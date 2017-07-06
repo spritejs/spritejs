@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+</head>
+<body>
+  <div id="paper"></div>
+  <script src="/js/index.js"></script>
+  <script>
+    const paper = sprites.Paper2D('#paper', 600, 400);
+    const Sprite = sprites.Sprite;
+
+    const s = new Sprite({
+      attributeChangedCallback(...args) {
+        console.log(args)
+      }
+    })
+
+    s.attr({
+      anchor: [0.5, 0.5],
+      pos: [100, 100],
+      size: [50, 50],
+      bgcolor: 'red',
+      rotate: 5,
+    })
+    console.log(s.attr('x'), s.attr());
+
+    s.appendTo(paper);
+  /**
+    let sprite = new Sprite();
+    sprite.attr(...);
+
+    paper.appendChild(...sprites);
+
+    //paper.removeChild(...spirtes);
+  */
+  </script>
+</body>
+</html>
