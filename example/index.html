@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Demo</title>
+  <style>
+  #paper {
+    position: relative;
+  }
+  </style>
 </head>
 <body>
   <div id="paper"></div>
@@ -46,6 +51,28 @@
     })
 
     s2.appendTo(paper);
+
+    paper.canvas.addEventListener('mousemove', e => {
+      let offsetX = e.offsetX, 
+          offsetY = e.offsetY;
+
+      let attr = s.attr();
+      [x, y, w, h] = attr.boxRect;
+
+      if( offsetX >= x && offsetX - x <= w 
+       && offsetY >= y && offsetY - y <= h){
+        let [dx, dy] = [offsetX - attr.x, offsetY - attr.y];
+        //console.log('in box', dx, dy);
+        let transform = new sprites.Matrix(attr.transform);
+        let [nx, ny] = transform.inverse().transformPoint(dx, dy);
+        let [ox, oy, ow, oh] = attr.originBoxRect;
+
+        if(nx >= ox && nx - ox <= ow
+          && ny >= oy && ny - oy <= oh){
+          console.log('in origin box', nx, ny);
+        }
+      }
+    });
   /**
     let sprite = new Sprite();
     sprite.attr(...);
