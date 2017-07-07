@@ -13,7 +13,7 @@
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
-        console.log(args)
+        //console.log(args)
       }
     })
 
@@ -21,12 +21,31 @@
       anchor: [0.5, 0.5],
       pos: [100, 100],
       size: [50, 50],
-      bgcolor: 'red',
-      rotate: 5,
+      bgcolor: 'green',
+      transform: {
+        translate: [30, 30],
+        rotate: 45,
+      }
     })
-    console.log(s.attr('x'), s.attr());
 
     s.appendTo(paper);
+
+    const s2 = new Sprite();
+
+    s2.attr({
+      anchor: [0.5, 0.5],
+      pos: [100, 100],
+      size: [50, 50],
+      bgcolor: 'red',
+      border: [5, 'blue'],
+      opacity: 0.5,
+      transform: {
+        translate: [30, 30],
+        rotate: 90
+      }
+    })
+
+    s2.appendTo(paper);
   /**
     let sprite = new Sprite();
     sprite.attr(...);

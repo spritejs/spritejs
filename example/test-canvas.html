@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <canvas width="600", height="400" id="test"></canvas>
+  <script>
+    let ctx = test.getContext('2d');
+    ctx.save()
+    //ctx.translate(200, 0)
+    ctx.translate(200, 200)
+    ctx.rotate(45 * Math.PI / 180)
+    ctx.translate(-25, - 25)
+    ctx.fillRect(0,0,50,50);
+
+    ctx.restore()
+    ctx.translate(200, 200)
+    ctx.translate(-25, - 25)
+    ctx.fillRect(0,0,50,50);
+
+    ctx.rect(150,100,50,50);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  </script>
+</body>
+</html>
