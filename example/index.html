@@ -33,8 +33,6 @@
       }
     })
 
-    s.appendTo(paper);
-
     const s2 = new Sprite();
 
     s2.attr({
@@ -45,12 +43,25 @@
       border: [5, 'blue'],
       opacity: 0.5,
       transform: {
+        //skew: [30, 0]
         translate: [30, 30],
         rotate: 90
       }
     })
 
-    s2.appendTo(paper);
+    const s3 = new Sprite();
+
+    s3.attr({
+      anchor: [0.5, 0.5],
+      pos: [209, 200],
+      size: [50, 50],
+      bgcolor: 'red',
+      border: [15, 'blue'],
+      opacity: 0.5,
+    })
+
+
+    paper.appendChild(s, s2, s3);
 
     paper.canvas.addEventListener('mousemove', e => {
       let offsetX = e.offsetX, 

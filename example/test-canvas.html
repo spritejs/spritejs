@@ -16,6 +16,8 @@
     ctx.fillRect(0,0,50,50);
 
     ctx.restore()
+
+    ctx.save()
     ctx.translate(200, 200)
     ctx.translate(-25, - 25)
     ctx.fillRect(0,0,50,50);
@@ -23,6 +25,19 @@
     ctx.rect(150,100,50,50);
     ctx.lineWidth = 1;
     ctx.stroke();
+    ctx.restore()
+
+ctx.save()
+ctx.beginPath()
+//ctx.arc(100,100,50,0,Math.PI);
+ctx.rect(100,100,100,100);
+ctx.clip()
+ctx.beginPath()
+ctx.translate(-100, -100)
+ctx.rotate(45)
+ctx.rect(100,100,100,100);
+ctx.fill();
+
   </script>
 </body>
 </html>
