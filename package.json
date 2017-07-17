@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ava",
     "lint": "eslint 'lib/**/*.js' --fix",
     "start": "webpack-dev-server --quiet & http-server example -c-1 -p 8081",
     "deploy": "rm -rf dist/* && ./script/deploy.js"
@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "ava": "^0.21.0",
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^6.4.1",
@@ -30,5 +31,11 @@
     "http-server": "^0.9.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   }
 }
