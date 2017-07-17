@@ -63,36 +63,32 @@
 
 
     paper.appendChild(s, s2, s3);
+    //paper.removeChild(s);
 
-    paper.canvas.addEventListener('mousemove', e => {
-      let offsetX = e.offsetX, 
-          offsetY = e.offsetY;
+    console.log('box', s3.attr('box'))
 
-      let attr = s.attr();
-      [x, y, w, h] = attr.boxRect;
+    // paper.canvas.addEventListener('mousemove', e => {
+    //   let offsetX = e.offsetX, 
+    //       offsetY = e.offsetY;
 
-      if( offsetX >= x && offsetX - x <= w 
-       && offsetY >= y && offsetY - y <= h){
-        let [dx, dy] = [offsetX - attr.x, offsetY - attr.y];
-        //console.log('in box', dx, dy);
-        let transform = new sprites.Matrix(attr.transform);
-        let [nx, ny] = transform.inverse().transformPoint(dx, dy);
-        let [ox, oy, ow, oh] = attr.originBoxRect;
+    //   let attr = s.attr();
+    //   [x, y, w, h] = attr.boxRect;
 
-        if(nx >= ox && nx - ox <= ow
-          && ny >= oy && ny - oy <= oh){
-          console.log('in origin box', nx, ny);
-        }
-      }
-    });
-  /**
-    let sprite = new Sprite();
-    sprite.attr(...);
+    //   if( offsetX >= x && offsetX - x <= w 
+    //    && offsetY >= y && offsetY - y <= h){
+    //     let [dx, dy] = [offsetX - attr.x, offsetY - attr.y];
+    //     //console.log('in box', dx, dy);
+    //     let transform = new sprites.Matrix(attr.transform);
+    //     let [nx, ny] = transform.inverse().transformPoint(dx, dy);
+    //     let [ox, oy, ow, oh] = attr.originBoxRect;
 
-    paper.appendChild(...sprites);
+    //     if(nx >= ox && nx - ox <= ow
+    //       && ny >= oy && ny - oy <= oh){
+    //       console.log('in origin box', nx, ny);
+    //     }
+    //   }
+    // });
 
-    //paper.removeChild(...spirtes);
-  */
   </script>
 </body>
 </html>
