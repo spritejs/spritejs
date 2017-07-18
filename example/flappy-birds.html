@@ -8,12 +8,13 @@
     position: relative;
   }
   </style>
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
 </head>
 <body>
-  <div id="paper"></div>
+  <div id="container"></div>
   <script src="/js/index.js"></script>
   <script>
-    const paper = sprites.Paper2D('#paper', 600, 400);
+    const paper = sprites.Paper2D('#container', 600, 400);
     const Sprite = sprites.Sprite;
 
     const s = new Sprite({
@@ -27,19 +28,38 @@
       pos: [100, 100],
       size: [50, 50],
       bgcolor: 'green',
-      border: [10, 'red'],
+      border: [5, 'red'],
       // transform: {
       //   translate: [30, 30],
       //   rotate: 45,
       // },
-      zIndex: 200,
+      //zIndex: 200,
       textures: [{
         src: 'images/bird.png',
-        srcRect: [2, 2, 86, 60]
+        //srcRect: [2, 2, 86, 60]
       }]
     })
 
-    paper.appendChild(s)
+    const s2 = new Sprite()
+
+    s2.attr({
+      anchor: [0.5, 0.5],
+      pos: [100, 300],
+      size: [50, 50],
+      bgcolor: 'blue',
+      opacity: 0.5    
+    })
+
+    paper.appendChild(s, s2)
+
+    var a1 = new Animator(3000,  function(p){
+      var ty = -200 * p
+      s2.attr('pos', [100, 300 + ty])
+    });
+
+    container.onclick = function(e){
+      a1.animate();
+    }
 
   </script>
 </body>
