@@ -26,17 +26,17 @@
     s.attr({
       anchor: [0.5, 0.5],
       pos: [100, 100],
-      size: [50, 50],
-      bgcolor: 'green',
-      border: [5, 'red'],
+      size: [35, 35],
+      //bgcolor: 'green',
+      //border: [5, 'red'],
       // transform: {
       //   translate: [30, 30],
       //   rotate: 45,
       // },
-      //zIndex: 200,
+      zIndex: 200,
       textures: [{
         src: 'images/bird.png',
-        //srcRect: [2, 2, 86, 60]
+        srcRect: [2, 2, 86, 60]
       }]
     })
 
@@ -47,15 +47,39 @@
       pos: [100, 300],
       size: [50, 50],
       bgcolor: 'blue',
-      opacity: 0.5    
+      opacity: 0.5,
+      zIndex: 201    
     })
 
+    const s0 = new Sprite()
+
+    s0.attr({
+      pos: [0, 0],
+      size: [600, 400],
+      bgcolor: '#444',
+      textures: [{
+        src: 'images/bird.png',
+        srcRect: [2, 2, 86, 60]
+      }]
+    });
+
     paper.appendChild(s, s2)
+    //paper.appendChild(s0, s, s2)
 
     var a1 = new Animator(3000,  function(p){
       var ty = -200 * p
       s2.attr('pos', [100, 300 + ty])
-    });
+      console.log(s2.attr('pos'))
+    })
+
+    let textureIdx = 0;
+    
+    setInterval(function(){
+      const textures = s.attr('textures')
+      textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
+      //s.attr('textures', textures)
+      s.forceUpdate()
+    }, 100);
 
     container.onclick = function(e){
       a1.animate();
