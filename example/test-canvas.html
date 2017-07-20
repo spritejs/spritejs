@@ -13,15 +13,18 @@
     //ctx.translate(200, 200)
     //ctx.rotate(45 * Math.PI / 180)
     //ctx.translate(-25, - 25)
-    ctx.fillRect(0,0,600,400);
+    ctx.translate(0, 100)
+    ctx.rotate(-90 * Math.PI / 180)
+    ctx.fillRect(0,50,100,100);
+
 
     ctx.restore()
 
-    ctx.save()
-    ctx.rect(50, 50, 200, 200)
-    ctx.clip()
-    ctx.clearRect(0, 0, 600, 400)
-    ctx.restore()
+    // ctx.save()
+    // ctx.rect(50, 50, 200, 200)
+    // ctx.clip()
+    // ctx.clearRect(0, 0, 600, 400)
+    // ctx.restore()
 
 //     ctx.save()
 //     ctx.translate(200, 200)

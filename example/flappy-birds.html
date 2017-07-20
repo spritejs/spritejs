@@ -18,9 +18,13 @@
     const paper = sprites.Paper2D('#container', 600, 400);
     const Sprite = sprites.Sprite;
 
-    let res = await paper.preload()
+    let res = await paper.preload(
+      ['images/tt2.png', 'images/tt2.json'],
+      ['images/birds.png', 'images/birds.json'],
+      'images/bird.png',
+    )
 
-    await sprites.Resource.loadFrames('images/tt2.png', 'images/tt2.json')
+    console.log(res)
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
@@ -45,6 +49,27 @@
       }]
     })
 
+    const bird = new Sprite()
+    
+    bird.attr({
+      anchor: [0.5, 0.5],
+      pos: [300, 100],
+      size: [35, 35],
+      //bgcolor: 'green',
+      //border: [5, 'red'],
+      // transform: {
+      //   translate: [30, 30],
+      //   rotate: 45,
+      // },
+      zIndex: 200,
+      textures: [{
+        src: 'images/bird.png',
+        srcRect: [2, 2, 86, 60]
+      }]
+    })
+
+    paper.appendChild(bird)
+
     const s2 = new Sprite()
 
     s2.attr({
@@ -60,13 +85,12 @@
 
     s0.attr({
       pos: [0, 0],
-      size: [600, 400],
+      size: [390, 390],
       textures: [{
         src: 'ramda.png'
       }]
     });
 
-    //paper.appendChild(s, s2)
     paper.appendChild(s0, s, s2)
 
     var a1 = new Animator(3000,  function(p){
@@ -84,8 +108,12 @@
     setInterval(function(){
       const textures = s.attr('textures')
       textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
-      //s.attr('textures', textures)
       s.forceUpdate()
+
+      const src = `bird${textureIdx % 3 + 1}.png`
+      bird.attr('textures', [
+        {src}
+      ])
     }, 100);
 
   })()
