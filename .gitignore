@@ -36,3 +36,5 @@ dist/
 runtime/
 
 .DS_Store
+
+sftp-config.json
