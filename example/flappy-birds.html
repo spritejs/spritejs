@@ -14,15 +14,20 @@
   <div id="container"></div>
   <script src="/js/index.js"></script>
   <script>
+  (async function(){
     const paper = sprites.Paper2D('#container', 600, 400);
     const Sprite = sprites.Sprite;
+
+    let res = await paper.preload()
+
+    await sprites.Resource.loadFrames('images/tt2.png', 'images/tt2.json')
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
         //console.log(args)
       }
     })
-
+    
     s.attr({
       anchor: [0.5, 0.5],
       pos: [100, 100],
@@ -56,21 +61,23 @@
     s0.attr({
       pos: [0, 0],
       size: [600, 400],
-      bgcolor: '#444',
       textures: [{
-        src: 'images/bird.png',
-        srcRect: [2, 2, 86, 60]
+        src: 'ramda.png'
       }]
     });
 
-    paper.appendChild(s, s2)
-    //paper.appendChild(s0, s, s2)
+    //paper.appendChild(s, s2)
+    paper.appendChild(s0, s, s2)
 
     var a1 = new Animator(3000,  function(p){
       var ty = -200 * p
       s2.attr('pos', [100, 300 + ty])
       console.log(s2.attr('pos'))
     })
+
+    container.onclick = function(e){
+      a1.animate();
+    }
 
     let textureIdx = 0;
     
@@ -81,10 +88,7 @@
       s.forceUpdate()
     }, 100);
 
-    container.onclick = function(e){
-      a1.animate();
-    }
-
+  })()
   </script>
 </body>
 </html>

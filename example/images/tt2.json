@@ -1,0 +1,28 @@
+{"frames": {
+
+"ramda.png":
+{
+	"frame": {"x":2,"y":604,"w":340,"h":268},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":54,"w":340,"h":268},
+	"sourceSize": {"w":390,"h":390}
+},
+"haskell.png":
+{
+	"frame": {"x":2,"y":2,"w":600,"h":450},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":450},
+	"sourceSize": {"w":600,"h":450}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "tt2.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:4b253b5941ec7c58062a3f8451d9ec07:2eea74fbadd4b400f5be08fd0d6081e4:869ccb85c3e32b2b9ee79a8812f028ef$"
+}
+}
