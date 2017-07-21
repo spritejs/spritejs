@@ -43,11 +43,12 @@
       //   rotate: 45,
       // },
       zIndex: 200,
-      textures: [{
-        src: 'images/bird.png',
-        srcRect: [2, 2, 86, 60]
-      }]
     })
+
+    s.textures = [{
+      src: 'images/bird.png',
+      srcRect: [2, 2, 86, 60]
+    }]
 
     const bird = new Sprite()
     
@@ -62,12 +63,9 @@
       //   rotate: 45,
       // },
       zIndex: 200,
-      textures: [{
-        src: 'images/bird.png',
-        srcRect: [2, 2, 86, 60]
-      }]
     })
 
+    bird.textures = ['bird1.png']
 
     const s2 = new Sprite({
       attributeChangedCallback(key, oldVal, newVal){
@@ -91,10 +89,9 @@
     s0.attr({
       pos: [0, 0],
       size: [390, 390],
-      textures: [{
-        src: 'ramda.png'
-      }]
     });
+
+    s0.textures = ['ramda.png']
 
     paper.layer('bg').append(s0)
     paper.layer('fg').append(bird, s, s2)
@@ -120,14 +117,13 @@
     let textureIdx = 0;
     
     setInterval(function(){
-      const textures = s.attr('textures')
+      const textures = s.textures
+
       textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
       s.forceUpdate()
 
       const src = `bird${textureIdx % 3 + 1}.png`
-      bird.attr('textures', [
-        {src}
-      ])
+      bird.textures = [src]
     }, 100);
 
   })()
