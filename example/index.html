@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>Demo</title>
   <style>
   #paper {
@@ -68,27 +69,14 @@
 
     console.log('box', s3.attr('box'))
 
-    document.getElementById('paper').addEventListener('mousemove', e => {
-      let offsetX = e.offsetX, 
-          offsetY = e.offsetY;
+    s.on('touchstart', e => {
+      console.log('in origin box', e.offsetX, e.offsetY);
+      e.stopDispatch()
+    })
 
-      let attr = s.attr();
-      [x, y, w, h] = attr.boxRect;
-
-      if( offsetX >= x && offsetX - x <= w 
-       && offsetY >= y && offsetY - y <= h){
-        let [dx, dy] = [offsetX - attr.x, offsetY - attr.y];
-        //console.log('in box', dx, dy);
-        let transform = new sprite2.Matrix(attr.transform);
-        let [nx, ny] = transform.inverse().transformPoint(dx, dy);
-        let [ox, oy, ow, oh] = attr.originBoxRect;
-
-        if(nx >= ox && nx - ox <= ow
-          && ny >= oy && ny - oy <= oh){
-          console.log('in origin box', nx, ny);
-        }
-      }
-    });
+    s2.on('touchstart', e => {
+      console.log(111)
+    })
 
   </script>
 </body>

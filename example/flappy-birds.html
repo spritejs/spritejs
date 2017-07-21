@@ -72,7 +72,7 @@
     const s2 = new Sprite({
       attributeChangedCallback(key, oldVal, newVal){
         if(key === 'pos'){
-          console.log(newVal)
+          //console.log(newVal)
         }
       }
     })
@@ -105,9 +105,17 @@
       //console.log(s2.attr('pos'))
     })
 
-    container.onclick = function(e){
-      a1.animate();
-    }
+    // container.onclick = function(e){
+    //   a1.animate();
+    // }
+    s0.on('click', function a(evt){
+      a1.animate()
+      evt.target.off(evt.type, a)
+    })
+    
+    paper.layer('bg').on('click', function(){
+      console.log(111)
+    })
 
     let textureIdx = 0;
     
