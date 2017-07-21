@@ -67,6 +67,10 @@
 
     bird.textures = ['bird1.png']
 
+    bird.on('click', function(e){
+      console.log(e)
+    })
+
     const s2 = new Sprite({
       attributeChangedCallback(key, oldVal, newVal){
         if(key === 'pos'){
