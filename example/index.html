@@ -13,8 +13,8 @@
   <div id="paper"></div>
   <script src="/js/index.js"></script>
   <script>
-    const paper = sprites.Paper2D('#paper', 600, 400);
-    const Sprite = sprites.Sprite;
+    const paper = sprite2.Paper2D('#paper', 600, 400);
+    const Sprite = sprite2.Sprite;
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
@@ -63,12 +63,12 @@
     })
 
 
-    paper.appendChild(s, s2, s3);
+    paper.layer('default').append(s, s2, s3);
     //paper.removeChild(s);
 
     console.log('box', s3.attr('box'))
 
-    paper.canvas.addEventListener('mousemove', e => {
+    document.getElementById('paper').addEventListener('mousemove', e => {
       let offsetX = e.offsetX, 
           offsetY = e.offsetY;
 
@@ -79,7 +79,7 @@
        && offsetY >= y && offsetY - y <= h){
         let [dx, dy] = [offsetX - attr.x, offsetY - attr.y];
         //console.log('in box', dx, dy);
-        let transform = new sprites.Matrix(attr.transform);
+        let transform = new sprite2.Matrix(attr.transform);
         let [nx, ny] = transform.inverse().transformPoint(dx, dy);
         let [ox, oy, ow, oh] = attr.originBoxRect;
 

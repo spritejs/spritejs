@@ -15,8 +15,8 @@
   <script src="/js/index.js"></script>
   <script>
   (async function(){
-    const paper = sprites.Paper2D('#container', 600, 400);
-    const Sprite = sprites.Sprite;
+    const paper = sprite2.Paper2D('#container', 600, 400)
+    const Sprite = sprite2.Sprite
 
     let res = await paper.preload(
       ['images/tt2.png', 'images/tt2.json'],
@@ -68,9 +68,14 @@
       }]
     })
 
-    paper.appendChild(bird)
 
-    const s2 = new Sprite()
+    const s2 = new Sprite({
+      attributeChangedCallback(key, oldVal, newVal){
+        if(key === 'pos'){
+          console.log(newVal)
+        }
+      }
+    })
 
     s2.attr({
       anchor: [0.5, 0.5],
@@ -91,12 +96,13 @@
       }]
     });
 
-    paper.appendChild(s0, s, s2)
+    paper.layer('bg').append(s0)
+    paper.layer('fg').append(bird, s, s2)
 
     var a1 = new Animator(3000,  function(p){
       var ty = -200 * p
       s2.attr('pos', [100, 300 + ty])
-      console.log(s2.attr('pos'))
+      //console.log(s2.attr('pos'))
     })
 
     container.onclick = function(e){

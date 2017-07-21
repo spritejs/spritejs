@@ -33,10 +33,10 @@ module.exports = function (env = {}) {
   return {
     entry: './lib/index.js',
     output: {
-      filename: env.production ? `sprite-canvas-${version}.min.js` : 'index.js',
+      filename: env.production ? `sprite2-${version}.min.js` : 'index.js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/js/',
-      library: 'sprites',
+      library: 'sprite2',
       libraryTarget: 'umd'
     },
 
