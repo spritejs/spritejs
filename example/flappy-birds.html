@@ -124,7 +124,7 @@
       const textures = s.textures
 
       textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
-      s.forceUpdate()
+      s.textures = textures
 
       const src = `bird${textureIdx % 3 + 1}.png`
       bird.textures = [src]
