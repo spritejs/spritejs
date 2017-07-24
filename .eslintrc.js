@@ -24,6 +24,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-unused-vars': 'warn',
     // 强制 getter 和 setter 在对象中成对出现
     // 默认状态是开启对setWithoutGet的监控，关闭对getWithoutSet的监控
     'accessor-pairs': 'error',
