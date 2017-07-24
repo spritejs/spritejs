@@ -54,6 +54,7 @@ module.exports = function (env = {}) {
       proxy: {
         '*': `http://127.0.0.1:${proxyPort}`
       }
-    }
+    },
+    //devtool: 'inline-source-map',
   }
 }

@@ -35,7 +35,7 @@
     s.attr({
       anchor: [0.5, 0.5],
       pos: [100, 100],
-      size: [35, 35],
+      size: [43, 30],
       //bgcolor: 'green',
       //border: [5, 'red'],
       // transform: {
@@ -55,7 +55,8 @@
     bird.attr({
       anchor: [0.5, 0.5],
       pos: [300, 100],
-      size: [35, 35],
+      opacity: 0.7,
+      scale: 0.5,
       //bgcolor: 'green',
       //border: [5, 'red'],
       // transform: {
@@ -125,6 +126,7 @@
 
       textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
       s.textures = textures
+      //s.forceUpdate()
 
       const src = `bird${textureIdx % 3 + 1}.png`
       bird.textures = [src]
