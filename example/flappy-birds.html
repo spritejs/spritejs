@@ -16,7 +16,8 @@
   <script>
   (async function(){
     const paper = sprite2.Paper2D('#container', 600, 400)
-    const Sprite = sprite2.Sprite
+    const Sprite = sprite2.Sprite,
+          Label = sprite2.Label
 
     let res = await paper.preload(
       ['images/tt2.png', 'images/tt2.json'],
@@ -57,7 +58,8 @@
       pos: [300, 100],
       opacity: 0.7,
       scale: 0.5,
-      //bgcolor: 'green',
+      bgcolor: 'green',
+      padding: [30,30,30,30],
       //border: [5, 'red'],
       // transform: {
       //   translate: [30, 30],
@@ -100,6 +102,20 @@
 
     paper.layer('bg').append(s0)
     paper.layer('fg').append(bird, s, s2)
+
+    let label1 = new Label('测试一下\n我能换行\n测试');
+
+    label1.attr({
+      pos: [120, 150],
+      //size: [150, 150],
+      padding: 10,
+      zIndex: 300,
+      color: 'white',
+      bgcolor: 'rgba(0,0,0,0.5)',
+      textAlign: 'right'
+    })
+
+    paper.layer('fg').append(label1)
 
     var a1 = new Animator(3000,  function(p){
       var ty = -200 * p
