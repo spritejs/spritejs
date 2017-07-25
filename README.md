@@ -1,11 +1,16 @@
-# ES6 Component Developing Environments
+# sprite2 轻量级的 canvas 绘图库
 
-Create a clean & powerful JavaScript developing environment, with ES6+ support.
+像操作 DOM 元素一样操作 canvas 中的图形
 
 ## Usage
 
-Download this codebase and enjoy! :)
+在浏览器中使用
 
 ```html
-<script src="https://s1.ssl.qhres.com/!cac8efdb/sprite2-0.2.0.min.js"></script>
+<script src="https://s0.ssl.qhres.com/!42385365/sprite2-0.2.1.min.js"></script>
+```
+
+```js
+
+
 ```
