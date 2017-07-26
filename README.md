@@ -7,7 +7,7 @@
 在浏览器中使用
 
 ```html
-<script src="https://s4.ssl.qhres.com/!612844d4/sprite2-0.2.4.min.js"></script>
+<script src="https://s2.ssl.qhres.com/!081a96ad/sprite2-0.3.1.js"></script>
 ```
 
 ```js
