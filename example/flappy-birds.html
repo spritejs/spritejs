@@ -86,7 +86,26 @@
       anchor: [0.5, 0.5],
       pos: [100, 300],
       size: [50, 50],
+      rotate: 45,
       bgcolor: 'blue',
+      opacity: 0.5,
+      zIndex: 201    
+    })
+
+    const s3 = new Sprite({
+      attributeChangedCallback(key, oldVal, newVal){
+        if(key === 'pos'){
+          //console.log(newVal)
+        }
+      }
+    })
+
+    s3.attr({
+      anchor: [0, 0],
+      pos: [100, 300],
+      size: [50, 50],
+      rotate: 45,
+      bgcolor: 'green',
       opacity: 0.5,
       zIndex: 201    
     })
@@ -96,12 +115,12 @@
     s0.attr({
       pos: [0, 0],
       size: [390, 390],
-    });
+    })
 
     s0.textures = ['ramda.png']
 
     paper.layer('bg').append(s0)
-    paper.layer('fg').append(bird, s, s2)
+    paper.layer('fg').append(bird, s, s2, s3)
 
     let label1 = new Label('测试一下\n我能换行\n测试');
 
@@ -136,19 +155,21 @@
       console.log(111)
     })
 
-    let textureIdx = 0;
+    // let textureIdx = 0;
     
-    setInterval(function(){
-      const textures = s.textures
+    // setInterval(function(){
+    //   const textures = s.textures
 
-      textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
-      s.textures = textures
-      //s.forceUpdate()
+    //   textures[0].srcRect = [2 + (++textureIdx % 3) * 88, 2, 86, 60]
+    //   s.textures = textures
+    //   //s.forceUpdate()
 
-      const src = `bird${textureIdx % 3 + 1}.png`
-      bird.textures = [src]
-    }, 100);
+    //   const src = `bird${textureIdx % 3 + 1}.png`
+    //   bird.textures = [src]
+    // }, 100);
 
+    window.s2 = s2
+    window.bird = bird
   })()
   </script>
 </body>
