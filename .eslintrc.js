@@ -24,6 +24,14 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'prefer-const': ['error', {'destructuring': 'all'}],
+    // ✘ : 因为需要异步 one-by-one 执行 sprite 的渲染，故关闭此规则
+    'no-await-in-loop': 'off',
+    // ✘ : 允许匿名函数
+    'func-names': 'off',
+    'no-restricted-syntax': ['error', 'WithStatement'],
+    // ✘ : 在确定不需要判断 prototype 的基础上没必要在 for-in 里加 if
+    'guard-for-in': 'off',  
     'no-unused-vars': 'warn',
     // 强制 getter 和 setter 在对象中成对出现
     // 默认状态是开启对setWithoutGet的监控，关闭对getWithoutSet的监控
@@ -82,7 +90,8 @@ module.exports = {
     // 禁止在全局范围使用变量和函数声明
     'no-implicit-globals': 'error',
     // 禁止 this 关键字在类或类对象之外出现
-    'no-invalid-this': 'error',
+    // 因为在 decorators 里面可能会使用 this，故不强制，仅提示 warn
+    'no-invalid-this': 'warn',
     // 禁止混合操作符，同组的需要添加圆括号
     // 这个其实有点不太实用  
     'no-mixed-operators': ['off', {
