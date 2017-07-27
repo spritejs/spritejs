@@ -12,7 +12,9 @@
 </head>
 <body>
   <div id="paper"></div>
-  <script src="/js/index.js"></script>
+  <script src="https://s5.ssl.qhres.com/!31ef3eb6/sprite2-0.3.3.js"></script>
+
+  <!--<script src="/js/index.js"></script>-->
   <script>
     const paper = sprite2.Paper2D('#paper', 600, 400);
     const Sprite = sprite2.Sprite;
@@ -77,6 +79,33 @@
     s2.on('touchstart', e => {
       console.log(111)
     })
+
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+;(async function(){
+  const paper = sprite2.Paper2D('#paper', 600, 400)
+  paper.setResolution(1200, 800) // 设置 Paper 的实际分辨率
+  
+  await paper.preload(
+    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+  )  
+  
+  //const bglayer = paper.layer('bg'),  // 背景层
+  const fglayer = paper.layer('fg')   // 前景层
+
+  const bird = new sprite2.Sprite('bird1.png') 
+
+  bird.attr({
+    pos: [100, 100],
+    transform: {
+      rotate: 30
+    }
+  })
+
+  fglayer.appendChild(bird)
+
+})()
 
   </script>
 </body>
