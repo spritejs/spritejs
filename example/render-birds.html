@@ -43,6 +43,32 @@
     const paper = sprite2.Paper2D('#paper')
     paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
     
+    const cacheMap = new Map()
+    class Bird extends sprite2.Sprite {
+      constructor(){
+        super('bird1.png')
+      }
+      //共用缓存，提高性能
+      clearCache(e) {
+        //不清除缓存，总是使用，在这个场景里可用
+        //只要不改变 bird 的基本属性，比如 bgcolor 等
+        //cacheMap.clear()
+      }
+      fromCache() {
+        const key = JSON.stringify(this.textures) + this.attr('scale')
+        if(cacheMap.has(key)) {
+          return cacheMap.get(key)
+        }
+      }
+      cache(context) {
+        const key = JSON.stringify(this.textures) + this.attr('scale')
+
+        if(!cacheMap.has(key)) {
+          cacheMap.set(key, context)
+        }
+      }      
+    }
+
     await paper.preload(
       [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
     )  
@@ -109,7 +135,7 @@
     let birdCount = 0
     async function addBird(){
       spriteCount.innerHTML = ++birdCount
-      const bird = new sprite2.Sprite('bird1.png') 
+      const bird = new Bird()
 
       bird.attr({
         anchor: [0.5, 0.5],
