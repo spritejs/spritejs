@@ -97,17 +97,28 @@
         bird.attr('pos', [100 + ty, 100 ])
       })
 
+      button.on('mouseenter', function(evt){
+        evt.layer.canvas.style.cursor = 'pointer'
+      })
+
+      button.on('mouseleave', function(evt){
+        evt.layer.canvas.style.cursor = 'default'
+      })
+
       button.on('mousedown', function(evt){
         evt.target.attr({
           color: '#f99'
         })
-        a1.animate()
       })
 
       layer.on('mouseup', function(evt){
         button.attr({
           color: '#111'
         })
+      })
+
+      button.on('click', function(evt){
+        a1.animate()
       })
 
       let textureIdx = 0
