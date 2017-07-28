@@ -25,14 +25,21 @@
 
     s.attr({
       anchor: [0.5, 0.5],
-      pos: [100, 100],
+      pos: [200, 200],
       size: [50, 50],
       bgcolor: 'green',
+      opacity: 0.5,
       transform: {
-        translate: [30, 30],
+        //translate: [30, 30],
         rotate: 45,
       },
       zIndex: 200
+    })
+
+    paper.layer().appendChild(s)
+
+    s.on('click', function(evt){
+      console.log(evt)
     })
 
     const s2 = new Sprite();
@@ -43,7 +50,7 @@
       size: [50, 50],
       bgcolor: 'red',
       border: [5, 'blue'],
-      opacity: 0.5,
+      opacity: 1,
       zIndex: 201,
       transform: {
         //skew: [30, 0]
@@ -56,7 +63,7 @@
 
     s3.attr({
       anchor: [0.5, 0.5],
-      pos: [209, 200],
+      pos: [200, 200],
       size: [50, 50],
       bgcolor: 'red',
       border: [15, 'blue'],
@@ -64,46 +71,48 @@
     })
 
 
-    paper.layer('default').append(s, s2, s3);
+    paper.layer().append(s2, s3);
+
+    window.s = s;
     //paper.removeChild(s);
 
-    console.log('box', s3.renderBox)
+    // console.log('box', s3.renderBox)
 
-    s.on('touchstart', e => {
-      console.log('in origin box', e.offsetX, e.offsetY);
-      e.stopDispatch()
-    })
+    // s.on('touchstart', e => {
+    //   console.log('in origin box', e.offsetX, e.offsetY);
+    //   e.stopDispatch()
+    // })
 
-    s2.on('touchstart', e => {
-      console.log(111)
-    })
+    // s2.on('touchstart', e => {
+    //   console.log(111)
+    // })
 
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+// const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+// const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-;(async function(){
-  const paper = sprite2.Paper2D('#paper', 600, 400)
-  paper.setResolution(1200, 800) // 设置 Paper 的实际分辨率
+// ;(async function(){
+//   const paper = sprite2.Paper2D('#paper', 600, 400)
+//   paper.setResolution(1200, 800) // 设置 Paper 的实际分辨率
   
-  await paper.preload(
-    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-  )  
+//   await paper.preload(
+//     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+//   )  
   
-  //const bglayer = paper.layer('bg'),  // 背景层
-  const fglayer = paper.layer('fg')   // 前景层
+//   //const bglayer = paper.layer('bg'),  // 背景层
+//   const fglayer = paper.layer('fg')   // 前景层
 
-  const bird = new sprite2.Sprite('bird1.png') 
+//   const bird = new sprite2.Sprite('bird1.png') 
 
-  bird.attr({
-    pos: [100, 100],
-    transform: {
-      rotate: 30
-    }
-  })
+//   bird.attr({
+//     pos: [100, 100],
+//     transform: {
+//       rotate: 30
+//     }
+//   })
 
-  fglayer.appendChild(bird)
+//   fglayer.appendChild(bird)
 
-})()
+// })()
 
   </script>
 </body>

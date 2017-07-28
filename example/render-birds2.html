@@ -55,13 +55,13 @@
         //cacheMap.clear()
       }
       fromCache() {
-        const key = JSON.stringify(this.textures)
+        const key = JSON.stringify(this.textures) + this.attr('scale')
         if(cacheMap.has(key)) {
           return cacheMap.get(key)
         }
       }
       cache(context) {
-        const key = JSON.stringify(this.textures)
+        const key = JSON.stringify(this.textures) + this.attr('scale')
 
         if(!cacheMap.has(key)) {
           cacheMap.set(key, context)
@@ -79,7 +79,7 @@
           fglayer = paper.layer('fg', {
                 handleEvent: false,
                 evaluateFPS: true,
-                renderMode: 'repaintAll',
+                renderMode: 'repaintDirty',
           })   
     
     const axisZero = [400, 400]
@@ -116,33 +116,36 @@
       
       const dist = pointSub(randomPoint, birdPoint)
       const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
+      const deg = Math.round(180 * Math.atan(dist[1] / dist[0]) / Math.PI)
       const flip = dist[0] < 0 ? -1 : 1
-      const duration = 5 * distance + 100
+      const duration = 5 * distance
 
       bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
 
       const anim = new Animator(duration, function(p){
         const pos = pointAdd(birdPoint, [p * dist[0], p * dist[1]])
-        if(isNaN(pos[0]) || isNaN(pos[1])){
-          console.log('p', duration, p)
-        }
         bird.attr({
           pos
         })
       })
-
       await anim.animate()
       await sleep(500)
     }
 
     let birdCount = 0
-    async function addBird(){
+    let birds = []
+
+    function addBird(){
       spriteCount.innerHTML = ++birdCount
       const bird = new Bird()
 
+      const randomArc = Math.random() * 2 * Math.PI
+      const randomPoint = pointAdd([350 * Math.cos(randomArc) * Math.random(), 
+                                    350 * Math.sin(randomArc) * Math.random()], axisZero)
+
       bird.attr({
         anchor: [0.5, 0.5],
-        pos: axisZero,
+        pos: randomPoint,
         transform: {
           rotate: 0,
         }
@@ -150,22 +153,45 @@
 
       fglayer.appendChild(bird)
       
-      let idx = 0
-      setInterval(() => {
-        bird.textures = [`bird${++idx % 3 + 1}.png`]
-      }, 100)
-      
-      //noprotect
-      do{
-        await randomAnimate(bird)
-      }while(1) 
+      // //noprotect
+      // do{
+      //   await randomAnimate(bird)
+      // }while(1) 
+
+      birds.push(bird)
+      return bird
     }
 
-    addBird()
-
-    circle.on('click', evt => {
+    for(let i = 0; i < 100; i++){
       addBird()
+    }
+
+    //window.bird = addBird()
+
+    let anim = new Animator(2000,function(p) {
+      birds.forEach(bird => {
+        bird.attr('translate', [0, 20 * Math.cos(2 * Math.PI * p)])
+      })
     })
+
+    //noprotect
+    anim.animate().then(function reset(){
+      anim.animate().then(reset)
+    })
+
+
+    let idx = 0
+    setInterval(() => {
+      idx++
+      birds.forEach(bird => {
+        bird.textures = [`bird${idx % 3 + 1}.png`]   
+      })
+    }, 100)
+
+
+    // circle.on('click', evt => {
+    //   addBird()
+    // })
 
     //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
     //所以所有精灵不运动的时候 fps 也会降下来
