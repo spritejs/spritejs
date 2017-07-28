@@ -1,6 +1,6 @@
 # sprite2 轻量级的 canvas 绘图库
 
-像操作 DOM 元素一样操作 canvas 中的图形
+像操作 DOM 元素一样操作 canvas 中的“精灵”
 
 ## Usage
 
@@ -10,7 +10,7 @@
 <script src="https://s2.ssl.qhres.com/!0dfc644d/sprite2-0.3.6.js"></script>
 ```
 
-[Demo](https://code.h5jun.com/gateg)
+[Demo](https://code.h5jun.com/gus)
 
 ```js
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
