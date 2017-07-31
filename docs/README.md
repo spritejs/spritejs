@@ -50,7 +50,7 @@ paper.setResolution(1200, 800)
 
 paper.layer 可以创建或获取一个 layer，一个 layer 是一层 canvas，可以在上面绘制 sprite。paper.layer 可以传不同 id，这样可以创建不同的图层。比如：
 
-```
+```js
 const background = paper.layer('background')
 const foreground = paper.layer('foreground')
 ```
@@ -356,7 +356,7 @@ sprite2 支持小图片拼合，类似于 css 的雪碧图，可以使用 [Textu
 
 [例子](https://code.h5jun.com/jut)
 
-```
+```js
 const paper = sprite2.Paper2D('#container')
 const Sprite = sprite2.Sprite
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
