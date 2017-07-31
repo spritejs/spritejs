@@ -49,19 +49,18 @@
         super('bird1.png')
       }
       //共用缓存，提高性能
-      clearCache(e) {
-        //不清除缓存，总是使用，在这个场景里可用
-        //只要不改变 bird 的基本属性，比如 bgcolor 等
-        //cacheMap.clear()
-      }
-      fromCache() {
-        const key = JSON.stringify(this.textures)
+      get cache() {
+        const key = JSON.stringify(this.textures) + this.attr('scale')
         if(cacheMap.has(key)) {
           return cacheMap.get(key)
         }
       }
-      cache(context) {
-        const key = JSON.stringify(this.textures)
+      set cache(context) {
+        if(context == null){
+          cacheMap.clear()
+          return
+        }
+        const key = JSON.stringify(this.textures) + this.attr('scale')
 
         if(!cacheMap.has(key)) {
           cacheMap.set(key, context)
