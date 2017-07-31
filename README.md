@@ -7,8 +7,10 @@
 在浏览器中使用
 
 ```html
-<script src="https://s2.ssl.qhres.com/!0dfc644d/sprite2-0.3.6.js"></script>
+<script src="https://s4.ssl.qhres.com/!e92e97c3/sprite2-0.3.7.js"></script>
 ```
+
+[帮助文档](https://github.com/spritejs/sprite2/tree/master/docs)
 
 [Demo](https://code.h5jun.com/gus)
 
@@ -61,9 +63,8 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     
     const dist = pointSub(randomPoint, birdPoint)
     const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
-    const deg = Math.round(180 * Math.atan(dist[1] / dist[0]) / Math.PI)
     const flip = dist[0] < 0 ? -1 : 1
-    const duration = 5 * distance
+    const duration = 5 * distance + 100
 
     const anim = new Animator(duration, function(p){
       const pos = pointAdd(birdPoint, [p * dist[0], p * dist[1]])
