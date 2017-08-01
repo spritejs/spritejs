@@ -9,7 +9,7 @@
   "scripts": {
     "test": "ava",
     "lint": "eslint 'lib/**/*.js' --fix",
-    "start": "webpack-dev-server -d --quiet & http-server example -c-1 -p 8081",
+    "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
     "deploy": "rm -rf dist/* && ./script/deploy.js"
   },
   "keywords": [],

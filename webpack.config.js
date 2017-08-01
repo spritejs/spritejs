@@ -5,7 +5,7 @@ module.exports = function (env = {}) {
     packageConf = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
 
   const version = packageConf.version,
-    proxyPort = 8081,
+    proxyPort = 9091,
     plugins = [],
     jsLoaders = []
 
