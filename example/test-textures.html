@@ -39,28 +39,12 @@
 
     box1.textures = [{
       src: birdsRes,
-      srcRect: [2, 2, 86, 60],
-      rect: [2, 2, 86, 60],
-      filter: {
-        blur: '10px',
-        sepia: '10%',
-        saturate: '15%'
-      }
-    }, {
-      src: birdsRes,
       srcRect: [2, 64, 86, 60],
       rect: [64, 64, 86, 60],
       filter: {
         opacity: '0.5',
+        dropShadow: '-10px -5px 10px red',
       }    
-    }, {
-      src: birdsRes,
-      srcRect: [2, 126, 86, 60],
-      rect: [126, 126, 86, 60] ,
-      filter: {
-        invert: '0.5',
-        grayscale: '0.1',
-      } 
     }]
 
     paper.layer().appendChild(box1)
