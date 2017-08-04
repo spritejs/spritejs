@@ -46,7 +46,7 @@ module.exports = function (env = {}) {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules\/(?!sprite-)|bower_components)/,
         use: jsLoaders
       }]
     },
