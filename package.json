@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
+    "sprite-animator": "^1.0.1",
     "sprite-decorators": "^0.1.0",
     "sprite-utils": "^0.2.1"
   },

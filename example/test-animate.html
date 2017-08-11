@@ -14,6 +14,7 @@
   <div id="paper"></div>
   <script src="/js/index.js"></script>
   <script>
+  (async function(){
     const paper = sprite2.Paper2D('#paper', 600, 400);
     const Sprite = sprite2.Sprite;
 
@@ -33,16 +34,35 @@
         translate: [30, 30],
         rotate: 45,
       },
-      zIndex: 200
+      zIndex: 500
     })
 
     paper.layer().appendChild(s)
+
+    const animation = s.animate(
+    [{
+      transform: {
+        rotate: 45
+      }
+    }, 
+    {
+      transform: {
+        rotate: 225
+      }
+    }], 
+    {
+      duration: 2000,
+      delay: 1000,
+    })
+
+
+    await animation.ready
 
     // s.on('click', function(evt){
     //   console.log(evt)
     // })
 
-    const s2 = new Sprite();
+    const s2 = new Sprite()
 
     s2.attr({
       anchor: [0.5, 0.5],
@@ -58,8 +78,12 @@
         rotate: 90
       }
     })
+    
+    paper.layer().appendChild(s2)
 
-    const s3 = new Sprite();
+    await animation.finished
+
+    const s3 = new Sprite()
 
     s3.attr({
       anchor: [0.5, 0.5],
@@ -71,12 +95,9 @@
     })
 
 
-    paper.layer().append(s2, s3);
+    paper.layer().appendChild(s3)
 
     window.s = s;
-    //paper.removeChild(s);
-
-    // console.log('box', s3.renderBox)
 
     s.on('touchstart', e => {
       console.log('in origin box', e.offsetX, e.offsetY);
@@ -86,34 +107,7 @@
     s2.on('touchstart', e => {
       console.log(111)
     })
-
-// const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-// const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
-// ;(async function(){
-//   const paper = sprite2.Paper2D('#paper', 600, 400)
-//   paper.setResolution(1200, 800) // 设置 Paper 的实际分辨率
-  
-//   await paper.preload(
-//     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-//   )  
-  
-//   //const bglayer = paper.layer('bg'),  // 背景层
-//   const fglayer = paper.layer('fg')   // 前景层
-
-//   const bird = new sprite2.Sprite('bird1.png') 
-
-//   bird.attr({
-//     pos: [100, 100],
-//     transform: {
-//       rotate: 30
-//     }
-//   })
-
-//   fglayer.appendChild(bird)
-
-// })()
-
+  })()
   </script>
 </body>
 </html>
