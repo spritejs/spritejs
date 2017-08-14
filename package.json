@@ -13,13 +13,12 @@
     "deploy": "rm -rf dist/* && ./script/deploy.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "akira-cn",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
-    "sprite-animator": "^1.0.1",
-    "sprite-decorators": "^0.1.0",
-    "sprite-utils": "^0.2.1"
+    "sprite-animator": "^1.0.9",
+    "sprite-utils": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^0.21.0",

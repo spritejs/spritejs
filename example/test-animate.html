@@ -29,7 +29,7 @@
       pos: [100, 100],
       size: [50, 50],
       bgcolor: 'green',
-      opacity: 0.5,
+      //opacity: 0.5,
       transform: {
         translate: [30, 30],
         rotate: 45,
@@ -42,22 +42,41 @@
     const animation = s.animate(
     [{
       transform: {
-        rotate: 45
-      }
+        rotate: 45,
+      },
+      bgcolor: 'red',
+      borderRadius: 0,
     }, 
     {
       transform: {
-        rotate: 225
-      }
+        rotate: 135,
+      },
+      bgcolor: 'green',
+      borderRadius: 25,
+    },
+    {
+      transform: {
+        rotate: 135,
+      },
+      bgcolor: 'green',
+      borderRadius: 25,
+    },
+    {
+      transform: {
+        rotate: 225,
+      },
+      bgcolor: 'blue',
+      borderRadius: 0,
     }], 
     {
       duration: 2000,
-      delay: 1000,
+      delay: 5000,
     })
 
-
+    window.animation = animation
     await animation.ready
-
+    console.log('ready')
+    paper.layer().timeline.playbackRate = -1
     // s.on('click', function(evt){
     //   console.log(evt)
     // })
@@ -66,7 +85,7 @@
 
     s2.attr({
       anchor: [0.5, 0.5],
-      pos: [100, 100],
+      pos: [300, 100],
       size: [50, 50],
       bgcolor: 'red',
       border: [5, 'blue'],
@@ -82,6 +101,7 @@
     paper.layer().appendChild(s2)
 
     await animation.finished
+    console.log('finished')
 
     const s3 = new Sprite()
 
