@@ -1,5 +1,10 @@
 # sprite2 轻量级的 canvas 绘图库
 
+[![npm status](https://img.shields.io/npm/v/sprite2.svg)](https://www.npmjs.org/package/sprite2)
+[![build status](https://api.travis-ci.org/spritejs/sprite2.svg?branch=master)](https://travis-ci.org/spritejs/sprite2) 
+[![dependency status](https://david-dm.org/spritejs/sprite2.svg)](https://david-dm.org/spritejs/sprite2)
+[![coverage status](https://img.shields.io/coveralls/spritejs/sprite2.svg)](https://coveralls.io/github/spritejs/sprite2)
+
 像操作 DOM 元素一样操作 canvas 中的“精灵”
 
 ## 特性
