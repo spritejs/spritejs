@@ -2,12 +2,21 @@
 
 像操作 DOM 元素一样操作 canvas 中的“精灵”
 
+## 特性
+
+- 支持 attr 属性设置精灵样式
+- 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface
+) 精灵动画
+- 支持精灵的 canvas 滤镜
+- 支持精灵的 mouse 和 touch 事件
+- 优化的渲染性能
+
 ## Usage
 
 在浏览器中使用
 
 ```html
-<script src="https://s1.ssl.qhres.com/!3dfaee4b/sprite2-0.3.8.js"></script>
+<script src="https://s2.ssl.qhres.com/!39729fa5/sprite2-1.0.0.js"></script>
 ```
 
 [帮助文档](https://github.com/spritejs/sprite2/tree/master/docs)
@@ -22,12 +31,43 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   const paper = sprite2.Paper2D('#paper')
   paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
   
+  const cacheMap = new Map()
+  class Bird extends sprite2.Sprite {
+    constructor(){
+      super('bird1.png')
+    }
+    //共用缓存，提高性能
+    get cache() {
+      const key = JSON.stringify(this.textures) + this.attr('scale')
+      if(cacheMap.has(key)) {
+        return cacheMap.get(key)
+      }
+    }
+    set cache(context) {
+      if(context == null){
+        cacheMap.clear()
+        return
+      }
+      const key = JSON.stringify(this.textures) + this.attr('scale')
+
+      if(!cacheMap.has(key)) {
+        cacheMap.set(key, context)
+      }
+    }      
+  }
+
   await paper.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
   )  
   
   const bglayer = paper.layer('bg'),  // 背景层
-        fglayer = paper.layer('fg')   // 前景层
+        // 前景层
+        // 每次最多渲染 50 个 sprite，并且不代理事件，提升性能
+        fglayer = paper.layer('fg', {
+              handleEvent: false,
+              evaluateFPS: true,
+              renderMode: 'repaintAll',
+        })   
   
   const axisZero = [400, 400]
   const circle = new sprite2.Sprite()
@@ -66,19 +106,34 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     const flip = dist[0] < 0 ? -1 : 1
     const duration = 5 * distance + 100
 
-    const anim = new Animator(duration, function(p){
-      const pos = pointAdd(birdPoint, [p * dist[0], p * dist[1]])
-      bird.attr({
-        pos,
-        scale: [flip, 1]
-      })
+    bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
+    
+    bird.animate([
+      {textures: 'bird1.png'},
+      {textures: 'bird2.png'},
+      {textures: 'bird3.png'},
+    ], {
+      duration: 300,
+      direction: 'alternate',
+      iterations: Infinity,
     })
-    await anim.animate()
-    await sleep(500)
+    
+    const anim = bird.animate([
+      {pos: birdPoint},
+      {pos: randomPoint}
+    ], {
+      duration,
+      endDelay: 500,
+      fill: 'both'
+    })
+
+    await anim.finished
   }
-  
+
+  let birdCount = 0
   async function addBird(){
-    const bird = new sprite2.Sprite('bird1.png') 
+    spriteCount.innerHTML = ++birdCount
+    const bird = new Bird()
 
     bird.attr({
       anchor: [0.5, 0.5],
@@ -90,20 +145,24 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
     fglayer.appendChild(bird)
     
-    let idx = 0
-    setInterval(() => {
-      bird.textures = [`bird${++idx % 3 + 1}.png`]
-    }, 100)
-    
     //noprotect
     do{
       await randomAnimate(bird)
-    }while(1)
+    }while(1) 
   }
 
   addBird()
+
   circle.on('click', evt => {
     addBird()
   })
+
+  //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
+  //所以所有精灵不运动的时候 fps 也会降下来
+  setInterval(() => {
+    fps.innerHTML = fglayer.fps
+  }, 1000)
+  window.fglayer = fglayer
+  window.paper = paper
 })()
 ```

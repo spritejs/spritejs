@@ -543,13 +543,171 @@ s2.on('touchstart', e => {
 
 `mousedown、mouseup、mousemove、mouseenter、mouseleave、touchstart、touchend、touchmove`
 
-### transition 与 animation
+### 动画
 
-这一块目前还未实现，将来会实现
+sprite2 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface)，能够通过指定精灵的关键帧和 timing 来为单个精灵添加动画：
 
-现在可以使用[第三方动画库](https://github.com/akira-cn/animator.js)来做简单的动画
+```js
+block1.animate([{
+  rotate: 0,
+  borderRadius: 0,
+  bgcolor: 'red',
+},{
+  rotate: 180,
+  borderRadius: 50,
+  bgcolor: 'green',
+},{
+  rotate: 360,
+  borderRadius: 0,
+  bgcolor: 'blue',
+}], {
+  duration: 5000,
+  direction: 'alternate',
+  iterations: Infinity,
+})
+```
 
-[例子](https://code.h5jun.com/gus)
+#### layer.timeline
+
+可以通过改变 layer.timeline 中的属性调整动画进程，最常用的是通过设置 layer.timeline.playbackRate 来控制动画的播放速度，如果要让动画暂停，可以将 layer.timeline.playbackRate 设置为 0。
+
+**注意** layer.timeline 会影响到 layer 上的所有动画。
+
+[例子](https://code.h5jun.com/page)
+
+```js
+(async function(){
+  const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+  const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+  
+  const paper = sprite2.Paper2D('#container', 600, 400)
+  const Sprite = sprite2.Sprite,
+        Label = sprite2.Label
+
+  let res = await paper.preload(
+    [birdsRes, birdsJsonUrl],
+  )
+
+  console.log(res)
+
+  const layer = paper.layer('fg', {
+                  handleEvent: false,
+                  evaluateFPS: true,
+                })
+
+  function randomBirds(i){
+    const s = new Sprite('bird1.png')
+    const pos = [100, 50 + 30 * i]
+    const duration = Math.round(200 + 300 * Math.random())
+
+    s.attr({
+      anchor: [0.5, 0.5],
+      pos,
+      size: [43, 30],
+      zIndex: 200,
+    })  
+
+    layer.appendChild(s)
+
+    s.animate([
+      {textures: 'bird1.png'},
+      {textures: 'bird2.png'},
+      {textures: 'bird3.png'},
+    ], {
+      duration,
+      direction: 'alternate',
+      iterations: Infinity,
+    })
+
+    s.animate([
+      {x: 100},
+      {x: 500},
+      {x: 100},
+    ], {
+      duration: duration * 10,
+      iterations: Infinity,
+      easing: 'ease-in-out',        
+    })
+
+    s.animate([
+      {scale: [1, 1]},
+      {scale: [-1, 1]},
+      {scale: [1, 1]},
+    ], {
+      duration: duration * 10,
+      iterations: Infinity,
+      easing: 'step-end',        
+    })
+
+    return s    
+  }
+
+  let block1 = new Sprite({
+    attr: {
+      anchor: [0.5, 0.5],
+      pos: [300, 200],
+      size: [100, 100],
+      bgcolor: 'red',
+    }
+  })
+
+  layer.appendChild(block1)
+
+  block1.animate([{
+    rotate: 0,
+    borderRadius: 0,
+    bgcolor: 'red',
+  },{
+    rotate: 180,
+    borderRadius: 50,
+    bgcolor: 'green',
+  },{
+    rotate: 360,
+    borderRadius: 0,
+    bgcolor: 'blue',
+  }], {
+    duration: 5000,
+    direction: 'alternate',
+    iterations: Infinity,
+  })
+
+  for(let i = 0; i < 10; i++){
+    randomBirds(i)
+  }
+
+  let pausedPlaybackRate;
+
+  speedUpBtn.onclick = function(){
+    layer.timeline.playbackRate += 0.2
+    rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
+  }
+  
+  slowDownBtn.onclick = function(){
+    layer.timeline.playbackRate -= 0.2
+    rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
+  }
+
+  pauseBtn.onclick = function(){
+    if(pausedPlaybackRate == null){
+      pausedPlaybackRate = layer.timeline.playbackRate
+      layer.timeline.playbackRate = 0
+      rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
+    }
+  }
+
+  resumeBtn.onclick = function(){
+    if(pausedPlaybackRate != null){
+      layer.timeline.playbackRate = pausedPlaybackRate
+      pausedPlaybackRate = null
+      rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
+    }
+  }
+
+  setInterval(() => {
+    fps.innerHTML = layer.fps
+  }, 1000)
+})()
+```
 
 ### 性能
 
