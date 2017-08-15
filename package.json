@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "ava",
+    "test": "nyc ava",
     "lint": "eslint 'lib/**/*.js' --fix",
     "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
     "deploy": "rm -rf dist/* && ./script/deploy.js"
@@ -17,8 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
-    "sprite-animator": "^1.0.9",
-    "sprite-utils": "^1.0.0"
+    "deep-equal": "^1.0.1",
+    "sprite-animator": "^1.0.9"
   },
   "devDependencies": {
     "ava": "^0.21.0",
@@ -29,11 +29,13 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.3.2",
+    "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-vue": "^2.1.0",
     "http-server": "^0.9.0",
+    "nyc": "^11.1.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
