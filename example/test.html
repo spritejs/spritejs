@@ -14,8 +14,9 @@
   <div id="paper"></div>
   <script src="/js/index.js"></script>
   <script>
-    const paper = sprite2.Paper2D('#paper', 600, 400);
-    const Sprite = sprite2.Sprite;
+    const paper = sprite2.Paper2D('#paper', 600, 400)
+    const Sprite = sprite2.Sprite,
+          Path = sprite2.Path
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
@@ -42,7 +43,7 @@
     //   console.log(evt)
     // })
 
-    const s2 = new Sprite();
+    const s2 = new Sprite()
 
     s2.attr({
       anchor: [0.5, 0.5],
@@ -59,7 +60,7 @@
       }
     })
 
-    const s3 = new Sprite();
+    const s3 = new Sprite()
 
     s3.attr({
       anchor: [0.5, 0.5],
@@ -87,32 +88,18 @@
       console.log(111)
     })
 
-// const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-// const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+    const s4 = new Path()
 
-// ;(async function(){
-//   const paper = sprite2.Paper2D('#paper', 600, 400)
-//   paper.setResolution(1200, 800) // 设置 Paper 的实际分辨率
-  
-//   await paper.preload(
-//     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-//   )  
-  
-//   //const bglayer = paper.layer('bg'),  // 背景层
-//   const fglayer = paper.layer('fg')   // 前景层
-
-//   const bird = new sprite2.Sprite('bird1.png') 
-
-//   bird.attr({
-//     pos: [100, 100],
-//     transform: {
-//       rotate: 30
-//     }
-//   })
-
-//   fglayer.appendChild(bird)
-
-// })()
+    s4.attr({
+      pos: [300, 100],
+      //size: [200, 200],
+      bgcolor: '#ddd',
+      color: 'red',
+      //renderMode: 'fill',
+      lineWidth: 6,
+      d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+    })
+    paper.layer().append(s4)
 
   </script>
 </body>
