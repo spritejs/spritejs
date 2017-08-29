@@ -26,18 +26,30 @@
 
     s.attr({
       anchor: [0.5, 0.5],
-      pos: [100, 100],
+      pos: [300, 100],
       size: [50, 50],
       bgcolor: 'green',
       opacity: 0.5,
-      transform: {
-        translate: [30, 30],
-        rotate: 45,
-      },
-      zIndex: 200
+      //transform: {
+        //translate: [30, 30],
+        //rotate: 45,
+      //},
+      offsetPath: 'M10,80 q100,120 120,20 q140,-50 160,0',
+      //offsetDistance: 0.5,
+      zIndex: 200,
     })
 
     paper.layer().appendChild(s)
+
+    s.animate([
+      {offsetDistance: 0},
+      {offsetDistance: 1}
+    ], {
+      duration: 3000,
+      direction: 'alternate',
+      iterations: Infinity,
+    })
+
 
     // s.on('click', function(evt){
     //   console.log(evt)
@@ -96,7 +108,7 @@
       bgcolor: '#ddd',
       color: 'red',
       //renderMode: 'fill',
-      lineWidth: 6,
+      //lineWidth: 6,
       d: 'M10,80 q100,120 120,20 q140,-50 160,0',
     })
     paper.layer().append(s4)
