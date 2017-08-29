@@ -739,3 +739,127 @@ class Bird extends sprite2.Sprite {
   }      
 }
 ```
+
+## 1.1 版本更新
+
+### 新增 Path 对象用来绘制 SVG Path
+
+Path 对象继承 BaseSprite，可以设置 d、lineWidth、color、renderMode 属性
+
+[例子](https://code.h5jun.com/nalu)
+
+```js
+const paper = sprite2.Paper2D('#paper', 600, 400)
+const Sprite = sprite2.Sprite,
+      Path = sprite2.Path
+
+
+const path = new Path()
+
+path.attr({
+  pos: [10, 50],
+  color: 'red',
+  d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+})
+paper.layer().append(path)
+
+renderMode.onchange = function(e){
+  path.attr('renderMode', e.target.value)
+}
+
+lineWidth.onchange = function(e) {
+  let width = e.target.value | 0
+
+  if(width) {
+    path.attr('lineWidth', width)
+  }
+}
+
+pickColor.onchange = function(e) {
+  path.attr('color', e.target.value)
+}
+
+dPath.onchange = function(e) {
+  path.attr('d', e.target.value)
+}
+```
+
+### 新增 offsetPath、offsetDistance、offsetRotate 属性用来实现路径动画
+
+符合 [offset-path](https://developer.mozilla.org/en-US/docs/Web/CSS/offset-path) API
+
+[例子](https://code.h5jun.com/zozux)
+
+```js
+const paper = sprite2.Paper2D('#paper', 600, 400)
+const Sprite = sprite2.Sprite,
+      Path = sprite2.Path
+
+;(async function(){
+  const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json',
+        birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'  
+  
+  const path = new Path(),
+        d = 'M10,80 q100,120 120,20 q140,-50 160,0'
+  
+  path.attr({
+    pos: [10, 50],
+    color: 'red',
+    d,
+  })
+  paper.layer().append(path)
+
+  await paper.preload(
+    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+  )
+
+  const s = new Sprite({
+    attributeChangedCallback(...args) {
+      //console.log(args)
+    }
+  })
+
+  s.attr({
+    anchor: [0.5, 0.5],
+    pos: [10, 50],
+    transform: {
+      scale: [0.5, 0.5],
+    },
+    offsetPath: d,
+    zIndex: 200,
+  })
+
+  paper.layer().appendChild(s)
+
+  s.textures = ['bird1.png']
+
+  s.animate([
+    {offsetDistance: 0},
+    {offsetDistance: 1}
+  ], {
+    duration: 3000,
+    direction: 'alternate',
+    iterations: Infinity,
+  })
+
+  s.animate([
+    {scale: [.5, .5], offsetRotate: 'auto'},
+    {scale: [.5, -.5], offsetRotate: 'reverse'},
+    {scale: [.5, .5], offsetRotate: 'auto'},
+  ], {
+    duration: 6000,
+    iterations: Infinity,
+    easing: 'step-end',
+  })
+
+  s.animate([
+    {textures: 'bird1.png'},
+    {textures: 'bird2.png'},
+    {textures: 'bird3.png'},
+  ], {
+    duration: 300,
+    direction: 'alternate',
+    iterations: Infinity,
+  })  
+})()
+```
