@@ -20,7 +20,8 @@
   ;(async function(){
     const paper = sprite2.Paper2D('#paper', 600, 400)
     const Sprite = sprite2.Sprite,
-          Path = sprite2.Path
+          Path = sprite2.Path,
+          Label = sprite2.Label
     
     await paper.preload(
       [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
@@ -82,7 +83,38 @@
       iterations: Infinity,
     })
 
-    // s.on('click', function(evt){
+    window.s = s;
+    //paper.removeChild(s);
+
+    // console.log('box', s3.renderBox)
+
+    s.on('touchstart', e => {
+      console.log('in origin box', e.offsetX, e.offsetY);
+      e.stopDispatch()
+    })
+
+    // const s1 = new Sprite({
+    //   attributeChangedCallback(...args) {
+    //     //console.log(args)
+    //   }
+    // })
+
+    // s1.attr({
+    //   anchor: [0.5, 0.5],
+    //   pos: [100, 100],
+    //   size: [50, 50],
+    //   bgcolor: 'green',
+    //   opacity: 0.5,
+    //   transform: {
+    //     translate: [30, 30],
+    //     rotate: 45,
+    //   },
+    //   zIndex: 201,
+    // })
+
+    // paper.layer().appendChild(s1)
+
+    // s1.on('click', function(evt){
     //   console.log(evt)
     // })
 
@@ -99,8 +131,30 @@
       transform: {
         //skew: [30, 0]
         translate: [30, 30],
-        rotate: 90
-      }
+        //rotate: 90
+      },
+      linearGradients: {
+        bgcolor: {
+          direction: 135,
+          colors: [{
+            offset: 0,
+            color: 'red',
+          }, {
+            offset: 1,
+            color: 'green',
+          }]
+        },
+        border: {
+          direction: 135,
+          colors: [{
+            offset: 0,
+            color: '#37c',
+          }, {
+            offset: 1,
+            color: '#c73',
+          }]
+        },
+      },
     })
 
     const s3 = new Sprite()
@@ -116,16 +170,6 @@
 
 
     paper.layer().append(s2, s3);
-
-    window.s = s;
-    //paper.removeChild(s);
-
-    // console.log('box', s3.renderBox)
-
-    s.on('touchstart', e => {
-      console.log('in origin box', e.offsetX, e.offsetY);
-      e.stopDispatch()
-    })
 
     s2.on('touchstart', e => {
       console.log(111)
@@ -143,6 +187,31 @@
       d: 'M10,80 q100,120 120,20 q140,-50 160,0',
     })
     paper.layer().append(s4)
+
+
+    const label = new Label('Hello World!\n你好，世界！')
+    
+    label.attr({
+      pos: [200, 100],
+      zIndex: 1000,
+      font: '36px Arial',
+      border: [10, 'blue'],
+      linearGradients: {
+        text: {
+          direction: 135,
+          colors: [{
+            offset: 0,
+            color: 'red',
+          }, {
+            offset: 1,
+            color: 'green',
+          }]
+        },
+      }      
+    })
+
+    paper.layer().append(label)
+
   })()
   </script>
 </body>
