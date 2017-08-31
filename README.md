@@ -26,16 +26,15 @@
 
 ## 快速上手
 
-- [使用手册](https://github.com/spritejs/sprite2/tree/master/docs)
-	- [整体结构](docs#整体结构)
-	- [paper & layers](docs#快速上手)
-	- [Sprite](docs#sprite-类结构)
-	- [事件模型](docs#事件机制)
-	- [性能](docs#性能)
-	- [1.1 更新](docs#11-版本更新)
-	- [1.2 更新](docs#12-版本更新)
+- [整体结构](docs#整体结构)
+- [paper & layers](docs#快速上手)
+- [Sprite](docs#sprite-类结构)
+- [事件模型](docs#事件机制)
+- [性能](docs#性能)
+- [1.1 更新](docs#11-版本更新)
+- [1.2 更新](docs#12-版本更新)
 	
-## 实例
+## 示例
 
 [Demo](https://code.h5jun.com/gus)
 
