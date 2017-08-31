@@ -397,7 +397,46 @@ paper.layer().appendChild(box1)
 
 #### 滤镜 filter
 
-texture 未来会支持 filter 属性，可以对图形进行一些变换，目前还未实现
+支持 blur、brightness、brightness、dropShadow、grayscale、hueRotate、invert、opacity、saturate、sepia 等常用滤镜。
+
+[例子](https://code.h5jun.com/wisa)
+
+```js
+paper.setResolution(800, 600)
+
+const box1 = new Sprite()
+box1.attr({
+  anchor: [0.5, 0.5],
+  pos: [400, 300],
+  size: [212, 188],
+  border: [10, 'red'],
+  borderRadius: 25,
+  bgcolor: '#7fc',
+  padding: 10
+})
+
+box1.textures = [{
+  src: birdsRes,
+  srcRect: [2, 64, 86, 60],
+  rect: [64, 64, 86, 60],
+  filter: {
+    dropShadow: [2, 2, 10, 'black'],
+  }    
+},{
+  src: birdsRes,
+  srcRect: [2, 2, 86, 60],
+  rect: [2, 2, 86, 60],
+  filter: {
+    opacity: 0.5,
+  }    
+},{
+  src: birdsRes,
+  srcRect: [2, 126, 86, 60],
+  rect: [126, 126, 86, 60] ,
+}]
+
+paper.layer().appendChild(box1)
+```
 
 #### Label
 
@@ -861,5 +900,92 @@ const Sprite = sprite2.Sprite,
     direction: 'alternate',
     iterations: Infinity,
   })  
+})()
+```
+
+## 1.2 版本更新
+
+支持 linearGradients 渐变
+
+[例子](https://code.h5jun.com/vik)
+
+```js
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+;(async function(){
+
+const paper = sprite2.Paper2D('#paper', 600, 400)
+const Sprite = sprite2.Sprite,
+      Path = sprite2.Path,
+      Label = sprite2.Label
+    
+await paper.preload(
+  [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+)  
+
+const s2 = new Sprite()
+
+s2.attr({
+  anchor: [0.5, 0.5],
+  pos: [100, 100],
+  size: [50, 50],
+  bgcolor: 'red',
+  border: [5, 'blue'],
+  opacity: 1,
+  zIndex: 101,
+  transform: {
+    //skew: [30, 0]
+    translate: [30, 30],
+    //rotate: 90
+  },
+  linearGradients: {
+    bgcolor: {
+      direction: 135,
+      colors: [{
+        offset: 0,
+        color: 'red',
+      }, {
+        offset: 1,
+        color: 'green',
+      }]
+    },
+    border: {
+      direction: 135,
+      colors: [{
+        offset: 0,
+        color: '#37c',
+      }, {
+        offset: 1,
+        color: '#c73',
+      }]
+    },
+  },
+})
+
+paper.layer().append(s2);
+
+const label = new Label('Hello World!\n你好，世界！')
+    
+label.attr({
+  pos: [200, 100],
+  zIndex: 1000,
+  font: '36px Arial',
+  linearGradients: {
+    text: {
+      direction: 135,
+      colors: [{
+        offset: 0,
+        color: 'red',
+      }, {
+        offset: 1,
+        color: 'green',
+      }]
+    },
+  }      
+})
+
+paper.layer().append(label)
+
 })()
 ```

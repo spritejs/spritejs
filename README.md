@@ -21,7 +21,7 @@
 在浏览器中使用
 
 ```html
-<script src="https://s0.ssl.qhres.com/!68337249/sprite2-1.1.0.js"></script>
+<script src="https://s3.ssl.qhres.com/!78ffd5d7/sprite2-1.2.0.js"></script>
 ```
 
 [帮助文档](https://github.com/spritejs/sprite2/tree/master/docs)
