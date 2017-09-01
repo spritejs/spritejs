@@ -1,6 +1,6 @@
 {
   "name": "sprite2",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Create a clean & powerful JavaScript developing environment, with ES6+ support.",
   "main": "lib/index.js",
   "directories": {
