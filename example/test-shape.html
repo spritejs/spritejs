@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    position: relative;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <script src="/js/index.js"></script>
+  <script>
+  ;(async function(){
+    const paper = sprite2.Paper2D('#paper', 600, 400)
+    const Sprite = sprite2.Sprite,
+          Path = sprite2.Path
+
+    const paths = [
+      `M93.6,27.1C87.6,34.2,78,39.8,68.4,39c-1.2-9.6,3.5-19.8,9-26.1c6-7.3,16.5-12.5,25-12.9
+        C103.4,10,99.5,19.8,93.6,27.1 M102.3,40.9c-13.9-0.8-25.8,7.9-32.4,7.9c-6.7,0-16.8-7.5-27.8-7.3c-14.3,0.2-27.6,8.3-34.9,21.2
+        c-15,25.8-3.9,64,10.6,85c7.1,10.4,15.6,21.8,26.8,21.4c10.6-0.4,14.8-6.9,27.6-6.9c12.9,0,16.6,6.9,27.8,6.7
+        c11.6-0.2,18.9-10.4,26-20.8c8.1-11.8,11.4-23.3,11.6-23.9c-0.2-0.2-22.4-8.7-22.6-34.3c-0.2-21.4,17.5-31.6,18.3-32.2
+        C123.3,42.9,107.7,41.3,102.3,40.9 z`,
+      'M48,5L42.38,18.26L28,19.48L38.92,28.94L35.64,43L48,35.54L48,35.54L60.36,43L57.08,28.94L68,19.48L53.62,18.26Z',
+      'M 40 40 Q 60 80 80 40T 120 40 T 160 40 z',
+      'M32,0C14.4,0,0,14.4,0,32s14.3,32,32,32 s32-14.3,32-32S49.7,0,32,0z',
+    ]
+
+    const s4 = new Path()
+
+    s4.attr({
+      pos: [300, 100],
+      //size: [200, 200],
+      //bgcolor: '#ddd',
+      color: 'red',
+      //renderMode: 'fill',
+      //lineWidth: 6,
+      d: paths[0],
+    })
+    paper.layer().append(s4)
+
+    s4.animate([
+      {d: paths[0]},
+      {d: paths[1]},
+      {d: paths[2]},
+      {d: paths[3]},
+    ], 5000)
+    
+    s4.attr('d', paths[1])
+    window.s4 = s4
+    window.paths = paths
+  })()
+  </script>
+</body>
+</html>
