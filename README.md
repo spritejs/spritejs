@@ -77,7 +77,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   
   const bglayer = paper.layer('bg'),  // 背景层
         // 前景层
-        // 每次最多渲染 50 个 sprite，并且不代理事件，提升性能
+        // 不代理事件，提升性能
         fglayer = paper.layer('fg', {
               handleEvent: false,
               evaluateFPS: true,
