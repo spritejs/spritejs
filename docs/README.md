@@ -1003,3 +1003,128 @@ paper.layer().append(label)
 
 })()
 ```
+
+## 1.3 版本更新
+
+支持 OBB 碰撞检测
+
+[例子](https://code.h5jun.com/cosu)
+
+```js
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+;(async function(){
+  const paper = sprite2.Paper2D('#paper', 600, 400)
+  const Sprite = sprite2.Sprite,
+        Path = sprite2.Path,
+        Label = sprite2.Label
+  
+  await paper.preload(
+    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+  )  
+
+  const s = new Sprite()
+
+  s.attr({
+    anchor: [0.5, 0.5],
+    pos: [50, 100],
+    transform: {
+      scale: [0.5, 0.5],
+    },
+    offsetPath: 'M10,80 q100,120 120,20 q140,-50 160,0',
+    zIndex: 200,
+  })
+
+  paper.layer().appendChild(s)
+
+  s.textures = ['bird1.png']
+
+  s.animate([
+    {offsetDistance: 0},
+    {offsetDistance: 1}
+  ], {
+    duration: 3000,
+    direction: 'alternate',
+    iterations: Infinity,
+  })
+
+  s.animate([
+    {scale: [.5, .5], offsetRotate: 'auto'},
+    {scale: [.5, -.5], offsetRotate: 'reverse'},
+    {scale: [.5, .5], offsetRotate: 'auto'},
+  ], {
+    duration: 6000,
+    iterations: Infinity,
+    easing: 'step-end',
+  })
+
+  s.animate([
+    {textures: 'bird1.png'},
+    {textures: 'bird2.png'},
+    {textures: 'bird3.png'},
+  ], {
+    duration: 300,
+    direction: 'alternate',
+    iterations: Infinity,
+  })
+  
+  s.on('touchstart', e => {
+    console.log('in origin box', e.offsetX, e.offsetY);
+    e.stopDispatch()
+  })
+
+  const s4 = new Path()
+
+  s4.attr({
+    pos: [50, 100],
+    bgcolor: '#ddd',
+    color: 'red',
+    d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+  })
+  paper.layer().append(s4)
+
+
+  const label = new Label('Hello World!\n你好，世界！')
+  
+  label.attr({
+    anchor: [0.5, 0.5],
+    pos: [200, 150],
+    zIndex: 1000,
+    font: '36px Arial',
+    border: [10, 'blue'],
+    opacity: 0.3,
+    linearGradients: {
+      text: {
+        direction: 135,
+        colors: [{
+          offset: 0,
+          color: 'red',
+        }, {
+          offset: 1,
+          color: 'green',
+        }]
+      },
+    }      
+  })
+
+  paper.layer().append(label)
+
+  label.animate([
+    {rotate: 0},
+    {rotate: 360}
+  ], {
+    duration: 10000,
+    iterations: Infinity,
+  })
+
+  s.on('update', evt => {
+    if(s.OBBCollision(label)){
+      label.attr('opacity', 0.7)
+    } else {
+      label.attr('opacity', 0.3)
+    }
+  })
+
+})()
+```
