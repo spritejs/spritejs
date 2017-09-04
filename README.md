@@ -181,3 +181,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   window.paper = paper
 })()
 ```
+
+## License
+
+[MIT](LICENSE)

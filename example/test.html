@@ -7,12 +7,18 @@
   <style>
   #paper {
     position: relative;
+    width: 600px;
+    height: 400px;
   }
   </style>
 </head>
 <body>
+  <button id="startRecord">start record</button>
+  <button id="stopRecord" disabled="disabled">stop record</button>
   <div id="paper"></div>
+  <img id="recordGif"/>
   <script src="/js/index.js"></script>
+  <script src="/js/gif.js"></script>
   <script>
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
@@ -88,10 +94,14 @@
 
     // console.log('box', s3.renderBox)
 
-    s.on('touchstart', e => {
-      console.log('in origin box', e.offsetX, e.offsetY);
-      e.stopDispatch()
-    })
+    // s.on('touchstart', e => {
+    //   console.log('in origin box', e.offsetX, e.offsetY);
+    //   e.stopDispatch()
+    // })
+
+    // paper.layer().on('update', e => {
+    //   console.log(e.currentTime)
+    // })
 
     // s.on('update', e => {
     //   console.log('update')
@@ -180,9 +190,9 @@
 
     window.s3 = s3
 
-    s2.on('touchstart', e => {
-      console.log(111)
-    })
+    // s2.on('touchstart', e => {
+    //   console.log(111)
+    // })
 
     const s4 = new Path()
 
@@ -239,6 +249,49 @@
       }
     })
 
+    let gif, layer = paper.layer(), timer
+    startRecord.onclick = function(){
+      startRecord.disabled = 'disabled'
+      stopRecord.disabled = ''
+
+      gif = new GIF({
+        workers: 1,
+        workerScript: '/js/gif.worker.js',
+        quality: 10,
+        background: '#fff',
+      })
+
+      gif.addFrame(layer.canvas, {delay: 1, copy: true})
+
+      //gif.addFrame(layer.canvas, {delay: 1000, copy: true})
+      //gif.addFrame(layer.canvas, {delay: 2000, copy: true})
+      //gif.addFrame(layer.canvas, {delay: 3000, copy: true})
+
+      //gif.addFrame(layer.canvas, {delay: 100})
+
+      timer = setInterval(() => {
+        gif.addFrame(layer.canvas, {delay: 1, copy: true})
+      }, 100)
+
+      gif.on('finished', function(blob) {
+        const blobObj = URL.createObjectURL(blob);
+        startRecord.disabled = ''
+        //console.log(blob)
+        recordGif.src = blobObj
+      });
+      
+      console.log(gif)
+      //console.log(gif.frames)
+      
+    }
+
+    stopRecord.onclick = function(){
+      stopRecord.disabled = 'disabled'
+      s3.attr('opacity', 0)
+      clearInterval(timer)
+      layer.off('update')
+      gif.render()
+    }
   })()
   </script>
 </body>
