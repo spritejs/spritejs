@@ -582,6 +582,20 @@ s2.on('touchstart', e => {
 
 `mousedown、mouseup、mousemove、mouseenter、mouseleave、touchstart、touchend、touchmove`
 
+#### 特殊事件: update
+
+任何一个 sprite 如果被引擎渲染一次，就会触发一次 update 事件，事件参数为：
+
+```
+{
+  target,   //触发事件的 sprite
+  context,  //render 时的 context
+  renderBox, //当前 render 时的 box
+  lastRenderBox,  //前一次 render 时的 box
+}
+
+```
+
 ### 动画
 
 sprite2 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface)，能够通过指定精灵的关键帧和 timing 来为单个精灵添加动画：

@@ -93,6 +93,10 @@
       e.stopDispatch()
     })
 
+    // s.on('update', e => {
+    //   console.log('update')
+    // })
+
     // const s1 = new Sprite({
     //   attributeChangedCallback(...args) {
     //     //console.log(args)
@@ -129,9 +133,9 @@
       opacity: 1,
       zIndex: 101,
       transform: {
-        //skew: [30, 0]
+        //skew: [30, 0],
         translate: [30, 30],
-        //rotate: 90
+        rotate: 45,
       },
       linearGradients: {
         bgcolor: {
@@ -157,19 +161,24 @@
       },
     })
 
+    window.s2 = s2
+
     const s3 = new Sprite()
 
     s3.attr({
       anchor: [0.5, 0.5],
-      pos: [200, 200],
+      pos: [130, 130],
       size: [50, 50],
       bgcolor: 'red',
       border: [15, 'blue'],
       opacity: 0.5,
+      zIndex: 500,
     })
 
 
     paper.layer().append(s2, s3);
+
+    window.s3 = s3
 
     s2.on('touchstart', e => {
       console.log(111)
@@ -192,10 +201,12 @@
     const label = new Label('Hello World!\n你好，世界！')
     
     label.attr({
-      pos: [200, 100],
+      anchor: [0.5, 0.5],
+      pos: [300, 150],
       zIndex: 1000,
       font: '36px Arial',
       border: [10, 'blue'],
+      opacity: 0.3,
       linearGradients: {
         text: {
           direction: 135,
@@ -211,6 +222,22 @@
     })
 
     paper.layer().append(label)
+
+    label.animate([
+      {rotate: 0},
+      {rotate: 360}
+    ], {
+      duration: 10000,
+      iterations: Infinity,
+    })
+
+    s.on('update', evt => {
+      if(s.OBBCollision(label)){
+        label.attr('opacity', 0.7)
+      } else {
+        label.attr('opacity', 0.3)
+      }
+    })
 
   })()
   </script>
