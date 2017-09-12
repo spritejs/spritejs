@@ -21,7 +21,7 @@
 在浏览器中使用
 
 ```html
-<script src="https://s0.ssl.qhres.com/!44638369/spritejs-1.3.0.js"></script>
+<script src="https://s3.ssl.qhres.com/!6584201e/spritejs-1.3.1.js"></script>
 ```
 
 ## 快速上手
