@@ -21,10 +21,10 @@
   <script>
     (async function(){
       const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-      const paper = sprite2.Paper2D('#container')
+      const paper = spritejs.Paper2D('#container')
       paper.setResolution(400, 400)
       
-      const sprite = new sprite2.Sprite(imgUrl)
+      const sprite = new spritejs.Sprite(imgUrl)
       sprite.attr({
         bgcolor: '#fff',
         //anchor: [0.5, 0.5],

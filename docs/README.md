@@ -1,4 +1,4 @@
-# sprite2 轻量级的 canvas 绘图库
+# spritejs 轻量级的 canvas 绘图库
 
 像操作 DOM 元素一样操作 canvas 中的“精灵”
 
@@ -14,10 +14,10 @@ paper -> layer -> sprite -> texture
 
 ```js
 const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-const paper = sprite2.Paper2D('#container')
+const paper = spritejs.Paper2D('#container')
 paper.setResolution(400, 400)
 
-const sprite = new sprite2.Sprite(imgUrl)
+const sprite = new spritejs.Sprite(imgUrl)
 sprite.attr({
   bgcolor: '#fff',
   //anchor: [0.5, 0.5],
@@ -29,7 +29,7 @@ sprite.attr({
 paper.layer().appendChild(sprite)
 ```
 
-sprite2 使用非常简单，`sprite2.Paper2D(selector)` 在容器上创建一个 paper， paper 会自适应容器的宽高。通过 `paper.setResolution(width, height)` 创建指定分辨率的画布。
+spritejs 使用非常简单，`spritejs.Paper2D(selector)` 在容器上创建一个 paper， paper 会自适应容器的宽高。通过 `paper.setResolution(width, height)` 创建指定分辨率的画布。
 
 ### 设置分辨率
 
@@ -42,7 +42,7 @@ const container = document.querySelector('#container')
 container.style.width = 600
 container.style.height = 400
 
-const paper = sprite2.Paper2D(container)
+const paper = spritejs.Paper2D(container)
 paper.setResolution(1200, 800)
 ```
 
@@ -86,7 +86,7 @@ const foreground = paper.layer('foreground', {handleEvent: false})
 
 #### evaluateFPS
 
-boolean evaluteFPS ： 开启这个选项可以监控 layer 的 FPS 变化从而测试性能。不过注意的是，sprite2 的渲染机制和其他一些库不同，它并没有固定周期渲染，如果当前 layer 的 sprite 没有发生变化，sprite2 并不会刷新，此时测不出 FPS，如果 sprite 的刷新频率很低，那么此时的 FPS 数值也会很低，这个和性能无关。
+boolean evaluteFPS ： 开启这个选项可以监控 layer 的 FPS 变化从而测试性能。不过注意的是，spritejs 的渲染机制和其他一些库不同，它并没有固定周期渲染，如果当前 layer 的 sprite 没有发生变化，spritejs 并不会刷新，此时测不出 FPS，如果 sprite 的刷新频率很低，那么此时的 FPS 数值也会很低，这个和性能无关。
 
 ```js
 const foreground = paper.layer('foreground', {evaluateFPS: false})
@@ -131,11 +131,11 @@ sprite 很像 DOM 的 element，它有一个 attr 方法，可以设置各种属
 
 ![](https://s5.ssl.qhres.com/static/14c973eccde05f63.svg)
 
-目前 sprite2 提供两类基本 Sprite，一类是图形化的 Sprite，拥有 textures 结构，一类是 Label，用来设置字体。
+目前 spritejs 提供两类基本 Sprite，一类是图形化的 Sprite，拥有 textures 结构，一类是 Label，用来设置字体。
 
 #### Sprite 盒模型
 
-sprite 盒模型和 DOM 的类似，不同的是因为 sprite2 主要是以坐标定位为主，因此没有为 sprite 提供 margin 属性。
+sprite 盒模型和 DOM 的类似，不同的是因为 spritejs 主要是以坐标定位为主，因此没有为 sprite 提供 margin 属性。
 
 ![](https://s5.ssl.qhres.com/static/a8175ad8602ba8ee.svg)
 
@@ -145,15 +145,15 @@ innerbox 与 outerbox 之间的空隙是 padding
 
 **注意** 
 
-- sprite2 简化了 border 和 padding，目前只支持单一的数值，暂不支持 borderLeft、paddingTop 这种分别设定不同宽度，未来可能会提供支持。
-- sprite2 的 border 提供 colore 和宽度，暂不支持改变线条样式，统一为实现，未来可能会提供其他线条支持
-- sprite2 的 border 支持 borderRadius，但是也同样不支持分别设定不同的 x、y 方向的 radius，只支持统一的单一值，另外 borderRadius 不支持百分比，未来可能会提供支持
+- spritejs 简化了 border 和 padding，目前只支持单一的数值，暂不支持 borderLeft、paddingTop 这种分别设定不同宽度，未来可能会提供支持。
+- spritejs 的 border 提供 colore 和宽度，暂不支持改变线条样式，统一为实现，未来可能会提供其他线条支持
+- spritejs 的 border 支持 borderRadius，但是也同样不支持分别设定不同的 x、y 方向的 radius，只支持统一的单一值，另外 borderRadius 不支持百分比，未来可能会提供支持
 
 [例子](https://code.h5jun.com/legi)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Sprite = sprite2.Sprite
+const paper = spritejs.Paper2D('#container')
+const Sprite = spritejs.Sprite
 
 paper.setResolution(800, 600)
 
@@ -171,7 +171,7 @@ paper.layer().appendChild(box)
 
 #### 定位
 
-上面的例子可以看到，sprite2 提供 pos、 size 属性用来定义 sprite **相对于 layer** 的坐标位置和大小。另外 sprite 有一个 anchor 属性，两个值分别定义 x、y 轴上元素参考点的相对位置，默认是 [0, 0]，表示元素的左上角。上面设置为 [0.5, 0.5] 表示参考点位于元素的中心。sprite 在 layer 上的位置 pos 实际上是参考点在 layer 上的相对坐标。另外对元素做 transform 的时候，也是以参考点为中心。 
+上面的例子可以看到，spritejs 提供 pos、 size 属性用来定义 sprite **相对于 layer** 的坐标位置和大小。另外 sprite 有一个 anchor 属性，两个值分别定义 x、y 轴上元素参考点的相对位置，默认是 [0, 0]，表示元素的左上角。上面设置为 [0.5, 0.5] 表示参考点位于元素的中心。sprite 在 layer 上的位置 pos 实际上是参考点在 layer 上的相对坐标。另外对元素做 transform 的时候，也是以参考点为中心。 
 
 #### transform
 
@@ -180,8 +180,8 @@ sprite 提供 transform 进行形状变换，支持 rotate、scale、translate�
 [例子](https://code.h5jun.com/fejo)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Sprite = sprite2.Sprite
+const paper = spritejs.Paper2D('#container')
+const Sprite = spritejs.Sprite
 
 paper.setResolution(800, 600)
 
@@ -243,8 +243,8 @@ sprite 支持背景色，背景色支持所有的 css 颜色格式，包括 rgba
 [例子](https://code.h5jun.com/juri)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Sprite = sprite2.Sprite
+const paper = spritejs.Paper2D('#container')
+const Sprite = spritejs.Sprite
 
 paper.setResolution(800, 600)
 
@@ -316,8 +316,8 @@ sprite 可以添加多个 texture，如果设置了 size，默认 texture 的大
 [例子](https://code.h5jun.com/kev)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Sprite = sprite2.Sprite
+const paper = spritejs.Paper2D('#container')
+const Sprite = spritejs.Sprite
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 paper.setResolution(800, 600)
@@ -352,13 +352,13 @@ paper.layer().appendChild(box1)
 
 #### spriteFrames
 
-sprite2 支持小图片拼合，类似于 css 的雪碧图，可以使用 [Texture Packer](https://www.codeandweb.com/texturepacker/download) 来生成合并的图片并导出 json 文件，可以用 paper.preload 直接加载合并后的图片和 json 文件，然后直接使用 json 文件中定义好的资源 ID 即可。 
+spritejs 支持小图片拼合，类似于 css 的雪碧图，可以使用 [Texture Packer](https://www.codeandweb.com/texturepacker/download) 来生成合并的图片并导出 json 文件，可以用 paper.preload 直接加载合并后的图片和 json 文件，然后直接使用 json 文件中定义好的资源 ID 即可。 
 
 [例子](https://code.h5jun.com/jut)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Sprite = sprite2.Sprite
+const paper = spritejs.Paper2D('#container')
+const Sprite = spritejs.Sprite
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
@@ -457,8 +457,8 @@ label.attr({
 [例子](https://code.h5jun.com/god)
 
 ```js
-const paper = sprite2.Paper2D('#container')
-const Label = sprite2.Label
+const paper = spritejs.Paper2D('#container')
+const Label = spritejs.Label
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 paper.setResolution(800, 600)
@@ -478,7 +478,7 @@ paper.layer().appendChild(box1)
 
 ### 事件机制
 
-sprite2 支持类似 DOM 的事件模型，与 DOM 不同的是，sprite 没有事件冒泡，默认也不会遮盖事件，事件会依照 sprite 的 zIndex、zOrder 依次触发，最后会触发 layer 的事件。
+spritejs 支持类似 DOM 的事件模型，与 DOM 不同的是，sprite 没有事件冒泡，默认也不会遮盖事件，事件会依照 sprite 的 zIndex、zOrder 依次触发，最后会触发 layer 的事件。
 
 事件注册方法是 on，注销方法是 off，事件参数中包含 target 表示当前触发事件的对象，layerX、layerY 表示鼠标或触摸事件触发时相对于 layer 左上角的位置，offsetX、offsetY 表示鼠标或触摸事件触发时相对于当前元素 anchor 的坐标位置。如果包含 texture，还有一个 targetTextures 数组，包含当前位置命中的所有 textures。
 
@@ -490,10 +490,10 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 
 ;(async function(){
-  const paper = sprite2.Paper2D('#container', 600, 400)
+  const paper = spritejs.Paper2D('#container', 600, 400)
 
-  const Sprite = sprite2.Sprite,
-        Label = sprite2.Label
+  const Sprite = spritejs.Sprite,
+        Label = spritejs.Label
 
   let res = await paper.preload([birdsRes, 
                                  birdsJsonUrl])
@@ -598,7 +598,7 @@ s2.on('touchstart', e => {
 
 ### 动画
 
-sprite2 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface)，能够通过指定精灵的关键帧和 timing 来为单个精灵添加动画：
+spritejs 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface)，能够通过指定精灵的关键帧和 timing 来为单个精灵添加动画：
 
 ```js
 block1.animate([{
@@ -633,9 +633,9 @@ block1.animate([{
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   
-  const paper = sprite2.Paper2D('#container', 600, 400)
-  const Sprite = sprite2.Sprite,
-        Label = sprite2.Label
+  const paper = spritejs.Paper2D('#container', 600, 400)
+  const Sprite = spritejs.Sprite,
+        Label = spritejs.Label
 
   let res = await paper.preload(
     [birdsRes, birdsJsonUrl],
@@ -764,11 +764,11 @@ block1.animate([{
 
 ### 性能
 
-sprite2 默认对 sprite 采取缓存，只要没有 bgcolor、border 等基本属性的变化，sprite 渲染一次之后就会被缓存，下次直接从缓存读取，不需要重绘，从而提升效率。另外开发者可以继承 Sprite 类实现自己的缓存策略，比如前面动画的例子就使用了：
+spritejs 默认对 sprite 采取缓存，只要没有 bgcolor、border 等基本属性的变化，sprite 渲染一次之后就会被缓存，下次直接从缓存读取，不需要重绘，从而提升效率。另外开发者可以继承 Sprite 类实现自己的缓存策略，比如前面动画的例子就使用了：
 
 ```js
 const cacheMap = new Map()
-class Bird extends sprite2.Sprite {
+class Bird extends spritejs.Sprite {
   constructor(){
     super('bird1.png')
   }
@@ -802,9 +802,9 @@ Path 对象继承 BaseSprite，可以设置 d、lineWidth、color、renderMode �
 [例子](https://code.h5jun.com/nalu)
 
 ```js
-const paper = sprite2.Paper2D('#paper', 600, 400)
-const Sprite = sprite2.Sprite,
-      Path = sprite2.Path
+const paper = spritejs.Paper2D('#paper', 600, 400)
+const Sprite = spritejs.Sprite,
+      Path = spritejs.Path
 
 
 const path = new Path()
@@ -844,9 +844,9 @@ dPath.onchange = function(e) {
 [例子](https://code.h5jun.com/zozux)
 
 ```js
-const paper = sprite2.Paper2D('#paper', 600, 400)
-const Sprite = sprite2.Sprite,
-      Path = sprite2.Path
+const paper = spritejs.Paper2D('#paper', 600, 400)
+const Sprite = spritejs.Sprite,
+      Path = spritejs.Path
 
 ;(async function(){
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json',
@@ -929,10 +929,10 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
 
-const paper = sprite2.Paper2D('#paper', 600, 400)
-const Sprite = sprite2.Sprite,
-      Path = sprite2.Path,
-      Label = sprite2.Label
+const paper = spritejs.Paper2D('#paper', 600, 400)
+const Sprite = spritejs.Sprite,
+      Path = spritejs.Path,
+      Label = spritejs.Label
     
 await paper.preload(
   [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
@@ -1015,10 +1015,10 @@ const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
-  const paper = sprite2.Paper2D('#paper', 600, 400)
-  const Sprite = sprite2.Sprite,
-        Path = sprite2.Path,
-        Label = sprite2.Label
+  const paper = spritejs.Paper2D('#paper', 600, 400)
+  const Sprite = spritejs.Sprite,
+        Path = spritejs.Path,
+        Label = spritejs.Label
   
   await paper.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图

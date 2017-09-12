@@ -15,9 +15,9 @@
   <script src="/js/index.js"></script>
   <script>
   (async function(){
-    const paper = sprite2.Paper2D('#container', 600, 400)
-    const Sprite = sprite2.Sprite,
-          Label = sprite2.Label
+    const paper = spritejs.Paper2D('#container', 600, 400)
+    const Sprite = spritejs.Sprite,
+          Label = spritejs.Label
 
     let res = await paper.preload(
       ['images/tt2.png', 'images/tt2.json'],

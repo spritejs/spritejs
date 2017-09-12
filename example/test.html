@@ -15,6 +15,7 @@
 <body>
   <button id="startRecord">start record</button>
   <button id="stopRecord" disabled="disabled">stop record</button>
+  <div id="message"></div>
   <div id="paper"></div>
   <img id="recordGif"/>
   <script src="/js/index.js"></script>
@@ -24,10 +25,10 @@
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
   ;(async function(){
-    const paper = sprite2.Paper2D('#paper', 600, 400)
-    const Sprite = sprite2.Sprite,
-          Path = sprite2.Path,
-          Label = sprite2.Label
+    const paper = spritejs.Paper2D('#paper', 600, 400)
+    const Sprite = spritejs.Sprite,
+          Path = spritejs.Path,
+          Label = spritejs.Label
     
     await paper.preload(
       [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
@@ -255,7 +256,7 @@
       stopRecord.disabled = ''
 
       gif = new GIF({
-        workers: 1,
+        workers: 4,
         workerScript: '/js/gif.worker.js',
         quality: 10,
         background: '#fff',
@@ -274,13 +275,19 @@
       }, 100)
 
       gif.on('finished', function(blob) {
-        const blobObj = URL.createObjectURL(blob);
+        const url = URL.createObjectURL(blob);
         startRecord.disabled = ''
-        //console.log(blob)
-        recordGif.src = blobObj
+        //recordGif.src = url
+
+        const link = document.createElement('a')
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'snap.gif');
+        link.click()
+
+        message.innerHTML = ''
+        s3.attr('opacity', 0.5)
       });
       
-      console.log(gif)
       //console.log(gif.frames)
       
     }
@@ -291,6 +298,7 @@
       clearInterval(timer)
       layer.off('update')
       gif.render()
+      message.innerHTML = 'generating gif... please wait.'
     }
   })()
   </script>

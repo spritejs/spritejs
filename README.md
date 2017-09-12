@@ -1,9 +1,9 @@
-# sprite2 轻量级的 canvas 绘图库
+# spritejs 轻量级的 canvas 绘图库
 
-[![npm status](https://img.shields.io/npm/v/sprite2.svg)](https://www.npmjs.org/package/sprite2)
-[![build status](https://api.travis-ci.org/spritejs/sprite2.svg?branch=master)](https://travis-ci.org/spritejs/sprite2) 
-[![dependency status](https://david-dm.org/spritejs/sprite2.svg)](https://david-dm.org/spritejs/sprite2)
-[![coverage status](https://img.shields.io/coveralls/spritejs/sprite2.svg)](https://coveralls.io/github/spritejs/sprite2)
+[![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
+[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
+[![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
+[![coverage status](https://img.shields.io/coveralls/spritejs/spritejs.svg)](https://coveralls.io/github/spritejs/spritejs)
 
 像操作 DOM 元素一样操作 canvas 中的“精灵”
 
@@ -21,7 +21,7 @@
 在浏览器中使用
 
 ```html
-<script src="https://s4.ssl.qhres.com/!5037b002/sprite2-1.3.0.js"></script>
+<script src="https://s0.ssl.qhres.com/!44638369/spritejs-1.3.0.js"></script>
 ```
 
 ## 快速上手
@@ -43,11 +43,11 @@ const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
-  const paper = sprite2.Paper2D('#paper')
+  const paper = spritejs.Paper2D('#paper')
   paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
   
   const cacheMap = new Map()
-  class Bird extends sprite2.Sprite {
+  class Bird extends spritejs.Sprite {
     constructor(){
       super('bird1.png')
     }
@@ -85,7 +85,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
         })   
   
   const axisZero = [400, 400]
-  const circle = new sprite2.Sprite()
+  const circle = new spritejs.Sprite()
   
   circle.attr({
     anchor: [0.5, 0.5],

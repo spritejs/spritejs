@@ -34,10 +34,10 @@ module.exports = function (env = {}) {
   return {
     entry: './lib/index.js',
     output: {
-      filename: env.production ? `sprite2-${version}.js` : 'index.js',
+      filename: env.production ? `spritejs-${version}.js` : 'index.js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/js/',
-      library: 'sprite2',
+      library: 'spritejs',
       libraryTarget: 'umd'
     },
 
