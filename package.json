@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "1.3.1",
+  "version": "1.3.3",
   "description": "Create a clean & powerful JavaScript developing environment, with ES6+ support.",
   "main": "lib/index.js",
   "directories": {
@@ -18,7 +18,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "deep-equal": "^1.0.1",
-    "sprite-animator": "^1.0.9"
+    "sprite-animator": "^1.0.10"
   },
   "devDependencies": {
     "ava": "^0.21.0",

@@ -1,48 +1,48 @@
-# spritejs 轻量级的 canvas 绘图库
-
-[![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
-[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
-[![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
-[![coverage status](https://img.shields.io/coveralls/spritejs/spritejs.svg)](https://coveralls.io/github/spritejs/spritejs)
-
-像操作 DOM 元素一样操作 canvas 中的“精灵”
-
-## 特性
-
-- 支持 attr 属性设置精灵样式
-- 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface
-) 精灵动画
-- 支持精灵的 canvas 滤镜
-- 支持精灵的 mouse 和 touch 事件
-- 优化的渲染性能
-
-## Usage
-
-在浏览器中使用
-
-```html
-<script src="https://s4.ssl.qhres.com/!1e688bda/spritejs-1.3.3.js"></script>
-```
-
-## 快速上手
-
-- [整体结构](docs#整体结构)
-- [paper & layers](docs#快速上手)
-- [Sprite](docs#sprite-类结构)
-- [事件模型](docs#事件机制)
-- [性能](docs#性能)
-- [1.1 更新](docs#11-版本更新)
-- [1.2 更新](docs#12-版本更新)
-	
-## 示例
-
-[Demo](https://code.h5jun.com/gus)
-
-```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+    *{      
+      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
+      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */      
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */       
+      -webkit-user-select:none;
+    }  
+    html,body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      max-width: 500px;
+    }
+    #paper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 100%;
+      height: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
+  <div id="paper"></div>
+  
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <!--<script src="https://s2.ssl.qhres.com/!39729fa5/sprite2-1.0.0.js"></script>-->
+  <script src="/js/index.js"></script>
+  <script>
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
+  if(typeof sprite2 !== 'undefined'){
+    spritejs = sprite2
+  }
+
   const paper = spritejs.Paper2D('#paper')
   paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
   
@@ -122,7 +122,8 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     const duration = 5 * distance + 100
 
     bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
-    
+
+    //console.log(birdPoint, randomPoint)
     const anim = bird.animate([
       {pos: birdPoint},
       {pos: randomPoint}
@@ -150,18 +151,23 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
     fglayer.appendChild(bird)
 
-    bird.animate([
-      {textures: 'bird1.png'},
-      {textures: 'bird2.png'},
-      {textures: 'bird3.png'},
-      {textures: 'bird1.png'},
-    ], {
-      duration: 300,
-      direction: 'alternate',
-      iterations: Infinity,
-      easing: 'step-end',
-    })
-    
+    // bird.animate([
+    //   {textures: ['bird1.png']},
+    //   {textures: ['bird2.png']},
+    //   {textures: ['bird3.png']},
+    //   {textures: ['bird1.png']},
+    // ], {
+    //   duration: 100,
+    //   direction: 'alternate',
+    //   iterations: Infinity,
+    //   easing: 'step-end',
+    // })
+
+    let idx = 0
+    setInterval(() => {
+      bird.textures = [`bird${++idx % 3 + 1}.png`]
+    }, 100)
+
     //noprotect
     do{
       await randomAnimate(bird)
@@ -182,8 +188,6 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   window.fglayer = fglayer
   window.paper = paper
 })()
-```
-
-## License
-
-[MIT](LICENSE)
+  </script>
+</body>
+</html>

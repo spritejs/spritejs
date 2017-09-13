@@ -53,7 +53,7 @@
           fglayer = paper.layer('fg', {
                 handleEvent: false,
                 evaluateFPS: true,
-                renderMode: 'repaintDirty',
+                renderMode: 'repaintAll',
           })   
     
     const axisZero = [400, 400]
@@ -92,7 +92,7 @@
       const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
       const deg = Math.round(180 * Math.atan(dist[1] / dist[0]) / Math.PI)
       const flip = dist[0] < 0 ? -1 : 1
-      const duration = 5 * distance
+      const duration = 5 * distance + 100
 
       bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
 
