@@ -16,100 +16,33 @@
       <li class="header">SpriteJS</li>
       <li class="title"><a href="https://github.com/spritejs/spritejs/tree/master/docs">Docs</a></li>
       <li class="title">Examples</li>
-      <li><a href="?code=basic_sprites">basic sprites</a></li>
-      <li><a href="?code=sprites">sprites &amp; textures</a></li>
-      <li><a href="#">labels</a></li>
-      <li><a href="#">sprite transforms</a></li>
-      <li><a href="#">sprite events</a></li>
-      <li><a href="#">texture filters</a></li>
-      <li><a href="#">animations</a></li>
-      <li><a href="#">svg path</a></li>
-      <li><a href="#">offset API</a></li>
+      <li><a href="#">index</a></li>
+      <li><a href="#basic_sprites">basic sprites</a></li>
+      <li><a href="#sprites_textures">sprites &amp; textures</a></li>
+      <li><a href="#sprites_transforms">sprite transforms</a></li>
+      <li><a href="#sprite_events">sprite events</a></li>
+      <li><a href="#labels_buttons">labels</a></li>
+      <li><a href="#buttons">buttons</a></li>
+      <li><a href="#filters">filters</a></li>
+      <li><a href="#animations">animations</a></li>
+      <li><a href="#svg_path">svg path</a></li>
+      <li><a href="#offset_api">offset API</a></li>
     </ul>
   </div>
   <div id="demo">
     <div id="paper">
-      <!--<canvas></canvas>-->
       <iframe id="sandbox"></iframe>
     </div>
     <div id="console-panel">console<a href="###">clear</a></div>
-    <pre id="output"></pre>
+    <div id="output"></div>
   </div>
   <div id="code">
-<textarea name="code">
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite  
-
-paper.setResolution(800, 600)
-
-const s1 = new Sprite()
-s1.attr({
-  pos: [200, 200],
-  size: [50, 50],
-  rotate: 45,
-  border: [3, '#77cc33'],
-  bgcolor: 'white',
-})
-
-fglayer.appendChild(s1)
-
-console.log('hello')
-console.warn('hello')
-console.error('hello')</textarea>
+    <textarea name="code"></textarea>
   </div>
   <div id="fork">
     <a href="https://github.com/spritejs/spritejs"><img src="/static/image/github.png"></a>
   </div>
   <script src="/static/js/app.js"></script>
 </div>
-
-<script>
-  function debounce(fn, wait = 300){
-    let timer = null
-    return function(...args){
-      clearTimeout(timer)
-      timer = window.setTimeout(() => {
-        fn.apply(this, args)
-      }, wait)
-    }
-  }
-
-  const editor = CodeMirror.fromTextArea(document.querySelector("#code textarea"), {
-    lineNumbers: true,
-    styleActiveLine: true,
-    matchBrackets: true,
-    theme: "seti",
-  });
-  editor.on('change', debounce(evt => {
-    //console.log(evt.getValue())
-    sandbox.src = "/sendbox.html"
-  }))
-  const clearBtn = document.querySelector('#console-panel a')
-  clearBtn.addEventListener('click', evt => {
-    output.innerHTML = ''
-  })
-
-  window.editor = editor
-  sandbox.src = "/sendbox.html"
-
-  function menuFade(){
-    menu.className = 'fade'
-    menu.timer = setTimeout(() => {
-      menu.className = 'hide'
-    }, 500)
-  }
-
-  menuFade()
-
-  menu.addEventListener('mouseover', evt => {
-    clearTimeout(menu.timer)
-    menu.className = ''
-  })
-  menu.addEventListener('mouseout', evt => {
-    clearTimeout(menu.timer)
-    menuFade()
-  })
-</script>
 </body>
 </html>

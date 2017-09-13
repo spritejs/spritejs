@@ -10,11 +10,13 @@
     return (...args) => {
       output.innerHTML += `<div class="${level}">&gt; ${args.map(arg => {
         try {
-          return JSON.stringify(arg)
+          return typeof arg === 'string' ? arg : JSON.stringify(arg)
         } catch(ex) {
           return arg
         }
       }).join(' ')}</div>`
+
+      output.scrollTop = output.scrollHeight
 
       return logger(...args)
     }
