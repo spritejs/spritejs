@@ -1,3 +1,5 @@
+//Shape cases come from: https://github.com/alloyteam/pasition
+
 const paper = spritejs.Paper2D('#paper', 800, 600)
 
 ;(async function(){
