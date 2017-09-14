@@ -124,6 +124,10 @@ html,body{
   color: rgb(233, 77, 77);
 }
 
+#code {
+  max-width: 50%;
+}
+
 #code textarea {
   opacity: 0;
 }

@@ -66,3 +66,7 @@ s4.attr({
 })
 
 bglayer.append(s3, s4)
+
+window.addEventListener('resize', evt => {
+  paper.setViewport('auto', 'auto')
+})
