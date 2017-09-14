@@ -18,7 +18,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "deep-equal": "^1.0.1",
-    "sprite-animator": "^1.0.11"
+    "sprite-animator": "^1.0.12"
   },
   "devDependencies": {
     "ava": "^0.21.0",
