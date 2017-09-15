@@ -3,9 +3,11 @@
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
-[![coverage status](https://img.shields.io/coveralls/spritejs/spritejs.svg)](https://coveralls.io/github/spritejs/spritejs)
+[![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
 像操作 DOM 元素一样操作 canvas 中的“精灵”
+
+Learn more at [spritejs.org](http://spritejs.org/)
 
 ## 特性
 
@@ -21,7 +23,7 @@
 在浏览器中使用
 
 ```html
-<script src="https://s3.ssl.qhres.com/!3c1d17b9/spritejs-1.3.6.js"></script>
+<script src="https://s3.ssl.qhres.com/!3c1d17b9/spritejs-1.3.7.js"></script>
 ```
 
 ## 快速上手
