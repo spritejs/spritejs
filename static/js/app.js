@@ -22,6 +22,15 @@
     output.innerHTML = ''
     sandbox.onload = function(){
       frames[0].exec(evt.getValue())
+
+      const scriptPath = frames[0].document.querySelector('script').src
+      const versionInfo = scriptPath.match(/spritejs-(\d+\.\d+\.\d+)/)
+      if(versionInfo){
+        libVersion.innerHTML = 'v' + versionInfo[1]
+        libVersion.href = scriptPath
+      }
+
+      menuFade()
     }
   }))
   const clearBtn = document.querySelector('#console-panel a')
@@ -35,8 +44,6 @@
       menu.className = 'hide'
     }, 500)
   }
-
-  menuFade()
 
   menu.addEventListener('mouseover', evt => {
     clearTimeout(menu.timer)
