@@ -23,7 +23,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 在浏览器中使用
 
 ```html
-<script src="https://s3.ssl.qhres.com/!3c1d17b9/spritejs-1.3.7.js"></script>
+<script src="https://s4.ssl.qhres.com/!a1cc94b8/spritejs-1.3.9.js"></script>
 ```
 
 ## 快速上手
