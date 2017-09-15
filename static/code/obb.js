@@ -30,7 +30,8 @@ function randomBullet() {
   const p = new Path('M0 0 L 50 15 L 0 30 Z')
   const x0 = 100 + Math.floor(250 * Math.random()),
         y0 = 100 + Math.floor(200 * Math.random()),
-        speedX = 500 + Math.floor(1500 * Math.random())
+        deltaX = 500 + Math.floor(1500 * Math.random()),
+        deltaY = 1500
 
   p.attr({
     pos: [x0, y0],
@@ -39,15 +40,20 @@ function randomBullet() {
   })
 
   const animation = p.animate(
-    (attr, p) => {
-      let x = x0 + speedX * p,
-          y = y0 + 1500 * p * p
+    [{x: x0, y: y0}, {x: x0 + deltaX, y: y0 + deltaY}],{
+      duration: 5000,
+      fill: 'forwards',
+      effect: (from, to, p) => {
+        const deltaX = to.x - from.x,
+              deltaY = to.y - from.y
 
-      let rotate = 180 * Math.atan(2 * x * 1500 / (speedX * speedX)) / Math.PI
-          
-      return {pos: [x, y], rotate}
-    },{
-      duration: 5000
+        const x = from.x + deltaX * p,
+            y = from.y + deltaY * p * p
+
+        const rotate = 180 * Math.atan(2 * x * deltaY / (deltaX * deltaX)) / Math.PI
+            
+        return {x, y, rotate}
+      },
     })
 
   animation.finished.then(() => {
