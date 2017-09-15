@@ -15,8 +15,9 @@
   <script src="/js/index.js"></script>
   <script>
   (async function(){
-    const paper = spritejs.Paper2D('#paper', 600, 400);
-    const Sprite = spritejs.Sprite;
+    const paper = spritejs.Paper2D('#paper', 600, 400)
+    const Sprite = spritejs.Sprite,
+          Color = spritejs.Color
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
@@ -40,9 +41,24 @@
     paper.layer().appendChild(s)
     
     s.animate(
-      function(attr, p){
-        console.log(p)
-      }, 2000)
+      [{rotate: 0, bgcolor: 'red'},
+       {rotate: 360, bgcolor: 'blue'}], 
+      {
+        duration:2000,
+        effect: (from, to, p) => {
+          let rotate = (to.rotate - from.rotate) * p
+          let fromColor = Color(from.bgcolor),
+              toColor = Color(to.bgcolor)
+              
+          let color = {
+            red: fromColor.red + p * (toColor.red - fromColor.red),
+            green: fromColor.green + p * (toColor.green - fromColor.green),
+            blue: fromColor.blue + p * (toColor.blue - fromColor.blue),
+          }
+
+          return {rotate, bgcolor: color}
+        }
+      })
 
     // const animation = s.animate(
     // [{
