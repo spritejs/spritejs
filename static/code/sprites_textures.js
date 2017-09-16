@@ -1,12 +1,23 @@
 const paper = spritejs.Paper2D('#paper'),
       bglayer = paper.layer('bglayer', {handleEvent: false}),
       fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite  
+      Sprite = spritejs.Sprite,
+      Label = spritejs.Label
 
 const earthCfg = '/static/image/earth.plist.json'
 const earthRes = '/static/image/earth.png'
 
 paper.setResolution(1600, 1200) 
+
+const loading = new Label('loading, please wait...')
+loading.attr({
+  anchor: [0.5, 0.5],
+  pos: [800, 600],
+  color: 'white',
+  font: '32px Arial',
+})
+
+bglayer.appendChild(loading)
 
 paper.preload(
   [earthRes, earthCfg],
@@ -15,6 +26,8 @@ paper.preload(
     tree2: '/static/image/tree2.png'
   }
 ).then(function() {
+  bglayer.removeChild(loading)
+
   const bgsky = new Sprite()
   bgsky.attr({
     size: [1600, 1200],
