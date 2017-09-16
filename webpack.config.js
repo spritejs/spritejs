@@ -12,14 +12,17 @@ module.exports = function (env = {}) {
   if(env.production) {
     // compress js in production environment
 
-    // plugins.push(
-    //   new webpack.optimize.UglifyJsPlugin({
-    //     compress: {
-    //       warnings: false,
-    //       drop_console: false
-    //     }
-    //   })
-    // )
+    plugins.push(
+      new webpack.optimize.UglifyJsPlugin({
+        output: {
+          comments: false,  // remove all comments
+        },
+        compress: {
+          warnings: false,
+          drop_console: false
+        }
+      })
+    )
   }
 
   if(fs.existsSync('./.babelrc')) {
@@ -34,7 +37,7 @@ module.exports = function (env = {}) {
   return {
     entry: './lib/index.js',
     output: {
-      filename: env.production ? `spritejs-${version}.js` : 'index.js',
+      filename: env.production ? `spritejs-${version}.min.js` : 'index.js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/js/',
       library: 'spritejs',

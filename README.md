@@ -5,11 +5,11 @@
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
-像操作 DOM 元素一样操作 canvas 中的“精灵”
+Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 Learn more at [spritejs.org](http://spritejs.org/)
 
-## 特性
+## Fetures
 
 - 支持 attr 属性设置精灵样式
 - 支持 [web animations api](https://w3c.github.io/web-animations/#the-animation-interface
@@ -23,7 +23,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 在浏览器中使用
 
 ```html
-<script src="https://s4.ssl.qhres.com/!df4e7a41/spritejs-1.4.1.js"></script>
+<script src="https://s1.ssl.qhres.com/!5f7cbc1e/spritejs-1.4.2.min.js"></script>
 ```
 
 ## 快速上手

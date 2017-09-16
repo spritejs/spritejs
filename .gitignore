@@ -32,7 +32,6 @@ output/
 output.tar.gz
 
 app/
-dist/
 
 runtime/
 

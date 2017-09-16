@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Create a clean & powerful JavaScript developing environment, with ES6+ support.",
   "main": "lib/index.js",
   "directories": {

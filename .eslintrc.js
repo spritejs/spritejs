@@ -24,6 +24,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-loop-func': 'off',
+    'no-multi-assign': 'off',
     'prefer-const': ['error', {'destructuring': 'all'}],
     // ✘ : 因为需要异步 one-by-one 执行 sprite 的渲染，故关闭此规则
     'no-await-in-loop': 'off',
@@ -119,12 +121,12 @@ module.exports = {
     'max-len': 'off',
     // 禁止一个文件中在忽略空行和注释之后行数超过300行
     'max-lines': ['error', {
-      max: 300,
+      max: 500,
       skipBlankLines: true,
       skipComments: true
     }],
     // 一个函数的最大参数数量不可以超过5个
-    'max-params': ['error', 5],
+    'max-params': ['warn', 10],
     'max-statements': ['off', 10],
     // ✘ : 关闭这一规则
     // 因为 ES6 之前 JS 没有块级作用域，存在变量提升，故采用此规则
