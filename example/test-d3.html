@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    position: relative;
+    width: 600px;
+    height: 400px;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <script src="/js/d3.js"></script>
+  <script src="/js/index.js"></script>
+  <script>
+  const paper = spritejs.Paper2D('#paper', 600, 400).setResolution(1200, 800)
+  const Sprite = spritejs.Sprite,
+        Path = spritejs.Path,
+        Label = spritejs.Label
+
+  const dataset = [ 250 , 210 , 170 , 130 , 90 ];  //数据（表示矩形的宽度）
+
+  let s = d3.select(paper).append('fglayer')
+
+  s = s.selectAll('sprite')
+    .data(dataset)
+    .enter()
+    .append('sprite')
+    .attr('x', 50)
+    .attr('y', function(d,i){
+         return i * 70;
+    })
+    .attr("width",function(d){
+         return d;
+    })
+    .attr('height', 50)
+    .attr('bgcolor', 'red')
+
+
+    //.attr('transform', 'rotate(0)')
+
+    s.on('click', data => {
+      console.log(data, d3.event)
+    })
+
+    // s.transition()
+    // .duration(1000)
+    // .attr('transform', 'rotate(270)')
+
+    //.attr('pos', [300, 300])
+    //.attr('bgcolor', 'green')
+
+  //console.log(d3.select(paper.layer()).select({id:'test'}))
+console.log(s)
+  </script>
+</body>
+</html>

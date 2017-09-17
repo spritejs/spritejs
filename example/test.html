@@ -143,11 +143,12 @@
       border: [5, 'blue'],
       opacity: 1,
       zIndex: 101,
-      transform: {
-        //skew: [30, 0],
-        translate: [30, 30],
-        rotate: 45,
-      },
+      // transform: {
+      //   //skew: [30, 0],
+      //   translate: [30, 30],
+      //   rotate: 45,
+      // },
+      transform: 'translate(30,30) rotate(45)',
       linearGradients: {
         bgcolor: {
           direction: 135,
@@ -191,9 +192,9 @@
 
     window.s3 = s3
 
-    // s2.on('touchstart', e => {
-    //   console.log(111)
-    // })
+    s2.on('click', e => {
+      console.log(111)
+    })
 
     const s4 = new Path()
 
