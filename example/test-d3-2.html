@@ -34,7 +34,13 @@ d3.json('/data/city2.json', (err, data) => {
 
   const nodes = pack(root)
 
-  const s = layer.selectAll('label')
+  layer.append('label')
+        .attr('pos', [1000, 50])
+        .attr('name', 'region')
+        .attr('font', '42px Arial')
+        .attr('text', '中国')
+
+  const s = layer.selectAll({label: s => s.name !== 'region'})
        .data(nodes.descendants())
        .enter()
        .append('label')
@@ -62,13 +68,25 @@ d3.json('/data/city2.json', (err, data) => {
        .attr('textAlign', 'center')
        .attr('text', d => d.data.name)
        .on('mousemove', d => {
+          d3.event.stopDispatch()
+       })
+       .on('mouseenter', d => {
           const {offsetX, offsetY} = d3.event,
                 r = Math.round(d.r)
+
+          d3.event.target.attr('border', [3, 'red'])
           
           if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
-            console.log(d.data.name)
+            //console.log(d.data.name)
+            layer.selectAll({label: s => s.name === 'region'})
+                .attr('text', d.data.name)
           }
-          d3.event.stopDispatch()
+       })
+       .on('mouseleave', d => {
+          const {offsetX, offsetY} = d3.event,
+                r = Math.round(d.r)
+
+          d3.event.target.attr('border', [0, 'transparent'])
        })
 })
 
