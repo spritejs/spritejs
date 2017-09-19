@@ -58,6 +58,10 @@
     }]
 
     paper.layer().appendChild(box1)
+
+    box1.on('click', evt => {
+      console.log(evt.offsetX, evt.offsetY, evt.targetTextures)
+    })
   </script>
 </body>
 </html>

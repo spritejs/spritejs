@@ -61,6 +61,15 @@ d3.json('/data/city2.json', (err, data) => {
        })
        .attr('textAlign', 'center')
        .attr('text', d => d.data.name)
+       .on('mousemove', d => {
+          const {offsetX, offsetY} = d3.event,
+                r = Math.round(d.r)
+          
+          if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
+            console.log(d.data.name)
+          }
+          d3.event.stopDispatch()
+       })
 })
 
 
