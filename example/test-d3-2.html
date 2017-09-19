@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    position: relative;
+    width: 600px;
+    height: 400px;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <script src="/js/d3.js"></script>
+  <script src="/js/index.js"></script>
+  <script>
+
+const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200)
+
+const layer = d3.select(paper).append('fglayer')
+
+d3.json('/data/city2.json', (err, data) => {
+
+  const root = d3.hierarchy(data)
+      .sum(function(d) { return 1 })
+      .sort(function(a, b) { return b.value - a.value; });
+
+  const pack = d3.pack()
+            .size([ 1200, 1200 ])
+            .padding(3)
+
+  const nodes = pack(root)
+
+  const s = layer.selectAll('label')
+       .data(nodes.descendants())
+       .enter()
+       .append('label')
+       .attr('anchor', 0.5)
+       .attr('pos', d => {
+          const x = Math.round(d.x),
+                y = Math.round(d.y)
+
+          return [x, y] 
+       })
+       .attr('size', d => {
+          const r = Math.round(d.r)
+          return [2 * r, 2 * r]
+       })
+       .attr('bgcolor', 'rgba(31, 119, 180, 0.4)')
+       .attr('borderRadius', d => {
+          return d.r
+       })
+       .attr('font', d => {
+          return `${16 + Math.round(10 * Math.log2(d.value))}px Arial`
+       })
+       .attr('lineHeight', d => {
+          return Math.round(2 * d.r)
+       })
+       .attr('textAlign', 'center')
+       .attr('text', d => d.data.name)
+})
+
+
+
+  </script>
+</body>
+</html>
