@@ -14,7 +14,7 @@ function loadScript(url) {
 }
 
 loadScript(d3Url).then(function(){
-  const paper = spritejs.Paper2D('#paper', 600, 400).setResolution(1200, 800)
+  const paper = spritejs.Paper2D('#paper').setResolution(1600, 1200)
 
   const dataset = [ 125 , 121 , 127 , 193 , 309 ];  //数据（表示矩形的宽度）
 
@@ -57,5 +57,9 @@ loadScript(d3Url).then(function(){
 
   chart.on('click', data => {
     console.log(data, d3.event)
+  })
+
+  window.addEventListener('resize', evt => {
+    paper.setViewport('auto', 'auto')
   })
 })
