@@ -75,30 +75,21 @@ loadScript(d3Url).then(function(){
          })
          .on('mousemove', d => {
             d3.event.stopDispatch()
-         })
-         .on('mouseenter', d => {
+            
             const {offsetX, offsetY} = d3.event,
                   r = Math.round(d.r)
 
-            d3.event.target.attr('border', [3, 'red'])
-            
-            if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
-              //console.log(d.data.name)
-              layer.selectAll({label: s => s.name === 'region'})
-                  .attr('text', d.data.name)
-            } 
-         })
-         .on('mouseleave', d => {
-            const {offsetX, offsetY} = d3.event,
-                  r = Math.round(d.r)
-
-            d3.event.target.attr('border', [0, 'transparent'])
-            
             if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
               //console.log(d.data.name)
               layer.selectAll({label: s => s.name === 'region'})
                   .attr('text', d.data.name)
             }
+         })
+         .on('mouseenter', d => {
+            d3.event.target.attr('border', [3, 'red'])
+         })
+         .on('mouseleave', d => {
+            d3.event.target.attr('border', [0, 'transparent'])
          })
   })
 })
