@@ -15,10 +15,6 @@ function loadScript(url) {
 
 loadScript(d3Url).then(function(){
   const paper = spritejs.Paper2D('#paper', 600, 400).setResolution(1200, 800)
-  const Sprite = spritejs.Sprite,
-        Path = spritejs.Path,
-        Label = spritejs.Label,
-        Axis = spritejs.Axis
 
   const dataset = [ 125 , 121 , 127 , 193 , 309 ];  //数据（表示矩形的宽度）
 
@@ -26,8 +22,6 @@ loadScript(d3Url).then(function(){
   var linear = d3.scaleLinear()
       .domain([100, d3.max(dataset)])
       .range([0, 500]);
-
-  //console.log(linear.domain(), dataset.map(linear))
 
   const colors = ['#f00', '#0a0', '#00a', '#3ca', '#7ac']
 
