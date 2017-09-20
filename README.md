@@ -25,7 +25,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 In browser:
 
 ```html
-<script src="https://s3.ssl.qhres.com/!31ae3916/spritejs-1.5.4.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!1c335fae/spritejs-1.6.0.min.js"></script>
 ```
 
 ## Quick Start
@@ -44,6 +44,14 @@ In browser:
 - [SVG Paths](http://spritejs.org/#svg_path)
 - [Offset API](http://spritejs.org/#offset_api)
 - [OBB Hit](http://spritejs.org/#obb)
+
+#### D3 Examples
+
+Compatible with [d3.js](https://github.com/d3/d3).
+
+- [D3.js Example 1](http://spritejs.org/#d3)
+- [D3.js Example 2](http://spritejs.org/#d3-2)
+- [D3.js Example 3](http://spritejs.org/#d3-3)
 
 ### API Doc (中文）
 
