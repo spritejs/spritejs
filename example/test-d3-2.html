@@ -22,7 +22,7 @@ const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200)
 
 const layer = d3.select(paper).append('fglayer')
 
-d3.json('/data/city2.json', (err, data) => {
+d3.json('/data/city.json', (err, data) => {
 
   const root = d3.hierarchy(data)
       .sum(function(d) { return 1 })
