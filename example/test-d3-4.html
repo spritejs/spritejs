@@ -20,65 +20,59 @@
 
 const paper = spritejs.Paper2D('#paper').setResolution(800, 600)
 
-const layer = d3.select(paper).append('fglayer')
-
-//TODO: 利用 Path2D 的方法增强 Path 对象的能力
-//---
-
-var canvas = document.querySelector("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width,
-    height = canvas.height;
+const layer = paper.layer('fglayer', {
+  handleEvent: false
+})
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("center", d3.forceCenter(400, 300));
 
 d3.json("/data/miserables.json", function(error, graph) {
-  if (error) throw error;
+  if (error) throw error
 
   simulation
       .nodes(graph.nodes)
-      .on("tick", ticked);
+      .on("tick", ticked)
 
   simulation.force("link")
-      .links(graph.links);
+      .links(graph.links)
 
-  // d3.select(canvas)
-  //     .call(d3.drag()
-  //         .container(canvas)
-  //         .subject(dragsubject)
-  //         .on("start", dragstarted)
-  //         .on("drag", dragged)
-  //         .on("end", dragended));
+  let path = new spritejs.Path()
+  path.attr({
+    size: [800, 600],
+    //bgcolor: '#aaa',
+  })
+  layer.appendChild(path)
+
+  d3.select(layer.canvas)
+      .call(d3.drag()
+          .container(layer.canvas)
+          .subject(dragsubject)
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended))
 
   function ticked() {
-    //console.log(graph.links, graph.nodes)
+    path.drawOnce(context => {
+      context.beginPath()
+      graph.links.forEach(d => {
+        context.moveTo(d.source.x, d.source.y);
+        context.lineTo(d.target.x, d.target.y);        
+      })
+      context.strokeStyle = "#aaa"
+      context.stroke()
 
-    layer.selectAll('path')
-        .data(graph.links)
-        .attr('d', d => {
-          return `M${d.source.x} ${d.source.y}L${d.target.x} ${d.target.y}`
-        })
-        .enter()
-        .append('path')
-        .attr('d', d => {
-          return `M${d.source.x} ${d.source.y}L${d.target.x} ${d.target.y}`
-        })
-
-    // context.clearRect(0, 0, width, height);
-
-    // context.beginPath();
-    // graph.links.forEach(drawLink);
-    // context.strokeStyle = "#aaa";
-    // context.stroke();
-
-    // context.beginPath();
-    // graph.nodes.forEach(drawNode);
-    // context.fill();
-    // context.strokeStyle = "#fff";
-    // context.stroke();
+      context.beginPath()
+      graph.nodes.forEach(d => {
+        context.moveTo(d.x + 3, d.y);
+        context.arc(d.x, d.y, 3, 0, 2 * Math.PI);        
+      })
+      context.fill()
+      context.strokeStyle = "#fff"
+      context.stroke()
+    })
   }
 
   function dragsubject() {
@@ -101,16 +95,6 @@ function dragended() {
   if (!d3.event.active) simulation.alphaTarget(0);
   d3.event.subject.fx = null;
   d3.event.subject.fy = null;
-}
-
-function drawLink(d) {
-  context.moveTo(d.source.x, d.source.y);
-  context.lineTo(d.target.x, d.target.y);
-}
-
-function drawNode(d) {
-  context.moveTo(d.x + 3, d.y);
-  context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
 }
 
   </script>
