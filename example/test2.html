@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+#paper {
+  width: 800px;
+  height: 600px;
+}
+  </style>
+  <script src="/js/index.js"></script>
+</head>
+<body>
+  <div id="paper"></div>
+  <script>
+const paper = spritejs.Paper2D('#paper')
+//paper.setResolution(800, 600)
+
+const sprite = new spritejs.Sprite()
+sprite.attr({
+  bgcolor: '#000',
+  pos: [10, 10],
+  size: [100, 100],
+})
+
+paper.layer().appendChild(sprite)
+
+let i = 0
+setInterval(() => {
+  sprite.drawOnce(context => {
+    context.font = '48px Arial'
+    context.strokeStyle = '#f00'
+    context.strokeText(String(++i), 10, 90)
+  })
+}, 1000)
+  </script>
+</body>
+</html>

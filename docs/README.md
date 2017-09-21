@@ -476,11 +476,43 @@ box1.attr({
 paper.layer().appendChild(box1)
 ```
 
+### 底层渲染
+
+所有的 sprite 都有两个底层方法 draw(fn, clearCache, remove) 和 drawOnce(fn) 方法，用来直接调用 context 进行多次与单次底层渲染。
+
+draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以及渲染后是否移除 sprite。drawOnce 方法只有一个默认参数 fn。fn 是一个函数，它有三个参数分别为当前 canvas 的 context 对象、一个 t 时间戳以及 remove 对象。
+
+调用底层接口用来实现一些高性能动画（如果需要的话）
+
+[例子](https://code.h5jun.com/jibe/edit?js,output)
+
+```
+const paper = spritejs.Paper2D('#paper')
+
+const sprite = new spritejs.Sprite()
+sprite.attr({
+  bgcolor: '#fff',
+  pos: [10, 10],
+  size: [100, 100],
+})
+
+paper.layer().appendChild(sprite)
+
+let i = 0
+setInterval(() => {
+  sprite.drawOnce(context => {
+    context.font = '48px Arial'
+    context.strokeStyle = '#f00'
+    context.strokeText(String(++i), 10, 90)
+  })
+}, 1000)
+```
+
 ### 事件机制
 
 spritejs 支持类似 DOM 的事件模型，与 DOM 不同的是，sprite 没有事件冒泡，默认也不会遮盖事件，事件会依照 sprite 的 zIndex、zOrder 依次触发，最后会触发 layer 的事件。
 
-事件注册方法是 on，注销方法是 off，事件参数中包含 target 表示当前触发事件的对象，layerX、layerY 表示鼠标或触摸事件触发时相对于 layer 左上角的位置，offsetX、offsetY 表示鼠标或触摸事件触发时相对于当前元素 anchor 的坐标位置。如果包含 texture，还有一个 targetTextures 数组，包含当前位置命中的所有 textures。
+事件注册方法是 on，注销方法是 off，事件参数中包含 target 表示当前触发事件的对象，layerX、layerY 表示鼠标或触摸事件触发时相对于 layer 左上角的位置，offsetX、offsetY 表示鼠标或触摸事件触发时相对于当前元素 anchor 的坐标位置，originalX、originalY 表示原始的鼠标或 touch 事件坐标。如果包含 texture，还有一个 targetTextures 数组，包含当前位置命中的所有 textures。
 
 [例子](https://code.h5jun.com/puz)
 
@@ -1128,3 +1160,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 })()
 ```
+
+## 1.4 ~ 1.7+
+
+完善渲染机制、优化性能、规范 API，提供对 d3 的友好支持
