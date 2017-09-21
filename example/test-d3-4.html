@@ -18,7 +18,7 @@
   <script src="/js/index.js"></script>
   <script>
 
-const paper = spritejs.Paper2D('#paper').setResolution(800, 600)
+const paper = spritejs.Paper2D('#paper').setResolution(1200, 900)
 
 const layer = paper.layer('fglayer', {
   handleEvent: false
@@ -58,16 +58,21 @@ d3.json("/data/miserables.json", function(error, graph) {
     path.drawOnce(context => {
       context.beginPath()
       graph.links.forEach(d => {
-        context.moveTo(d.source.x, d.source.y);
-        context.lineTo(d.target.x, d.target.y);        
+        const [sx, sy] = [d.source.x, d.source.y],
+              [tx, ty] = [d.target.x, d.target.y]
+
+        context.moveTo(sx, sy);
+        context.lineTo(tx, ty);        
       })
       context.strokeStyle = "#aaa"
       context.stroke()
 
       context.beginPath()
       graph.nodes.forEach(d => {
-        context.moveTo(d.x + 3, d.y);
-        context.arc(d.x, d.y, 3, 0, 2 * Math.PI);        
+        const [x, y] = [d.x, d.y]
+
+        context.moveTo(x + 3, y);
+        context.arc(x, y, 3, 0, 2 * Math.PI);        
       })
       context.fill()
       context.strokeStyle = "#fff"
@@ -76,19 +81,31 @@ d3.json("/data/miserables.json", function(error, graph) {
   }
 
   function dragsubject() {
-    return simulation.find(d3.event.x, d3.event.y);
+    const [x, y] = paper.toLocalPos(d3.event.x, d3.event.y)
+    return simulation.find(x, y);
   }
 });
 
 function dragstarted() {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d3.event.subject.fx = d3.event.subject.x;
-  d3.event.subject.fy = d3.event.subject.y;
+  
+  const [x, y] = [d3.event.subject.x, d3.event.subject.y]
+
+  d3.event.subject.fx = x;
+  d3.event.subject.fy = y;
+
+  d3.event.subject.x0 = x;
+  d3.event.subject.y0 = y;
 }
 
 function dragged() {
-  d3.event.subject.fx = d3.event.x;
-  d3.event.subject.fy = d3.event.y;
+  const [x, y] = [d3.event.x, d3.event.y],
+        {x0, y0} = d3.event.subject
+
+  const [dx, dy] = paper.toLocalPos((x - x0), (y - y0))
+
+  d3.event.subject.fx = x0 + dx;
+  d3.event.subject.fy = y0 + dy;
 }
 
 function dragended() {
