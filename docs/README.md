@@ -476,38 +476,6 @@ box1.attr({
 paper.layer().appendChild(box1)
 ```
 
-### 底层渲染
-
-所有的 sprite 都有两个底层方法 draw(fn, clearCache, remove) 和 drawOnce(fn) 方法，用来直接调用 context 进行多次与单次底层渲染。
-
-draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以及渲染后是否移除 sprite。drawOnce 方法只有一个默认参数 fn。fn 是一个函数，它有三个参数分别为当前 canvas 的 context 对象、一个 t 时间戳以及 remove 对象。
-
-调用底层接口用来实现一些高性能动画（如果需要的话）
-
-[例子](https://code.h5jun.com/jibe/edit?js,output)
-
-```
-const paper = spritejs.Paper2D('#paper')
-
-const sprite = new spritejs.Sprite()
-sprite.attr({
-  bgcolor: '#fff',
-  pos: [10, 10],
-  size: [100, 100],
-})
-
-paper.layer().appendChild(sprite)
-
-let i = 0
-setInterval(() => {
-  sprite.drawOnce(context => {
-    context.font = '48px Arial'
-    context.strokeStyle = '#f00'
-    context.strokeText(String(++i), 10, 90)
-  })
-}, 1000)
-```
-
 ### 事件机制
 
 spritejs 支持类似 DOM 的事件模型，与 DOM 不同的是，sprite 没有事件冒泡，默认也不会遮盖事件，事件会依照 sprite 的 zIndex、zOrder 依次触发，最后会触发 layer 的事件。
@@ -794,7 +762,7 @@ block1.animate([{
 })()
 ```
 
-### 性能
+## 性能
 
 spritejs 默认对 sprite 采取缓存，只要没有 bgcolor、border 等基本属性的变化，sprite 渲染一次之后就会被缓存，下次直接从缓存读取，不需要重绘，从而提升效率。另外开发者可以继承 Sprite 类实现自己的缓存策略，比如前面动画的例子就使用了：
 
@@ -823,6 +791,192 @@ class Bird extends spritejs.Sprite {
     }
   }      
 }
+```
+
+## 高级用法
+
+### 底层渲染
+
+所有的 sprite 都有两个底层方法 draw(fn, clearCache, remove) 和 drawOnce(fn) 方法，用来直接调用 context 进行多次与单次底层渲染。
+
+draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以及渲染后是否移除 sprite。drawOnce 方法只有一个默认参数 fn。fn 是一个函数，它有三个参数分别为当前 canvas 的 context 对象、一个 t 时间戳以及 remove 对象。
+
+调用底层接口用来实现一些高性能动画（如果需要的话）
+
+[例子](https://code.h5jun.com/jibe/edit?js,output)
+
+```
+const paper = spritejs.Paper2D('#paper')
+
+const sprite = new spritejs.Sprite()
+sprite.attr({
+  bgcolor: '#fff',
+  pos: [10, 10],
+  size: [100, 100],
+})
+
+paper.layer().appendChild(sprite)
+
+let i = 0
+setInterval(() => {
+  sprite.drawOnce(context => {
+    context.font = '48px Arial'
+    context.strokeStyle = '#f00'
+    context.strokeText(String(++i), 10, 90)
+  })
+}, 1000)
+```
+
+### 自定义 sprite 元素
+
+用户可以通过类继承 BaseSprite 或其他 Sprite 类来自定义 Sprite 元素。比如前面性能的例子里，我们通过继承 Sprite 就定义了一个 Bird 类，重写了缓存策略来达到更好的性能。
+
+我们除了继承 Sprite，还可以通过 Sprite.defineAttributes 来扩展属性（**版本 1.8+**），结合底层渲染和扩展属性，我们可以定制出其他的一些强大的 sprite 元素。
+
+[例子](https://code.h5jun.com/coqot)
+
+```js
+const paper = spritejs.Paper2D('#paper')
+paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
+    
+const BaseSprite = spritejs.BaseSprite,
+  Color = spritejs.Color
+
+class Arc extends BaseSprite {
+  constructor(props) {
+    super(props);
+    this.initAttributes({
+      radius: 10,
+      fillColor: '',
+      strokeColor: '#000',
+      renderMode: 'stroke',
+      lineWidth: 1,
+      angle: [0, 360],
+      direction: 1,
+    })
+  }
+  get contentSize() {
+    let [width, height] = this.attr('size')
+    const radius = this.attr('radius'),
+      lineWidth = this.attr('lineWidth')
+
+    if(width === '') {
+      width = 2 * (radius + lineWidth)
+    }
+    if(height === '') {
+      height = 2 * (radius + lineWidth)
+    }
+
+    return [width, height]
+  }
+  render(t) {
+    const context = super.render(t)
+    const r = this.attr('radius')
+
+    if(r) {
+      let path = this.createPath()
+      const [borderWidth] = this.attr('border')
+      const {strokeColor, fillColor, renderMode, lineWidth, direction} = this.attr()
+
+      context.save()
+      context.translate(borderWidth + lineWidth, borderWidth + lineWidth)
+
+      let angle = this.attr('angle')
+
+      if(direction === 1) {
+        angle = angle.map(ang => Math.PI * -ang / 180)
+      } else {
+        angle = angle.map(ang => Math.PI * ang / 180)
+      }
+
+      path.arc(r, r, r, ...angle, direction)
+      if(angle[1] - angle[0] < 2 * Math.PI) {            
+        path.lineTo(r, r)
+        path.closePath()
+      }
+
+      if(lineWidth){
+        context.lineWidth = lineWidth
+        context.strokeStyle = strokeColor
+        context.stroke(path)
+      }
+
+      if(renderMode === 'fill') {
+        context.fillStyle = fillColor || strokeColor
+        context.fill(path)
+      }
+      context.restore()
+    }
+
+    return context
+  }
+}
+
+Arc.defineAttributes({
+  set radius(val) {
+    this.set('radius', val)
+    this.forceUpdate(true)
+  },
+  get radius() {
+    return this.get('radius')
+  },
+  set fillColor(val) {
+    this.set('fillColor', Color(val).str)
+    this.forceUpdate(true)
+  },
+  get fillColor() {
+    return this.get('fillColor')
+  },
+  set strokeColor(val) {
+    this.set('strokeColor', Color(val).str)
+    this.forceUpdate(true)
+  },
+  get strokeColor() {
+    return this.get('strokeColor')
+  },
+  set renderMode(val) {
+    this.set('renderMode', val)
+    this.forceUpdate(true)
+  },
+  get renderMode() {
+    return this.get('renderMode')
+  },
+  set lineWidth(val) {
+    this.set('lineWidth', val)
+  },
+  get lineWidth() {
+    return this.get('lineWidth')
+  },
+  set angle(val) {
+    this.set('angle', val)
+  },
+  get angle() {
+    return this.get('angle').slice(0)
+  },
+  set direction(val) {
+    this.set('direction', val)
+  },
+  get direction() {
+    return this.get('direction')
+  },
+})
+
+const arc = new Arc()
+arc.attr({
+  pos: [200, 200],
+  //size: [100, 100],
+  //bgcolor: '#f00',
+  radius: 100,
+  border: [10, 'green'],
+  padding: 10,
+  renderMode: 'fill',
+  fillColor: 'blue',
+  strokeColor: 'red',
+  lineWidth: 20,
+  angle: [0, 90],
+})
+
+paper.layer().appendChild(arc)
 ```
 
 ## 1.1 版本更新
@@ -1164,3 +1318,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 ## 1.4 ~ 1.7+
 
 完善渲染机制、优化性能、规范 API，提供对 d3 的友好支持
+
+## 1.8 版本更新
+
+新增 Attr 的集成机制，可以很方便地扩展各类 Sprite 对象
