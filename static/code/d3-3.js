@@ -45,14 +45,18 @@ loadScript(d3Url).then(function(){
         .attr('renderMode', 'fill')
         .attr('fillColor', '#d1eeee')
         .on('click', d => {
-          if(d3.event.pointInPath){
+          const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
+
+          if(paths.length){
             console.log(d.properties.name)
           }
         })
         .on('mousemove', d => {
           const event = d3.event
           if(event.target !== selectedTarget){
-            if(event.pointInPath){
+            const paths = event.target.findPath(event.offsetX, event.offsetY)
+
+            if(paths.length){
               if(selectedTarget){
                 selectedTarget.attr('fillColor', '#d1eeee')
               }
