@@ -115,49 +115,49 @@
     Arc.defineAttributes({
       set radius(val) {
         this.set('radius', val)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get radius() {
         return this.get('radius')
       },
       set fillColor(val) {
         this.set('fillColor', Color(val).str)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get fillColor() {
         return this.get('fillColor')
       },
       set strokeColor(val) {
         this.set('strokeColor', Color(val).str)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get strokeColor() {
         return this.get('strokeColor')
       },
       set renderMode(val) {
         this.set('renderMode', val)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get renderMode() {
         return this.get('renderMode')
       },
       set lineWidth(val) {
         this.set('lineWidth', val)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get lineWidth() {
         return this.get('lineWidth')
       },
       set angle(val) {
         this.set('angle', val)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get angle() {
         return this.get('angle')
       },
       set direction(val) {
         this.set('direction', val)
-        this.forceUpdate(true)
+        this.clearCache()
       },
       get direction() {
         return this.get('direction')
