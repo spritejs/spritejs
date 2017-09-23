@@ -838,7 +838,7 @@ setInterval(() => {
 ```js
 const paper = spritejs.Paper2D('#paper')
 paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
-    
+
 const BaseSprite = spritejs.BaseSprite,
   Color = spritejs.Color
 
@@ -943,18 +943,21 @@ Arc.defineAttributes({
   },
   set lineWidth(val) {
     this.set('lineWidth', val)
+    this.forceUpdate(true)
   },
   get lineWidth() {
     return this.get('lineWidth')
   },
   set angle(val) {
     this.set('angle', val)
+    this.forceUpdate(true)
   },
   get angle() {
-    return this.get('angle').slice(0)
+    return this.get('angle')
   },
   set direction(val) {
     this.set('direction', val)
+    this.forceUpdate(true)
   },
   get direction() {
     return this.get('direction')
