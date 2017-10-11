@@ -32,7 +32,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
   const birdCountLabel = new spritejs.Label()
   birdCountLabel.attr({
-    pos: [30, 160],
+    pos: [30, 50],
     font: '32px Arial',
     color: 'white',
   })

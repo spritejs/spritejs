@@ -73,6 +73,7 @@ html,body{
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  margin-top: 46px;
 }
 
 
@@ -82,7 +83,7 @@ html,body{
   width: 100%;
   padding-top: 75%;
   height: 0px;
-  border: solid 1px rgba(255,255,255,0.3);
+  border-bottom: solid 1px rgba(255,255,255,0.3);
 }
 
 #paper iframe{
@@ -166,3 +167,14 @@ a.selected {
   height: 100%;
 }
 
+@media screen and (max-width:480px){
+ #main {
+  background-color: rgba(33,33,33,1)
+ }
+ #code, #fork {
+  display:none;
+ }
+ #demo {
+  min-width: 300px;
+ }
+}

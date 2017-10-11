@@ -166,7 +166,7 @@ class Button extends spritejs.Label {
 
   const birdCountLabel = new spritejs.Label()
   birdCountLabel.attr({
-    pos: [30, 160],
+    pos: [30, 60],
     font: '32px Arial',
     color: 'white',
   })
