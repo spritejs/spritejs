@@ -168,13 +168,16 @@ a.selected {
 }
 
 @media screen and (max-width:480px){
- #main {
-  background-color: rgba(33,33,33,1)
- }
- #code, #fork {
-  display:none;
- }
- #demo {
-  min-width: 300px;
- }
+  #main {
+    background-color: rgba(33,33,33,1)
+  }
+  #code, #fork {
+    display:none;
+  }
+  #demo {
+    min-width: 300px;
+  }
+  #output div {
+    max-width: 100%;
+  } 
 }
