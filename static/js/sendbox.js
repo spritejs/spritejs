@@ -27,4 +27,6 @@
   console.error = makeOutput(console.error, 'error')
 
   global.exec = exec
+
+  top.codeChange()
 })(this)

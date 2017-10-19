@@ -16,23 +16,24 @@
     matchBrackets: true,
     theme: "seti",
   });
-  editor.on('change', debounce(evt => {
-    //console.log(evt.getValue())
-    sandbox.src = '/sendbox.html'
+  editor.on('change', debounce(evt => {    
     output.innerHTML = ''
-    sandbox.onload = function(){
-      frames[0].exec(evt.getValue())
-
-      const scriptPath = frames[0].document.querySelector('script').src
-      const versionInfo = scriptPath.match(/spritejs-(\d+\.\d+\.\d+)/)
-      if(versionInfo){
-        libVersion.innerHTML = 'v' + versionInfo[1]
-        libVersion.href = scriptPath
-      }
-
-      menuFade()
-    }
+    frames[0].location.href = '/sendbox.html'
   }))
+
+  global.codeChange = function(){
+    frames[0].exec(editor.getValue())
+
+    const scriptPath = frames[0].document.querySelector('script').src
+    const versionInfo = scriptPath.match(/spritejs-(\d+\.\d+\.\d+)/)
+    if(versionInfo){
+      libVersion.innerHTML = 'v' + versionInfo[1]
+      libVersion.href = scriptPath
+    }
+
+    menuFade()
+  }
+
   const clearBtn = document.querySelector('#console-panel a')
   clearBtn.addEventListener('click', evt => {
     output.innerHTML = ''
