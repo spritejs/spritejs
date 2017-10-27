@@ -25,7 +25,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 In browser:
 
 ```html
-<script src="https://s3.ssl.qhres.com/!09b5cbf4/spritejs-1.8.4.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!08e14d12/spritejs-1.8.5.min.js"></script>
 ```
 
 ## Quick Start
