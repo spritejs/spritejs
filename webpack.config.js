@@ -37,7 +37,7 @@ module.exports = function (env = {}) {
   return {
     entry: './lib/index.js',
     output: {
-      filename: env.production ? `spritejs-${version}.min.js` : 'index.js',
+      filename: env.production ? `spritejs.min.js` : 'spritejs.js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/js/',
       library: 'spritejs',

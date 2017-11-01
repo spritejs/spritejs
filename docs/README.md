@@ -799,7 +799,7 @@ class Bird extends spritejs.Sprite {
 
 所有的 sprite 都有两个底层方法 draw(fn, clearCache, remove) 和 drawOnce(fn) 方法，用来直接调用 context 进行多次与单次底层渲染。
 
-draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以及渲染后是否移除 sprite。drawOnce 方法只有一个默认参数 fn。fn 是一个函数，它有三个参数分别为当前 canvas 的 context 对象、一个 t 时间戳以及 remove 对象。
+draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以及渲染后是否移除 sprite。drawOnce 方法只有一个默认参数 fn。fn 是一个函数，它有三个参数分别为当前 canvas 的 context 对象、一个 t 时间戳以及当前 renderer 对象。
 
 调用底层接口用来实现一些高性能动画（如果需要的话）
 
