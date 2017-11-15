@@ -9842,73 +9842,105 @@ var Layer = function (_BaseNode) {
     return _this;
   }
 
-  /*
-    d3-friendly
-    *, nodeType, checker
-  */
-
-
   (0, _createClass3.default)(Layer, [{
+    key: 'getElementById',
+    value: function getElementById(id) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = (0, _getIterator3.default)(this[_children]), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var child = _step.value;
+
+          if (child.id === id) {
+            return child;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: 'getElementsByName',
+    value: function getElementsByName(name) {
+      return this[_children].filter(function (c) {
+        return c.name === name;
+      });
+    }
+
+    /*
+      d3-friendly
+      *, nodeType, checker
+    */
+
+  }, {
     key: 'querySelector',
     value: function querySelector(selector) {
       if (!selector || selector === '*') {
         return this[_children][0];
       } else if (typeof selector === 'string') {
-        var nodeType = (0, _nodetype.getNodeType)(selector);
-        if (nodeType) {
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+        // querySelector('nodeType')
+        // querySelector('#id')
+        // querySelector(':name')
+        if (selector.startsWith('#')) {
+          return this.getElementById(selector.slice(1));
+        }
+        if (selector.startsWith(':')) {
+          var name = selector.slice(1);
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator = (0, _getIterator3.default)(this[_children]), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var child = _step.value;
+            for (var _iterator2 = (0, _getIterator3.default)(this[_children]), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var child = _step2.value;
 
-              if (child instanceof nodeType) {
+              if (child.name === name) {
                 return child;
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
 
           return null;
         }
-        return null;
-      }
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = (0, _getIterator3.default)(this[_children]), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var _child = _step2.value;
+        var nodeType = (0, _nodetype.getNodeType)(selector);
+        if (nodeType) {
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
           var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator3 = (0, _getIterator3.default)((0, _entries2.default)(selector)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var _ref2 = _step3.value;
+            for (var _iterator3 = (0, _getIterator3.default)(this[_children]), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var _child = _step3.value;
 
-              var _ref3 = (0, _slicedToArray3.default)(_ref2, 2);
-
-              var type = _ref3[0];
-              var checker = _ref3[1];
-
-              var _nodeType = (0, _nodetype.getNodeType)(type);
-              if (_nodeType && _child instanceof _nodeType && checker.call(this, _child)) {
+              if (_child instanceof nodeType) {
                 return _child;
               }
             }
@@ -9926,18 +9958,62 @@ var Layer = function (_BaseNode) {
               }
             }
           }
+
+          return null;
+        }
+        return null;
+      }
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = (0, _getIterator3.default)(this[_children]), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var _child2 = _step4.value;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
+
+          try {
+            for (var _iterator5 = (0, _getIterator3.default)((0, _entries2.default)(selector)), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var _ref2 = _step5.value;
+
+              var _ref3 = (0, _slicedToArray3.default)(_ref2, 2);
+
+              var type = _ref3[0];
+              var checker = _ref3[1];
+
+              var _nodeType = (0, _nodetype.getNodeType)(type);
+              if (_nodeType && _child2 instanceof _nodeType && checker.call(this, _child2)) {
+                return _child2;
+              }
+            }
+          } catch (err) {
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
+              }
+            } finally {
+              if (_didIteratorError5) {
+                throw _iteratorError5;
+              }
+            }
+          }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
@@ -9952,6 +10028,13 @@ var Layer = function (_BaseNode) {
       if (!selector || selector === '*') {
         return this[_children];
       } else if (typeof selector === 'string') {
+        if (selector.startsWith('#')) {
+          var sprite = this.getElementById(selector.slice(1));
+          return sprite ? [sprite] : [];
+        }
+        if (selector.startsWith(':')) {
+          return this.getElementsByName(selector.slice(1));
+        }
         var nodeType = (0, _nodetype.getNodeType)(selector);
         if (nodeType) {
           return this[_children].filter(function (child) {
@@ -9961,13 +10044,13 @@ var Layer = function (_BaseNode) {
         return null;
       }
       return this[_children].filter(function (child) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator4 = (0, _getIterator3.default)((0, _entries2.default)(selector)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var _ref4 = _step4.value;
+          for (var _iterator6 = (0, _getIterator3.default)((0, _entries2.default)(selector)), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var _ref4 = _step6.value;
 
             var _ref5 = (0, _slicedToArray3.default)(_ref4, 2);
 
@@ -9984,16 +10067,16 @@ var Layer = function (_BaseNode) {
             }
           }
         } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
             }
           } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -10329,7 +10412,7 @@ var Layer = function (_BaseNode) {
       var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(t) {
         var _this4 = this;
 
-        var _resolution3, width, height, updateSet, children, shadowContext, outputContext, shadowCanvas, restEls, affectedEls, unaffectedEls, i, unaffectedEl, affected, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, affectedEl, box1, box2, box3, changed, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, _affectedEl, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, _unaffectedEl, _box, _box2, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, updateEl, box, dirtyBox, dirtyRect, lastRenderBox, _dirtyRect, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, _affectedEl2, _dirtyRect2, renderEls;
+        var _resolution3, width, height, updateSet, children, shadowContext, outputContext, shadowCanvas, restEls, affectedEls, unaffectedEls, i, unaffectedEl, affected, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, affectedEl, box1, box2, box3, changed, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, _affectedEl, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, _unaffectedEl, _box, _box2, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, updateEl, box, dirtyBox, dirtyRect, lastRenderBox, _dirtyRect, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, _affectedEl2, _dirtyRect2, renderEls;
 
         return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
@@ -10357,19 +10440,19 @@ var Layer = function (_BaseNode) {
 
                 unaffectedEl = restEls[i];
                 affected = false;
-                _iteratorNormalCompletion5 = true;
-                _didIteratorError5 = false;
-                _iteratorError5 = undefined;
+                _iteratorNormalCompletion7 = true;
+                _didIteratorError7 = false;
+                _iteratorError7 = undefined;
                 _context4.prev = 15;
-                _iterator5 = (0, _getIterator3.default)(updateSet);
+                _iterator7 = (0, _getIterator3.default)(updateSet);
 
               case 17:
-                if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
+                if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
                   _context4.next = 26;
                   break;
                 }
 
-                affectedEl = _step5.value;
+                affectedEl = _step7.value;
                 box1 = affectedEl.renderBox, box2 = unaffectedEl.renderBox, box3 = affectedEl.lastRenderBox;
 
                 if (!((0, _utils.boxIntersect)(box1, box2) || box3 && (0, _utils.boxIntersect)(box3, box2))) {
@@ -10381,7 +10464,7 @@ var Layer = function (_BaseNode) {
                 return _context4.abrupt('break', 26);
 
               case 23:
-                _iteratorNormalCompletion5 = true;
+                _iteratorNormalCompletion7 = true;
                 _context4.next = 17;
                 break;
 
@@ -10392,26 +10475,26 @@ var Layer = function (_BaseNode) {
               case 28:
                 _context4.prev = 28;
                 _context4.t0 = _context4['catch'](15);
-                _didIteratorError5 = true;
-                _iteratorError5 = _context4.t0;
+                _didIteratorError7 = true;
+                _iteratorError7 = _context4.t0;
 
               case 32:
                 _context4.prev = 32;
                 _context4.prev = 33;
 
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                  _iterator7.return();
                 }
 
               case 35:
                 _context4.prev = 35;
 
-                if (!_didIteratorError5) {
+                if (!_didIteratorError7) {
                   _context4.next = 38;
                   break;
                 }
 
-                throw _iteratorError5;
+                throw _iteratorError7;
 
               case 38:
                 return _context4.finish(35);
@@ -10437,26 +10520,26 @@ var Layer = function (_BaseNode) {
 
               case 46:
                 changed = false;
-                _iteratorNormalCompletion6 = true;
-                _didIteratorError6 = false;
-                _iteratorError6 = undefined;
+                _iteratorNormalCompletion8 = true;
+                _didIteratorError8 = false;
+                _iteratorError8 = undefined;
                 _context4.prev = 50;
-                _iterator6 = (0, _getIterator3.default)(affectedEls);
+                _iterator8 = (0, _getIterator3.default)(affectedEls);
 
               case 52:
-                if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                if (_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done) {
                   _context4.next = 76;
                   break;
                 }
 
-                _affectedEl = _step6.value;
-                _iteratorNormalCompletion7 = true;
-                _didIteratorError7 = false;
-                _iteratorError7 = undefined;
+                _affectedEl = _step8.value;
+                _iteratorNormalCompletion9 = true;
+                _didIteratorError9 = false;
+                _iteratorError9 = undefined;
                 _context4.prev = 57;
 
-                for (_iterator7 = (0, _getIterator3.default)(unaffectedEls); !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                  _unaffectedEl = _step7.value;
+                for (_iterator9 = (0, _getIterator3.default)(unaffectedEls); !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                  _unaffectedEl = _step9.value;
                   _box = _affectedEl.renderBox, _box2 = _unaffectedEl.renderBox;
 
 
@@ -10472,26 +10555,26 @@ var Layer = function (_BaseNode) {
               case 61:
                 _context4.prev = 61;
                 _context4.t1 = _context4['catch'](57);
-                _didIteratorError7 = true;
-                _iteratorError7 = _context4.t1;
+                _didIteratorError9 = true;
+                _iteratorError9 = _context4.t1;
 
               case 65:
                 _context4.prev = 65;
                 _context4.prev = 66;
 
-                if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                  _iterator7.return();
+                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                  _iterator9.return();
                 }
 
               case 68:
                 _context4.prev = 68;
 
-                if (!_didIteratorError7) {
+                if (!_didIteratorError9) {
                   _context4.next = 71;
                   break;
                 }
 
-                throw _iteratorError7;
+                throw _iteratorError9;
 
               case 71:
                 return _context4.finish(68);
@@ -10500,7 +10583,7 @@ var Layer = function (_BaseNode) {
                 return _context4.finish(65);
 
               case 73:
-                _iteratorNormalCompletion6 = true;
+                _iteratorNormalCompletion8 = true;
                 _context4.next = 52;
                 break;
 
@@ -10511,26 +10594,26 @@ var Layer = function (_BaseNode) {
               case 78:
                 _context4.prev = 78;
                 _context4.t2 = _context4['catch'](50);
-                _didIteratorError6 = true;
-                _iteratorError6 = _context4.t2;
+                _didIteratorError8 = true;
+                _iteratorError8 = _context4.t2;
 
               case 82:
                 _context4.prev = 82;
                 _context4.prev = 83;
 
-                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                  _iterator6.return();
+                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                  _iterator8.return();
                 }
 
               case 85:
                 _context4.prev = 85;
 
-                if (!_didIteratorError6) {
+                if (!_didIteratorError8) {
                   _context4.next = 88;
                   break;
                 }
 
-                throw _iteratorError6;
+                throw _iteratorError8;
 
               case 88:
                 return _context4.finish(85);
@@ -10552,12 +10635,12 @@ var Layer = function (_BaseNode) {
                 shadowContext.beginPath();
                 outputContext.beginPath();
 
-                _iteratorNormalCompletion8 = true;
-                _didIteratorError8 = false;
-                _iteratorError8 = undefined;
+                _iteratorNormalCompletion10 = true;
+                _didIteratorError10 = false;
+                _iteratorError10 = undefined;
                 _context4.prev = 98;
-                for (_iterator8 = (0, _getIterator3.default)(updateSet); !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                  updateEl = _step8.value;
+                for (_iterator10 = (0, _getIterator3.default)(updateSet); !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                  updateEl = _step10.value;
                   box = updateEl.renderBox;
                   dirtyBox = (0, _utils.boxIntersect)(box, [0, 0, width, height]);
 
@@ -10591,26 +10674,26 @@ var Layer = function (_BaseNode) {
               case 102:
                 _context4.prev = 102;
                 _context4.t3 = _context4['catch'](98);
-                _didIteratorError8 = true;
-                _iteratorError8 = _context4.t3;
+                _didIteratorError10 = true;
+                _iteratorError10 = _context4.t3;
 
               case 106:
                 _context4.prev = 106;
                 _context4.prev = 107;
 
-                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                  _iterator8.return();
+                if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                  _iterator10.return();
                 }
 
               case 109:
                 _context4.prev = 109;
 
-                if (!_didIteratorError8) {
+                if (!_didIteratorError10) {
                   _context4.next = 112;
                   break;
                 }
 
-                throw _iteratorError8;
+                throw _iteratorError10;
 
               case 112:
                 return _context4.finish(109);
@@ -10619,12 +10702,12 @@ var Layer = function (_BaseNode) {
                 return _context4.finish(106);
 
               case 114:
-                _iteratorNormalCompletion9 = true;
-                _didIteratorError9 = false;
-                _iteratorError9 = undefined;
+                _iteratorNormalCompletion11 = true;
+                _didIteratorError11 = false;
+                _iteratorError11 = undefined;
                 _context4.prev = 117;
-                for (_iterator9 = (0, _getIterator3.default)(affectedEls); !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                  _affectedEl2 = _step9.value;
+                for (_iterator11 = (0, _getIterator3.default)(affectedEls); !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                  _affectedEl2 = _step11.value;
                   box = _affectedEl2.renderBox;
                   dirtyBox = (0, _utils.boxIntersect)(box, [0, 0, width, height]);
 
@@ -10644,26 +10727,26 @@ var Layer = function (_BaseNode) {
               case 121:
                 _context4.prev = 121;
                 _context4.t4 = _context4['catch'](117);
-                _didIteratorError9 = true;
-                _iteratorError9 = _context4.t4;
+                _didIteratorError11 = true;
+                _iteratorError11 = _context4.t4;
 
               case 125:
                 _context4.prev = 125;
                 _context4.prev = 126;
 
-                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                  _iterator9.return();
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                  _iterator11.return();
                 }
 
               case 128:
                 _context4.prev = 128;
 
-                if (!_didIteratorError9) {
+                if (!_didIteratorError11) {
                   _context4.next = 131;
                   break;
                 }
 
-                throw _iteratorError9;
+                throw _iteratorError11;
 
               case 131:
                 return _context4.finish(128);
