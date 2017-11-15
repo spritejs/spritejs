@@ -7359,6 +7359,11 @@ var Paper = function () {
       }
       return layer && this[_layerMap][layerID] === layer;
     }
+  }, {
+    key: 'distortion',
+    get: function get() {
+      return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1]);
+    }
   }]);
   return Paper;
 }();
