@@ -39,7 +39,7 @@ const paper = spritejs.Paper2D('#paper'),
       fglayer = paper.layer('fglayer'),
       Label = spritejs.Label  
 
-paper.setResolution(800, 600) 
+paper.setResolution(1600, 600) 
 
 const text1 = new Label('SpriteJS.org')
 
@@ -51,6 +51,7 @@ text1.attr({
   bgcolor: 'blue',
   renderMode: 'stroke',
   lineHeight: 100,
+  scale: [paper.distortion, 1]
 })
 
 fglayer.appendChild(text1)
