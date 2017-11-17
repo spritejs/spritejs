@@ -1325,3 +1325,106 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 ## 1.8 版本更新
 
 新增 Attr 的集成机制，可以很方便地扩展各类 Sprite 对象
+
+## 1.9 版本更新
+
+添加了 layer.getElementById、layer.getElementsByName、layer.querySelector、layer.querySelectorAll
+
+```js
+sprite1.id = 'someid'
+sprite1.name = sprite2.name = 'akira'
+
+fglayer.getElementById('someid') //sprite1
+fglayer.getElementsByName('akira') //[sprite1, sprite2]
+fglayer.querySelector('#someid') //sprite1
+fglayer.querySelectorAll(':akira') //[sprite1, sprite2]
+fglayer.querySelectorAll('label') //[all labels on fglayer]
+```
+
+# 1.10 版本更新
+
+增加了快照机制，方便高性能地切换 layer
+
+[例子](https://code.h5jun.com/yoro/edit?js,output)
+
+```js
+const paper = spritejs.Paper2D('#paper'),
+      fglayer = paper.layer('fglayer'),
+      Label = spritejs.Label  
+
+paper.setResolution(1600, 600) 
+
+let snapshot1, snapshot2;
+
+async function drawText1(){
+  
+  if(snapshot1) {
+    //clearTimeout(timer)
+    const [text1] = fglayer.putSnapshot(snapshot1)
+    console.log(fglayer.getElementById('mytext'))
+  } else {
+    fglayer.remove()
+    const text1 = new Label('SpriteJS.org')
+
+    text1.attr({
+      id: 'mytext',
+      anchor: "0.5",
+      pos: [400, 300],
+      font: '48px Arial',
+      color: '#fff',
+      bgcolor: 'blue',
+      renderMode: 'stroke',
+      lineHeight: 100,
+      scale: [paper.distortion, 1]
+    })
+
+    fglayer.appendChild(text1)
+  }
+
+  if(!snapshot1) {
+    snapshot1 = await fglayer.getSnapshot()
+  }
+}
+
+async function drawText2(){
+  if(snapshot2) {
+    //console.log('from snapshot!')
+    const [text1] = fglayer.putSnapshot(snapshot2)
+  } else {
+    fglayer.remove()
+    const text1 = new Label('Hello world')
+
+    text1.attr({
+      //id: "mytext",
+      anchor: "0.5",
+      pos: [400, 300],
+      font: '48px Arial',
+      color: '#f0f',
+      bgcolor: 'blue',
+      renderMode: 'fill',
+      lineHeight: 100,
+      scale: [paper.distortion, 1]
+    })
+
+    fglayer.appendChild(text1)
+  }
+
+  if(!snapshot2) {
+    snapshot2 = await fglayer.getSnapshot()
+  }
+}
+
+function $toggle(...functors) {
+  const len = functors.length
+  let idx = 0
+  return function() {
+    functors[idx++ % len]()
+  }
+}
+
+let timer = setInterval($toggle(drawText1, drawText2), 1000)
+
+window.addEventListener('resize', evt => {
+  paper.setViewport('auto', 'auto')
+})
+```
