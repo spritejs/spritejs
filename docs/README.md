@@ -1341,6 +1341,35 @@ fglayer.querySelectorAll(':akira') //[sprite1, sprite2]
 fglayer.querySelectorAll('label') //[all labels on fglayer]
 ```
 
+添加了 paper.distortion 表示分辨率与 Viewport 之间的横向比率，可以用来防止 label 被拉伸变形：
+
+```js
+const paper = spritejs.Paper2D('#paper'),
+      fglayer = paper.layer('fglayer'),
+      Label = spritejs.Label  
+
+paper.setResolution(1600, 600) 
+
+const text1 = new Label('SpriteJS.org')
+
+text1.attr({
+  anchor: "0.5",
+  pos: [400, 300],
+  font: '48px Arial',
+  color: '#fff',
+  bgcolor: 'blue',
+  renderMode: 'stroke',
+  lineHeight: 100,
+  scale: [paper.distortion, 1] //防止 text 的拉伸变形
+})
+
+fglayer.appendChild(text1)
+
+window.addEventListener('resize', evt => {
+  paper.setViewport('auto', 'auto')
+})
+```
+
 # 1.10 版本更新
 
 增加了快照机制，方便高性能地切换 layer
