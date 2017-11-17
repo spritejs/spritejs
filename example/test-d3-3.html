@@ -19,8 +19,9 @@
   <script>
 
 const paper = spritejs.Paper2D('#paper').setResolution(800, 600)
+const fglayer = paper.layer('fglayer', {handleEvent: true})
 
-const layer = d3.select(paper).append('fglayer')
+const layer = d3.select(fglayer)
 
 const width  = 1330;
 const height = 520;
