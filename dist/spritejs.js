@@ -3580,7 +3580,7 @@ var _inherits2 = __webpack_require__(25);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _desc, _value, _class, _class2, _temp;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _class2, _temp;
 
 var _basesprite = __webpack_require__(36);
 
@@ -3631,7 +3631,11 @@ _spriteAnimator.Effects.d = _index2.default;
 
 function getBoundingBox(attr) {
   var path = attr.loadObj('path');
-  var d = attr.d;
+  var d = attr.d,
+      lineCap = attr.lineCap,
+      lineJoin = attr.lineJoin,
+      lineWidth = attr.lineWidth;
+
 
   if (!path) {
     if (d) {
@@ -3643,7 +3647,7 @@ function getBoundingBox(attr) {
     }
   }
 
-  var lw = Math.ceil(attr.lineWidth / 2);
+  var lw = Math.ceil(lineWidth / 2);
 
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.style.visibility = 'hidden';
@@ -3653,8 +3657,10 @@ function getBoundingBox(attr) {
   // svg.setAttribute('width', 1000)
   // svg.setAttribute('height', 1000)
   // svg.setAttribute('preserveAspectRatio', 'none')
-  path.setAttribute('stroke-width', attr.lineWidth);
+  path.setAttribute('stroke-width', lineWidth);
   path.setAttribute('stroke', '#f00');
+  path.setAttribute('stroke-linecap', lineCap);
+  path.setAttribute('stroke-linejoin', lineJoin);
   svg.appendChild(path);
   document.body.appendChild(svg);
 
@@ -3676,7 +3682,7 @@ function getBoundingBox(attr) {
   return [-lw, -lw, ox + width + lw, oy + height + lw];
 }
 
-var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _decorators.attr)('repaint'), _dec2 = (0, _decorators.attr)('repaint'), _dec3 = (0, _decorators.attr)('repaint'), _dec4 = (0, _decorators.attr)('repaint'), _dec5 = (0, _decorators.attr)('repaint'), _dec6 = (0, _decorators.attr)('repaint'), (_class = function (_BaseSprite$Attr) {
+var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _decorators.attr)('repaint'), _dec2 = (0, _decorators.attr)('repaint'), _dec3 = (0, _decorators.attr)('repaint'), _dec4 = (0, _decorators.attr)('repaint'), _dec5 = (0, _decorators.attr)('repaint'), _dec6 = (0, _decorators.attr)('repaint'), _dec7 = (0, _decorators.attr)('repaint'), _dec8 = (0, _decorators.attr)('repaint'), (_class = function (_BaseSprite$Attr) {
   (0, _inherits3.default)(PathSpriteAttr, _BaseSprite$Attr);
 
   function PathSpriteAttr(subject) {
@@ -3686,6 +3692,8 @@ var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _decorators.attr)('rep
 
     _this.merge({
       lineWidth: 1,
+      lineCap: 'butt',
+      lineJoin: 'miter',
       strokeColor: (0, _utils.parseColorString)('black'),
       fillColor: '',
       renderMode: 'stroke', // stroke, fill
@@ -3740,6 +3748,32 @@ var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _decorators.attr)('rep
     get: function get() {
       return this.get('lineWidth');
     }
+
+    /**
+      lineCap: butt|round|square
+     */
+
+  }, {
+    key: 'lineCap',
+    set: function set(val) {
+      this.set('lineCap', val);
+    },
+    get: function get() {
+      return this.get('lineCap');
+    }
+
+    /**
+      lineJoin: miter|round|bevel
+     */
+
+  }, {
+    key: 'lineJoin',
+    set: function set(val) {
+      this.set('lineJoin', val);
+    },
+    get: function get() {
+      return this.get('lineJoin');
+    }
   }, {
     key: 'renderMode',
     set: function set(val) {
@@ -3774,7 +3808,7 @@ var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _decorators.attr)('rep
     }
   }]);
   return PathSpriteAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'boundingBox', [_decorators.readonly], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boundingBox'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSize', [_decorators.readonly], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_dec2], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMode', [_dec3], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'renderMode'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype)), _class));
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'boundingBox', [_decorators.readonly], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boundingBox'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSize', [_decorators.readonly], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_dec2], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineCap', [_dec3], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineCap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineJoin', [_dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineJoin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMode', [_dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'renderMode'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec7], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec8], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype)), _class));
 var Path = (_temp = _class2 = function (_BaseSprite) {
   (0, _inherits3.default)(Path, _BaseSprite);
 
@@ -3806,6 +3840,8 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
 
 
         context.lineWidth = attr.lineWidth;
+        context.lineCap = attr.lineCap;
+        context.lineJoin = attr.lineJoin;
 
         var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
             width = _contentSize[0],
