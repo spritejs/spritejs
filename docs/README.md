@@ -1370,9 +1370,9 @@ window.addEventListener('resize', evt => {
 })
 ```
 
-# 1.10 版本更新
+## 1.10 版本更新
 
-增加了快照机制，方便高性能地切换 layer
+### 1.10.0 增加了快照机制，方便高性能地切换 layer
 
 [例子](https://code.h5jun.com/yoro/edit?js,output)
 
@@ -1455,5 +1455,34 @@ let timer = setInterval($toggle(drawText1, drawText2), 1000)
 
 window.addEventListener('resize', evt => {
   paper.setViewport('auto', 'auto')
+})
+```
+
+### 1.10.1 Path 增加了 lineCap 和 lineJoin 两个属性
+
+```js
+s4.attr({
+  anchor: [0, 0],
+  pos: [300, 100],
+  //size: [200, 200],
+  bgcolor: '#ddd',
+  //color: 'red',
+  //renderMode: 'fill',
+  lineWidth: 6,
+  lineCap: 'round',
+  d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+  //d: 'M10 80 h260 v206 h-260Z',
+  linearGradients: {
+    strokeColor: {
+      direction: 45,
+      colors: [{
+        offset: 0,
+        color: 'rgba(255,0,0,1)',
+      }, {
+        offset: 1,
+        color: 'rgba(255,0,0,0)',
+      }]
+    },
+  }  
 })
 ```
