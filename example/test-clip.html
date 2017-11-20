@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+    *{      
+      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
+      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */      
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */       
+      -webkit-user-select:none;
+    }  
+    html,body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      max-width: 800px;
+      background-color: #000;
+    }
+    #paper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 100%;
+      height: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <!--<script src="https://s2.ssl.qhres.com/!39729fa5/sprite2-1.0.0.js"></script>-->
+  <script src="/js/spritejs.js"></script>
+  <script>
+
+function drawHeart(ctx,x,y,R,rot) {
+    ctx.save();
+    ctx.rotate(rot/180*Math.PI);
+    heartPath(ctx, x, y, R);
+    ctx.clip();
+}
+function heartPath(ctx, x, y, R) {
+    ctx.beginPath();
+    ctx.arc(-R + x, y, R, Math.PI, 0, false);
+    ctx.arc(R + x, y, R, Math.PI, 0, false);
+    ctx.bezierCurveTo(...[1.9, 1.2, 0.6, 1.6, 0, 3.0].map((d, i) =>  (i % 2 ? y : x) + d * R));
+    ctx.bezierCurveTo(...[-0.6, 1.6, -1.9, 1.2, -2,0, 0].map((d, i) =>  (i % 2 ? y : x) + d * R));
+    ctx.closePath();
+}
+
+const paper = spritejs.Paper2D('#paper'),
+      fglayer = paper.layer('fglayer'),
+      Label = spritejs.Label,
+      Path = spritejs.Path
+
+paper.setResolution(800, 800) 
+
+drawHeart(fglayer.outputContext, 400, 210, 180, 0)
+
+const text1 = new Label('SpriteJS.org')
+
+text1.attr({
+  anchor: "0.5",
+  pos: [40, 400],
+  font: '48px Arial',
+  color: '#fff',
+  bgcolor: 'blue',
+  renderMode: 'stroke',
+  lineHeight: 100,
+  scale: [paper.distortion, 1]
+})
+
+fglayer.appendChild(text1)
+
+window.addEventListener('resize', evt => {
+  paper.setViewport('auto', 'auto')
+  drawHeart(fglayer.outputContext, 400, 210, 180, 0)
+})
+  </script>
+</body>
+</html>
