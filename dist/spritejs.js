@@ -7162,20 +7162,26 @@ var Paper = function () {
             }
           };
 
-          var originalX = e.layerX != null ? e.layerX : e.offsetX;
-          var originalY = e.layerY != null ? e.layerY : e.offsetY;
+          var _e$target$getBounding = e.target.getBoundingClientRect(),
+              left = _e$target$getBounding.left,
+              top = _e$target$getBounding.top;
 
-          if (originalX == null || originalY == null) {
+          var originalX = void 0,
+              originalY = void 0;
+
+          //mouse event layerX, layerY value change while browser scaled.
+          if (e.changedTouches) {
+            //mobile
             var _e$changedTouches$ = e.changedTouches[0],
                 clientX = _e$changedTouches$.clientX,
                 clientY = _e$changedTouches$.clientY;
 
-            var _e$target$getBounding = e.target.getBoundingClientRect(),
-                left = _e$target$getBounding.left,
-                top = _e$target$getBounding.top;
 
-            originalX = clientX - left;
-            originalY = clientY - top;
+            originalX = Math.round(clientX - left);
+            originalY = Math.round(clientY - top);
+          } else {
+            originalX = Math.round(e.x - left);
+            originalY = Math.round(e.y - top);
           }
 
           var _toLocalPos = _this.toLocalPos(originalX, originalY),
@@ -7183,7 +7189,7 @@ var Paper = function () {
               layerX = _toLocalPos2[0],
               layerY = _toLocalPos2[1];
 
-          (0, _assign2.default)(evtArgs, { layerX: layerX, layerY: layerY, originalX: originalX, originalY: originalY });
+          (0, _assign2.default)(evtArgs, { layerX: layerX, layerY: layerY, originalX: originalX, originalY: originalY, x: layerX, y: layerY });
 
           for (var i = 0; i < layers.length; i++) {
             var layer = layers[i];
