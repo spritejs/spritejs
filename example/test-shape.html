@@ -48,8 +48,8 @@
 
     function morph(from, to){
       let animation = s4.animate([
-        {d: from},
-        {d: to},      
+        {d: from, fillColor: 'red'},
+        {d: to, fillColor: 'blue'},      
       ], {
         delay: 1000,
         duration: 1000,
