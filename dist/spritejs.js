@@ -8939,7 +8939,9 @@ function colorEffect(color1, color2, p, start, end) {
     return Math.round(defaultEffect(v1, v2, p, start, end));
   },
 
-  color: colorEffect
+  color: colorEffect,
+  strokeColor: colorEffect,
+  fillColor: colorEffect
 });
 
 var _default = function (_Animator) {
