@@ -1236,7 +1236,11 @@ function attr() {
       var subject = this.subject || this,
           oldVal = this.get(prop);
 
-      setter.call(this, val);
+      if (val === null) {
+        this.remove(prop);
+      } else {
+        setter.call(this, val);
+      }
 
       var newVal = this.get(prop);
 
@@ -9174,6 +9178,11 @@ var SpriteAttr = (_dec = (0, _decorators.parseValue)(_utils.parseStringFloat, _u
         return Immutable.asMutable(obj, { deep: true });
       }
       return obj;
+    }
+  }, {
+    key: 'remove',
+    value: function remove(key) {
+      return delete this[_attr][key];
     }
   }, {
     key: 'clearCache',
