@@ -7,8 +7,8 @@
   <style>
   #paper {
     position: relative;
-    width: 800px;
-    height: 600px;
+    width: 1200px;
+    height: 900px;
   }
   </style>
 </head>
@@ -43,6 +43,7 @@ d3.json('/data/mapdata/china.json', (err, data) => {
       .data(data.features)
       .enter()
       .append('path')
+      .attr('anchor', 0.5)
       .attr('color', 'black')
       .attr('lineWidth', 1)
       .attr('d', path)
@@ -50,7 +51,7 @@ d3.json('/data/mapdata/china.json', (err, data) => {
       .attr('fillColor', '#d1eeee')
       //.attr('bgcolor', 'red')
       .on('click', d => {
-        const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
+        const paths = d3.event.target.findPath(d3.event.x, d3.event.y)
 
         if(paths.length){
           console.log(d.properties.name)
@@ -59,7 +60,7 @@ d3.json('/data/mapdata/china.json', (err, data) => {
       .on('mousemove', d => {
         const event = d3.event
         if(event.target !== selectedTarget){
-          const paths = event.target.findPath(event.offsetX, event.offsetY)
+          const paths = event.target.findPath(event.x, event.y)
 
           if(paths.length){
             if(selectedTarget){
@@ -69,6 +70,10 @@ d3.json('/data/mapdata/china.json', (err, data) => {
             event.target.attr('fillColor', '#c73')
           }
         }
+      })
+      .select(function() {
+        const [x, y] = this.outerSize
+        this.attr('translate', [x/2, y/2])
       })
 })  
 
