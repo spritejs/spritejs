@@ -1994,6 +1994,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         if (nx >= ox && nx - ox < ow && ny >= oy && ny - oy < oh) {
           evt.offsetX = nx;
           evt.offsetY = ny;
+          evt.targetPath = this.findPath(nx, ny);
 
           return true;
         }

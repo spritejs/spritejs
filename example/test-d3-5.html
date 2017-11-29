@@ -16,7 +16,7 @@
   <div id="paper"></div>
   <script src="/js/d3.js"></script>
   <script src="/js/spritejs.js"></script>
-  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="/js/topojson.v1.min.js"></script>
   <script>
 
 var width = 960,
@@ -46,7 +46,7 @@ d3.json("/data/us.json", function(error, us) {
     .attr('renderMode', 'fill')
     .attr('fillColor', '#666')
     .on("click", d => {
-      const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
+      const paths = d3.event.targetPath
       
       if(paths.length) {
         clicked(d)
