@@ -43,7 +43,7 @@ Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
       .attr('renderMode', 'fill')
       .attr('fillColor', '#666')
       .on("click", d => {
-        const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
+        const paths = d3.event.targetPaths
         
         if(paths.length) {
           clicked(d)
