@@ -15,12 +15,12 @@ function loadScript(url) {
 }
 
 let width = 1000,
-    height = 750,
+    height = 750
 
 const paper = spritejs.Paper2D('#paper').setResolution(width, height)
 
 Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
-  
+
   let centered;
   let projection = d3.geoAlbersUsa()
       .scale(1070)
