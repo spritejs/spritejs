@@ -46,7 +46,7 @@ d3.json("/data/us.json", function(error, us) {
     .attr('renderMode', 'fill')
     .attr('fillColor', '#666')
     .on("click", d => {
-      const paths = d3.event.targetPath
+      const paths = d3.event.targetPaths
       
       if(paths.length) {
         clicked(d)
