@@ -14,20 +14,22 @@ function loadScript(url) {
   }) 
 }
 
+let width = 1000,
+    height = 750,
+
+const paper = spritejs.Paper2D('#paper').setResolution(width, height)
+
 Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
-
-  var width = 1000,
-      height = 750,
-      centered;
-
-  var projection = d3.geoAlbersUsa()
+  
+  let centered;
+  let projection = d3.geoAlbersUsa()
       .scale(1070)
       .translate([width / 2, height / 2]);
 
-  var path = d3.geoPath()
+  let path = d3.geoPath()
       .projection(projection);
 
-  const paper = spritejs.Paper2D('#paper').setResolution(width, height)
+  
 
   const layer = paper.layer('fglayer', {
     handleEvent: true
