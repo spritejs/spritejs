@@ -41,6 +41,15 @@ const paper = spritejs.Paper2D('#paper'),
 
 paper.setResolution(1600, 600) 
 
+let dis = 1
+setInterval(() => {
+  fglayer.adjust(context => {
+    context.restore()
+    context.save()
+    context.translate(dis++, dis++)
+  })
+}, 10)
+
 const text1 = new Label('SpriteJS.org')
 
 text1.attr({
