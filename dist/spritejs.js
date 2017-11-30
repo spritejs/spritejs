@@ -11102,6 +11102,20 @@ var Layer = function (_BaseNode) {
       return this[_children];
     }
   }, {
+    key: 'adjust',
+    value: function adjust(handler) {
+      var outputContext = this.outputContext,
+          shadowContext = this.shadowContext;
+
+      var _resolution6 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution6[0],
+          height = _resolution6[1];
+
+      handler.call(this, outputContext);
+      outputContext.clearRect(0, 0, width, height);
+      outputContext.drawImage(shadowContext.canvas, 0, 0);
+    }
+  }, {
     key: 'timeline',
     get: function get() {
       return this[_timeline];
