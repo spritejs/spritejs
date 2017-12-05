@@ -303,7 +303,23 @@ class World {
   }
 }
 
-(async function() {
+function findId(idOrName) {
+  if(mapRelation[idOrName]){
+    return idOrName
+  }
+  for(let [id, value] of Object.entries(mapRelation)) {
+    if(value.name === idOrName) { 
+      return id
+    }
+  }
+  for(let [id, value] of Object.entries(mapRelation)) {
+    if(value.name.startsWith(idOrName)) { 
+      return id
+    }
+  }
+}
+
+;(async function() {
   const world = new World(worldLayer)
   await world.load(1)
   //world.enter(2205)
@@ -311,7 +327,8 @@ class World {
 
   moveToForm.onsubmit = function(evt) {
     const value = moveToText.value || 1
-    world.moveTo(value)
+
+    world.moveTo(findId(value))
     evt.preventDefault()
   }
 })()
