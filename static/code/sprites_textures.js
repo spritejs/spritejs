@@ -22,7 +22,7 @@ bglayer.appendChild(loading)
 paper.preload(
   [earthRes, earthCfg],
   {
-    id : 'tree1:',
+    id : 'tree1',
     src: '/static/image/tree1.png',
   },
   {
