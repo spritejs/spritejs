@@ -22,8 +22,12 @@ bglayer.appendChild(loading)
 paper.preload(
   [earthRes, earthCfg],
   {
-    tree1: '/static/image/tree1.png',
-    tree2: '/static/image/tree2.png'
+    id : 'tree1:',
+    src: '/static/image/tree1.png',
+  },
+  {
+    id: 'tree2',
+    src: '/static/image/tree2.png',
   }
 ).then(function() {
   bglayer.removeChild(loading)
