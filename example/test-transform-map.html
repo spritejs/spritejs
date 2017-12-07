@@ -124,9 +124,10 @@ class World {
 
     this.map = map
     
-    if(!map.cp) {
+    // 这里直接用boxCP因为发现一些Map数据的同一个地区不同地图数据里CP不一致
+    //if(!map.cp) {
       map.cp = mapRelation[mapId].boxCP
-    }
+    //}
 
     this.metaData = {
       [mapId]: {id: mapId, name: mapRelation[mapId].name, cp: map.cp, size: srcSize}
@@ -134,9 +135,9 @@ class World {
 
     for(let feature of map.features) {
       let {id, name, cp} = feature.properties
-      if(!cp) {
+      //if(!cp) {
         cp = mapRelation[id].boxCP
-      }
+      //}
       this.metaData[id] = {id, name, cp, size: mapRelation[id].size}
     }
 
