@@ -169,27 +169,25 @@ class World {
     this.layer = layer
   }
   getPath(destId) {
-    let id = this.mapId
-    let sources = [id + '']
+    const leave = []
+    const enter = []
+    let srcId = this.mapId
 
-    while(mapRelation[id] && mapRelation[id].parentId) {
-      id = mapRelation[id].parentId
-      sources.push(id)
+    while(mapRelation[destId].parentId != 0) {
+      enter.unshift(destId)
+      destId = mapRelation[destId].parentId
     }
-    let des = [destId + '']
-    id = destId
-    while(mapRelation[id] && mapRelation[id].parentId) {
-      id = mapRelation[id].parentId
-      const idx = sources.indexOf(id)
+    while(mapRelation[srcId].parentId != 0){
+      leave.push(srcId)
+      srcId = mapRelation[srcId].parentId
+    }
 
-      if(idx >= 0){
-        sources = sources.slice(0, idx + 1)
-        break
-      }
-      des.unshift(id)
+    while (enter[0] == leave[leave.length - 1]){
+      enter.shift()
+      leave.pop()
     }
-    sources.pop()
-    return {leave: sources, enter: des}
+    
+    return {leave, enter}
   }
   async moveTo(id) {
     if(id != this.mapId){
