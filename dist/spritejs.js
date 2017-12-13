@@ -2097,7 +2097,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         boxctx.closePath();
 
         if (linearGradients && linearGradients.border) {
-          var rect = linearGradients.rect || [x, y, w, h];
+          var rect = linearGradients.border.rect || [x, y, w, h];
 
           boxctx.strokeStyle = (0, _utils.getLinearGradients)(boxctx, rect, linearGradients.border);
         } else if (borderColor) {
@@ -2127,7 +2127,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         boxctx.closePath();
 
         if (linearGradients && linearGradients.bgcolor) {
-          var _rect = linearGradients.rect || [_x5, _y, _w, _h];
+          var _rect = linearGradients.bgcolor.rect || [_x5, _y, _w, _h];
 
           boxctx.fillStyle = (0, _utils.getLinearGradients)(boxctx, _rect, linearGradients.bgcolor);
         } else if (bgcolor) {
@@ -3565,7 +3565,7 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
         var linearGradients = attr.linearGradients;
 
         if (linearGradients && linearGradients.text) {
-          var rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+          var rect = linearGradients.text.rect || [borderWidth, borderWidth, width, height];
 
           context.strokeStyle = context.fillStyle = (0, _utils.getLinearGradients)(context, rect, linearGradients.text);
         }
@@ -4027,7 +4027,7 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
         var linearGradients = attr.linearGradients;
 
         if (linearGradients && linearGradients.strokeColor) {
-          var rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+          var rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth, width, height];
 
           context.strokeStyle = (0, _utils.getLinearGradients)(context, rect, linearGradients.strokeColor);
         } else {
@@ -4038,7 +4038,7 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
 
         if (attr.renderMode === 'fill') {
           if (linearGradients && linearGradients.fillColor) {
-            var _rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+            var _rect = linearGradients.fillColor.rect || [borderWidth, borderWidth, width, height];
 
             context.fillStyle = (0, _utils.getLinearGradients)(context, _rect, linearGradients.fillColor);
           } else {
