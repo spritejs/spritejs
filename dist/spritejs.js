@@ -952,19 +952,36 @@ function copyContext(context) {
 
 function getLinearGradients(context, rect, linearGradients) {
   var colors = linearGradients.colors,
-      direction = linearGradients.direction || 0,
+      direction = linearGradients.direction,
+      vector = linearGradients.vector,
       _rect2 = (0, _slicedToArray3.default)(rect, 4),
       x = _rect2[0],
       y = _rect2[1],
       w = _rect2[2],
       h = _rect2[3];
 
-  var _gradientBox = gradientBox(direction, [x, y, w, h]),
-      _gradientBox2 = (0, _slicedToArray3.default)(_gradientBox, 4),
-      x0 = _gradientBox2[0],
-      y0 = _gradientBox2[1],
-      x1 = _gradientBox2[2],
-      y1 = _gradientBox2[3];
+  var x0 = void 0,
+      y0 = void 0,
+      x1 = void 0,
+      y1 = void 0;
+
+  if (direction) {
+    var _gradientBox = gradientBox(direction, [x, y, w, h]);
+
+    var _gradientBox2 = (0, _slicedToArray3.default)(_gradientBox, 4);
+
+    x0 = _gradientBox2[0];
+    y0 = _gradientBox2[1];
+    x1 = _gradientBox2[2];
+    y1 = _gradientBox2[3];
+  } else if (vector) {
+    var _vector = (0, _slicedToArray3.default)(vector, 4);
+
+    x0 = _vector[0];
+    y0 = _vector[1];
+    x1 = _vector[2];
+    y1 = _vector[3];
+  }
 
   var gradient = context.createLinearGradient(x0, y0, x1, y1);
 
@@ -9582,6 +9599,7 @@ var SpriteAttr = (_dec = (0, _decorators.parseValue)(_utils.parseStringFloat, _u
         bgcolor: {
           direction: 30,  //angle，[0,360)
           rect: [x, y, w, h],
+          vector: [x1, y1, x2, y2], // direction/rect or from/to 
           colors: [
             {offset: 0, color: 'red'},
             {offset: 1, color: 'black'}
