@@ -2097,7 +2097,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         boxctx.closePath();
 
         if (linearGradients && linearGradients.border) {
-          boxctx.strokeStyle = (0, _utils.getLinearGradients)(boxctx, [x, y, w, h], linearGradients.border);
+          var rect = linearGradients.rect || [x, y, w, h];
+
+          boxctx.strokeStyle = (0, _utils.getLinearGradients)(boxctx, rect, linearGradients.border);
         } else if (borderColor) {
           boxctx.strokeStyle = borderColor;
         }
@@ -2125,7 +2127,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         boxctx.closePath();
 
         if (linearGradients && linearGradients.bgcolor) {
-          boxctx.fillStyle = (0, _utils.getLinearGradients)(boxctx, [_x5, _y, _w, _h], linearGradients.bgcolor);
+          var _rect = linearGradients.rect || [_x5, _y, _w, _h];
+
+          boxctx.fillStyle = (0, _utils.getLinearGradients)(boxctx, _rect, linearGradients.bgcolor);
         } else if (bgcolor) {
           boxctx.fillStyle = bgcolor;
         }
@@ -3561,7 +3565,9 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
         var linearGradients = attr.linearGradients;
 
         if (linearGradients && linearGradients.text) {
-          context.strokeStyle = context.fillStyle = (0, _utils.getLinearGradients)(context, [borderWidth, borderWidth, width, height], linearGradients.text);
+          var rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+
+          context.strokeStyle = context.fillStyle = (0, _utils.getLinearGradients)(context, rect, linearGradients.text);
         }
 
         var top = borderWidth;
@@ -4021,7 +4027,9 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
         var linearGradients = attr.linearGradients;
 
         if (linearGradients && linearGradients.strokeColor) {
-          context.strokeStyle = (0, _utils.getLinearGradients)(context, [borderWidth, borderWidth, width, height], linearGradients.strokeColor);
+          var rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+
+          context.strokeStyle = (0, _utils.getLinearGradients)(context, rect, linearGradients.strokeColor);
         } else {
           context.strokeStyle = strokeColor;
         }
@@ -4030,7 +4038,9 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
 
         if (attr.renderMode === 'fill') {
           if (linearGradients && linearGradients.fillColor) {
-            context.fillStyle = (0, _utils.getLinearGradients)(context, [borderWidth, borderWidth, width, height], linearGradients.fillColor);
+            var _rect = linearGradients.rect || [borderWidth, borderWidth, width, height];
+
+            context.fillStyle = (0, _utils.getLinearGradients)(context, _rect, linearGradients.fillColor);
           } else {
             context.fillStyle = fillColor || strokeColor;
           }
@@ -9571,6 +9581,7 @@ var SpriteAttr = (_dec = (0, _decorators.parseValue)(_utils.parseStringFloat, _u
       linearGradients : {
         bgcolor: {
           direction: 30,  //angle，[0,360)
+          rect: [x, y, w, h],
           colors: [
             {offset: 0, color: 'red'},
             {offset: 1, color: 'black'}
