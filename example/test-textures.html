@@ -28,7 +28,7 @@
     const box1 = new Sprite()
     box1.attr({
       anchor: [0.5, 0.5],
-      pos: [400, 300],
+      pos: [300, 300],
       size: [212, 188],
       border: [10, 'red'],
       borderRadius: 25,
@@ -61,6 +61,35 @@
     box1.on('click', evt => {
       console.log(evt.offsetX, evt.offsetY, evt.targetTextures)
     })
+
+    const s1 = new Sprite()
+    s1.attr({
+      anchor: [0.5, 0.5],
+      pos: [600, 400],
+      size: [200, 200],
+      border: [6, '#77cc33'],
+      borderRadius: 5,
+      bgcolor: '#fff',
+    })
+
+    const s2 = new Sprite()
+    s2.attr({
+      anchor: [0.5, 0.5],
+      pos: [105, 105],
+      size: [200, 200],
+      border: [6, '#77cc33'],
+      borderRadius: 5,
+      rotate: 45,
+      bgcolor: 'rgba(255, 133, 77, 0.5)',
+    })
+
+    s1.textures = [{
+       src: s2,
+       //srcRect: [-10, -10, 150, 150],
+       //rect: [50,10, 200, 200]
+    }]
+
+    paper.layer().append(s1)
   </script>
 </body>
 </html>

@@ -4157,16 +4157,16 @@ var Resource = {
       return new _promise2.default(function (resolve, reject) {
         if (typeof texture.src !== 'string') {
           // support sprites as textures
-          if (!(texture.src instanceof _basesprite2.default)) {
-            var node = (0, _nodetype.createNode)(texture.src.nodeType, texture.src.attrs);
-            node.id = texture.id;
-            texture.src = node;
+          var node = texture.src;
+          if (!(node instanceof _basesprite2.default)) {
+            var _node = (0, _nodetype.createNode)(_node.nodeType, _node.attrs);
+            _node.id = texture.id;
           }
-          _promise2.default.resolve(texture.src.render()).then(function (context) {
-            resolve({ img: context.canvas, texture: texture });
-            loadedResources.set(mapKey, context.canvas);
+          _promise2.default.resolve(node.render()).then(function (context) {
+            resolve({ img: node, texture: texture });
+            loadedResources.set(mapKey, node);
           });
-          texture.src = texture.src.serialize();
+          texture.src = node.serialize();
         } else {
           var img = document.createElement('img');
           img.crossOrigin = 'anonymous';
@@ -4591,15 +4591,15 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
 
         var context, textures, _attr3, borderWidth, promises, texturesWithImg;
 
-        return _regenerator2.default.wrap(function _callee$(_context4) {
+        return _regenerator2.default.wrap(function _callee$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 context = void 0;
                 textures = this.textures;
 
                 if (!textures) {
-                  _context4.next = 12;
+                  _context5.next = 12;
                   break;
                 }
 
@@ -4610,18 +4610,19 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
                 promises = textures.map(function (texture) {
                   return _resource2.default.loadTexture(texture);
                 });
-                _context4.next = 7;
+                _context5.next = 7;
                 return _promise2.default.all(promises);
 
               case 7:
-                texturesWithImg = _context4.sent;
+                texturesWithImg = _context5.sent;
 
 
                 context = (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t);
 
                 texturesWithImg.forEach(function (_ref5) {
                   var texture = _ref5.texture,
-                      img = _ref5.img;
+                      img = _ref5.img,
+                      sprite = _ref5.sprite;
 
                   var rect = (texture.rect || [0, 0].concat((0, _toConsumableArray3.default)(_this5.innerSize))).slice(0);
                   var srcRect = texture.srcRect;
@@ -4632,8 +4633,27 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
                   var imgCanvas = document.createElement('canvas');
                   var imgContext = imgCanvas.getContext('2d');
 
-                  if (texture.filter) {
+                  context.save();
+
+                  var bound = [0, 0];
+
+                  if (img instanceof _basesprite2.default) {
                     var _context;
+
+                    var transform = img.transform.m,
+                        pos = img.attr('pos');
+
+                    bound = img.originRect;
+
+                    context.translate(pos[0], pos[1]);
+                    (_context = context).transform.apply(_context, (0, _toConsumableArray3.default)(transform));
+                    context.globalAlpha = img.attr('opacity');
+
+                    img = img.context.canvas;
+                  }
+
+                  if (texture.filter) {
+                    var _context2;
 
                     var outterRect = void 0;
                     var imgRect = srcRect ? [0, 0, srcRect[2], srcRect[3]] : [0, 0, img.width, img.height];
@@ -4654,33 +4674,35 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
                     imgContext.filter = _filters2.default.compile(texture.filter);
 
                     if (srcRect) {
-                      imgContext.drawImage.apply(imgContext, [img].concat((0, _toConsumableArray3.default)(srcRect), [outterRect[0], outterRect[1], srcRect[2], srcRect[3]]));
+                      imgContext.drawImage.apply(imgContext, [img].concat((0, _toConsumableArray3.default)(srcRect), [bound[0] + outterRect[0], bound[1] + outterRect[1], srcRect[2], srcRect[3]]));
                     } else {
-                      imgContext.drawImage(img, outterRect[0], outterRect[1], img.width, img.height);
+                      imgContext.drawImage(img, bound[0] + outterRect[0], bound[1] + outterRect[1], img.width, img.height);
                     }
-                    (_context = context).drawImage.apply(_context, [imgCanvas].concat((0, _toConsumableArray3.default)(rect)));
+                    (_context2 = context).drawImage.apply(_context2, [imgCanvas].concat((0, _toConsumableArray3.default)(rect)));
                   } else if (srcRect) {
-                    var _context2;
-
-                    (_context2 = context).drawImage.apply(_context2, [img].concat((0, _toConsumableArray3.default)(srcRect), (0, _toConsumableArray3.default)(rect)));
-                  } else {
                     var _context3;
 
-                    (_context3 = context).drawImage.apply(_context3, [img].concat((0, _toConsumableArray3.default)(rect)));
+                    (_context3 = context).drawImage.apply(_context3, [img].concat((0, _toConsumableArray3.default)(srcRect), [bound[0] + rect[0], bound[1] + rect[1], rect[2], rect[3]]));
+                  } else {
+                    var _context4;
+
+                    (_context4 = context).drawImage.apply(_context4, [img].concat([bound[0] + rect[0], bound[1] + rect[1], rect[2], rect[3]]));
                   }
+
+                  context.restore();
                 });
-                _context4.next = 13;
+                _context5.next = 13;
                 break;
 
               case 12:
                 context = (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t);
 
               case 13:
-                return _context4.abrupt('return', context);
+                return _context5.abrupt('return', context);
 
               case 14:
               case 'end':
-                return _context4.stop();
+                return _context5.stop();
             }
           }
         }, _callee, this);
@@ -10424,7 +10446,7 @@ var Layer = function (_BaseNode) {
                 context = child.cache;
 
                 if (context) {
-                  _context2.next = 12;
+                  _context2.next = 11;
                   break;
                 }
 
@@ -10434,10 +10456,11 @@ var Layer = function (_BaseNode) {
               case 9:
                 context = _context2.sent;
 
-                child.userRender(t, context);
                 child.cache = context;
 
-              case 12:
+              case 11:
+
+                child.userRender(t, context);
 
                 if (this[_updateSet].has(child)) {
                   child.dispatchEvent('update', { target: child, context: context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox }, true);
