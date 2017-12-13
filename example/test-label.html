@@ -63,16 +63,17 @@ text1.attr({
   scale: [paper.distortion, 1]
 })
 
-let i = 1
-text1.draw(context => {
-  context.fillRect(20 * i++, 20, 20, 20)
-}, true)
 
-text1.on('update', evt => {
-  setTimeout(() => {
-      text1.forceUpdate()
-    }, 500)
-})
+// let i = 1
+// text1.draw(context => {
+//   context.fillRect(20 * i++, 20, 20, 20)
+// }, true)
+
+// text1.on('update', evt => {
+//   setTimeout(() => {
+//       text1.forceUpdate()
+//     }, 500)
+// })
 
 
 fglayer.appendChild(text1)
