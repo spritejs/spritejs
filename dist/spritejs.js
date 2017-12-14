@@ -965,7 +965,7 @@ function getLinearGradients(context, rect, linearGradients) {
       x1 = void 0,
       y1 = void 0;
 
-  if (direction) {
+  if (direction != null) {
     var _gradientBox = gradientBox(direction, [x, y, w, h]);
 
     var _gradientBox2 = (0, _slicedToArray3.default)(_gradientBox, 4);
@@ -4016,6 +4016,23 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
   }
 
   (0, _createClass3.default)(Path, [{
+    key: 'getPointAtLength',
+    value: function getPointAtLength(length) {
+      var path = (0, _utils.createPath)(this.attr('d'));
+
+      var _path$getPointAtLengt = path.getPointAtLength(length),
+          x = _path$getPointAtLengt.x,
+          y = _path$getPointAtLengt.y;
+
+      return [x, y];
+    }
+  }, {
+    key: 'getPathLength',
+    value: function getPathLength() {
+      var path = (0, _utils.createPath)(this.attr('d'));
+      return path.getTotalLength();
+    }
+  }, {
     key: 'render',
     value: function render(t) {
       var context = (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'render', this).call(this, t),
