@@ -18,6 +18,7 @@
   <div id="message"></div>
   <div id="paper"></div>
   <img id="recordGif"/>
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
   <script src="/js/spritejs.js"></script>
   <script src="/js/gif.js"></script>
   <script>
@@ -213,10 +214,10 @@
         strokeColor: {
           //direction: 45,
           //rect: [0, 0, 100, 100],
-          vector: [0, 0, 150, 250],
+          vector: [10, 50, 290, 200],
           colors: [{
             offset: 0,
-            color: 'rgba(255,0,0,1)',
+            color: 'rgba(255,0,0,0)',
           }, {
             offset: 1,
             color: 'rgba(255,0,0,0)',
@@ -224,8 +225,23 @@
         },
       }  
     })
+    
     paper.layer().append(s4)
     window.s4 = s4
+
+    const a1 = new Animator(1000,  p => {
+          const colors = [
+            {offset: 0, color: 'rgba(255,0,0,0)'},
+            {offset: p, color: 'rgba(255,0,0,1)'},
+            {offset: p, color: 'rgba(255,0,0,0)'},
+          ]
+
+          const linearGradients = s4.attr('linearGradients')
+          linearGradients.strokeColor.colors = colors
+          s4.attr({linearGradients})
+    })
+
+    a1.animate()
 
 
     const label = new Label('Hello World!\n你好，世界！')
