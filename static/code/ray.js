@@ -87,6 +87,7 @@ function sleep(ms) {
     })   
 
     await a1.animate()
+    paper.layer().remove(s)
   }
 
   do {
