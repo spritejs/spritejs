@@ -37,7 +37,7 @@
     "http-server": "^0.9.0",
     "nyc": "^11.1.0",
     "seamless-immutable": "^7.1.2",
-    "sprite-animator": "^1.1.0",
+    "sprite-animator": "^1.1.1",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
