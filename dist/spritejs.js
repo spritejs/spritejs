@@ -2809,7 +2809,7 @@ var Animator = function () {
         if (this[_readyDefer] && !this[_readyDefer].timerID) {
           this[_readyDefer].timerID = this.timeline.setTimeout(function () {
             _this2[_readyDefer].resolve();
-            assert(_this2.playState === 'running', 'An error occured: ' + _this2.playState);
+            assert(_this2.playState === 'running' || _this2.playState === 'finished', 'An error occured: ' + _this2.playState);
             delete _this2[_readyDefer];
           }, { entropy: -this.timeline.entropy });
         }
@@ -3097,7 +3097,7 @@ var Animator = function () {
         // 已经在 pending 状态
         this[_readyDefer].timerID = this.timeline.setTimeout(function () {
           _this3[_readyDefer].resolve();
-          assert(_this3.playState === 'running', 'An error occured: ' + _this3.playState);
+          assert(_this3.playState === 'running' || _this3.playState === 'finished', 'An error occured: ' + _this3.playState);
           delete _this3[_readyDefer];
         }, { entropy: -this.timeline.entropy });
       }
