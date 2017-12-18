@@ -4159,7 +4159,7 @@ var Resource = {
   loadTexture: function loadTexture(texture) {
     var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30000;
 
-    if (typeof texture === 'string' || texture instanceof _basesprite2.default) {
+    if (typeof texture === 'string' || texture instanceof _basesprite2.default || texture.tagName === 'CANVAS') {
       texture = { src: texture };
     }
     if (typeof texture.src !== 'string' && texture.src.id == null) {
@@ -4175,15 +4175,20 @@ var Resource = {
         if (typeof texture.src !== 'string') {
           // support sprites as textures
           var node = texture.src;
-          if (!(node instanceof _basesprite2.default)) {
-            var _node = (0, _nodetype.createNode)(_node.nodeType, _node.attrs);
-            _node.id = texture.id;
-          }
-          _promise2.default.resolve(node.render()).then(function (context) {
+          if (node.tagName === 'CANVAS') {
             resolve({ img: node, texture: texture });
             loadedResources.set(mapKey, node);
-          });
-          texture.src = node.serialize();
+          } else {
+            if (!(node instanceof _basesprite2.default)) {
+              var _node = (0, _nodetype.createNode)(_node.nodeType, _node.attrs);
+              _node.id = texture.id;
+            }
+            _promise2.default.resolve(node.render()).then(function (context) {
+              resolve({ img: node, texture: texture });
+              loadedResources.set(mapKey, node);
+            });
+            texture.src = node.serialize();
+          }
         } else {
           var img = document.createElement('img');
           img.crossOrigin = 'anonymous';
