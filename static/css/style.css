@@ -127,6 +127,8 @@ html,body{
 
 #code {
   max-width: 50%;
+  display: flex;
+  flex-grow: 0.5;
 }
 
 #code textarea {
@@ -165,6 +167,7 @@ a.selected {
 
 .cm-s-seti.CodeMirror {
   height: 100%;
+  width: 100%;
 }
 
 @media screen and (max-width:480px){
