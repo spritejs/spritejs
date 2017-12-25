@@ -37,12 +37,10 @@
   <script>
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
 ;(async function(){
   if(typeof sprite2 !== 'undefined'){
     spritejs = sprite2
   }
-
   const paper = spritejs.Paper2D('#paper')
   paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
   
@@ -64,13 +62,11 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
         return
       }
       const key = JSON.stringify(this.textures) + this.attr('scale')
-
       if(!cacheMap.has(key)) {
         cacheMap.set(key, context)
       }
     }      
   }
-
   await paper.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
   )  
@@ -120,9 +116,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
     const flip = dist[0] < 0 ? -1 : 1
     const duration = 5 * distance + 100
-
     bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
-
     //console.log(birdPoint, randomPoint)
     const anim = bird.animate([
       {pos: birdPoint},
@@ -132,15 +126,12 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
       endDelay: 500,
       fill: 'both'
     })
-
     await anim.finished
   }
-
   let birdCount = 0
   async function addBird(){
     spriteCount.innerHTML = ++birdCount
     const bird = new Bird()
-
     bird.attr({
       anchor: [0.5, 0.5],
       pos: axisZero,
@@ -148,9 +139,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
         rotate: 0,
       }
     })
-
     fglayer.appendChild(bird)
-
     // bird.animate([
     //   {textures: ['bird1.png']},
     //   {textures: ['bird2.png']},
@@ -162,24 +151,19 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     //   iterations: Infinity,
     //   easing: 'step-end',
     // })
-
     let idx = 0
     setInterval(() => {
       bird.textures = [`bird${++idx % 3 + 1}.png`]
     }, 100)
-
     //noprotect
     do{
       await randomAnimate(bird)
     }while(1) 
   }
-
   addBird()
-
   circle.on('click', evt => {
     addBird()
   })
-
   //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
   //所以所有精灵不运动的时候 fps 也会降下来
   setInterval(() => {
