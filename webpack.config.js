@@ -55,10 +55,11 @@ module.exports = function (env = {}) {
     },
 
     devServer: {
+      open: true,
       proxy: {
         '*': `http://127.0.0.1:${proxyPort}`
       }
     },
-    //devtool: 'inline-source-map',
+    // devtool: 'inline-source-map',
   }
 }

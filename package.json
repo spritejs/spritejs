@@ -10,7 +10,8 @@
     "test": "nyc ava",
     "lint": "eslint 'lib/**/*.js' --fix",
     "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
-    "prepublishOnly": "rm -rf dist/* && ./script/build.js"
+    "build": "rm -rf dist/* && ./script/build.js",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "akira-cn",
