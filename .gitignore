@@ -39,3 +39,5 @@ runtime/
 
 sftp-config.json
 package-lock.json
+
+.vscode
