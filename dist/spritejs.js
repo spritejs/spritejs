@@ -9678,7 +9678,12 @@ var SpriteAttr = (_dec = (0, _decorators.parseValue)(_utils.parseStringFloat, _u
           var x1 = delta.x,
               y1 = delta.y;
 
-          angle = 180 * Math.atan2(y1 - y, x1 - x) / Math.PI;
+          if (x1 === x && y1 === y) {
+            // last point
+            angle = this.get('offsetAngle');
+          } else {
+            angle = 180 * Math.atan2(y1 - y, x1 - x) / Math.PI;
+          }
 
           if (this.offsetRotate === 'reverse') {
             angle = -angle;
