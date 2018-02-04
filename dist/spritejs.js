@@ -1272,6 +1272,7 @@ var _stringify = __webpack_require__(63);
 var _stringify2 = _interopRequireDefault(_stringify);
 
 exports.attr = attr;
+exports.deprecate = deprecate;
 exports.readonly = readonly;
 exports.parseValue = parseValue;
 exports.memoize = memoize;
@@ -1328,13 +1329,55 @@ function attr() {
   return decorator.apply(undefined, arguments);
 }
 
+function deprecate() {
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var msg = '';
+  function decorator(target, prop, descriptor) {
+    var defaultMsg = target.constructor.name + '#' + key + ' has been deprecated.';
+    if (typeof descriptor.value === 'function') {
+      var func = descriptor.value;
+      descriptor.value = function () {
+        console.warn(defaultMs, msg);
+
+        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        return func.apply(this, args);
+      };
+    }
+    if (descriptor.set) {
+      var setter = descriptor.set;
+      descriptor.set = function (val) {
+        console.warn(defaultMs, msg);
+        return setter.call(this, val);
+      };
+    }
+    if (descriptor.get) {
+      var getter = descriptor.get;
+      descriptor.get = function () {
+        console.warn(defaultMs, msg);
+        return getter.call(this);
+      };
+    }
+  }
+  if (args.length === 1) {
+    msg = args[0];
+    return decorator;
+  }
+  return decorator.apply(undefined, args);
+}
+
 function readonly(target, prop, descriptor) {
   descriptor.enumerable = true;
 }
 
 function parseValue() {
-  for (var _len = arguments.length, parsers = Array(_len), _key = 0; _key < _len; _key++) {
-    parsers[_key] = arguments[_key];
+  for (var _len3 = arguments.length, parsers = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    parsers[_key3] = arguments[_key3];
   }
 
   return function (target, prop, descriptor) {
@@ -1372,8 +1415,8 @@ function memoize(fn) {
 
   var cache = {};
   return function () {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
+    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      args[_key4] = arguments[_key4];
     }
 
     var key = serializer(args);
@@ -7393,6 +7436,7 @@ exports.default = Group;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _regenerator = __webpack_require__(38);
 
@@ -7475,13 +7519,13 @@ function sortLayer(paper) {
   paper[_layers] = layers;
 }
 
-var Paper = function (_BaseNode) {
-  (0, _inherits3.default)(Paper, _BaseNode);
+var _default = function (_BaseNode) {
+  (0, _inherits3.default)(_default, _BaseNode);
 
-  function Paper(container, width, height) {
-    (0, _classCallCheck3.default)(this, Paper);
+  function _default(container, width, height) {
+    (0, _classCallCheck3.default)(this, _default);
 
-    var _this = (0, _possibleConstructorReturn3.default)(this, (Paper.__proto__ || (0, _getPrototypeOf2.default)(Paper)).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || (0, _getPrototypeOf2.default)(_default)).call(this));
 
     if (typeof container === 'string') {
       container = document.querySelector(container);
@@ -7518,7 +7562,7 @@ var Paper = function (_BaseNode) {
   // d3-friendly
 
 
-  (0, _createClass3.default)(Paper, [{
+  (0, _createClass3.default)(_default, [{
     key: 'insertBefore',
     value: function insertBefore(node, next) {
       if (this.container) {
@@ -7823,20 +7867,10 @@ var Paper = function (_BaseNode) {
       return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1]);
     }
   }]);
-  return Paper;
+  return _default;
 }(_basenode2.default);
 
-var paper = {
-  Paper2D: function Paper2D() {
-    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-      args[_key3] = arguments[_key3];
-    }
-
-    return new (Function.prototype.bind.apply(Paper, [null].concat((0, _toConsumableArray3.default)(args))))();
-  }
-};
-
-exports.default = paper;
+exports.default = _default;
 
 /***/ }),
 /* 117 */
@@ -10112,7 +10146,7 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Group = exports.Matrix = exports.Effects = exports.createNode = exports.registerNodeType = exports.Axis = exports.Color = exports.Path = exports.Label = exports.Resource = exports.Paper2D = exports.Sprite = exports.BaseSprite = undefined;
+exports.Paper2D = exports.Scene = exports.Group = exports.Matrix = exports.Effects = exports.createNode = exports.registerNodeType = exports.Axis = exports.Color = exports.Path = exports.Label = exports.Resource = exports.Sprite = exports.BaseSprite = undefined;
 
 var _basesprite = __webpack_require__(29);
 
@@ -10126,9 +10160,9 @@ var _label = __webpack_require__(56);
 
 var _label2 = _interopRequireDefault(_label);
 
-var _paper = __webpack_require__(116);
+var _scene = __webpack_require__(116);
 
-var _paper2 = _interopRequireDefault(_paper);
+var _scene2 = _interopRequireDefault(_scene);
 
 var _resource = __webpack_require__(59);
 
@@ -10158,11 +10192,20 @@ var _spriteAnimator = __webpack_require__(46);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Paper2D = _paper2.default.Paper2D,
-    Color = _utils.parseColor;
+var Color = _utils.parseColor;
+
+function Paper2D() {
+  console.warn('Paper2D has been deprecated. Use new sprite.Scene instead.');
+
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
+}
+
 exports.BaseSprite = _basesprite2.default;
 exports.Sprite = _sprite2.default;
-exports.Paper2D = Paper2D;
 exports.Resource = _resource2.default;
 exports.Label = _label2.default;
 exports.Path = _path2.default;
@@ -10173,6 +10216,8 @@ exports.createNode = _nodetype.createNode;
 exports.Effects = _spriteAnimator.Effects;
 exports.Matrix = _matrix2.default;
 exports.Group = _group2.default;
+exports.Scene = _scene2.default;
+exports.Paper2D = Paper2D;
 
 /***/ }),
 /* 140 */
