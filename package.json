@@ -35,6 +35,7 @@
     "eslint-plugin-vue": "^2.1.0",
     "http-server": "^0.9.0",
     "nyc": "^11.1.0",
+    "puppeteer": "^1.0.0",
     "seamless-immutable": "^7.1.2",
     "sprite-animator": "^1.1.1",
     "webpack": "^2.3.3",

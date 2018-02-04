@@ -119,9 +119,9 @@ module.exports = {
     // ✘ : 关闭对强制行的最大长度的监控
     // 传参很多就很方啊，尤其加上默认参数的时候
     'max-len': 'off',
-    // 禁止一个文件中在忽略空行和注释之后行数超过300行
+    // 禁止一个文件中在忽略空行和注释之后行数超过1500行
     'max-lines': ['error', {
-      max: 500,
+      max: 1500,
       skipBlankLines: true,
       skipComments: true
     }],
