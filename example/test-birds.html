@@ -18,7 +18,7 @@
       margin: 0;
       max-width: 500px;
     }
-    #paper {
+    #scene {
       position: relative;
       overflow: hidden;
       width: 100%;
@@ -29,7 +29,7 @@
 </head>
 <body>
   <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
-  <div id="paper"></div>
+  <div id="scene"></div>
   
   <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
   <!--<script src="https://s2.ssl.qhres.com/!39729fa5/sprite2-1.0.0.js"></script>-->
@@ -41,8 +41,8 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   if(typeof sprite2 !== 'undefined'){
     spritejs = sprite2
   }
-  const paper = spritejs.Paper2D('#paper')
-  paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
+  const scene = new spritejs.Scene('#scene')
+  scene.setResolution(800, 800) // 设置 scene 的实际分辨率
   
   const cacheMap = new Map()
   class Bird extends spritejs.Sprite {
@@ -67,14 +67,14 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
       }
     }      
   }
-  await paper.preload(
+  await scene.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
   )  
   
-  const bglayer = paper.layer('bg'),  // 背景层
+  const bglayer = scene.layer('bg'),  // 背景层
         // 前景层
         // 每次最多渲染 50 个 sprite，并且不代理事件，提升性能
-        fglayer = paper.layer('fg', {
+        fglayer = scene.layer('fg', {
               handleEvent: false,
               evaluateFPS: true,
               renderMode: 'repaintAll',
@@ -170,7 +170,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     fps.innerHTML = fglayer.fps
   }, 1000)
   window.fglayer = fglayer
-  window.paper = paper
+  window.scene = scene
 })()
   </script>
 </body>
