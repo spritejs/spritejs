@@ -1,0 +1,407 @@
+import {memoize} from './decorators'
+
+class Color {
+  constructor(color) {
+    if(typeof color === 'string') {
+      const canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d')
+
+      context.fillStyle = color
+      context.fillRect(0, 0, 1, 1)
+      const data = context.getImageData(0, 0, 1, 1).data
+
+      this.red = data[0]
+      this.green = data[1]
+      this.blue = data[2]
+      this.alpha = data[3] / 255
+    } else {
+      this.red = Math.round(color.red)
+      this.green = Math.round(color.green)
+      this.blue = Math.round(color.blue)
+      this.alpha = color.alpha != null ? color.alpha : 1
+    }
+  }
+  toString() {
+    const {red, green, blue, alpha} = this
+    return `rgba(${red},${green},${blue},${alpha})`
+  }
+  get str() {
+    return String(this)
+  }
+}
+
+const parseColor = memoize((color) => {
+  return new Color(color)
+})
+
+function parseColorString(color) {
+  return parseColor(color).toString()
+}
+
+function parseStringTransform(str) {
+  if(typeof str !== 'string') return str
+
+  const rules = str.match(/((?:scale|rotate|translate|skew|matrix)\([^()]+\))/g)
+  const ret = {}
+  if(rules) {
+    rules.forEach((rule) => {
+      const matched = rule.match(/(scale|rotate|translate|skew|matrix)\(([^()]+)\)/)
+      if(matched) {
+        const [r, m, v] = matched
+        if(m === 'rotate') {
+          ret[m] = parseStringFloat(v)[0]
+        } else {
+          ret[m] = parseStringFloat(v)
+        }
+      }
+    })
+  }
+
+  return ret
+}
+
+function parseValuesString(str, isInt = true) {
+  if(typeof str === 'string') {
+    const values = str.split(/[\s,]+/g)
+    return values.map((v) => { return isInt ? parseInt(v, 10) : parseFloat(v) })
+  }
+  return str
+}
+
+function parseStringInt(str) {
+  return parseValuesString(str, true)
+}
+
+function parseStringFloat(str) {
+  return parseValuesString(str, false)
+}
+
+function oneOrTwoValues(val) {
+  if(!Array.isArray(val)) {
+    return [val, val]
+  } else if(val.length === 1) {
+    return [val[0], val[0]]
+  }
+  return val
+}
+
+function fourValuesShortCut(val) {
+  if(!Array.isArray(val)) {
+    return [val, val, val, val]
+  } else if(val.length === 1) {
+    return [val[0], val[0], val[0], val[0]]
+  } else if(val.length === 2) {
+    return [val[0], val[1], val[0], val[1]]
+  }
+  return [...val, 0, 0, 0, 0].slice(0, 4)
+}
+
+function boxIntersect(box1, box2) {
+  // left, top, right, buttom
+  const [l1, t1, r1, b1] = [box1[0], box1[1],
+      box1[2], box1[3]],
+    [l2, t2, r2, b2] = [box2[0], box2[1],
+      box2[2], box2[3]]
+
+  const t = Math.max(t1, t2),
+    r = Math.min(r1, r2),
+    b = Math.min(b1, b2),
+    l = Math.max(l1, l2)
+
+  if(b >= t && r >= l) {
+    return [l, t, r, b]
+  }
+  return null
+}
+
+function boxToRect(box) {
+  return [box[0], box[1], Math.round(box[2] - box[0]), Math.round(box[3] - box[1])]
+}
+
+function boxEqual(box1, box2) {
+  return box1[0] === box2[0]
+         && box1[1] === box2[1]
+         && box1[2] === box2[2]
+         && box1[3] === box2[3]
+}
+
+function rectToBox(rect) {
+  return [rect[0], rect[1], Math.round(rect[0] + rect[2]), Math.round(rect[1] + rect[3])]
+}
+
+function rectVertices(rect) {
+  const [x1, y1, x2, y2] = rectToBox(rect)
+
+  return [
+    [x1, y1],
+    [x2, y1],
+    [x2, y2],
+    [x1, y2],
+  ]
+}
+
+function boxUnion(box1, box2) {
+  if(!box1) return box2
+  if(!box2) return box1
+
+  return [Math.min(box1[0], box2[0]),
+    Math.min(box1[1], box2[1]),
+    Math.max(box1[2], box2[2]),
+    Math.max(box1[3], box2[3])]
+}
+
+// http://jsfiddle.net/joquery/cQXgd/
+function measureFontHeight(context, text = "fißgPauljMPÜÖÄ") {
+  const sourceWidth = context.canvas.width,
+    sourceHeight = context.canvas.height
+  
+  // place the text somewhere
+  context.textAlign = "left"
+  context.textBaseline = "top"
+  context.fillText(text, 25, 0)
+
+  // returns an array containing the sum of all pixels in a canvas
+  // * 4 (red, green, blue, alpha)
+  // [pixel1Red, pixel1Green, pixel1Blue, pixel1Alpha, pixel2Red ...]
+  const data = context.getImageData(0, 0, sourceWidth, sourceHeight).data
+
+  let firstY = -1
+  let lastY = -1
+
+  // loop through each row
+  for(let y = 0; y < sourceHeight; y++) {
+      // loop through each column
+      for(let x = 0; x < sourceWidth; x++) {
+          //let red = data[((sourceWidth * y) + x) * 4]
+          //let green = data[((sourceWidth * y) + x) * 4 + 1]
+          //let blue = data[((sourceWidth * y) + x) * 4 + 2]
+          let alpha = data[((sourceWidth * y) + x) * 4 + 3]
+
+          if(alpha > 0) {
+              firstY = y
+              // exit the loop
+              break
+          }
+      }
+      if(firstY >= 0) {
+          // exit the loop
+          break
+      }
+
+  }
+
+  // loop through each row, this time beginning from the last row
+  for(let y = sourceHeight; y > 0; y--) {
+      // loop through each column
+      for(let x = 0; x < sourceWidth; x++) {
+          let alpha = data[((sourceWidth * y) + x) * 4 + 3]
+          if(alpha > 0) {
+              lastY = y
+              // exit the loop
+              break
+          }
+      }
+      if(lastY >= 0) {
+          // exit the loop
+          break
+      }
+
+  }
+
+  return {
+      // The actual height
+      textHeight: lastY - firstY,
+
+      height: lastY + firstY,
+
+      // The first pixel
+      firstPixel: firstY,
+
+      // The last pixel
+      lastPixel: lastY
+  }
+}
+
+const getTextSize = memoize((text, font, lineHeight = '') => {
+  if(typeof IS_NODE_ENV !== 'undefined') {
+    lineHeight = parseInt(lineHeight) || 0 // warn: only support px
+    const canvas = document.createElement('canvas'),
+      ctx = canvas.getContext('2d')
+    
+    if(font) ctx.font = font
+
+    const {width} = ctx.measureText(text),
+      {height, textHeight} = measureFontHeight(ctx, text)
+    
+    const size = [width, Math.max(height, lineHeight), height]
+
+    return size
+  }
+
+  const tmpEl = document.createElement('font')
+
+  if(font) tmpEl.style.font = font
+
+  if(!isNaN(lineHeight)) {
+    lineHeight += 'px'
+  }
+
+  Object.assign(tmpEl.style, {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    visibility: 'hidden',
+    display: 'inline-block',
+    lineHeight,
+    padding: '0',
+    verticalAlign: 'middle',
+    whiteSpace: 'nowrap',
+  })
+
+  tmpEl.innerHTML = text
+  document.documentElement.appendChild(tmpEl)
+  const size = [tmpEl.clientWidth, tmpEl.clientHeight]
+
+  tmpEl.style.lineHeight = ''
+  size.push(tmpEl.clientHeight)
+
+  document.documentElement.removeChild(tmpEl)
+
+  return size
+})
+
+
+function appendUnit(value, defaultUnit = 'px') {
+  if(typeof value === 'string' && isNaN(value)) {
+    return value
+  }
+  return value + defaultUnit
+}
+
+// get svg path object
+function createPath(d) {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  path.setAttribute('d', d)
+
+  return path
+}
+
+function gradientBox(angle, rect) {
+  const [x, y, w, h] = rect
+
+  angle %= 360
+  if(angle < 0) {
+    angle += 360
+  }
+
+  if(angle >= 0 && angle < 90) {
+    const tan = Math.tan(Math.PI * angle / 180)
+
+    let d = tan * w
+
+    if(d <= h) {
+      return [x, y, x + w, y + d]
+    }
+    d = h / tan
+    return [x, y, x + d, y + h]
+  } else if(angle >= 90 && angle < 180) {
+    const tan = Math.tan(Math.PI * (angle - 90) / 180)
+
+    let d = tan * h
+
+    if(d <= w) {
+      return [x + w, y, x + w - d, y + h]
+    }
+    d = w / tan
+    return [x + w, y, x, y + d]
+  } else if(angle >= 180 && angle < 270) {
+    const tan = Math.tan(Math.PI * (angle - 180) / 180)
+
+    let d = tan * w
+
+    if(d <= h) {
+      return [x + w, y + h, x, y + h - d]
+    }
+    d = h / tan
+    return [x + w, y + h, x + w - d, y]
+  } else if(angle >= 270 && angle < 360) {
+    const tan = Math.tan(Math.PI * (angle - 270) / 180)
+
+    let d = tan * h
+
+    if(d <= w) {
+      return [x, y + h, x + d, y]
+    }
+    d = w / tan
+    return [x, y + h, x + w, y + h - d]
+  }
+
+  return [x, y, x + w, y + h]
+}
+
+function copyContext(context) {
+  const canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d')
+
+  canvas.width = context.canvas.width
+  canvas.height = context.canvas.height
+
+  ctx.drawImage(context.canvas, 0, 0)
+
+  return ctx
+}
+
+function getLinearGradients(context, rect, linearGradients) {
+  const {colors, direction, vector} = linearGradients,
+    [x, y, w, h] = rect
+
+  let x0,
+    y0,
+    x1,
+    y1
+
+  if(direction != null) {
+    [x0, y0, x1, y1] = gradientBox(direction, [x, y, w, h])
+  } else if(vector) {
+    [x0, y0, x1, y1] = vector
+  }
+
+  const gradient = context.createLinearGradient(x0, y0, x1, y1)
+
+  colors.forEach((o) => {
+    gradient.addColorStop(o.offset, o.color)
+  })
+
+  return gradient
+}
+
+function defer(context = null) {
+  const ret = {context}
+  ret.promise = new Promise((resolve, reject) => {
+    ret.resolve = resolve
+    ret.reject = reject
+  })
+  return ret
+}
+
+export {
+  defer,
+  parseColor,
+  oneOrTwoValues,
+  parseStringInt,
+  parseStringFloat,
+  parseColorString,
+  fourValuesShortCut,
+  parseStringTransform,
+  boxIntersect,
+  boxToRect,
+  boxEqual,
+  boxUnion,
+  rectToBox,
+  rectVertices,
+  getTextSize,
+  appendUnit,
+  createPath,
+  copyContext,
+  getLinearGradients,
+}

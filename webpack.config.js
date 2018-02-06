@@ -35,7 +35,7 @@ module.exports = function (env = {}) {
   }
 
   return {
-    entry: './lib/index.js',
+    entry: './src/entrance.js',
     output: {
       filename: env.production ? `spritejs.min.js` : 'spritejs.js',
       path: path.resolve(__dirname, 'dist'),
@@ -49,7 +49,7 @@ module.exports = function (env = {}) {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /(node_modules\/(?!sprite-)|bower_components)/,
+        exclude: /(node_modules|bower_components)/,
         use: jsLoaders
       }]
     },
