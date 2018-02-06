@@ -1,6 +1,6 @@
 const test = require("ava")
 
-import Matrix from "../lib/matrix"
+import Matrix from "../src/matrix"
 
 function matrixEqual(m1, m2){
   let diff = m1.m.filter((o, i) => Math.abs(o - m2.m[i]) > 0.00001)
