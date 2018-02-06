@@ -237,7 +237,7 @@ export default class extends BaseNode {
     }
     return layer && this[_layerMap][layerID] === layer
   }
-  snapshot(mimetype = 'image/png') {
+  async snapshot(mimetype = 'image/png') {
     const canvas = document.createElement('canvas')
     const [width, height] = this.viewport
     
@@ -248,6 +248,7 @@ export default class extends BaseNode {
     const ctx = canvas.getContext('2d')
 
     for(const layer of layers) {
+      await layer.prepareRender()
       ctx.drawImage(layer.canvas, 0, 0, width, height)  
     }
 

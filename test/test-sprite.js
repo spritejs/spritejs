@@ -64,7 +64,6 @@ text1.attr({
 
 layer.append(text1)
 
-await layer.prepareRender()
 let base64Data = await scene.snapshot()
 saveTo(base64Data, 'test3.png')
 })()
