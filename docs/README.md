@@ -793,6 +793,95 @@ class Bird extends spritejs.Sprite {
 }
 ```
 
+## 分组
+
+这是 1.13.0 之后增加的新功能，能够创建一个 Group 对象，在 Group 实例中添加多个 sprites，对它们统一进行 transform。
+
+[例子](https://code.h5jun.com/juqu/edit?html,output)
+
+```js
+const paper = spritejs.Paper2D('#paper'),
+      fglayer = paper.layer('fglayer'),
+      Sprite = spritejs.Sprite,
+      Group = spritejs.Group
+
+paper.setResolution(800, 600) 
+
+const s1 = new Sprite()
+s1.attr({
+  pos: [100, 100],
+  size: [50, 50],
+  bgcolor: 'red',
+  rotate: 90,
+})
+
+const s2 = new Sprite()
+s2.attr({
+  pos: [100, 100],
+  size: [50, 50],
+  bgcolor: 'green',
+  rotate: 180,
+})
+
+const s3 = new Sprite()
+s3.attr({
+  pos: [100, 100],
+  size: [50, 50],
+  bgcolor: 'blue',
+})
+
+const group = new Group()
+
+group.append(s1, s2, s3)
+
+fglayer.append(group)
+
+group.attr({
+  anchor: 0.5,
+  pos: [200, 200],
+  rotate: 0, 
+  border: [1, 'red'],
+})
+
+s1.on('click', evt => {
+  console.log(evt)
+})
+
+group.animate([
+  {rotate: 360}
+], {
+  duration: 2000,
+  iterations: Infinity,
+  direction: 'reverse',
+})
+
+s1.animate([
+  {rotate: 450}
+], {
+  duration: 1000,
+  iterations: Infinity,
+})
+
+s2.animate([
+  {rotate: 540}
+], {
+  duration: 1000,
+  iterations: Infinity,
+})
+
+s3.animate([
+  {rotate: 360}
+], {
+  duration: 1000,
+  iterations: Infinity,
+})
+
+
+window.addEventListener('resize', evt => {
+  paper.setViewport('auto', 'auto')
+})
+```
+
 ## 高级用法
 
 ### 底层渲染
@@ -890,7 +979,7 @@ class Arc extends BaseSprite {
       }
 
       path.arc(r, r, r, ...angle, direction)
-      if(angle[1] - angle[0] < 2 * Math.PI) {            
+      if(angle[1] - angle[0] < 2 * Math.PI) {
         path.lineTo(r, r)
         path.closePath()
       }
@@ -980,6 +1069,103 @@ arc.attr({
 })
 
 paper.layer().appendChild(arc)
+```
+
+## 服务端渲染
+
+在 1.14.0 之后支持服务端渲染，服务端渲染需要依赖于 [node-canvas](https://github.com/Automattic/node-canvas)，目前暂不支持 Path、Axis 以及 d3 相关的 API 在服务器端渲染。其他 API 可以使用，生成的 canvas 可以输出成图片或者 gif 动画。
+
+例子
+
+```js
+const fs = require('fs')
+const GIFEncoder = require('gifencoder');
+
+function saveTo(base64Data, file) {
+  return new Promise((resolve, reject) => {
+    base64Data = base64Data.replace(/^data:image\/\w+;base64,/, "")
+    const dataBuffer = new Buffer(base64Data, 'base64')
+    fs.writeFile(file, dataBuffer, function(err) {
+      if(err){
+        reject(err)
+      }else{
+        resolve("保存成功！")
+      }
+    })
+  }) 
+}
+
+const {Scene, Layer, Sprite, Label} = require('../lib')
+const width = 800, height = 600
+const scene = new Scene('#test', width, height)
+scene.setResolution(width * 2, height * 2)
+
+;(async function(){
+
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+await scene.preload(
+  [birdsRes, birdsJsonUrl]   
+) 
+
+const layer = scene.layer('fglayer', {handleEvent: false})
+
+const sprite = new Sprite()
+sprite.attr({
+  pos: [100, 100],
+  size: [100, 100],
+  bgcolor: 'red'
+})
+
+const bird = new Sprite('bird1.png') 
+
+bird.attr({
+  anchor: [0.5, 0.5],
+  pos: [800, 600],
+  transform: {
+    rotate: 0,
+  }
+})
+
+layer.append(sprite, bird)
+
+const text1 = new Label('中国')
+
+text1.attr({
+  anchor: "0.5",
+  pos: [400, 300],
+  font: '64px Arial',
+  color: '#fff',
+  bgcolor: 'blue',
+  renderMode: 'stroke',
+  lineHeight: 200,
+  scale: [scene.distortion, 1]
+})
+
+layer.append(text1)
+
+// let canvas = await scene.snapshot()
+// saveTo(canvas.toDataURL(), 'test3.png')
+
+const encoder = new GIFEncoder(width, height)
+// stream the results as they are available into myanimated.gif
+encoder.createReadStream().pipe(fs.createWriteStream('myanimated.gif'))
+
+encoder.start()
+encoder.setRepeat(0)   // 0 for repeat, -1 for no-repeat
+encoder.setDelay(500)  // frame delay in ms
+encoder.setQuality(10) // image quality. 10 is default.
+
+for(let i = 0; i < 51; i++) {
+  console.log(`recording... frame ${i + 1} of 51`)
+  bird.textures = [`bird${i % 3 + 1}.png`]
+  const canvas = await scene.snapshot(),
+    ctx = canvas.getContext('2d')
+  
+    encoder.addFrame(ctx)
+}
+})()
 ```
 
 ## 1.1 版本更新

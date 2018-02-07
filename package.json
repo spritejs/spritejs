@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "dist/spritejs.js",
   "directories": {
@@ -38,6 +38,7 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-vue": "^2.1.0",
+    "gifencoder": "^1.1.0",
     "http-server": "^0.9.0",
     "nyc": "^11.1.0",
     "puppeteer": "^1.0.0",

@@ -4,7 +4,8 @@ import BaseNode from './basenode'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
-  _layers = Symbol('layers')
+  _layers = Symbol('layers'),
+  _snapshot = Symbol('snapshot')
 
 function sortLayer(paper) {
   const layers = []
@@ -45,6 +46,7 @@ export default class extends BaseNode {
     this[_zOrder] = 0
     this[_layerMap] = {}
     this[_layers] = []
+    this[_snapshot] = document.createElement('canvas')
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/paper2D'
@@ -237,8 +239,8 @@ export default class extends BaseNode {
     }
     return layer && this[_layerMap][layerID] === layer
   }
-  async snapshot(mimetype = 'image/png') {
-    const canvas = document.createElement('canvas')
+  async snapshot() {
+    const canvas = this[_snapshot]
     const [width, height] = this.viewport
     
     canvas.width = width
@@ -252,15 +254,6 @@ export default class extends BaseNode {
       ctx.drawImage(layer.canvas, 0, 0, width, height)  
     }
 
-    if(typeof IS_NODE_ENV !== 'undefined') {
-      return new Promise((resolve, reject) => {
-        canvas.toDataURL(mimetype, (err, data) => { 
-          if(err) reject(err)
-          else resolve(data)
-        })
-      })
-    } else {
-      return canvas.toDataURL(mimetype)
-    }
+    return canvas
   }
 }
