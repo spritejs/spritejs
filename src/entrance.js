@@ -1,3 +1,5 @@
+// webpack build for browser
+
 import BaseSprite from './basesprite'
 import Sprite from './sprite'
 import Label from './label'

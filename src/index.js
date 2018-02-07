@@ -3,4 +3,16 @@ global.document = document
 global.requestAnimationFrame = requestAnimationFrame
 global.IS_NODE_ENV = true
 
-module.exports = require('./entrance')
+import {BaseSprite, Sprite, Resource, Label, Color, Matrix, Group, Scene, Paper2D} from './entrance'
+
+module.exports = {
+  BaseSprite, 
+  Sprite, 
+  Resource, 
+  Label, 
+  Color, 
+  Matrix, 
+  Group, 
+  Scene, 
+  Paper2D
+}
