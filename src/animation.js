@@ -17,13 +17,15 @@ function transformMatrix(trans) {
     return trans
   }
   const transform = new Matrix()
-  for(const [key, value] of Object.entries(trans)) {
+
+  Object.entries(trans).forEach(([key, value]) => {
     if(Array.isArray(value)) {
       transform[key](...value)
     } else {
       transform[key](value)
     }
-  }
+  })
+
   return transform
 }
 
@@ -31,9 +33,9 @@ function objectEffect(obj1, obj2, p, start, end) {
   const t1 = Object.assign({}, obj2, obj1),
     t2 = Object.assign({}, obj1, obj2)
 
-  for(const [key, value] of Object.entries(t1)) {
+  Object.entries(t1).forEach(([key, value]) => {
     t1[key] = arrayEffect(value, t2[key], p, start, end)
-  }
+  })
 
   return t1
 }

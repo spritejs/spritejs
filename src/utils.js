@@ -22,7 +22,9 @@ class Color {
     }
   }
   toString() {
-    const {red, green, blue, alpha} = this
+    const {
+      red, green, blue, alpha,
+    } = this
     return `rgba(${red},${green},${blue},${alpha})`
   }
   get str() {
@@ -47,7 +49,7 @@ function parseStringTransform(str) {
     rules.forEach((rule) => {
       const matched = rule.match(/(scale|rotate|translate|skew|matrix)\(([^()]+)\)/)
       if(matched) {
-        const [r, m, v] = matched
+        const [, m, v] = matched
         if(m === 'rotate') {
           ret[m] = parseStringFloat(v)[0]
         } else {
@@ -151,13 +153,13 @@ function boxUnion(box1, box2) {
 }
 
 // http://jsfiddle.net/joquery/cQXgd/
-function measureFontHeight(context, text = "fißgPauljMPÜÖÄ") {
+function measureFontHeight(context, text = 'fißgPauljMPÜÖÄ') {
   const sourceWidth = context.canvas.width,
     sourceHeight = context.canvas.height
-  
+
   // place the text somewhere
-  context.textAlign = "left"
-  context.textBaseline = "top"
+  context.textAlign = 'left'
+  context.textBaseline = 'top'
   context.fillText(text, 25, 0)
 
   // returns an array containing the sum of all pixels in a canvas
@@ -170,69 +172,67 @@ function measureFontHeight(context, text = "fißgPauljMPÜÖÄ") {
 
   // loop through each row
   for(let y = 0; y < sourceHeight; y++) {
-      // loop through each column
-      for(let x = 0; x < sourceWidth; x++) {
-          //let red = data[((sourceWidth * y) + x) * 4]
-          //let green = data[((sourceWidth * y) + x) * 4 + 1]
-          //let blue = data[((sourceWidth * y) + x) * 4 + 2]
-          let alpha = data[((sourceWidth * y) + x) * 4 + 3]
+    // loop through each column
+    for(let x = 0; x < sourceWidth; x++) {
+      // let red = data[((sourceWidth * y) + x) * 4]
+      // let green = data[((sourceWidth * y) + x) * 4 + 1]
+      // let blue = data[((sourceWidth * y) + x) * 4 + 2]
+      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
 
-          if(alpha > 0) {
-              firstY = y
-              // exit the loop
-              break
-          }
+      if(alpha > 0) {
+        firstY = y
+        // exit the loop
+        break
       }
-      if(firstY >= 0) {
-          // exit the loop
-          break
-      }
-
+    }
+    if(firstY >= 0) {
+      // exit the loop
+      break
+    }
   }
 
   // loop through each row, this time beginning from the last row
   for(let y = sourceHeight; y > 0; y--) {
-      // loop through each column
-      for(let x = 0; x < sourceWidth; x++) {
-          let alpha = data[((sourceWidth * y) + x) * 4 + 3]
-          if(alpha > 0) {
-              lastY = y
-              // exit the loop
-              break
-          }
+    // loop through each column
+    for(let x = 0; x < sourceWidth; x++) {
+      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
+      if(alpha > 0) {
+        lastY = y
+        // exit the loop
+        break
       }
-      if(lastY >= 0) {
-          // exit the loop
-          break
-      }
-
+    }
+    if(lastY >= 0) {
+      // exit the loop
+      break
+    }
   }
 
   return {
-      // The actual height
-      textHeight: lastY - firstY,
+    // The actual height
+    textHeight: lastY - firstY,
 
-      height: lastY + firstY,
+    height: lastY + firstY,
 
-      // The first pixel
-      firstPixel: firstY,
+    // The first pixel
+    firstPixel: firstY,
 
-      // The last pixel
-      lastPixel: lastY
+    // The last pixel
+    lastPixel: lastY,
   }
 }
 
-const getTextSize = memoize((text, font, lineHeight = '') => {
+const getTextSize = memoize((text, font, lineHeight = 'normal') => {
   if(typeof IS_NODE_ENV !== 'undefined') {
-    lineHeight = parseInt(lineHeight) || 0 // warn: only support px
+    lineHeight = parseInt(lineHeight, 10) || 0 // warn: only support px
     const canvas = document.createElement('canvas'),
       ctx = canvas.getContext('2d')
-    
+
     if(font) ctx.font = font
 
     const {width} = ctx.measureText(text),
-      {height, textHeight} = measureFontHeight(ctx, text)
-    
+      {height} = measureFontHeight(ctx, text)
+
     const size = [width, Math.max(height, lineHeight), height]
 
     return size
@@ -242,9 +242,7 @@ const getTextSize = memoize((text, font, lineHeight = '') => {
 
   if(font) tmpEl.style.font = font
 
-  if(!isNaN(lineHeight)) {
-    lineHeight += 'px'
-  }
+  appendUnit(lineHeight)
 
   Object.assign(tmpEl.style, {
     position: 'absolute',
@@ -272,7 +270,10 @@ const getTextSize = memoize((text, font, lineHeight = '') => {
 
 
 function appendUnit(value, defaultUnit = 'px') {
-  if(typeof value === 'string' && isNaN(value)) {
+  if(value === '') {
+    return value
+  }
+  if(typeof value === 'string' && Number.isNaN(Number(value))) {
     return value
   }
   return value + defaultUnit

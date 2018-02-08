@@ -10,7 +10,9 @@ Effects.d = pathEffect
 
 function calPathRect(attr) {
   let path = attr.loadObj('path')
-  const {d, lineCap, lineJoin, lineWidth} = attr
+  const {
+    d, lineCap, lineJoin, lineWidth,
+  } = attr
 
   if(!path) {
     if(d) { // Deserialized sprite may have d value but no path obj
@@ -36,7 +38,9 @@ function calPathRect(attr) {
   svg.appendChild(path)
   document.body.appendChild(svg)
   const {x: x0, y: y0} = svg.getBoundingClientRect()
-  const {x, y, width, height} = path.getBoundingClientRect()
+  const {
+    x, y, width, height,
+  } = path.getBoundingClientRect()
   const [ox, oy] = [x - x0, y - y0]
   document.body.removeChild(svg)
 
@@ -69,7 +73,7 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       lineJoin: 'miter',
       strokeColor: parseColorString('black'),
       fillColor: '',
-      renderMode: 'stroke',   // stroke, fill
+      renderMode: 'stroke', // stroke, fill
       // d: path2d,
       boxSize: [0, 0],
     })

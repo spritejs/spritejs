@@ -154,6 +154,6 @@ function permute(input) {
 }
 
 export {
-    sort,
-    sortCurves
+  sort,
+  sortCurves,
 }

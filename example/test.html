@@ -30,6 +30,7 @@
     const Sprite = spritejs.Sprite,
           Path = spritejs.Path,
           Label = spritejs.Label
+    const layer = paper.layer('fglayer', {renderMode: 'repaintDirty'})
     
     await paper.preload(
       [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
@@ -58,7 +59,7 @@
       zIndex: 200,
     })
 
-    paper.layer().appendChild(s)
+    layer.appendChild(s)
 
     s.textures = ['bird1.png']
 
@@ -101,7 +102,7 @@
     //   e.stopDispatch()
     // })
 
-    // paper.layer().on('update', e => {
+    // layer.on('update', e => {
     //   console.log(e.currentTime)
     // })
 
@@ -128,7 +129,7 @@
     //   zIndex: 201,
     // })
 
-    // paper.layer().appendChild(s1)
+    // layer.appendChild(s1)
 
     // s1.on('click', function(evt){
     //   console.log(evt)
@@ -189,7 +190,7 @@
     })
 
 
-    paper.layer().append(s2, s3);
+    layer.append(s2, s3);
 
     window.s3 = s3
 
@@ -226,7 +227,7 @@
       }  
     })
     
-    paper.layer().append(s4)
+    layer.append(s4)
     window.s4 = s4
 
     const a1 = new Animator(1000,  p => {
@@ -267,7 +268,7 @@
       }      
     })
 
-    paper.layer().append(label)
+    layer.append(label)
 
     label.animate([
       {rotate: 0},
@@ -285,7 +286,7 @@
       }
     })
 
-    let gif, layer = paper.layer(), timer
+    let gif, timer
     startRecord.onclick = function(){
       startRecord.disabled = 'disabled'
       stopRecord.disabled = ''

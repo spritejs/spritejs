@@ -67,9 +67,13 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
       }
     }      
   }
+
+  scene.on('preload', e => {
+    console.log(e)
+  })
   await scene.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-  )  
+  ) 
   
   const bglayer = scene.layer('bg'),  // 背景层
         // 前景层

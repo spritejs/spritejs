@@ -4,7 +4,9 @@
  * @type {Object}
  */
 
-const length = {a: 7, c: 6, h: 1, l: 2, m: 2, q: 4, s: 4, t: 2, v: 1, z: 0}
+const length = {
+  a: 7, c: 6, h: 1, l: 2, m: 2, q: 4, s: 4, t: 2, v: 1, z: 0,
+}
 
 /**
  * segment pattern
@@ -28,7 +30,7 @@ function parse(path) {
     let type = command.toLowerCase()
     args = parseValues(args)
 
-        // overloaded moveTo
+    // overloaded moveTo
     if(type === 'm' && args.length > 2) {
       data.push([command].concat(args.splice(0, 2)))
       type = 'l'

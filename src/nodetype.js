@@ -4,7 +4,7 @@ export function registerNodeType(type, Class) {
   Object.defineProperty(Class, 'nodeType', {
     get() {
       return type
-    }
+    },
   })
   nodeTypes.set(type, Class)
 }

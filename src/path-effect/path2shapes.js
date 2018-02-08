@@ -8,18 +8,18 @@ function q2b(x1, y1, x2, y2, x3, y3) {
 }
 
 export default function (path) {
-    // https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Paths
-    // M = moveto
-    // L = lineto
-    // H = horizontal lineto
-    // V = vertical lineto
-    // C = curveto
-    // S = smooth curveto
-    // Q = quadratic Belzier curve
-    // T = smooth quadratic Belzier curveto
-    // A = elliptical Arc
-    // Z = closepath
-    // 以上所有命令均允许小写字母。大写表示绝对定位，小写表示相对定位(从上一个点开始)。
+  // https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Paths
+  // M = moveto
+  // L = lineto
+  // H = horizontal lineto
+  // V = vertical lineto
+  // C = curveto
+  // S = smooth curveto
+  // Q = quadratic Belzier curve
+  // T = smooth quadratic Belzier curveto
+  // A = elliptical Arc
+  // Z = closepath
+  // 以上所有命令均允许小写字母。大写表示绝对定位，小写表示相对定位(从上一个点开始)。
   const cmds = parser(path),
     len = cmds.length,
     shapes = []
@@ -138,7 +138,7 @@ export default function (path) {
           largeArcFlag: item[4],
           sweepFlag: item[5],
           cx: preX + item[6],
-          cy: preX + item[7]
+          cy: preX + item[7],
         })
         lastCurve = curves[curves.length - 1]
 
@@ -167,7 +167,7 @@ export default function (path) {
           largeArcFlag: item[4],
           sweepFlag: item[5],
           cx: item[6],
-          cy: item[7]
+          cy: item[7],
         })
         lastCurve = curves[curves.length - 1]
 

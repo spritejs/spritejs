@@ -11,7 +11,9 @@ const _axisPath = Symbol('axisPath'),
 function ticksToD(axis) {
   if(!axis) return
 
-  let {direction, ticks, length, vLength, font, lineWidth, color, axisScales} = axis.attr()
+  let {
+    direction, ticks, length, vLength, font, lineWidth, color, axisScales,
+  } = axis.attr()
 
   const originTicks = ticks.slice(0)
 
@@ -138,7 +140,7 @@ class AxisSpriteAttr extends Sprite.Attr {
 
       lineWidth: 1,
       color: 'black',
-      renderMode: 'stroke',   // stroke, fill
+      renderMode: 'stroke', // stroke, fill
 
       font: '24px Arial',
       axisScales: [],
@@ -165,9 +167,6 @@ class AxisSpriteAttr extends Sprite.Attr {
 
   @attr('repaint')
   set length(val) {
-    if(isNaN(val)) {
-      val = Math.round(val)
-    }
     this.set('length', val)
     ticksToD(this.subject)
   }
@@ -209,6 +208,7 @@ class AxisSpriteAttr extends Sprite.Attr {
     if(this.subject && this.subject[_axisPath]) {
       return this.subject[_axisPath].d
     }
+    return null
   }
 
   @attr('repaint')

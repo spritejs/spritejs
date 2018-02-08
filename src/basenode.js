@@ -27,7 +27,6 @@ class BaseNode {
   removeEventListener(type, handler) {
     return this.off(type, handler)
   }
-
   pointCollision(evt) {
     throw Error('you mast override this method')
   }
