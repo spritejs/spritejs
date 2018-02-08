@@ -35,6 +35,9 @@ app/
 
 runtime/
 
+frames/
+ffmpeg.sh
+
 .DS_Store
 
 sftp-config.json

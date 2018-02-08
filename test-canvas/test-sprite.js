@@ -65,24 +65,28 @@ text1.attr({
 
 layer.append(text1)
 
-// let canvas = await scene.snapshot()
-// saveTo(canvas.toDataURL(), 'test3.png')
-
 const encoder = new GIFEncoder(width, height)
 // stream the results as they are available into myanimated.gif
 encoder.createReadStream().pipe(fs.createWriteStream('myanimated.gif'))
 
 encoder.start()
 encoder.setRepeat(0)   // 0 for repeat, -1 for no-repeat
-encoder.setDelay(500)  // frame delay in ms
+encoder.setDelay(100)  // frame delay in ms
 encoder.setQuality(10) // image quality. 10 is default.
 
-for(let i = 0; i < 51; i++) {
-  console.log(`recording... frame ${i + 1} of 51`)
+const frameCount = 120
+for(let i = 0; i < frameCount; i++) {
+  console.log(`recording... frame ${i + 1} of ${frameCount}`)
   bird.textures = [`bird${i % 3 + 1}.png`]
   const canvas = await scene.snapshot(),
-    ctx = canvas.getContext('2d')
+     ctx = canvas.getContext('2d')
   
-    encoder.addFrame(ctx)
+  sprite.attr({
+    rotate: i % 360
+  })
+
+  encoder.addFrame(ctx)
+
+  // await saveTo(canvas.toDataURL(), `frames/test${('000' + i).slice(-4)}.png`)
 }
 })()
