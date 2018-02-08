@@ -222,7 +222,7 @@ function measureFontHeight(context, text = 'fißgPauljMPÜÖÄ') {
   }
 }
 
-const getTextSize = memoize((text, font, lineHeight = 'normal') => {
+const getTextSize = memoize((text, font, lineHeight = '') => {
   if(typeof IS_NODE_ENV !== 'undefined') {
     lineHeight = parseInt(lineHeight, 10) || 0 // warn: only support px
     const canvas = document.createElement('canvas'),
@@ -242,7 +242,7 @@ const getTextSize = memoize((text, font, lineHeight = 'normal') => {
 
   if(font) tmpEl.style.font = font
 
-  appendUnit(lineHeight)
+  lineHeight = appendUnit(lineHeight)
 
   Object.assign(tmpEl.style, {
     position: 'absolute',
