@@ -10370,8 +10370,6 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'querySelector',
     value: function querySelector(selector) {
-      var _this2 = this;
-
       var children = this[_children];
 
       if (!selector || selector === '*') {
@@ -10407,30 +10405,26 @@ var Layer = function (_BaseNode) {
         }
         return null;
       }
-
-      var _loop = function _loop(_i2) {
-        var child = children[_i2];
-        (0, _entries2.default)(selector).forEach(function (_ref2) {
-          var _ref3 = (0, _slicedToArray3.default)(_ref2, 2),
-              type = _ref3[0],
-              checker = _ref3[1];
-
-          var nodeType = (0, _nodetype.getNodeType)(type);
-          if (nodeType && child instanceof nodeType && checker.call(_this2, child)) {
-            return child;
-          }
-        });
-      };
-
       for (var _i2 = 0; _i2 < children.length; _i2++) {
-        _loop(_i2);
+        var _child2 = children[_i2];
+        var sel = (0, _entries2.default)(selector);
+        for (var j = 0; j < sel.length; j++) {
+          var _sel$j = (0, _slicedToArray3.default)(sel[j], 2),
+              type = _sel$j[0],
+              checker = _sel$j[1];
+
+          var _nodeType = (0, _nodetype.getNodeType)(type);
+          if (_nodeType && _child2 instanceof _nodeType && checker.call(this, _child2)) {
+            return _child2;
+          }
+        }
       }
       return null;
     }
   }, {
     key: 'querySelectorAll',
     value: function querySelectorAll(selector) {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!selector || selector === '*') {
         return this[_children];
@@ -10451,20 +10445,20 @@ var Layer = function (_BaseNode) {
         return null;
       }
       return this[_children].filter(function (child) {
-        (0, _entries2.default)(selector).forEach(function (_ref4) {
-          var _ref5 = (0, _slicedToArray3.default)(_ref4, 2),
-              type = _ref5[0],
-              checker = _ref5[1];
+        var sel = (0, _entries2.default)(selector);
+        for (var i = 0; i < sel.length; i++) {
+          var _sel$i = (0, _slicedToArray3.default)(sel[i], 2),
+              type = _sel$i[0],
+              checker = _sel$i[1];
 
-          var nodeType = (0, _nodetype.getNodeType)(type);
-          if (!nodeType || !(child instanceof nodeType)) {
+          var _nodeType2 = (0, _nodetype.getNodeType)(type);
+          if (!_nodeType2 || !(child instanceof _nodeType2)) {
             return false;
           }
-
-          if (!checker.call(_this3, child)) {
+          if (!checker.call(_this2, child)) {
             return false;
           }
-        });
+        }
         return true;
       });
     }
@@ -10514,7 +10508,7 @@ var Layer = function (_BaseNode) {
 
         this[_renderPromise] = new _promise2.default(function (resolve, reject) {
           requestAnimationFrame(function () {
-            var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(t) {
+            var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(t) {
               var renderer;
               return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
@@ -10592,7 +10586,7 @@ var Layer = function (_BaseNode) {
             }));
 
             function step(_x) {
-              return _ref6.apply(this, arguments);
+              return _ref2.apply(this, arguments);
             }
 
             return step;
@@ -10664,7 +10658,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'drawSprites',
     value: function () {
-      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(shadowContext, renderEls, t) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(shadowContext, renderEls, t) {
         var i, child, context, transform, pos, bound;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
@@ -10750,7 +10744,7 @@ var Layer = function (_BaseNode) {
       }));
 
       function drawSprites(_x2, _x3, _x4) {
-        return _ref7.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       }
 
       return drawSprites;
@@ -10758,8 +10752,8 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'renderRepaintAll',
     value: function () {
-      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(t) {
-        var _this4 = this;
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(t) {
+        var _this3 = this;
 
         var renderEls, _resolution3, width, height, shadowContext, outputContext, shadowCanvas;
 
@@ -10768,7 +10762,7 @@ var Layer = function (_BaseNode) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 renderEls = this[_children].filter(function (e) {
-                  return _this4.isVisible(e);
+                  return _this3.isVisible(e);
                 });
                 _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2), width = _resolution3[0], height = _resolution3[1];
                 shadowContext = this.shadowContext;
@@ -10798,7 +10792,7 @@ var Layer = function (_BaseNode) {
       }));
 
       function renderRepaintAll(_x5) {
-        return _ref8.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       }
 
       return renderRepaintAll;
@@ -10806,8 +10800,8 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'renderRepaintDirty',
     value: function () {
-      var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(t) {
-        var _this5 = this;
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(t) {
+        var _this4 = this;
 
         var _resolution4, width, height, updateSet, children, shadowContext, outputContext, shadowCanvas, restEls, affectedSet, unaffectedSet, updateEls, i, unaffectedEl, affected, j, affectedEl, box1, box2, box3, changed, _affectedEls, unaffectedEls, _i3, _affectedEl, _j, _unaffectedEl, _box, _box2, _i4, updateEl, box, dirtyBox, dirtyRect, lastRenderBox, _dirtyRect, affectedEls, _i5, _affectedEl2, _box3, _dirtyBox, _dirtyRect2, renderEls;
 
@@ -10818,7 +10812,7 @@ var Layer = function (_BaseNode) {
                 _resolution4 = (0, _slicedToArray3.default)(this.resolution, 2), width = _resolution4[0], height = _resolution4[1];
                 updateSet = this[_updateSet];
                 children = this[_children].filter(function (e) {
-                  return _this5.isVisible(e);
+                  return _this4.isVisible(e);
                 });
                 shadowContext = this.shadowContext;
                 outputContext = this.outputContext;
@@ -11020,7 +11014,7 @@ var Layer = function (_BaseNode) {
       }));
 
       function renderRepaintDirty(_x6) {
-        return _ref9.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       }
 
       return renderRepaintDirty;
@@ -11039,14 +11033,14 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'append',
     value: function append() {
-      var _this6 = this;
+      var _this5 = this;
 
       for (var _len = arguments.length, sprites = Array(_len), _key = 0; _key < _len; _key++) {
         sprites[_key] = arguments[_key];
       }
 
       sprites.forEach(function (sprite) {
-        return _this6.appendChild(sprite);
+        return _this5.appendChild(sprite);
       });
     }
   }, {
@@ -11066,7 +11060,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'remove',
     value: function remove() {
-      var _this7 = this;
+      var _this6 = this;
 
       for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
@@ -11076,7 +11070,7 @@ var Layer = function (_BaseNode) {
         args = this[_children].slice(0);
       }
       return args.map(function (child) {
-        return _this7.removeChild(child);
+        return _this6.removeChild(child);
       });
     }
   }, {
@@ -11169,7 +11163,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'getSnapshot',
     value: function () {
-      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
         var snapshotCanvas, children;
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
@@ -11196,7 +11190,7 @@ var Layer = function (_BaseNode) {
       }));
 
       function getSnapshot() {
-        return _ref10.apply(this, arguments);
+        return _ref6.apply(this, arguments);
       }
 
       return getSnapshot;
@@ -11204,7 +11198,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'putSnapshot',
     value: function putSnapshot(snapshot) {
-      var _this8 = this;
+      var _this7 = this;
 
       var outputContext = this.outputContext;
 
@@ -11219,7 +11213,7 @@ var Layer = function (_BaseNode) {
 
       snapshot.children.forEach(function (child) {
         var node = (0, _nodetype.createNode)(child.nodeType, child.attrs, child.id);
-        _this8.appendChild(node, false);
+        _this7.appendChild(node, false);
       });
 
       for (var i = 0; i < this[_children].length; i++) {
