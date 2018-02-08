@@ -127,12 +127,14 @@ class Layer extends BaseNode {
     }
     for(let i = 0; i < children.length; i++) {
       const child = children[i]
-      Object.entries(selector).forEach(([type, checker]) => {
+      const sel = Object.entries(selector)
+      for(let j = 0; j < sel.length; j++) {
+        const [type, checker] = sel[j]
         const nodeType = getNodeType(type)
         if(nodeType && child instanceof nodeType && checker.call(this, child)) {
           return child
         }
-      })
+      }
     }
     return null
   }
@@ -154,16 +156,17 @@ class Layer extends BaseNode {
       return null
     }
     return this[_children].filter((child) => {
-      Object.entries(selector).forEach(([type, checker]) => {
+      const sel = Object.entries(selector)
+      for(let i = 0; i < sel.length; i++) {
+        const [type, checker] = sel[i]
         const nodeType = getNodeType(type)
         if(!nodeType || !(child instanceof nodeType)) {
           return false
         }
-
         if(!checker.call(this, child)) {
           return false
         }
-      })
+      }
       return true
     })
   }

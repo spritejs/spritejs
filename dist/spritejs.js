@@ -958,7 +958,7 @@ function measureFontHeight(context) {
 }
 
 var getTextSize = (0, _decorators.memoize)(function (text, font) {
-  var lineHeight = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'normal';
+  var lineHeight = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
   if (typeof IS_NODE_ENV !== 'undefined') {
     lineHeight = parseInt(lineHeight, 10) || 0; // warn: only support px
@@ -981,7 +981,7 @@ var getTextSize = (0, _decorators.memoize)(function (text, font) {
 
   if (font) tmpEl.style.font = font;
 
-  appendUnit(lineHeight);
+  lineHeight = appendUnit(lineHeight);
 
   (0, _assign2.default)(tmpEl.style, {
     position: 'absolute',
