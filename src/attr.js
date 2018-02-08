@@ -236,14 +236,15 @@ class SpriteAttr {
       this.set('transform', [1, 0, 0, 1, 0, 0])
       const transformStr = []
 
-      for(const [key, value] of Object.entries(val)) {
+      Object.entries(val).forEach(([key, value]) => {
         if(key === 'matrix' && Array.isArray(value)) {
           this.set('transform', new Matrix(value).m)
         } else {
           this[key] = value
         }
         transformStr.push(`${key}(${value})`)
-      }
+      })
+
       this.set('transformStr', transformStr.join(' '))
     }
   }

@@ -23,9 +23,9 @@ class BaseSprite extends BaseNode {
   static defineAttributes(attrs) {
     const SubAttr = class extends this.Attr {}
     const descriptors = Object.getOwnPropertyDescriptors(attrs)
-    for(const [prop, descriptor] of Object.entries(descriptors)) {
+    Object.entries(descriptors).forEach(([prop, descriptor]) => {
       Object.defineProperty(SubAttr.prototype, prop, attr(SubAttr.prototype, prop, descriptor))
-    }
+    })
     this.Attr = SubAttr
   }
 
@@ -91,7 +91,7 @@ class BaseSprite extends BaseNode {
     return {
       nodeType,
       attrs,
-      id
+      id,
     }
   }
 
@@ -137,9 +137,11 @@ class BaseSprite extends BaseNode {
       return this[_attr][props]
     }
     const ret = {}
+    /* eslint-disable no-restricted-syntax */
     for(const prop in this[_attr]) {
       ret[prop] = this[_attr][prop]
     }
+    /* eslint-enable no-restricted-syntax */
     return ret
   }
 
@@ -162,19 +164,17 @@ class BaseSprite extends BaseNode {
 
   connect(parent, zOrder) {
     super.connect(parent, zOrder)
-    for(const animation of this[_animations]) {
+    this[_animations].forEach((animation) => {
       animation.baseTimeline = parent.timeline
       animation.play()
       animation.finished.then(() => {
         this[_animations].delete(animation)
       })
-    }
+    })
   }
 
   disconnect(parent) {
-    for(const animation of this[_animations]) {
-      animation.cancel()
-    }
+    this[_animations].forEach(animation => animation.cancel())
     super.disconnect(parent)
   }
 
@@ -219,9 +219,9 @@ class BaseSprite extends BaseNode {
     const [anchorX, anchorY] = anchor
 
     const vertexs = [[-anchorX * width, -anchorY * height],
-                     [(1 - anchorX) * width, -anchorY * height],
-                     [-anchorX * width, (1 - anchorY) * height],
-                     [(1 - anchorX) * width, (1 - anchorY) * height]]
+      [(1 - anchorX) * width, -anchorY * height],
+      [-anchorX * width, (1 - anchorY) * height],
+      [(1 - anchorX) * width, (1 - anchorY) * height]]
 
     const transformed = vertexs.map(v => transform.transformPoint(v[0], v[1]))
     const vx = transformed.map(v => v[0]),
@@ -289,8 +289,9 @@ class BaseSprite extends BaseNode {
 
   // OBB: http://blog.csdn.net/silangquan/article/details/50812425
   OBBCollision(sprite) {
-    const [p11, p12, p13, p14] = this.vertices,
-      [p21, p22, p23, p24] = sprite.vertices
+    // vertices: [p1, p2, p3, p4]
+    const [p11, p12, p13] = this.vertices,
+      [p21, p22, p23] = sprite.vertices
 
     const a1 = (new Vector(p12, p11)).unit(),
       a2 = (new Vector(p13, p12)).unit(),
@@ -314,18 +315,18 @@ class BaseSprite extends BaseNode {
     }
 
     return projectionIntersect(
-          verticesProjection(this.vertices, a1),
-          verticesProjection(sprite.vertices, a1)
-        ) && projectionIntersect(
-          verticesProjection(this.vertices, a2),
-          verticesProjection(sprite.vertices, a2)
-        ) && projectionIntersect(
-          verticesProjection(this.vertices, a3),
-          verticesProjection(sprite.vertices, a3)
-        ) && projectionIntersect(
-          verticesProjection(this.vertices, a4),
-          verticesProjection(sprite.vertices, a4)
-        )
+      verticesProjection(this.vertices, a1),
+      verticesProjection(sprite.vertices, a1)
+    ) && projectionIntersect(
+      verticesProjection(this.vertices, a2),
+      verticesProjection(sprite.vertices, a2)
+    ) && projectionIntersect(
+      verticesProjection(this.vertices, a3),
+      verticesProjection(sprite.vertices, a3)
+    ) && projectionIntersect(
+      verticesProjection(this.vertices, a4),
+      verticesProjection(sprite.vertices, a4)
+    )
   }
 
   set cache(context) {
@@ -362,7 +363,7 @@ class BaseSprite extends BaseNode {
     }
   }
 
-/** abstract
+  /** abstract
   connectedCallback() { }
   disconnectedCallback() { }
   attributeChangedCallback() { }
@@ -419,7 +420,6 @@ class BaseSprite extends BaseNode {
   // call by layer
   userRender(t, context) {
     if(this[_renderers].length) {
-      let renderType
       const renderers = []
 
       this[_renderers].forEach((renderer) => {
@@ -444,7 +444,7 @@ class BaseSprite extends BaseNode {
       [clientWidth, clientHeight] = this.clientSize
 
     if(offsetWidth === 0 || offsetHeight === 0) {
-      return  // don't need to render
+      return // don't need to render
     }
 
     const box = document.createElement('canvas'),

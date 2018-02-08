@@ -59,18 +59,18 @@ const vectorAngle = (ux, uy, vx, vy) => {
 }
 
 const getArcCenter = (
-    px,
-        py,
-        cx,
-        cy,
-        rx,
-        ry,
-        largeArcFlag,
-        sweepFlag,
-        sinphi,
-        cosphi,
-        pxp,
-        pyp
+  px,
+  py,
+  cx,
+  cy,
+  rx,
+  ry,
+  largeArcFlag,
+  sweepFlag,
+  sinphi,
+  cosphi,
+  pxp,
+  pyp
 ) => {
   const rxsq = rx ** 2
   const rysq = ry ** 2
@@ -112,16 +112,16 @@ const getArcCenter = (
 }
 
 const arcToBezier = ({
-    px,
-    py,
-    cx,
-    cy,
-    rx,
-    ry,
-    xAxisRotation = 0,
-    largeArcFlag = 0,
-    sweepFlag = 0
-    }) => {
+  px,
+  py,
+  cx,
+  cy,
+  rx,
+  ry,
+  xAxisRotation = 0,
+  largeArcFlag = 0,
+  sweepFlag = 0,
+}) => {
   const curves = []
 
   if(rx === 0 || ry === 0) {
@@ -151,19 +151,19 @@ const arcToBezier = ({
   }
 
   let [centerx, centery, ang1, ang2] = getArcCenter(
-        px,
-        py,
-        cx,
-        cy,
-        rx,
-        ry,
-        largeArcFlag,
-        sweepFlag,
-        sinphi,
-        cosphi,
-        pxp,
-        pyp
-    )
+    px,
+    py,
+    cx,
+    cy,
+    rx,
+    ry,
+    largeArcFlag,
+    sweepFlag,
+    sinphi,
+    cosphi,
+    pxp,
+    pyp
+  )
 
   const segments = Math.max(Math.ceil(Math.abs(ang2) / (TAU / 4)), 1)
 
@@ -179,7 +179,9 @@ const arcToBezier = ({
     const {x: x2, y: y2} = mapToEllipse(curve[1], rx, ry, cosphi, sinphi, centerx, centery)
     const {x, y} = mapToEllipse(curve[2], rx, ry, cosphi, sinphi, centerx, centery)
 
-    return {x1, y1, x2, y2, x, y}
+    return {
+      x1, y1, x2, y2, x, y,
+    }
   })
 }
 

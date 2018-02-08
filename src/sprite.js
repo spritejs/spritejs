@@ -180,6 +180,7 @@ export default class Sprite extends BaseSprite {
     if(cacheMap.has(key)) {
       return cacheMap.get(key)
     }
+    return null
   }
 
   async render(t) {

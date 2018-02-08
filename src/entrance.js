@@ -16,7 +16,7 @@ import {Effects} from 'sprite-animator'
 const Color = parseColor
 
 function Paper2D(...args) {
-  console.warn('Paper2D has been deprecated. Use new sprite.Scene instead.')
+  console.warn('[Deprecation] spritejs.Paper2D is deprecated, instead use new spritejs.Scene.')
   return new Scene(...args)
 }
 

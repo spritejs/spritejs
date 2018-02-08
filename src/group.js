@@ -46,18 +46,17 @@ export default class Group extends BaseSprite {
 
     if(width === '' || height === '') {
       width = height = 0
-      for(const sprite of this[_children]) {
+      this[_children].forEach((sprite) => {
         const renderBox = sprite.renderBox
         width = Math.max(width, renderBox[2])
         height = Math.max(width, renderBox[3])
-      }
+      })
     }
 
     return [width, height]
   }
   dispatchEvent(type, evt, forceTrigger = false) {
     if(!evt.terminated && (forceTrigger || this.pointCollision(evt))) {
-      const originRect = this.originRect
       const parentX = evt.offsetX - this.originRect[0]
       const parentY = evt.offsetY - this.originRect[1]
       // console.log(evt.parentX, evt.parentY)
@@ -81,7 +80,10 @@ export default class Group extends BaseSprite {
   async render(t) {
     const context = super.render(t)
     const children = this[_children]
-    for(const child of children) {
+
+    /* eslint-disable no-await-in-loop */
+    for(let i = 0; i < children.length; i++) {
+      const child = children[i]
       const ctx = await child.render(t)
       const transform = child.transform.m,
         pos = child.attr('pos'),
@@ -94,6 +96,7 @@ export default class Group extends BaseSprite {
       context.drawImage(ctx.canvas, bound[0], bound[1])
       context.restore()
     }
+    /* eslint-enable no-await-in-loop */
 
     return context
   }

@@ -31,10 +31,10 @@ const Resource = {
               node.id = texture.id
             }
             Promise.resolve(node.render())
-                .then((context) => {
-                  resolve({img: node, texture})
-                  loadedResources.set(mapKey, node)
-                })
+              .then((context) => {
+                resolve({img: node, texture})
+                loadedResources.set(mapKey, node)
+              })
             texture.src = node.serialize()
           }
         } else {
@@ -67,8 +67,10 @@ const Resource = {
         }
       })
     }
-    return Promise.resolve({img: loadedResources.get(mapKey),
-      texture})
+    return Promise.resolve({
+      img: loadedResources.get(mapKey),
+      texture,
+    })
   },
   /**
     u3d-json compatible: https://www.codeandweb.com/texturepacker
@@ -93,9 +95,8 @@ const Resource = {
     const texture = await this.loadTexture(src)
     const frames = frameData.frames
 
-    for(const key in frames) {
-      const frame = frames[key],
-        {w, h} = frame.sourceSize
+    Object.entries(frames).forEach(([key, frame]) => {
+      const {w, h} = frame.sourceSize
 
       const canvas = document.createElement('canvas'),
         srcRect = frame.frame,
@@ -117,21 +118,26 @@ const Resource = {
         rect.y = rect.x
         rect.x = h - srcRect.h - tmp
 
-        context.drawImage(texture.img,
-              srcRect.x, srcRect.y, srcRect.h, srcRect.w,
-              rect.x, rect.y, rect.h, rect.w)
+        context.drawImage(
+          texture.img,
+          srcRect.x, srcRect.y, srcRect.h, srcRect.w,
+          rect.x, rect.y, rect.h, rect.w
+        )
       } else {
-        context.drawImage(texture.img,
-              srcRect.x, srcRect.y, srcRect.w, srcRect.h,
-              rect.x, rect.y, rect.w, rect.h)
+        context.drawImage(
+          texture.img,
+          srcRect.x, srcRect.y, srcRect.w, srcRect.h,
+          rect.x, rect.y, rect.w, rect.h
+        )
       }
 
       context.restore()
 
       loadedResources.set(key, canvas)
-    }
+    })
+
     return texture
-  }
+  },
 }
 
 export default Resource

@@ -8,13 +8,7 @@ const _layerMap = Symbol('layerMap'),
   _snapshot = Symbol('snapshot')
 
 function sortLayer(paper) {
-  const layers = []
-
-  for(const key in paper[_layerMap]) {
-    const layer = paper[_layerMap][key]
-
-    layers.push(layer)
-  }
+  const layers = Object.values(paper[_layerMap])
 
   layers.sort((a, b) => {
     if(b.zIndex === a.zIndex) {
@@ -54,7 +48,7 @@ export default class extends BaseNode {
     this.ownerDocument = {
       createElementNS(uri, name) {
         return that.layer(name)
-      }
+      },
     }
 
     const events = ['mousedown', 'mouseup', 'mousemove',
@@ -130,7 +124,7 @@ export default class extends BaseNode {
           type,
           stopDispatch() {
             this.terminated = true
-          }
+          },
         }
 
         const {left, top} = e.target.getBoundingClientRect()
@@ -150,7 +144,9 @@ export default class extends BaseNode {
 
         const [layerX, layerY] = this.toLocalPos(originalX, originalY)
 
-        Object.assign(evtArgs, {layerX, layerY, originalX, originalY, x: layerX, y: layerY})
+        Object.assign(evtArgs, {
+          layerX, layerY, originalX, originalY, x: layerX, y: layerY,
+        })
 
         for(let i = 0; i < layers.length; i++) {
           const layer = layers[i]
@@ -163,21 +159,31 @@ export default class extends BaseNode {
     })
   }
   async preload(...resources) {
-    const ret = []
+    const ret = [],
+      tasks = []
+
     for(let i = 0; i < resources.length; i++) {
       const res = resources[i]
+      let task
+
       if(typeof res === 'string') {
-        ret.push(await Resource.loadTexture(res))
-        this.dispatchEvent('preload', {target: this, progress: i, resources}, true)
+        task = Resource.loadTexture(res)
       } else if(Array.isArray(res)) {
-        ret.push(await Resource.loadFrames(...res))
-        this.dispatchEvent('preload', {target: this, progress: i, resources}, true)
+        task = Resource.loadFrames(...res)
       } else {
         const {id, src} = res
-        ret.push(await Resource.loadTexture({id, src}))
-        this.dispatchEvent('preload', {target: this, progress: i, resources}, true)
+        task = Resource.loadTexture({id, src})
       }
+
+      tasks.push(task.then((r) => {
+        ret.push(r)
+        this.dispatchEvent('preload', {
+          target: this, current: r, loaded: ret, resources,
+        }, true)
+      }))
     }
+
+    await Promise.all(tasks)
     return ret
   }
   layer(id = 'default', opts = {handleEvent: true}) {
@@ -242,17 +248,17 @@ export default class extends BaseNode {
   async snapshot() {
     const canvas = this[_snapshot]
     const [width, height] = this.viewport
-    
+
     canvas.width = width
     canvas.height = height
-    
+
     const layers = this[_layers]
     const ctx = canvas.getContext('2d')
 
-    for(const layer of layers) {
-      await layer.prepareRender()
-      ctx.drawImage(layer.canvas, 0, 0, width, height)  
-    }
+    const renderTasks = layers.map(layer => layer.prepareRender())
+    await Promise.all(renderTasks)
+
+    layers.forEach(layer => ctx.drawImage(layer.canvas, 0, 0, width, height))
 
     return canvas
   }

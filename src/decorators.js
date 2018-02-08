@@ -10,8 +10,7 @@ export function attr(...args) {
   function decorator(target, prop, descriptor) {
     descriptor.enumerable = true
 
-    const setter = descriptor.set,
-      getter = descriptor.get
+    const setter = descriptor.set
 
     descriptor.set = function (val) {
       const subject = this.subject || this,

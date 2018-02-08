@@ -33,7 +33,7 @@ function _upShapes(shapes, count) {
 function split(x1, y1, x2, y2, x3, y3, x4, y4, t) {
   return {
     left: _split(x1, y1, x2, y2, x3, y3, x4, y4, t),
-    right: _split(x4, y4, x3, y3, x2, y2, x1, y1, 1 - t, true)
+    right: _split(x4, y4, x3, y3, x2, y2, x1, y1, 1 - t, true),
   }
 }
 
@@ -130,9 +130,9 @@ function lerpPoints(x1, y1, x2, y2, t) {
 
 function lerpCurve(curveA, curveB, t) {
   return lerpPoints(curveA[0], curveA[1], curveB[0], curveB[1], t)
-        .concat(lerpPoints(curveA[2], curveA[3], curveB[2], curveB[3], t))
-        .concat(lerpPoints(curveA[4], curveA[5], curveB[4], curveB[5], t))
-        .concat(lerpPoints(curveA[6], curveA[7], curveB[6], curveB[7], t))
+    .concat(lerpPoints(curveA[2], curveA[3], curveB[2], curveB[3], t))
+    .concat(lerpPoints(curveA[4], curveA[5], curveB[4], curveB[5], t))
+    .concat(lerpPoints(curveA[6], curveA[7], curveB[6], curveB[7], t))
 }
 
 function lerp(pathA, pathB, t) {

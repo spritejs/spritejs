@@ -9,7 +9,7 @@ const _children = Symbol('children'),
   _renderPromise = Symbol('renderPromise'),
   _resolution = Symbol('resolution')
 
-import {boxIntersect, boxEqual, boxToRect, defer} from './utils'
+import {boxIntersect, boxEqual, boxToRect} from './utils'
 import {Timeline} from 'sprite-animator'
 
 import Sprite from './sprite'
@@ -25,7 +25,9 @@ registerNodeType('path', Path)
 registerNodeType('axis', Axis)
 
 class Layer extends BaseNode {
-  constructor(id, {handleEvent, evaluateFPS, renderMode, resolution}) {
+  constructor(id, {
+    handleEvent, evaluateFPS, renderMode, resolution,
+  }) {
     super()
 
     this.handleEvent = handleEvent !== false
@@ -61,7 +63,7 @@ class Layer extends BaseNode {
           return that.appendChild(sprite)
         }
         return null
-      }
+      },
     }
 
     if(resolution) this.resolution = resolution
@@ -69,7 +71,9 @@ class Layer extends BaseNode {
   }
 
   getElementById(id) {
-    for(const child of this[_children]) {
+    const children = this[_children]
+    for(let i = 0; i < children.length; i++) {
+      const child = children[i]
       if(child.id === id) {
         return child
       }
@@ -86,18 +90,23 @@ class Layer extends BaseNode {
     *, nodeType, checker
   */
   querySelector(selector) {
+    const children = this[_children]
+
     if(!selector || selector === '*') {
-      return this[_children][0]
+      return children[0]
     } else if(typeof selector === 'string') {
       // querySelector('nodeType')
       // querySelector('#id')
       // querySelector(':name')
+
       if(selector.startsWith('#')) {
         return this.getElementById(selector.slice(1))
       }
       if(selector.startsWith(':')) {
         const name = selector.slice(1)
-        for(const child of this[_children]) {
+
+        for(let i = 0; i < children.length; i++) {
+          const child = children[i]
           if(child.name === name) {
             return child
           }
@@ -106,7 +115,8 @@ class Layer extends BaseNode {
       }
       const nodeType = getNodeType(selector)
       if(nodeType) {
-        for(const child of this[_children]) {
+        for(let i = 0; i < children.length; i++) {
+          const child = children[i]
           if(child instanceof nodeType) {
             return child
           }
@@ -115,13 +125,14 @@ class Layer extends BaseNode {
       }
       return null
     }
-    for(const child of this[_children]) {
-      for(const [type, checker] of Object.entries(selector)) {
+    for(let i = 0; i < children.length; i++) {
+      const child = children[i]
+      Object.entries(selector).forEach(([type, checker]) => {
         const nodeType = getNodeType(type)
         if(nodeType && child instanceof nodeType && checker.call(this, child)) {
           return child
         }
-      }
+      })
     }
     return null
   }
@@ -143,7 +154,7 @@ class Layer extends BaseNode {
       return null
     }
     return this[_children].filter((child) => {
-      for(const [type, checker] of Object.entries(selector)) {
+      Object.entries(selector).forEach(([type, checker]) => {
         const nodeType = getNodeType(type)
         if(!nodeType || !(child instanceof nodeType)) {
           return false
@@ -152,7 +163,7 @@ class Layer extends BaseNode {
         if(!checker.call(this, child)) {
           return false
         }
-      }
+      })
       return true
     })
   }
@@ -244,8 +255,10 @@ class Layer extends BaseNode {
           if(that[_updateSet].size) {
             await renderer(t)
 
-            _dispatchEvent.call(that, 'update',
-              {target: that, timeline: that.timeline, currentTime: that.timeline.currentTime}, true)
+            _dispatchEvent.call(
+              that, 'update',
+              {target: that, timeline: that.timeline, currentTime: that.timeline.currentTime}, true
+            )
           }
 
           if(that[_updateSet].size) {
@@ -330,17 +343,23 @@ class Layer extends BaseNode {
         if(this.isVisible(child)) {
           let context = child.cache
 
+          /* eslint-disable no-await-in-loop */
           if(!context) {
             context = await child.render(t)
             child.cache = context
           }
+          /* eslint-enable no-await-in-loop */
 
           child.userRender(t, context)
 
           if(this[_updateSet].has(child)) {
-            child.dispatchEvent('update',
-              {target: child, context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox},
-              true)
+            child.dispatchEvent(
+              'update',
+              {
+                target: child, context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox,
+              },
+              true
+            )
           }
 
           child.lastRenderBox = child.renderBox
@@ -394,14 +413,17 @@ class Layer extends BaseNode {
 
     const restEls = children.filter(el => !updateSet.has(el))
 
-    const affectedEls = new Set(),
-      unaffectedEls = new Set()
+    const affectedSet = new Set(),
+      unaffectedSet = new Set()
+
+    const updateEls = Array.from(updateSet)
 
     for(let i = 0; i < restEls.length; i++) {
       const unaffectedEl = restEls[i]
       let affected = false
 
-      for(const affectedEl of updateSet) {
+      for(let j = 0; j < updateEls.length; j++) {
+        const affectedEl = updateEls[j]
         const box1 = affectedEl.renderBox,
           box2 = unaffectedEl.renderBox,
           box3 = affectedEl.lastRenderBox
@@ -411,25 +433,32 @@ class Layer extends BaseNode {
           break
         }
       }
-      if(affected) affectedEls.add(unaffectedEl)
-      else unaffectedEls.add(unaffectedEl)
+      if(affected) affectedSet.add(unaffectedEl)
+      else unaffectedSet.add(unaffectedEl)
     }
 
-    if(affectedEls.size > 0 && unaffectedEls.size > 0) {
+    if(affectedSet.size > 0 && unaffectedSet.size > 0) {
       let changed
       do {
         changed = false
-        for(const affectedEl of affectedEls) {
-          for(const unaffectedEl of unaffectedEls) {
+        const affectedEls = Array.from(affectedSet),
+          unaffectedEls = Array.from(unaffectedSet)
+
+        for(let i = 0; i < affectedEls.length; i++) {
+          const affectedEl = affectedEls[i]
+          for(let j = 0; j < unaffectedEls.length; j++) {
+            const unaffectedEl = unaffectedEls[j]
             const box1 = affectedEl.renderBox,
               box2 = unaffectedEl.renderBox
 
             if(boxIntersect(box1, box2)) {
-              affectedEls.add(unaffectedEl)
-              unaffectedEls.delete(unaffectedEl)
+              affectedSet.add(unaffectedEl)
+              unaffectedSet.delete(unaffectedEl)
               changed = true
+              break
             }
           }
+          if(changed) break
         }
       } while(changed)
     }
@@ -440,7 +469,8 @@ class Layer extends BaseNode {
     shadowContext.beginPath()
     outputContext.beginPath()
 
-    for(const updateEl of updateSet) {
+    for(let i = 0; i < updateEls.length; i++) {
+      const updateEl = updateEls[i]
       const box = updateEl.renderBox
 
       let dirtyBox = boxIntersect(box, [0, 0, width, height])
@@ -465,7 +495,9 @@ class Layer extends BaseNode {
       }
     }
 
-    for(const affectedEl of affectedEls) {
+    const affectedEls = Array.from(affectedSet)
+    for(let i = 0; i < affectedEls.length; i++) {
+      const affectedEl = affectedEls[i]
       const box = affectedEl.renderBox
       const dirtyBox = boxIntersect(box, [0, 0, width, height])
 
@@ -483,7 +515,7 @@ class Layer extends BaseNode {
     shadowContext.clearRect(0, 0, width, height)
     outputContext.clearRect(0, 0, width, height)
 
-    const renderEls = [...updateSet, ...affectedEls]
+    const renderEls = [...updateSet, ...affectedSet]
 
     this.sortChildren(renderEls)
     await this.drawSprites(shadowContext, renderEls, t)
@@ -605,7 +637,7 @@ class Layer extends BaseNode {
   async getSnapshot() {
     await this.prepareRender()
     const snapshotCanvas = this.canvas.cloneNode(true)
-    const context = snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0)
+    snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0)
     const children = this[_children].map(child => child.serialize())
     return {context: snapshotCanvas, children}
   }
@@ -624,10 +656,15 @@ class Layer extends BaseNode {
       this.appendChild(node, false)
     })
 
-    for(const child of this[_children]) {
-      child.dispatchEvent('update',
-        {target: child, context: child.context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox},
-        true)
+    for(let i = 0; i < this[_children].length; i++) {
+      const child = this[_children][i]
+      child.dispatchEvent(
+        'update',
+        {
+          target: child, context: child.context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox,
+        },
+        true
+      )
 
       child.lastRenderBox = child.renderBox
     }

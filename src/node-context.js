@@ -1,5 +1,5 @@
-const { createCanvas, Image, Canvas } = require('canvas')
-const request = require('request').defaults({ encoding: null })
+const {createCanvas, Image, Canvas} = require('canvas')
+const request = require('request').defaults({encoding: null})
 const fs = require('fs')
 
 const base64Pattern = /^data:image\/\w+;base64,/
@@ -24,38 +24,43 @@ export class Container {
     }
   }
   addEventListener() {
-    //console.warn('addEventListener is not implemented yet.')
+    // console.warn('addEventListener is not implemented yet.')
   }
 }
 
-Image.prototype.__defineSetter__('src', function(data){
-  if(typeof data === 'string') {
-    if ('string' == typeof data && base64Pattern.test(data)) {
-      const base64Data = data.replace(base64Pattern, "")
-      this.source = new Buffer(data, 'base64')
-    } else if(/^https?:\/\//.test(data)) {
-      request.get(data, (err, res, buf) => {
-        if(err) {
-          throw err
-        } else {
-          this.source = buf
-        }
-      })
+Object.defineProperty(Image.prototype, 'src', {
+  set(data) {
+    if(typeof data === 'string') {
+      if(typeof data === 'string' && base64Pattern.test(data)) {
+        const base64Data = data.replace(base64Pattern, '')
+        this.source = Buffer.from(base64Data, 'base64')
+      } else if(/^https?:\/\//.test(data)) {
+        request.get(data, (err, res, buf) => {
+          if(err) {
+            throw err
+          } else {
+            this.source = buf
+          }
+        })
+      } else {
+        fs.readFile(data, function (err, squid) {
+          if(err) {
+            throw err
+          } else {
+            this.source = squid
+          }
+        })
+      }
     } else {
-      fs.readFile(data,  function(err, squid){
-        if(err) {
-          throw err
-        } else {
-          this.source = squid
-        }
-      })      
+      this.source = data
     }
-  } else {
-    this.source = data
-  }
+  },
+  get() {
+    return this.source
+  },
 })
 
-Canvas.prototype.cloneNode = function(copyContent) {
+Canvas.prototype.cloneNode = function (copyContent) {
   const {width, height} = this
   const copied = createCanvas(width, height)
   if(copyContent) {
@@ -69,17 +74,16 @@ const elementMap = new Map()
 
 const document = {
   querySelector(selector) {
-    const key = 'res-' + selector.replace(/[#.:()]/g, '')
+    const key = `res-${selector.replace(/[#.:()]/g, '')}`
     return this.getElementById(key)
   },
   getElementById(id) {
-    if(elementMap.has(id)){
+    if(elementMap.has(id)) {
       return elementMap.get(id)
-    } else {
-      const el = new Container(id)
-      elementMap.set(id, el)
-      return el
-    }        
+    }
+    const el = new Container(id)
+    elementMap.set(id, el)
+    return el
   },
   createElement(nodeType) {
     if(nodeType === 'canvas') {
@@ -89,15 +93,14 @@ const document = {
       return canvas
     } else if(nodeType === 'img') {
       return new Image()
-    } else {
-      throw new Error('Invalid element. Only canvas and img can be created.')
     }
-  }
+    throw new Error('Invalid element. Only canvas and img can be created.')
+  },
 }
 
 function requestAnimationFrame(fn) {
   process.nextTick(() => {
-    let [s, ns] = process.hrtime()
+    const [s, ns] = process.hrtime()
     const t = s * 1e3 + ns * 1e-6
     fn(t)
   })
