@@ -18,7 +18,6 @@
   "author": "akira-cn",
   "license": "MIT",
   "dependencies": {
-    "eslint-config-airbnb-base": "^12.1.0",
     "sprite-animator": "^1.1.2"
   },
   "devDependencies": {
