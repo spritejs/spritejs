@@ -69,8 +69,6 @@ Spritejs (>= 1.14.4) can render sprites' canvas on server-side. Depend on [node-
 npm install spritejs --save
 ```
 
-![](https://p1.ssl.qhimg.com/t011ff767a8b23524f7.gif)
-
 ```js
 const fs = require('fs')
 const GIFEncoder = require('gifencoder')
