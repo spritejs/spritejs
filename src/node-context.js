@@ -1,6 +1,6 @@
 const {createCanvas, Image, Canvas} = require('canvas')
-const request = require('request').defaults({encoding: null})
 const fs = require('fs')
+const axios = require('axios')
 
 const base64Pattern = /^data:image\/\w+;base64,/
 
@@ -35,12 +35,8 @@ Object.defineProperty(Image.prototype, 'src', {
         const base64Data = data.replace(base64Pattern, '')
         this.source = Buffer.from(base64Data, 'base64')
       } else if(/^https?:\/\//.test(data)) {
-        request.get(data, (err, res, buf) => {
-          if(err) {
-            throw err
-          } else {
-            this.source = buf
-          }
+        axios.get(data, {responseType: 'arraybuffer'}).then(({data}) => {
+          this.source = data
         })
       } else {
         fs.readFile(data, function (err, squid) {
