@@ -85,10 +85,8 @@ scene.setResolution(width * 2, height * 2)
 
   await scene.preload([birdsRes, birdsJsonUrl])
 
-  // 背景层
   const bglayer = scene.layer('bg', {handleEvent: false})
 
-  // 前景层
   const fglayer = scene.layer('fg', {handleEvent: false})
   const axisZero = [400, 400]
   const circle = new Sprite()
@@ -122,7 +120,7 @@ scene.setResolution(width * 2, height * 2)
     const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
     const flip = dist[0] < 0 ? -1 : 1
     const duration = 5 * distance + 100
-    bird.attr('scale', [flip, 1]) // scale 放在外面，触发缓存
+    bird.attr('scale', [flip, 1])
 
     const anim = bird.animate([
       {pos: birdPoint},
