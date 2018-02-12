@@ -73,7 +73,7 @@ npm install spritejs --save
 const fs = require('fs')
 const GIFEncoder = require('gifencoder')
 
-const {Scene, Sprite} = require('../lib')
+const {Scene, Sprite} = require('spritejs')
 const width = 800
 const height = 600
 const scene = new Scene('#test', width, height)
