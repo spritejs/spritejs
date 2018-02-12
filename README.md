@@ -63,10 +63,10 @@ Compatible with [d3.js](https://github.com/d3/d3).
 
 ### Server-side Render
 
-Spritejs (>= 1.14.2) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
+Spritejs (>= 1.14.3) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
 
 ```js
-npm install node-canvas spritejs --save
+npm install spritejs --save
 ```
 
 ```js
