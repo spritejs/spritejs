@@ -95,11 +95,11 @@ const document = {
 }
 
 function requestAnimationFrame(fn) {
-  process.nextTick(() => {
+  setTimeout(() => {
     const [s, ns] = process.hrtime()
     const t = s * 1e3 + ns * 1e-6
     fn(t)
-  })
+  }, 16)
 }
 
 export {

@@ -7849,7 +7849,7 @@ var _default = function (_BaseNode) {
                 canvas.width = width;
                 canvas.height = height;
 
-                layers = this[_layers];
+                layers = this[_layers].slice(0).reverse();
                 ctx = canvas.getContext('2d');
                 renderTasks = layers.map(function (layer) {
                   return layer.prepareRender();

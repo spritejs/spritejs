@@ -252,7 +252,7 @@ export default class extends BaseNode {
     canvas.width = width
     canvas.height = height
 
-    const layers = this[_layers]
+    const layers = this[_layers].slice(0).reverse()
     const ctx = canvas.getContext('2d')
 
     const renderTasks = layers.map(layer => layer.prepareRender())
