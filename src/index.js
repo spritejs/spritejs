@@ -1,18 +1,22 @@
-const {document, requestAnimationFrame} = require('./node-context')
-global.document = document
-global.requestAnimationFrame = requestAnimationFrame
-global.IS_NODE_ENV = true
+import * as spritejs from './entrance'
 
-import {BaseSprite, Sprite, Resource, Label, Color, Matrix, Group, Scene, Paper2D} from './entrance'
+spritejs.serverRenderer = function () {
+  const {document, requestAnimationFrame} = require('./node-context')
+  global.document = document
+  global.requestAnimationFrame = requestAnimationFrame
+  global.IS_NODE_ENV = true
+  const {Sprite, Resource, Label, Color, Matrix, Group, Scene, Paper2D} = this
 
-module.exports = {
-  BaseSprite,
-  Sprite,
-  Resource,
-  Label,
-  Color,
-  Matrix,
-  Group,
-  Scene,
-  Paper2D,
+  return {
+    Sprite,
+    Resource,
+    Label,
+    Color,
+    Matrix,
+    Group,
+    Scene,
+    Paper2D,
+  }
 }
+
+module.exports = spritejs

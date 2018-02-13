@@ -1,7 +1,7 @@
 const fs = require('fs')
 const GIFEncoder = require('gifencoder')
 
-const {Scene, Sprite} = require('../lib')
+const {Scene, Sprite} = require('../lib').serverRenderer()
 const width = 800
 const height = 600
 const scene = new Scene('#test', width, height)

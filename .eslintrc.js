@@ -18,6 +18,7 @@ module.exports = {
     // 因为函数签名中可能声明未使用的变量
     'no-unused-vars': ['error', {args: "none"}],
     'prefer-destructuring': 'off',
+    'object-curly-newline': 'off',
     // 'no-restricted-syntax': [
     //   'error',
     //   'ForInStatement',

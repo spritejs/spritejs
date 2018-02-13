@@ -15,7 +15,7 @@ function saveTo (base64Data, file) {
   })
 }
 
-const {Scene, Sprite, Label} = require('../lib')
+const {Scene, Sprite, Label} = require('../lib').serverRenderer()
 const width = 800,
   height = 600
 const scene = new Scene('#test', width, height)

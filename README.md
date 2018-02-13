@@ -63,7 +63,7 @@ Compatible with [d3.js](https://github.com/d3/d3).
 
 ### Server-side Render
 
-Spritejs (>= 1.14.4) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
+Spritejs (>= 1.14.5) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
 
 ```bash
 sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
@@ -77,7 +77,7 @@ npm install canvas spritejs --save
 const fs = require('fs')
 const GIFEncoder = require('gifencoder')
 
-const {Scene, Sprite} = require('spritejs')
+const {Scene, Sprite} = require('spritejs').serverRenderer()
 const width = 800
 const height = 600
 const scene = new Scene('#test', width, height)
@@ -116,6 +116,7 @@ scene.setResolution(width * 2, height * 2)
   function sleep(time) {
     return new Promise(resolve => setTimeout(resolve, time))
   }
+
   async function randomAnimate(bird) {
     const birdPoint = bird.attr('pos')
     const randomArc = Math.random() * 2 * Math.PI
