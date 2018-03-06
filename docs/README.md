@@ -1075,7 +1075,7 @@ paper.layer().appendChild(arc)
 
 在 1.15.0 之后支持服务端渲染，服务端渲染需要依赖于 [node-canvas](https://github.com/Automattic/node-canvas)，目前暂不支持 Path、Axis 以及 d3 相关的 API 在服务器端渲染。其他 API 可以使用，生成的 canvas 可以输出成图片或者 gif 动画。
 
-服务端渲染需要使用 sprite-node 模块代替 spritejs 模块
+服务端渲染需要使用 [sprite-node](https://github.com/spritejs/sprite-node) 模块代替 spritejs 模块
 
 ```bash
 npm install sprite-node
@@ -1150,8 +1150,8 @@ for(let i = 0; i < 51; i++) {
   bird.textures = [`bird${i % 3 + 1}.png`]
   const canvas = await scene.snapshot(),
     ctx = canvas.getContext('2d')
-  
-    encoder.addFrame(ctx)
+
+  encoder.addFrame(ctx)
 }
 })()
 ```
