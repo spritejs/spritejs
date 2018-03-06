@@ -1073,29 +1073,20 @@ paper.layer().appendChild(arc)
 
 ## 服务端渲染
 
-在 1.14.0 之后支持服务端渲染，服务端渲染需要依赖于 [node-canvas](https://github.com/Automattic/node-canvas)，目前暂不支持 Path、Axis 以及 d3 相关的 API 在服务器端渲染。其他 API 可以使用，生成的 canvas 可以输出成图片或者 gif 动画。
+在 1.15.0 之后支持服务端渲染，服务端渲染需要依赖于 [node-canvas](https://github.com/Automattic/node-canvas)，目前暂不支持 Path、Axis 以及 d3 相关的 API 在服务器端渲染。其他 API 可以使用，生成的 canvas 可以输出成图片或者 gif 动画。
+
+服务端渲染需要使用 sprite-node 模块代替 spritejs 模块
+
+```bash
+npm install sprite-node
+```
 
 例子
 
 ```js
 const fs = require('fs')
 const GIFEncoder = require('gifencoder');
-
-function saveTo(base64Data, file) {
-  return new Promise((resolve, reject) => {
-    base64Data = base64Data.replace(/^data:image\/\w+;base64,/, "")
-    const dataBuffer = new Buffer(base64Data, 'base64')
-    fs.writeFile(file, dataBuffer, function(err) {
-      if(err){
-        reject(err)
-      }else{
-        resolve("保存成功！")
-      }
-    })
-  }) 
-}
-
-const {Scene, Layer, Sprite, Label} = require('../lib')
+const {Scene, Layer, Sprite, Label} = require('sprite-node')
 const width = 800, height = 600
 const scene = new Scene('#test', width, height)
 scene.setResolution(width * 2, height * 2)
@@ -1106,7 +1097,7 @@ const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 await scene.preload(
-  [birdsRes, birdsJsonUrl]   
+  [birdsRes, birdsJsonUrl]
 ) 
 
 const layer = scene.layer('fglayer', {handleEvent: false})
@@ -1144,9 +1135,6 @@ text1.attr({
 })
 
 layer.append(text1)
-
-// let canvas = await scene.snapshot()
-// saveTo(canvas.toDataURL(), 'test3.png')
 
 const encoder = new GIFEncoder(width, height)
 // stream the results as they are available into myanimated.gif

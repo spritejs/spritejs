@@ -25,7 +25,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 In browser:
 
 ```html
-<script src="https://s1.ssl.qhres.com/!729ec803/spritejs.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!4a1de9d8/spritejs.min.js"></script>
 ```
 
 ## Quick Start
@@ -70,14 +70,14 @@ sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-
 ```
 
 ```bash
-npm install canvas@next spritejs --save
+npm install sprite-node
 ```
 
 ```js
 const fs = require('fs')
 const GIFEncoder = require('gifencoder')
 
-const {Scene, Sprite} = require('spritejs').serverRenderer()
+const {Scene, Sprite} = require('sprite-node')
 const width = 800
 const height = 600
 const scene = new Scene('#test', width, height)

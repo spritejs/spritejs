@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 140);
+/******/ 	return __webpack_require__(__webpack_require__.s = 141);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4673,7 +4673,7 @@ var _resource = __webpack_require__(59);
 
 var _resource2 = _interopRequireDefault(_resource);
 
-var _filters = __webpack_require__(141);
+var _filters = __webpack_require__(140);
 
 var _filters2 = _interopRequireDefault(_filters);
 
@@ -10027,91 +10027,6 @@ exports.default = SpriteAttr;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Paper2D = exports.Scene = exports.Group = exports.Matrix = exports.Effects = exports.createNode = exports.registerNodeType = exports.Axis = exports.Color = exports.Path = exports.Label = exports.Resource = exports.Sprite = exports.BaseSprite = undefined;
-
-var _basesprite = __webpack_require__(29);
-
-var _basesprite2 = _interopRequireDefault(_basesprite);
-
-var _sprite = __webpack_require__(60);
-
-var _sprite2 = _interopRequireDefault(_sprite);
-
-var _label = __webpack_require__(56);
-
-var _label2 = _interopRequireDefault(_label);
-
-var _scene = __webpack_require__(118);
-
-var _scene2 = _interopRequireDefault(_scene);
-
-var _resource = __webpack_require__(59);
-
-var _resource2 = _interopRequireDefault(_resource);
-
-var _path = __webpack_require__(58);
-
-var _path2 = _interopRequireDefault(_path);
-
-var _utils = __webpack_require__(13);
-
-var _axis = __webpack_require__(84);
-
-var _axis2 = _interopRequireDefault(_axis);
-
-var _nodetype = __webpack_require__(57);
-
-var _matrix = __webpack_require__(44);
-
-var _matrix2 = _interopRequireDefault(_matrix);
-
-var _group = __webpack_require__(117);
-
-var _group2 = _interopRequireDefault(_group);
-
-var _spriteAnimator = __webpack_require__(45);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// webpack build for browser
-
-var Color = _utils.parseColor;
-
-function Paper2D() {
-  console.warn('[Deprecation] spritejs.Paper2D is deprecated, instead use new spritejs.Scene.');
-
-  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
-
-  return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
-}
-
-exports.BaseSprite = _basesprite2.default;
-exports.Sprite = _sprite2.default;
-exports.Resource = _resource2.default;
-exports.Label = _label2.default;
-exports.Path = _path2.default;
-exports.Color = Color;
-exports.Axis = _axis2.default;
-exports.registerNodeType = _nodetype.registerNodeType;
-exports.createNode = _nodetype.createNode;
-exports.Effects = _spriteAnimator.Effects;
-exports.Matrix = _matrix2.default;
-exports.Group = _group2.default;
-exports.Scene = _scene2.default;
-exports.Paper2D = Paper2D;
-
-/***/ }),
-/* 141 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _entries = __webpack_require__(25);
 
@@ -10175,6 +10090,89 @@ exports.default = {
     }, []).join(' ');
   }
 }; // http://www.runoob.com/cssref/css3-pr-filter.html
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Paper2D = exports.Scene = exports.Group = exports.Matrix = exports.Effects = exports.createNode = exports.registerNodeType = exports.Axis = exports.Color = exports.Path = exports.Label = exports.Resource = exports.Sprite = exports.BaseSprite = undefined;
+
+var _basesprite = __webpack_require__(29);
+
+var _basesprite2 = _interopRequireDefault(_basesprite);
+
+var _sprite = __webpack_require__(60);
+
+var _sprite2 = _interopRequireDefault(_sprite);
+
+var _label = __webpack_require__(56);
+
+var _label2 = _interopRequireDefault(_label);
+
+var _scene = __webpack_require__(118);
+
+var _scene2 = _interopRequireDefault(_scene);
+
+var _resource = __webpack_require__(59);
+
+var _resource2 = _interopRequireDefault(_resource);
+
+var _path = __webpack_require__(58);
+
+var _path2 = _interopRequireDefault(_path);
+
+var _utils = __webpack_require__(13);
+
+var _axis = __webpack_require__(84);
+
+var _axis2 = _interopRequireDefault(_axis);
+
+var _nodetype = __webpack_require__(57);
+
+var _matrix = __webpack_require__(44);
+
+var _matrix2 = _interopRequireDefault(_matrix);
+
+var _group = __webpack_require__(117);
+
+var _group2 = _interopRequireDefault(_group);
+
+var _spriteAnimator = __webpack_require__(45);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Color = _utils.parseColor;
+
+function Paper2D() {
+  console.warn('[Deprecation] spritejs.Paper2D is deprecated, instead use new spritejs.Scene.');
+
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
+}
+
+exports.BaseSprite = _basesprite2.default;
+exports.Sprite = _sprite2.default;
+exports.Resource = _resource2.default;
+exports.Label = _label2.default;
+exports.Path = _path2.default;
+exports.Color = Color;
+exports.Axis = _axis2.default;
+exports.registerNodeType = _nodetype.registerNodeType;
+exports.createNode = _nodetype.createNode;
+exports.Effects = _spriteAnimator.Effects;
+exports.Matrix = _matrix2.default;
+exports.Group = _group2.default;
+exports.Scene = _scene2.default;
+exports.Paper2D = Paper2D;
 
 /***/ }),
 /* 142 */
