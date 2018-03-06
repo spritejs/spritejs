@@ -76,7 +76,7 @@ npm install sprite-node
 ```js
 const fs = require('fs')
 
-const {Scene, Label} = require('../lib')
+const {Scene, Label} = require('sprite-node')
 const scene = new Scene('#test', 800, 600)
 
 const bglayer = scene.layer('bg', {handleEvent: false})
