@@ -4,9 +4,9 @@
 
 ## 整体结构
 
-![](https://p4.ssl.qhimg.com/t01d5a8d15933153621.png)
+![](https://p1.ssl.qhimg.com/t01c7d7aa748c0367c3.png)
 
-paper -> layer -> sprite -> texture
+scene -> layer -> sprite -> texture
 
 ### 快速上手
 
@@ -14,8 +14,8 @@ paper -> layer -> sprite -> texture
 
 ```js
 const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-const paper = spritejs.Paper2D('#container')
-paper.setResolution(400, 400)
+const scene = new Scene('#container')
+scene.setResolution(400, 400)
 
 const sprite = new spritejs.Sprite(imgUrl)
 sprite.attr({
@@ -26,7 +26,7 @@ sprite.attr({
   borderRadius: '200'
 })
 
-paper.layer().appendChild(sprite)
+scene.layer().appendChild(sprite)
 ```
 
 spritejs 使用非常简单，`spritejs.Paper2D(selector)` 在容器上创建一个 paper， paper 会自适应容器的宽高。通过 `paper.setResolution(width, height)` 创建指定分辨率的画布。
