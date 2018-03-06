@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "1.14.5",
+  "version": "1.15.0",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
@@ -11,8 +11,8 @@
     "lint": "eslint 'src/**/*.js' --fix",
     "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
     "build": "rm -rf dist/* && ./script/build.js",
-    "build-node": "babel src -d lib --watch",
-    "prepublishOnly": "babel src -d lib && npm run build"
+    "build-node": "rm -rf lib/* && babel src -d lib --watch",
+    "prepublishOnly": "rm -rf lib/* && babel src -d lib && npm run build"
   },
   "keywords": [],
   "author": "akira-cn",
