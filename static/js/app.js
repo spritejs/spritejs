@@ -18,10 +18,11 @@
   });
   editor.on('change', debounce(evt => {    
     output.innerHTML = ''
+    const hash = Date.now()
     if(location.hash === '#d3-6') {
-      frames[0].location.href = '/sendbox2.html'
+      frames[0].location.href = '/sendbox2.html?t=' + hash
     } else {
-      frames[0].location.href = '/sendbox.html'
+      frames[0].location.href = '/sendbox.html?t=' + hash
     }
   }))
 
