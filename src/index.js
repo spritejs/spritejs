@@ -18,7 +18,10 @@ function Paper2D(...args) {
   return new Scene(...args)
 }
 
+const version = require('../package.json').version
+
 export {
+  version,
   BaseSprite,
   Sprite,
   Resource,
