@@ -22,7 +22,6 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
     const sprite = new Sprite(imgUrl)
     sprite.attr({
       bgcolor: '#fff',
-      //anchor: [0.5, 0.5],
       pos: [0, 0],
       size: [400, 400],
       borderRadius: '200'
