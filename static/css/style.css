@@ -14,7 +14,7 @@ html,body{
 #menu {
   position: absolute;
   z-index: 999;
-  width: 220px;
+  width: 260px;
   user-select: none;
 }
 
