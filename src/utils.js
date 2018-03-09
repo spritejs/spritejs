@@ -233,7 +233,7 @@ const getTextSize = memoize((text, font, lineHeight = '') => {
     const {width} = ctx.measureText(text),
       {height} = measureFontHeight(ctx, text)
 
-    const size = [width, Math.max(height, lineHeight), height]
+    const size = [width, Math.max(height, lineHeight)]
 
     return size
   }
@@ -259,9 +259,6 @@ const getTextSize = memoize((text, font, lineHeight = '') => {
   tmpEl.innerHTML = text
   document.documentElement.appendChild(tmpEl)
   const size = [tmpEl.clientWidth, tmpEl.clientHeight]
-
-  tmpEl.style.lineHeight = ''
-  size.push(tmpEl.clientHeight)
 
   document.documentElement.removeChild(tmpEl)
 

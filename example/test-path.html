@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+#paper {
+  position: relative;
+}
+
+#dPath {
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
+}  
+  </style>
+</head>
+<body>
+  <script src="/js/spritejs.js"></script>
+  <textarea id="dPath">M10,80 q100,120 120,20 q140,-50 160,0</textarea>
+  颜色<input type="color" id="pickColor"/>
+  线宽<input id="lineWidth" value="1"/>
+  <select id="renderMode">
+    <option>stroke</option>
+    <option>fill</option>
+  </select>
+  <div id="paper"></div>
+  <script>
+const paper = spritejs.Paper2D('#paper', 600, 400)
+const Sprite = spritejs.Sprite,
+      Path = spritejs.Path
+
+
+const path = new Path()
+
+path.attr({
+  pos: [10, 50],
+  color: 'red',
+  d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+})
+paper.layer().append(path)
+
+renderMode.onchange = function(e){
+  path.attr('renderMode', e.target.value)
+}
+
+lineWidth.onchange = function(e) {
+  let width = e.target.value | 0
+
+  if(width) {
+    path.attr('lineWidth', width)
+  }
+}
+
+pickColor.onchange = function(e) {
+  path.attr('color', e.target.value)
+}
+
+dPath.onchange = function(e) {
+  path.attr('d', e.target.value)
+}  
+  </script>  
+</body>
+</html>

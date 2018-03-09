@@ -138,6 +138,7 @@ class Label extends BaseSprite {
         [width, height] = this.contentSize
 
       context.strokeStyle = context.fillStyle = color
+      context.textBaseline = 'middle'
 
       const [borderWidth] = this.attr('border')
 
@@ -155,7 +156,7 @@ class Label extends BaseSprite {
 
       lines.forEach((line) => {
         let left = borderWidth
-        const [w, h, textHeight] = getTextSize(line, font, attr.lineHeight)
+        const [w, h] = getTextSize(line, font, attr.lineHeight)
 
         if(align === 'center') {
           left += (width - w) / 2
@@ -164,9 +165,9 @@ class Label extends BaseSprite {
         }
 
         if(renderMode === 'fill') {
-          context.fillText(line, left, top + (h - textHeight) / 2)
+          context.fillText(line, left, top + h / 2)
         } else {
-          context.strokeText(line, left, top + (h - textHeight) / 2)
+          context.strokeText(line, left, top + h / 2)
         }
 
         top += h

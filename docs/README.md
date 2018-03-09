@@ -152,10 +152,10 @@ innerbox 与 outerbox 之间的空隙是 padding
 [例子](https://code.h5jun.com/legi)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Sprite = spritejs.Sprite
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
 
-paper.setResolution(800, 600)
+scene.setResolution(800, 600)
 
 const box = new Sprite()
 box.attr({
@@ -166,7 +166,7 @@ box.attr({
   borderRadius: 25
 })
 
-paper.layer().appendChild(box)
+scene.layer().appendChild(box)
 ```
 
 #### 定位
@@ -180,10 +180,10 @@ sprite 提供 transform 进行形状变换，支持 rotate、scale、translate�
 [例子](https://code.h5jun.com/fejo)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Sprite = spritejs.Sprite
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
 
-paper.setResolution(800, 600)
+scene.setResolution(800, 600)
 
 const box1 = new Sprite()
 box1.attr({
@@ -198,7 +198,7 @@ box1.attr({
   }
 })
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 
 const box2 = new Sprite()
 box2.attr({
@@ -213,7 +213,7 @@ box2.attr({
   }
 })
 
-paper.layer().appendChild(box2)
+scene.layer().appendChild(box2)
 
 const box3 = new Sprite()
 box3.attr({
@@ -228,7 +228,7 @@ box3.attr({
   }
 })
 
-paper.layer().appendChild(box3)
+scene.layer().appendChild(box3)
 ```
 
 **注意**
@@ -243,10 +243,10 @@ sprite 支持背景色，背景色支持所有的 css 颜色格式，包括 rgba
 [例子](https://code.h5jun.com/juri)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Sprite = spritejs.Sprite
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
 
-paper.setResolution(800, 600)
+scene.setResolution(800, 600)
 
 const box1 = new Sprite()
 box1.attr({
@@ -262,7 +262,7 @@ box1.attr({
   }
 })
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 
 const box2 = new Sprite()
 box2.attr({
@@ -279,7 +279,7 @@ box2.attr({
   }
 })
 
-paper.layer().appendChild(box2)
+scene.layer().appendChild(box2)
 
 const box3 = new Sprite()
 box3.attr({
@@ -294,7 +294,7 @@ box3.attr({
   }
 })
 
-paper.layer().appendChild(box3)
+scene.layer().appendChild(box3)
 ```
 
 #### zOrder 和 zIndex
@@ -311,16 +311,33 @@ textures 不是通过 attr() 添加，而是直接在 sprite 属性上赋值，�
 
 [例子](https://code.h5jun.com/giq)
 
+```js
+const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+const scene = new spritejs.Scene('#container')
+scene.setResolution(400, 400)
+
+const sprite = new spritejs.Sprite(imgUrl)
+sprite.attr({
+  bgcolor: '#fff',
+  //anchor: [0.5, 0.5],
+  pos: [0, 0],
+  size: [400, 400],
+  borderRadius: '200'
+})
+
+scene.layer().appendChild(sprite)
+```
+
 sprite 可以添加多个 texture，如果设置了 size，默认 texture 的大小会铺满 sprite 区域，不过我们可以通过 rect 指定 texture 相对于 sprite 显示的区域。还有，我们可以通过 srcRect 来指定 sprite 图片剪裁区域。
 
 [例子](https://code.h5jun.com/kev)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Sprite = spritejs.Sprite
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-paper.setResolution(800, 600)
+scene.setResolution(800, 600)
 
 const box1 = new Sprite()
 box1.attr({
@@ -347,7 +364,7 @@ box1.textures = [{
   rect: [126, 126, 86, 60]   
 }]
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 ```
 
 #### spriteFrames
@@ -357,16 +374,15 @@ spritejs 支持小图片拼合，类似于 css 的雪碧图，可以使用 [Text
 [例子](https://code.h5jun.com/jut)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Sprite = spritejs.Sprite
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
+scene.setResolution(800, 600)
 
-paper.setResolution(800, 600)
-
-await paper.preload([
+await scene.preload([
   birdsRes, birdsJsonUrl
 ])
 
@@ -391,7 +407,7 @@ box1.textures = [{
   rect: [126, 126, 86, 60]
 }]
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 })()
 ```
 
@@ -402,7 +418,11 @@ paper.layer().appendChild(box1)
 [例子](https://code.h5jun.com/wisa)
 
 ```js
-paper.setResolution(800, 600)
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#container')
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+scene.setResolution(800, 600)
 
 const box1 = new Sprite()
 box1.attr({
@@ -435,7 +455,7 @@ box1.textures = [{
   rect: [126, 126, 86, 60] ,
 }]
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 ```
 
 #### Label
@@ -457,11 +477,11 @@ label.attr({
 [例子](https://code.h5jun.com/god)
 
 ```js
-const paper = spritejs.Paper2D('#container')
-const Label = spritejs.Label
+const {Scene, Label} = spritejs
+const scene = new Scene('#container')
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-paper.setResolution(800, 600)
+scene.setResolution(800, 600)
 
 const box1 = new Label("Hello World")
 box1.attr({
@@ -473,7 +493,7 @@ box1.attr({
   font: 'italic bold 32px Arial'
 })
 
-paper.layer().appendChild(box1)
+scene.layer().appendChild(box1)
 ```
 
 ### 事件机制
@@ -490,17 +510,15 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 
 ;(async function(){
-  const paper = spritejs.Paper2D('#container', 600, 400)
+  const {Scene, Sprite, Label} = spritejs
+  const scene = new Scene('#container', 600, 400)
 
-  const Sprite = spritejs.Sprite,
-        Label = spritejs.Label
-
-  let res = await paper.preload([birdsRes, 
+  let res = await scene.preload([birdsRes, 
                                  birdsJsonUrl])
 
 
   const button = new Label('点我开始')
-  const layer = paper.layer()
+  const layer = scene.layer()
 
   button.attr({
     pos: [10, 10],
@@ -630,23 +648,22 @@ block1.animate([{
 
 ```js
 (async function(){
+  const {Scene, Sprite, Label} = spritejs
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-  
-  const paper = spritejs.Paper2D('#container', 600, 400)
-  const Sprite = spritejs.Sprite,
-        Label = spritejs.Label
 
-  let res = await paper.preload(
+  const scene = new Scene('#container', 600, 400)
+
+  let res = await scene.preload(
     [birdsRes, birdsJsonUrl],
   )
 
   console.log(res)
 
-  const layer = paper.layer('fg', {
-                  handleEvent: false,
-                  evaluateFPS: true,
-                })
+  const layer = scene.layer('fg', {
+    handleEvent: false,
+    evaluateFPS: true,
+  })
 
   function randomBirds(i){
     const s = new Sprite('bird1.png')
@@ -734,7 +751,7 @@ block1.animate([{
     layer.timeline.playbackRate += 0.2
     rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
   }
-  
+
   slowDownBtn.onclick = function(){
     layer.timeline.playbackRate -= 0.2
     rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
@@ -800,12 +817,12 @@ class Bird extends spritejs.Sprite {
 [例子](https://code.h5jun.com/juqu/edit?html,output)
 
 ```js
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
+const scene = new spritejs.Scene('#paper'),
+      fglayer = scene.layer('fglayer'),
       Sprite = spritejs.Sprite,
       Group = spritejs.Group
 
-paper.setResolution(800, 600) 
+scene.setResolution(800, 600) 
 
 const s1 = new Sprite()
 s1.attr({
@@ -876,9 +893,8 @@ s3.animate([
   iterations: Infinity,
 })
 
-
 window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
+  scene.setViewport('auto', 'auto')
 })
 ```
 
@@ -894,8 +910,9 @@ draw 方法有两个额外参数，表示渲染后是否主动清除缓存，以
 
 [例子](https://code.h5jun.com/jibe/edit?js,output)
 
-```
-const paper = spritejs.Paper2D('#paper')
+```js
+const scene = new spritejs.Scene('#paper')
+//paper.setResolution(800, 600)
 
 const sprite = new spritejs.Sprite()
 sprite.attr({
@@ -904,7 +921,7 @@ sprite.attr({
   size: [100, 100],
 })
 
-paper.layer().appendChild(sprite)
+scene.layer().appendChild(sprite)
 
 let i = 0
 setInterval(() => {
@@ -925,8 +942,8 @@ setInterval(() => {
 [例子](https://code.h5jun.com/coqot)
 
 ```js
-const paper = spritejs.Paper2D('#paper')
-paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
+const scene = new spritejs.Scene('#paper')
+scene.setResolution(800, 800) // 设置 Paper 的实际分辨率
 
 const BaseSprite = spritejs.BaseSprite,
   Color = spritejs.Color
@@ -979,7 +996,7 @@ class Arc extends BaseSprite {
       }
 
       path.arc(r, r, r, ...angle, direction)
-      if(angle[1] - angle[0] < 2 * Math.PI) {
+      if(angle[1] - angle[0] < 2 * Math.PI) {            
         path.lineTo(r, r)
         path.closePath()
       }
@@ -1004,49 +1021,46 @@ class Arc extends BaseSprite {
 Arc.defineAttributes({
   set radius(val) {
     this.set('radius', val)
-    this.clearCache()
+    this.forceUpdate(true)
   },
   get radius() {
     return this.get('radius')
   },
   set fillColor(val) {
     this.set('fillColor', Color(val).str)
-    this.clearCache()
+    this.forceUpdate(true)
   },
   get fillColor() {
     return this.get('fillColor')
   },
   set strokeColor(val) {
     this.set('strokeColor', Color(val).str)
-    this.clearCache()
+    this.forceUpdate(true)
   },
   get strokeColor() {
     return this.get('strokeColor')
   },
   set renderMode(val) {
     this.set('renderMode', val)
-    this.clearCache()
+    this.forceUpdate(true)
   },
   get renderMode() {
     return this.get('renderMode')
   },
   set lineWidth(val) {
     this.set('lineWidth', val)
-    this.clearCache()
   },
   get lineWidth() {
     return this.get('lineWidth')
   },
   set angle(val) {
     this.set('angle', val)
-    this.clearCache()
   },
   get angle() {
-    return this.get('angle')
+    return this.get('angle').slice(0)
   },
   set direction(val) {
     this.set('direction', val)
-    this.clearCache()
   },
   get direction() {
     return this.get('direction')
@@ -1068,7 +1082,7 @@ arc.attr({
   angle: [0, 90],
 })
 
-paper.layer().appendChild(arc)
+scene.layer().appendChild(arc)
 ```
 
 ## 服务端渲染
@@ -1165,10 +1179,8 @@ Path 对象继承 BaseSprite，可以设置 d、lineWidth、color、renderMode �
 [例子](https://code.h5jun.com/nalu)
 
 ```js
-const paper = spritejs.Paper2D('#paper', 600, 400)
-const Sprite = spritejs.Sprite,
-      Path = spritejs.Path
-
+const {Scene, Sprite, Path} = spritejs
+const scene = new Scene('#paper', 600, 400)
 
 const path = new Path()
 
@@ -1177,7 +1189,7 @@ path.attr({
   color: 'red',
   d: 'M10,80 q100,120 120,20 q140,-50 160,0',
 })
-paper.layer().append(path)
+scene.layer().append(path)
 
 renderMode.onchange = function(e){
   path.attr('renderMode', e.target.value)
@@ -1207,9 +1219,8 @@ dPath.onchange = function(e) {
 [例子](https://code.h5jun.com/zozux)
 
 ```js
-const paper = spritejs.Paper2D('#paper', 600, 400)
-const Sprite = spritejs.Sprite,
-      Path = spritejs.Path
+const {Scene, Sprite, Path} = spritejs
+const scene = new Scene('#paper', 600, 400)
 
 ;(async function(){
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json',
@@ -1223,9 +1234,9 @@ const Sprite = spritejs.Sprite,
     color: 'red',
     d,
   })
-  paper.layer().append(path)
+  scene.layer().append(path)
 
-  await paper.preload(
+  await scene.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
   )
 
@@ -1245,7 +1256,7 @@ const Sprite = spritejs.Sprite,
     zIndex: 200,
   })
 
-  paper.layer().appendChild(s)
+  scene.layer().appendChild(s)
 
   s.textures = ['bird1.png']
 
@@ -1291,79 +1302,75 @@ const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
+  const {Scene, Sprite, Path, Label} = spritejs
+  const scene = new Scene('#paper', 600, 400)
+  
+  await scene.preload(
+    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
+  )  
 
-const paper = spritejs.Paper2D('#paper', 600, 400)
-const Sprite = spritejs.Sprite,
-      Path = spritejs.Path,
-      Label = spritejs.Label
-    
-await paper.preload(
-  [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-)  
+  const s2 = new Sprite()
 
-const s2 = new Sprite()
-
-s2.attr({
-  anchor: [0.5, 0.5],
-  pos: [100, 100],
-  size: [50, 50],
-  bgcolor: 'red',
-  border: [5, 'blue'],
-  opacity: 1,
-  zIndex: 101,
-  transform: {
-    //skew: [30, 0]
-    translate: [30, 30],
-    //rotate: 90
-  },
-  linearGradients: {
-    bgcolor: {
-      direction: 135,
-      colors: [{
-        offset: 0,
-        color: 'red',
-      }, {
-        offset: 1,
-        color: 'green',
-      }]
+  s2.attr({
+    anchor: [0.5, 0.5],
+    pos: [100, 100],
+    size: [50, 50],
+    bgcolor: 'red',
+    border: [5, 'blue'],
+    opacity: 1,
+    zIndex: 101,
+    transform: {
+      //skew: [30, 0]
+      translate: [30, 30],
+      //rotate: 90
     },
-    border: {
-      direction: 135,
-      colors: [{
-        offset: 0,
-        color: '#37c',
-      }, {
-        offset: 1,
-        color: '#c73',
-      }]
+    linearGradients: {
+      bgcolor: {
+        direction: 135,
+        colors: [{
+          offset: 0,
+          color: 'red',
+        }, {
+          offset: 1,
+          color: 'green',
+        }]
+      },
+      border: {
+        direction: 135,
+        colors: [{
+          offset: 0,
+          color: '#37c',
+        }, {
+          offset: 1,
+          color: '#c73',
+        }]
+      },
     },
-  },
-})
+  })
 
-paper.layer().append(s2);
+  scene.layer().append(s2);
 
-const label = new Label('Hello World!\n你好，世界！')
-    
-label.attr({
-  pos: [200, 100],
-  zIndex: 1000,
-  font: '36px Arial',
-  linearGradients: {
-    text: {
-      direction: 135,
-      colors: [{
-        offset: 0,
-        color: 'red',
-      }, {
-        offset: 1,
-        color: 'green',
-      }]
-    },
-  }      
-})
+  const label = new Label('Hello World!\n你好，世界！')
+  
+  label.attr({
+    pos: [200, 100],
+    zIndex: 1000,
+    font: '36px Arial',
+    linearGradients: {
+      text: {
+        direction: 135,
+        colors: [{
+          offset: 0,
+          color: 'red',
+        }, {
+          offset: 1,
+          color: 'green',
+        }]
+      },
+    }      
+  })
 
-paper.layer().append(label)
-
+  scene.layer().append(label)
 })()
 ```
 
@@ -1378,28 +1385,37 @@ const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
 ;(async function(){
-  const paper = spritejs.Paper2D('#paper', 600, 400)
-  const Sprite = spritejs.Sprite,
-        Path = spritejs.Path,
-        Label = spritejs.Label
+  const {Scene, Sprite, Path, Label} = spritejs
+  const scene = new Scene('#paper', 600, 400)
   
-  await paper.preload(
+  await scene.preload(
     [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
   )  
 
-  const s = new Sprite()
+  const s = new Sprite({
+    attributeChangedCallback(...args) {
+      //console.log(args)
+    }
+  })
 
   s.attr({
     anchor: [0.5, 0.5],
     pos: [50, 100],
+    //size: [50, 50],
+    //bgcolor: 'green',
+    //opacity: 0.5,
     transform: {
+      //translate: [30, 30],
+      //rotate: 30,
       scale: [0.5, 0.5],
     },
     offsetPath: 'M10,80 q100,120 120,20 q140,-50 160,0',
+    //offsetDistance: 0.5,
+    //offsetRotate: 30,
     zIndex: 200,
   })
 
-  paper.layer().appendChild(s)
+  scene.layer().appendChild(s)
 
   s.textures = ['bird1.png']
 
@@ -1441,11 +1457,14 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
   s4.attr({
     pos: [50, 100],
+    //size: [200, 200],
     bgcolor: '#ddd',
     color: 'red',
+    //renderMode: 'fill',
+    //lineWidth: 6,
     d: 'M10,80 q100,120 120,20 q140,-50 160,0',
   })
-  paper.layer().append(s4)
+  scene.layer().append(s4)
 
 
   const label = new Label('Hello World!\n你好，世界！')
@@ -1471,7 +1490,7 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     }      
   })
 
-  paper.layer().append(label)
+  scene.layer().append(label)
 
   label.animate([
     {rotate: 0},
@@ -1515,14 +1534,14 @@ fglayer.querySelectorAll(':akira') //[sprite1, sprite2]
 fglayer.querySelectorAll('label') //[all labels on fglayer]
 ```
 
-添加了 paper.distortion 表示分辨率与 Viewport 之间的横向比率，可以用来防止 label 被拉伸变形：
+添加了 scene.distortion 属性表示分辨率与 Viewport 之间的横向比率，可以用来防止 label 被拉伸变形：
 
 ```js
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
+const scene = new Scene('#paper'),
+      fglayer = scene.layer('fglayer'),
       Label = spritejs.Label  
 
-paper.setResolution(1600, 600) 
+scene.setResolution(1600, 600) 
 
 const text1 = new Label('SpriteJS.org')
 
@@ -1534,13 +1553,13 @@ text1.attr({
   bgcolor: 'blue',
   renderMode: 'stroke',
   lineHeight: 100,
-  scale: [paper.distortion, 1] //防止 text 的拉伸变形
+  scale: [scene.distortion, 1] //防止 text 的拉伸变形
 })
 
 fglayer.appendChild(text1)
 
 window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
+  scene.setViewport('auto', 'auto')
 })
 ```
 
@@ -1551,16 +1570,17 @@ window.addEventListener('resize', evt => {
 [例子](https://code.h5jun.com/yoro/edit?js,output)
 
 ```js
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Label = spritejs.Label  
+const {Scene, Label} = spritejs
 
-paper.setResolution(1600, 600) 
+const scene = new Scene('#paper'),
+      fglayer = scene.layer('fglayer') 
+
+scene.setResolution(1600, 600) 
 
 let snapshot1, snapshot2;
 
 async function drawText1(){
-  
+
   if(snapshot1) {
     //clearTimeout(timer)
     const [text1] = fglayer.putSnapshot(snapshot1)
@@ -1578,7 +1598,7 @@ async function drawText1(){
       bgcolor: 'blue',
       renderMode: 'stroke',
       lineHeight: 100,
-      scale: [paper.distortion, 1]
+      scale: [scene.distortion, 1]
     })
 
     fglayer.appendChild(text1)
@@ -1606,7 +1626,7 @@ async function drawText2(){
       bgcolor: 'blue',
       renderMode: 'fill',
       lineHeight: 100,
-      scale: [paper.distortion, 1]
+      scale: [scene.distortion, 1]
     })
 
     fglayer.appendChild(text1)
@@ -1628,7 +1648,7 @@ function $toggle(...functors) {
 let timer = setInterval($toggle(drawText1, drawText2), 1000)
 
 window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
+  scene.setViewport('auto', 'auto')
 })
 ```
 
@@ -1657,6 +1677,6 @@ s4.attr({
         color: 'rgba(255,0,0,0)',
       }]
     },
-  }  
+  }
 })
 ```

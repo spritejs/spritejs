@@ -972,7 +972,7 @@ var getTextSize = (0, _decorators.memoize)(function (text, font) {
         _measureFontHeight = measureFontHeight(ctx, text),
         height = _measureFontHeight.height;
 
-    var _size = [width, Math.max(height, lineHeight), height];
+    var _size = [width, Math.max(height, lineHeight)];
 
     return _size;
   }
@@ -998,9 +998,6 @@ var getTextSize = (0, _decorators.memoize)(function (text, font) {
   tmpEl.innerHTML = text;
   document.documentElement.appendChild(tmpEl);
   var size = [tmpEl.clientWidth, tmpEl.clientHeight];
-
-  tmpEl.style.lineHeight = '';
-  size.push(tmpEl.clientHeight);
 
   document.documentElement.removeChild(tmpEl);
 
@@ -3827,6 +3824,7 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
 
 
         context.strokeStyle = context.fillStyle = color;
+        context.textBaseline = 'middle';
 
         var _attr = this.attr('border'),
             _attr2 = (0, _slicedToArray3.default)(_attr, 1),
@@ -3846,10 +3844,9 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
           var left = borderWidth;
 
           var _getTextSize3 = (0, _utils.getTextSize)(line, font, attr.lineHeight),
-              _getTextSize4 = (0, _slicedToArray3.default)(_getTextSize3, 3),
+              _getTextSize4 = (0, _slicedToArray3.default)(_getTextSize3, 2),
               w = _getTextSize4[0],
-              h = _getTextSize4[1],
-              textHeight = _getTextSize4[2];
+              h = _getTextSize4[1];
 
           if (align === 'center') {
             left += (width - w) / 2;
@@ -3858,9 +3855,9 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
           }
 
           if (renderMode === 'fill') {
-            context.fillText(line, left, top + (h - textHeight) / 2);
+            context.fillText(line, left, top + h / 2);
           } else {
-            context.strokeText(line, left, top + (h - textHeight) / 2);
+            context.strokeText(line, left, top + h / 2);
           }
 
           top += h;
