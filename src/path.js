@@ -37,11 +37,11 @@ function calPathRect(attr) {
   path.setAttribute('stroke-linejoin', lineJoin)
   svg.appendChild(path)
   document.body.appendChild(svg)
-  const {x: x0, y: y0} = svg.getBoundingClientRect()
+  const {left: x0, top: y0} = svg.getBoundingClientRect()
   const {
-    x, y, width, height,
+    left, top, width, height,
   } = path.getBoundingClientRect()
-  const [ox, oy] = [x - x0, y - y0]
+  const [ox, oy] = [left - x0, top - y0]
   document.body.removeChild(svg)
 
   const pathRect = [ox, oy, width, height]
