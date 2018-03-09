@@ -11,6 +11,12 @@ import Matrix from './matrix'
 import Group from './group'
 import {Effects} from 'sprite-animator'
 
+registerNodeType('sprite', Sprite)
+registerNodeType('label', Label)
+registerNodeType('path', Path)
+registerNodeType('axis', Axis)
+registerNodeType('group', Group)
+
 const Color = parseColor
 
 function Paper2D(...args) {
