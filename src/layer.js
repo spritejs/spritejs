@@ -12,19 +12,7 @@ const _children = Symbol('children'),
 import {boxIntersect, boxEqual, boxToRect} from './utils'
 import {Timeline} from 'sprite-animator'
 
-import Sprite from './sprite'
-import Label from './label'
-import Path from './path'
-import Axis from './axis'
-import Group from './group'
-
-import {registerNodeType, createNode, getNodeType} from './nodetype'
-
-registerNodeType('sprite', Sprite)
-registerNodeType('label', Label)
-registerNodeType('path', Path)
-registerNodeType('axis', Axis)
-registerNodeType('group', Group)
+import {createNode, getNodeType} from './nodetype'
 
 class Layer extends BaseNode {
   constructor(id, {

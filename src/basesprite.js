@@ -1,6 +1,7 @@
 import SpriteAttr from './attr'
 import BaseNode from './basenode'
 import Matrix from './matrix'
+import Layer from './layer'
 
 import Vector from './vector'
 
@@ -83,6 +84,14 @@ class BaseSprite extends BaseNode {
     return this.constructor.nodeType
   }
 
+  get layer() {
+    let node = this
+    do {
+      node = node.parent
+    } while(node != null && !(node instanceof Layer))
+    return node
+  }
+
   serialize() {
     const nodeType = this.nodeType,
       attrs = this[_attr].serialize(),
@@ -151,8 +160,8 @@ class BaseSprite extends BaseNode {
 
   animate(frames, timing) {
     const animation = new Animation(this, frames, timing)
-    if(this.parent) {
-      animation.baseTimeline = this.parent.timeline
+    if(this.layer) {
+      animation.baseTimeline = this.layer.timeline
       animation.play()
       animation.finished.then(() => {
         this[_animations].delete(animation)
