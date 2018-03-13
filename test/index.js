@@ -1,5 +1,5 @@
-const test = require("ava")
+const test = require('ava')
 
-test('bootstrap', t => {
+test('bootstrap', (t) => {
   t.is(1, 1)
 })

@@ -10,25 +10,25 @@ export function attr(...args) {
   function decorator(target, prop, descriptor) {
     descriptor.enumerable = true
 
-    const setter = descriptor.set
+    const setter = descriptor.set,
+      getter = descriptor.get
 
     descriptor.set = function (val) {
       const subject = this.subject || this,
-        oldVal = this.get(prop)
+        oldVal = getter.call(this, prop)
 
-      if(val === null) {
+      if(val === null && this.remove) {
         this.remove(prop)
       } else {
         setter.call(this, val)
       }
 
-      const newVal = this.get(prop)
+      const newVal = getter.call(this, prop)
 
       if(!deepEqual(newVal, oldVal)) {
         if(repaint === 'repaint') {
           subject.cache = null
         }
-
         subject.forceUpdate()
       }
 
