@@ -101,3 +101,13 @@ export function calPathRect(attr) {
 
   return pathRect
 }
+
+export function getContainer(container) {
+  if(typeof container === 'string') {
+    container = document.querySelector(container)
+  }
+  if(!container) {
+    throw new Error('Container is not defined or cannot found.')
+  }
+  return container
+}

@@ -5,7 +5,7 @@ const scene = new Scene('#test', 800, 600)
 
 const bglayer = scene.layer('bg', {handleEvent: false})
 
-const text = new Label('Hello Sprite!')
+const text = new Label('Hello Sprite! ~')
 
 text.attr({
   anchor: [0.5, 0.5],
