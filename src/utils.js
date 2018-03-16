@@ -1,9 +1,10 @@
 import {memoize} from './decorators'
+import {createCanvas} from './cross-platform'
 
 class Color {
   constructor(color) {
     if(typeof color === 'string') {
-      const canvas = document.createElement('canvas'),
+      const canvas = createCanvas(1, 1),
         context = canvas.getContext('2d')
 
       context.fillStyle = color
@@ -152,120 +153,6 @@ function boxUnion(box1, box2) {
     Math.max(box1[3], box2[3])]
 }
 
-// http://jsfiddle.net/joquery/cQXgd/
-function measureFontHeight(context, text = 'fißgPauljMPÜÖÄ') {
-  const sourceWidth = context.canvas.width,
-    sourceHeight = context.canvas.height
-
-  // place the text somewhere
-  context.textAlign = 'left'
-  context.textBaseline = 'top'
-  context.fillText(text, 25, 0)
-
-  // returns an array containing the sum of all pixels in a canvas
-  // * 4 (red, green, blue, alpha)
-  // [pixel1Red, pixel1Green, pixel1Blue, pixel1Alpha, pixel2Red ...]
-  const data = context.getImageData(0, 0, sourceWidth, sourceHeight).data
-
-  let firstY = -1
-  let lastY = -1
-
-  // loop through each row
-  for(let y = 0; y < sourceHeight; y++) {
-    // loop through each column
-    for(let x = 0; x < sourceWidth; x++) {
-      // let red = data[((sourceWidth * y) + x) * 4]
-      // let green = data[((sourceWidth * y) + x) * 4 + 1]
-      // let blue = data[((sourceWidth * y) + x) * 4 + 2]
-      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
-
-      if(alpha > 0) {
-        firstY = y
-        // exit the loop
-        break
-      }
-    }
-    if(firstY >= 0) {
-      // exit the loop
-      break
-    }
-  }
-
-  // loop through each row, this time beginning from the last row
-  for(let y = sourceHeight; y > 0; y--) {
-    // loop through each column
-    for(let x = 0; x < sourceWidth; x++) {
-      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
-      if(alpha > 0) {
-        lastY = y
-        // exit the loop
-        break
-      }
-    }
-    if(lastY >= 0) {
-      // exit the loop
-      break
-    }
-  }
-
-  return {
-    // The actual height
-    textHeight: lastY - firstY,
-
-    height: lastY + firstY,
-
-    // The first pixel
-    firstPixel: firstY,
-
-    // The last pixel
-    lastPixel: lastY,
-  }
-}
-
-const getTextSize = memoize((text, font, lineHeight = '') => {
-  if(typeof IS_NODE_ENV !== 'undefined') {
-    lineHeight = parseInt(lineHeight, 10) || 0 // warn: only support px
-    const canvas = document.createElement('canvas'),
-      ctx = canvas.getContext('2d')
-
-    if(font) ctx.font = font
-
-    const {width} = ctx.measureText(text),
-      {height} = measureFontHeight(ctx, text)
-
-    const size = [width, Math.max(height, lineHeight)]
-
-    return size
-  }
-
-  const tmpEl = document.createElement('font')
-
-  if(font) tmpEl.style.font = font
-
-  lineHeight = appendUnit(lineHeight)
-
-  Object.assign(tmpEl.style, {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    visibility: 'hidden',
-    display: 'inline-block',
-    lineHeight,
-    padding: '0',
-    verticalAlign: 'middle',
-    whiteSpace: 'nowrap',
-  })
-
-  tmpEl.innerHTML = text
-  document.documentElement.appendChild(tmpEl)
-  const size = [tmpEl.clientWidth, tmpEl.clientHeight]
-
-  document.documentElement.removeChild(tmpEl)
-
-  return size
-})
-
-
 function appendUnit(value, defaultUnit = 'px') {
   if(value === '') {
     return value
@@ -274,14 +161,6 @@ function appendUnit(value, defaultUnit = 'px') {
     return value
   }
   return value + defaultUnit
-}
-
-// get svg path object
-function createPath(d) {
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-  path.setAttribute('d', d)
-
-  return path
 }
 
 function gradientBox(angle, rect) {
@@ -338,7 +217,7 @@ function gradientBox(angle, rect) {
 }
 
 function copyContext(context) {
-  const canvas = document.createElement('canvas'),
+  const canvas = createCanvas(),
     ctx = canvas.getContext('2d')
 
   canvas.width = context.canvas.width
@@ -397,9 +276,7 @@ export {
   boxUnion,
   rectToBox,
   rectVertices,
-  getTextSize,
   appendUnit,
-  createPath,
   copyContext,
   getLinearGradients,
 }

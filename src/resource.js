@@ -1,5 +1,6 @@
 import BaseSprite from './basesprite'
 import {createNode} from './nodetype'
+import {createCanvas, loadImage} from './cross-platform'
 
 const axios = require('axios')
 
@@ -38,22 +39,15 @@ const Resource = {
             texture.src = node.serialize()
           }
         } else {
-          const img = document.createElement('img')
-          img.crossOrigin = 'anonymous'
-
           const timer = setTimeout(() => {
             reject(new Error('load img timeout'))
           }, timeout)
 
-          img.src = texture.src
-          img.onload = function () {
+          loadImage(texture.src).then((img) => {
             const {width, height} = img
-            const canvas = document.createElement('canvas')
+            const canvas = createCanvas(width, height)
             const ctx = canvas.getContext('2d')
             let imgRect
-
-            canvas.width = width
-            canvas.height = height
 
             if(imgRect) {
               ctx.drawImage(img, imgRect[0], imgRect[1], width, height)
@@ -63,7 +57,7 @@ const Resource = {
             resolve({img: canvas, texture})
             loadedResources.set(mapKey, canvas)
             clearTimeout(timer)
-          }
+          })
         }
       })
     }
@@ -98,15 +92,12 @@ const Resource = {
     Object.entries(frames).forEach(([key, frame]) => {
       const {w, h} = frame.sourceSize
 
-      const canvas = document.createElement('canvas'),
+      const canvas = createCanvas(w, h),
         srcRect = frame.frame,
         rect = frame.spriteSourceSize,
         context = canvas.getContext('2d')
 
       const rotated = frame.rotated
-
-      canvas.width = w
-      canvas.height = h
 
       context.save()
 

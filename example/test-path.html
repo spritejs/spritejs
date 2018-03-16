@@ -21,6 +21,7 @@
   <script src="/js/spritejs.js"></script>
   <textarea id="dPath">M10,80 q100,120 120,20 q140,-50 160,0</textarea>
   颜色<input type="color" id="pickColor"/>
+  <input type="color" id="pickFillColor"/>
   线宽<input id="lineWidth" value="1"/>
   <select id="renderMode">
     <option>stroke</option>
@@ -38,6 +39,7 @@ const path = new Path()
 path.attr({
   pos: [10, 50],
   color: 'red',
+  bgcolor: 'blue',
   d: 'M10,80 q100,120 120,20 q140,-50 160,0',
 })
 paper.layer().append(path)
@@ -55,7 +57,11 @@ lineWidth.onchange = function(e) {
 }
 
 pickColor.onchange = function(e) {
-  path.attr('color', e.target.value)
+  path.attr('strokeColor', e.target.value)
+}
+
+pickFillColor.onchange = function(e) {
+  path.attr('fillColor', e.target.value)
 }
 
 dPath.onchange = function(e) {

@@ -1,7 +1,9 @@
 import {attr, parseValue} from './decorators'
 import Matrix from './matrix'
 import {parseColorString, oneOrTwoValues, fourValuesShortCut,
-  createPath, parseStringInt, parseStringFloat, parseStringTransform} from './utils'
+  parseStringInt, parseStringFloat, parseStringTransform} from './utils'
+
+import {createPath} from './cross-platform'
 
 const Immutable = require('seamless-immutable').static
 const _attr = Symbol('attr'),
