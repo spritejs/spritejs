@@ -123,26 +123,37 @@ export default class extends BaseNode {
           },
         }
 
-        const {left, top} = e.target.getBoundingClientRect()
-        let originalX,
-          originalY
-
         // mouse event layerX, layerY value change while browser scaled.
-        if(e.changedTouches) { // mobile
-          const {clientX, clientY} = e.changedTouches[0]
-
-          originalX = Math.round(clientX - left)
-          originalY = Math.round(clientY - top)
+        if(e instanceof CustomEvent) {
+          Object.assign(evtArgs, e.detail)
+          const {x, y} = evtArgs
+          if(x != null && y != null) {
+            const [originalX, originalY] = this.toGlobalPos(x, y)
+            Object.assign(evtArgs, {
+              layerX: x, layerY: y, originalX, originalY, x, y,
+            })
+          }
         } else {
-          originalX = Math.round(e.clientX - left)
-          originalY = Math.round(e.clientY - top)
+          const {left, top} = e.target.getBoundingClientRect()
+          let originalX,
+            originalY
+
+          if(e.changedTouches) { // mobile
+            const {clientX, clientY} = e.changedTouches[0]
+
+            originalX = Math.round(clientX - left)
+            originalY = Math.round(clientY - top)
+          } else {
+            originalX = Math.round(e.clientX - left)
+            originalY = Math.round(e.clientY - top)
+          }
+
+          const [layerX, layerY] = this.toLocalPos(originalX, originalY)
+
+          Object.assign(evtArgs, {
+            layerX, layerY, originalX, originalY, x: layerX, y: layerY,
+          })
         }
-
-        const [layerX, layerY] = this.toLocalPos(originalX, originalY)
-
-        Object.assign(evtArgs, {
-          layerX, layerY, originalX, originalY, x: layerX, y: layerY,
-        })
 
         for(let i = 0; i < layers.length; i++) {
           const layer = layers[i]
@@ -153,6 +164,11 @@ export default class extends BaseNode {
         }
       }, {passive})
     })
+  }
+  dispatchEvent(type, evt) {
+    const container = this.container
+    container.dispatchEvent(new CustomEvent(type, {detail: evt}))
+    super.dispatchEvent(type, evt, true)
   }
   async preload(...resources) {
     const ret = [],
@@ -175,7 +191,7 @@ export default class extends BaseNode {
         ret.push(r)
         this.dispatchEvent('preload', {
           target: this, current: r, loaded: ret, resources,
-        }, true)
+        })
       }))
     }
 

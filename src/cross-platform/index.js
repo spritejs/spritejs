@@ -323,8 +323,10 @@ Object.defineProperty(CanvasRenderingContext2D.prototype, 'fill', {
   },
 })
 
-class Container {
+const EventEmitter = require('events')
+class Container extends EventEmitter {
   constructor(id) {
+    super()
     this.id = id
     this.children = []
     this.clientWidth = 800
@@ -347,8 +349,14 @@ class Container {
       this.children.splice(idx, 0, node)
     }
   }
-  addEventListener() {
-    // throw new Error('addEventListener is not implemented yet.')
+  dispatchEvent(evt) {
+    return this.emit(evt.type, evt)
+  }
+  addEventListener(type, handler) {
+    return this.addListener(type, handler)
+  }
+  removeEventListener(type, handler) {
+    return this.removeListener(type, handler)
   }
 }
 
