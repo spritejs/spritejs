@@ -3,7 +3,7 @@ const fs = require('fs')
 const {Scene, Label} = require('../../lib')
 const scene = new Scene('#test', 800, 600)
 
-const bglayer = scene.layer('bg', {handleEvent: false})
+const bglayer = scene.layer('bg', {handleEvent: true})
 
 const text = new Label('Hello Sprite! ~')
 
@@ -17,6 +17,13 @@ text.attr({
 })
 
 bglayer.append(text)
+
+bglayer.on('click', (e) => {
+  text.text += 'AA'
+})
+
+// scene.delegateEvent('click')
+scene.dispatchEvent('click', {x: 400, y: 300})
 
 ;(async function () {
   const canvas = await scene.snapshot()

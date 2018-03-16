@@ -11,4 +11,13 @@ global.requestAnimationFrame = (fn) => {
 
 global.Path2D = Path2D
 
+class CustomEvent {
+  constructor(type, evt = {}) {
+    this.type = type
+    Object.assign(this, evt)
+  }
+}
+
+global.CustomEvent = CustomEvent
+
 export default {}
