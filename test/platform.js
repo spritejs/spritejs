@@ -16,7 +16,7 @@ test('load image', async (t) => {
 
 test('measureText', (t) => {
   const r = measureText('中国', '16px Arial')
-  t.deepEqual(r, [32, 20])
+  t.deepEqual(r, [32, 17])
   const r2 = measureText('中国', '16px Arial', 101)
   t.deepEqual(r2, [32, 101])
 })
