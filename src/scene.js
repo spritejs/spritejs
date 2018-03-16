@@ -54,6 +54,13 @@ export default class extends BaseNode {
     this.delegateEvent(...events)
   }
 
+  get width() {
+    return this.viewport[0]
+  }
+  get height() {
+    return this.viewport[1]
+  }
+
   // d3-friendly
   insertBefore(node, next) {
     if(this.container) {
