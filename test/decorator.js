@@ -46,7 +46,7 @@ class Attr {
   bar() {
     return 'bar'
   }
-  @deprecate('out')
+  @deprecate('out of date...')
   set bar2(val) {
     this._bar2 = val
   }

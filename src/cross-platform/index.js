@@ -322,3 +322,42 @@ Object.defineProperty(CanvasRenderingContext2D.prototype, 'fill', {
     return _fill.call(this)
   },
 })
+
+class Container {
+  constructor(id) {
+    this.id = id
+    this.children = []
+    this.clientWidth = 800
+    this.clientHeight = 600
+  }
+  appendChild(node) {
+    this.children.push(node)
+    node.remove = () => {
+      const idx = this.children.indexOf(this)
+      if(idx !== -1) {
+        this.children.splice(idx, 1)
+      }
+    }
+  }
+  insertBefore(node, next) {
+    const idx = this.children.indexOf(next)
+    if(idx === -1) {
+      throw new Error('ERR: no such element')
+    } else {
+      this.children.splice(idx, 0, node)
+    }
+  }
+  addEventListener() {
+    // throw new Error('addEventListener is not implemented yet.')
+  }
+}
+
+export function getContainer(container) {
+  if(typeof container === 'string') {
+    container = new Container(container)
+  }
+  if(!container) {
+    throw new Error('Container is not defined or cannot found.')
+  }
+  return container
+}

@@ -1,7 +1,7 @@
 import Layer from './layer'
 import Resource from './resource'
 import BaseNode from './basenode'
-import {createCanvas} from './cross-platform'
+import {createCanvas, getContainer} from './cross-platform'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
@@ -24,13 +24,8 @@ function sortLayer(paper) {
 export default class extends BaseNode {
   constructor(container, width, height) {
     super()
-    if(typeof container === 'string') {
-      container = document.querySelector(container)
-    }
-    if(!container) {
-      throw new Error('Container is not defined or cannot found.')
-    }
 
+    container = getContainer(container)
     this.container = container
 
     this.viewport = [width || container.clientWidth,

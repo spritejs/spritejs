@@ -88,17 +88,17 @@ Compatible with [d3.js](https://github.com/d3/d3).
 Spritejs (>= 1.15.0) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
 
 ```bash
-sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
+sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev librsvg2-dev libgif-dev build-essential g++
 ```
 
 ```bash
-npm install sprite-node
+npm install canvas@next
 ```
 
 ```js
 const fs = require('fs')
 
-const {Scene, Label} = require('sprite-node')
+const {Scene, Label} = require('spritejs')
 const scene = new Scene('#test', 800, 600)
 
 const bglayer = scene.layer('bg', {handleEvent: false})
