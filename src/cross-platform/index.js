@@ -134,19 +134,21 @@ function measureFontHeight(context, text = 'fißgPauljMPÜÖÄ') {
   }
 }
 
+const MAX_SIZE = 2048
+
 const measureText = memoize((text, font, lineHeight = '') => {
   lineHeight = parseInt(lineHeight, 10) || 0 // warn: only support px
-  const canvas = createCanvas(),
+  const canvas = createCanvas(MAX_SIZE, MAX_SIZE),
     ctx = canvas.getContext('2d')
 
   if(font) ctx.font = font
 
   const {width} = ctx.measureText(text)
 
-  canvas.width = width
-  canvas.height = width * 3
+  // canvas.width = width
+  // canvas.height = width * 3
 
-  const {height} = measureFontHeight(ctx, text)
+  const {height} = measureFontHeight(ctx)
 
   const size = [width, Math.max(height, lineHeight)]
 
@@ -154,8 +156,6 @@ const measureText = memoize((text, font, lineHeight = '') => {
 })
 
 export {measureText}
-
-const MAX_SIZE = 2048
 
 export function createPathSVG(d, lineWidth, lineCap, lineJoin, strokeColor, fillColor, width = MAX_SIZE, height = MAX_SIZE) {
   const tpl = `
