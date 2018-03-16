@@ -13,6 +13,7 @@ import {boxIntersect, boxEqual, boxToRect} from './utils'
 import {Timeline} from 'sprite-animator'
 
 import {createNode, getNodeType} from './nodetype'
+import {createCanvas} from './cross-platform'
 
 class Layer extends BaseNode {
   constructor(id, {
@@ -26,7 +27,7 @@ class Layer extends BaseNode {
     // renderMode: repaintAll | repaintDirty
     this.renderMode = renderMode || 'repaintAll'
 
-    const canvas = document.createElement('canvas')
+    const canvas = createCanvas()
     canvas.dataset.layerId = id
     canvas.style.position = 'absolute'
     canvas.style.left = 0

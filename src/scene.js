@@ -1,6 +1,7 @@
 import Layer from './layer'
 import Resource from './resource'
 import BaseNode from './basenode'
+import {createCanvas} from './cross-platform'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
@@ -40,7 +41,7 @@ export default class extends BaseNode {
     this[_zOrder] = 0
     this[_layerMap] = {}
     this[_layers] = []
-    this[_snapshot] = document.createElement('canvas')
+    this[_snapshot] = createCanvas()
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/paper2D'

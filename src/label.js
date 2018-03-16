@@ -1,7 +1,8 @@
 import BaseSprite from './basesprite'
 
 import {attr, readonly} from './decorators'
-import {parseColorString, getTextSize, getLinearGradients} from './utils'
+import {parseColorString, getLinearGradients} from './utils'
+import {measureText} from './cross-platform'
 
 function calculTextboxSize(text, font, lineHeight) {
   const lines = text.split(/\n/)
@@ -9,7 +10,7 @@ function calculTextboxSize(text, font, lineHeight) {
     height = 0
 
   lines.forEach((line) => {
-    const [w, h] = getTextSize(line, font, lineHeight)
+    const [w, h] = measureText(line, font, lineHeight)
     width = Math.max(width, w)
     height += h
   })
@@ -156,7 +157,7 @@ class Label extends BaseSprite {
 
       lines.forEach((line) => {
         let left = borderWidth
-        const [w, h] = getTextSize(line, font, attr.lineHeight)
+        const [w, h] = measureText(line, font, attr.lineHeight)
 
         if(align === 'center') {
           left += (width - w) / 2

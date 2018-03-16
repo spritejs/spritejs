@@ -10,6 +10,7 @@ import Animation from './animation'
 import {getLinearGradients, rectVertices} from './utils'
 
 import {attr} from './decorators'
+import {createCanvas} from './cross-platform'
 
 const _attr = Symbol('attr'),
   _eventHandlers = Symbol('eventHandlers'),
@@ -456,7 +457,7 @@ class BaseSprite extends BaseNode {
       return // don't need to render
     }
 
-    const box = document.createElement('canvas'),
+    const box = createCanvas(),
       // bound = this.boundRect
       bound = this.originRect
 

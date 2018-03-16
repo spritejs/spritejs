@@ -4,6 +4,7 @@ import filters from './filters'
 
 import {attr, readonly} from './decorators'
 import {rectToBox, boxToRect, boxUnion} from './utils'
+import {createCanvas} from './cross-platform'
 
 const _texturesCache = Symbol('_texturesCache')
 
@@ -204,7 +205,7 @@ export default class Sprite extends BaseSprite {
         rect[0] += borderWidth
         rect[1] += borderWidth
 
-        const imgCanvas = document.createElement('canvas')
+        const imgCanvas = createCanvas()
         const imgContext = imgCanvas.getContext('2d')
 
         context.save()

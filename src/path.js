@@ -1,55 +1,14 @@
 import BaseSprite from './basesprite'
 
 import {attr, readonly} from './decorators'
-import {parseColorString, createPath, getLinearGradients} from './utils'
+import {parseColorString, getLinearGradients} from './utils'
 
 import {Effects} from 'sprite-animator'
-import pathEffect from './path-effect/index'
+import pathEffect from './path-effect'
 
 Effects.d = pathEffect
 
-function calPathRect(attr) {
-  let path = attr.loadObj('path')
-  const {
-    d, lineCap, lineJoin, lineWidth,
-  } = attr
-
-  if(!path) {
-    if(d) { // Deserialized sprite may have d value but no path obj
-      path = createPath(d)
-      attr.saveObj('path', path)
-    } else {
-      return [0, 0, 0, 0]
-    }
-  }
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svg.style.visibility = 'hidden'
-  svg.style.position = 'absolute'
-  svg.style.top = 0
-  svg.style.left = 0
-  // svg.setAttribute('width', 1000)
-  // svg.setAttribute('height', 1000)
-  // svg.setAttribute('preserveAspectRatio', 'none')
-  path.setAttribute('stroke-width', lineWidth)
-  path.setAttribute('stroke', '#f00')
-  path.setAttribute('stroke-linecap', lineCap)
-  path.setAttribute('stroke-linejoin', lineJoin)
-  svg.appendChild(path)
-  document.body.appendChild(svg)
-  const {left: x0, top: y0} = svg.getBoundingClientRect()
-  const {
-    left, top, width, height,
-  } = path.getBoundingClientRect()
-  const [ox, oy] = [left - x0, top - y0]
-  document.body.removeChild(svg)
-
-  const pathRect = [ox, oy, width, height]
-
-  attr.saveObj('pathRect', pathRect)
-
-  return pathRect
-}
+import {createPath, calPathRect} from './cross-platform'
 
 function getBoundingBox(attr, forceUpdate) {
   let pathRect = forceUpdate ? null : attr.loadObj('pathRect')
@@ -73,7 +32,6 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       lineJoin: 'miter',
       strokeColor: parseColorString('black'),
       fillColor: '',
-      renderMode: 'stroke', // stroke, fill
       // d: path2d,
       boxSize: [0, 0],
     })
@@ -94,7 +52,6 @@ export class PathSpriteAttr extends BaseSprite.Attr {
   set d(val) {
     const path = createPath(val)
     this.set('d', path.getAttribute('d'))
-    this.saveObj('path', path)
 
     const box = getBoundingBox(this, true)
     this.set('boxSize', [box[2] - box[0], box[3] - box[1]])
@@ -121,6 +78,12 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     if(this.d) {
       const box = getBoundingBox(this, false)
       this.set('boxSize', [box[2] - box[0], box[3] - box[1]])
+
+      const [x0, y0] = this.translate
+      const offset = this.get('dOffset') || [0, 0]
+
+      this.translate = [x0 + box[0] - offset[0], y0 + box[1] - offset[1]]
+      this.set('dOffset', [box[0], box[1]])
     }
   }
   get lineWidth() {
@@ -147,14 +110,6 @@ export class PathSpriteAttr extends BaseSprite.Attr {
   }
   get lineJoin() {
     return this.get('lineJoin')
-  }
-
-  @attr('repaint')
-  set renderMode(val) {
-    this.set('renderMode', val)
-  }
-  get renderMode() {
-    return this.get('renderMode')
   }
 
   @attr('repaint')
@@ -254,14 +209,14 @@ class Path extends BaseSprite {
 
       context.stroke(p)
 
-      if(attr.renderMode === 'fill') {
+      if(fillColor) {
         if(linearGradients && linearGradients.fillColor) {
           const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
             width, height]
 
           context.fillStyle = getLinearGradients(context, rect, linearGradients.fillColor)
         } else {
-          context.fillStyle = fillColor || strokeColor
+          context.fillStyle = fillColor
         }
 
         context.fill(p)
