@@ -1,14 +1,9 @@
 import SpriteAttr from './attr'
 import BaseNode from './basenode'
-import Matrix from './matrix'
+import {Matrix, Vector} from './math'
 import Layer from './layer'
-
-import Vector from './vector'
-
 import Animation from './animation'
-
 import {getLinearGradients, rectVertices} from './utils'
-
 import {attr} from './decorators'
 import {createCanvas} from './cross-platform'
 

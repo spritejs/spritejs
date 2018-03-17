@@ -7,7 +7,7 @@ import Path from './path'
 import {parseColor} from './utils'
 import Axis from './axis'
 import {registerNodeType, createNode} from './nodetype'
-import Matrix from './matrix'
+import {Matrix, Vector} from './math'
 import Group from './group'
 import {Effects} from 'sprite-animator'
 import './cross-platform/shim'
@@ -43,4 +43,5 @@ export {
   Group,
   Scene,
   Paper2D,
+  Vector,
 }
