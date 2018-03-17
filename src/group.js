@@ -77,14 +77,13 @@ export default class Group extends BaseSprite {
       super.dispatchEvent(type, evt, forceTrigger)
     }
   }
-  async render(t) {
-    const context = super.render(t)
+  async render(t, drawingContext) {
+    const context = super.render(t, drawingContext)
     const children = this[_children]
 
     /* eslint-disable no-await-in-loop */
     for(let i = 0; i < children.length; i++) {
       const child = children[i]
-      const ctx = await child.render(t)
       const transform = child.transform.m,
         pos = child.attr('pos'),
         bound = child.originRect
@@ -93,7 +92,12 @@ export default class Group extends BaseSprite {
       context.translate(pos[0], pos[1])
       context.transform(...transform)
       context.globalAlpha = child.attr('opacity')
-      context.drawImage(ctx.canvas, bound[0], bound[1])
+
+      const ctx = await child.render(t, drawingContext)
+
+      if(ctx !== drawingContext) {
+        context.drawImage(ctx.canvas, bound[0], bound[1])
+      }
       context.restore()
     }
     /* eslint-enable no-await-in-loop */
