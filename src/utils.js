@@ -216,18 +216,6 @@ function gradientBox(angle, rect) {
   return [x, y, x + w, y + h]
 }
 
-function copyContext(context) {
-  const canvas = createCanvas(),
-    ctx = canvas.getContext('2d')
-
-  canvas.width = context.canvas.width
-  canvas.height = context.canvas.height
-
-  ctx.drawImage(context.canvas, 0, 0)
-
-  return ctx
-}
-
 function getLinearGradients(context, rect, linearGradients) {
   const {colors, direction, vector} = linearGradients,
     [x, y, w, h] = rect
@@ -277,6 +265,5 @@ export {
   rectToBox,
   rectVertices,
   appendUnit,
-  copyContext,
   getLinearGradients,
 }
