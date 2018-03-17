@@ -1,8 +1,7 @@
 import {attr, parseValue} from './decorators'
-import Matrix from './matrix'
+import {Matrix} from './math'
 import {parseColorString, oneOrTwoValues, fourValuesShortCut,
   parseStringInt, parseStringFloat, parseStringTransform} from './utils'
-
 import {createPath} from './cross-platform'
 
 const Immutable = require('seamless-immutable').static

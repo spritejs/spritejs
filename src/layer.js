@@ -32,8 +32,8 @@ class Layer extends BaseNode {
     canvas.style.position = 'absolute'
     canvas.style.left = 0
     canvas.style.top = 0
-
     this.outputContext = canvas.getContext('2d')
+    
     const shadowCanvas = canvas.cloneNode(true)
     this.shadowContext = shadowCanvas.getContext('2d')
 
