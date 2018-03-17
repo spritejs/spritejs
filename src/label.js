@@ -121,8 +121,8 @@ class Label extends BaseSprite {
     return [width, height]
   }
 
-  render(t) {
-    const context = super.render(t),
+  render(t, drawingContext) {
+    const context = super.render(t, drawingContext),
       attr = this.attr(),
       text = this.text,
       font = attr.font,

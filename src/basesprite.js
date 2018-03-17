@@ -444,7 +444,7 @@ class BaseSprite extends BaseNode {
     }
   }
 
-  render(t) {
+  render(t, drawingContext) {
     this[_paths] = []
 
     const attr = this.attr(),
@@ -457,14 +457,17 @@ class BaseSprite extends BaseNode {
       return // don't need to render
     }
 
-    const box = createCanvas(),
-      // bound = this.boundRect
-      bound = this.originRect
+    let boxctx = drawingContext
+    const bound = this.originRect
 
-    box.width = bound[2]
-    box.height = bound[3]
-
-    const boxctx = box.getContext('2d')
+    if(!boxctx) {
+      const box = createCanvas()
+      box.width = bound[2]
+      box.height = bound[3]
+      boxctx = box.getContext('2d')
+    } else {
+      boxctx.translate(bound[0], bound[1])
+    }
 
     const [borderWidth, borderColor] = attr.border
     const borderRadius = attr.borderRadius

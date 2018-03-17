@@ -184,7 +184,7 @@ export default class Sprite extends BaseSprite {
     return null
   }
 
-  async render(t) {
+  async render(t, drawingContext) {
     let context
     const textures = this.textures
 
@@ -196,7 +196,7 @@ export default class Sprite extends BaseSprite {
       const promises = textures.map(texture => Resource.loadTexture(texture))
       const texturesWithImg = await Promise.all(promises)
 
-      context = super.render(t)
+      context = super.render(t, drawingContext)
 
       texturesWithImg.forEach(({texture, img, sprite}) => {
         const rect = (texture.rect || [0, 0, ...this.innerSize]).slice(0)
@@ -257,7 +257,7 @@ export default class Sprite extends BaseSprite {
         context.restore()
       })
     } else {
-      context = super.render(t)
+      context = super.render(t, drawingContext)
     }
 
     return context

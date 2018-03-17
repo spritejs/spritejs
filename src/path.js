@@ -177,8 +177,8 @@ class Path extends BaseSprite {
     return path.getTotalLength()
   }
 
-  render(t) {
-    const context = super.render(t),
+  render(t, drawingContext) {
+    const context = super.render(t, drawingContext),
       attr = this.attr()
 
     if(attr.d) {

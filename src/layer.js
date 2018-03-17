@@ -33,9 +33,9 @@ class Layer extends BaseNode {
     canvas.style.left = 0
     canvas.style.top = 0
 
+    this.outputContext = canvas.getContext('2d')
     const shadowCanvas = canvas.cloneNode(true)
     this.shadowContext = shadowCanvas.getContext('2d')
-    this.outputContext = canvas.getContext('2d')
 
     this[_children] = []
     this[_updateSet] = new Set()
@@ -330,17 +330,27 @@ class Layer extends BaseNode {
       return a_zidx - b_zidx
     })
   }
-  async drawSprites(shadowContext, renderEls, t) {
+  async drawSprites(drawingContext, renderEls, t) {
     for(let i = 0; i < renderEls.length; i++) {
       const child = renderEls[i]
       if(child.parent === this) {
         if(this.isVisible(child)) {
+          const transform = child.transform.m,
+            pos = child.attr('pos'),
+            bound = child.originRect
+
+          drawingContext.save()
+          drawingContext.translate(pos[0], pos[1])
+          drawingContext.transform(...transform)
+          drawingContext.globalAlpha = child.attr('opacity')
+
           let context = child.cache
 
           /* eslint-disable no-await-in-loop */
           if(!context) {
+            // context = await child.render(t, drawingContext)
             context = await child.render(t)
-            child.cache = context
+            if(context !== drawingContext) child.cache = context
           }
           /* eslint-enable no-await-in-loop */
 
@@ -358,16 +368,10 @@ class Layer extends BaseNode {
 
           child.lastRenderBox = child.renderBox
 
-          const transform = child.transform.m,
-            pos = child.attr('pos'),
-            bound = child.originRect
-
-          shadowContext.save()
-          shadowContext.translate(pos[0], pos[1])
-          shadowContext.transform(...transform)
-          shadowContext.globalAlpha = child.attr('opacity')
-          shadowContext.drawImage(context.canvas, bound[0], bound[1])
-          shadowContext.restore()
+          if(context !== drawingContext) {
+            drawingContext.drawImage(context.canvas, bound[0], bound[1])
+          }
+          drawingContext.restore()
         } else {
           // invisible, only need to remove lastRenderBox
           delete child.lastRenderBox
@@ -379,17 +383,20 @@ class Layer extends BaseNode {
     const renderEls = this[_children].filter(e => this.isVisible(e))
     const [width, height] = this.resolution
 
-    const shadowContext = this.shadowContext
-    const outputContext = this.outputContext
-    const shadowCanvas = shadowContext.canvas
+    this.sortChildren(renderEls)
 
-    shadowContext.clearRect(0, 0, width, height)
+    const outputContext = this.outputContext
     outputContext.clearRect(0, 0, width, height)
 
-    this.sortChildren(renderEls)
-    await this.drawSprites(shadowContext, renderEls, t)
+    const shadowContext = this.shadowContext
 
-    outputContext.drawImage(shadowCanvas, 0, 0)
+    if(shadowContext) {
+      shadowContext.clearRect(0, 0, width, height)
+      await this.drawSprites(shadowContext, renderEls, t)
+      outputContext.drawImage(shadowContext.canvas, 0, 0)
+    } else {
+      await this.drawSprites(outputContext, renderEls, t)
+    }
 
     this[_updateSet].clear()
   }
@@ -397,16 +404,8 @@ class Layer extends BaseNode {
     const [width, height] = this.resolution
 
     const updateSet = this[_updateSet]
-
     const children = this[_children].filter(e => this.isVisible(e))
-
-    const shadowContext = this.shadowContext
-    const outputContext = this.outputContext
-
-    const shadowCanvas = shadowContext.canvas
-
     const restEls = children.filter(el => !updateSet.has(el))
-
     const affectedSet = new Set(),
       unaffectedSet = new Set()
 
@@ -457,10 +456,14 @@ class Layer extends BaseNode {
       } while(changed)
     }
 
-    shadowContext.save()
-    outputContext.save()
+    const shadowContext = this.shadowContext
+    const outputContext = this.outputContext
 
-    shadowContext.beginPath()
+    if(shadowContext) {
+      shadowContext.save()
+      shadowContext.beginPath()
+    }
+    outputContext.save()
     outputContext.beginPath()
 
     for(let i = 0; i < updateEls.length; i++) {
@@ -472,7 +475,7 @@ class Layer extends BaseNode {
       if(dirtyBox) {
         const dirtyRect = boxToRect(dirtyBox)
 
-        shadowContext.rect(...dirtyRect)
+        if(shadowContext) shadowContext.rect(...dirtyRect)
         outputContext.rect(...dirtyRect)
       }
 
@@ -483,7 +486,7 @@ class Layer extends BaseNode {
         if(dirtyBox) {
           const dirtyRect = boxToRect(dirtyBox)
 
-          shadowContext.rect(...dirtyRect)
+          if(shadowContext) shadowContext.rect(...dirtyRect)
           outputContext.rect(...dirtyRect)
         }
       }
@@ -498,27 +501,31 @@ class Layer extends BaseNode {
       if(dirtyBox) {
         const dirtyRect = boxToRect(dirtyBox)
 
-        shadowContext.rect(...dirtyRect)
+        if(shadowContext) shadowContext.rect(...dirtyRect)
         outputContext.rect(...dirtyRect)
       }
     }
 
-    shadowContext.clip()
-    outputContext.clip()
+    if(shadowContext) {
+      shadowContext.clip()
+      shadowContext.clearRect(0, 0, width, height)
+    }
 
-    shadowContext.clearRect(0, 0, width, height)
+    outputContext.clip()
     outputContext.clearRect(0, 0, width, height)
 
     const renderEls = [...updateSet, ...affectedSet]
-
     this.sortChildren(renderEls)
-    await this.drawSprites(shadowContext, renderEls, t)
 
-    outputContext.drawImage(shadowCanvas, 0, 0)
+    if(shadowContext) {
+      await this.drawSprites(shadowContext, renderEls, t)
+      outputContext.drawImage(shadowContext.canvas, 0, 0)
+      shadowContext.restore()
+    } else {
+      await this.drawSprites(outputContext, renderEls, t)
+    }
 
-    shadowContext.restore()
     outputContext.restore()
-
     this[_updateSet].clear()
   }
   appendChild(sprite, forceUpdate = true) {
@@ -589,19 +596,22 @@ class Layer extends BaseNode {
       viewport = this.viewport
 
     const container = this.parent.container,
-      shadowCanvas = this.shadowContext.canvas,
       outputCanvas = this.outputContext.canvas
 
     outputCanvas.width = resolution[0]
     outputCanvas.height = resolution[1]
-    shadowCanvas.width = resolution[0]
-    shadowCanvas.height = resolution[1]
 
     outputCanvas.style.width = `${viewport[0]}px`
     outputCanvas.style.height = `${viewport[1]}px`
 
     this.outputContext.clearRect(0, 0, resolution[0], resolution[1])
-    this.shadowContext.clearRect(0, 0, resolution[0], resolution[1])
+
+    if(this.shadowContext) {
+      const shadowCanvas = this.shadowContext.canvas
+      shadowCanvas.width = resolution[0]
+      shadowCanvas.height = resolution[1]
+      this.shadowContext.clearRect(0, 0, resolution[0], resolution[1])
+    }
 
     if(container !== outputCanvas.parentNode) {
       container.appendChild(outputCanvas)
@@ -664,19 +674,6 @@ class Layer extends BaseNode {
     }
 
     return this[_children]
-  }
-  adjust(handler, forceUpdate = true) {
-    const outputContext = this.outputContext,
-      shadowContext = this.shadowContext
-
-    const [width, height] = this.resolution
-    outputContext.clearRect(0, 0, width, height)
-
-    handler.call(this, outputContext)
-
-    if(forceUpdate) {
-      outputContext.drawImage(shadowContext.canvas, 0, 0)
-    }
   }
 }
 
