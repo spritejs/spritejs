@@ -448,11 +448,12 @@ class BaseSprite extends BaseNode {
       [offsetWidth, offsetHeight] = this.offsetSize,
       [clientWidth, clientHeight] = this.clientSize
 
+    let boxctx = drawingContext
+
     if(offsetWidth === 0 || offsetHeight === 0) {
-      return // don't need to render
+      return boxctx // don't need to render
     }
 
-    let boxctx = drawingContext
     const bound = this.originRect
 
     if(!boxctx) {

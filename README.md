@@ -9,10 +9,20 @@ A lightweight 2D canvas rendering engine for modern browsers with ES6+.
 
 Manipulate the **sprites** in canvas as you do with the DOM elements.
 
+## Fetures
+
+- Manipulate the **sprites** element as you do with the DOM elements.
+- Perform fast drawing with smart cache.
+- Multiple layers.
+- Controllable event dispatching.
+- Object Oriented Programmed Development with ES6+
+- [Server-side render](#server-side-render). Work with node-canvas.
+- [微信小程序](https://github.com/spritejs/sprite-wxapp)
+
 ## Quick Look
 
 ```html
-<script src="https://s2.ssl.qhres.com/!75e3f7dd/spritejs.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!add64f65/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -47,7 +57,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 In browser:
 
 ```html
-<script src="https://s2.ssl.qhres.com/!75e3f7dd/spritejs.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!add64f65/spritejs.min.js"></script>
 ```
 
 ## Quick Start

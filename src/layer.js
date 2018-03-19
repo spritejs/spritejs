@@ -18,7 +18,7 @@ import {createCanvas} from './cross-platform'
 class Layer extends BaseNode {
   constructor(id, {
     handleEvent, evaluateFPS, renderMode, resolution,
-  }) {
+  } = {}) {
     super()
 
     this.handleEvent = handleEvent !== false

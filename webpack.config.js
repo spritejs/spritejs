@@ -1,4 +1,4 @@
-const conf = require('./package.json')
+// const conf = require('./package.json')
 
 module.exports = function (env = {}) {
   const webpack = require('webpack'),
