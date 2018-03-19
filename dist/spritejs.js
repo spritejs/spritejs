@@ -2081,11 +2081,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           clientHeight = _clientSize[1];
 
 
+      var boxctx = drawingContext;
+
       if (offsetWidth === 0 || offsetHeight === 0) {
-        return; // don't need to render
+        return boxctx; // don't need to render
       }
 
-      var boxctx = drawingContext;
       var bound = this.originRect;
 
       if (!boxctx) {
@@ -5427,9 +5428,6 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
                   rect[0] += borderWidth;
                   rect[1] += borderWidth;
 
-                  var imgCanvas = (0, _crossPlatform.createCanvas)();
-                  var imgContext = imgCanvas.getContext('2d');
-
                   context.save();
 
                   var bound = [0, 0];
@@ -5451,6 +5449,9 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
 
                   if (texture.filter) {
                     var _context2;
+
+                    var imgCanvas = (0, _crossPlatform.createCanvas)();
+                    var imgContext = imgCanvas.getContext('2d');
 
                     var outterRect = void 0;
                     var imgRect = srcRect ? [0, 0, srcRect[2], srcRect[3]] : [0, 0, img.width, img.height];
@@ -5935,11 +5936,13 @@ var _children = (0, _symbol2.default)('children'),
 var Layer = function (_BaseNode) {
   (0, _inherits3.default)(Layer, _BaseNode);
 
-  function Layer(id, _ref) {
-    var handleEvent = _ref.handleEvent,
+  function Layer(id) {
+    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+        handleEvent = _ref.handleEvent,
         evaluateFPS = _ref.evaluateFPS,
         renderMode = _ref.renderMode,
         resolution = _ref.resolution;
+
     (0, _classCallCheck3.default)(this, Layer);
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (Layer.__proto__ || (0, _getPrototypeOf2.default)(Layer)).call(this));
@@ -6228,7 +6231,7 @@ var Layer = function (_BaseNode) {
               }, _callee, this);
             }));
 
-            function step(_x) {
+            function step(_x2) {
               return _ref2.apply(this, arguments);
             }
 
@@ -6389,7 +6392,7 @@ var Layer = function (_BaseNode) {
         }, _callee2, this);
       }));
 
-      function drawSprites(_x2, _x3, _x4) {
+      function drawSprites(_x3, _x4, _x5) {
         return _ref3.apply(this, arguments);
       }
 
@@ -6451,7 +6454,7 @@ var Layer = function (_BaseNode) {
         }, _callee3, this);
       }));
 
-      function renderRepaintAll(_x5) {
+      function renderRepaintAll(_x6) {
         return _ref4.apply(this, arguments);
       }
 
@@ -6687,7 +6690,7 @@ var Layer = function (_BaseNode) {
         }, _callee4, this);
       }));
 
-      function renderRepaintDirty(_x6) {
+      function renderRepaintDirty(_x7) {
         return _ref5.apply(this, arguments);
       }
 
@@ -11195,7 +11198,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '1.15.1';
+var version = '1.16.0';
 
 exports.version = version;
 exports.BaseSprite = _basesprite2.default;

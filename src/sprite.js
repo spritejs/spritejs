@@ -205,9 +205,6 @@ export default class Sprite extends BaseSprite {
         rect[0] += borderWidth
         rect[1] += borderWidth
 
-        const imgCanvas = createCanvas()
-        const imgContext = imgCanvas.getContext('2d')
-
         context.save()
 
         let bound = [0, 0]
@@ -226,6 +223,9 @@ export default class Sprite extends BaseSprite {
         }
 
         if(texture.filter) {
+          const imgCanvas = createCanvas()
+          const imgContext = imgCanvas.getContext('2d')
+
           let outterRect
           const imgRect = srcRect ? [0, 0, srcRect[2], srcRect[3]] : [0, 0, img.width, img.height]
 
