@@ -1,6 +1,6 @@
 const test = require('ava')
 
-import {attr, readonly, parseValue, memoize, deprecate} from '../src/decorators'
+import {attr, parseValue, memoize, deprecate} from '../src/decorators'
 
 const _subject = Symbol('subject')
 
@@ -25,7 +25,7 @@ class Attr {
   get border() {
     return this._border
   }
-  @readonly
+
   get loc() {
     return this._pos
   }

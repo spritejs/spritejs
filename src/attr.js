@@ -25,12 +25,14 @@ class SpriteAttr {
       translate: [0, 0],
       skew: [0, 0],
       transform: [1, 0, 0, 1, 0, 0],
-      border: '',
+      transformStr: 'matrix(1,0,0,1,0,0)',
+      border: [0, 'rgba(0,0,0,0)'],
       borderRadius: 0,
       padding: [0, 0, 0, 0],
       zIndex: 0,
       offsetRotate: 'auto',
       linearGradients: {},
+      offsetDistance: 0,
     })
     this[_temp] = new Map() // save non-serialized values
   }
@@ -86,6 +88,10 @@ class SpriteAttr {
   serialize() {
     const attrs = Object.assign({}, this[_attr])
     return JSON.stringify(attrs)
+  }
+
+  get attrs() {
+    return Immutable.asMutable(this[_attr], {deep: true})
   }
 
   get subject() {
@@ -192,7 +198,7 @@ class SpriteAttr {
     this.set('border', [width, parseColorString(color)])
   }
   get border() {
-    return this.get('border') || [0, 'rgba(0,0,0,0)']
+    return this.get('border')
   }
 
   @attr('repaint')
@@ -250,7 +256,7 @@ class SpriteAttr {
     }
   }
   get transform() {
-    return this.get('transformStr') || 'matrix(1,0,0,1,0,0)'
+    return this.get('transformStr')
   }
 
   @attr
@@ -361,7 +367,7 @@ class SpriteAttr {
     this.resetOffset()
   }
   get offsetDistance() {
-    return this.get('offsetDistance') || 0
+    return this.get('offsetDistance')
   }
 
   @attr

@@ -1,6 +1,6 @@
 import BaseSprite from './basesprite'
 
-import {attr, readonly} from './decorators'
+import {attr} from './decorators'
 import {parseColorString, getLinearGradients} from './utils'
 
 import {Effects} from 'sprite-animator'
@@ -10,15 +10,9 @@ Effects.d = pathEffect
 
 import {createPath, calPathRect} from './cross-platform'
 
-function getBoundingBox(attr, forceUpdate) {
-  let pathRect = forceUpdate ? null : attr.loadObj('pathRect')
-
-  if(!pathRect) {
-    pathRect = calPathRect(attr)
-  }
-
+function getBoundingBox(lineWidth, pathRect) {
   const [x, y, width, height] = pathRect,
-    lw = Math.ceil(attr.lineWidth / 2)
+    lw = Math.ceil(lineWidth / 2)
 
   return [-lw, -lw, x + width + lw, y + height + lw]
 }
@@ -34,18 +28,8 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       fillColor: '',
       // d: path2d,
       boxSize: [0, 0],
+      pathRect: [0, 0, 0, 0],
     })
-  }
-
-  @readonly
-  get boundingBox() {
-    return getBoundingBox(this)
-  }
-
-  @readonly
-  get pathRect() {
-    const pathRect = this.loadObj('pathRect')
-    return pathRect || [0, 0, 0, 0]
   }
 
   @attr('repaint')
@@ -53,7 +37,10 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     const path = createPath(val)
     this.set('d', path.getAttribute('d'))
 
-    const box = getBoundingBox(this, true)
+    const pathRect = calPathRect(this)
+    this.set('pathRect', pathRect)
+
+    const box = getBoundingBox(this.lineWidth, pathRect)
     this.set('boxSize', [box[2] - box[0], box[3] - box[1]])
 
     const [x0, y0] = this.translate
@@ -66,9 +53,12 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     return this.get('d')
   }
 
-  @readonly
   get boxSize() {
     return this.get('boxSize')
+  }
+
+  get pathRect() {
+    return this.get('pathRect')
   }
 
   @attr('repaint')
@@ -76,7 +66,8 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     this.set('lineWidth', Math.round(val))
 
     if(this.d) {
-      const box = getBoundingBox(this, false)
+      const pathRect = this.pathRect
+      const box = getBoundingBox(this.lineWidth, pathRect)
       this.set('boxSize', [box[2] - box[0], box[3] - box[1]])
 
       const [x0, y0] = this.translate
@@ -182,7 +173,7 @@ class Path extends BaseSprite {
       attr = this.attr()
 
     if(attr.d) {
-      const box = attr.boundingBox
+      const box = getBoundingBox(attr.lineWidth, attr.pathRect)
 
       context.translate(-box[0], -box[1])
 

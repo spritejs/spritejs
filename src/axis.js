@@ -2,7 +2,7 @@ import Path from './path'
 import Label from './label'
 import Sprite from './sprite'
 
-import {attr, readonly, parseValue} from './decorators'
+import {attr, parseValue} from './decorators'
 import {parseStringFloat, parseColorString} from './utils'
 
 const _axisPath = Symbol('axisPath'),
@@ -99,7 +99,7 @@ function ticksToD(axis) {
   } else if(direction === 'bottom') {
     d = `M0 0 h${length}`
     points.forEach((point) => {
-      d += `M${point} 0 v${vLength}`
+      d += `M${Math.round(point)} 0 v${vLength}`
     })
     rect = [offsetX0, 0, length, vLength]
   } else if(direction === 'left') {
@@ -203,7 +203,6 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('axisScales')
   }
 
-  @readonly
   get d() {
     if(this.subject && this.subject[_axisPath]) {
       return this.subject[_axisPath].d

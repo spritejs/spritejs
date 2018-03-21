@@ -232,11 +232,6 @@ class Layer extends BaseNode {
             return
           }
 
-          if(that.evaluateFPS) {
-            that[_tRecord].push(t)
-            that[_tRecord] = that[_tRecord].slice(-10)
-          }
-
           let renderer
           if(that.renderMode === 'repaintDirty') {
             renderer = that.renderRepaintDirty.bind(that)
@@ -314,11 +309,12 @@ class Layer extends BaseNode {
     const tr = this[_tRecord].slice(-10)
     const len = tr.length
 
-    if(tr.length <= 5) {
+    if(len <= 5) {
       return NaN
     }
-    tr.reduceRight((a, b, i) => { sum += i * (a - b); return b })
-    return Math.round(1000 * ((len - 1) * len / 2) / sum)
+    tr.reduceRight((a, b, i) => { sum += (a - b); return b })
+
+    return Math.round(1000 * (len - 1) / sum)
   }
   sortChildren(children) {
     children.sort((a, b) => {
@@ -331,6 +327,11 @@ class Layer extends BaseNode {
     })
   }
   async drawSprites(drawingContext, renderEls, t) {
+    if(this.evaluateFPS) {
+      this[_tRecord].push(t)
+      this[_tRecord] = this[_tRecord].slice(-10)
+    }
+
     for(let i = 0; i < renderEls.length; i++) {
       const child = renderEls[i]
       if(child.parent === this) {
@@ -582,6 +583,7 @@ class Layer extends BaseNode {
       const sprite = sprites[i]
       const hit = sprite.dispatchEvent(type, evt)
       if(hit) {
+        // detect mouseenter/mouseleave
         targetSprites.push(sprite)
       }
     }

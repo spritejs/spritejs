@@ -1,6 +1,6 @@
 import BaseSprite from './basesprite'
 
-import {attr, readonly} from './decorators'
+import {attr} from './decorators'
 import {parseColorString, getLinearGradients} from './utils'
 import {measureText} from './cross-platform'
 
@@ -42,7 +42,6 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     return this.get('text')
   }
 
-  @readonly
   get textboxSize() {
     return this.get('textboxSize')
   }
