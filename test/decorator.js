@@ -125,7 +125,6 @@ test('attr enumable', (t) => {
   /* eslint-enable no-restricted-syntax */
 
   t.is(attrs.includes('pos'), true)
-  t.is(attrs.includes('loc'), true)
   t.is(attrs.includes('normal'), false)
 })
 
