@@ -43,6 +43,8 @@
     paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
     
     const cacheMap = new Map()
+    window.cacheMap = cacheMap
+
     class Bird extends spritejs.Sprite {
       constructor(){
         super('bird1.png')
@@ -52,11 +54,11 @@
         const key = JSON.stringify(this.textures) + this.attr('scale')
         if(cacheMap.has(key)) {
           return cacheMap.get(key)
-        }
+        }      
       }
       set cache(context) {
         if(context == null){
-          cacheMap.clear()
+          // cacheMap.clear()
           return
         }
         const key = JSON.stringify(this.textures) + this.attr('scale')

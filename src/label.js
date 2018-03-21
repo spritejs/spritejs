@@ -1,6 +1,5 @@
 import BaseSprite from './basesprite'
 
-import {attr} from './decorators'
 import {parseColorString, getLinearGradients} from './utils'
 import {measureText} from './cross-platform'
 
@@ -21,7 +20,7 @@ function calculTextboxSize(text, font, lineHeight) {
 class LabelSpriteAttr extends BaseSprite.Attr {
   constructor(subject) {
     super(subject)
-    this.merge({
+    this.setDefault({
       font: '16px Arial',
       textAlign: 'left',
       color: parseColorString('black'),
@@ -32,9 +31,9 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     })
   }
 
-  @attr('repaint')
   set text(val) {
     val = String(val)
+    this.clearCache()
     this.set('textboxSize', calculTextboxSize(val, this.font, this.lineHeight))
     this.set('text', val)
   }
@@ -46,8 +45,8 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     return this.get('textboxSize')
   }
 
-  @attr('repaint')
   set font(val) {
+    this.clearCache()
     this.set('textboxSize', calculTextboxSize(this.text, val, this.lineHeight))
     this.set('font', val)
   }
@@ -55,8 +54,8 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     return this.get('font')
   }
 
-  @attr('repaint')
   set lineHeight(val) {
+    this.clearCache()
     this.set('textboxSize', calculTextboxSize(this.text, this.font, val))
     this.set('lineHeight', val)
   }
@@ -64,24 +63,24 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     return this.get('lineHeight')
   }
 
-  @attr('repaint')
   set textAlign(val) {
+    this.clearCache()
     this.set('textAlign', val)
   }
   get textAlign() {
     return this.get('textAlign')
   }
 
-  @attr('repaint')
   set renderMode(val) {
+    this.clearCache()
     this.set('renderMode', val)
   }
   get renderMode() {
     return this.get('renderMode')
   }
 
-  @attr('repaint')
   set color(val) {
+    this.clearCache()
     this.set('color', parseColorString(val))
   }
   get color() {

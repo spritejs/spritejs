@@ -1,18 +1,20 @@
-import {attr, parseValue} from './decorators'
+import {parseValue} from './decorators'
 import {Matrix} from './math'
 import {parseColorString, oneOrTwoValues, fourValuesShortCut,
   parseStringInt, parseStringFloat, parseStringTransform} from './utils'
 import {createPath} from './cross-platform'
 
-const Immutable = require('seamless-immutable').static
 const _attr = Symbol('attr'),
   _temp = Symbol('store'),
-  _subject = Symbol('subject')
+  _subject = Symbol('subject'),
+  _default = Symbol('default')
 
 class SpriteAttr {
   constructor(subject) {
     this[_subject] = subject
-    this[_attr] = Immutable({
+    this[_default] = {}
+    this[_attr] = {}
+    this.setDefault({
       anchor: [0, 0],
       x: 0,
       y: 0,
@@ -37,6 +39,11 @@ class SpriteAttr {
     this[_temp] = new Map() // save non-serialized values
   }
 
+  setDefault(attrs) {
+    Object.assign(this[_default], attrs)
+    Object.assign(this[_attr], attrs)
+  }
+
   getAttrState() {
     return this[_attr]
   }
@@ -48,19 +55,18 @@ class SpriteAttr {
     return this[_temp].get(key)
   }
 
+  quietSet(key, val) {
+    this[_attr][key] = val
+  }
   set(key, val) {
-    this[_attr] = Immutable.set(this[_attr], key, val)
+    if(val == null) {
+      val = this[_default][key]
+    }
+    this.quietSet(key, val)
+    this.forceUpdate()
   }
   get(key) {
-    const obj = this[_attr][key]
-
-    if(obj && typeof obj === 'object') {
-      return Immutable.asMutable(obj, {deep: true})
-    }
-    return obj
-  }
-  remove(key) {
-    return delete this[_attr][key]
+    return this[_attr][key]
   }
 
   clearCache() {
@@ -73,7 +79,6 @@ class SpriteAttr {
     if(this.subject) {
       this.subject.forceUpdate(clearCache)
     }
-
     return this
   }
   merge(attrs) {
@@ -81,17 +86,16 @@ class SpriteAttr {
       attrs = JSON.parse(attrs)
     }
 
-    this[_attr] = Immutable.merge(this[_attr], attrs)
+    Object.assign(this[_attr], attrs)
 
     return this
   }
   serialize() {
-    const attrs = Object.assign({}, this[_attr])
-    return JSON.stringify(attrs)
+    return JSON.stringify(this[_attr])
   }
 
   get attrs() {
-    return Immutable.asMutable(this[_attr], {deep: true})
+    return this[_attr]
   }
 
   get subject() {
@@ -106,13 +110,12 @@ class SpriteAttr {
   }
 
   set name(val) {
-    return this.set('name', String(val))
+    return this.quietSet('name', String(val))
   }
   get name() {
     return this.get('name')
   }
 
-  @attr
   @parseValue(parseStringFloat, oneOrTwoValues)
   set anchor(val) {
     this.set('anchor', val)
@@ -121,7 +124,6 @@ class SpriteAttr {
     return this.get('anchor')
   }
 
-  @attr
   set x(val) {
     this.set('x', Math.round(val))
   }
@@ -129,7 +131,6 @@ class SpriteAttr {
     return this.get('x')
   }
 
-  @attr
   set y(val) {
     this.set('y', Math.round(val))
   }
@@ -137,9 +138,11 @@ class SpriteAttr {
     return this.get('y')
   }
 
-  @attr
   @parseValue(parseStringInt)
   set pos(val) {
+    if(val == null) {
+      val = [0, 0]
+    }
     const [x, y] = val
     this.x = x
     this.y = y
@@ -148,16 +151,15 @@ class SpriteAttr {
     return [this.x, this.y]
   }
 
-  @attr('repaint')
   @parseValue(parseColorString)
   set bgcolor(val) {
+    this.clearCache()
     this.set('bgcolor', val)
   }
   get bgcolor() {
     return this.get('bgcolor')
   }
 
-  @attr
   set opacity(val) {
     this.set('opacity', val)
   }
@@ -165,25 +167,27 @@ class SpriteAttr {
     return this.get('opacity')
   }
 
-  @attr('repaint')
   set width(val) {
+    this.clearCache()
     this.set('width', Math.round(val))
   }
   get width() {
     return this.get('width')
   }
 
-  @attr('repaint')
   set height(val) {
+    this.clearCache()
     this.set('height', Math.round(val))
   }
   get height() {
     return this.get('height')
   }
 
-  @attr
   @parseValue(parseStringInt)
   set size(val) {
+    if(val == null) {
+      val = ['', '']
+    }
     const [width, height] = val
     this.width = width
     this.height = height
@@ -192,8 +196,8 @@ class SpriteAttr {
     return [this.width, this.height]
   }
 
-  @attr('repaint')
   set border(val) {
+    this.clearCache()
     const [width, color] = val
     this.set('border', [width, parseColorString(color)])
   }
@@ -201,17 +205,17 @@ class SpriteAttr {
     return this.get('border')
   }
 
-  @attr('repaint')
   @parseValue(parseStringInt, fourValuesShortCut)
   set padding(val) {
+    this.clearCache()
     this.set('padding', val)
   }
   get padding() {
     return this.get('padding')
   }
 
-  @attr('repaint')
   set borderRadius(val) {
+    this.clearCache()
     this.set('borderRadius', val)
   }
   get borderRadius() {
@@ -219,7 +223,6 @@ class SpriteAttr {
   }
 
   // transform attributes
-  @attr
   @parseValue(parseStringTransform)
   set transform(val) {
     /*
@@ -259,7 +262,6 @@ class SpriteAttr {
     return this.get('transformStr')
   }
 
-  @attr
   set rotate(val) {
     const delta = this.get('rotate') - val
     this.set('rotate', val)
@@ -270,7 +272,6 @@ class SpriteAttr {
     return this.get('rotate')
   }
 
-  @attr
   set scale(val) {
     val = oneOrTwoValues(val)
     const oldVal = this.get('scale')
@@ -294,7 +295,6 @@ class SpriteAttr {
     return this.get('scale')
   }
 
-  @attr
   set translate(val) {
     const oldVal = this.get('translate')
     const delta = [val[0] - oldVal[0], val[1] - oldVal[1]]
@@ -307,7 +307,6 @@ class SpriteAttr {
     return this.get('translate')
   }
 
-  @attr
   set skew(val) {
     const oldVal = this.get('skew')
     const invm = new Matrix().skew(...oldVal).inverse()
@@ -320,7 +319,6 @@ class SpriteAttr {
     return this.get('skew')
   }
 
-  @attr
   set zIndex(val) {
     this.set('zIndex', val)
   }
@@ -341,15 +339,14 @@ class SpriteAttr {
       }
     }
    */
-  @attr('repaint')
   set linearGradients(val) {
+    this.clearCache()
     this.set('linearGradients', val)
   }
   get linearGradients() {
     return this.get('linearGradients')
   }
 
-  @attr
   set offsetPath(val) {
     const offsetPath = createPath(val)
 
@@ -361,7 +358,6 @@ class SpriteAttr {
     return this.get('offsetPath')
   }
 
-  @attr
   set offsetDistance(val) {
     this.set('offsetDistance', val)
     this.resetOffset()
@@ -370,7 +366,6 @@ class SpriteAttr {
     return this.get('offsetDistance')
   }
 
-  @attr
   set offsetRotate(val) {
     this.set('offsetRotate', val)
     this.resetOffset()

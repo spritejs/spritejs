@@ -2,7 +2,7 @@ import Path from './path'
 import Label from './label'
 import Sprite from './sprite'
 
-import {attr, parseValue} from './decorators'
+import {parseValue} from './decorators'
 import {parseStringFloat, parseColorString} from './utils'
 
 const _axisPath = Symbol('axisPath'),
@@ -132,7 +132,7 @@ class AxisSpriteAttr extends Sprite.Attr {
   constructor(subject) {
     super(subject)
 
-    this.merge({
+    this.setDefault({
       length: 'auto',
       vLength: 10,
       ticks: [0, 100],
@@ -147,8 +147,8 @@ class AxisSpriteAttr extends Sprite.Attr {
     })
   }
 
-  @attr('repaint')
   set font(val) {
+    this.clearCache()
     this.set('font', val)
     ticksToD(this.subject)
   }
@@ -156,8 +156,8 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('font')
   }
 
-  @attr('repaint')
   set direction(val) {
+    this.clearCache()
     this.set('direction', val)
     ticksToD(this.subject)
   }
@@ -165,8 +165,8 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('direction')
   }
 
-  @attr('repaint')
   set length(val) {
+    this.clearCache()
     this.set('length', val)
     ticksToD(this.subject)
   }
@@ -174,8 +174,8 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('length')
   }
 
-  @attr('repaint')
   set vLength(val) {
+    this.clearCache()
     this.set('vLength', Math.round(val))
     ticksToD(this.subject)
   }
@@ -183,9 +183,9 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('vLength')
   }
 
-  @attr('repaint')
   @parseValue(parseStringFloat)
   set ticks(ticks) {
+    this.clearCache()
     this.set('ticks', ticks.sort((a, b) => a - b))
     ticksToD(this.subject)
   }
@@ -194,8 +194,8 @@ class AxisSpriteAttr extends Sprite.Attr {
   }
 
   // set d3 scales
-  @attr('repaint')
   set axisScales(val) {
+    this.clearCache()
     this.set('axisScales', val)
     ticksToD(this.subject)
   }
@@ -210,8 +210,8 @@ class AxisSpriteAttr extends Sprite.Attr {
     return null
   }
 
-  @attr('repaint')
   set lineWidth(val) {
+    this.clearCache()
     this.set('lineWidth', val)
     ticksToD(this.subject)
   }
@@ -219,9 +219,9 @@ class AxisSpriteAttr extends Sprite.Attr {
     return this.get('lineWidth')
   }
 
-  @attr('repaint')
   @parseValue(parseColorString)
   set color(val) {
+    this.clearCache()
     this.set('color', val)
     ticksToD(this.subject)
   }

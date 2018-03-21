@@ -677,6 +677,21 @@ class Layer extends BaseNode {
 
     return this[_children]
   }
+  adjust(handler, forceUpdate = true) {
+    const outputContext = this.outputContext,
+      shadowContext = this.shadowContext
+    if(!shadowContext) {
+      throw new Error('No shadowContext.')
+    }
+    const [width, height] = this.resolution
+    outputContext.clearRect(0, 0, width, height)
+
+    handler.call(this, outputContext)
+
+    if(forceUpdate) {
+      outputContext.drawImage(shadowContext.canvas, 0, 0)
+    }
+  }
 }
 
 export default Layer

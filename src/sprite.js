@@ -2,7 +2,6 @@ import BaseSprite from './basesprite'
 import Resource from './resource'
 import filters from './filters'
 
-import {attr} from './decorators'
 import {rectToBox, boxToRect, boxUnion} from './utils'
 import {createCanvas} from './cross-platform'
 
@@ -55,7 +54,6 @@ class TextureAttr extends BaseSprite.Attr {
       filter: ...  //texture filters
     }
    */
-  @attr
   set textures(textures) {
     if(!Array.isArray(textures)) {
       textures = [textures]
@@ -174,7 +172,6 @@ export default class Sprite extends BaseSprite {
       this[_texturesCache].clear()
       return
     }
-
     const key = JSON.stringify(this.textures),
       cacheMap = this[_texturesCache]
 
