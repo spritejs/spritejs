@@ -60,19 +60,15 @@ export function createPath(d) {
 }
 
 export function calPathRect(attr) {
-  let path = attr.loadObj('path')
   const {
-    d, lineCap, lineJoin, lineWidth,
+    d, lineCap, lineJoin,
   } = attr
 
-  if(!path) {
-    if(d) { // Deserialized sprite may have d value but no path obj
-      path = createPath(d)
-      attr.saveObj('path', path)
-    } else {
-      return [0, 0, 0, 0]
-    }
+  if(!d) {
+    return [0, 0, 0, 0]
   }
+
+  const path = createPath(d)
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.style.visibility = 'hidden'
@@ -82,7 +78,7 @@ export function calPathRect(attr) {
   // svg.setAttribute('width', 1000)
   // svg.setAttribute('height', 1000)
   // svg.setAttribute('preserveAspectRatio', 'none')
-  path.setAttribute('stroke-width', lineWidth)
+  path.setAttribute('stroke-width', 1)
   path.setAttribute('stroke', '#f00')
   path.setAttribute('stroke-linecap', lineCap)
   path.setAttribute('stroke-linejoin', lineJoin)
@@ -95,11 +91,7 @@ export function calPathRect(attr) {
   const [ox, oy] = [left - x0, top - y0]
   document.body.removeChild(svg)
 
-  const pathRect = [ox, oy, width, height]
-
-  attr.saveObj('pathRect', pathRect)
-
-  return pathRect
+  return [ox, oy, width, height]
 }
 
 export function getContainer(container) {

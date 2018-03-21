@@ -141,13 +141,17 @@ class BaseSprite extends BaseNode {
       }
       return this[_attr][props]
     }
-    const ret = {}
-    /* eslint-disable no-restricted-syntax */
-    for(const prop in this[_attr]) {
-      ret[prop] = this[_attr][prop]
-    }
-    /* eslint-enable no-restricted-syntax */
-    return ret
+    // const ret = {}
+    // /* eslint-disable no-restricted-syntax */
+    // for(const prop in this[_attr]) {
+    //   ret[prop] = this[_attr][prop]
+    // }
+    // /* eslint-enable no-restricted-syntax */
+    // return ret
+    return this[_attr].attrs
+  }
+  attrs() {
+    return this[_attr].attrs
   }
 
   get transform() {

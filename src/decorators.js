@@ -80,10 +80,6 @@ export function deprecate(...args) {
   return decorator(...args)
 }
 
-export function readonly(target, prop, descriptor) {
-  descriptor.enumerable = true
-}
-
 export function parseValue(...parsers) {
   return function (target, prop, descriptor) {
     const setter = descriptor.set

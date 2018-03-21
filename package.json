@@ -14,9 +14,14 @@
     "test": "nyc ava",
     "lint": "eslint 'src/**/*.js' --fix",
     "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
+    "benchmark": "webpack-dev-server -d --quiet --port 9090 & http-server benchmark -c-1 -p 9091",
     "build": "rm -rf dist/* && ./script/build.js",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
     "prepublishOnly": "rm -rf lib/* && babel src -d lib && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spritejs/spritejs"
   },
   "keywords": [],
   "author": "akira-cn",

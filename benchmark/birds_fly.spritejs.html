@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-  <title>Demo</title>
+  <title>Birds Flying</title>
   <style>
     *{      
       -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
@@ -143,8 +143,10 @@
         pos: axisZero,
         transform: {
           rotate: 0,
-        }
+        },
+        size: [86, 60],
       })
+      window.bird = bird
 
       fglayer.appendChild(bird)
       
@@ -152,7 +154,7 @@
       setInterval(() => {
         bird.textures = [`bird${++idx % 3 + 1}.png`]
       }, 100)
-      
+      window.bird = bird
       //noprotect
       do{
         await randomAnimate(bird)

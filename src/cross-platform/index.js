@@ -178,6 +178,9 @@ export function createPathSVG(d, lineWidth, lineCap, lineJoin, strokeColor, fill
 
 export function calPathRect(attr) {
   const {d, lineCap, lineJoin, strokeColor, fillColor} = attr
+  if(!d) {
+    return [0, 0, 0, 0]
+  }
 
   const svg = createPathSVG(d, 1, lineCap, lineJoin, strokeColor, fillColor)
 
@@ -209,10 +212,7 @@ export function calPathRect(attr) {
     }
   }
 
-  const pathRect = [left + 1, top + 1, right - left - 1, bottom - top - 1]
-  attr.saveObj('pathRect', pathRect)
-
-  return pathRect
+  return [left + 1, top + 1, right - left - 1, bottom - top - 1]
 }
 
 export function createPath(d) {

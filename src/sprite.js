@@ -2,11 +2,49 @@ import BaseSprite from './basesprite'
 import Resource from './resource'
 import filters from './filters'
 
-import {attr, readonly} from './decorators'
+import {attr} from './decorators'
 import {rectToBox, boxToRect, boxUnion} from './utils'
 import {createCanvas} from './cross-platform'
 
 const _texturesCache = Symbol('_texturesCache')
+
+function getTextureSize(attr, textures) {
+  const subject = attr.subject
+
+  // adaptive textures
+  const promises = textures.map(texture => Resource.loadTexture(texture))
+  Promise.all(promises).then((textures) => {
+    let width = 0,
+      height = 0
+    textures.forEach(({img, texture}) => {
+      let w,
+        h
+      if(texture && texture.rect) {
+        w = texture.rect[2] + texture.rect[0]
+        h = texture.rect[3] + texture.rect[1]
+      } else if(texture && texture.srcRect) {
+        w = texture.srcRect[2]
+        h = texture.srcRect[3]
+      } else {
+        w = img.width
+        h = img.height
+      }
+      if(width < w) {
+        width = w
+      }
+      if(height < h) {
+        height = h
+      }
+    })
+    const [ow, oh] = attr.texturesSize
+    attr.set('texturesSize', [width, height])
+
+    // Asynchronously loaded new texture
+    if(ow !== width || oh !== height) {
+      subject.forceUpdate(true)
+    }
+  })
+}
 
 class TextureAttr extends BaseSprite.Attr {
   /*
@@ -22,7 +60,6 @@ class TextureAttr extends BaseSprite.Attr {
     if(!Array.isArray(textures)) {
       textures = [textures]
     }
-    const subject = this.subject
 
     textures = textures.map((texture) => {
       if(typeof texture === 'string') {
@@ -34,39 +71,10 @@ class TextureAttr extends BaseSprite.Attr {
       return texture
     })
 
-    // adaptive textures
-    const promises = textures.map(texture => Resource.loadTexture(texture))
-    Promise.all(promises).then((textures) => {
-      let width = 0,
-        height = 0
-      textures.forEach(({img, texture}) => {
-        let w,
-          h
-        if(texture && texture.rect) {
-          w = texture.rect[2] + texture.rect[0]
-          h = texture.rect[3] + texture.rect[1]
-        } else if(texture && texture.srcRect) {
-          w = texture.srcRect[2]
-          h = texture.srcRect[3]
-        } else {
-          w = img.width
-          h = img.height
-        }
-        if(width < w) {
-          width = w
-        }
-        if(height < h) {
-          height = h
-        }
-      })
-      const [ow, oh] = this.texturesSize
-      this.set('texturesSize', [width, height])
-
-      // Asynchronously loaded new texture
-      if(ow !== width || oh !== height) {
-        subject.forceUpdate(true)
-      }
-    })
+    const [width, height] = this.size
+    if(width === '' || height === '') {
+      getTextureSize(this, textures)
+    }
 
     this.set('textures', textures)
   }
@@ -74,7 +82,6 @@ class TextureAttr extends BaseSprite.Attr {
     return this.get('textures')
   }
 
-  @readonly
   get texturesSize() {
     return this.get('texturesSize') || [0, 0]
   }
