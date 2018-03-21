@@ -1,6 +1,5 @@
 import BaseSprite from './basesprite'
 
-import {attr} from './decorators'
 import {parseColorString, getLinearGradients} from './utils'
 
 import {Effects} from 'sprite-animator'
@@ -20,7 +19,7 @@ function getBoundingBox(lineWidth, pathRect) {
 export class PathSpriteAttr extends BaseSprite.Attr {
   constructor(subject) {
     super(subject)
-    this.merge({
+    this.setDefault({
       lineWidth: 1,
       lineCap: 'butt',
       lineJoin: 'miter',
@@ -32,10 +31,14 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     })
   }
 
-  @attr('repaint')
   set d(val) {
-    const path = createPath(val)
-    this.set('d', path.getAttribute('d'))
+    this.clearCache()
+    if(val != null) {
+      const path = createPath(val)
+      this.set('d', path.getAttribute('d'))
+    } else {
+      this.set('d', val) // undefined
+    }
 
     const pathRect = calPathRect(this)
     this.set('pathRect', pathRect)
@@ -61,8 +64,8 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     return this.get('pathRect')
   }
 
-  @attr('repaint')
   set lineWidth(val) {
+    this.clearCache()
     this.set('lineWidth', Math.round(val))
 
     if(this.d) {
@@ -84,8 +87,8 @@ export class PathSpriteAttr extends BaseSprite.Attr {
   /**
     lineCap: butt|round|square
    */
-  @attr('repaint')
   set lineCap(val) {
+    this.clearCache()
     this.set('lineCap', val)
   }
   get lineCap() {
@@ -95,15 +98,14 @@ export class PathSpriteAttr extends BaseSprite.Attr {
   /**
     lineJoin: miter|round|bevel
    */
-  @attr('repaint')
   set lineJoin(val) {
+    this.clearCache()
     this.set('lineJoin', val)
   }
   get lineJoin() {
     return this.get('lineJoin')
   }
 
-  @attr('repaint')
   set color(val) {
     this.strokeColor = val
   }
@@ -111,16 +113,16 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     return this.strokeColor
   }
 
-  @attr('repaint')
   set strokeColor(val) {
+    this.clearCache()
     this.set('strokeColor', parseColorString(val))
   }
   get strokeColor() {
     return this.get('strokeColor')
   }
 
-  @attr('repaint')
   set fillColor(val) {
+    this.clearCache()
     this.set('fillColor', parseColorString(val))
   }
   get fillColor() {

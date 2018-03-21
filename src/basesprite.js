@@ -4,7 +4,6 @@ import {Matrix, Vector} from './math'
 import Layer from './layer'
 import Animation from './animation'
 import {getLinearGradients, rectVertices} from './utils'
-import {attr} from './decorators'
 import {createCanvas} from './cross-platform'
 
 const _attr = Symbol('attr'),
@@ -16,15 +15,6 @@ const _attr = Symbol('attr'),
 
 class BaseSprite extends BaseNode {
   static Attr = SpriteAttr;
-
-  static defineAttributes(attrs) {
-    const SubAttr = class extends this.Attr {}
-    const descriptors = Object.getOwnPropertyDescriptors(attrs)
-    Object.entries(descriptors).forEach(([prop, descriptor]) => {
-      Object.defineProperty(SubAttr.prototype, prop, attr(SubAttr.prototype, prop, descriptor))
-    })
-    this.Attr = SubAttr
-  }
 
   /**
     new Sprite({
