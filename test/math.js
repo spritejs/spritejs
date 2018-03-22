@@ -1,6 +1,6 @@
 const test = require('ava')
 
-import {Matrix} from '../src/math'
+import {Matrix, Vector} from '../src/math'
 
 function matrixEqual(m1, m2) {
   const diff = m1.m.filter((o, i) => Math.abs(o - m2.m[i]) > 0.00001)
@@ -55,4 +55,17 @@ test('transformVector', (t) => {
   const m = new Matrix([1, 2, 3, 4, 5, 6])
   const v = m.transformVector(2, 3)
   t.deepEqual(v, [11, 16])
+})
+
+test('vector length', (t) => {
+  const v = new Vector([3, 4])
+  t.is(v.length, 5)
+})
+
+test('vector unit', (t) => {
+  const v = new Vector([3, 4])
+  const w = v.unit()
+  t.is(w.length, 1)
+  t.is(w.x, 0.6)
+  t.is(w.y, 0.8)
 })
