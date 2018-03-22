@@ -235,7 +235,8 @@ export default class Sprite extends BaseSprite {
 
           if(texture.filter.dropShadow) {
             const dsArr = texture.filter.dropShadow
-            const shadowRect = [Math.round(dsArr[0] - 2 * dsArr[2]), Math.round(dsArr[1] - 2 * dsArr[2]), imgRect[2] + 4 * dsArr[2], imgRect[3] + 4 * dsArr[2]]
+            const shadowRect = [dsArr[0] - 2 * dsArr[2], dsArr[1] - 2 * dsArr[2],
+              imgRect[2] + 4 * dsArr[2], imgRect[3] + 4 * dsArr[2]].map(val => Math.round(val))
 
             outterRect = boxToRect(boxUnion(rectToBox(shadowRect), rectToBox(imgRect))).map(val => Math.abs(val))
           } else {

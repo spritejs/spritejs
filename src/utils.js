@@ -118,7 +118,7 @@ function boxIntersect(box1, box2) {
 }
 
 function boxToRect(box) {
-  return [box[0], box[1], Math.round(box[2] - box[0]), Math.round(box[3] - box[1])]
+  return [box[0], box[1], box[2] - box[0], box[3] - box[1]]
 }
 
 function boxEqual(box1, box2) {
@@ -129,7 +129,7 @@ function boxEqual(box1, box2) {
 }
 
 function rectToBox(rect) {
-  return [rect[0], rect[1], Math.round(rect[0] + rect[2]), Math.round(rect[1] + rect[3])]
+  return [rect[0], rect[1], rect[0] + rect[2], rect[1] + rect[3]]
 }
 
 function rectVertices(rect) {
@@ -240,17 +240,7 @@ function getLinearGradients(context, rect, linearGradients) {
   return gradient
 }
 
-function defer(context = null) {
-  const ret = {context}
-  ret.promise = new Promise((resolve, reject) => {
-    ret.resolve = resolve
-    ret.reject = reject
-  })
-  return ret
-}
-
 export {
-  defer,
   parseColor,
   oneOrTwoValues,
   parseStringInt,

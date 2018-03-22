@@ -241,8 +241,8 @@ export default class Axis extends Sprite {
       this.attr({ticks})
     }
   }
-  render(t) {
-    const context = super.render(t)
+  render(t, drawingContext) {
+    const context = super.render(t, drawingContext)
     return context
   }
   initAttributes(attrs) {
