@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Birds Flying</title>
+  <style>
+    *{      
+      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
+      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */      
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */       
+      -webkit-user-select:none;
+    }  
+    html,body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      max-width: 500px;
+    }
+    #paper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 100%;
+      height: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">0</span></div>
+  <div id="paper"></div>
+  
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <script src="/js/spritejs.js"></script>
+  
+  <script>
+  const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+  const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+
+  ;(async function(){
+    const scene = new spritejs.Scene('#paper')
+    scene.setResolution(800, 800) // 设置 Paper 的实际分辨率
+    
+    const bglayer = scene.layer('bg'),  // 背景层
+          // 前景层
+          // 不代理事件，提升性能
+          fglayer = scene.layer('fg', {
+                handleEvent: false,
+                evaluateFPS: true,
+                renderMode: 'repaintAll',
+          })   
+    
+    const axisZero = [400, 400]
+    const circle = new spritejs.Sprite()
+    
+    circle.attr({
+      anchor: [0.5, 0.5],
+      size: [800, 800],
+      pos: axisZero,
+      bgcolor: '#139',
+      opacity: 0.5,
+      borderRadius: 400,
+    })
+    
+    bglayer.appendChild(circle)
+    
+    function pointAdd(p1, p2 = [0, 0]){
+      return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
+    }
+    
+    function pointSub(p1, p2 = [0, 0]){
+      return [p1[0] - p2[0], p1[1] - p2[1]].map(Math.round)
+    }
+    
+    function sleep(time){
+      return new Promise(resolve => setTimeout(resolve, time))
+    }
+    
+    async function randomAnimate(sprite){
+      const fromPoint = sprite.attr('pos')
+      const randomArc = Math.random() * 2 * Math.PI
+      const randomPoint = pointAdd([350 * Math.cos(randomArc), 
+                                    350 * Math.sin(randomArc)], axisZero)
+      
+      const dist = pointSub(randomPoint, fromPoint)
+      const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
+      const flip = dist[0] < 0 ? -1 : 1
+      const duration = 5 * distance + 100
+
+      const anim = new Animator(duration, function(p){
+        const pos = pointAdd(fromPoint, [p * dist[0], p * dist[1]])
+        const rotate = p * 720
+        sprite.attr({
+          pos,
+          rotate,
+        })
+      })
+
+      await anim.animate()
+      await sleep(500)
+    }
+
+    async function addSprite(){
+      spriteCount.innerHTML = Number(spriteCount.innerHTML) + 1
+      const group = new spritejs.Group()
+      group.attr({
+        anchor: [0.5, 0.5],
+        pos: axisZero,
+        size: [60, 60],
+      })
+
+      const center = new spritejs.Sprite()
+      center.attr({
+        anchor: [0.5, 0.5],
+        pos: [30, 30],
+        size: [20, 20],
+        borderRadius: 10,
+        bgcolor: 'black',
+      })
+
+      const top = center.cloneNode(true)
+      top.attr({
+        pos: [30, 10],
+      })
+      
+      const right = center.cloneNode(true)
+      right.attr({
+        pos: [50, 30],
+      })
+
+      const bottom = center.cloneNode(true)
+      bottom.attr({
+        pos: [30, 50]
+      })
+
+      const left = center.cloneNode(true)
+      left.attr({
+        pos: [10, 30]
+      })
+
+      group.append(center, top, right, bottom, left)
+
+      fglayer.appendChild(group)
+      
+      //noprotect
+      do{
+        await randomAnimate(group)
+      }while(1) 
+    }
+
+    addSprite()
+
+    circle.on('click', evt => {
+      addSprite()
+    })
+
+    //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
+    //所以所有精灵不运动的时候 fps 也会降下来
+    setInterval(() => {
+      fps.innerHTML = fglayer.fps
+    }, 1000)
+  })()
+  </script>
+</body>
+</html>
