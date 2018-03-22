@@ -31,7 +31,8 @@ const Resource = {
               node = createNode(node.nodeType, node.attrs)
               node.id = texture.id
             }
-            Promise.resolve(node.render())
+            const bound = node.originRect
+            Promise.resolve(node.render(0, createCanvas(bound[2], bound[3]).getContext('2d')))
               .then((context) => {
                 resolve({img: node, texture})
                 loadedResources.set(mapKey, node)

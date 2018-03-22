@@ -1,31 +1,47 @@
+const deprecationSet = new Set()
+
+export function setDeprecation(apiName, msg = '') {
+  msg = `[Deprecation] ${apiName} has been deprecated.${msg}`
+  if(!deprecationSet.has(msg)) {
+    deprecationSet.add(msg)
+    console.warn(msg)
+  }
+}
+
 export function deprecate(...args) {
-  let msg = ''
+  let msg = '',
+    apiName = ''
   function decorator(target, prop, descriptor) {
-    const defaultMsg = `${target.constructor.name}#${prop} has been deprecated.`
+    apiName = apiName || `${target.constructor.name}#${prop}`
     if(typeof descriptor.value === 'function') {
       const func = descriptor.value
       descriptor.value = function (...args) {
-        console.warn(defaultMsg, msg)
+        setDeprecation(apiName, msg)
         return func.apply(this, args)
       }
     }
     if(descriptor.set) {
       const setter = descriptor.set
       descriptor.set = function (val) {
-        console.warn(defaultMsg, msg)
+        setDeprecation(apiName, msg)
         return setter.call(this, val)
       }
     }
     if(descriptor.get) {
       const getter = descriptor.get
       descriptor.get = function () {
-        console.warn(defaultMsg, msg)
+        setDeprecation(apiName, msg)
         return getter.call(this)
       }
     }
   }
   if(args.length === 1) {
     msg = args[0]
+    return decorator
+  }
+  if(args.length === 2) {
+    apiName = args[0]
+    msg = args[1]
     return decorator
   }
   return decorator(...args)

@@ -336,43 +336,9 @@ class Layer extends BaseNode {
       const child = renderEls[i]
       if(child.parent === this) {
         if(this.isVisible(child)) {
-          const transform = child.transform.m,
-            pos = child.attr('pos'),
-            bound = child.originRect
-
-          drawingContext.save()
-          drawingContext.translate(pos[0], pos[1])
-          drawingContext.transform(...transform)
-          drawingContext.globalAlpha = child.attr('opacity')
-
-          let context = child.cache
-
           /* eslint-disable no-await-in-loop */
-          if(!context) {
-            // context = await child.render(t, drawingContext)
-            context = await child.render(t)
-            if(context !== drawingContext) child.cache = context
-          }
+          await child.draw(drawingContext, true, t)
           /* eslint-enable no-await-in-loop */
-
-          child.userRender(t, context)
-
-          if(this[_updateSet].has(child)) {
-            child.dispatchEvent(
-              'update',
-              {
-                target: child, context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox,
-              },
-              true
-            )
-          }
-
-          child.lastRenderBox = child.renderBox
-
-          if(context !== drawingContext) {
-            drawingContext.drawImage(context.canvas, bound[0], bound[1])
-          }
-          drawingContext.restore()
         } else {
           // invisible, only need to remove lastRenderBox
           delete child.lastRenderBox

@@ -69,3 +69,20 @@ test('vector unit', (t) => {
   t.is(w.x, 0.6)
   t.is(w.y, 0.8)
 })
+
+test('vector dot', (t) => {
+  const v = new Vector([1, 2, 0], [3, 4, 3]) // [-2, -2, -3]
+  const w = new Vector([2, 0, -1])
+  const res = v.dot(w)
+  t.is(res, -1)
+})
+
+test('vector cross', (t) => {
+  const v1 = new Vector([1, 2])
+  const v2 = new Vector([3, 4])
+
+  const v3 = v1.cross(v2)
+  t.is(v3.x, 0)
+  t.is(v3.y, 0)
+  t.is(v3.z, -2)
+})

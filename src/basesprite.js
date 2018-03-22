@@ -3,6 +3,7 @@ import BaseNode from './basenode'
 import {Matrix, Vector} from './math'
 import Layer from './layer'
 import Animation from './animation'
+import {deprecate} from './decorators'
 import {getLinearGradients, rectVertices} from './utils'
 import {createCanvas} from './cross-platform'
 
@@ -10,7 +11,8 @@ const _attr = Symbol('attr'),
   _eventHandlers = Symbol('eventHandlers'),
   _animations = Symbol('animations'),
   _context = Symbol('context'),
-  _renderers = Symbol('renderers'),
+  _beforeRenders = Symbol('beforeRenders'),
+  _afterRenders = Symbol('afterRenders'),
   _paths = Symbol('paths')
 
 class BaseSprite extends BaseNode {
@@ -20,9 +22,6 @@ class BaseSprite extends BaseNode {
     new Sprite({
       attr: {
         ...
-      },
-      attributeChangedCallback: function(prop, oldValue, newValue){
-
       }
     })
    */
@@ -37,7 +36,8 @@ class BaseSprite extends BaseNode {
     this[_eventHandlers] = {}
     this[_animations] = new Set()
     this[_context] = null
-    this[_renderers] = []
+    this[_beforeRenders] = []
+    this[_afterRenders] = []
     this[_paths] = []
   }
 
@@ -365,10 +365,9 @@ class BaseSprite extends BaseNode {
   }
 
   /** abstract
-  connectedCallback() { }
-  disconnectedCallback() { }
-  attributeChangedCallback() { }
-*/
+    connectedCallback() { }
+    disconnectedCallback() { }
+  */
 
   // layer position to sprite offset
   pointToOffset(x, y) {
@@ -409,30 +408,98 @@ class BaseSprite extends BaseNode {
       }
     }
   }
+  async draw(drawingContext, enableCache = true, t) {
+    if(typeof drawingContext === 'function') {
+      return this._draw(drawingContext, enableCache, t)
+    }
 
-  draw(fn, clearCache = false, remove = false) {
-    this[_renderers].push({fn, remove})
-    this.forceUpdate(clearCache)
+    const transform = this.transform.m,
+      pos = this.attr('pos'),
+      bound = this.originRect
+
+    drawingContext.save()
+    drawingContext.translate(pos[0], pos[1])
+    drawingContext.transform(...transform)
+    drawingContext.globalAlpha = this.attr('opacity')
+
+    let context = drawingContext
+
+    if(enableCache) {
+      context = this.cache
+      if(!context) {
+        context = createCanvas(bound[2], bound[3]).getContext('2d')
+      }
+    } else {
+      context.translate(bound[0], bound[1])
+    }
+
+    if(this[_beforeRenders].length) {
+      this[_beforeRenders] = this.userRender(t, context, this[_beforeRenders])
+    }
+    if(!enableCache || context !== this.cache) {
+      context = await this.render(t, context)
+      if(enableCache) this.cache = context
+    }
+    if(this[_afterRenders].length) {
+      this[_afterRenders] = this.userRender(t, context, this[_afterRenders])
+    }
+
+    if(this[_eventHandlers].update && this[_eventHandlers].update.length) {
+      this.dispatchEvent(
+        'update',
+        {
+          target: this, context, renderBox: this.renderBox, lastRenderBox: this.lastRenderBox,
+        },
+        true
+      )
+    }
+    this.lastRenderBox = this.renderBox
+
+    if(context !== drawingContext) {
+      drawingContext.drawImage(context.canvas, bound[0], bound[1])
+    }
+    drawingContext.restore()
+
+    return drawingContext
   }
+
+  @deprecate('BaseSprite#draw(fn, ...)', 'Instead use beforeDraw/afterDraw.')
+  _draw(fn, clearCache = false, remove = false) {
+    this.drawAfter(fn, clearCache, remove)
+  }
+
+  @deprecate('Instead use beforeDraw/afterDraw.')
   drawOnce(fn) {
-    this.draw(fn, true, true)
+    this._draw(fn, true, true)
+  }
+
+  drawBefore(fn, clearCache = false, remove = false) {
+    this[_beforeRenders].push({fn, clearCache, remove})
+    this.forceUpdate()
+  }
+
+  drawAfter(fn, clearCache = false, remove = false) {
+    this[_afterRenders].push({fn, clearCache, remove})
+    this.forceUpdate()
   }
 
   // call by layer
-  userRender(t, context) {
-    if(this[_renderers].length) {
-      const renderers = []
-
-      this[_renderers].forEach((renderer) => {
-        const {fn, remove} = renderer
-        fn.call(this, context, t, renderer)
-        if(!remove) {
-          renderers.push(renderer)
-        }
-      })
-
-      this[_renderers] = renderers
+  userRender(t, context, handlers) {
+    const renderers = []
+    for(let i = 0; i < handlers.length; i++) {
+      const renderer = handlers[i]
+      const {fn, remove, clearCache} = renderer
+      /* eslint-disable no-await-in-loop */
+      fn.call(this, context, t, renderer)
+      /* eslint-enable no-await-in-loop */
+      if(!remove) {
+        renderers.push(renderer)
+      }
+      if(clearCache) {
+        this.cache = null
+      }
     }
+    return renderers
   }
 
   render(t, drawingContext) {
@@ -444,21 +511,10 @@ class BaseSprite extends BaseNode {
       [offsetWidth, offsetHeight] = this.offsetSize,
       [clientWidth, clientHeight] = this.clientSize
 
-    let boxctx = drawingContext
+    const boxctx = drawingContext
 
     if(offsetWidth === 0 || offsetHeight === 0) {
       return boxctx // don't need to render
-    }
-
-    const bound = this.originRect
-
-    if(!boxctx) {
-      const box = createCanvas()
-      box.width = bound[2]
-      box.height = bound[3]
-      boxctx = box.getContext('2d')
-    } else {
-      boxctx.translate(bound[0], bound[1])
     }
 
     const [borderWidth, borderColor] = attr.border
