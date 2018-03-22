@@ -90,9 +90,11 @@ class BaseSprite extends BaseNode {
     }
   }
 
-  cloneNode() {
+  cloneNode(copyContent) {
     const node = new this.constructor()
-    node.initAttributes(this[_attr].serialize())
+    if(copyContent) {
+      node.initAttributes(this[_attr].serialize())
+    }
     return node
   }
 

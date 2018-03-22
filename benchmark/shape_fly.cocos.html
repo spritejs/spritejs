@@ -15,34 +15,22 @@
   </style>
 </head>
 <body>
+    <div>sprites: <span id="spriteCount">0</span></div>
   <canvas id="gameCanvas" width="800" height="800"></canvas>
   <script type="text/javascript" src="js/cocos2d-js-v3.13.js" charset="UTF-8"></script>
   <script type="text/javascript">
-    function addBird() {
+    function place(sprite) {
       let size = cc.director.getWinSize();
-      let sprite = cc.Sprite.createWithSpriteFrame(cc.spriteFrameCache.getSpriteFrame("bird1.png"));
       sprite.setPosition(size.width / 2, size.height / 2);
       sprite.anchor = [0.5, 0.5]
-      let allFrames = [];
-      for(let i = 1; i <= 3; i++){
-          let str = `bird${i}.png`;
-          let frame = cc.spriteFrameCache.getSpriteFrame(str);//new cc.SpriteFrame()
-
-          allFrames.push(frame);
-      }
-      this.addChild(sprite, 0);
-
-      var animation = new cc.Animation(allFrames,0.1);
-      var animate = new cc.Animate(animation);
-      var action = animate.repeatForever();//new cc.RepeatForever(animate)
-      sprite.runAction(action);
       randomMove(sprite);
+      spriteCount.innerHTML = Number(spriteCount.innerHTML) + 1;
       return sprite;
     }
 
-    function randomMove(bird) {
+    function randomMove(sprite) {
       const ang = Math.random() * 2 * Math.PI;
-      const {x: x0, y: y0} = bird;
+      const {x: x0, y: y0} = sprite;
       let {width, height} = cc.director.getWinSize();
       const x1 =  width / 2 + 350 * Math.cos(ang);
       const y1 =  height / 2 + 350 * Math.sin(ang);
@@ -54,13 +42,14 @@
       requestAnimationFrame(function f() {
         let p = (Date.now() - startTime) / T;
         p = Math.min(1.0, p);
-        bird.x = x0 + p * (x1 - x0);
-        bird.y = y0 + p * (y1 - y0);
+        sprite.x = x0 + p * (x1 - x0);
+        sprite.y = y0 + p * (y1 - y0);
+        sprite.rotation = 720 * p;
         if(p < 1){
           requestAnimationFrame(f);
         } else {
           setTimeout(() => {
-            randomMove(bird);
+            randomMove(sprite);
           }, 500)
         } 
       }) 
@@ -69,7 +58,7 @@
     window.onload = function(){
         cc.game.onStart = function(){
             //load resources
-            cc.LoaderScene.preload(["/res/birds.png", "/res/birds.json"], function () {
+            cc.LoaderScene.preload([], function () {
               const MyScene = cc.Scene.extend({
                   onEnter:function () {
                     this._super();
@@ -86,12 +75,19 @@
                   },
                   onEnter: function() {
                     this._super();
-                    cc.spriteFrameCache.addSpriteFrames("/res/birds.json", "/res/birds.png")
-                    
-                    addBird.call(this);
-
+                    function crateNode() {
+                      let drawNode = new cc.DrawNode();
+                      drawNode.clear();
+                      drawNode.drawDot(cc.p(0, 0), 10, cc.color(0, 0, 0, 255));
+                      drawNode.drawDot(cc.p(-20, 0), 10, cc.color(0, 0, 0, 255));
+                      drawNode.drawDot(cc.p(20, 0), 10, cc.color(0, 0, 0, 255));
+                      drawNode.drawDot(cc.p(0, 20), 10, cc.color(0, 0, 0, 255));
+                      drawNode.drawDot(cc.p(0, -20), 10, cc.color(0, 0, 0, 255));
+                      return drawNode;
+                    }
+                    this.addChild(place(crateNode()), 0);
                     gameCanvas.addEventListener('click', evt => {
-                      addBird.call(this);
+                      this.addChild(place(crateNode()), 0);
                     })
                   }
               });
