@@ -5,7 +5,7 @@
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
-A lightweight 2D canvas rendering engine for modern browsers with ES6+.
+SpriteJS is a cross-platform lightweight 2D render object model.
 
 Manipulate the **sprites** in canvas as you do with the DOM elements.
 

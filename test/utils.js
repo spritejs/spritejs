@@ -14,7 +14,6 @@ import {
   boxUnion,
   appendUnit,
   rectVertices,
-  defer,
 } from '../src/utils'
 
 function floatEqual(a, b, precision = 0.01) {
@@ -26,12 +25,10 @@ test('color', (t) => {
   t.is(red.toString(), 'rgba(255,0,0,1)')
 
   const c1 = parseColor('#ff0')
-  t.is(c1.red, 255)
-  t.is(c1.green, 255)
-  t.is(c1.blue, 0)
+  t.deepEqual(c1.value, [255, 255, 0, 1])
 
   const c2 = parseColor('rgba(0,0,0,.5)')
-  t.truthy(floatEqual(c2.alpha, 0.5))
+  t.truthy(floatEqual(c2.value[3], 0.5))
 })
 
 test('parseColorString', (t) => {

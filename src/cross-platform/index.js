@@ -1,8 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
 
-import {memoize} from '../decorators'
-
 let nodeCanvas = null
 try {
   nodeCanvas = require('canvas')
@@ -63,99 +61,6 @@ export function loadImage(src) {
 
   return promise
 }
-
-// http://jsfiddle.net/joquery/cQXgd/
-function measureFontHeight(context, text = 'fißgPauljMPÜÖÄ') {
-  const sourceWidth = context.canvas.width,
-    sourceHeight = context.canvas.height
-
-  // place the text somewhere
-  context.textAlign = 'left'
-  context.textBaseline = 'top'
-  context.fillText(text, 25, 0)
-
-  // returns an array containing the sum of all pixels in a canvas
-  // * 4 (red, green, blue, alpha)
-  // [pixel1Red, pixel1Green, pixel1Blue, pixel1Alpha, pixel2Red ...]
-  const data = context.getImageData(0, 0, sourceWidth, sourceHeight).data
-
-  let firstY = -1
-  let lastY = -1
-
-  // loop through each row
-  for(let y = 0; y < sourceHeight; y++) {
-    // loop through each column
-    for(let x = 0; x < sourceWidth; x++) {
-      // let red = data[((sourceWidth * y) + x) * 4]
-      // let green = data[((sourceWidth * y) + x) * 4 + 1]
-      // let blue = data[((sourceWidth * y) + x) * 4 + 2]
-      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
-
-      if(alpha > 0) {
-        firstY = y
-        // exit the loop
-        break
-      }
-    }
-    if(firstY >= 0) {
-      // exit the loop
-      break
-    }
-  }
-
-  // loop through each row, this time beginning from the last row
-  for(let y = sourceHeight; y > 0; y--) {
-    // loop through each column
-    for(let x = 0; x < sourceWidth; x++) {
-      const alpha = data[((sourceWidth * y) + x) * 4 + 3]
-      if(alpha > 0) {
-        lastY = y
-        // exit the loop
-        break
-      }
-    }
-    if(lastY >= 0) {
-      // exit the loop
-      break
-    }
-  }
-
-  return {
-    // The actual height
-    textHeight: lastY - firstY,
-
-    height: lastY + firstY,
-
-    // The first pixel
-    firstPixel: firstY,
-
-    // The last pixel
-    lastPixel: lastY,
-  }
-}
-
-const MAX_SIZE = 2048
-
-const measureText = memoize((text, font, lineHeight = '') => {
-  lineHeight = parseInt(lineHeight, 10) || 0 // warn: only support px
-  const canvas = createCanvas(MAX_SIZE, MAX_SIZE),
-    ctx = canvas.getContext('2d')
-
-  if(font) ctx.font = font
-
-  const {width} = ctx.measureText(text)
-
-  // canvas.width = width
-  // canvas.height = width * 3
-
-  const {height} = measureFontHeight(ctx)
-
-  const size = [width, Math.max(height, lineHeight)]
-
-  return size
-})
-
-export {measureText}
 
 export function createPathSVG(d, lineWidth, lineCap, lineJoin, strokeColor, fillColor, width = MAX_SIZE, height = MAX_SIZE) {
   const tpl = `

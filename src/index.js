@@ -5,7 +5,7 @@ import Scene from './scene'
 import Resource from './resource'
 import Path from './path'
 import {setDeprecation} from './decorators'
-import {parseColor} from './utils'
+import {Color, parseColor} from './utils'
 import Axis from './axis'
 import {registerNodeType, createNode} from './nodetype'
 import {Matrix, Vector} from './math'
@@ -18,8 +18,6 @@ registerNodeType('label', Label)
 registerNodeType('path', Path)
 registerNodeType('axis', Axis)
 registerNodeType('group', Group)
-
-const Color = parseColor
 
 function Paper2D(...args) {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.')
@@ -36,6 +34,7 @@ export {
   Label,
   Path,
   Color,
+  parseColor,
   Axis,
   registerNodeType,
   createNode,
