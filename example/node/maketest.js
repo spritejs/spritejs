@@ -25,6 +25,8 @@ text1.attr({
   color: '#fff',
   bgcolor: 'blue',
   renderMode: 'stroke',
+  lineHeight: 75,
+  padding: [0, 50, 0, 50],
 })
 
 const canvas = createCanvas(800, 600)

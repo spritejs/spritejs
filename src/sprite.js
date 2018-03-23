@@ -4,6 +4,7 @@ import filters from './filters'
 
 import {rectToBox, boxToRect, boxUnion} from './utils'
 import {createCanvas} from './cross-platform'
+import {attr} from './decorators'
 
 const _texturesCache = Symbol('_texturesCache')
 
@@ -46,6 +47,13 @@ function getTextureSize(attr, textures) {
 }
 
 class TextureAttr extends BaseSprite.Attr {
+  constructor(subject) {
+    super(subject)
+    this.setDefault({
+      texturesSize: [0, 0],
+      textures: [],
+    })
+  }
   /*
     {
       src: ...,   //texture path
@@ -54,6 +62,7 @@ class TextureAttr extends BaseSprite.Attr {
       filter: ...  //texture filters
     }
    */
+  @attr
   set textures(textures) {
     if(!Array.isArray(textures)) {
       textures = [textures]
@@ -76,12 +85,9 @@ class TextureAttr extends BaseSprite.Attr {
 
     this.set('textures', textures)
   }
-  get textures() {
-    return this.get('textures')
-  }
 
   get texturesSize() {
-    return this.get('texturesSize') || [0, 0]
+    return this.get('texturesSize')
   }
 }
 
@@ -189,18 +195,16 @@ export default class Sprite extends BaseSprite {
   }
 
   async render(t, drawingContext) {
-    let context
+    let context = super.render(t, drawingContext)
     const textures = this.textures
 
-    if(textures) {
+    if(textures && textures.length) {
       const attr = this.attr(),
         borderWidth = attr.border[0]
 
       // load textures
       const promises = textures.map(texture => Resource.loadTexture(texture))
       const texturesWithImg = await Promise.all(promises)
-
-      context = super.render(t, drawingContext)
 
       texturesWithImg.forEach(({texture, img, sprite}) => {
         const rect = (texture.rect || [0, 0, ...this.innerSize]).slice(0)

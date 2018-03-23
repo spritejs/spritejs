@@ -1,6 +1,7 @@
 import BaseSprite from './basesprite'
-
-import {parseColorString, getLinearGradients} from './utils'
+import {attr, deprecate} from './decorators'
+import {parseColorString} from './utils'
+import {createLinearGradients} from './gradient'
 const parseFont = require('./font/parse-font')
 
 const measureText = (node, text, font, lineHeight = '') => {
@@ -13,7 +14,7 @@ const measureText = (node, text, font, lineHeight = '') => {
   const {width} = ctx.measureText(text)
   const height = parseFont(font).size * 1.2
   ctx.restore()
-  return [width, height]
+  return [width, Math.max(height, lineHeight)]
 }
 
 function calculTextboxSize(node, text, font, lineHeight) {
@@ -36,71 +37,69 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     this.setDefault({
       font: '16px Arial',
       textAlign: 'left',
-      color: parseColorString('black'),
+      strokeColor: '',
+      fillColor: '',
       lineHeight: '',
-      renderMode: 'fill',
       text: '',
       textboxSize: '',
+    }, {
+      color: {
+        get() {
+          return this.strokeColor
+        },
+      },
     })
   }
 
+  @attr
   set text(val) {
     val = String(val)
     this.clearCache()
     this.set('textboxSize', '')
     this.set('text', val)
   }
-  get text() {
-    return this.get('text')
-  }
 
+  @attr
   set textboxSize(val) {
     this.set('textboxSize', val)
   }
-  get textboxSize() {
-    return this.get('textboxSize')
-  }
 
+  @attr
   set font(val) {
     this.clearCache()
     this.set('textboxSize', '')
     this.set('font', val)
   }
-  get font() {
-    return this.get('font')
-  }
 
+  @attr
   set lineHeight(val) {
     this.clearCache()
     this.set('textboxSize', '')
     this.set('lineHeight', val)
   }
-  get lineHeight() {
-    return this.get('lineHeight')
-  }
 
+  @attr
   set textAlign(val) {
     this.clearCache()
     this.set('textAlign', val)
   }
-  get textAlign() {
-    return this.get('textAlign')
-  }
 
-  set renderMode(val) {
-    this.clearCache()
-    this.set('renderMode', val)
-  }
-  get renderMode() {
-    return this.get('renderMode')
-  }
-
+  @attr
+  @deprecate('Instead use strokeColor.')
   set color(val) {
-    this.clearCache()
-    this.set('color', parseColorString(val))
+    this.strokeColor = val
   }
-  get color() {
-    return this.get('color')
+
+  @attr
+  set strokeColor(val) {
+    this.clearCache()
+    this.set('strokeColor', parseColorString(val))
+  }
+
+  @attr
+  set fillColor(val) {
+    this.clearCache()
+    this.set('fillColor', parseColorString(val))
   }
 }
 
@@ -140,32 +139,45 @@ class Label extends BaseSprite {
     const context = super.render(t, drawingContext),
       attr = this.attr(),
       text = this.text,
-      font = attr.font,
-      renderMode = attr.renderMode
+      font = attr.font
 
     if(text) {
       context.font = attr.font
-      const color = attr.color
       const lines = this.text.split(/\n/)
+      let {strokeColor, fillColor} = attr
+      if(!strokeColor && !fillColor) {
+        fillColor = parseColorString('black')
+      }
 
       context.textBaseline = 'top'
 
       const align = attr.textAlign,
         [width, height] = this.contentSize
 
-      context.strokeStyle = context.fillStyle = color
       context.textBaseline = 'middle'
 
       const [borderWidth] = this.attr('border')
 
       const linearGradients = attr.linearGradients
 
-      if(linearGradients && linearGradients.text) {
-        const rect = linearGradients.text.rect || [borderWidth, borderWidth,
+      if(linearGradients && linearGradients.strokeColor) {
+        const rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth,
           width, height]
 
-        context.strokeStyle = context.fillStyle
-          = getLinearGradients(context, rect, linearGradients.text)
+        context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
+      } else {
+        context.strokeStyle = strokeColor
+      }
+
+      if(fillColor) {
+        if(linearGradients && linearGradients.fillColor) {
+          const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
+            width, height]
+
+          context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
+        } else {
+          context.fillStyle = fillColor
+        }
       }
 
       let top = borderWidth
@@ -180,9 +192,10 @@ class Label extends BaseSprite {
           left += width - w
         }
 
-        if(renderMode === 'fill') {
+        if(fillColor) {
           context.fillText(line, left, top + h / 2)
-        } else {
+        }
+        if(strokeColor) {
           context.strokeText(line, left, top + h / 2)
         }
 

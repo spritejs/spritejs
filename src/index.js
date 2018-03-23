@@ -11,7 +11,11 @@ import {registerNodeType, createNode} from './nodetype'
 import {Matrix, Vector} from './math'
 import Group from './group'
 import {Effects} from 'sprite-animator'
-import './cross-platform/shim'
+import {shim} from './cross-platform'
+
+if(shim) {
+  shim()
+}
 
 registerNodeType('sprite', Sprite)
 registerNodeType('label', Label)

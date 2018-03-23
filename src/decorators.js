@@ -1,5 +1,15 @@
 const deprecationSet = new Set()
 
+export function attr(target, prop, descriptor) {
+  if(descriptor.get) {
+    throw new Error(`Attributes' getter ${prop} can not be override!`)
+  }
+  descriptor.get = function () {
+    return this.get(prop)
+  }
+  return descriptor
+}
+
 export function setDeprecation(apiName, msg = '') {
   msg = `[Deprecation] ${apiName} has been deprecated.${msg}`
   if(!deprecationSet.has(msg)) {
@@ -58,32 +68,5 @@ export function parseValue(...parsers) {
     }
 
     return descriptor
-  }
-}
-
-// export function defaultValue(val){
-//   return function(target, prop, descriptor){
-//     const getter = descriptor.get
-
-//     descriptor.get = function () {
-//       const ret = getter.call(this)
-//       return ret != null ? ret : val
-//     }
-
-//     return descriptor
-//   }
-// }
-
-// functional decorators
-
-export function memoize(fn, serializer = JSON.stringify) {
-  const cache = {}
-  return function (...args) {
-    const key = serializer(args)
-    if(!(key in cache)) {
-      cache[key] = fn.apply(this, args)
-    }
-
-    return cache[key]
   }
 }

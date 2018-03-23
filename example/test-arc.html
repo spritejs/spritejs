@@ -47,50 +47,29 @@
         this.set('radius', val)
         this.clearCache()
       }
-      get radius() {
-        return this.get('radius')
-      }
       set fillColor(val) {
-        this.set('fillColor', Color(val).str)
+        this.set('fillColor', new Color(val).str)
         this.clearCache()
-      }
-      get fillColor() {
-        return this.get('fillColor')
       }
       set strokeColor(val) {
-        this.set('strokeColor', Color(val).str)
+        this.set('strokeColor', new Color(val).str)
         this.clearCache()
-      }
-      get strokeColor() {
-        return this.get('strokeColor')
       }
       set renderMode(val) {
         this.set('renderMode', val)
         this.clearCache()
       }
-      get renderMode() {
-        return this.get('renderMode')
-      }
       set lineWidth(val) {
         this.set('lineWidth', val)
         this.clearCache()
-      }
-      get lineWidth() {
-        return this.get('lineWidth')
       }
       set angle(val) {
         this.set('angle', val)
         this.clearCache()
       }
-      get angle() {
-        return this.get('angle')
-      }
       set direction(val) {
         this.set('direction', val)
         this.clearCache()
-      }
-      get direction() {
-        return this.get('direction')
       }
     }
 
@@ -121,8 +100,8 @@
 
         return [width, height]
       }
-      render(t) {
-        const context = super.render(t)
+      render(t, drawingContext) {
+        const context = super.render(t, drawingContext)
         const r = this.attr('radius')
 
         if(r) {

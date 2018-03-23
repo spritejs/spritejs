@@ -7,8 +7,7 @@
     "example": "example"
   },
   "browser": {
-    "./src/cross-platform": "./src/cross-platform/browser",
-    "./src/cross-platform/shim": false
+    "./src/cross-platform": "./src/cross-platform/browser"
   },
   "scripts": {
     "test": "nyc ava",
