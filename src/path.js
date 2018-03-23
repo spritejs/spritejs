@@ -1,6 +1,7 @@
 import BaseSprite from './basesprite'
 
-import {parseColorString, getLinearGradients} from './utils'
+import {parseColorString} from './utils'
+import {createLinearGradients} from './gradient'
 
 import {Effects} from 'sprite-animator'
 import pathEffect from './path-effect'
@@ -8,6 +9,7 @@ import pathEffect from './path-effect'
 Effects.d = pathEffect
 
 import {createPath, calPathRect} from './cross-platform'
+import {deprecate, attr} from './decorators'
 
 function getBoundingBox(lineWidth, pathRect) {
   const [x, y, width, height] = pathRect,
@@ -28,9 +30,16 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       // d: path2d,
       boxSize: [0, 0],
       pathRect: [0, 0, 0, 0],
+    }, {
+      color: {
+        get() {
+          return this.strokeColor
+        },
+      },
     })
   }
 
+  @attr
   set d(val) {
     this.clearCache()
     if(val != null) {
@@ -52,24 +61,14 @@ export class PathSpriteAttr extends BaseSprite.Attr {
     this.translate = [x0 + box[0] - offset[0], y0 + box[1] - offset[1]]
     this.set('dOffset', [box[0], box[1]])
   }
-  get d() {
-    return this.get('d')
-  }
 
-  get boxSize() {
-    return this.get('boxSize')
-  }
-
-  get pathRect() {
-    return this.get('pathRect')
-  }
-
+  @attr
   set lineWidth(val) {
     this.clearCache()
     this.set('lineWidth', Math.round(val))
 
     if(this.d) {
-      const pathRect = this.pathRect
+      const pathRect = this.get('pathRect')
       const box = getBoundingBox(this.lineWidth, pathRect)
       this.set('boxSize', [box[2] - box[0], box[3] - box[1]])
 
@@ -80,53 +79,41 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       this.set('dOffset', [box[0], box[1]])
     }
   }
-  get lineWidth() {
-    return this.get('lineWidth')
-  }
 
   /**
     lineCap: butt|round|square
    */
+  @attr
   set lineCap(val) {
     this.clearCache()
     this.set('lineCap', val)
-  }
-  get lineCap() {
-    return this.get('lineCap')
   }
 
   /**
     lineJoin: miter|round|bevel
    */
+  @attr
   set lineJoin(val) {
     this.clearCache()
     this.set('lineJoin', val)
   }
-  get lineJoin() {
-    return this.get('lineJoin')
-  }
 
+  @attr
+  @deprecate('Instead use strokeColor.')
   set color(val) {
     this.strokeColor = val
   }
-  get color() {
-    return this.strokeColor
-  }
 
+  @attr
   set strokeColor(val) {
     this.clearCache()
     this.set('strokeColor', parseColorString(val))
   }
-  get strokeColor() {
-    return this.get('strokeColor')
-  }
 
+  @attr
   set fillColor(val) {
     this.clearCache()
     this.set('fillColor', parseColorString(val))
-  }
-  get fillColor() {
-    return this.get('fillColor')
   }
 }
 
@@ -195,7 +182,7 @@ class Path extends BaseSprite {
         const rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth,
           width, height]
 
-        context.strokeStyle = getLinearGradients(context, rect, linearGradients.strokeColor)
+        context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
       } else {
         context.strokeStyle = strokeColor
       }
@@ -207,7 +194,7 @@ class Path extends BaseSprite {
           const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
             width, height]
 
-          context.fillStyle = getLinearGradients(context, rect, linearGradients.fillColor)
+          context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
         } else {
           context.fillStyle = fillColor
         }

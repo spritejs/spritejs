@@ -1,8 +1,7 @@
-import {parseValue} from './decorators'
+import {parseValue, attr} from './decorators'
 import {Matrix} from './math'
 import {parseColorString, oneOrTwoValues, fourValuesShortCut,
   parseStringInt, parseStringFloat, parseStringTransform} from './utils'
-import {createPath} from './cross-platform'
 
 const _attr = Symbol('attr'),
   _temp = Symbol('store'),
@@ -26,8 +25,8 @@ class SpriteAttr {
       scale: [1, 1],
       translate: [0, 0],
       skew: [0, 0],
-      transform: [1, 0, 0, 1, 0, 0],
-      transformStr: 'matrix(1,0,0,1,0,0)',
+      transform: 'matrix(1,0,0,1,0,0)',
+      transformMatrix: [1, 0, 0, 1, 0, 0],
       border: [0, 'rgba(0,0,0,0)'],
       borderRadius: 0,
       padding: [0, 0, 0, 0],
@@ -35,13 +34,25 @@ class SpriteAttr {
       offsetRotate: 'auto',
       linearGradients: {},
       offsetDistance: 0,
+    }, {
+      pos: {
+        get() {
+          return [this.x, this.y]
+        },
+      },
+      size: {
+        get() {
+          return [this.width, this.height]
+        },
+      },
     })
     this[_temp] = new Map() // save non-serialized values
   }
 
-  setDefault(attrs) {
+  setDefault(attrs, props = {}) {
     Object.assign(this[_default], attrs)
     Object.assign(this[_attr], attrs)
+    Object.defineProperties(this[_attr], props)
   }
 
   getAttrState() {
@@ -102,42 +113,34 @@ class SpriteAttr {
     return this[_subject]
   }
 
+  /* ------------------- define attributes ----------------------- */
+  @attr
   set id(val) {
-    return this.saveObj('id', String(val))
-  }
-  get id() {
-    return this.loadObj('id')
+    return this.quietSet('id', String(val))
   }
 
+  @attr
   set name(val) {
     return this.quietSet('name', String(val))
   }
-  get name() {
-    return this.get('name')
-  }
 
+  @attr
   @parseValue(parseStringFloat, oneOrTwoValues)
   set anchor(val) {
     this.set('anchor', val)
   }
-  get anchor() {
-    return this.get('anchor')
-  }
 
+  @attr
   set x(val) {
     this.set('x', Math.round(val))
   }
-  get x() {
-    return this.get('x')
-  }
 
+  @attr
   set y(val) {
     this.set('y', Math.round(val))
   }
-  get y() {
-    return this.get('y')
-  }
 
+  @attr
   @parseValue(parseStringInt)
   set pos(val) {
     if(val == null) {
@@ -147,42 +150,32 @@ class SpriteAttr {
     this.x = x
     this.y = y
   }
-  get pos() {
-    return [this.x, this.y]
-  }
 
+  @attr
   @parseValue(parseColorString)
   set bgcolor(val) {
     this.clearCache()
     this.set('bgcolor', val)
   }
-  get bgcolor() {
-    return this.get('bgcolor')
-  }
 
+  @attr
   set opacity(val) {
     this.set('opacity', val)
   }
-  get opacity() {
-    return this.get('opacity')
-  }
 
+  @attr
   set width(val) {
     this.clearCache()
     this.set('width', Math.round(val))
   }
-  get width() {
-    return this.get('width')
-  }
 
+  @attr
   set height(val) {
     this.clearCache()
     this.set('height', Math.round(val))
   }
-  get height() {
-    return this.get('height')
-  }
 
+  @attr
   @parseValue(parseStringInt)
   set size(val) {
     if(val == null) {
@@ -192,37 +185,29 @@ class SpriteAttr {
     this.width = width
     this.height = height
   }
-  get size() {
-    return [this.width, this.height]
-  }
 
+  @attr
   set border(val) {
     this.clearCache()
     const [width, color] = val
     this.set('border', [width, parseColorString(color)])
   }
-  get border() {
-    return this.get('border')
-  }
 
+  @attr
   @parseValue(parseStringInt, fourValuesShortCut)
   set padding(val) {
     this.clearCache()
     this.set('padding', val)
   }
-  get padding() {
-    return this.get('padding')
-  }
 
+  @attr
   set borderRadius(val) {
     this.clearCache()
     this.set('borderRadius', val)
   }
-  get borderRadius() {
-    return this.get('borderRadius')
-  }
 
   // transform attributes
+  @attr
   @parseValue(parseStringTransform)
   set transform(val) {
     /*
@@ -240,38 +225,34 @@ class SpriteAttr {
     })
 
     if(Array.isArray(val)) {
-      this.set('transform', val)
-      this.set('transformStr', `matrix(${val})`)
+      this.set('transformMatrix', val)
+      this.set('transform', `matrix(${val})`)
     } else {
-      this.set('transform', [1, 0, 0, 1, 0, 0])
+      this.set('transformMatrix', [1, 0, 0, 1, 0, 0])
       const transformStr = []
 
       Object.entries(val).forEach(([key, value]) => {
         if(key === 'matrix' && Array.isArray(value)) {
-          this.set('transform', new Matrix(value).m)
+          this.set('transformMatrix', new Matrix(value).m)
         } else {
           this[key] = value
         }
         transformStr.push(`${key}(${value})`)
       })
 
-      this.set('transformStr', transformStr.join(' '))
+      this.set('transform', transformStr.join(' '))
     }
   }
-  get transform() {
-    return this.get('transformStr')
-  }
 
+  @attr
   set rotate(val) {
     const delta = this.get('rotate') - val
     this.set('rotate', val)
-    const transform = new Matrix(this.get('transform')).rotate(-delta)
-    this.set('transform', transform.m)
-  }
-  get rotate() {
-    return this.get('rotate')
+    const transform = new Matrix(this.get('transformMatrix')).rotate(-delta)
+    this.set('transformMatrix', transform.m)
   }
 
+  @attr
   set scale(val) {
     val = oneOrTwoValues(val)
     const oldVal = this.get('scale')
@@ -283,47 +264,38 @@ class SpriteAttr {
       this.rotate -= offsetAngle
     }
 
-    const transform = new Matrix(this.get('transform'))
+    const transform = new Matrix(this.get('transformMatrix'))
     transform.scale(...delta)
-    this.set('transform', transform.m)
+    this.set('transformMatrix', transform.m)
 
     if(offsetAngle) {
       this.rotate += offsetAngle
     }
   }
-  get scale() {
-    return this.get('scale')
-  }
 
+  @attr
   set translate(val) {
     const oldVal = this.get('translate')
     const delta = [val[0] - oldVal[0], val[1] - oldVal[1]]
     this.set('translate', val)
-    const transform = new Matrix(this.get('transform'))
+    const transform = new Matrix(this.get('transformMatrix'))
     transform.translate(...delta)
-    this.set('transform', transform.m)
-  }
-  get translate() {
-    return this.get('translate')
+    this.set('transformMatrix', transform.m)
   }
 
+  @attr
   set skew(val) {
     const oldVal = this.get('skew')
     const invm = new Matrix().skew(...oldVal).inverse()
     this.set('skew', val)
-    const transform = new Matrix(this.get('transform'))
+    const transform = new Matrix(this.get('transformMatrix'))
     transform.multiply(invm).skew(...val)
-    this.set('transform', transform.m)
-  }
-  get skew() {
-    return this.get('skew')
+    this.set('transformMatrix', transform.m)
   }
 
+  @attr
   set zIndex(val) {
     this.set('zIndex', val)
-  }
-  get zIndex() {
-    return this.get('zIndex')
   }
 
   /**
@@ -339,93 +311,10 @@ class SpriteAttr {
       }
     }
    */
+  @attr
   set linearGradients(val) {
     this.clearCache()
     this.set('linearGradients', val)
-  }
-  get linearGradients() {
-    return this.get('linearGradients')
-  }
-
-  set offsetPath(val) {
-    const offsetPath = createPath(val)
-
-    this.set('offsetPath', offsetPath.getAttribute('d'))
-    this.saveObj('offsetPath', offsetPath)
-    this.resetOffset()
-  }
-  get offsetPath() {
-    return this.get('offsetPath')
-  }
-
-  set offsetDistance(val) {
-    this.set('offsetDistance', val)
-    this.resetOffset()
-  }
-  get offsetDistance() {
-    return this.get('offsetDistance')
-  }
-
-  set offsetRotate(val) {
-    this.set('offsetRotate', val)
-    this.resetOffset()
-  }
-  get offsetRotate() {
-    return this.get('offsetRotate')
-  }
-
-  resetOffset() {
-    let offsetPath = this.get('offsetPath')
-    const dis = this.offsetDistance
-
-    if(offsetPath) {
-      const pathObj = this.loadObj('offsetPath')
-      if(pathObj) {
-        offsetPath = pathObj
-      } else {
-        offsetPath = createPath(offsetPath)
-        this.saveObj('offsetPath', offsetPath)
-      }
-    }
-
-    if(offsetPath != null) {
-      const len = dis * offsetPath.getTotalLength(),
-        {x, y} = offsetPath.getPointAtLength(len)
-
-      let angle = this.offsetRotate
-      if(angle === 'auto' || angle === 'reverse') {
-        const delta = offsetPath.getPointAtLength(angle === 'auto' ? len + 1 : len - 1)
-        const x1 = delta.x,
-          y1 = delta.y
-
-        if(x1 === x && y1 === y) { // last point
-          angle = this.get('offsetAngle')
-        } else {
-          angle = 180 * Math.atan2(y1 - y, x1 - x) / Math.PI
-        }
-
-        if(this.offsetRotate === 'reverse') {
-          angle = -angle
-        }
-      }
-
-      const offsetAngle = this.get('offsetAngle')
-
-      if(offsetAngle) {
-        this.rotate -= offsetAngle
-      }
-
-      this.set('offsetAngle', angle)
-      this.rotate += angle
-
-      const offsetPoint = this.get('offsetPoint')
-      if(offsetPoint) {
-        this.pos = [this.x - offsetPoint[0], this.y - offsetPoint[1]]
-      }
-
-      this.set('offsetPoint', [x, y])
-      this.pos = [this.x + x, this.y + y]
-    }
   }
 }
 

@@ -70,3 +70,96 @@ export function getContainer(container) {
   }
   return container
 }
+
+import SpriteAttr from '../../attr'
+
+export function shim() {
+  Object.defineProperties(SpriteAttr.prototype, {
+    offsetPath: {
+      set(val) {
+        const offsetPath = createPath(val)
+
+        this.set('offsetPath', offsetPath.getAttribute('d'))
+        this.saveObj('offsetPath', offsetPath)
+        this.resetOffset()
+      },
+      get() {
+        return this.get('offsetPath')
+      },
+    },
+    offsetDistance: {
+      set(val) {
+        this.set('offsetDistance', val)
+        this.resetOffset()
+      },
+      get() {
+        return this.get('offsetDistance')
+      },
+    },
+    offsetRotate: {
+      set(val) {
+        this.set('offsetRotate', val)
+        this.resetOffset()
+      },
+      get() {
+        return this.get('offsetRotate')
+      },
+    },
+  })
+
+  Object.assign(SpriteAttr.prototype, {
+    resetOffset() {
+      let offsetPath = this.get('offsetPath')
+      const dis = this.offsetDistance
+
+      if(offsetPath) {
+        const pathObj = this.loadObj('offsetPath')
+        if(pathObj) {
+          offsetPath = pathObj
+        } else {
+          offsetPath = createPath(offsetPath)
+          this.saveObj('offsetPath', offsetPath)
+        }
+      }
+
+      if(offsetPath != null) {
+        const len = dis * offsetPath.getTotalLength(),
+          {x, y} = offsetPath.getPointAtLength(len)
+
+        let angle = this.offsetRotate
+        if(angle === 'auto' || angle === 'reverse') {
+          const delta = offsetPath.getPointAtLength(angle === 'auto' ? len + 1 : len - 1)
+          const x1 = delta.x,
+            y1 = delta.y
+
+          if(x1 === x && y1 === y) { // last point
+            angle = this.get('offsetAngle')
+          } else {
+            angle = 180 * Math.atan2(y1 - y, x1 - x) / Math.PI
+          }
+
+          if(this.offsetRotate === 'reverse') {
+            angle = -angle
+          }
+        }
+
+        const offsetAngle = this.get('offsetAngle')
+
+        if(offsetAngle) {
+          this.rotate -= offsetAngle
+        }
+
+        this.set('offsetAngle', angle)
+        this.rotate += angle
+
+        const offsetPoint = this.get('offsetPoint')
+        if(offsetPoint) {
+          this.pos = [this.x - offsetPoint[0], this.y - offsetPoint[1]]
+        }
+
+        this.set('offsetPoint', [x, y])
+        this.pos = [this.x + x, this.y + y]
+      }
+    },
+  })
+}

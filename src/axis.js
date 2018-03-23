@@ -2,7 +2,7 @@ import Path from './path'
 import Label from './label'
 import Sprite from './sprite'
 
-import {parseValue} from './decorators'
+import {parseValue, attr} from './decorators'
 import {parseStringFloat, parseColorString} from './utils'
 
 const _axisPath = Symbol('axisPath'),
@@ -147,86 +147,63 @@ class AxisSpriteAttr extends Sprite.Attr {
     })
   }
 
+  @attr
   set font(val) {
     this.clearCache()
     this.set('font', val)
     ticksToD(this.subject)
   }
-  get font() {
-    return this.get('font')
-  }
 
+  @attr
   set direction(val) {
     this.clearCache()
     this.set('direction', val)
     ticksToD(this.subject)
   }
-  get direction() {
-    return this.get('direction')
-  }
 
+  @attr
   set length(val) {
     this.clearCache()
     this.set('length', val)
     ticksToD(this.subject)
   }
-  get length() {
-    return this.get('length')
-  }
 
+  @attr
   set vLength(val) {
     this.clearCache()
     this.set('vLength', Math.round(val))
     ticksToD(this.subject)
   }
-  get vLength() {
-    return this.get('vLength')
-  }
 
+  @attr
   @parseValue(parseStringFloat)
   set ticks(ticks) {
     this.clearCache()
     this.set('ticks', ticks.sort((a, b) => a - b))
     ticksToD(this.subject)
   }
-  get ticks() {
-    return this.get('ticks')
-  }
 
   // set d3 scales
+  @attr
   set axisScales(val) {
     this.clearCache()
     this.set('axisScales', val)
     ticksToD(this.subject)
   }
-  get axisScales() {
-    return this.get('axisScales')
-  }
 
-  get d() {
-    if(this.subject && this.subject[_axisPath]) {
-      return this.subject[_axisPath].d
-    }
-    return null
-  }
-
+  @attr
   set lineWidth(val) {
     this.clearCache()
     this.set('lineWidth', val)
     ticksToD(this.subject)
   }
-  get lineWidth() {
-    return this.get('lineWidth')
-  }
 
+  @attr
   @parseValue(parseColorString)
   set color(val) {
     this.clearCache()
     this.set('color', val)
     ticksToD(this.subject)
-  }
-  get color() {
-    return this.get('color')
   }
 }
 

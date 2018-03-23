@@ -4,7 +4,8 @@ import {Matrix, Vector} from './math'
 import Layer from './layer'
 import Animation from './animation'
 import {deprecate} from './decorators'
-import {getLinearGradients, rectVertices} from './utils'
+import {rectVertices} from './utils'
+import {createLinearGradients} from './gradient'
 import {createCanvas} from './cross-platform'
 
 const _attr = Symbol('attr'),
@@ -129,15 +130,10 @@ class BaseSprite extends BaseNode {
         Object.assign(this[_attr], {[props]: val})
         return this
       }
-      return this[_attr][props]
+      const attrs = this[_attr].attrs
+      return attrs[props]
     }
-    // const ret = {}
-    // /* eslint-disable no-restricted-syntax */
-    // for(const prop in this[_attr]) {
-    //   ret[prop] = this[_attr][prop]
-    // }
-    // /* eslint-enable no-restricted-syntax */
-    // return ret
+
     return this[_attr].attrs
   }
   attrs() {
@@ -145,7 +141,7 @@ class BaseSprite extends BaseNode {
   }
 
   get transform() {
-    return new Matrix(this[_attr].get('transform'))
+    return new Matrix(this[_attr].get('transformMatrix'))
   }
 
   animate(frames, timing) {
@@ -410,7 +406,7 @@ class BaseSprite extends BaseNode {
     if(typeof drawingContext === 'function') {
       return this._draw(drawingContext, enableCache, t)
     }
-
+    this[_context] = drawingContext
     const transform = this.transform.m,
       pos = this.attr('pos'),
       bound = this.originRect
@@ -503,6 +499,7 @@ class BaseSprite extends BaseNode {
 
   render(t, drawingContext) {
     this[_paths] = []
+    this[_context] = drawingContext
 
     const attr = this.attr(),
       bgcolor = attr.bgcolor,
@@ -510,44 +507,41 @@ class BaseSprite extends BaseNode {
       [offsetWidth, offsetHeight] = this.offsetSize,
       [clientWidth, clientHeight] = this.clientSize
 
-    const boxctx = drawingContext
-    this[_context] = boxctx
-
     if(offsetWidth === 0 || offsetHeight === 0) {
-      return boxctx // don't need to render
+      return drawingContext // don't need to render
     }
 
     const [borderWidth, borderColor] = attr.border
     const borderRadius = attr.borderRadius
 
-    boxctx.save()
+    drawingContext.save()
 
     // draw border
     if(borderWidth || linearGradients && linearGradients.border) {
-      boxctx.lineWidth = borderWidth
+      drawingContext.lineWidth = borderWidth
 
       const [x, y, w, h, r] = [borderWidth / 2, borderWidth / 2,
         offsetWidth - borderWidth, offsetHeight - borderWidth,
         borderRadius]
 
-      boxctx.beginPath()
-      boxctx.moveTo(x + r, y)
-      boxctx.arcTo(x + w, y, x + w, y + h, r)
-      boxctx.arcTo(x + w, y + h, x, y + h, r)
-      boxctx.arcTo(x, y + h, x, y, r)
-      boxctx.arcTo(x, y, x + w, y, r)
-      boxctx.closePath()
+      drawingContext.beginPath()
+      drawingContext.moveTo(x + r, y)
+      drawingContext.arcTo(x + w, y, x + w, y + h, r)
+      drawingContext.arcTo(x + w, y + h, x, y + h, r)
+      drawingContext.arcTo(x, y + h, x, y, r)
+      drawingContext.arcTo(x, y, x + w, y, r)
+      drawingContext.closePath()
 
       if(linearGradients && linearGradients.border) {
         const rect = linearGradients.border.rect || [x, y, w, h]
 
-        boxctx.strokeStyle = getLinearGradients(boxctx, rect, linearGradients.border)
+        drawingContext.strokeStyle = createLinearGradients(drawingContext, rect, linearGradients.border)
       } else if(borderColor) {
-        boxctx.strokeStyle = borderColor
+        drawingContext.strokeStyle = borderColor
       }
 
-      boxctx.stroke()
-      boxctx.clip()
+      drawingContext.stroke()
+      drawingContext.clip()
     }
 
     // draw bgcolor
@@ -556,34 +550,34 @@ class BaseSprite extends BaseNode {
         clientWidth, clientHeight,
         Math.max(0, borderRadius - borderWidth / 2)]
 
-      boxctx.beginPath()
-      boxctx.moveTo(x + r, y)
-      boxctx.arcTo(x + w, y, x + w, y + h, r)
-      boxctx.arcTo(x + w, y + h, x, y + h, r)
-      boxctx.arcTo(x, y + h, x, y, r)
-      boxctx.arcTo(x, y, x + w, y, r)
-      boxctx.closePath()
+      drawingContext.beginPath()
+      drawingContext.moveTo(x + r, y)
+      drawingContext.arcTo(x + w, y, x + w, y + h, r)
+      drawingContext.arcTo(x + w, y + h, x, y + h, r)
+      drawingContext.arcTo(x, y + h, x, y, r)
+      drawingContext.arcTo(x, y, x + w, y, r)
+      drawingContext.closePath()
 
       if(linearGradients && linearGradients.bgcolor) {
         const rect = linearGradients.bgcolor.rect || [x, y, w, h]
 
-        boxctx.fillStyle = getLinearGradients(boxctx, rect, linearGradients.bgcolor)
+        drawingContext.fillStyle = createLinearGradients(drawingContext, rect, linearGradients.bgcolor)
       } else if(bgcolor) {
-        boxctx.fillStyle = bgcolor
+        drawingContext.fillStyle = bgcolor
       }
 
-      boxctx.fill()
+      drawingContext.fill()
     }
 
-    boxctx.restore()
+    drawingContext.restore()
 
     const padding = attr.padding,
       paddingTop = padding[0],
       paddingLeft = padding[3]
 
-    boxctx.translate(paddingTop, paddingLeft)
+    drawingContext.translate(paddingLeft, paddingTop)
 
-    return boxctx
+    return drawingContext
   }
 }
 

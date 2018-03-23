@@ -1,6 +1,6 @@
 const test = require('ava')
 
-import {parseValue, memoize, deprecate} from '../src/decorators'
+import {parseValue, deprecate} from '../src/decorators'
 
 const _subject = Symbol('subject')
 
@@ -65,28 +65,6 @@ test('attr parseValue', (t) => {
   node.width = '100px'
 
   t.is(node.width, 100)
-})
-
-test('memoize', (t) => {
-  let getRand = function (key) {
-    return Math.random()
-  }
-
-  let a = getRand('a')
-  let b = getRand('b')
-  let c = getRand('a')
-
-  t.is(a !== b, true)
-  t.is(a !== c, true)
-
-  getRand = memoize(getRand)
-
-  a = getRand('a')
-  b = getRand('b')
-  c = getRand('a')
-
-  t.is(a !== b, true)
-  t.is(a === c, true)
 })
 
 test('deprecate', (t) => {
