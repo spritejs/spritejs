@@ -20,6 +20,9 @@ class BaseNode {
       delete this[_eventHandlers][type]
     }
   }
+  getEventHandlers(type) {
+    return this[_eventHandlers][type] || []
+  }
   // d3-friendly
   addEventListener(type, handler) {
     return this.on(type, handler)

@@ -1,15 +1,28 @@
 import BaseSprite from './basesprite'
 
 import {parseColorString, getLinearGradients} from './utils'
-import {measureText} from './cross-platform'
+const parseFont = require('./font/parse-font')
 
-function calculTextboxSize(text, font, lineHeight) {
+const measureText = (node, text, font, lineHeight = '') => {
+  const ctx = node.context || node.layer && node.layer.outputContext
+  if(!ctx) {
+    return [0, 0]
+  }
+  ctx.save()
+  ctx.font = font
+  const {width} = ctx.measureText(text)
+  const height = parseFont(font).size * 1.2
+  ctx.restore()
+  return [width, height]
+}
+
+function calculTextboxSize(node, text, font, lineHeight) {
   const lines = text.split(/\n/)
   let width = 0,
     height = 0
 
   lines.forEach((line) => {
-    const [w, h] = measureText(line, font, lineHeight)
+    const [w, h] = measureText(node, line, font, lineHeight)
     width = Math.max(width, w)
     height += h
   })
@@ -27,27 +40,30 @@ class LabelSpriteAttr extends BaseSprite.Attr {
       lineHeight: '',
       renderMode: 'fill',
       text: '',
-      textboxSize: [0, 0],
+      textboxSize: '',
     })
   }
 
   set text(val) {
     val = String(val)
     this.clearCache()
-    this.set('textboxSize', calculTextboxSize(val, this.font, this.lineHeight))
+    this.set('textboxSize', '')
     this.set('text', val)
   }
   get text() {
     return this.get('text')
   }
 
+  set textboxSize(val) {
+    this.set('textboxSize', val)
+  }
   get textboxSize() {
     return this.get('textboxSize')
   }
 
   set font(val) {
     this.clearCache()
-    this.set('textboxSize', calculTextboxSize(this.text, val, this.lineHeight))
+    this.set('textboxSize', '')
     this.set('font', val)
   }
   get font() {
@@ -56,7 +72,7 @@ class LabelSpriteAttr extends BaseSprite.Attr {
 
   set lineHeight(val) {
     this.clearCache()
-    this.set('textboxSize', calculTextboxSize(this.text, this.font, val))
+    this.set('textboxSize', '')
     this.set('lineHeight', val)
   }
   get lineHeight() {
@@ -105,15 +121,16 @@ class Label extends BaseSprite {
 
   // override to adapt content size
   get contentSize() {
-    let [width, height] = this.attr('size')
+    const [width, height] = this.attr('size')
 
     const boxSize = this.attr('textboxSize')
-
-    if(width === '') {
-      width = boxSize[0] | 0
+    if(boxSize) {
+      return boxSize
     }
-    if(height === '') {
-      height = boxSize[1] | 0
+    if(width === '' || height === '') {
+      const size = calculTextboxSize(this, this.text, this.attr('font'), this.attr('lineHeight'))
+      this.attr('textboxSize', size)
+      return size
     }
 
     return [width, height]
@@ -155,7 +172,7 @@ class Label extends BaseSprite {
 
       lines.forEach((line) => {
         let left = borderWidth
-        const [w, h] = measureText(line, font, attr.lineHeight)
+        const [w, h] = measureText(this, line, font, attr.lineHeight)
 
         if(align === 'center') {
           left += (width - w) / 2

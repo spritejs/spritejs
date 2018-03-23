@@ -8,7 +8,6 @@ import {getLinearGradients, rectVertices} from './utils'
 import {createCanvas} from './cross-platform'
 
 const _attr = Symbol('attr'),
-  _eventHandlers = Symbol('eventHandlers'),
   _animations = Symbol('animations'),
   _context = Symbol('context'),
   _beforeRenders = Symbol('beforeRenders'),
@@ -33,7 +32,6 @@ class BaseSprite extends BaseNode {
     this.attr(opts.attr)
     delete opts.attr
     Object.assign(this, opts)
-    this[_eventHandlers] = {}
     this[_animations] = new Set()
     this[_context] = null
     this[_beforeRenders] = []
@@ -444,7 +442,8 @@ class BaseSprite extends BaseNode {
       this[_afterRenders] = this.userRender(t, context, this[_afterRenders])
     }
 
-    if(this[_eventHandlers].update && this[_eventHandlers].update.length) {
+    const updateHandlers = this.getEventHandlers('update')
+    if(updateHandlers.length) {
       this.dispatchEvent(
         'update',
         {
@@ -512,6 +511,7 @@ class BaseSprite extends BaseNode {
       [clientWidth, clientHeight] = this.clientSize
 
     const boxctx = drawingContext
+    this[_context] = boxctx
 
     if(offsetWidth === 0 || offsetHeight === 0) {
       return boxctx // don't need to render
@@ -582,7 +582,6 @@ class BaseSprite extends BaseNode {
       paddingLeft = padding[3]
 
     boxctx.translate(paddingTop, paddingLeft)
-    this[_context] = boxctx
 
     return boxctx
   }

@@ -1,41 +1,32 @@
-import {memoize} from './decorators'
-import {createCanvas} from './cross-platform'
+const colorString = require('color-string')
 
 class Color {
   constructor(color) {
     if(typeof color === 'string') {
-      const canvas = createCanvas(1, 1),
-        context = canvas.getContext('2d')
-
-      context.fillStyle = color
-      context.fillRect(0, 0, 1, 1)
-      const data = context.getImageData(0, 0, 1, 1).data
-
-      this.red = data[0]
-      this.green = data[1]
-      this.blue = data[2]
-      this.alpha = data[3] / 255
+      const {model, value} = colorString.get(color)
+      this.model = model
+      this.value = value
     } else {
-      this.red = Math.round(color.red)
-      this.green = Math.round(color.green)
-      this.blue = Math.round(color.blue)
-      this.alpha = color.alpha != null ? color.alpha : 1
+      this.model = color.model
+      this.value = color.value
     }
   }
   toString() {
-    const {
-      red, green, blue, alpha,
-    } = this
-    return `rgba(${red},${green},${blue},${alpha})`
+    const [a, b, c, d] = this.value
+    const model = this.model
+
+    return `${model}a(${a},${b},${c},${d})`
   }
   get str() {
     return String(this)
   }
 }
 
-const parseColor = memoize((color) => {
+export {Color}
+
+const parseColor = (color) => {
   return new Color(color)
-})
+}
 
 function parseColorString(color) {
   return parseColor(color).toString()

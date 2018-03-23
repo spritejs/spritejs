@@ -1,6 +1,3 @@
-import {memoize} from '../../decorators'
-import {appendUnit} from '../../utils'
-
 export function createCanvas(width = 300, height = 150) {
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -20,36 +17,6 @@ export function loadImage(src) {
   img.src = src
   return promise
 }
-
-const measureText = memoize((text, font, lineHeight = '') => {
-  const tmpEl = document.createElement('font')
-
-  if(font) tmpEl.style.font = font
-
-  lineHeight = appendUnit(lineHeight)
-
-  Object.assign(tmpEl.style, {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    visibility: 'hidden',
-    display: 'inline-block',
-    lineHeight,
-    padding: '0',
-    verticalAlign: 'middle',
-    whiteSpace: 'nowrap',
-  })
-
-  tmpEl.innerHTML = text
-  document.documentElement.appendChild(tmpEl)
-  const size = [tmpEl.clientWidth, tmpEl.clientHeight]
-
-  document.documentElement.removeChild(tmpEl)
-
-  return size
-})
-
-export {measureText}
 
 // get svg path object
 export function createPath(d) {

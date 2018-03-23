@@ -55,7 +55,12 @@ function colorEffect(color1, color2, p, start, end) {
   color1 = parseColor(color1)
   color2 = parseColor(color2)
 
-  return objectEffect(color1, color2, p, start, end)
+  if(color1.model === color2.model) {
+    color1.value = arrayEffect(color1.value, color2.value, p, start, end).map(c => Math.round(c))
+    return color1
+  }
+
+  return color2
 }
 
 Object.assign(Effects, {
