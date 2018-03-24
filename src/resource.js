@@ -1,65 +1,43 @@
-import BaseSprite from './basesprite'
-import {createNode} from './nodetype'
 import {createCanvas, loadImage} from './cross-platform'
 
 const axios = require('axios')
 
 const loadedResources = new Map()
 
+/**
+  loadTexture({
+    id: 'bird1',
+    src: 'http://some.path/brid1.png'
+  })
+ */
+
 const Resource = {
   loadTexture(texture, timeout = 30000) {
-    if(typeof texture === 'string' || texture instanceof BaseSprite || texture.tagName === 'CANVAS') {
+    if(typeof texture === 'string') {
       texture = {src: texture}
     }
-    if(typeof texture.src !== 'string' && texture.src.id == null) {
-      texture.src.id = `texture${Math.random()}`
-    }
-    if(texture.src && texture.src.id) {
-      texture.id = texture.src.id
+    if(!texture.id) {
+      texture.id = texture.src
     }
 
-    const mapKey = texture.id || texture.src
+    const mapKey = texture.id
+
     if(!loadedResources.has(mapKey)) {
       return new Promise((resolve, reject) => {
-        if(typeof texture.src !== 'string') { // support sprites as textures
-          let node = texture.src
-          if(node.tagName === 'CANVAS') {
-            resolve({img: node, texture})
-            loadedResources.set(mapKey, node)
-          } else {
-            if(!(node instanceof BaseSprite)) {
-              node = createNode(node.nodeType, node.attrs)
-              node.id = texture.id
-            }
-            const bound = node.originRect
-            Promise.resolve(node.render(0, createCanvas(bound[2], bound[3]).getContext('2d')))
-              .then((context) => {
-                resolve({img: node, texture})
-                loadedResources.set(mapKey, node)
-              })
-            texture.src = node.serialize()
-          }
-        } else {
-          const timer = setTimeout(() => {
-            reject(new Error('load img timeout'))
-          }, timeout)
+        const timer = setTimeout(() => {
+          reject(new Error('load img timeout'))
+        }, timeout)
 
-          loadImage(texture.src).then((img) => {
-            const {width, height} = img
-            const canvas = createCanvas(width, height)
-            const ctx = canvas.getContext('2d')
-            let imgRect
+        loadImage(texture.src).then((img) => {
+          const {width, height} = img
+          const canvas = createCanvas(width, height)
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0)
 
-            if(imgRect) {
-              ctx.drawImage(img, imgRect[0], imgRect[1], width, height)
-            } else {
-              ctx.drawImage(img, 0, 0)
-            }
-            resolve({img: canvas, texture})
-            loadedResources.set(mapKey, canvas)
-            clearTimeout(timer)
-          })
-        }
+          resolve({img: canvas, texture})
+          loadedResources.set(mapKey, canvas)
+          clearTimeout(timer)
+        })
       })
     }
     return Promise.resolve({

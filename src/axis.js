@@ -1,10 +1,7 @@
 import Path from './path'
 import Label from './label'
-import Sprite from './sprite'
+import Group from './group'
 import {parseStringFloat, parseColorString, parseValue, attr} from 'sprite-utils'
-
-const _axisPath = Symbol('axisPath'),
-  _labels = Symbol('labels')
 
 function ticksToD(axis) {
   if(!axis) return
@@ -44,9 +41,7 @@ function ticksToD(axis) {
   const dist = axisTicks[axisTicks.length - 1] - axisTicks[0]
   if(length === 'auto') length = dist
 
-  let rect,
-    d
-  const textures = []
+  let d
 
   const points = axisTicks.map(tick => length * (tick - axisTicks[0]) / dist)
 
@@ -54,17 +49,14 @@ function ticksToD(axis) {
     offsetX = 0,
     offsetX0 = 0
 
+  axis.remove()
   ticks.forEach((data, i) => {
     if(originTicks.indexOf(data) === -1) return
 
-    let label = axis[_labels][i]
-    if(!label) {
-      label = new Label()
-      axis[_labels][i] = label
-    }
-    label.text = data
+    const label = new Label()
 
-    label.attr({font, strokeColor: color})
+    label.text = data
+    label.attr({font, fillColor: color})
     const [w, h] = label.contentSize
 
     offsetY = Math.max(offsetY, h)
@@ -77,17 +69,27 @@ function ticksToD(axis) {
     const x = points[i]
     if(x != null) {
       if(direction === 'top') {
-        textures.push({src: label, rect: [offsetX0 + x - Math.round(w / 2), 0, w, h]})
+        label.attr({
+          pos: [offsetX0 + x - Math.round(w / 2), 0],
+        })
       } else if(direction === 'bottom') {
-        textures.push({src: label, rect: [offsetX0 + x - Math.round(w / 2), vLength + 5, w, h]})
+        label.attr({
+          pos: [offsetX0 + x - Math.round(w / 2), vLength + 5],
+        })
       } else if(direction === 'left') {
-        textures.push({src: label, rect: [vLength + 5, x, w, h]})
+        label.attr({
+          pos: [vLength + 5, x],
+        })
       } else if(direction === 'right') {
-        textures.push({src: label, rect: [0, x, w, h]})
+        label.attr({
+          pos: [0, x],
+        })
       }
+      axis.appendChild(label)
     }
   })
 
+  let rect
   if(direction === 'top') {
     d = `M0 ${vLength} h${length}`
     points.forEach((point) => {
@@ -115,18 +117,18 @@ function ticksToD(axis) {
     rect = [offsetX + 5, offsetY / 2, vLength, length]
   }
 
-  const path = axis[_axisPath]
+  const path = new Path()
   path.attr({
     d,
     lineWidth,
     strokeColor: color,
+    pos: [rect[0], rect[1]],
   })
-  textures.push({src: path, rect})
 
-  axis.attr({textures})
+  axis.appendChild(path)
 }
 
-class AxisSpriteAttr extends Sprite.Attr {
+class AxisSpriteAttr extends Group.Attr {
   constructor(subject) {
     super(subject)
 
@@ -205,13 +207,11 @@ class AxisSpriteAttr extends Sprite.Attr {
   }
 }
 
-export default class Axis extends Sprite {
+export default class Axis extends Group {
   static Attr = AxisSpriteAttr
 
   constructor(ticks = [0, 100], opts) {
-    super(null, opts)
-    this[_axisPath] = new Path()
-    this[_labels] = []
+    super(opts)
     if(ticks) {
       this.attr({ticks})
     }

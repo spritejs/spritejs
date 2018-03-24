@@ -26,7 +26,9 @@ function calculTextboxSize(node, text, font, lineHeight) {
     width = Math.max(width, w)
     height += h
   })
-
+  if(width === 0 && height === 0) {
+    return ''
+  }
   return [width, height]
 }
 
@@ -44,7 +46,7 @@ class LabelSpriteAttr extends BaseSprite.Attr {
     }, {
       color: {
         get() {
-          return this.strokeColor
+          return this.fillColor
         },
       },
     })
@@ -84,9 +86,9 @@ class LabelSpriteAttr extends BaseSprite.Attr {
   }
 
   @attr
-  @deprecate('Instead use strokeColor.')
+  @deprecate('Instead use fillColor.')
   set color(val) {
-    this.strokeColor = val
+    this.fillColor = val
   }
 
   @attr
@@ -122,13 +124,14 @@ class Label extends BaseSprite {
     const [width, height] = this.attr('size')
 
     const boxSize = this.attr('textboxSize')
+
     if(boxSize) {
       return boxSize
     }
     if(width === '' || height === '') {
       const size = calculTextboxSize(this, this.text, this.attr('font'), this.attr('lineHeight'))
       this.attr('textboxSize', size)
-      return size
+      return size || [0, 0]
     }
 
     return [width, height]
@@ -164,19 +167,17 @@ class Label extends BaseSprite {
           width, height]
 
         context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
-      } else {
+      } else if(strokeColor) {
         context.strokeStyle = strokeColor
       }
 
-      if(fillColor) {
-        if(linearGradients && linearGradients.fillColor) {
-          const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
-            width, height]
+      if(linearGradients && linearGradients.fillColor) {
+        const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
+          width, height]
 
-          context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
-        } else {
-          context.fillStyle = fillColor
-        }
+        context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
+      } else if(fillColor) {
+        context.fillStyle = fillColor
       }
 
       let top = borderWidth

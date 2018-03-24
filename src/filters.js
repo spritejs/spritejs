@@ -41,5 +41,4 @@ export default {
       return accumulator.concat(this[curVal[0]](curVal[1]))
     }, []).join(' ')
   },
-
 }

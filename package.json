@@ -22,7 +22,19 @@
     "type": "git",
     "url": "https://github.com/spritejs/spritejs"
   },
-  "keywords": [],
+  "keywords": [
+    "sprite",
+    "canvas",
+    "graphic",
+    "graphics",
+    "SVG",
+    "Path",
+    "d3",
+    "node-canvas",
+    "parser",
+    "HTML5",
+    "object model"
+  ],
   "author": "akira-cn",
   "license": "MIT",
   "dependencies": {
@@ -30,7 +42,7 @@
     "babel-runtime": "^6.26.0",
     "sprite-animator": "^1.1.2",
     "sprite-math": "^1.0.0",
-    "sprite-utils": "^1.0.2",
+    "sprite-utils": "^1.0.3",
     "svg-path-parser": "^1.1.0"
   },
   "devDependencies": {

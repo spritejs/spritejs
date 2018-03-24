@@ -1,49 +1,10 @@
 import BaseSprite from './basesprite'
-import Resource from './resource'
 import filters from './filters'
 
 import {rectToBox, boxToRect, boxUnion, attr} from 'sprite-utils'
-import {createCanvas} from './cross-platform'
 
 const _texturesCache = Symbol('_texturesCache')
-
-function getTextureSize(attr, textures) {
-  const subject = attr.subject
-
-  // adaptive textures
-  const promises = textures.map(texture => Resource.loadTexture(texture))
-  Promise.all(promises).then((textures) => {
-    let width = 0,
-      height = 0
-    textures.forEach(({img, texture}) => {
-      let w,
-        h
-      if(texture && texture.rect) {
-        w = texture.rect[2] + texture.rect[0]
-        h = texture.rect[3] + texture.rect[1]
-      } else if(texture && texture.srcRect) {
-        w = texture.srcRect[2]
-        h = texture.srcRect[3]
-      } else {
-        w = img.width
-        h = img.height
-      }
-      if(width < w) {
-        width = w
-      }
-      if(height < h) {
-        height = h
-      }
-    })
-    const [ow, oh] = attr.texturesSize
-    attr.set('texturesSize', [width, height])
-
-    // Asynchronously loaded new texture
-    if(ow !== width || oh !== height) {
-      subject.forceUpdate(true)
-    }
-  })
-}
+const _images = Symbol('_images')
 
 class TextureAttr extends BaseSprite.Attr {
   constructor(subject) {
@@ -55,8 +16,8 @@ class TextureAttr extends BaseSprite.Attr {
   }
   /*
     {
-      src: ...,   //texture path
-      srcRect: ...,  //texture clip
+      image: ...,  //texture resource
+      srcRect: ..., //texture clip
       rect: ....,  //texture in sprite offset
       filter: ...  //texture filters
     }
@@ -68,21 +29,52 @@ class TextureAttr extends BaseSprite.Attr {
     }
 
     textures = textures.map((texture) => {
-      if(typeof texture === 'string') {
-        texture = {src: texture}
-      } else if(texture instanceof BaseSprite) {
-        texture = {src: texture}
+      if(!texture.image) {
+        texture = {image: texture}
       }
-
       return texture
     })
 
-    const [width, height] = this.size
-    if(width === '' || height === '') {
-      getTextureSize(this, textures)
-    }
+    this.setTextureSize(textures)
 
     this.set('textures', textures)
+  }
+
+  setTextureSize(textures) {
+    const subject = this.subject
+
+    // adaptive textures
+    let width = 0,
+      height = 0
+
+    subject.images = textures.map(({image, rect, srcRect}) => {
+      let w,
+        h
+      if(rect) {
+        w = rect[2] + rect[0]
+        h = rect[3] + rect[1]
+      } else if(srcRect) {
+        w = srcRect[2]
+        h = srcRect[3]
+      } else {
+        w = image.width
+        h = image.height
+      }
+      if(width < w) {
+        width = w
+      }
+      if(height < h) {
+        height = h
+      }
+      return image
+    })
+    const [ow, oh] = this.texturesSize
+    this.set('texturesSize', [width, height])
+
+    // Asynchronously loaded new texture
+    if(ow !== width || oh !== height) {
+      subject.forceUpdate(true)
+    }
   }
 
   get texturesSize() {
@@ -120,6 +112,21 @@ export default class Sprite extends BaseSprite {
     if(attr) {
       this.attr(attr)
     }
+  }
+
+  cloneNode(copyContent) {
+    const node = super.cloneNode(copyContent)
+    if(copyContent) {
+      node.textures = this.textures
+    }
+    return node
+  }
+
+  set images(images) {
+    this[_images] = images
+  }
+  get images() {
+    return this[_images]
   }
 
   set textures(textures) {
@@ -193,46 +200,24 @@ export default class Sprite extends BaseSprite {
     return null
   }
 
-  async render(t, drawingContext) {
-    let context = super.render(t, drawingContext)
+  render(t, drawingContext) {
+    const context = super.render(t, drawingContext)
     const textures = this.textures
 
     if(textures && textures.length) {
       const attr = this.attr(),
         borderWidth = attr.border[0]
 
-      // load textures
-      const promises = textures.map(texture => Resource.loadTexture(texture))
-      const texturesWithImg = await Promise.all(promises)
-
-      texturesWithImg.forEach(({texture, img, sprite}) => {
+      textures.forEach((texture, i) => {
+        const img = this.images[i]
         const rect = (texture.rect || [0, 0, ...this.innerSize]).slice(0)
         const srcRect = texture.srcRect
-
         rect[0] += borderWidth
         rect[1] += borderWidth
 
         context.save()
 
-        let bound = [0, 0]
-
-        if(img instanceof BaseSprite) {
-          const transform = img.transform.m,
-            pos = img.attr('pos')
-
-          bound = img.originRect
-
-          context.translate(pos[0], pos[1])
-          context.transform(...transform)
-          context.globalAlpha = img.attr('opacity')
-
-          img = img.context.canvas
-        }
-
         if(texture.filter) {
-          const imgCanvas = createCanvas()
-          const imgContext = imgCanvas.getContext('2d')
-
           let outterRect
           const imgRect = srcRect ? [0, 0, srcRect[2], srcRect[3]] : [0, 0, img.width, img.height]
 
@@ -245,27 +230,25 @@ export default class Sprite extends BaseSprite {
           } else {
             outterRect = imgRect
           }
-          imgCanvas.width = outterRect[2]
-          imgCanvas.height = outterRect[3]
 
-          imgContext.filter = filters.compile(texture.filter)
+          const sx = rect[2] / outterRect[2],
+            sy = rect[3] / outterRect[3]
+
+          context.filter = filters.compile(texture.filter)
 
           if(srcRect) {
-            imgContext.drawImage(img, ...srcRect, bound[0] + outterRect[0], bound[1] + outterRect[1], srcRect[2], srcRect[3])
+            context.drawImage(img, ...srcRect, sx * outterRect[0] + rect[0], sy * outterRect[1] + rect[1], sx * srcRect[2], sy * srcRect[3])
           } else {
-            imgContext.drawImage(img, bound[0] + outterRect[0], bound[1] + outterRect[1], img.width, img.height)
+            context.drawImage(img, sx * outterRect[0] + rect[0], sy * outterRect[1] + rect[1], sx * img.width, sy * img.height)
           }
-          context.drawImage(imgCanvas, ...rect)
         } else if(srcRect) {
-          context.drawImage(img, ...srcRect, ...[bound[0] + rect[0], bound[1] + rect[1], rect[2], rect[3]])
+          context.drawImage(img, ...srcRect, ...rect)
         } else {
-          context.drawImage(img, ...[bound[0] + rect[0], bound[1] + rect[1], rect[2], rect[3]])
+          context.drawImage(img, ...rect)
         }
 
         context.restore()
       })
-    } else {
-      context = super.render(t, drawingContext)
     }
 
     return context
