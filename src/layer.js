@@ -1,5 +1,11 @@
 import BaseNode from './basenode'
 
+import {boxIntersect, boxEqual, boxToRect} from 'sprite-utils'
+import {Timeline} from 'sprite-animator'
+
+import {createNode, getNodeType} from './nodetype'
+import {createCanvas} from './cross-platform'
+
 const _children = Symbol('children'),
   _updateSet = Symbol('updateSet'),
   _zOrder = Symbol('zOrder'),
@@ -8,12 +14,6 @@ const _children = Symbol('children'),
   _timeline = Symbol('timeline'),
   _renderPromise = Symbol('renderPromise'),
   _resolution = Symbol('resolution')
-
-import {boxIntersect, boxEqual, boxToRect} from './utils'
-import {Timeline} from 'sprite-animator'
-
-import {createNode, getNodeType} from './nodetype'
-import {createCanvas} from './cross-platform'
 
 class Layer extends BaseNode {
   constructor(id, {

@@ -2,9 +2,8 @@ import BaseSprite from './basesprite'
 import Resource from './resource'
 import filters from './filters'
 
-import {rectToBox, boxToRect, boxUnion} from './utils'
+import {rectToBox, boxToRect, boxUnion, attr} from 'sprite-utils'
 import {createCanvas} from './cross-platform'
-import {attr} from './decorators'
 
 const _texturesCache = Symbol('_texturesCache')
 

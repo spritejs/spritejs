@@ -1,7 +1,6 @@
-import {parseValue, attr} from './decorators'
-import {Matrix} from './math'
+import {Matrix} from 'sprite-math'
 import {parseColorString, oneOrTwoValues, fourValuesShortCut,
-  parseStringInt, parseStringFloat, parseStringTransform} from './utils'
+  parseStringInt, parseStringFloat, parseStringTransform, parseValue, attr} from 'sprite-utils'
 
 const _attr = Symbol('attr'),
   _temp = Symbol('store'),

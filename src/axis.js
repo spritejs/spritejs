@@ -1,9 +1,7 @@
 import Path from './path'
 import Label from './label'
 import Sprite from './sprite'
-
-import {parseValue, attr} from './decorators'
-import {parseStringFloat, parseColorString} from './utils'
+import {parseStringFloat, parseColorString, parseValue, attr} from 'sprite-utils'
 
 const _axisPath = Symbol('axisPath'),
   _labels = Symbol('labels')
@@ -66,7 +64,7 @@ function ticksToD(axis) {
     }
     label.text = data
 
-    label.attr({font, color})
+    label.attr({font, strokeColor: color})
     const [w, h] = label.contentSize
 
     offsetY = Math.max(offsetY, h)
@@ -121,7 +119,7 @@ function ticksToD(axis) {
   path.attr({
     d,
     lineWidth,
-    color,
+    strokeColor: color,
   })
   textures.push({src: path, rect})
 
