@@ -1,6 +1,6 @@
 import {Animator, Effects} from 'sprite-animator'
-import {Matrix} from './math'
-import {parseColor, parseStringTransform} from './utils'
+import {Matrix} from 'sprite-math'
+import {parseColor, parseStringTransform} from 'sprite-utils'
 
 const defaultEffect = Effects.default
 

@@ -28,8 +28,9 @@
   "dependencies": {
     "axios": "^0.16.2",
     "babel-runtime": "^6.26.0",
-    "color-string": "^1.5.2",
     "sprite-animator": "^1.1.2",
+    "sprite-math": "^1.0.0",
+    "sprite-utils": "^1.0.2",
     "svg-path-parser": "^1.1.0"
   },
   "devDependencies": {

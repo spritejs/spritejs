@@ -1,5 +1,5 @@
 // http://www.runoob.com/cssref/css3-pr-filter.html
-import {appendUnit} from './utils'
+import {appendUnit} from 'sprite-utils'
 export default {
   blur(px) {
     return `blur(${appendUnit(px)})`

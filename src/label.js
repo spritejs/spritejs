@@ -1,6 +1,5 @@
 import BaseSprite from './basesprite'
-import {attr, deprecate} from './decorators'
-import {parseColorString} from './utils'
+import {parseColorString, attr, deprecate} from 'sprite-utils'
 import {createLinearGradients} from './gradient'
 const parseFont = require('./font/parse-font')
 

@@ -1,15 +1,11 @@
 import BaseSprite from './basesprite'
-
-import {parseColorString} from './utils'
+import {parseColorString, deprecate, attr} from 'sprite-utils'
 import {createLinearGradients} from './gradient'
-
 import {Effects} from 'sprite-animator'
 import pathEffect from './path-effect'
+import {createPath, calPathRect} from './cross-platform'
 
 Effects.d = pathEffect
-
-import {createPath, calPathRect} from './cross-platform'
-import {deprecate, attr} from './decorators'
 
 function getBoundingBox(lineWidth, pathRect) {
   const [x, y, width, height] = pathRect,
@@ -178,17 +174,6 @@ class Path extends BaseSprite {
 
       const linearGradients = attr.linearGradients
 
-      if(linearGradients && linearGradients.strokeColor) {
-        const rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth,
-          width, height]
-
-        context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
-      } else {
-        context.strokeStyle = strokeColor
-      }
-
-      context.stroke(p)
-
       if(fillColor) {
         if(linearGradients && linearGradients.fillColor) {
           const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
@@ -201,6 +186,17 @@ class Path extends BaseSprite {
 
         context.fill(p)
       }
+
+      if(linearGradients && linearGradients.strokeColor) {
+        const rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth,
+          width, height]
+
+        context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
+      } else {
+        context.strokeStyle = strokeColor
+      }
+
+      context.stroke(p)
 
       this.path = p
     }
