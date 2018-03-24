@@ -39,20 +39,28 @@ export default class Group extends BaseSprite {
     return sprite
   }
   remove(...sprites) {
+    if(sprites.length === 0) {
+      sprites = this[_children].slice(0)
+    }
     sprites.forEach(sprite => this.removeChild(sprite))
   }
   get contentSize() {
     let [width, height] = this.attr('size')
 
     if(width === '' || height === '') {
-      width = height = 0
+      let right,
+        bottom
+
+      right = 0
+      bottom = 0
       this[_children].forEach((sprite) => {
         const renderBox = sprite.renderBox
-        width = Math.max(width, renderBox[2])
-        height = Math.max(width, renderBox[3])
+        right = Math.max(right, renderBox[2])
+        bottom = Math.max(bottom, renderBox[3])
       })
+      width = right
+      height = bottom
     }
-
     return [width, height]
   }
   dispatchEvent(type, evt, forceTrigger = false) {
@@ -79,32 +87,13 @@ export default class Group extends BaseSprite {
   }
   async render(t, drawingContext) {
     drawingContext = super.render(t, drawingContext)
+
     const children = this[_children]
 
     /* eslint-disable no-await-in-loop */
     for(let i = 0; i < children.length; i++) {
       const child = children[i]
-      const transform = child.transform.m,
-        pos = child.attr('pos'),
-        bound = child.originRect
-
-      drawingContext.save()
-      drawingContext.translate(pos[0], pos[1])
-      drawingContext.transform(...transform)
-      drawingContext.globalAlpha = child.attr('opacity')
-
-      let context = child.cache
-
-      /* eslint-disable no-await-in-loop */
-      if(!context) {
-        context = await child.render(t, drawingContext)
-        if(context !== drawingContext) child.cache = context
-      }
-
-      if(context !== drawingContext) {
-        drawingContext.drawImage(context.canvas, bound[0], bound[1])
-      }
-      drawingContext.restore()
+      await child.draw(drawingContext, false, t)
     }
     /* eslint-enable no-await-in-loop */
 

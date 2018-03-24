@@ -47,14 +47,18 @@
         duration:2000,
         effect: (from, to, p) => {
           let rotate = (to.rotate - from.rotate) * p
-          let fromColor = Color(from.bgcolor),
-              toColor = Color(to.bgcolor)
-              
+          let fromColor = new Color(from.bgcolor),
+              toColor = new Color(to.bgcolor)
+          
           let color = {
-            red: fromColor.red + p * (toColor.red - fromColor.red),
-            green: fromColor.green + p * (toColor.green - fromColor.green),
-            blue: fromColor.blue + p * (toColor.blue - fromColor.blue),
+            model: 'rgb',
+            value: [fromColor.value[0] + p * (toColor.value[0] - fromColor.value[0]),
+                    fromColor.value[1] + p * (toColor.value[1] - fromColor.value[1]),
+                    fromColor.value[2] + p * (toColor.value[2] - fromColor.value[2]),
+                    1].map(c => Math.round(c))
           }
+
+          // console.log(new Color(color).toString())
 
           return {rotate, bgcolor: color}
         }

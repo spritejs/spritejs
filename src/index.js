@@ -1,6 +1,6 @@
 import {Color, parseColor, setDeprecation} from 'sprite-utils'
 import BaseSprite from './basesprite'
-import Sprite from './sprite'
+import Sprite from './ressprite'
 import Label from './label'
 import Scene from './scene'
 import Resource from './resource'

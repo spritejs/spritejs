@@ -1,7 +1,6 @@
 import SpriteAttr from './attr'
 import BaseNode from './basenode'
 import {Matrix, Vector} from 'sprite-math'
-import Layer from './layer'
 import Animation from './animation'
 import {rectVertices, deprecate} from 'sprite-utils'
 import {createLinearGradients} from './gradient'
@@ -61,7 +60,21 @@ class BaseSprite extends BaseNode {
   }
 
   get context() {
-    return this[_context]
+    let node = this
+    do {
+      if(node[_context]) {
+        return node[_context]
+      }
+      if(node.shadowContext) {
+        return node.shadowContext
+      }
+      if(node.outputContext) {
+        return node.outputContext
+      }
+      node = node.parent
+    } while(node != null)
+
+    return null
   }
 
   get nodeType() {
@@ -72,7 +85,7 @@ class BaseSprite extends BaseNode {
     let node = this
     do {
       node = node.parent
-    } while(node != null && !(node instanceof Layer))
+    } while(node != null && !(node.drawSprites))
     return node
   }
 
@@ -401,7 +414,7 @@ class BaseSprite extends BaseNode {
       }
     }
   }
-  async draw(drawingContext, enableCache = true, t) {
+  async draw(drawingContext, enableCache = false, t) {
     if(typeof drawingContext === 'function') {
       return this._draw(drawingContext, enableCache, t)
     }
@@ -420,7 +433,8 @@ class BaseSprite extends BaseNode {
     if(enableCache) {
       context = this.cache
       if(!context) {
-        context = createCanvas(bound[2], bound[3]).getContext('2d')
+        const canvas = createCanvas(bound[2], bound[3])
+        context = canvas.getContext('2d')
       }
     } else {
       context.translate(bound[0], bound[1])

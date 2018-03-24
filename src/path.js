@@ -21,7 +21,7 @@ export class PathSpriteAttr extends BaseSprite.Attr {
       lineWidth: 1,
       lineCap: 'butt',
       lineJoin: 'miter',
-      strokeColor: parseColorString('black'),
+      strokeColor: '',
       fillColor: '',
       // d: path2d,
       boxSize: [0, 0],
@@ -162,8 +162,12 @@ class Path extends BaseSprite {
 
       context.translate(-box[0], -box[1])
 
-      const p = this.createPath(attr.d),
-        {strokeColor, fillColor} = attr
+      const p = this.createPath(attr.d)
+      let {strokeColor, fillColor} = attr
+
+      if(!strokeColor && !fillColor) {
+        strokeColor = parseColorString('black')
+      }
 
       context.lineWidth = attr.lineWidth
       context.lineCap = attr.lineCap
@@ -174,17 +178,13 @@ class Path extends BaseSprite {
 
       const linearGradients = attr.linearGradients
 
-      if(fillColor) {
-        if(linearGradients && linearGradients.fillColor) {
-          const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
-            width, height]
+      if(linearGradients && linearGradients.fillColor) {
+        const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
+          width, height]
 
-          context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
-        } else {
-          context.fillStyle = fillColor
-        }
-
-        context.fill(p)
+        context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
+      } else if(fillColor) {
+        context.fillStyle = fillColor
       }
 
       if(linearGradients && linearGradients.strokeColor) {
@@ -192,11 +192,12 @@ class Path extends BaseSprite {
           width, height]
 
         context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
-      } else {
+      } else if(strokeColor) {
         context.strokeStyle = strokeColor
       }
 
-      context.stroke(p)
+      if(fillColor) context.fill(p)
+      if(strokeColor) context.stroke(p)
 
       this.path = p
     }

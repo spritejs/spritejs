@@ -1,4 +1,5 @@
 import BaseNode from './basenode'
+import Group from './group'
 
 import {boxIntersect, boxEqual, boxToRect} from 'sprite-utils'
 import {Timeline} from 'sprite-animator'
@@ -642,6 +643,12 @@ class Layer extends BaseNode {
     }
 
     return this[_children]
+  }
+  group(...sprites) {
+    const group = new Group()
+    group.append(...sprites)
+    this.appendChild(group)
+    return group
   }
   adjust(handler, forceUpdate = true) {
     const outputContext = this.outputContext,
