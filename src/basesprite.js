@@ -411,10 +411,6 @@ class BaseSprite extends BaseNode {
     if(typeof drawingContext === 'function') {
       return this._draw(drawingContext, cacheContext, t)
     }
-    this[_context] = drawingContext
-    const transform = this.transform.m,
-      pos = this.attr('pos'),
-      bound = this.originRect
 
     const opacity = this.attr('opacity'),
       box = this.renderBox,
@@ -424,8 +420,14 @@ class BaseSprite extends BaseNode {
     const isVisible = opacity > 0 && (size[0] > 0 && size[1] > 0)
       && (box[0] <= width && box[1] <= height && box[2] >= 0 && box[3] >= 0)
 
+    this[_context] = drawingContext
+
     let context = drawingContext
     if(isVisible) {
+      const transform = this.transform.m,
+        pos = this.attr('pos'),
+        bound = this.originRect
+
       drawingContext.save()
       drawingContext.translate(pos[0], pos[1])
       drawingContext.transform(...transform)
