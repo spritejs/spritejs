@@ -407,7 +407,7 @@ class BaseSprite extends BaseNode {
       }
     }
   }
-  async draw(drawingContext, cacheContext, t) {
+  draw(drawingContext, cacheContext, t) {
     if(typeof drawingContext === 'function') {
       return this._draw(drawingContext, cacheContext, t)
     }
@@ -448,7 +448,7 @@ class BaseSprite extends BaseNode {
         this.userRender(t, context, 'before')
       }
       if(!cacheContext || context !== this.cache) {
-        context = await this.render(t, context)
+        context = this.render(t, context)
         if(cacheContext) this.cache = context
       }
       if(this[_afterRenders].length) {

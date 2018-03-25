@@ -29,11 +29,11 @@ class ResAttr extends Sprite.Attr {
       return texture
     })
 
-    this.setTextureSize(textures)
     this.set('textures', textures)
+    this.loadTextures(textures)
   }
 
-  setTextureSize(textures) {
+  loadTextures(textures) {
     // adaptive textures
     const promises = textures.map((texture) => {
       if(texture.image) {
@@ -41,12 +41,14 @@ class ResAttr extends Sprite.Attr {
       }
       return Resource.loadTexture(texture)
     })
-    const subject = this.subject
-    subject.images = Promise.all(promises).then((textures) => {
-      const res = textures.map(({img, texture}) => {
+    Promise.all(promises).then((textures) => {
+      const res = textures.map(({img, texture, fromCache}) => {
+        if(!fromCache) {
+          this.clearCache()
+        }
         return Object.assign({}, texture, {image: img})
       })
-      super.setTextureSize(res)
+      super.loadTextures(res)
     })
   }
 }
@@ -54,11 +56,7 @@ class ResAttr extends Sprite.Attr {
 class ResSprite extends Sprite {
   static Attr = ResAttr
 
-  async render(t, drawingContext) {
-    const textures = this.textures
-    if(textures && textures.length) {
-      await this.images
-    }
+  render(t, drawingContext) {
     return super.render(t, drawingContext)
   }
 }
