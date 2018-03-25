@@ -327,6 +327,9 @@ class Layer extends BaseNode {
       return a_zidx - b_zidx
     })
   }
+  createCacheContext() {
+    return createCanvas().getContext('2d')
+  }
   async drawSprites(drawingContext, renderEls, t) {
     if(this.evaluateFPS) {
       this[_tRecord].push(t)
@@ -337,8 +340,9 @@ class Layer extends BaseNode {
       const child = renderEls[i]
       if(child.parent === this) {
         if(this.isVisible(child)) {
+          const cacheContext = this.createCacheContext()
           /* eslint-disable no-await-in-loop */
-          await child.draw(drawingContext, true, t)
+          await child.draw(drawingContext, cacheContext, t)
           /* eslint-enable no-await-in-loop */
         } else {
           // invisible, only need to remove lastRenderBox

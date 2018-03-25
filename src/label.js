@@ -107,8 +107,8 @@ class LabelSpriteAttr extends BaseSprite.Attr {
 class Label extends BaseSprite {
   static Attr = LabelSpriteAttr
 
-  constructor(text, opts) {
-    super(opts)
+  constructor(text, attr) {
+    super(attr)
     this.text = String(text)
   }
 
