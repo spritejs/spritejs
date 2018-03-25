@@ -412,6 +412,9 @@ class BaseSprite extends BaseNode {
       return this._draw(drawingContext, cacheContext, t)
     }
 
+    this[_context] = drawingContext
+    let context = drawingContext
+
     const opacity = this.attr('opacity'),
       box = this.renderBox,
       size = this.offsetSize,
@@ -420,9 +423,6 @@ class BaseSprite extends BaseNode {
     const isVisible = opacity > 0 && (size[0] > 0 && size[1] > 0)
       && (box[0] <= width && box[1] <= height && box[2] >= 0 && box[3] >= 0)
 
-    this[_context] = drawingContext
-
-    let context = drawingContext
     if(isVisible) {
       const transform = this.transform.m,
         pos = this.attr('pos'),
@@ -445,14 +445,14 @@ class BaseSprite extends BaseNode {
       }
 
       if(this[_beforeRenders].length) {
-        this[_beforeRenders] = this.userRender(t, context, this[_beforeRenders])
+        this.userRender(t, context, 'before')
       }
       if(!cacheContext || context !== this.cache) {
         context = await this.render(t, context)
         if(cacheContext) this.cache = context
       }
       if(this[_afterRenders].length) {
-        this[_afterRenders] = this.userRender(t, context, this[_afterRenders])
+        this.userRender(t, context, 'after')
       }
 
       if(context !== drawingContext) {
@@ -497,7 +497,10 @@ class BaseSprite extends BaseNode {
   }
 
   // call by layer
-  userRender(t, context, handlers) {
+  userRender(t, context, type) {
+    let handlers = type
+    if(type === 'before') handlers = this[_beforeRenders]
+    if(type === 'after') handlers = this[_afterRenders]
     const renderers = []
     for(let i = 0; i < handlers.length; i++) {
       const renderer = handlers[i]
@@ -511,6 +514,12 @@ class BaseSprite extends BaseNode {
       if(clearCache) {
         this.cache = null
       }
+    }
+    if(type === 'before') {
+      this[_beforeRenders] = renderers
+    }
+    if(type === 'after') {
+      this[_afterRenders] = renderers
     }
     return renderers
   }

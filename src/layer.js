@@ -345,7 +345,37 @@ class Layer extends BaseNode {
             cacheContext = this.createCacheContext()
           }
           /* eslint-disable no-await-in-loop */
-          await child.draw(drawingContext, cacheContext, t)
+          // await child.draw(drawingContext, cacheContext, t)
+          // for better performance...
+          const transform = child.transform.m,
+            pos = child.attr('pos'),
+            bound = child.originRect
+
+          drawingContext.save()
+          drawingContext.translate(pos[0], pos[1])
+          drawingContext.transform(...transform)
+          drawingContext.globalAlpha = child.attr('opacity')
+          let context = drawingContext
+          if(cacheContext) {
+            context = child.cache
+            if(!context) {
+              cacheContext.canvas.width = bound[2]
+              cacheContext.canvas.height = bound[3]
+              context = cacheContext
+            }
+          } else {
+            context.translate(bound[0], bound[1])
+          }
+          child.userRender(t, context, 'before')
+          if(!cacheContext || context !== child.cache) {
+            context = await child.render(t, context)
+            if(cacheContext) child.cache = context
+          }
+          child.userRender(t, context, 'after')
+          if(context !== drawingContext) {
+            drawingContext.drawImage(context.canvas, bound[0], bound[1])
+          }
+          drawingContext.restore()
           /* eslint-enable no-await-in-loop */
         } else {
           // invisible, only need to remove lastRenderBox
