@@ -500,11 +500,11 @@ class Layer extends BaseNode {
     outputContext.restore()
     this[_updateSet].clear()
   }
-  appendChild(sprite, forceUpdate = true) {
+  appendChild(sprite, update = true) {
     this.removeChild(sprite)
     this[_children].push(sprite)
     sprite.connect(this, this[_zOrder]++)
-    if(forceUpdate) this.update(sprite)
+    if(update) this.update(sprite)
     return sprite
   }
   append(...sprites) {
@@ -654,7 +654,7 @@ class Layer extends BaseNode {
     this.appendChild(group)
     return group
   }
-  adjust(handler, forceUpdate = true) {
+  adjust(handler, update = true) {
     const outputContext = this.outputContext,
       shadowContext = this.shadowContext
     if(!shadowContext) {
@@ -665,7 +665,7 @@ class Layer extends BaseNode {
 
     handler.call(this, outputContext)
 
-    if(forceUpdate) {
+    if(update) {
       outputContext.drawImage(shadowContext.canvas, 0, 0)
     }
   }

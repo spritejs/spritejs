@@ -368,11 +368,6 @@ class BaseSprite extends BaseNode {
     }
   }
 
-  /** abstract
-    connectedCallback() { }
-    disconnectedCallback() { }
-  */
-
   // layer position to sprite offset
   pointToOffset(x, y) {
     const attr = this.attr()
@@ -421,33 +416,47 @@ class BaseSprite extends BaseNode {
       pos = this.attr('pos'),
       bound = this.originRect
 
-    drawingContext.save()
-    drawingContext.translate(pos[0], pos[1])
-    drawingContext.transform(...transform)
-    drawingContext.globalAlpha = this.attr('opacity')
+    const opacity = this.attr('opacity'),
+      box = this.renderBox,
+      size = this.offsetSize,
+      {width, height} = drawingContext.canvas
+
+    const isVisible = opacity > 0 && (size[0] > 0 && size[1] > 0)
+      && (box[0] <= width && box[1] <= height && box[2] >= 0 && box[3] >= 0)
 
     let context = drawingContext
+    if(isVisible) {
+      drawingContext.save()
+      drawingContext.translate(pos[0], pos[1])
+      drawingContext.transform(...transform)
+      drawingContext.globalAlpha = this.attr('opacity')
 
-    if(cacheContext) {
-      context = this.cache
-      if(!context) {
-        cacheContext.canvas.width = bound[2]
-        cacheContext.canvas.height = bound[3]
-        context = cacheContext
+      if(cacheContext) {
+        context = this.cache
+        if(!context) {
+          cacheContext.canvas.width = bound[2]
+          cacheContext.canvas.height = bound[3]
+          context = cacheContext
+        }
+      } else {
+        context.translate(bound[0], bound[1])
       }
-    } else {
-      context.translate(bound[0], bound[1])
-    }
 
-    if(this[_beforeRenders].length) {
-      this[_beforeRenders] = this.userRender(t, context, this[_beforeRenders])
-    }
-    if(!cacheContext || context !== this.cache) {
-      context = await this.render(t, context)
-      if(cacheContext) this.cache = context
-    }
-    if(this[_afterRenders].length) {
-      this[_afterRenders] = this.userRender(t, context, this[_afterRenders])
+      if(this[_beforeRenders].length) {
+        this[_beforeRenders] = this.userRender(t, context, this[_beforeRenders])
+      }
+      if(!cacheContext || context !== this.cache) {
+        context = await this.render(t, context)
+        if(cacheContext) this.cache = context
+      }
+      if(this[_afterRenders].length) {
+        this[_afterRenders] = this.userRender(t, context, this[_afterRenders])
+      }
+
+      if(context !== drawingContext) {
+        drawingContext.drawImage(context.canvas, bound[0], bound[1])
+      }
+      drawingContext.restore()
     }
 
     const updateHandlers = this.getEventHandlers('update')
@@ -455,17 +464,12 @@ class BaseSprite extends BaseNode {
       this.dispatchEvent(
         'update',
         {
-          target: this, context, renderBox: this.renderBox, lastRenderBox: this.lastRenderBox,
+          target: this, isVisible, context, renderBox: this.renderBox, lastRenderBox: this.lastRenderBox,
         },
         true
       )
     }
     this.lastRenderBox = this.renderBox
-
-    if(context !== drawingContext) {
-      drawingContext.drawImage(context.canvas, bound[0], bound[1])
-    }
-    drawingContext.restore()
 
     return drawingContext
   }

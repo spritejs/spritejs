@@ -89,8 +89,12 @@ class BaseNode {
       configurable: true,
     })
 
-    if(this.connectedCallback) {
-      this.connectedCallback(parent)
+    const handlers = this[_eventHandlers].append
+    if(handlers && handlers.length) {
+      this.dispatchEvent('append', {
+        parent,
+        zOrder,
+      }, true)
     }
 
     return this
@@ -102,10 +106,15 @@ class BaseNode {
       throw new Error('Invalid node to disconnect')
     }
 
+    const zOrder = this.zOrder
     delete this.zOrder
 
-    if(this.disconnectedCallback) {
-      this.disconnectedCallback(this.parent)
+    const handlers = this[_eventHandlers].remove
+    if(handlers && handlers.length) {
+      this.dispatchEvent('remove', {
+        parent,
+        zOrder,
+      }, true)
     }
 
     delete this.parent
