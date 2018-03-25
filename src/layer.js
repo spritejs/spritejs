@@ -340,7 +340,10 @@ class Layer extends BaseNode {
       const child = renderEls[i]
       if(child.parent === this) {
         if(this.isVisible(child)) {
-          const cacheContext = this.createCacheContext()
+          let cacheContext = child.cache
+          if(!cacheContext) {
+            cacheContext = this.createCacheContext()
+          }
           /* eslint-disable no-await-in-loop */
           await child.draw(drawingContext, cacheContext, t)
           /* eslint-enable no-await-in-loop */
