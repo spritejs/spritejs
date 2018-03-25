@@ -34,7 +34,7 @@ const Resource = {
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0)
 
-          resolve({img: canvas, texture})
+          resolve({img: canvas, texture, fromCache: false})
           loadedResources.set(mapKey, canvas)
           clearTimeout(timer)
         })
@@ -43,6 +43,7 @@ const Resource = {
     return Promise.resolve({
       img: loadedResources.get(mapKey),
       texture,
+      fromCache: true,
     })
   },
   /**

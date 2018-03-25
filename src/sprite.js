@@ -35,12 +35,11 @@ class TextureAttr extends BaseSprite.Attr {
       return texture
     })
 
-    this.setTextureSize(textures)
-
     this.set('textures', textures)
+    this.loadTextures(textures)
   }
 
-  setTextureSize(textures) {
+  loadTextures(textures) {
     const subject = this.subject
 
     // adaptive textures
@@ -68,13 +67,7 @@ class TextureAttr extends BaseSprite.Attr {
       }
       return image
     })
-    const [ow, oh] = this.texturesSize
     this.set('texturesSize', [width, height])
-
-    // Asynchronously loaded new texture
-    if(ow !== width || oh !== height) {
-      subject.forceUpdate(true)
-    }
   }
 
   get texturesSize() {
@@ -193,7 +186,7 @@ export default class Sprite extends BaseSprite {
     const context = super.render(t, drawingContext)
     const textures = this.textures
 
-    if(textures && textures.length) {
+    if(this.images) {
       const attr = this.attr(),
         borderWidth = attr.border[0]
 

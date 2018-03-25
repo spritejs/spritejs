@@ -225,7 +225,7 @@ class Layer extends BaseNode {
         parent = this.parent
 
       this[_renderPromise] = new Promise((resolve, reject) => {
-        requestAnimationFrame(async function step(t) {
+        requestAnimationFrame(function step(t) {
           if(!parent) {
             // already removed from paper
             that[_state].prepareRender = false
@@ -243,7 +243,7 @@ class Layer extends BaseNode {
           }
 
           if(that[_updateSet].size) {
-            await renderer(t)
+            renderer(t)
 
             _dispatchEvent.call(
               that, 'update',
@@ -330,7 +330,7 @@ class Layer extends BaseNode {
   createCacheContext() {
     return createCanvas().getContext('2d')
   }
-  async drawSprites(drawingContext, renderEls, t) {
+  drawSprites(drawingContext, renderEls, t) {
     if(this.evaluateFPS) {
       this[_tRecord].push(t)
       this[_tRecord] = this[_tRecord].slice(-10)
@@ -344,39 +344,7 @@ class Layer extends BaseNode {
           if(!cacheContext) {
             cacheContext = this.createCacheContext()
           }
-          /* eslint-disable no-await-in-loop */
-          // await child.draw(drawingContext, cacheContext, t)
-          // for better performance...
-          const transform = child.transform.m,
-            pos = child.attr('pos'),
-            bound = child.originRect
-
-          drawingContext.save()
-          drawingContext.translate(pos[0], pos[1])
-          drawingContext.transform(...transform)
-          drawingContext.globalAlpha = child.attr('opacity')
-          let context = drawingContext
-          if(cacheContext) {
-            context = child.cache
-            if(!context) {
-              cacheContext.canvas.width = bound[2]
-              cacheContext.canvas.height = bound[3]
-              context = cacheContext
-            }
-          } else {
-            context.translate(bound[0], bound[1])
-          }
-          child.userRender(t, context, 'before')
-          if(!cacheContext || context !== child.cache) {
-            context = await child.render(t, context)
-            if(cacheContext) child.cache = context
-          }
-          child.userRender(t, context, 'after')
-          if(context !== drawingContext) {
-            drawingContext.drawImage(context.canvas, bound[0], bound[1])
-          }
-          drawingContext.restore()
-          /* eslint-enable no-await-in-loop */
+          child.draw(drawingContext, cacheContext, t)
         } else {
           // invisible, only need to remove lastRenderBox
           delete child.lastRenderBox
@@ -384,7 +352,7 @@ class Layer extends BaseNode {
       }
     }
   }
-  async renderRepaintAll(t) {
+  renderRepaintAll(t) {
     const renderEls = this[_children].filter(e => this.isVisible(e))
     const [width, height] = this.resolution
 
@@ -397,15 +365,15 @@ class Layer extends BaseNode {
 
     if(shadowContext) {
       shadowContext.clearRect(0, 0, width, height)
-      await this.drawSprites(shadowContext, renderEls, t)
+      this.drawSprites(shadowContext, renderEls, t)
       outputContext.drawImage(shadowContext.canvas, 0, 0)
     } else {
-      await this.drawSprites(outputContext, renderEls, t)
+      this.drawSprites(outputContext, renderEls, t)
     }
 
     this[_updateSet].clear()
   }
-  async renderRepaintDirty(t) {
+  renderRepaintDirty(t) {
     const [width, height] = this.resolution
 
     const updateSet = this[_updateSet]
@@ -523,11 +491,11 @@ class Layer extends BaseNode {
     this.sortChildren(renderEls)
 
     if(shadowContext) {
-      await this.drawSprites(shadowContext, renderEls, t)
+      this.drawSprites(shadowContext, renderEls, t)
       outputContext.drawImage(shadowContext.canvas, 0, 0)
       shadowContext.restore()
     } else {
-      await this.drawSprites(outputContext, renderEls, t)
+      this.drawSprites(outputContext, renderEls, t)
     }
 
     outputContext.restore()

@@ -23,7 +23,7 @@ test('test bgcolor red', async (t) => {
   const canvas = createCanvas(200, 200),
     context = canvas.getContext('2d')
 
-  await s.draw(context)
+  s.draw(context)
 
   const isEqual = await compare(canvas, 'basesprite-bgcolor-red.png')
 
@@ -44,7 +44,7 @@ test('test bgcolor green opacity=0.5', async (t) => {
   const canvas = createCanvas(200, 200),
     context = canvas.getContext('2d')
 
-  await s.draw(context)
+  s.draw(context)
 
   const isEqual = await compare(canvas, 'basesprite-bgcolor-green-opacity.png')
 
@@ -72,7 +72,7 @@ test('test basesprite-s1-s2-rotate', async (t) => {
   })
 
   const canvas = createCanvas(200, 200)
-  await drawSprites(canvas, [s1, s2])
+  drawSprites(canvas, [s1, s2])
 
   const isEqual = await compare(canvas, 'basesprite-s1-s2-rotate.png')
   t.truthy(isEqual)

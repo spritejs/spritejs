@@ -85,7 +85,7 @@ export default class Group extends BaseSprite {
       super.dispatchEvent(type, evt, forceTrigger)
     }
   }
-  async render(t, drawingContext) {
+  render(t, drawingContext) {
     drawingContext = super.render(t, drawingContext)
 
     const children = this[_children]
@@ -93,7 +93,7 @@ export default class Group extends BaseSprite {
     /* eslint-disable no-await-in-loop */
     for(let i = 0; i < children.length; i++) {
       const child = children[i]
-      await child.draw(drawingContext, false, t)
+      child.draw(drawingContext, false, t)
     }
     /* eslint-enable no-await-in-loop */
 

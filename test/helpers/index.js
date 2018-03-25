@@ -76,15 +76,13 @@ export async function compare(canvas, imgFile) {
   return isEqual
 }
 
-export async function drawSprites(canvas, sprites) {
+export function drawSprites(canvas, sprites) {
   const {width, height} = canvas,
     context = canvas.getContext('2d')
 
   context.clearRect(0, 0, width, height)
   for(let i = 0; i < sprites.length; i++) {
-    /* eslint-disable no-await-in-loop */
-    await sprites[i].draw(context)
-    /* eslint-enabel no-await-in-loop */
+    sprites[i].draw(context)
   }
   return canvas
 }
