@@ -72,7 +72,7 @@ class SpriteAttr {
     if(val == null) {
       val = this[_default][key]
     }
-    this.quietSet(key, val)
+    this[_attr][key] = val
     this.forceUpdate()
   }
   get(key) {
