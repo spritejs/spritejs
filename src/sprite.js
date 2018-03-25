@@ -95,23 +95,12 @@ export default class Sprite extends BaseSprite {
       }
     })
    */
-  constructor(textures, opts = {attr: {}}, AttrModel = TextureAttr) {
-    if(typeof textures === 'string') {
-      textures = [textures]
-    } else if(textures && !Array.isArray(textures)) {
-      opts = textures
-      textures = opts.textures
+  constructor(attr) {
+    if(typeof attr === 'string') {
+      attr = {textures: [attr]}
     }
-    const attr = opts.attr
-    delete opts.attr
-    super(opts, AttrModel)
+    super(attr)
     this[_texturesCache] = new Map()
-    if(textures) {
-      this.textures = textures
-    }
-    if(attr) {
-      this.attr(attr)
-    }
   }
 
   cloneNode(copyContent) {

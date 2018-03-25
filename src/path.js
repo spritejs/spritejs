@@ -116,11 +116,11 @@ export class PathSpriteAttr extends BaseSprite.Attr {
 class Path extends BaseSprite {
   static Attr = PathSpriteAttr
 
-  constructor(d, opts) {
-    super(opts)
-    if(d) {
-      this.attr({d})
+  constructor(attr) {
+    if(typeof attr === 'string') {
+      attr = {d: attr}
     }
+    super(attr)
   }
 
   get contentSize() {

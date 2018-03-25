@@ -4,7 +4,6 @@ import {Matrix, Vector} from 'sprite-math'
 import Animation from './animation'
 import {rectVertices, deprecate} from 'sprite-utils'
 import {createLinearGradients} from './gradient'
-import {createCanvas} from './cross-platform'
 
 const _attr = Symbol('attr'),
   _animations = Symbol('animations'),
@@ -23,14 +22,13 @@ class BaseSprite extends BaseNode {
       }
     })
    */
-  constructor(opts = {attr: {}}) {
+  constructor(attr) {
     super()
 
     this[_attr] = new this.constructor.Attr(this)
-
-    this.attr(opts.attr)
-    delete opts.attr
-    Object.assign(this, opts)
+    if(attr) {
+      this.attr(attr)
+    }
     this[_animations] = new Set()
     this[_context] = null
     this[_beforeRenders] = []
@@ -414,9 +412,9 @@ class BaseSprite extends BaseNode {
       }
     }
   }
-  async draw(drawingContext, enableCache = false, t) {
+  async draw(drawingContext, cacheContext, t) {
     if(typeof drawingContext === 'function') {
-      return this._draw(drawingContext, enableCache, t)
+      return this._draw(drawingContext, cacheContext, t)
     }
     this[_context] = drawingContext
     const transform = this.transform.m,
@@ -430,11 +428,12 @@ class BaseSprite extends BaseNode {
 
     let context = drawingContext
 
-    if(enableCache) {
+    if(cacheContext) {
       context = this.cache
       if(!context) {
-        const canvas = createCanvas(bound[2], bound[3])
-        context = canvas.getContext('2d')
+        cacheContext.canvas.width = bound[2]
+        cacheContext.canvas.height = bound[3]
+        context = cacheContext
       }
     } else {
       context.translate(bound[0], bound[1])
@@ -443,9 +442,9 @@ class BaseSprite extends BaseNode {
     if(this[_beforeRenders].length) {
       this[_beforeRenders] = this.userRender(t, context, this[_beforeRenders])
     }
-    if(!enableCache || context !== this.cache) {
+    if(!cacheContext || context !== this.cache) {
       context = await this.render(t, context)
-      if(enableCache) this.cache = context
+      if(cacheContext) this.cache = context
     }
     if(this[_afterRenders].length) {
       this[_afterRenders] = this.userRender(t, context, this[_afterRenders])

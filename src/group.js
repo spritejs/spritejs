@@ -15,8 +15,8 @@ function sortChildren(children) {
 }
 
 export default class Group extends BaseSprite {
-  constructor(opts = {attr: {}}) {
-    super(opts)
+  constructor(attr) {
+    super(attr)
     this[_children] = []
     this[_zOrder] = 0
   }
