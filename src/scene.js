@@ -1,6 +1,6 @@
-import Layer from './mylayer'
+import Layer from './layer'
 import Resource from './resource'
-import BaseNode from './basenode'
+import {BaseNode} from 'sprite-core'
 import {createCanvas, getContainer} from './cross-platform'
 
 const _layerMap = Symbol('layerMap'),

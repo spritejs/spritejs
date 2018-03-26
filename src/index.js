@@ -1,15 +1,19 @@
 import {Color, parseColor, setDeprecation} from 'sprite-utils'
-import BaseSprite from './basesprite'
-import Sprite from './ressprite'
-import Label from './label'
-import Layer from './mylayer'
+import {
+  BaseNode,
+  BaseSprite,
+  Label,
+  Group,
+} from 'sprite-core'
+
+import Sprite from './sprite'
+import Layer from './layer'
 import Scene from './scene'
 import Resource from './resource'
 import Path from './path'
 import Axis from './axis'
 import {registerNodeType, createNode} from './nodetype'
 import {Matrix, Vector} from 'sprite-math'
-import Group from './group'
 import {Effects} from 'sprite-animator'
 import {shim} from './cross-platform'
 
@@ -32,6 +36,7 @@ const version = require('../package.json').version
 
 export {
   version,
+  BaseNode,
   BaseSprite,
   Sprite,
   Resource,
