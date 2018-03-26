@@ -1,6 +1,5 @@
-import BaseSprite from './basesprite'
+import {BaseSprite, createLinearGradients} from 'sprite-core'
 import {parseColorString, deprecate, attr} from 'sprite-utils'
-import {createLinearGradients} from './gradient'
 import {Effects} from 'sprite-animator'
 import pathEffect from './path-effect'
 import {createPath, calPathRect} from './cross-platform'

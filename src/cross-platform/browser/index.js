@@ -71,8 +71,8 @@ export function getContainer(container) {
   return container
 }
 
-import SpriteAttr from '../../attr'
-
+import {Sprite} from 'sprite-core'
+const SpriteAttr = Sprite.Attr
 export function shim() {
   Object.defineProperties(SpriteAttr.prototype, {
     offsetPath: {
