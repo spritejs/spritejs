@@ -75,7 +75,8 @@ class BaseNode {
   // called when layer appendChild
   connect(parent, zOrder) {
     if(this.parent) {
-      throw new Error('This node belongs to another parent node! Remove it first...')
+      // throw new Error('This node belongs to another parent node! Remove it first...')
+      this.disconnect(this.parent)
     }
 
     Object.defineProperty(this, 'zOrder', {

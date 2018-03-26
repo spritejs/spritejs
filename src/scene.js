@@ -215,7 +215,11 @@ export default class extends BaseNode {
         zIndex = opts.zIndex
         delete opts.zIndex
       }
-      const layer = new Layer(id, opts)
+
+      const canvas = opts.canvas || createCanvas()
+      canvas.dataset.layerId = id
+      opts.canvas = canvas
+      const layer = new Layer(opts)
       this.appendLayer(layer, zIndex)
     }
 

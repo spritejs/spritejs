@@ -82,7 +82,7 @@ export function drawSprites(canvas, sprites) {
 
   context.clearRect(0, 0, width, height)
   for(let i = 0; i < sprites.length; i++) {
-    sprites[i].draw(context)
+    sprites[i].connect(context).draw()
   }
   return canvas
 }

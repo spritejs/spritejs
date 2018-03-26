@@ -147,10 +147,15 @@ class BaseSprite extends BaseNode {
     return animation
   }
 
-  connect(parent, zOrder) {
-    super.connect(parent, zOrder)
+  connect(parent, zOrder = 0) {
+    if(parent && !(parent instanceof BaseNode)) {
+      const node = new BaseNode()
+      node.context = parent
+      parent = node
+    }
+    const ret = super.connect(parent, zOrder)
     Object.defineProperty(this, 'context', {
-      get: () => parent.context,
+      get: () => parent.cache || parent.context,
       configurable: true,
     })
     this[_animations].forEach((animation) => {
@@ -160,12 +165,14 @@ class BaseSprite extends BaseNode {
         this[_animations].delete(animation)
       })
     })
+    return ret
   }
 
   disconnect(parent) {
     this[_animations].forEach(animation => animation.cancel())
-    super.disconnect(parent)
+    const ret = super.disconnect(parent)
     delete this.context
+    return ret
   }
 
   // content width / height
@@ -392,12 +399,15 @@ class BaseSprite extends BaseNode {
       }
     }
   }
-  draw(drawingContext, cacheContext, t) {
-    if(typeof drawingContext === 'function') {
-      return this._draw(drawingContext, cacheContext, t)
+  draw(t, ...args) {
+    if(typeof t === 'function') {
+      return this._draw(t, ...args)
     }
 
-    let context = drawingContext
+    const drawingContext = this.context
+    if(!drawingContext) {
+      throw new Error('No context!')
+    }
 
     const opacity = this.attr('opacity'),
       box = this.renderBox,
@@ -407,6 +417,7 @@ class BaseSprite extends BaseNode {
     const isVisible = opacity > 0 && (size[0] > 0 && size[1] > 0)
       && (box[0] <= width && box[1] <= height && box[2] >= 0 && box[3] >= 0)
 
+    let context = drawingContext
     if(isVisible) {
       const transform = this.transform.m,
         pos = this.attr('pos'),
@@ -417,12 +428,13 @@ class BaseSprite extends BaseNode {
       drawingContext.transform(...transform)
       drawingContext.globalAlpha = this.attr('opacity')
 
-      if(cacheContext) {
+      if(drawingContext.canvas && drawingContext.canvas.cloneNode) {
         context = this.cache
         if(!context) {
-          cacheContext.canvas.width = bound[2]
-          cacheContext.canvas.height = bound[3]
-          context = cacheContext
+          const cacheCanvas = drawingContext.canvas.cloneNode(false)
+          cacheCanvas.width = bound[2]
+          cacheCanvas.height = bound[3]
+          context = cacheCanvas.getContext('2d')
         }
       } else {
         context.translate(bound[0], bound[1])
@@ -437,9 +449,9 @@ class BaseSprite extends BaseNode {
         this.userRender(t, context, 'before')
         context.restore()
       }
-      if(!cacheContext || context !== this.cache) {
+      if(context !== this.cache) {
+        this.cache = context
         context = this.render(t, context)
-        if(cacheContext) this.cache = context
       }
       if(this[_afterRenders].length) {
         context.save()
