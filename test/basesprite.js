@@ -23,7 +23,7 @@ test('test bgcolor red', async (t) => {
   const canvas = createCanvas(200, 200),
     context = canvas.getContext('2d')
 
-  s.draw(context)
+  s.connect(context).draw()
 
   const isEqual = await compare(canvas, 'basesprite-bgcolor-red.png')
 
@@ -44,7 +44,7 @@ test('test bgcolor green opacity=0.5', async (t) => {
   const canvas = createCanvas(200, 200),
     context = canvas.getContext('2d')
 
-  s.draw(context)
+  s.connect(context).draw()
 
   const isEqual = await compare(canvas, 'basesprite-bgcolor-green-opacity.png')
 

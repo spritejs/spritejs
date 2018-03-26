@@ -5,7 +5,6 @@ import {boxIntersect, boxEqual, boxToRect} from 'sprite-utils'
 import {Timeline} from 'sprite-animator'
 
 import {createNode, getNodeType} from './nodetype'
-import {createCanvas} from './cross-platform'
 
 const _children = Symbol('children'),
   _updateSet = Symbol('updateSet'),
@@ -17,8 +16,12 @@ const _children = Symbol('children'),
   _resolution = Symbol('resolution')
 
 class Layer extends BaseNode {
-  constructor(id, {
-    handleEvent, evaluateFPS, renderMode, resolution,
+  constructor({
+    canvas,
+    handleEvent,
+    evaluateFPS,
+    renderMode,
+    resolution,
   } = {}) {
     super()
 
@@ -28,8 +31,8 @@ class Layer extends BaseNode {
     // renderMode: repaintAll | repaintDirty
     this.renderMode = renderMode || 'repaintAll'
 
-    const canvas = createCanvas()
-    canvas.dataset.layerId = id
+    // const canvas = createCanvas()
+    // canvas.dataset.layerId = id
     canvas.style.position = 'absolute'
     canvas.style.left = 0
     canvas.style.top = 0
@@ -196,6 +199,9 @@ class Layer extends BaseNode {
   get canvas() {
     return this.outputContext.canvas
   }
+  get context() {
+    return this.shadowContext ? this.shadowContext : this.outputContext
+  }
   get container() {
     return this.parent ? this.parent.container : null
   }
@@ -327,10 +333,7 @@ class Layer extends BaseNode {
       return a_zidx - b_zidx
     })
   }
-  createCacheContext() {
-    return createCanvas().getContext('2d')
-  }
-  drawSprites(drawingContext, renderEls, t) {
+  drawSprites(renderEls, t) {
     if(this.evaluateFPS) {
       this[_tRecord].push(t)
       this[_tRecord] = this[_tRecord].slice(-10)
@@ -340,11 +343,7 @@ class Layer extends BaseNode {
       const child = renderEls[i]
       if(child.parent === this) {
         if(this.isVisible(child)) {
-          let cacheContext = child.cache
-          if(!cacheContext) {
-            cacheContext = this.createCacheContext()
-          }
-          child.draw(drawingContext, cacheContext, t)
+          child.draw(t)
         } else {
           // invisible, only need to remove lastRenderBox
           delete child.lastRenderBox
@@ -365,10 +364,10 @@ class Layer extends BaseNode {
 
     if(shadowContext) {
       shadowContext.clearRect(0, 0, width, height)
-      this.drawSprites(shadowContext, renderEls, t)
+      this.drawSprites(renderEls, t)
       outputContext.drawImage(shadowContext.canvas, 0, 0)
     } else {
-      this.drawSprites(outputContext, renderEls, t)
+      this.drawSprites(renderEls, t)
     }
 
     this[_updateSet].clear()
@@ -491,11 +490,11 @@ class Layer extends BaseNode {
     this.sortChildren(renderEls)
 
     if(shadowContext) {
-      this.drawSprites(shadowContext, renderEls, t)
+      this.drawSprites(renderEls, t)
       outputContext.drawImage(shadowContext.canvas, 0, 0)
       shadowContext.restore()
     } else {
-      this.drawSprites(outputContext, renderEls, t)
+      this.drawSprites(renderEls, t)
     }
 
     outputContext.restore()

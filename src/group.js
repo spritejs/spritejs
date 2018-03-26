@@ -93,7 +93,7 @@ export default class Group extends BaseSprite {
     /* eslint-disable no-await-in-loop */
     for(let i = 0; i < children.length; i++) {
       const child = children[i]
-      child.draw(drawingContext, false, t)
+      child.draw(t)
     }
     /* eslint-enable no-await-in-loop */
 
