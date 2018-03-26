@@ -349,13 +349,11 @@ class BaseSprite extends BaseNode {
     if(parent) {
       if(parent.forceUpdate) {
         parent.forceUpdate(true)
-      } else if(parent.update && parent.parent) {
+      } else if(parent.update) {
         if(clearCache) {
           this.cache = null
         }
-        if(!this.parent.isDirty(this)) {
-          this.parent.update(this)
-        }
+        this.parent.update(this)
       }
     }
   }

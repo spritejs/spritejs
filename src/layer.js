@@ -31,11 +31,6 @@ class Layer extends BaseNode {
     // renderMode: repaintAll | repaintDirty
     this.renderMode = renderMode || 'repaintAll'
 
-    // const canvas = createCanvas()
-    // canvas.dataset.layerId = id
-    canvas.style.position = 'absolute'
-    canvas.style.left = 0
-    canvas.style.top = 0
     this.outputContext = canvas.getContext('2d')
 
     const shadowCanvas = canvas.cloneNode(true)
@@ -218,9 +213,6 @@ class Layer extends BaseNode {
   }
   get id() {
     return this.canvas.dataset.layerId
-  }
-  isDirty(target) {
-    return this[_updateSet].has(target)
   }
   prepareRender() {
     if(!this[_state].prepareRender) {

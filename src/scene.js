@@ -218,6 +218,9 @@ export default class extends BaseNode {
 
       const canvas = opts.canvas || createCanvas()
       canvas.dataset.layerId = id
+      canvas.style.position = 'absolute'
+      canvas.style.left = 0
+      canvas.style.top = 0
       opts.canvas = canvas
       const layer = new Layer(opts)
       this.appendLayer(layer, zIndex)
