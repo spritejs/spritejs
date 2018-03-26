@@ -7,7 +7,6 @@ import {createLinearGradients} from './gradient'
 
 const _attr = Symbol('attr'),
   _animations = Symbol('animations'),
-  _context = Symbol('context'),
   _beforeRenders = Symbol('beforeRenders'),
   _afterRenders = Symbol('afterRenders'),
   _paths = Symbol('paths')
@@ -30,7 +29,6 @@ class BaseSprite extends BaseNode {
       this.attr(attr)
     }
     this[_animations] = new Set()
-    this[_context] = null
     this[_beforeRenders] = []
     this[_afterRenders] = []
     this[_paths] = []
@@ -55,24 +53,6 @@ class BaseSprite extends BaseNode {
       return paths
     }
     return []
-  }
-
-  get context() {
-    let node = this
-    do {
-      if(node[_context]) {
-        return node[_context]
-      }
-      if(node.shadowContext) {
-        return node.shadowContext
-      }
-      if(node.outputContext) {
-        return node.outputContext
-      }
-      node = node.parent
-    } while(node != null)
-
-    return null
   }
 
   get nodeType() {
@@ -169,6 +149,10 @@ class BaseSprite extends BaseNode {
 
   connect(parent, zOrder) {
     super.connect(parent, zOrder)
+    Object.defineProperty(this, 'context', {
+      get: () => parent.context,
+      configurable: true,
+    })
     this[_animations].forEach((animation) => {
       animation.baseTimeline = parent.timeline
       animation.play()
@@ -181,6 +165,7 @@ class BaseSprite extends BaseNode {
   disconnect(parent) {
     this[_animations].forEach(animation => animation.cancel())
     super.disconnect(parent)
+    delete this.context
   }
 
   // content width / height
@@ -412,7 +397,6 @@ class BaseSprite extends BaseNode {
       return this._draw(drawingContext, cacheContext, t)
     }
 
-    this[_context] = drawingContext
     let context = drawingContext
 
     const opacity = this.attr('opacity'),
@@ -445,14 +429,26 @@ class BaseSprite extends BaseNode {
       }
 
       if(this[_beforeRenders].length) {
+        context.save()
+        if(context === drawingContext) {
+          context.rect(...bound)
+          context.clip()
+        }
         this.userRender(t, context, 'before')
+        context.restore()
       }
       if(!cacheContext || context !== this.cache) {
         context = this.render(t, context)
         if(cacheContext) this.cache = context
       }
       if(this[_afterRenders].length) {
+        context.save()
+        if(context === drawingContext) {
+          context.rect(...bound)
+          context.clip()
+        }
         this.userRender(t, context, 'after')
+        context.restore()
       }
 
       if(context !== drawingContext) {
@@ -526,7 +522,6 @@ class BaseSprite extends BaseNode {
 
   render(t, drawingContext) {
     this[_paths] = []
-    this[_context] = drawingContext
 
     const attr = this.attr(),
       bgcolor = attr.bgcolor,
