@@ -4,7 +4,7 @@ import {createLinearGradients} from './gradient'
 const parseFont = require('./font/parse-font')
 
 const measureText = (node, text, font, lineHeight = '') => {
-  const ctx = node.context || node.layer && node.layer.outputContext
+  const ctx = node.context
   if(!ctx) {
     return [0, 0]
   }
