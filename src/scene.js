@@ -1,4 +1,4 @@
-import Layer from './layer'
+import Layer from './mylayer'
 import Resource from './resource'
 import BaseNode from './basenode'
 import {createCanvas, getContainer} from './cross-platform'
@@ -6,7 +6,9 @@ import {createCanvas, getContainer} from './cross-platform'
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
   _layers = Symbol('layers'),
-  _snapshot = Symbol('snapshot')
+  _snapshot = Symbol('snapshot'),
+  _viewport = Symbol('viewport'),
+  _resolution = Symbol('resolution')
 
 function sortLayer(paper) {
   const layers = Object.values(paper[_layerMap])
@@ -28,11 +30,9 @@ export default class extends BaseNode {
     container = getContainer(container)
     this.container = container
 
-    this.viewport = [width || container.clientWidth,
+    this[_viewport] = [width || container.clientWidth,
       height || container.clientHeight]
-
-    this.resolution = [this.viewport[0], this.viewport[1]]
-
+    this[_resolution] = [this.viewport[0], this.viewport[1]]
     this[_zOrder] = 0
     this[_layerMap] = {}
     this[_layers] = []
@@ -78,22 +78,42 @@ export default class extends BaseNode {
     return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1])
   }
 
-  setViewport(width, height) {
+  set viewport([width, height]) {
     if(width === 'auto') {
       width = this.container.clientWidth
     }
     if(height === 'auto') {
       height = this.container.clientHeight
     }
+    this[_viewport] = [width, height]
+    this[_layers].forEach((layer) => {
+      layer.viewport = [width, height]
+    })
+  }
+  get viewport() {
+    return this[_viewport]
+  }
+
+  set resolution([width, height]) {
+    this[_resolution] = [width, height]
+    this[_layers].forEach((layer) => {
+      layer.resolution = [width, height]
+    })
+  }
+  get resolution() {
+    return this[_resolution]
+  }
+
+  setViewport(width, height) {
     this.viewport = [width, height]
-    this[_layers].forEach(layer => layer.updateResolution())
     return this
   }
+
   setResolution(width, height) {
     this.resolution = [width, height]
-    this[_layers].forEach(layer => layer.updateResolution())
     return this
   }
+
   toGlobalPos(x, y) {
     const resolution = this.resolution,
       viewport = this.viewport
@@ -239,6 +259,8 @@ export default class extends BaseNode {
 
     this[_layerMap][id] = layer
     layer.connect(this, this[_zOrder]++, zIndex)
+    layer.viewport = this.viewport
+    layer.resolution = this.resolution
 
     sortLayer(this)
     return layer

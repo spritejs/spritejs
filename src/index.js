@@ -2,6 +2,7 @@ import {Color, parseColor, setDeprecation} from 'sprite-utils'
 import BaseSprite from './basesprite'
 import Sprite from './ressprite'
 import Label from './label'
+import Layer from './mylayer'
 import Scene from './scene'
 import Resource from './resource'
 import Path from './path'
@@ -35,6 +36,7 @@ export {
   Sprite,
   Resource,
   Label,
+  Layer,
   Path,
   Color,
   parseColor,

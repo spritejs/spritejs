@@ -4,16 +4,13 @@ import Group from './group'
 import {boxIntersect, boxEqual, boxToRect} from 'sprite-utils'
 import {Timeline} from 'sprite-animator'
 
-import {createNode, getNodeType} from './nodetype'
-
 const _children = Symbol('children'),
   _updateSet = Symbol('updateSet'),
   _zOrder = Symbol('zOrder'),
   _state = Symbol('state'),
   _tRecord = Symbol('tRecord'),
   _timeline = Symbol('timeline'),
-  _renderPromise = Symbol('renderPromise'),
-  _resolution = Symbol('resolution')
+  _renderPromise = Symbol('renderPromise')
 
 class Layer extends BaseNode {
   constructor({
@@ -33,8 +30,10 @@ class Layer extends BaseNode {
 
     this.outputContext = canvas.getContext('2d')
 
-    const shadowCanvas = canvas.cloneNode(true)
-    this.shadowContext = shadowCanvas.getContext('2d')
+    if(canvas.cloneNode) {
+      const shadowCanvas = canvas.cloneNode(true)
+      this.shadowContext = shadowCanvas.getContext('2d')
+    }
 
     this[_children] = []
     this[_updateSet] = new Set()
@@ -43,123 +42,15 @@ class Layer extends BaseNode {
     this[_state] = {}
     this[_timeline] = new Timeline()
 
-    // d3-friendly
-    this.namespaceURI = 'http://spritejs.org/layer'
-    const that = this
-    this.ownerDocument = {
-      createElementNS(uri, name) {
-        const sprite = createNode(name)
-        if(sprite) {
-          return that.appendChild(sprite)
-        }
-        return null
-      },
+    if(resolution) {
+      this.resolution = resolution
     }
-
-    if(resolution) this.resolution = resolution
-    this.updateResolution()
   }
 
-  getElementById(id) {
-    const children = this[_children]
-    for(let i = 0; i < children.length; i++) {
-      const child = children[i]
-      if(child.id === id) {
-        return child
-      }
-    }
-    return null
+  get children() {
+    return this[_children]
   }
 
-  getElementsByName(name) {
-    return this[_children].filter(c => c.name === name)
-  }
-
-  /*
-    d3-friendly
-    *, nodeType, checker
-  */
-  querySelector(selector) {
-    const children = this[_children]
-
-    if(!selector || selector === '*') {
-      return children[0]
-    } else if(typeof selector === 'string') {
-      // querySelector('nodeType')
-      // querySelector('#id')
-      // querySelector(':name')
-
-      if(selector.startsWith('#')) {
-        return this.getElementById(selector.slice(1))
-      }
-      if(selector.startsWith(':')) {
-        const name = selector.slice(1)
-
-        for(let i = 0; i < children.length; i++) {
-          const child = children[i]
-          if(child.name === name) {
-            return child
-          }
-        }
-        return null
-      }
-      const nodeType = getNodeType(selector)
-      if(nodeType) {
-        for(let i = 0; i < children.length; i++) {
-          const child = children[i]
-          if(child instanceof nodeType) {
-            return child
-          }
-        }
-        return null
-      }
-      return null
-    }
-    for(let i = 0; i < children.length; i++) {
-      const child = children[i]
-      const sel = Object.entries(selector)
-      for(let j = 0; j < sel.length; j++) {
-        const [type, checker] = sel[j]
-        const nodeType = getNodeType(type)
-        if(nodeType && child instanceof nodeType && checker.call(this, child)) {
-          return child
-        }
-      }
-    }
-    return null
-  }
-  querySelectorAll(selector) {
-    if(!selector || selector === '*') {
-      return this[_children]
-    } else if(typeof selector === 'string') {
-      if(selector.startsWith('#')) {
-        const sprite = this.getElementById(selector.slice(1))
-        return sprite ? [sprite] : []
-      }
-      if(selector.startsWith(':')) {
-        return this.getElementsByName(selector.slice(1))
-      }
-      const nodeType = getNodeType(selector)
-      if(nodeType) {
-        return this[_children].filter(child => child instanceof nodeType)
-      }
-      return null
-    }
-    return this[_children].filter((child) => {
-      const sel = Object.entries(selector)
-      for(let i = 0; i < sel.length; i++) {
-        const [type, checker] = sel[i]
-        const nodeType = getNodeType(type)
-        if(!nodeType || !(child instanceof nodeType)) {
-          return false
-        }
-        if(!checker.call(this, child)) {
-          return false
-        }
-      }
-      return true
-    })
-  }
   insertBefore(newchild, refchild) {
     const idx = this[_children].indexOf(refchild)
     if(idx >= 0) {
@@ -197,40 +88,38 @@ class Layer extends BaseNode {
   get context() {
     return this.shadowContext ? this.shadowContext : this.outputContext
   }
-  get container() {
-    return this.parent ? this.parent.container : null
-  }
   get resolution() {
-    if(this[_resolution]) return this[_resolution]
-
-    return this.parent ? this.parent.resolution : [0, 0]
+    return [this.canvas.width, this.canvas.height]
   }
   set resolution(resolution) {
-    this[_resolution] = resolution
+    const [width, height] = resolution
+    const outputCanvas = this.outputContext.canvas
+    outputCanvas.width = width
+    outputCanvas.height = height
+    this.outputContext.clearRect(0, 0, width, height)
+
+    if(this.shadowContext) {
+      const shadowCanvas = this.shadowContext.canvas
+      shadowCanvas.width = width
+      shadowCanvas.height = height
+      this.shadowContext.clearRect(0, 0, width, height)
+    }
+
+    this[_children].forEach((child) => {
+      delete child.lastRenderBox
+      child.forceUpdate()
+    })
   }
-  get viewport() {
-    return this.parent ? this.parent.viewport : [0, 0]
-  }
-  get id() {
-    return this.canvas.dataset.layerId
-  }
+
   prepareRender() {
     if(!this[_state].prepareRender) {
       this[_state].prepareRender = true
 
       const that = this,
-        _dispatchEvent = super.dispatchEvent,
-        parent = this.parent
+        _dispatchEvent = super.dispatchEvent
 
       this[_renderPromise] = new Promise((resolve, reject) => {
         requestAnimationFrame(function step(t) {
-          if(!parent) {
-            // already removed from paper
-            that[_state].prepareRender = false
-            resolve()
-            return
-          }
-
           let renderer
           if(that.renderMode === 'repaintDirty') {
             renderer = that.renderRepaintDirty.bind(that)
@@ -263,13 +152,6 @@ class Layer extends BaseNode {
     return this[_renderPromise]
   }
   update(target) {
-    const parent = this.parent
-
-    // already removed from paper
-    if(!parent) {
-      this[_updateSet].clear()
-      return
-    }
     if(target && this[_updateSet].has(target)) return
 
     // invisible... return
@@ -554,91 +436,19 @@ class Layer extends BaseNode {
     evt.targetSprites = targetSprites
     super.dispatchEvent(type, evt)
   }
-  updateResolution() {
-    if(!this.parent) return
-
-    const resolution = this.resolution,
-      viewport = this.viewport
-
-    const container = this.parent.container,
-      outputCanvas = this.outputContext.canvas
-
-    outputCanvas.width = resolution[0]
-    outputCanvas.height = resolution[1]
-
-    outputCanvas.style.width = `${viewport[0]}px`
-    outputCanvas.style.height = `${viewport[1]}px`
-
-    this.outputContext.clearRect(0, 0, resolution[0], resolution[1])
-
-    if(this.shadowContext) {
-      const shadowCanvas = this.shadowContext.canvas
-      shadowCanvas.width = resolution[0]
-      shadowCanvas.height = resolution[1]
-      this.shadowContext.clearRect(0, 0, resolution[0], resolution[1])
-    }
-
-    if(container !== outputCanvas.parentNode) {
-      container.appendChild(outputCanvas)
-    }
-
-    this[_children].forEach((child) => {
-      delete child.lastRenderBox
-      child.forceUpdate()
-    })
-  }
-  get zIndex() {
-    return this.outputContext.canvas.style.zIndex
-  }
-  set zIndex(zIndex) {
-    this.outputContext.canvas.style.zIndex = zIndex
-  }
   connect(parent, zOrder, zIndex) {
     super.connect(parent, zOrder)
     this.zIndex = zIndex
-    this.updateResolution()
+    if(parent && parent.container) {
+      parent.container.append(this.outputContext.canvas)
+    }
     return this
   }
   disconnect(parent) {
-    this.outputContext.canvas.remove()
-    return super.disconnect(parent)
-  }
-  async getSnapshot() {
-    await this.prepareRender()
-    const snapshotCanvas = this.canvas.cloneNode(true)
-    snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0)
-    const children = this[_children].map(child => child.serialize())
-    return {context: snapshotCanvas, children}
-  }
-  putSnapshot(snapshot) {
-    const outputContext = this.outputContext
-
-    const [width, height] = this.resolution
-
-    outputContext.clearRect(0, 0, width, height)
-    outputContext.drawImage(snapshot.context, 0, 0)
-
-    this[_updateSet].clear()
-
-    snapshot.children.forEach((child) => {
-      const node = createNode(child.nodeType, child.attrs, child.id)
-      this.appendChild(node, false)
-    })
-
-    for(let i = 0; i < this[_children].length; i++) {
-      const child = this[_children][i]
-      child.dispatchEvent(
-        'update',
-        {
-          target: child, context: child.context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox,
-        },
-        true
-      )
-
-      child.lastRenderBox = child.renderBox
+    if(this.canvas && this.canvas.remove) {
+      this.canvas.remove()
     }
-
-    return this[_children]
+    return super.disconnect(parent)
   }
   group(...sprites) {
     const group = new Group()
@@ -660,6 +470,9 @@ class Layer extends BaseNode {
     if(update) {
       outputContext.drawImage(shadowContext.canvas, 0, 0)
     }
+  }
+  clearUpdate() {
+    this[_updateSet].clear()
   }
 }
 
