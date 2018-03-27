@@ -8707,7 +8707,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '1.17.1';
+var version = '1.17.2';
 
 exports.version = version;
 exports.BaseNode = _spriteCore.BaseNode;
@@ -13346,7 +13346,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
         bgcolor: {
           direction: 30,  //angle，[0,360)
           rect: [x, y, w, h],  // rect + direction or vector
-          vector: [x1, y1, r1, x2, y2, r2], // vector.length -> linear or radical
+          vector: [x1, y1, r1, x2, y2, r2], // vector.length -> linear or radial
           colors: [
             {offset: 0, color: 'red'},
             {offset: 1, color: 'black'}
@@ -14421,7 +14421,7 @@ var Layer = function (_BaseNode) {
       (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'connect', this).call(this, parent, zOrder);
       this.zIndex = zIndex;
       if (parent && parent.container) {
-        parent.container.append(this.outputContext.canvas);
+        parent.container.appendChild(this.outputContext.canvas);
       }
       return this;
     }
