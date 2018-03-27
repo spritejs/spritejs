@@ -8707,7 +8707,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '1.17.0';
+var version = '1.17.1';
 
 exports.version = version;
 exports.BaseNode = _spriteCore.BaseNode;
