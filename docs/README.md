@@ -29,37 +29,37 @@ sprite.attr({
 scene.layer().appendChild(sprite)
 ```
 
-spritejs 使用非常简单，`spritejs.Paper2D(selector)` 在容器上创建一个 paper， paper 会自适应容器的宽高。通过 `paper.setResolution(width, height)` 创建指定分辨率的画布。
+spritejs 使用非常简单，`spritejs.Scene(selector)` 在容器上创建一个 scene， scene 会自适应容器的宽高。通过 `scene.setResolution(width, height)` 创建指定分辨率的画布。
 
 ### 设置分辨率
 
-#### paper.setResolution(width, height)
+#### scene.setResolution(width, height)
 
-这个方法会影响所有属于 paper 的 layer，分辨率默认值是与容器的宽高相同，通过 setResolution 可以将分辨率设置为任意数值，如果分辨率比例和容器不相同，图像会被拉伸。
+这个方法会影响所有属于 scene 的 layer，分辨率默认值是与容器的宽高相同，通过 setResolution 可以将分辨率设置为任意数值，如果分辨率比例和容器不相同，图像会被拉伸。
 
 ```js
 const container = document.querySelector('#container')
 container.style.width = 600
 container.style.height = 400
 
-const paper = spritejs.Paper2D(container)
-paper.setResolution(1200, 800)
+const scene = spritejs.Scene(container)
+scene.setResolution(1200, 800)
 ```
 
-### 创建和获取 layer
+### 创建和获取 scene
 
-paper.layer 可以创建或获取一个 layer，一个 layer 是一层 canvas，可以在上面绘制 sprite。paper.layer 可以传不同 id，这样可以创建不同的图层。比如：
+scene.layer 可以创建或获取一个 layer，一个 layer 是一层 canvas，可以在上面绘制 sprite。scene.layer 可以传不同 id，这样可以创建不同的图层。比如：
 
 ```js
-const background = paper.layer('background')
-const foreground = paper.layer('foreground')
+const background = scene.layer('background')
+const foreground = scene.layer('foreground')
 ```
 
-paper.layer 有第二个参数，如果是一个数字，表示 zIndex，数值大的显示在上层。默认的 zIndex 是 0。如果两个 layer 的 zIndex 相同，后生成的 layer 显示在上层。
+scene.layer 有第二个参数，如果是一个数字，表示 zIndex，数值大的显示在上层。默认的 zIndex 是 0。如果两个 layer 的 zIndex 相同，后生成的 layer 显示在上层。
 
 ```js
-const foreground = paper.layer('foreground', 1)  //前景在背景之上
-const background = paper.layer('background', 0)
+const foreground = scene.layer('foreground', 1)  //前景在背景之上
+const background = scene.layer('background', 0)
 ```
 
 ### Layer 的高级配置
@@ -71,7 +71,7 @@ layer 的第二个参数可以传一个 object，有以下几个属性：
 同直接传数字 zIndex
 
 ```js
-const foreground = paper.layer('foreground', {zIndex: 1})
+const foreground = scene.layer('foreground', {zIndex: 1})
 ```
 
 #### handleEvent 
@@ -79,7 +79,7 @@ const foreground = paper.layer('foreground', {zIndex: 1})
 boolean handleEvent ： 是否处理事件，默认为 true，能够让 layer 响应事件，并派发给 layer 上的所有 sprites。目前支持的事件有 mousedown、mouseup、mousemove、mouseenter、mouseleave、touchstart、touchmove、touchend，详见**事件处理机制**
 
 ```js
-const foreground = paper.layer('foreground', {handleEvent: false})
+const foreground = scene.layer('foreground', {handleEvent: false})
 ```
 
 如果一个层只是渲染，不要给其中的 sprite 添加事件，那么可以将 handleEvent 置为 false，这样可以提升性能。
@@ -89,7 +89,7 @@ const foreground = paper.layer('foreground', {handleEvent: false})
 boolean evaluteFPS ： 开启这个选项可以监控 layer 的 FPS 变化从而测试性能。不过注意的是，spritejs 的渲染机制和其他一些库不同，它并没有固定周期渲染，如果当前 layer 的 sprite 没有发生变化，spritejs 并不会刷新，此时测不出 FPS，如果 sprite 的刷新频率很低，那么此时的 FPS 数值也会很低，这个和性能无关。
 
 ```js
-const foreground = paper.layer('foreground', {evaluateFPS: false})
+const foreground = scene.layer('foreground', {evaluateFPS: false})
 ```
 
 #### renderMode
@@ -97,15 +97,15 @@ const foreground = paper.layer('foreground', {evaluateFPS: false})
 renderMode : 渲染模式，默认值为 repaintAll，表示每当 sprite 有变化时，整个 layer 区域全部刷新，可切换为 repaintDirty，那样只会刷新 sprite 影响到的区域。如果 sprite 数量很多的时候，repaintAll 性能较好，如果 sprite 数量不太多，而且运动区域只占整个 canvas 区域一小部分的时候，采用 repaintDirty 性能较好。
 
 ```js
-const foreground = paper.layer('foreground', {renderMode: 'repaintDirty'})
+const foreground = scene.layer('foreground', {renderMode: 'repaintDirty'})
 ```
 
 
 ### 资源预加载
 
-主要是 sprite 用到的图片资源，当图片比较大时，可以用 paper.preload 进行资源的预加载。
+主要是 sprite 用到的图片资源，当图片比较大时，可以用 scene.preload 进行资源的预加载。
 
-#### paper.preload(...res)
+#### scene.preload(...res)
 
 这是一个异步方法，返回一个 promise，异步获取图片资源。
 
@@ -113,7 +113,7 @@ const foreground = paper.layer('foreground', {renderMode: 'repaintDirty'})
 (async function(){
 	...
 	
-	await paper.preload(
+	await scene.preload(
 	  img1,
 	  img2,
 	  [res3, res3json]   // 预加载资源，支持雪碧图
@@ -146,8 +146,8 @@ innerbox 与 outerbox 之间的空隙是 padding
 **注意** 
 
 - spritejs 简化了 border 和 padding，目前只支持单一的数值，暂不支持 borderLeft、paddingTop 这种分别设定不同宽度，未来可能会提供支持。
-- spritejs 的 border 提供 colore 和宽度，暂不支持改变线条样式，统一为实现，未来可能会提供其他线条支持
-- spritejs 的 border 支持 borderRadius，但是也同样不支持分别设定不同的 x、y 方向的 radius，只支持统一的单一值，另外 borderRadius 不支持百分比，未来可能会提供支持
+- spritejs 的 border 提供 color 和宽度，暂不支持改变线条样式，统一为实现，未来可能会提供其他线条支持。
+- spritejs 的 border 支持 borderRadius，但是也同样不支持分别设定不同的 x、y 方向的 radius，只支持统一的单一值，另外 borderRadius 不支持百分比，未来可能会提供支持。
 
 [例子](https://code.h5jun.com/legi)
 
