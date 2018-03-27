@@ -4,6 +4,7 @@ import {
   BaseSprite,
   Label,
   Group,
+  Effects,
 } from 'sprite-core'
 
 import Sprite from './sprite'
@@ -14,7 +15,6 @@ import Path from './path'
 import Axis from './axis'
 import {registerNodeType, createNode} from './nodetype'
 import {Matrix, Vector} from 'sprite-math'
-import {Effects} from 'sprite-animator'
 import {shim} from './cross-platform'
 
 if(shim) {

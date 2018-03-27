@@ -1,6 +1,5 @@
-import {BaseSprite, createLinearGradients} from 'sprite-core'
+import {BaseSprite, createGradients, Effects} from 'sprite-core'
 import {parseColorString, deprecate, attr} from 'sprite-utils'
-import {Effects} from 'sprite-animator'
 import pathEffect from './path-effect'
 import {createPath, calPathRect} from './cross-platform'
 
@@ -175,22 +174,22 @@ class Path extends BaseSprite {
       const [width, height] = this.contentSize,
         [borderWidth] = attr.border
 
-      const linearGradients = attr.linearGradients
+      const gradients = attr.gradients
 
-      if(linearGradients && linearGradients.fillColor) {
-        const rect = linearGradients.fillColor.rect || [borderWidth, borderWidth,
+      if(gradients && gradients.fillColor) {
+        const rect = gradients.fillColor.rect || [borderWidth, borderWidth,
           width, height]
 
-        context.fillStyle = createLinearGradients(context, rect, linearGradients.fillColor)
+        context.fillStyle = createGradients(context, rect, gradients.fillColor)
       } else if(fillColor) {
         context.fillStyle = fillColor
       }
 
-      if(linearGradients && linearGradients.strokeColor) {
-        const rect = linearGradients.strokeColor.rect || [borderWidth, borderWidth,
+      if(gradients && gradients.strokeColor) {
+        const rect = gradients.strokeColor.rect || [borderWidth, borderWidth,
           width, height]
 
-        context.strokeStyle = createLinearGradients(context, rect, linearGradients.strokeColor)
+        context.strokeStyle = createGradients(context, rect, gradients.strokeColor)
       } else if(strokeColor) {
         context.strokeStyle = strokeColor
       }
