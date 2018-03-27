@@ -46,7 +46,7 @@ const scene = spritejs.Scene(container)
 scene.setResolution(1200, 800)
 ```
 
-### 创建和获取 scene
+### 创建和获取 layer
 
 scene.layer 可以创建或获取一个 layer，一个 layer 是一层 canvas，可以在上面绘制 sprite。scene.layer 可以传不同 id，这样可以创建不同的图层。比如：
 
