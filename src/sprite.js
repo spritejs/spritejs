@@ -55,10 +55,6 @@ class ResAttr extends Sprite.Attr {
 
 class ResSprite extends Sprite {
   static Attr = ResAttr
-
-  render(t, drawingContext) {
-    return super.render(t, drawingContext)
-  }
 }
 
 export default ResSprite

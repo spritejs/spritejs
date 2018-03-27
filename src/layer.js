@@ -4,8 +4,14 @@ import {createNode, getNodeType} from './nodetype'
 const _viewport = Symbol('_viewport')
 
 class ExLayer extends Layer {
-  constructor(opts = {}) {
-    super(opts)
+  constructor({
+    context,
+    handleEvent,
+    evaluateFPS,
+    renderMode,
+    resolution,
+  } = {}) {
+    super({context, handleEvent, evaluateFPS, renderMode})
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/layer'
     const that = this
@@ -17,6 +23,10 @@ class ExLayer extends Layer {
         }
         return null
       },
+    }
+
+    if(resolution) {
+      this.resolution = resolution
     }
   }
   getElementById(id) {
