@@ -1,4 +1,4 @@
-import BaseSprite from '../src/basesprite'
+import {BaseSprite} from 'sprite-core'
 import {compare, drawSprites} from './helpers'
 import {createCanvas} from '../src/cross-platform'
 

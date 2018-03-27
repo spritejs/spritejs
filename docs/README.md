@@ -1680,3 +1680,36 @@ s4.attr({
   }
 })
 ```
+
+## 版本 1.16+ 更新
+
+### 将 linearGradients 改成 gradients，支持线性和圆周渐变
+
+```js
+const s = new BaseSprite({
+  anchor: 0.5,
+  bgcolor: 'red',
+  size: [100, 100],
+  pos: [300, 300],
+  zIndex: 200,
+  gradients: {
+    bgcolor: {
+      // vector: [0, 0, 100, 100],  // 线性渐变
+      vector: [50, 50, 10, 70, 80, 100], // 圆周渐变
+      colors: [{
+        offset: 0,
+        color: 'rgba(255,0,0,0.5)',
+      }, {
+        offset: 1,
+        color: 'rgba(255,0,0,1)',
+      }]
+    },
+  }  
+})
+```
+
+- 废弃了 textrue 中允许使用 sprite 的机制，推荐采用 Group 代替
+- 优化了 Canvas 渲染性能
+- 将 Paper2D 接口废弃，采用 Scene 类
+- 跨平台支持 node-canvas 和 微信小程序
+- 修复了 fps 显示不正确的 bug
