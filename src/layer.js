@@ -119,8 +119,33 @@ class ExLayer extends Layer {
       return true
     })
   }
+  get canvas() {
+    return this.outputContext.canvas
+  }
   get id() {
     return this.canvas.dataset.layerId
+  }
+  get resolution() {
+    return [this.canvas.width, this.canvas.height]
+  }
+  set resolution(resolution) {
+    const [width, height] = resolution
+    const outputCanvas = this.outputContext.canvas
+    outputCanvas.width = width
+    outputCanvas.height = height
+    this.outputContext.clearRect(0, 0, width, height)
+
+    if(this.shadowContext) {
+      const shadowCanvas = this.shadowContext.canvas
+      shadowCanvas.width = width
+      shadowCanvas.height = height
+      this.shadowContext.clearRect(0, 0, width, height)
+    }
+
+    this.children.forEach((child) => {
+      delete child.lastRenderBox
+      child.forceUpdate()
+    })
   }
   set viewport([width, height]) {
     this.canvas.style.width = `${width}px`
@@ -129,6 +154,17 @@ class ExLayer extends Layer {
   }
   get viewport() {
     return this[_viewport]
+  }
+  isVisible(sprite) {
+    if(!super.isVisible(sprite)) return false
+    const [maxWidth, maxHeigth] = this.resolution
+
+    const box = sprite.renderBox
+    if(box[0] > maxWidth || box[1] > maxHeigth
+      || box[2] < 0 || box[3] < 0) {
+      return false
+    }
+    return true
   }
   async getSnapshot() {
     await this.prepareRender()
