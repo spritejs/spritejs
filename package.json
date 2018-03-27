@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "1.17.1",
+  "version": "1.17.2",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
@@ -40,7 +40,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.3.4",
+    "sprite-core": "^1.3.5",
     "sprite-math": "^1.0.0",
     "sprite-utils": "^1.0.3",
     "svg-path-parser": "^1.1.0"
