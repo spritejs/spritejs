@@ -1,6 +1,6 @@
 import {BaseSprite, createGradients, Effects} from 'sprite-core'
 import {parseColorString, deprecate, attr} from 'sprite-utils'
-import pathEffect from './path-effect'
+import pathEffect from 'sprite-path-effect'
 import {createPath, calPathRect} from './cross-platform'
 
 Effects.d = pathEffect
@@ -12,7 +12,7 @@ function getBoundingBox(lineWidth, pathRect) {
   return [-lw, -lw, x + width + lw, y + height + lw]
 }
 
-export class PathSpriteAttr extends BaseSprite.Attr {
+class PathSpriteAttr extends BaseSprite.Attr {
   constructor(subject) {
     super(subject)
     this.setDefault({

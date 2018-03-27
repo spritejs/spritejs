@@ -93,7 +93,7 @@ if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 exports.__esModule = true;
 
-var _isIterable2 = __webpack_require__(147);
+var _isIterable2 = __webpack_require__(142);
 
 var _isIterable3 = _interopRequireDefault(_isIterable2);
 
@@ -293,7 +293,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 
 var bind = __webpack_require__(88);
-var isBuffer = __webpack_require__(223);
+var isBuffer = __webpack_require__(218);
 
 /*global toString:true*/
 
@@ -599,7 +599,7 @@ module.exports = {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(170), __esModule: true };
+module.exports = { "default": __webpack_require__(165), __esModule: true };
 
 /***/ }),
 /* 9 */
@@ -641,7 +641,7 @@ exports.parseValue = _decorators.parseValue;
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(176), __esModule: true };
+module.exports = { "default": __webpack_require__(171), __esModule: true };
 
 /***/ }),
 /* 11 */
@@ -696,11 +696,11 @@ exports.default = function get(object, property, receiver) {
 
 exports.__esModule = true;
 
-var _setPrototypeOf = __webpack_require__(151);
+var _setPrototypeOf = __webpack_require__(146);
 
 var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
 
-var _create = __webpack_require__(149);
+var _create = __webpack_require__(144);
 
 var _create2 = _interopRequireDefault(_create);
 
@@ -812,7 +812,7 @@ exports.f = __webpack_require__(15) ? Object.defineProperty : function definePro
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(164), __esModule: true };
+module.exports = { "default": __webpack_require__(159), __esModule: true };
 
 /***/ }),
 /* 18 */
@@ -864,13 +864,13 @@ module.exports = function (fn, that, length) {
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(169), __esModule: true };
+module.exports = { "default": __webpack_require__(164), __esModule: true };
 
 /***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(174), __esModule: true };
+module.exports = { "default": __webpack_require__(169), __esModule: true };
 
 /***/ }),
 /* 23 */
@@ -914,15 +914,15 @@ var _basesprite = __webpack_require__(50);
 
 var _basesprite2 = _interopRequireDefault(_basesprite);
 
-var _sprite = __webpack_require__(236);
+var _sprite = __webpack_require__(231);
 
 var _sprite2 = _interopRequireDefault(_sprite);
 
-var _label = __webpack_require__(234);
+var _label = __webpack_require__(229);
 
 var _label2 = _interopRequireDefault(_label);
 
-var _layer = __webpack_require__(235);
+var _layer = __webpack_require__(230);
 
 var _layer2 = _interopRequireDefault(_layer);
 
@@ -980,7 +980,7 @@ module.exports = function (it, key) {
 
 "use strict";
 
-var $at = __webpack_require__(192)(true);
+var $at = __webpack_require__(187)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
 __webpack_require__(62)(String, 'String', function (iterated) {
@@ -1002,13 +1002,13 @@ __webpack_require__(62)(String, 'String', function (iterated) {
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(162), __esModule: true };
+module.exports = { "default": __webpack_require__(157), __esModule: true };
 
 /***/ }),
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(168), __esModule: true };
+module.exports = { "default": __webpack_require__(163), __esModule: true };
 
 /***/ }),
 /* 31 */
@@ -1045,7 +1045,7 @@ module.exports = function (it) {
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(197);
+__webpack_require__(192);
 var global = __webpack_require__(6);
 var hide = __webpack_require__(23);
 var Iterators = __webpack_require__(31);
@@ -1380,11 +1380,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Vector = exports.Matrix = undefined;
 
-var _matrix = __webpack_require__(237);
+var _matrix = __webpack_require__(232);
 
 var _matrix2 = _interopRequireDefault(_matrix);
 
-var _vector = __webpack_require__(238);
+var _vector = __webpack_require__(233);
 
 var _vector2 = _interopRequireDefault(_vector);
 
@@ -1718,7 +1718,7 @@ var _slicedToArray2 = __webpack_require__(1);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _defineProperty2 = __webpack_require__(154);
+var _defineProperty2 = __webpack_require__(149);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1764,7 +1764,7 @@ var _symbol2 = _interopRequireDefault(_symbol);
 
 var _dec, _dec2, _desc, _value, _class, _class2, _temp;
 
-var _attr12 = __webpack_require__(231);
+var _attr12 = __webpack_require__(226);
 
 var _attr13 = _interopRequireDefault(_attr12);
 
@@ -1774,7 +1774,7 @@ var _basenode2 = _interopRequireDefault(_basenode);
 
 var _spriteMath = __webpack_require__(42);
 
-var _animation = __webpack_require__(230);
+var _animation = __webpack_require__(225);
 
 var _animation2 = _interopRequireDefault(_animation);
 
@@ -2857,7 +2857,7 @@ module.exports = defaults;
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(175), __esModule: true };
+module.exports = { "default": __webpack_require__(170), __esModule: true };
 
 /***/ }),
 /* 54 */
@@ -2912,7 +2912,7 @@ exports.default = function (fn) {
 
 exports.__esModule = true;
 
-var _iterator = __webpack_require__(153);
+var _iterator = __webpack_require__(148);
 
 var _iterator2 = _interopRequireDefault(_iterator);
 
@@ -2934,7 +2934,7 @@ exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.d
 /* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(224);
+module.exports = __webpack_require__(219);
 
 
 /***/ }),
@@ -3006,7 +3006,7 @@ var redefine = __webpack_require__(111);
 var hide = __webpack_require__(23);
 var has = __webpack_require__(27);
 var Iterators = __webpack_require__(31);
-var $iterCreate = __webpack_require__(187);
+var $iterCreate = __webpack_require__(182);
 var setToStringTag = __webpack_require__(40);
 var getPrototypeOf = __webpack_require__(106);
 var ITERATOR = __webpack_require__(5)('iterator');
@@ -3336,7 +3336,7 @@ var _slicedToArray2 = __webpack_require__(1);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _keys = __webpack_require__(150);
+var _keys = __webpack_require__(145);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -3362,7 +3362,7 @@ var _assign2 = _interopRequireDefault(_assign);
 
 var _utils = __webpack_require__(117);
 
-var _effect2 = __webpack_require__(229);
+var _effect2 = __webpack_require__(224);
 
 var _effect3 = _interopRequireDefault(_effect2);
 
@@ -3370,7 +3370,7 @@ var _spriteTimeline = __webpack_require__(239);
 
 var _spriteTimeline2 = _interopRequireDefault(_spriteTimeline);
 
-var _easing = __webpack_require__(228);
+var _easing = __webpack_require__(223);
 
 var _easing2 = _interopRequireDefault(_easing);
 
@@ -4659,7 +4659,6 @@ function getNodeType(type) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PathSpriteAttr = undefined;
 
 var _get2 = __webpack_require__(11);
 
@@ -4699,9 +4698,9 @@ var _spriteCore = __webpack_require__(25);
 
 var _spriteUtils = __webpack_require__(9);
 
-var _pathEffect = __webpack_require__(143);
+var _spritePathEffect = __webpack_require__(235);
 
-var _pathEffect2 = _interopRequireDefault(_pathEffect);
+var _spritePathEffect2 = _interopRequireDefault(_spritePathEffect);
 
 var _crossPlatform = __webpack_require__(41);
 
@@ -4736,7 +4735,7 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
-_spriteCore.Effects.d = _pathEffect2.default;
+_spriteCore.Effects.d = _spritePathEffect2.default;
 
 function getBoundingBox(lineWidth, pathRect) {
   var _pathRect = (0, _slicedToArray3.default)(pathRect, 4),
@@ -4749,7 +4748,7 @@ function getBoundingBox(lineWidth, pathRect) {
   return [-lw, -lw, x + width + lw, y + height + lw];
 }
 
-var PathSpriteAttr = exports.PathSpriteAttr = (_dec = (0, _spriteUtils.deprecate)('Instead use strokeColor.'), (_class = function (_BaseSprite$Attr) {
+var PathSpriteAttr = (_dec = (0, _spriteUtils.deprecate)('Instead use strokeColor.'), (_class = function (_BaseSprite$Attr) {
   (0, _inherits3.default)(PathSpriteAttr, _BaseSprite$Attr);
 
   function PathSpriteAttr(subject) {
@@ -5252,31 +5251,31 @@ module.exports = function bind(fn, thisArg) {
 /* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(158), __esModule: true };
+module.exports = { "default": __webpack_require__(153), __esModule: true };
 
 /***/ }),
 /* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(159), __esModule: true };
+module.exports = { "default": __webpack_require__(154), __esModule: true };
 
 /***/ }),
 /* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(161), __esModule: true };
+module.exports = { "default": __webpack_require__(156), __esModule: true };
 
 /***/ }),
 /* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(166), __esModule: true };
+module.exports = { "default": __webpack_require__(161), __esModule: true };
 
 /***/ }),
 /* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(167), __esModule: true };
+module.exports = { "default": __webpack_require__(162), __esModule: true };
 
 /***/ }),
 /* 94 */
@@ -5435,7 +5434,7 @@ module.exports = {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var classof = __webpack_require__(43);
-var from = __webpack_require__(179);
+var from = __webpack_require__(174);
 module.exports = function (NAME) {
   return function toJSON() {
     if (classof(this) != NAME) throw TypeError(NAME + "#toJSON isn't generic");
@@ -5461,7 +5460,7 @@ var anInstance = __webpack_require__(57);
 var isObject = __webpack_require__(19);
 var setToStringTag = __webpack_require__(40);
 var dP = __webpack_require__(16).f;
-var each = __webpack_require__(181)(0);
+var each = __webpack_require__(176)(0);
 var DESCRIPTORS = __webpack_require__(15);
 
 module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
@@ -5664,7 +5663,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 var has = __webpack_require__(27);
 var toIObject = __webpack_require__(24);
-var arrayIndexOf = __webpack_require__(180)(false);
+var arrayIndexOf = __webpack_require__(175)(false);
 var IE_PROTO = __webpack_require__(69)('IE_PROTO');
 
 module.exports = function (object, names) {
@@ -5836,7 +5835,7 @@ module.exports = function (O, D) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var ctx = __webpack_require__(20);
-var invoke = __webpack_require__(186);
+var invoke = __webpack_require__(181);
 var html = __webpack_require__(97);
 var cel = __webpack_require__(59);
 var global = __webpack_require__(6);
@@ -5974,7 +5973,7 @@ function periodicity(val, dur) {
   return val;
 }
 
-var BezierEasing = __webpack_require__(155);
+var BezierEasing = __webpack_require__(150);
 var bezierFuncCache = new _map2.default();
 
 function getBezierEasing() {
@@ -6667,7 +6666,7 @@ var _inherits2 = __webpack_require__(12);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _values = __webpack_require__(152);
+var _values = __webpack_require__(147);
 
 var _values2 = _interopRequireDefault(_values);
 
@@ -8707,7 +8706,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '1.17.2';
+var version = '1.17.3';
 
 exports.version = version;
 exports.BaseNode = _spriteCore.BaseNode;
@@ -8733,919 +8732,46 @@ exports.Vector = _spriteMath.Vector;
 /* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _slicedToArray2 = __webpack_require__(1);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// https://github.com/colinmeinke/svg-arc-to-cubic-bezier
-
-var TAU = Math.PI * 2;
-
-var mapToEllipse = function mapToEllipse(_ref, rx, ry, cosphi, sinphi, centerx, centery) {
-  var x = _ref.x,
-      y = _ref.y;
-
-  x *= rx;
-  y *= ry;
-
-  var xp = cosphi * x - sinphi * y;
-  var yp = sinphi * x + cosphi * y;
-
-  return {
-    x: xp + centerx,
-    y: yp + centery
-  };
-};
-
-var approxUnitArc = function approxUnitArc(ang1, ang2) {
-  var a = 4 / 3 * Math.tan(ang2 / 4);
-
-  var x1 = Math.cos(ang1);
-  var y1 = Math.sin(ang1);
-  var x2 = Math.cos(ang1 + ang2);
-  var y2 = Math.sin(ang1 + ang2);
-
-  return [{
-    x: x1 - y1 * a,
-    y: y1 + x1 * a
-  }, {
-    x: x2 + y2 * a,
-    y: y2 - x2 * a
-  }, {
-    x: x2,
-    y: y2
-  }];
-};
-
-var vectorAngle = function vectorAngle(ux, uy, vx, vy) {
-  var sign = ux * vy - uy * vx < 0 ? -1 : 1;
-  var umag = Math.sqrt(ux * ux + uy * uy);
-  var vmag = Math.sqrt(ux * ux + uy * uy);
-  var dot = ux * vx + uy * vy;
-
-  var div = dot / (umag * vmag);
-
-  if (div > 1) {
-    div = 1;
-  }
-
-  if (div < -1) {
-    div = -1;
-  }
-
-  return sign * Math.acos(div);
-};
-
-var getArcCenter = function getArcCenter(px, py, cx, cy, rx, ry, largeArcFlag, sweepFlag, sinphi, cosphi, pxp, pyp) {
-  var rxsq = Math.pow(rx, 2);
-  var rysq = Math.pow(ry, 2);
-  var pxpsq = Math.pow(pxp, 2);
-  var pypsq = Math.pow(pyp, 2);
-
-  var radicant = rxsq * rysq - rxsq * pypsq - rysq * pxpsq;
-
-  if (radicant < 0) {
-    radicant = 0;
-  }
-
-  radicant /= rxsq * pypsq + rysq * pxpsq;
-  radicant = Math.sqrt(radicant) * (largeArcFlag === sweepFlag ? -1 : 1);
-
-  var centerxp = radicant * rx / ry * pyp;
-  var centeryp = radicant * -ry / rx * pxp;
-
-  var centerx = cosphi * centerxp - sinphi * centeryp + (px + cx) / 2;
-  var centery = sinphi * centerxp + cosphi * centeryp + (py + cy) / 2;
-
-  var vx1 = (pxp - centerxp) / rx;
-  var vy1 = (pyp - centeryp) / ry;
-  var vx2 = (-pxp - centerxp) / rx;
-  var vy2 = (-pyp - centeryp) / ry;
-
-  var ang1 = vectorAngle(1, 0, vx1, vy1);
-  var ang2 = vectorAngle(vx1, vy1, vx2, vy2);
-
-  if (sweepFlag === 0 && ang2 > 0) {
-    ang2 -= TAU;
-  }
-
-  if (sweepFlag === 1 && ang2 < 0) {
-    ang2 += TAU;
-  }
-
-  return [centerx, centery, ang1, ang2];
-};
-
-var arcToBezier = function arcToBezier(_ref2) {
-  var px = _ref2.px,
-      py = _ref2.py,
-      cx = _ref2.cx,
-      cy = _ref2.cy,
-      rx = _ref2.rx,
-      ry = _ref2.ry,
-      _ref2$xAxisRotation = _ref2.xAxisRotation,
-      xAxisRotation = _ref2$xAxisRotation === undefined ? 0 : _ref2$xAxisRotation,
-      _ref2$largeArcFlag = _ref2.largeArcFlag,
-      largeArcFlag = _ref2$largeArcFlag === undefined ? 0 : _ref2$largeArcFlag,
-      _ref2$sweepFlag = _ref2.sweepFlag,
-      sweepFlag = _ref2$sweepFlag === undefined ? 0 : _ref2$sweepFlag;
-
-  var curves = [];
-
-  if (rx === 0 || ry === 0) {
-    return [];
-  }
-
-  var sinphi = Math.sin(xAxisRotation * TAU / 360);
-  var cosphi = Math.cos(xAxisRotation * TAU / 360);
-
-  var pxp = cosphi * (px - cx) / 2 + sinphi * (py - cy) / 2;
-  var pyp = -sinphi * (px - cx) / 2 + cosphi * (py - cy) / 2;
-
-  if (pxp === 0 && pyp === 0) {
-    return [];
-  }
-
-  rx = Math.abs(rx);
-  ry = Math.abs(ry);
-
-  var lambda = Math.pow(pxp, 2) / Math.pow(rx, 2) + Math.pow(pyp, 2) / Math.pow(ry, 2);
-
-  if (lambda > 1) {
-    rx *= Math.sqrt(lambda);
-    ry *= Math.sqrt(lambda);
-  }
-
-  var _getArcCenter = getArcCenter(px, py, cx, cy, rx, ry, largeArcFlag, sweepFlag, sinphi, cosphi, pxp, pyp),
-      _getArcCenter2 = (0, _slicedToArray3.default)(_getArcCenter, 4),
-      centerx = _getArcCenter2[0],
-      centery = _getArcCenter2[1],
-      ang1 = _getArcCenter2[2],
-      ang2 = _getArcCenter2[3];
-
-  var segments = Math.max(Math.ceil(Math.abs(ang2) / (TAU / 4)), 1);
-
-  ang2 /= segments;
-
-  for (var i = 0; i < segments; i++) {
-    curves.push(approxUnitArc(ang1, ang2));
-    ang1 += ang2;
-  }
-
-  return curves.map(function (curve) {
-    var _mapToEllipse = mapToEllipse(curve[0], rx, ry, cosphi, sinphi, centerx, centery),
-        x1 = _mapToEllipse.x,
-        y1 = _mapToEllipse.y;
-
-    var _mapToEllipse2 = mapToEllipse(curve[1], rx, ry, cosphi, sinphi, centerx, centery),
-        x2 = _mapToEllipse2.x,
-        y2 = _mapToEllipse2.y;
-
-    var _mapToEllipse3 = mapToEllipse(curve[2], rx, ry, cosphi, sinphi, centerx, centery),
-        x = _mapToEllipse3.x,
-        y = _mapToEllipse3.y;
-
-    return {
-      x1: x1, y1: y1, x2: x2, y2: y2, x: x, y: y
-    };
-  });
-};
-
-exports.default = arcToBezier;
+module.exports = { "default": __webpack_require__(155), __esModule: true };
 
 /***/ }),
 /* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _slicedToArray2 = __webpack_require__(1);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
-exports.default = function (pathA, pathB, p, s, e) {
-  var ep = (p - s) / (e - s);
-  if (ep <= 0) return pathA;
-  if (ep >= 1) return pathB;
-  return lerp(pathA, pathB, ep);
-};
-
-var _path2shapes = __webpack_require__(145);
-
-var _path2shapes2 = _interopRequireDefault(_path2shapes);
-
-var _sort = __webpack_require__(146);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// https://github.com/AlloyTeam/pasition
-
-function _subShapes(shapes, count) {
-  var _loop = function _loop(i) {
-    var shape = shapes[shapes.length - 1];
-    var newShape = [];
-    var x = shape[0][0],
-        y = shape[0][1];
-    shape.forEach(function () {
-      newShape.push([x, y, x, y, x, y, x, y]);
-    });
-
-    shapes.push(newShape);
-  };
-
-  for (var i = 0; i < count; i++) {
-    _loop(i);
-  }
-}
-
-function _upShapes(shapes, count) {
-  var _loop2 = function _loop2(i) {
-    var shape = shapes[shapes.length - 1];
-    var newShape = [];
-
-    shape.forEach(function (curve) {
-      newShape.push(curve.slice(0));
-    });
-    shapes.push(newShape);
-  };
-
-  for (var i = 0; i < count; i++) {
-    _loop2(i);
-  }
-}
-
-function split(x1, y1, x2, y2, x3, y3, x4, y4, t) {
-  return {
-    left: _split(x1, y1, x2, y2, x3, y3, x4, y4, t),
-    right: _split(x4, y4, x3, y3, x2, y2, x1, y1, 1 - t, true)
-  };
-}
-
-function _split(x1, y1, x2, y2, x3, y3, x4, y4, t, reverse) {
-  var x12 = (x2 - x1) * t + x1;
-  var y12 = (y2 - y1) * t + y1;
-
-  var x23 = (x3 - x2) * t + x2;
-  var y23 = (y3 - y2) * t + y2;
-
-  var x34 = (x4 - x3) * t + x3;
-  var y34 = (y4 - y3) * t + y3;
-
-  var x123 = (x23 - x12) * t + x12;
-  var y123 = (y23 - y12) * t + y12;
-
-  var x234 = (x34 - x23) * t + x23;
-  var y234 = (y34 - y23) * t + y23;
-
-  var x1234 = (x234 - x123) * t + x123;
-  var y1234 = (y234 - y123) * t + y123;
-
-  if (reverse) {
-    return [x1234, y1234, x123, y123, x12, y12, x1, y1];
-  }
-  return [x1, y1, x12, y12, x123, y123, x1234, y1234];
-}
-
-function _splitCurves(curves, count) {
-  var i = 0,
-      index = 0;
-
-  for (; i < count; i++) {
-    var curve = curves[index];
-    var cs = split(curve[0], curve[1], curve[2], curve[3], curve[4], curve[5], curve[6], curve[7], 0.5);
-    curves.splice(index, 1);
-    curves.splice(index, 0, cs.left, cs.right);
-
-    index += 2;
-    if (index >= curves.length - 1) {
-      index = 0;
-    }
-  }
-}
-
-// 将两段 path 对齐
-function match(pathA, pathB) {
-  var minCurves = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
-
-  var shapesA = (0, _path2shapes2.default)(pathA);
-  var shapesB = (0, _path2shapes2.default)(pathB);
-
-  var lenA = shapesA.length,
-      lenB = shapesB.length;
-
-  if (lenA > lenB) {
-    _subShapes(shapesB, lenA - lenB);
-  } else if (lenA < lenB) {
-    _upShapes(shapesA, lenB - lenA);
-  }
-
-  shapesA = (0, _sort.sort)(shapesA, shapesB);
-
-  shapesA.forEach(function (curves, index) {
-    var lenA = curves.length,
-        lenB = shapesB[index].length;
-
-    if (lenA > lenB) {
-      if (lenA < minCurves) {
-        _splitCurves(curves, minCurves - lenA);
-        _splitCurves(shapesB[index], minCurves - lenB);
-      } else {
-        _splitCurves(shapesB[index], lenA - lenB);
-      }
-    } else if (lenA < lenB) {
-      if (lenB < minCurves) {
-        _splitCurves(curves, minCurves - lenA);
-        _splitCurves(shapesB[index], minCurves - lenB);
-      } else {
-        _splitCurves(curves, lenB - lenA);
-      }
-    }
-  });
-
-  shapesA.forEach(function (curves, index) {
-    shapesA[index] = (0, _sort.sortCurves)(curves, shapesB[index]);
-  });
-
-  return [shapesA, shapesB];
-}
-
-function lerpPoints(x1, y1, x2, y2, t) {
-  return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
-}
-
-function lerpCurve(curveA, curveB, t) {
-  return lerpPoints(curveA[0], curveA[1], curveB[0], curveB[1], t).concat(lerpPoints(curveA[2], curveA[3], curveB[2], curveB[3], t)).concat(lerpPoints(curveA[4], curveA[5], curveB[4], curveB[5], t)).concat(lerpPoints(curveA[6], curveA[7], curveB[6], curveB[7], t));
-}
-
-function lerp(pathA, pathB, t) {
-  var _match = match(pathA, pathB),
-      _match2 = (0, _slicedToArray3.default)(_match, 2),
-      shapesA = _match2[0],
-      shapesB = _match2[1];
-
-  return shapesA.map(function (shapeA, i) {
-    var shapeB = shapesB[i];
-    return shapeA.map(function (curveA, i) {
-      var curveB = shapeB[i];
-      var curve = lerpCurve(curveA, curveB, t);
-      if (i === 0) {
-        return 'M' + curve[0] + ' ' + curve[1] + ' C' + curve[2] + ' ' + curve[3] + ', ' + curve[4] + ' ' + curve[5] + ', ' + curve[6] + ' ' + curve[7];
-      }
-      return curve[2] + ' ' + curve[3] + ', ' + curve[4] + ' ' + curve[5] + ', ' + curve[6] + ' ' + curve[7];
-    });
-  }).join(' ') + 'z';
-}
+module.exports = { "default": __webpack_require__(158), __esModule: true };
 
 /***/ }),
 /* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// https://github.com/jkroso/parse-svg-path/blob/master/index.js
-/**
- * expected argument lengths
- * @type {Object}
- */
-
-var length = {
-  a: 7, c: 6, h: 1, l: 2, m: 2, q: 4, s: 4, t: 2, v: 1, z: 0
-
-  /**
-   * segment pattern
-   * @type {RegExp}
-   */
-
-};var segment = /([astvzqmhlc])([^astvzqmhlc]*)/ig;
-
-/**
- * parse an svg path data string. Generates an Array
- * of commands where each command is an Array of the
- * form `[command, arg1, arg2, ...]`
- *
- * @param {String} path
- * @return {Array}
- */
-
-function parse(path) {
-  var data = [];
-  path.replace(segment, function (_, command, args) {
-    var type = command.toLowerCase();
-    args = parseValues(args);
-
-    // overloaded moveTo
-    if (type === 'm' && args.length > 2) {
-      data.push([command].concat(args.splice(0, 2)));
-      type = 'l';
-      command = command === 'm' ? 'l' : 'L';
-    }
-
-    while (true) {
-      if (args.length === length[type]) {
-        args.unshift(command);
-        return data.push(args);
-      }
-      if (args.length < length[type]) throw new Error('malformed path data');
-      data.push([command].concat(args.splice(0, length[type])));
-    }
-  });
-  return data;
-}
-
-var number = /-?[0-9]*\.?[0-9]+(?:e[-+]?\d+)?/ig;
-
-function parseValues(args) {
-  var numbers = args.match(number);
-  return numbers ? numbers.map(Number) : [];
-}
-
-exports.default = parse;
+module.exports = { "default": __webpack_require__(160), __esModule: true };
 
 /***/ }),
 /* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function (path) {
-  // https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Paths
-  // M = moveto
-  // L = lineto
-  // H = horizontal lineto
-  // V = vertical lineto
-  // C = curveto
-  // S = smooth curveto
-  // Q = quadratic Belzier curve
-  // T = smooth quadratic Belzier curveto
-  // A = elliptical Arc
-  // Z = closepath
-  // 以上所有命令均允许小写字母。大写表示绝对定位，小写表示相对定位(从上一个点开始)。
-  var cmds = (0, _parser2.default)(path),
-      len = cmds.length,
-      shapes = [];
-
-  var preX = 0,
-      preY = 0,
-      j = 0,
-      current = null,
-      closeX = void 0,
-      closeY = void 0,
-      preCX = void 0,
-      preCY = void 0,
-      sLen = void 0,
-      curves = void 0,
-      lastCurve = void 0;
-
-  for (; j < len; j++) {
-    var item = cmds[j];
-    var action = item[0];
-    var preItem = cmds[j - 1];
-
-    switch (action) {
-      case 'm':
-        sLen = shapes.length;
-        shapes[sLen] = [];
-        current = shapes[sLen];
-        preX += item[1];
-        preY += item[2];
-        break;
-      case 'M':
-
-        sLen = shapes.length;
-        shapes[sLen] = [];
-        current = shapes[sLen];
-        preX = item[1];
-        preY = item[2];
-        break;
-
-      case 'l':
-        current.push([preX, preY, preX, preY, preX, preY, preX + item[1], preY + item[2]]);
-        preX += item[1];
-        preY += item[2];
-        break;
-
-      case 'L':
-
-        current.push([preX, preY, item[1], item[2], item[1], item[2], item[1], item[2]]);
-        preX = item[1];
-        preY = item[2];
-
-        break;
-
-      case 'h':
-
-        current.push([preX, preY, preX, preY, preX, preY, preX + item[1], preY]);
-        preX += item[1];
-        break;
-
-      case 'H':
-        current.push([preX, preY, item[1], preY, item[1], preY, item[1], preY]);
-        preX = item[1];
-        break;
-
-      case 'v':
-        current.push([preX, preY, preX, preY, preX, preY, preX, preY + item[1]]);
-        preY += item[1];
-        break;
-
-      case 'V':
-        current.push([preX, preY, preX, item[1], preX, item[1], preX, item[1]]);
-        preY = item[1];
-        break;
-
-      case 'C':
-
-        current.push([preX, preY, item[1], item[2], item[3], item[4], item[5], item[6]]);
-        preX = item[5];
-        preY = item[6];
-        break;
-      case 'S':
-        if (preItem[0] === 'C' || preItem[0] === 'c') {
-          current.push([preX, preY, preX + preItem[5] - preItem[3], preY + preItem[6] - preItem[4], item[1], item[2], item[3], item[4]]);
-        } else if (preItem[0] === 'S' || preItem[0] === 's') {
-          current.push([preX, preY, preX + preItem[3] - preItem[1], preY + preItem[4] - preItem[2], item[1], item[2], item[3], item[4]]);
-        }
-        preX = item[3];
-        preY = item[4];
-        break;
-
-      case 'c':
-        current.push([preX, preY, preX + item[1], preY + item[2], preX + item[3], preY + item[4], preX + item[5], preY + item[6]]);
-        preX += item[5];
-        preY += item[6];
-        break;
-      case 's':
-        if (preItem[0] === 'C' || preItem[0] === 'c') {
-          current.push([preX, preY, preX + preItem[5] - preItem[3], preY + preItem[6] - preItem[4], preX + item[1], preY + item[2], preX + item[3], preY + item[4]]);
-        } else if (preItem[0] === 'S' || preItem[0] === 's') {
-          current.push([preX, preY, preX + preItem[3] - preItem[1], preY + preItem[4] - preItem[2], preX + item[1], preY + item[2], preX + item[3], preY + item[4]]);
-        }
-
-        preX += item[3];
-        preY += item[4];
-
-        break;
-      case 'a':
-        curves = (0, _arc2bezier2.default)({
-          rx: item[1],
-          ry: item[2],
-          px: preX,
-          py: preY,
-          xAxisRotation: item[3],
-          largeArcFlag: item[4],
-          sweepFlag: item[5],
-          cx: preX + item[6],
-          cy: preX + item[7]
-        });
-        lastCurve = curves[curves.length - 1];
-
-        curves.forEach(function (curve, index) {
-          if (index === 0) {
-            current.push([preX, preY, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
-          } else {
-            current.push([curves[index - 1].x, curves[index - 1].y, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
-          }
-        });
-
-        preX = lastCurve.x;
-        preY = lastCurve.y;
-
-        break;
-
-      case 'A':
-
-        curves = (0, _arc2bezier2.default)({
-          rx: item[1],
-          ry: item[2],
-          px: preX,
-          py: preY,
-          xAxisRotation: item[3],
-          largeArcFlag: item[4],
-          sweepFlag: item[5],
-          cx: item[6],
-          cy: item[7]
-        });
-        lastCurve = curves[curves.length - 1];
-
-        curves.forEach(function (curve, index) {
-          if (index === 0) {
-            current.push([preX, preY, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
-          } else {
-            current.push([curves[index - 1].x, curves[index - 1].y, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
-          }
-        });
-
-        preX = lastCurve.x;
-        preY = lastCurve.y;
-
-        break;
-      case 'Q':
-        current.push(q2b(preX, preY, item[1], item[2], item[3], item[4]));
-        preX = item[3];
-        preY = item[4];
-
-        break;
-      case 'q':
-        current.push(q2b(preX, preY, preX + item[1], preY + item[2], item[3] + preX, item[4] + preY));
-        preX += item[3];
-        preY += item[4];
-        break;
-
-      case 'T':
-
-        if (preItem[0] === 'Q' || preItem[0] === 'q') {
-          preCX = preX + preItem[3] - preItem[1];
-          preCY = preY + preItem[4] - preItem[2];
-          current.push(q2b(preX, preY, preCX, preCY, item[1], item[2]));
-        } else if (preItem[0] === 'T' || preItem[0] === 't') {
-          current.push(q2b(preX, preY, preX + preX - preCX, preY + preY - preCY, item[1], item[2]));
-          preCX = preX + preX - preCX;
-          preCY = preY + preY - preCY;
-        }
-
-        preX = item[1];
-        preY = item[2];
-        break;
-
-      case 't':
-        if (preItem[0] === 'Q' || preItem[0] === 'q') {
-          preCX = preX + preItem[3] - preItem[1];
-          preCY = preY + preItem[4] - preItem[2];
-          current.push(q2b(preX, preY, preCX, preCY, preX + item[1], preY + item[2]));
-        } else if (preItem[0] === 'T' || preItem[0] === 't') {
-          current.push(q2b(preX, preY, preX + preX - preCX, preY + preY - preCY, preX + item[1], preY + item[2]));
-          preCX = preX + preX - preCX;
-          preCY = preY + preY - preCY;
-        }
-
-        preX += item[1];
-        preY += item[2];
-        break;
-
-      case 'Z':
-        closeX = current[0][0];
-        closeY = current[0][1];
-        current.push([preX, preY, closeX, closeY, closeX, closeY, closeX, closeY]);
-        break;
-      case 'z':
-        closeX = current[0][0];
-        closeY = current[0][1];
-        current.push([preX, preY, closeX, closeY, closeX, closeY, closeX, closeY]);
-        break;
-
-      default:
-        throw new Error('unknown action');
-    }
-  }
-
-  return shapes;
-};
-
-var _arc2bezier = __webpack_require__(142);
-
-var _arc2bezier2 = _interopRequireDefault(_arc2bezier);
-
-var _parser = __webpack_require__(144);
-
-var _parser2 = _interopRequireDefault(_parser);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// https://github.com/AlloyTeam/pasition
-
-function q2b(x1, y1, x2, y2, x3, y3) {
-  return [x1, y1, (x1 + 2 * x2) / 3, (y1 + 2 * y2) / 3, (x3 + 2 * x2) / 3, (y3 + 2 * y2) / 3, x3, y3];
-}
+module.exports = { "default": __webpack_require__(166), __esModule: true };
 
 /***/ }),
 /* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// https://github.com/AlloyTeam/pasition
-
-function shapeBox(shape) {
-  var minX = shape[0][0],
-      minY = shape[0][1],
-      maxX = minX,
-      maxY = minY;
-  shape.forEach(function (curve) {
-    var x1 = curve[0],
-        x2 = curve[2],
-        x3 = curve[4],
-        x4 = curve[6],
-        y1 = curve[1],
-        y2 = curve[3],
-        y3 = curve[5],
-        y4 = curve[7];
-
-    minX = Math.min(minX, x1, x2, x3, x4);
-    minY = Math.min(minY, y1, y2, y3, y4);
-    maxX = Math.max(maxX, x1, x2, x3, x4);
-    maxY = Math.max(maxY, y1, y2, y3, y4);
-  });
-
-  return [minX, minY, maxX, maxY];
-}
-
-function boxDistance(boxA, boxB) {
-  return Math.sqrt(Math.pow(boxA[0] - boxB[0], 2) + Math.pow(boxA[1] - boxB[1], 2)) + Math.sqrt(Math.pow(boxA[2] - boxB[2], 2) + Math.pow(boxA[3] - boxB[3], 2));
-}
-
-function curveDistance(curveA, curveB) {
-  var x1 = curveA[0],
-      x2 = curveA[2],
-      x3 = curveA[4],
-      x4 = curveA[6],
-      y1 = curveA[1],
-      y2 = curveA[3],
-      y3 = curveA[5],
-      y4 = curveA[7],
-      xb1 = curveB[0],
-      xb2 = curveB[2],
-      xb3 = curveB[4],
-      xb4 = curveB[6],
-      yb1 = curveB[1],
-      yb2 = curveB[3],
-      yb3 = curveB[5],
-      yb4 = curveB[7];
-
-  return Math.sqrt(Math.pow(xb1 - x1, 2) + Math.pow(yb1 - y1, 2)) + Math.sqrt(Math.pow(xb2 - x2, 2) + Math.pow(yb2 - y2, 2)) + Math.sqrt(Math.pow(xb3 - x3, 2) + Math.pow(yb3 - y3, 2)) + Math.sqrt(Math.pow(xb4 - x4, 2) + Math.pow(yb4 - y4, 2));
-}
-
-function sortCurves(curvesA, curvesB) {
-  var arrList = permuteCurveNum(curvesA.length);
-
-  var list = [];
-  arrList.forEach(function (arr) {
-    var distance = 0;
-    var i = 0;
-    arr.forEach(function (index) {
-      distance += curveDistance(curvesA[index], curvesB[i++]);
-    });
-    list.push({ index: arr, distance: distance });
-  });
-
-  list.sort(function (a, b) {
-    return a.distance - b.distance;
-  });
-
-  var result = [];
-
-  list[0].index.forEach(function (index) {
-    result.push(curvesA[index]);
-  });
-
-  return result;
-}
-
-function sort(pathA, pathB) {
-  var arrList = permuteNum(pathA.length);
-
-  var list = [];
-  arrList.forEach(function (arr) {
-    var distance = 0;
-    arr.forEach(function (index) {
-      distance += boxDistance(shapeBox(pathA[index]), shapeBox(pathB[index]));
-    });
-    list.push({ index: arr, distance: distance });
-  });
-
-  list.sort(function (a, b) {
-    return a.distance - b.distance;
-  });
-
-  var result = [];
-
-  list[0].index.forEach(function (index) {
-    result.push(pathA[index]);
-  });
-
-  return result;
-}
-
-function permuteCurveNum(num) {
-  var arr = [];
-
-  for (var i = 0; i < num; i++) {
-    var indexArr = [];
-    for (var j = 0; j < num; j++) {
-      var index = j + i;
-      if (index > num - 1) index -= num;
-      indexArr[index] = j;
-    }
-
-    arr.push(indexArr);
-  }
-
-  return arr;
-}
-
-function permuteNum(num) {
-  var arr = [];
-  for (var i = 0; i < num; i++) {
-    arr.push(i);
-  }
-
-  return permute(arr);
-}
-
-function permute(input) {
-  var permArr = [],
-      usedChars = [];
-  function main(input) {
-    var i = void 0,
-        ch = void 0;
-    for (i = 0; i < input.length; i++) {
-      ch = input.splice(i, 1)[0];
-      usedChars.push(ch);
-      if (input.length === 0) {
-        permArr.push(usedChars.slice());
-      }
-      main(input);
-      input.splice(i, 0, ch);
-      usedChars.pop();
-    }
-    return permArr;
-  }
-  return main(input);
-}
-
-exports.sort = sort;
-exports.sortCurves = sortCurves;
+module.exports = { "default": __webpack_require__(167), __esModule: true };
 
 /***/ }),
 /* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(160), __esModule: true };
+module.exports = { "default": __webpack_require__(168), __esModule: true };
 
 /***/ }),
 /* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(163), __esModule: true };
-
-/***/ }),
-/* 149 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(165), __esModule: true };
-
-/***/ }),
-/* 150 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(171), __esModule: true };
-
-/***/ }),
-/* 151 */
-/***/ (function(module, exports, __webpack_require__) {
-
 module.exports = { "default": __webpack_require__(172), __esModule: true };
 
 /***/ }),
-/* 152 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(173), __esModule: true };
-
-/***/ }),
-/* 153 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(177), __esModule: true };
-
-/***/ }),
-/* 154 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9675,7 +8801,7 @@ exports.default = function (obj, key, value) {
 };
 
 /***/ }),
-/* 155 */
+/* 150 */
 /***/ (function(module, exports) {
 
 /**
@@ -9785,7 +8911,7 @@ module.exports = function bezier (mX1, mY1, mX2, mY2) {
 
 
 /***/ }),
-/* 156 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9944,12 +9070,12 @@ module.exports = {
 
 
 /***/ }),
-/* 157 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var colorNames = __webpack_require__(156);
-var swizzle = __webpack_require__(226);
+var colorNames = __webpack_require__(151);
+var swizzle = __webpack_require__(221);
 
 var reverseNames = {};
 
@@ -10183,34 +9309,34 @@ function hexDouble(num) {
 
 
 /***/ }),
-/* 158 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(28);
-__webpack_require__(196);
+__webpack_require__(191);
 module.exports = __webpack_require__(0).Array.from;
 
 
 /***/ }),
-/* 159 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(34);
 __webpack_require__(28);
-module.exports = __webpack_require__(194);
+module.exports = __webpack_require__(189);
 
 
 /***/ }),
-/* 160 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(34);
 __webpack_require__(28);
-module.exports = __webpack_require__(195);
+module.exports = __webpack_require__(190);
 
 
 /***/ }),
-/* 161 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core = __webpack_require__(0);
@@ -10221,40 +9347,40 @@ module.exports = function stringify(it) { // eslint-disable-line no-unused-vars
 
 
 /***/ }),
-/* 162 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(48);
 __webpack_require__(28);
 __webpack_require__(34);
-__webpack_require__(198);
-__webpack_require__(213);
-__webpack_require__(212);
-__webpack_require__(211);
+__webpack_require__(193);
+__webpack_require__(208);
+__webpack_require__(207);
+__webpack_require__(206);
 module.exports = __webpack_require__(0).Map;
 
 
 /***/ }),
-/* 163 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(199);
+__webpack_require__(194);
 module.exports = __webpack_require__(0).Number.isNaN;
 
 
 /***/ }),
-/* 164 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(200);
+__webpack_require__(195);
 module.exports = __webpack_require__(0).Object.assign;
 
 
 /***/ }),
-/* 165 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(201);
+__webpack_require__(196);
 var $Object = __webpack_require__(0).Object;
 module.exports = function create(P, D) {
   return $Object.create(P, D);
@@ -10262,10 +9388,10 @@ module.exports = function create(P, D) {
 
 
 /***/ }),
-/* 166 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(202);
+__webpack_require__(197);
 var $Object = __webpack_require__(0).Object;
 module.exports = function defineProperties(T, D) {
   return $Object.defineProperties(T, D);
@@ -10273,10 +9399,10 @@ module.exports = function defineProperties(T, D) {
 
 
 /***/ }),
-/* 167 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(203);
+__webpack_require__(198);
 var $Object = __webpack_require__(0).Object;
 module.exports = function defineProperty(it, key, desc) {
   return $Object.defineProperty(it, key, desc);
@@ -10284,18 +9410,18 @@ module.exports = function defineProperty(it, key, desc) {
 
 
 /***/ }),
-/* 168 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(214);
+__webpack_require__(209);
 module.exports = __webpack_require__(0).Object.entries;
 
 
 /***/ }),
-/* 169 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(204);
+__webpack_require__(199);
 var $Object = __webpack_require__(0).Object;
 module.exports = function getOwnPropertyDescriptor(it, key) {
   return $Object.getOwnPropertyDescriptor(it, key);
@@ -10303,77 +9429,77 @@ module.exports = function getOwnPropertyDescriptor(it, key) {
 
 
 /***/ }),
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(200);
+module.exports = __webpack_require__(0).Object.getPrototypeOf;
+
+
+/***/ }),
+/* 166 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(201);
+module.exports = __webpack_require__(0).Object.keys;
+
+
+/***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(202);
+module.exports = __webpack_require__(0).Object.setPrototypeOf;
+
+
+/***/ }),
+/* 168 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(210);
+module.exports = __webpack_require__(0).Object.values;
+
+
+/***/ }),
+/* 169 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(48);
+__webpack_require__(28);
+__webpack_require__(34);
+__webpack_require__(203);
+__webpack_require__(211);
+__webpack_require__(212);
+module.exports = __webpack_require__(0).Promise;
+
+
+/***/ }),
 /* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(205);
-module.exports = __webpack_require__(0).Object.getPrototypeOf;
+__webpack_require__(48);
+__webpack_require__(28);
+__webpack_require__(34);
+__webpack_require__(204);
+__webpack_require__(215);
+__webpack_require__(214);
+__webpack_require__(213);
+module.exports = __webpack_require__(0).Set;
 
 
 /***/ }),
 /* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(206);
-module.exports = __webpack_require__(0).Object.keys;
-
-
-/***/ }),
-/* 172 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(207);
-module.exports = __webpack_require__(0).Object.setPrototypeOf;
-
-
-/***/ }),
-/* 173 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(215);
-module.exports = __webpack_require__(0).Object.values;
-
-
-/***/ }),
-/* 174 */
-/***/ (function(module, exports, __webpack_require__) {
-
+__webpack_require__(205);
 __webpack_require__(48);
-__webpack_require__(28);
-__webpack_require__(34);
-__webpack_require__(208);
 __webpack_require__(216);
 __webpack_require__(217);
-module.exports = __webpack_require__(0).Promise;
-
-
-/***/ }),
-/* 175 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(48);
-__webpack_require__(28);
-__webpack_require__(34);
-__webpack_require__(209);
-__webpack_require__(220);
-__webpack_require__(219);
-__webpack_require__(218);
-module.exports = __webpack_require__(0).Set;
-
-
-/***/ }),
-/* 176 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(210);
-__webpack_require__(48);
-__webpack_require__(221);
-__webpack_require__(222);
 module.exports = __webpack_require__(0).Symbol;
 
 
 /***/ }),
-/* 177 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(28);
@@ -10382,14 +9508,14 @@ module.exports = __webpack_require__(75).f('iterator');
 
 
 /***/ }),
-/* 178 */
+/* 173 */
 /***/ (function(module, exports) {
 
 module.exports = function () { /* empty */ };
 
 
 /***/ }),
-/* 179 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var forOf = __webpack_require__(37);
@@ -10402,14 +9528,14 @@ module.exports = function (iter, ITERATOR) {
 
 
 /***/ }),
-/* 180 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(24);
 var toLength = __webpack_require__(46);
-var toAbsoluteIndex = __webpack_require__(193);
+var toAbsoluteIndex = __webpack_require__(188);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -10431,7 +9557,7 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 181 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 0 -> Array#forEach
@@ -10445,7 +9571,7 @@ var ctx = __webpack_require__(20);
 var IObject = __webpack_require__(61);
 var toObject = __webpack_require__(33);
 var toLength = __webpack_require__(46);
-var asc = __webpack_require__(183);
+var asc = __webpack_require__(178);
 module.exports = function (TYPE, $create) {
   var IS_MAP = TYPE == 1;
   var IS_FILTER = TYPE == 2;
@@ -10481,7 +9607,7 @@ module.exports = function (TYPE, $create) {
 
 
 /***/ }),
-/* 182 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(19);
@@ -10503,11 +9629,11 @@ module.exports = function (original) {
 
 
 /***/ }),
-/* 183 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 9.4.2.3 ArraySpeciesCreate(originalArray, length)
-var speciesConstructor = __webpack_require__(182);
+var speciesConstructor = __webpack_require__(177);
 
 module.exports = function (original, length) {
   return new (speciesConstructor(original))(length);
@@ -10515,7 +9641,7 @@ module.exports = function (original, length) {
 
 
 /***/ }),
-/* 184 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10530,7 +9656,7 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 185 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
@@ -10551,7 +9677,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 186 */
+/* 181 */
 /***/ (function(module, exports) {
 
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -10573,7 +9699,7 @@ module.exports = function (fn, args, that) {
 
 
 /***/ }),
-/* 187 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10593,7 +9719,7 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 188 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(6);
@@ -10667,7 +9793,7 @@ module.exports = function () {
 
 
 /***/ }),
-/* 189 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10708,7 +9834,7 @@ module.exports = !$assign || __webpack_require__(26)(function () {
 
 
 /***/ }),
-/* 190 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
@@ -10733,7 +9859,7 @@ module.exports.f = function getOwnPropertyNames(it) {
 
 
 /***/ }),
-/* 191 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Works with __proto__ only. Old v8 can't work with null proto objects.
@@ -10764,7 +9890,7 @@ module.exports = {
 
 
 /***/ }),
-/* 192 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var toInteger = __webpack_require__(71);
@@ -10787,7 +9913,7 @@ module.exports = function (TO_STRING) {
 
 
 /***/ }),
-/* 193 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var toInteger = __webpack_require__(71);
@@ -10800,7 +9926,7 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 194 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(18);
@@ -10813,7 +9939,7 @@ module.exports = __webpack_require__(0).getIterator = function (it) {
 
 
 /***/ }),
-/* 195 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var classof = __webpack_require__(43);
@@ -10829,7 +9955,7 @@ module.exports = __webpack_require__(0).isIterable = function (it) {
 
 
 /***/ }),
-/* 196 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10840,7 +9966,7 @@ var toObject = __webpack_require__(33);
 var call = __webpack_require__(101);
 var isArrayIter = __webpack_require__(99);
 var toLength = __webpack_require__(46);
-var createProperty = __webpack_require__(184);
+var createProperty = __webpack_require__(179);
 var getIterFn = __webpack_require__(76);
 
 $export($export.S + $export.F * !__webpack_require__(102)(function (iter) { Array.from(iter); }), 'Array', {
@@ -10873,12 +9999,12 @@ $export($export.S + $export.F * !__webpack_require__(102)(function (iter) { Arra
 
 
 /***/ }),
-/* 197 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var addToUnscopables = __webpack_require__(178);
+var addToUnscopables = __webpack_require__(173);
 var step = __webpack_require__(103);
 var Iterators = __webpack_require__(31);
 var toIObject = __webpack_require__(24);
@@ -10914,7 +10040,7 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 198 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10940,7 +10066,7 @@ module.exports = __webpack_require__(96)(MAP, function (get) {
 
 
 /***/ }),
-/* 199 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.4 Number.isNaN(number)
@@ -10955,17 +10081,17 @@ $export($export.S, 'Number', {
 
 
 /***/ }),
-/* 200 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
 var $export = __webpack_require__(2);
 
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(189) });
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(184) });
 
 
 /***/ }),
-/* 201 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(2);
@@ -10974,7 +10100,7 @@ $export($export.S, 'Object', { create: __webpack_require__(45) });
 
 
 /***/ }),
-/* 202 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(2);
@@ -10983,7 +10109,7 @@ $export($export.S + $export.F * !__webpack_require__(15), 'Object', { defineProp
 
 
 /***/ }),
-/* 203 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(2);
@@ -10992,7 +10118,7 @@ $export($export.S + $export.F * !__webpack_require__(15), 'Object', { defineProp
 
 
 /***/ }),
-/* 204 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
@@ -11007,7 +10133,7 @@ __webpack_require__(67)('getOwnPropertyDescriptor', function () {
 
 
 /***/ }),
-/* 205 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 Object.getPrototypeOf(O)
@@ -11022,7 +10148,7 @@ __webpack_require__(67)('getPrototypeOf', function () {
 
 
 /***/ }),
-/* 206 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 Object.keys(O)
@@ -11037,16 +10163,16 @@ __webpack_require__(67)('keys', function () {
 
 
 /***/ }),
-/* 207 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $export = __webpack_require__(2);
-$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(191).set });
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(186).set });
 
 
 /***/ }),
-/* 208 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11062,7 +10188,7 @@ var anInstance = __webpack_require__(57);
 var forOf = __webpack_require__(37);
 var speciesConstructor = __webpack_require__(115);
 var task = __webpack_require__(116).set;
-var microtask = __webpack_require__(188)();
+var microtask = __webpack_require__(183)();
 var newPromiseCapabilityModule = __webpack_require__(64);
 var perform = __webpack_require__(109);
 var promiseResolve = __webpack_require__(110);
@@ -11333,7 +10459,7 @@ $export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(102)(functio
 
 
 /***/ }),
-/* 209 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11354,7 +10480,7 @@ module.exports = __webpack_require__(96)(SET, function (get) {
 
 
 /***/ }),
-/* 210 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11373,14 +10499,14 @@ var uid = __webpack_require__(47);
 var wks = __webpack_require__(5);
 var wksExt = __webpack_require__(75);
 var wksDefine = __webpack_require__(74);
-var enumKeys = __webpack_require__(185);
+var enumKeys = __webpack_require__(180);
 var isArray = __webpack_require__(100);
 var anObject = __webpack_require__(18);
 var toIObject = __webpack_require__(24);
 var toPrimitive = __webpack_require__(72);
 var createDesc = __webpack_require__(39);
 var _create = __webpack_require__(45);
-var gOPNExt = __webpack_require__(190);
+var gOPNExt = __webpack_require__(185);
 var $GOPD = __webpack_require__(65);
 var $DP = __webpack_require__(16);
 var $keys = __webpack_require__(32);
@@ -11595,7 +10721,7 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 211 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
@@ -11603,7 +10729,7 @@ __webpack_require__(112)('Map');
 
 
 /***/ }),
-/* 212 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
@@ -11611,7 +10737,7 @@ __webpack_require__(113)('Map');
 
 
 /***/ }),
-/* 213 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
@@ -11621,7 +10747,7 @@ $export($export.P + $export.R, 'Map', { toJSON: __webpack_require__(95)('Map') }
 
 
 /***/ }),
-/* 214 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
@@ -11636,7 +10762,7 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 215 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
@@ -11651,7 +10777,7 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 216 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11678,7 +10804,7 @@ $export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
 
 
 /***/ }),
-/* 217 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11697,7 +10823,7 @@ $export($export.S, 'Promise', { 'try': function (callbackfn) {
 
 
 /***/ }),
-/* 218 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-set.from
@@ -11705,7 +10831,7 @@ __webpack_require__(112)('Set');
 
 
 /***/ }),
-/* 219 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-set.of
@@ -11713,7 +10839,7 @@ __webpack_require__(113)('Set');
 
 
 /***/ }),
-/* 220 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
@@ -11723,21 +10849,21 @@ $export($export.P + $export.R, 'Set', { toJSON: __webpack_require__(95)('Set') }
 
 
 /***/ }),
-/* 221 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(74)('asyncIterator');
 
 
 /***/ }),
-/* 222 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(74)('observable');
 
 
 /***/ }),
-/* 223 */
+/* 218 */
 /***/ (function(module, exports) {
 
 /*!
@@ -11764,7 +10890,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 224 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11789,7 +10915,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(225);
+module.exports = __webpack_require__(220);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -11805,7 +10931,7 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 225 */
+/* 220 */
 /***/ (function(module, exports) {
 
 /**
@@ -12538,13 +11664,13 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 226 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var isArrayish = __webpack_require__(227);
+var isArrayish = __webpack_require__(222);
 
 var concat = Array.prototype.concat;
 var slice = Array.prototype.slice;
@@ -12574,7 +11700,7 @@ swizzle.wrap = function (fn) {
 
 
 /***/ }),
-/* 227 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12592,7 +11718,7 @@ module.exports = function isArrayish(obj) {
 
 
 /***/ }),
-/* 228 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12640,7 +11766,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 229 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12664,7 +11790,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 230 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12886,7 +12012,7 @@ var _default = function (_Animator) {
 exports.default = _default;
 
 /***/ }),
-/* 231 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13367,7 +12493,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
 exports.default = SpriteAttr;
 
 /***/ }),
-/* 232 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13441,7 +12567,7 @@ exports.default = {
 }; // http://www.runoob.com/cssref/css3-pr-filter.html
 
 /***/ }),
-/* 233 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13555,7 +12681,7 @@ module.exports = function (str) {
 /* eslint-enable */
 
 /***/ }),
-/* 234 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13640,7 +12766,7 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
-var parseFont = __webpack_require__(233);
+var parseFont = __webpack_require__(228);
 
 var measureText = function measureText(node, text, font) {
   var lineHeight = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
@@ -13890,7 +13016,7 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
 exports.default = Label;
 
 /***/ }),
-/* 235 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14511,7 +13637,7 @@ var Layer = function (_BaseNode) {
 exports.default = Layer;
 
 /***/ }),
-/* 236 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14576,7 +13702,7 @@ var _basesprite = __webpack_require__(50);
 
 var _basesprite2 = _interopRequireDefault(_basesprite);
 
-var _filters = __webpack_require__(232);
+var _filters = __webpack_require__(227);
 
 var _filters2 = _interopRequireDefault(_filters);
 
@@ -14906,7 +14032,7 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
 exports.default = Sprite;
 
 /***/ }),
-/* 237 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15044,7 +14170,7 @@ Matrix.prototype.transformVector = function (px, py) {
 exports.default = Matrix;
 
 /***/ }),
-/* 238 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15127,6 +14253,879 @@ var Vector = function () {
 }();
 
 exports.default = Vector;
+
+/***/ }),
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray2 = __webpack_require__(1);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// https://github.com/colinmeinke/svg-arc-to-cubic-bezier
+
+var TAU = Math.PI * 2;
+
+var mapToEllipse = function mapToEllipse(_ref, rx, ry, cosphi, sinphi, centerx, centery) {
+  var x = _ref.x,
+      y = _ref.y;
+
+  x *= rx;
+  y *= ry;
+
+  var xp = cosphi * x - sinphi * y;
+  var yp = sinphi * x + cosphi * y;
+
+  return {
+    x: xp + centerx,
+    y: yp + centery
+  };
+};
+
+var approxUnitArc = function approxUnitArc(ang1, ang2) {
+  var a = 4 / 3 * Math.tan(ang2 / 4);
+
+  var x1 = Math.cos(ang1);
+  var y1 = Math.sin(ang1);
+  var x2 = Math.cos(ang1 + ang2);
+  var y2 = Math.sin(ang1 + ang2);
+
+  return [{
+    x: x1 - y1 * a,
+    y: y1 + x1 * a
+  }, {
+    x: x2 + y2 * a,
+    y: y2 - x2 * a
+  }, {
+    x: x2,
+    y: y2
+  }];
+};
+
+var vectorAngle = function vectorAngle(ux, uy, vx, vy) {
+  var sign = ux * vy - uy * vx < 0 ? -1 : 1;
+  var umag = Math.sqrt(ux * ux + uy * uy);
+  var vmag = Math.sqrt(ux * ux + uy * uy);
+  var dot = ux * vx + uy * vy;
+
+  var div = dot / (umag * vmag);
+
+  if (div > 1) {
+    div = 1;
+  }
+
+  if (div < -1) {
+    div = -1;
+  }
+
+  return sign * Math.acos(div);
+};
+
+var getArcCenter = function getArcCenter(px, py, cx, cy, rx, ry, largeArcFlag, sweepFlag, sinphi, cosphi, pxp, pyp) {
+  var rxsq = Math.pow(rx, 2);
+  var rysq = Math.pow(ry, 2);
+  var pxpsq = Math.pow(pxp, 2);
+  var pypsq = Math.pow(pyp, 2);
+
+  var radicant = rxsq * rysq - rxsq * pypsq - rysq * pxpsq;
+
+  if (radicant < 0) {
+    radicant = 0;
+  }
+
+  radicant /= rxsq * pypsq + rysq * pxpsq;
+  radicant = Math.sqrt(radicant) * (largeArcFlag === sweepFlag ? -1 : 1);
+
+  var centerxp = radicant * rx / ry * pyp;
+  var centeryp = radicant * -ry / rx * pxp;
+
+  var centerx = cosphi * centerxp - sinphi * centeryp + (px + cx) / 2;
+  var centery = sinphi * centerxp + cosphi * centeryp + (py + cy) / 2;
+
+  var vx1 = (pxp - centerxp) / rx;
+  var vy1 = (pyp - centeryp) / ry;
+  var vx2 = (-pxp - centerxp) / rx;
+  var vy2 = (-pyp - centeryp) / ry;
+
+  var ang1 = vectorAngle(1, 0, vx1, vy1);
+  var ang2 = vectorAngle(vx1, vy1, vx2, vy2);
+
+  if (sweepFlag === 0 && ang2 > 0) {
+    ang2 -= TAU;
+  }
+
+  if (sweepFlag === 1 && ang2 < 0) {
+    ang2 += TAU;
+  }
+
+  return [centerx, centery, ang1, ang2];
+};
+
+var arcToBezier = function arcToBezier(_ref2) {
+  var px = _ref2.px,
+      py = _ref2.py,
+      cx = _ref2.cx,
+      cy = _ref2.cy,
+      rx = _ref2.rx,
+      ry = _ref2.ry,
+      _ref2$xAxisRotation = _ref2.xAxisRotation,
+      xAxisRotation = _ref2$xAxisRotation === undefined ? 0 : _ref2$xAxisRotation,
+      _ref2$largeArcFlag = _ref2.largeArcFlag,
+      largeArcFlag = _ref2$largeArcFlag === undefined ? 0 : _ref2$largeArcFlag,
+      _ref2$sweepFlag = _ref2.sweepFlag,
+      sweepFlag = _ref2$sweepFlag === undefined ? 0 : _ref2$sweepFlag;
+
+  var curves = [];
+
+  if (rx === 0 || ry === 0) {
+    return [];
+  }
+
+  var sinphi = Math.sin(xAxisRotation * TAU / 360);
+  var cosphi = Math.cos(xAxisRotation * TAU / 360);
+
+  var pxp = cosphi * (px - cx) / 2 + sinphi * (py - cy) / 2;
+  var pyp = -sinphi * (px - cx) / 2 + cosphi * (py - cy) / 2;
+
+  if (pxp === 0 && pyp === 0) {
+    return [];
+  }
+
+  rx = Math.abs(rx);
+  ry = Math.abs(ry);
+
+  var lambda = Math.pow(pxp, 2) / Math.pow(rx, 2) + Math.pow(pyp, 2) / Math.pow(ry, 2);
+
+  if (lambda > 1) {
+    rx *= Math.sqrt(lambda);
+    ry *= Math.sqrt(lambda);
+  }
+
+  var _getArcCenter = getArcCenter(px, py, cx, cy, rx, ry, largeArcFlag, sweepFlag, sinphi, cosphi, pxp, pyp),
+      _getArcCenter2 = (0, _slicedToArray3.default)(_getArcCenter, 4),
+      centerx = _getArcCenter2[0],
+      centery = _getArcCenter2[1],
+      ang1 = _getArcCenter2[2],
+      ang2 = _getArcCenter2[3];
+
+  var segments = Math.max(Math.ceil(Math.abs(ang2) / (TAU / 4)), 1);
+
+  ang2 /= segments;
+
+  for (var i = 0; i < segments; i++) {
+    curves.push(approxUnitArc(ang1, ang2));
+    ang1 += ang2;
+  }
+
+  return curves.map(function (curve) {
+    var _mapToEllipse = mapToEllipse(curve[0], rx, ry, cosphi, sinphi, centerx, centery),
+        x1 = _mapToEllipse.x,
+        y1 = _mapToEllipse.y;
+
+    var _mapToEllipse2 = mapToEllipse(curve[1], rx, ry, cosphi, sinphi, centerx, centery),
+        x2 = _mapToEllipse2.x,
+        y2 = _mapToEllipse2.y;
+
+    var _mapToEllipse3 = mapToEllipse(curve[2], rx, ry, cosphi, sinphi, centerx, centery),
+        x = _mapToEllipse3.x,
+        y = _mapToEllipse3.y;
+
+    return {
+      x1: x1, y1: y1, x2: x2, y2: y2, x: x, y: y
+    };
+  });
+};
+
+exports.default = arcToBezier;
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray2 = __webpack_require__(1);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+exports.default = function (pathA, pathB, p, s, e) {
+  var ep = (p - s) / (e - s);
+  if (ep <= 0) return pathA;
+  if (ep >= 1) return pathB;
+  return lerp(pathA, pathB, ep);
+};
+
+var _path2shapes = __webpack_require__(237);
+
+var _path2shapes2 = _interopRequireDefault(_path2shapes);
+
+var _sort = __webpack_require__(238);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// https://github.com/AlloyTeam/pasition
+
+function _subShapes(shapes, count) {
+  var _loop = function _loop(i) {
+    var shape = shapes[shapes.length - 1];
+    var newShape = [];
+    var x = shape[0][0],
+        y = shape[0][1];
+    shape.forEach(function () {
+      newShape.push([x, y, x, y, x, y, x, y]);
+    });
+
+    shapes.push(newShape);
+  };
+
+  for (var i = 0; i < count; i++) {
+    _loop(i);
+  }
+}
+
+function _upShapes(shapes, count) {
+  var _loop2 = function _loop2(i) {
+    var shape = shapes[shapes.length - 1];
+    var newShape = [];
+
+    shape.forEach(function (curve) {
+      newShape.push(curve.slice(0));
+    });
+    shapes.push(newShape);
+  };
+
+  for (var i = 0; i < count; i++) {
+    _loop2(i);
+  }
+}
+
+function split(x1, y1, x2, y2, x3, y3, x4, y4, t) {
+  return {
+    left: _split(x1, y1, x2, y2, x3, y3, x4, y4, t),
+    right: _split(x4, y4, x3, y3, x2, y2, x1, y1, 1 - t, true)
+  };
+}
+
+function _split(x1, y1, x2, y2, x3, y3, x4, y4, t, reverse) {
+  var x12 = (x2 - x1) * t + x1;
+  var y12 = (y2 - y1) * t + y1;
+
+  var x23 = (x3 - x2) * t + x2;
+  var y23 = (y3 - y2) * t + y2;
+
+  var x34 = (x4 - x3) * t + x3;
+  var y34 = (y4 - y3) * t + y3;
+
+  var x123 = (x23 - x12) * t + x12;
+  var y123 = (y23 - y12) * t + y12;
+
+  var x234 = (x34 - x23) * t + x23;
+  var y234 = (y34 - y23) * t + y23;
+
+  var x1234 = (x234 - x123) * t + x123;
+  var y1234 = (y234 - y123) * t + y123;
+
+  if (reverse) {
+    return [x1234, y1234, x123, y123, x12, y12, x1, y1];
+  }
+  return [x1, y1, x12, y12, x123, y123, x1234, y1234];
+}
+
+function _splitCurves(curves, count) {
+  var i = 0,
+      index = 0;
+
+  for (; i < count; i++) {
+    var curve = curves[index];
+    var cs = split(curve[0], curve[1], curve[2], curve[3], curve[4], curve[5], curve[6], curve[7], 0.5);
+    curves.splice(index, 1);
+    curves.splice(index, 0, cs.left, cs.right);
+
+    index += 2;
+    if (index >= curves.length - 1) {
+      index = 0;
+    }
+  }
+}
+
+// 将两段 path 对齐
+function match(pathA, pathB) {
+  var minCurves = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
+
+  var shapesA = (0, _path2shapes2.default)(pathA);
+  var shapesB = (0, _path2shapes2.default)(pathB);
+
+  var lenA = shapesA.length,
+      lenB = shapesB.length;
+
+  if (lenA > lenB) {
+    _subShapes(shapesB, lenA - lenB);
+  } else if (lenA < lenB) {
+    _upShapes(shapesA, lenB - lenA);
+  }
+
+  shapesA = (0, _sort.sort)(shapesA, shapesB);
+
+  shapesA.forEach(function (curves, index) {
+    var lenA = curves.length,
+        lenB = shapesB[index].length;
+
+    if (lenA > lenB) {
+      if (lenA < minCurves) {
+        _splitCurves(curves, minCurves - lenA);
+        _splitCurves(shapesB[index], minCurves - lenB);
+      } else {
+        _splitCurves(shapesB[index], lenA - lenB);
+      }
+    } else if (lenA < lenB) {
+      if (lenB < minCurves) {
+        _splitCurves(curves, minCurves - lenA);
+        _splitCurves(shapesB[index], minCurves - lenB);
+      } else {
+        _splitCurves(curves, lenB - lenA);
+      }
+    }
+  });
+
+  shapesA.forEach(function (curves, index) {
+    shapesA[index] = (0, _sort.sortCurves)(curves, shapesB[index]);
+  });
+
+  return [shapesA, shapesB];
+}
+
+function lerpPoints(x1, y1, x2, y2, t) {
+  return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+}
+
+function lerpCurve(curveA, curveB, t) {
+  return lerpPoints(curveA[0], curveA[1], curveB[0], curveB[1], t).concat(lerpPoints(curveA[2], curveA[3], curveB[2], curveB[3], t)).concat(lerpPoints(curveA[4], curveA[5], curveB[4], curveB[5], t)).concat(lerpPoints(curveA[6], curveA[7], curveB[6], curveB[7], t));
+}
+
+function lerp(pathA, pathB, t) {
+  var _match = match(pathA, pathB),
+      _match2 = (0, _slicedToArray3.default)(_match, 2),
+      shapesA = _match2[0],
+      shapesB = _match2[1];
+
+  return shapesA.map(function (shapeA, i) {
+    var shapeB = shapesB[i];
+    return shapeA.map(function (curveA, i) {
+      var curveB = shapeB[i];
+      var curve = lerpCurve(curveA, curveB, t);
+      if (i === 0) {
+        return 'M' + curve[0] + ' ' + curve[1] + ' C' + curve[2] + ' ' + curve[3] + ', ' + curve[4] + ' ' + curve[5] + ', ' + curve[6] + ' ' + curve[7];
+      }
+      return curve[2] + ' ' + curve[3] + ', ' + curve[4] + ' ' + curve[5] + ', ' + curve[6] + ' ' + curve[7];
+    });
+  }).join(' ') + 'z';
+}
+
+/***/ }),
+/* 236 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// https://github.com/jkroso/parse-svg-path/blob/master/index.js
+/**
+ * expected argument lengths
+ * @type {Object}
+ */
+
+var length = {
+  a: 7, c: 6, h: 1, l: 2, m: 2, q: 4, s: 4, t: 2, v: 1, z: 0
+
+  /**
+   * segment pattern
+   * @type {RegExp}
+   */
+
+};var segment = /([astvzqmhlc])([^astvzqmhlc]*)/ig;
+
+/**
+ * parse an svg path data string. Generates an Array
+ * of commands where each command is an Array of the
+ * form `[command, arg1, arg2, ...]`
+ *
+ * @param {String} path
+ * @return {Array}
+ */
+
+function parse(path) {
+  var data = [];
+  path.replace(segment, function (_, command, args) {
+    var type = command.toLowerCase();
+    args = parseValues(args);
+
+    // overloaded moveTo
+    if (type === 'm' && args.length > 2) {
+      data.push([command].concat(args.splice(0, 2)));
+      type = 'l';
+      command = command === 'm' ? 'l' : 'L';
+    }
+
+    while (true) {
+      if (args.length === length[type]) {
+        args.unshift(command);
+        return data.push(args);
+      }
+      if (args.length < length[type]) throw new Error('malformed path data');
+      data.push([command].concat(args.splice(0, length[type])));
+    }
+  });
+  return data;
+}
+
+var number = /-?[0-9]*\.?[0-9]+(?:e[-+]?\d+)?/ig;
+
+function parseValues(args) {
+  var numbers = args.match(number);
+  return numbers ? numbers.map(Number) : [];
+}
+
+exports.default = parse;
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (path) {
+  // https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Paths
+  // M = moveto
+  // L = lineto
+  // H = horizontal lineto
+  // V = vertical lineto
+  // C = curveto
+  // S = smooth curveto
+  // Q = quadratic Belzier curve
+  // T = smooth quadratic Belzier curveto
+  // A = elliptical Arc
+  // Z = closepath
+  // 以上所有命令均允许小写字母。大写表示绝对定位，小写表示相对定位(从上一个点开始)。
+  var cmds = (0, _parser2.default)(path),
+      len = cmds.length,
+      shapes = [];
+
+  var preX = 0,
+      preY = 0,
+      j = 0,
+      current = null,
+      closeX = void 0,
+      closeY = void 0,
+      preCX = void 0,
+      preCY = void 0,
+      sLen = void 0,
+      curves = void 0,
+      lastCurve = void 0;
+
+  for (; j < len; j++) {
+    var item = cmds[j];
+    var action = item[0];
+    var preItem = cmds[j - 1];
+
+    switch (action) {
+      case 'm':
+        sLen = shapes.length;
+        shapes[sLen] = [];
+        current = shapes[sLen];
+        preX += item[1];
+        preY += item[2];
+        break;
+      case 'M':
+
+        sLen = shapes.length;
+        shapes[sLen] = [];
+        current = shapes[sLen];
+        preX = item[1];
+        preY = item[2];
+        break;
+
+      case 'l':
+        current.push([preX, preY, preX, preY, preX, preY, preX + item[1], preY + item[2]]);
+        preX += item[1];
+        preY += item[2];
+        break;
+
+      case 'L':
+
+        current.push([preX, preY, item[1], item[2], item[1], item[2], item[1], item[2]]);
+        preX = item[1];
+        preY = item[2];
+
+        break;
+
+      case 'h':
+
+        current.push([preX, preY, preX, preY, preX, preY, preX + item[1], preY]);
+        preX += item[1];
+        break;
+
+      case 'H':
+        current.push([preX, preY, item[1], preY, item[1], preY, item[1], preY]);
+        preX = item[1];
+        break;
+
+      case 'v':
+        current.push([preX, preY, preX, preY, preX, preY, preX, preY + item[1]]);
+        preY += item[1];
+        break;
+
+      case 'V':
+        current.push([preX, preY, preX, item[1], preX, item[1], preX, item[1]]);
+        preY = item[1];
+        break;
+
+      case 'C':
+
+        current.push([preX, preY, item[1], item[2], item[3], item[4], item[5], item[6]]);
+        preX = item[5];
+        preY = item[6];
+        break;
+      case 'S':
+        if (preItem[0] === 'C' || preItem[0] === 'c') {
+          current.push([preX, preY, preX + preItem[5] - preItem[3], preY + preItem[6] - preItem[4], item[1], item[2], item[3], item[4]]);
+        } else if (preItem[0] === 'S' || preItem[0] === 's') {
+          current.push([preX, preY, preX + preItem[3] - preItem[1], preY + preItem[4] - preItem[2], item[1], item[2], item[3], item[4]]);
+        }
+        preX = item[3];
+        preY = item[4];
+        break;
+
+      case 'c':
+        current.push([preX, preY, preX + item[1], preY + item[2], preX + item[3], preY + item[4], preX + item[5], preY + item[6]]);
+        preX += item[5];
+        preY += item[6];
+        break;
+      case 's':
+        if (preItem[0] === 'C' || preItem[0] === 'c') {
+          current.push([preX, preY, preX + preItem[5] - preItem[3], preY + preItem[6] - preItem[4], preX + item[1], preY + item[2], preX + item[3], preY + item[4]]);
+        } else if (preItem[0] === 'S' || preItem[0] === 's') {
+          current.push([preX, preY, preX + preItem[3] - preItem[1], preY + preItem[4] - preItem[2], preX + item[1], preY + item[2], preX + item[3], preY + item[4]]);
+        }
+
+        preX += item[3];
+        preY += item[4];
+
+        break;
+      case 'a':
+        curves = (0, _arc2bezier2.default)({
+          rx: item[1],
+          ry: item[2],
+          px: preX,
+          py: preY,
+          xAxisRotation: item[3],
+          largeArcFlag: item[4],
+          sweepFlag: item[5],
+          cx: preX + item[6],
+          cy: preX + item[7]
+        });
+        lastCurve = curves[curves.length - 1];
+
+        curves.forEach(function (curve, index) {
+          if (index === 0) {
+            current.push([preX, preY, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
+          } else {
+            current.push([curves[index - 1].x, curves[index - 1].y, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
+          }
+        });
+
+        preX = lastCurve.x;
+        preY = lastCurve.y;
+
+        break;
+
+      case 'A':
+
+        curves = (0, _arc2bezier2.default)({
+          rx: item[1],
+          ry: item[2],
+          px: preX,
+          py: preY,
+          xAxisRotation: item[3],
+          largeArcFlag: item[4],
+          sweepFlag: item[5],
+          cx: item[6],
+          cy: item[7]
+        });
+        lastCurve = curves[curves.length - 1];
+
+        curves.forEach(function (curve, index) {
+          if (index === 0) {
+            current.push([preX, preY, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
+          } else {
+            current.push([curves[index - 1].x, curves[index - 1].y, curve.x1, curve.y1, curve.x2, curve.y2, curve.x, curve.y]);
+          }
+        });
+
+        preX = lastCurve.x;
+        preY = lastCurve.y;
+
+        break;
+      case 'Q':
+        current.push(q2b(preX, preY, item[1], item[2], item[3], item[4]));
+        preX = item[3];
+        preY = item[4];
+
+        break;
+      case 'q':
+        current.push(q2b(preX, preY, preX + item[1], preY + item[2], item[3] + preX, item[4] + preY));
+        preX += item[3];
+        preY += item[4];
+        break;
+
+      case 'T':
+
+        if (preItem[0] === 'Q' || preItem[0] === 'q') {
+          preCX = preX + preItem[3] - preItem[1];
+          preCY = preY + preItem[4] - preItem[2];
+          current.push(q2b(preX, preY, preCX, preCY, item[1], item[2]));
+        } else if (preItem[0] === 'T' || preItem[0] === 't') {
+          current.push(q2b(preX, preY, preX + preX - preCX, preY + preY - preCY, item[1], item[2]));
+          preCX = preX + preX - preCX;
+          preCY = preY + preY - preCY;
+        }
+
+        preX = item[1];
+        preY = item[2];
+        break;
+
+      case 't':
+        if (preItem[0] === 'Q' || preItem[0] === 'q') {
+          preCX = preX + preItem[3] - preItem[1];
+          preCY = preY + preItem[4] - preItem[2];
+          current.push(q2b(preX, preY, preCX, preCY, preX + item[1], preY + item[2]));
+        } else if (preItem[0] === 'T' || preItem[0] === 't') {
+          current.push(q2b(preX, preY, preX + preX - preCX, preY + preY - preCY, preX + item[1], preY + item[2]));
+          preCX = preX + preX - preCX;
+          preCY = preY + preY - preCY;
+        }
+
+        preX += item[1];
+        preY += item[2];
+        break;
+
+      case 'Z':
+        closeX = current[0][0];
+        closeY = current[0][1];
+        current.push([preX, preY, closeX, closeY, closeX, closeY, closeX, closeY]);
+        break;
+      case 'z':
+        closeX = current[0][0];
+        closeY = current[0][1];
+        current.push([preX, preY, closeX, closeY, closeX, closeY, closeX, closeY]);
+        break;
+
+      default:
+        throw new Error('unknown action');
+    }
+  }
+
+  return shapes;
+};
+
+var _arc2bezier = __webpack_require__(234);
+
+var _arc2bezier2 = _interopRequireDefault(_arc2bezier);
+
+var _parser = __webpack_require__(236);
+
+var _parser2 = _interopRequireDefault(_parser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// https://github.com/AlloyTeam/pasition
+
+function q2b(x1, y1, x2, y2, x3, y3) {
+  return [x1, y1, (x1 + 2 * x2) / 3, (y1 + 2 * y2) / 3, (x3 + 2 * x2) / 3, (y3 + 2 * y2) / 3, x3, y3];
+}
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// https://github.com/AlloyTeam/pasition
+
+function shapeBox(shape) {
+  var minX = shape[0][0],
+      minY = shape[0][1],
+      maxX = minX,
+      maxY = minY;
+  shape.forEach(function (curve) {
+    var x1 = curve[0],
+        x2 = curve[2],
+        x3 = curve[4],
+        x4 = curve[6],
+        y1 = curve[1],
+        y2 = curve[3],
+        y3 = curve[5],
+        y4 = curve[7];
+
+    minX = Math.min(minX, x1, x2, x3, x4);
+    minY = Math.min(minY, y1, y2, y3, y4);
+    maxX = Math.max(maxX, x1, x2, x3, x4);
+    maxY = Math.max(maxY, y1, y2, y3, y4);
+  });
+
+  return [minX, minY, maxX, maxY];
+}
+
+function boxDistance(boxA, boxB) {
+  return Math.sqrt(Math.pow(boxA[0] - boxB[0], 2) + Math.pow(boxA[1] - boxB[1], 2)) + Math.sqrt(Math.pow(boxA[2] - boxB[2], 2) + Math.pow(boxA[3] - boxB[3], 2));
+}
+
+function curveDistance(curveA, curveB) {
+  var x1 = curveA[0],
+      x2 = curveA[2],
+      x3 = curveA[4],
+      x4 = curveA[6],
+      y1 = curveA[1],
+      y2 = curveA[3],
+      y3 = curveA[5],
+      y4 = curveA[7],
+      xb1 = curveB[0],
+      xb2 = curveB[2],
+      xb3 = curveB[4],
+      xb4 = curveB[6],
+      yb1 = curveB[1],
+      yb2 = curveB[3],
+      yb3 = curveB[5],
+      yb4 = curveB[7];
+
+  return Math.sqrt(Math.pow(xb1 - x1, 2) + Math.pow(yb1 - y1, 2)) + Math.sqrt(Math.pow(xb2 - x2, 2) + Math.pow(yb2 - y2, 2)) + Math.sqrt(Math.pow(xb3 - x3, 2) + Math.pow(yb3 - y3, 2)) + Math.sqrt(Math.pow(xb4 - x4, 2) + Math.pow(yb4 - y4, 2));
+}
+
+function sortCurves(curvesA, curvesB) {
+  var arrList = permuteCurveNum(curvesA.length);
+
+  var list = [];
+  arrList.forEach(function (arr) {
+    var distance = 0;
+    var i = 0;
+    arr.forEach(function (index) {
+      distance += curveDistance(curvesA[index], curvesB[i++]);
+    });
+    list.push({ index: arr, distance: distance });
+  });
+
+  list.sort(function (a, b) {
+    return a.distance - b.distance;
+  });
+
+  var result = [];
+
+  list[0].index.forEach(function (index) {
+    result.push(curvesA[index]);
+  });
+
+  return result;
+}
+
+function sort(pathA, pathB) {
+  var arrList = permuteNum(pathA.length);
+
+  var list = [];
+  arrList.forEach(function (arr) {
+    var distance = 0;
+    arr.forEach(function (index) {
+      distance += boxDistance(shapeBox(pathA[index]), shapeBox(pathB[index]));
+    });
+    list.push({ index: arr, distance: distance });
+  });
+
+  list.sort(function (a, b) {
+    return a.distance - b.distance;
+  });
+
+  var result = [];
+
+  list[0].index.forEach(function (index) {
+    result.push(pathA[index]);
+  });
+
+  return result;
+}
+
+function permuteCurveNum(num) {
+  var arr = [];
+
+  for (var i = 0; i < num; i++) {
+    var indexArr = [];
+    for (var j = 0; j < num; j++) {
+      var index = j + i;
+      if (index > num - 1) index -= num;
+      indexArr[index] = j;
+    }
+
+    arr.push(indexArr);
+  }
+
+  return arr;
+}
+
+function permuteNum(num) {
+  var arr = [];
+  for (var i = 0; i < num; i++) {
+    arr.push(i);
+  }
+
+  return permute(arr);
+}
+
+function permute(input) {
+  var permArr = [],
+      usedChars = [];
+  function main(input) {
+    var i = void 0,
+        ch = void 0;
+    for (i = 0; i < input.length; i++) {
+      ch = input.splice(i, 1)[0];
+      usedChars.push(ch);
+      if (input.length === 0) {
+        permArr.push(usedChars.slice());
+      }
+      main(input);
+      input.splice(i, 0, ch);
+      usedChars.pop();
+    }
+    return permArr;
+  }
+  return main(input);
+}
+
+exports.sort = sort;
+exports.sortCurves = sortCurves;
 
 /***/ }),
 /* 239 */
@@ -15688,7 +15687,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.appendUnit = exports.rectVertices = exports.rectToBox = exports.boxUnion = exports.boxEqual = exports.boxToRect = exports.boxIntersect = exports.parseStringTransform = exports.fourValuesShortCut = exports.parseColorString = exports.parseStringFloat = exports.parseStringInt = exports.oneOrTwoValues = exports.parseColor = exports.Color = undefined;
 
-var _isNan = __webpack_require__(148);
+var _isNan = __webpack_require__(143);
 
 var _isNan2 = _interopRequireDefault(_isNan);
 
@@ -15710,7 +15709,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var colorString = __webpack_require__(157);
+var colorString = __webpack_require__(152);
 
 var Color = function () {
   function Color(color) {
