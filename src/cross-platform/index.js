@@ -62,6 +62,7 @@ export function loadImage(src) {
   return promise
 }
 
+const MAX_SIZE = 2048
 export function createPathSVG(d, lineWidth, lineCap, lineJoin, strokeColor, fillColor, width = MAX_SIZE, height = MAX_SIZE) {
   const tpl = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
