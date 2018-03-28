@@ -22,7 +22,7 @@ class ResAttr extends Sprite.Attr {
     textures = textures.map((texture) => {
       if(typeof texture === 'string') {
         texture = {src: texture}
-      } else if(!texture.src && !texture.image) {
+      } else if(!texture.src && !texture.id && !texture.image) {
         texture = {image: texture}
       }
 
