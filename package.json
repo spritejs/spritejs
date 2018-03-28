@@ -40,11 +40,12 @@
   "dependencies": {
     "axios": "^0.16.2",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.3.6",
+    "sprite-core": "^1.3.10",
     "sprite-math": "^1.0.0",
     "sprite-path-effect": "^0.1.1",
     "sprite-utils": "^1.0.3",
-    "svg-path-parser": "^1.1.0"
+    "svg-path-parser": "^1.1.0",
+    "svg-path-to-canvas": "^0.4.0"
   },
   "devDependencies": {
     "ava": "^0.21.0",

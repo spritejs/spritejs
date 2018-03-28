@@ -20,6 +20,7 @@ export function loadImage(src) {
 
 // get svg path object
 export function createPath(d) {
+  if(!d) return null
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
   path.setAttribute('d', d)
 

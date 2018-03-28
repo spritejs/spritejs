@@ -105,7 +105,7 @@
         const r = this.attr('radius')
 
         if(r) {
-          let path = this.createPath()
+          let path = new Path2D()
           const [borderWidth] = this.attr('border')
           const {strokeColor, fillColor, renderMode, lineWidth, direction} = this.attr()
 

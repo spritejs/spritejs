@@ -3,6 +3,7 @@ import {parseColorString, deprecate, attr} from 'sprite-utils'
 import pathEffect from 'sprite-path-effect'
 import {createPath, calPathRect} from './cross-platform'
 
+const _paths = Symbol('paths')
 Effects.d = pathEffect
 
 function getBoundingBox(lineWidth, pathRect) {
@@ -119,6 +120,7 @@ class Path extends BaseSprite {
       attr = {d: attr}
     }
     super(attr)
+    this[_paths] = []
   }
 
   get contentSize() {
@@ -151,7 +153,34 @@ class Path extends BaseSprite {
     return path.getTotalLength()
   }
 
+  // create and save path
+  createPath(...args) {
+    const path = new Path2D(...args)
+    this[_paths].push(path)
+    return path
+  }
+
+  findPath(offsetX, offsetY) {
+    const context = this.context
+
+    if(context) {
+      const paths = this[_paths].filter(path => context.isPointInPath(path, offsetX, offsetY))
+      return paths
+    }
+    return []
+  }
+
+  pointCollision(evt) {
+    if(super.pointCollision(evt)) {
+      const {offsetX, offsetY} = evt
+      evt.targetPaths = this.findPath(offsetX, offsetY)
+      return true
+    }
+    return false
+  }
+
   render(t, drawingContext) {
+    this[_paths] = []
     const context = super.render(t, drawingContext),
       attr = this.attr()
 
