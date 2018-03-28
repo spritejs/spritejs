@@ -122,6 +122,7 @@ export function calPathRect(attr) {
 }
 
 export function createPath(d) {
+  if(!d) return null
   d.replace(/(\s){2,}/g, ' ').trim()
   return {
     getAttribute(attr) {
