@@ -25,29 +25,30 @@
 
     console.log(res)
 
-    const s = new Sprite('bird1.png')
+    const s = new Sprite()
     
     s.attr({
       anchor: [0.5, 0.5],
       pos: [200, 200],
-      // size: [43, 30],
+      size: [43, 30],
       zIndex: 200,
+      textures: [{id: 'bird1.png', rect: [0,0,100,100]}],
     })  
 
     paper.layer().appendChild(s)
 
-    s.animate([
-      {textures: 'bird1.png'},
-      {textures: 'bird2.png'},
-      {textures: 'bird3.png'},
-      //{textures: 'bird1.png'},
-    ], {
-      duration: 300,
-      direction: 'alternate',
-      iterations: Infinity,
-      //easing: 'step-end',
-      //fill: 'both'
-    })
+    // s.animate([
+    //   {textures: 'bird1.png'},
+    //   {textures: 'bird2.png'},
+    //   {textures: 'bird3.png'},
+    //   //{textures: 'bird1.png'},
+    // ], {
+    //   duration: 300,
+    //   direction: 'alternate',
+    //   iterations: Infinity,
+    //   //easing: 'step-end',
+    //   //fill: 'both'
+    // })
 
     //s.attr('textures', 'bird3.png')
     window.s = s
