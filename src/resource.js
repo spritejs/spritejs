@@ -29,13 +29,9 @@ const Resource = {
         }, timeout)
 
         loadImage(texture.src).then((img) => {
-          const {width, height} = img
-          const canvas = createCanvas(width, height)
-          const ctx = canvas.getContext('2d')
-          ctx.drawImage(img, 0, 0)
-
-          resolve({img: canvas, texture, fromCache: false})
-          loadedResources.set(mapKey, canvas)
+          // save image not canvas for svg preserveAspectRatio
+          resolve({img, texture, fromCache: false})
+          loadedResources.set(mapKey, img)
           clearTimeout(timer)
         })
       })
