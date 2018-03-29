@@ -194,7 +194,7 @@ class World {
       .enter()
       .append('path')
       .attr('d', path)
-      .attr('renderMode', 'fill')
+      .attr('strokeColor', 'black')
       .select(function(data) {
         const parentMeta = mapRelation[data.properties.id]
 

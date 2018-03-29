@@ -1,4 +1,4 @@
-import {createCanvas, loadImage} from './cross-platform'
+import {createCanvas, loadImage} from './platform'
 
 const axios = require('axios')
 

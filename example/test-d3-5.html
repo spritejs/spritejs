@@ -43,11 +43,11 @@ d3.json("/data/us.json", function(error, us) {
     .data(topojson.feature(us, us.objects.states).features)
     .enter().append('path')
     .attr('d', path)
-    .attr('renderMode', 'fill')
+    .attr('strokeColor', '#000')
     .attr('fillColor', '#666')
     .on("click", d => {
       const paths = d3.event.targetPaths
-      
+      console.log(paths)
       if(paths.length) {
         clicked(d)
       }

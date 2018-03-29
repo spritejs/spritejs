@@ -1,6 +1,6 @@
 const test = require('ava')
 
-import {createCanvas, loadImage} from '../src/cross-platform'
+import {createCanvas, loadImage} from '../src/platform'
 
 /* eslint-disable no-console */
 test('createCanvas', (t) => {

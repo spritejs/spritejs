@@ -1,4 +1,4 @@
-import {loadImage} from '../../src/cross-platform'
+import {loadImage} from '../../src/platform'
 const {createCanvas} = require('canvas')
 
 const imghash = require('imghash')

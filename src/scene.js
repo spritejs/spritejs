@@ -1,7 +1,7 @@
 import Layer from './layer'
 import Resource from './resource'
 import {BaseNode} from 'sprite-core'
-import {createCanvas, getContainer} from './cross-platform'
+import {createCanvas, getContainer} from './platform'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),

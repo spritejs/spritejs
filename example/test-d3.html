@@ -48,7 +48,8 @@
     .attr('height', 50)
     .attr('bgcolor', 'black')
 
-  chart.transition()
+  chart
+       .transition()
        .duration(2000)
        .attr('width',function(d, i){
           return linear(d);
