@@ -1,6 +1,6 @@
 import {BaseSprite} from 'sprite-core'
 import {compare, drawSprites} from './helpers'
-import {createCanvas} from '../src/cross-platform'
+import {createCanvas} from '../src/platform'
 
 const test = require('ava')
 

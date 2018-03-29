@@ -19,7 +19,7 @@
       size: [100, 100],
       pos: [300, 300]
     })
-    s.connect(context).draw()
+    s.connect(context).draw(0)
     
 
     const s2 = new BaseSprite({
@@ -38,7 +38,7 @@
       duration: 2000,
       iterations: Infinity,
     })
-    s2.connect(context).draw()
+    s2.connect(context).draw(0)
 
     s.on('click', evt => {
       console.log(evt)
@@ -49,10 +49,10 @@
       s.dispatchEvent('click', {layerX:offsetX, layerY:offsetY, originEvent: evt})
     })
 
-    requestAnimationFrame(function f() {
+    requestAnimationFrame(function f(t) {
       context.clearRect(0, 0, 600, 600)
-      s.draw()
-      s2.draw()
+      s.draw(t)
+      s2.draw(t)
       //console.log(s2.attr())
       // s2.disconnect()
       requestAnimationFrame(f)

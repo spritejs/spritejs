@@ -1,5 +1,4 @@
-import Path from './path'
-import {Label, Group} from 'sprite-core'
+import {Label, Group, Path} from 'sprite-core'
 import {parseStringFloat, parseColorString, parseValue, attr} from 'sprite-utils'
 
 function ticksToD(axis) {

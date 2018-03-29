@@ -13,7 +13,7 @@
     const BaseSprite = spritejs.BaseSprite
     const Layer = spritejs.Layer
 
-    const layer = new Layer({canvas: document.getElementById('mycanvas')})
+    const layer = new Layer({context: document.getElementById('mycanvas').getContext('2d')})
 
     const s = new BaseSprite({
       anchor: 0.5,

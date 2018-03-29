@@ -5,17 +5,17 @@ import {
   Label,
   Group,
   Effects,
+  Path,
 } from 'sprite-core'
 
 import Sprite from './sprite'
 import Layer from './layer'
 import Scene from './scene'
 import Resource from './resource'
-import Path from './path'
 import Axis from './axis'
 import {registerNodeType, createNode} from './nodetype'
 import {Matrix, Vector} from 'sprite-math'
-import {shim} from './cross-platform'
+import {shim} from './platform'
 
 if(shim) {
   shim()
