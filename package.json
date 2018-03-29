@@ -41,7 +41,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.6.2",
+    "sprite-core": "^1.6.3",
     "sprite-math": "^1.0.0",
     "sprite-utils": "^1.0.3"
   },
