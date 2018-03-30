@@ -39,7 +39,6 @@
   "author": "akira-cn",
   "license": "MIT",
   "dependencies": {
-    "@q/qcdn": "^3.0.34",
     "axios": "^0.16.2",
     "babel-runtime": "^6.26.0",
     "canvas": "^2.0.0-alpha.12",
