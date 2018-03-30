@@ -123,6 +123,11 @@
       fps.innerHTML = drawCount
       drawCount = 0
     }, 1000)
+    birdCount = 1
+    let timer = setInterval(() => {
+      if(birdCount++ < 500) randomBird()
+      else clearInterval(timer)
+    }, 100)    
   </script>
 </body>
 </html>

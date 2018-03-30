@@ -93,6 +93,11 @@
                     gameCanvas.addEventListener('click', evt => {
                       addBird.call(this);
                     })
+                    birdCount = 1
+                    let timer = setInterval(() => {
+                      if(birdCount++ < 500) addBird.call(this)
+                      else clearInterval(timer)
+                    }, 100)
                   }
               });
               const BgLayer = cc.Layer.extend({

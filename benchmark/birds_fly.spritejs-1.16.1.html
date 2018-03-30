@@ -168,7 +168,10 @@
     circle.on('click', evt => {
       addBird()
     })
-
+    let timer = setInterval(() => {
+      if(birdCount < 500) addBird()
+      else clearInterval(timer)
+    }, 100)
     //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
     //所以所有精灵不运动的时候 fps 也会降下来
     setInterval(() => {

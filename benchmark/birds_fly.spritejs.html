@@ -31,7 +31,8 @@
   <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
   <div id="paper"></div>
   
-  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <!--<script src="https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js"></script>-->
+  <script src="js/animator-dev.js"></script>
   <script src="/js/spritejs.js"></script>
   
   <script>
@@ -130,8 +131,17 @@
           pos
         })
       })
-
       await anim.animate()
+      
+      // const anim = bird.animate([
+      //   {pos: birdPoint},
+      //   {pos: pointAdd(birdPoint, dist)}
+      // ], {
+      //   duration,
+      //   fill: "forwards",
+      // })
+      // await anim.finished
+
       await sleep(500)
     }
 
@@ -143,9 +153,6 @@
       bird.attr({
         anchor: [0.5, 0.5],
         pos: axisZero,
-        transform: {
-          rotate: 0,
-        },
         size: [86, 60],
       })
       window.bird = bird
@@ -156,18 +163,23 @@
       setInterval(() => {
         bird.textures = [`bird${++idx % 3 + 1}.png`]
       }, 100)
-      window.bird = bird
-      //noprotect
+
+      // noprotect
       do{
         await randomAnimate(bird)
       }while(1) 
     }
+    
 
     addBird()
 
     circle.on('click', evt => {
       addBird()
     })
+    let timer = setInterval(() => {
+      if(birdCount < 500) addBird()
+      else clearInterval(timer)
+    }, 100)
 
     //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
     //所以所有精灵不运动的时候 fps 也会降下来
