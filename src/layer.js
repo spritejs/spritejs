@@ -1,5 +1,4 @@
-import {Layer} from 'sprite-core'
-import {createNode, getNodeType} from './nodetype'
+import {Layer, createNode} from 'sprite-core'
 
 const _viewport = Symbol('_viewport')
 
@@ -12,122 +11,10 @@ class ExLayer extends Layer {
     resolution,
   } = {}) {
     super({context, handleEvent, evaluateFPS, renderMode})
-    // d3-friendly
-    this.namespaceURI = 'http://spritejs.org/layer'
-    const that = this
-    this.ownerDocument = {
-      createElementNS(uri, name) {
-        const sprite = createNode(name)
-        if(sprite) {
-          return that.appendChild(sprite)
-        }
-        return null
-      },
-    }
 
     if(resolution) {
       this.resolution = resolution
     }
-  }
-  getElementById(id) {
-    const children = this.children
-    for(let i = 0; i < children.length; i++) {
-      const child = children[i]
-      if(child.id === id) {
-        return child
-      }
-    }
-    return null
-  }
-
-  getElementsByName(name) {
-    return this.children.filter(c => c.name === name)
-  }
-  /*
-    d3-friendly
-    *, nodeType, checker
-  */
-  querySelector(selector) {
-    const children = this.children
-
-    if(!selector || selector === '*') {
-      return children[0]
-    } else if(typeof selector === 'string') {
-      // querySelector('nodeType')
-      // querySelector('#id')
-      // querySelector(':name')
-
-      if(selector.startsWith('#')) {
-        return this.getElementById(selector.slice(1))
-      }
-      if(selector.startsWith(':')) {
-        const name = selector.slice(1)
-
-        for(let i = 0; i < children.length; i++) {
-          const child = children[i]
-          if(child.name === name) {
-            return child
-          }
-        }
-        return null
-      }
-      const nodeType = getNodeType(selector)
-      if(nodeType) {
-        for(let i = 0; i < children.length; i++) {
-          const child = children[i]
-          if(child instanceof nodeType) {
-            return child
-          }
-        }
-        return null
-      }
-      return null
-    }
-    for(let i = 0; i < children.length; i++) {
-      const child = children[i]
-      const sel = Object.entries(selector)
-      for(let j = 0; j < sel.length; j++) {
-        const [type, checker] = sel[j]
-        const nodeType = getNodeType(type)
-        if(nodeType && child instanceof nodeType && checker.call(this, child)) {
-          return child
-        }
-      }
-    }
-    return null
-  }
-
-  querySelectorAll(selector) {
-    if(!selector || selector === '*') {
-      return this.children
-    } else if(typeof selector === 'string') {
-      if(selector.startsWith('#')) {
-        const sprite = this.getElementById(selector.slice(1))
-        return sprite ? [sprite] : []
-      }
-      if(selector.startsWith(':')) {
-        return this.getElementsByName(selector.slice(1))
-      }
-      const nodeType = getNodeType(selector)
-      if(nodeType) {
-        return this.children.filter(child => child instanceof nodeType)
-      }
-      return null
-    }
-    return this.children.filter((child) => {
-      const sel = Object.entries(selector)
-      for(let i = 0; i < sel.length; i++) {
-        const [type, checker] = sel[i]
-        const nodeType = getNodeType(type)
-        if(!nodeType || !(child instanceof nodeType)) {
-          return false
-        }
-        if(!checker.call(this, child)) {
-          return false
-        }
-      }
-      return true
-    })
   }
   get canvas() {
     return this.outputContext.canvas
@@ -194,7 +81,8 @@ class ExLayer extends Layer {
     this.clearUpdate()
 
     snapshot.children.forEach((child) => {
-      const node = createNode(child.nodeType, child.attrs, child.id)
+      const node = createNode(child.nodeType)
+      Object.assign(node.attrs(), JSON.parse(child.attrs))
       this.appendChild(node, false)
     })
 

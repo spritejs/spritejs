@@ -39,7 +39,7 @@ export default class extends BaseNode {
     this[_snapshot] = createCanvas()
 
     // d3-friendly
-    this.namespaceURI = 'http://spritejs.org/paper2D'
+    this.namespaceURI = 'http://spritejs.org/scene'
     const that = this
     this.ownerDocument = {
       createElementNS(uri, name) {
