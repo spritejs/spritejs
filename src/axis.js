@@ -218,8 +218,4 @@ export default class Axis extends Group {
     const context = super.render(t, drawingContext)
     return context
   }
-  initAttributes(attrs) {
-    super.initAttributes(attrs)
-    ticksToD(this)
-  }
 }
