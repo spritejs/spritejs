@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Birds Flying</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #F0F0F0;
+    }
+    #container{
+      transform: scale(0.625)
+    }
+  </style>
+</head>
+<body>
+  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">0</span></div>
+  <div id="container"></div>
+  <script src="//lib.baomitu.com/konva/2.0.2/konva.js"></script>
+  <script type="text/javascript">
+    const width = 800
+    const height = 800
+
+    const stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height
+    })
+
+    const bglayer = new Konva.Layer()
+    stage.add(bglayer)
+
+    const fglayer = new Konva.Layer()
+    stage.add(fglayer)
+
+
+    function loadImage(src) {
+      const imageObj = new Image()
+      imageObj.crossOrigin = 'anonymous'
+      const promise = new Promise(resolve => {
+        imageObj.onload = function() {
+          resolve(imageObj)
+        }
+      })
+      imageObj.src = src
+      return promise
+    }
+
+    (async function(){
+      const birds = await Promise.all([
+        loadImage('/res/bird1.png'),
+        loadImage('/res/bird2.png'),
+        loadImage('/res/bird3.png'),
+      ])
+
+      const circle = new Konva.Circle({
+        x: stage.getWidth() / 2,
+        y: stage.getHeight() / 2,
+        radius: 400,
+        fill: '#139',
+        opacity: 0.5,
+      })
+
+      bglayer.add(circle)
+      bglayer.draw()
+
+      let fpsList = []
+
+      setTimeout(() => {
+        let sum = 0
+        const tr = fpsList.slice(-10)
+        const len = tr.length
+        console.log(tr)
+        if(len <= 5) {
+          return NaN
+        }
+        tr.reduceRight((a, b, i) => { sum += (a - b); return b })
+        console.log(sum)
+        fps.innerHTML = Math.round(1000 * (len - 1) / sum) 
+      }, 1000)
+      function randomFly(bird, layer) {
+        let [width, height] = [stage.getWidth(), stage.getHeight()];
+        let x0, y0, x1, y1, T, startTime
+
+        function initPos() {
+          startTime = Date.now()
+          const ang = Math.random() * 2 * Math.PI
+          x0 = bird.x()
+          y0 = bird.y()
+          x1 =  width / 2 - 43 + 350 * Math.cos(ang)
+          y1 =  height / 2 - 30 + 350 * Math.sin(ang)
+          const distance = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2)
+          T = 5 * distance + 100
+        }
+        initPos()
+
+        let anim = new Konva.Animation(function f(frame) {
+          fpsList.push(performance.now())
+          let p = (Date.now() - startTime) / T
+          p = Math.min(1.0, p)
+          bird.x(x0 + p * (x1 - x0))
+          bird.y(y0 + p * (y1 - y0))
+          if(p === 1) {
+            anim.stop()
+            setTimeout(() => {
+              initPos()
+              anim = new Konva.Animation(f, layer)
+              anim.start()
+            }, 500)
+          }
+        }, layer)
+
+        anim.start()    
+      }
+
+      function addBird() {
+        spriteCount.innerHTML = ++birdCount
+        const bird = new Konva.Image({
+          x: stage.getWidth() / 2 - 43,
+          y: stage.getHeight() / 2 - 30,
+          image: birds[0],
+          // width: 106,
+          // height: 118
+        })
+
+        // add the shape to the layer
+        fglayer.add(bird)
+        
+        // add the layer to the stage
+        fglayer.draw()
+
+        randomFly(bird, fglayer)
+
+        let i = 0
+        setInterval(() => {
+          bird.setImage(birds[++i % 3])
+        }, 100)
+      }
+      let birdCount = 0
+      let timer = setInterval(() => {
+        if(birdCount < 500) addBird()
+        else clearInterval(timer)
+      }, 100)
+      document.addEventListener('click', evt => {
+        addBird()
+      })
+    }())
+  </script>
+</body>
+</html>
