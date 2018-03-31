@@ -165,14 +165,15 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     anchor: [0.5, 0.5],
     pos: [width/2, height/2],
     fillColor: 'red',
-    scale: 0.5,
+    scale: width / 800,
   })
 
   layer.append(path)
 
-  window.onresize = function() {
+  window.addEventListener('resize', function() {
+    console.log(111)
     demo2.viewport = ['auto', 'auto']
-  }
+  })
 }())
 
 ;(function() {
@@ -195,11 +196,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     layer.append(kiwi)
   }
 
-  window.onresize = function() {
+  window.addEventListener('resize', function() {
     demo3.viewport = ['auto', 'auto']
     const [w, h] = demo3.viewport
     demo3.resolution = [w, h]
-  }
+  })
 }())
 
 </script>
