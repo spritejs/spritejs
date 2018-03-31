@@ -2,58 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-  <title>SpriteJS</title>
-  <link rel="stylesheet" href="/static/css/codemirror.css">
-  <link rel="stylesheet" href="/static/css/theme/seti.css">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <script src="/static/js/codemirror.js"></script>
-  <script src="/static/js/javascript.js"></script>
-  <script src="//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js"></script>
+  <title>spritejs - A lightweight 2D canvas rendering engine for modern browsers with ES6+.</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="A lightweight 2D canvas rendering engine for modern browsers with ES6+.">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link href="http://lib.baomitu.com/docsify/4.6.10/themes/vue.css" rel="stylesheet">
 </head>
 <body>
-<div id="main">
-  <div id="menu">
-    <ul>
-      <li class="header">SpriteJS <a id="libVersion" href="###">v</a></li>
-      <li class="title"><a href="https://github.com/spritejs/spritejs/tree/master/docs">Docs</a></li>
-      <li class="title">Examples</li>
-      <li><a href="#">index</a></li>
-      <li><a href="#basic_sprites">basic sprites</a></li>
-      <li><a href="#sprites_textures">sprites &amp; textures</a></li>
-      <li><a href="#labels">labels</a></li>
-      <li><a href="#buttons">buttons</a></li>
-      <li><a href="#sprites_transforms">sprite transforms</a></li>
-      <li><a href="#sprite_events">sprite events</a></li>
-      <li><a href="#filters">filters</a></li>
-      <li><a href="#animations">animations</a></li>
-      <li><a href="#svg_path">svg path</a></li>
-      <li><a href="#offset_api">offset API</a></li>
-      <li><a href="#groups">groups</a></li>
-      <li><a href="#ray">ray</a></li>
-      <li><a href="#obb">OBB Hit</a></li>
-      <li><a href="#d3">D3 Compatible</a></li>
-      <li><a href="#d3-2">D3 Example 2</a></li>
-      <li><a href="#d3-3">D3 Example 3</a></li>
-      <li><a href="#d3-4">D3 Example 4</a></li>
-      <li><a href="#d3-5">D3 Example 5</a></li>
-      <li><a href="#d3-6">D3 Example 6</a></li>
-    </ul>
-  </div>
-  <div id="demo">
-    <div id="paper">
-      <iframe id="sandbox"></iframe>
-    </div>
-    <div id="console-panel">console<a href="###">clear</a></div>
-    <div id="output"></div>
-  </div>
-  <div id="code">
-    <textarea name="code"></textarea>
-  </div>
-  <div id="fork">
-    <a href="https://github.com/spritejs/spritejs"><img src="/static/image/github.png"></a>
-  </div>
-  <script src="/static/js/app.js"></script>
-</div>
+  <div id="app"></div>
+  <script>
+    // const language = navigator.language
+    const language = 'zh-CN'
+    window.$docsify = {
+      name: 'spritejs',
+      repo: 'https://github.com/spritejs/spritejs',
+      onlyCover: false,
+      executeScript: true,
+      coverpage: language === 'zh-CN' ? 'zh-cn/_coverpage.md' : 'en/_coverpage.md',
+      homepage: language === 'zh-CN' ? 'zh-cn/README.md' : 'en/README.md',
+      loadNavbar: false,
+      loadSidebar: true,
+      // plugins: [
+      //   function (hook, vm) {
+      //     hook.beforeEach(function(content) {
+      //       console.log(content)
+      //       return content
+      //     })          
+      //   },
+      // ],
+    }
+  </script>
+  <script src="//lib.baomitu.com/docsify/4.6.10/docsify.js"></script>
+  <script src="//lib.baomitu.com/docsify/4.6.10/plugins/search.min.js"></script>
+  <script src="//lib.baomitu.com/docsify/4.6.10/plugins/external-script.min.js"></script>
+  <script src="https://s2.ssl.qhres.com/!fd4cd19d/spritejs.min.js"></script>
+  <!-- <script src="/js/spritejs.js"></script> -->
 </body>
 </html>
