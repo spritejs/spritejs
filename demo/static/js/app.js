@@ -20,9 +20,9 @@
     output.innerHTML = ''
     const hash = Date.now()
     if(location.hash === '#d3-6') {
-      frames[0].location.href = '/sendbox2.html?t=' + hash
+      frames[0].location.href = '/demo/sendbox2.html?t=' + hash
     } else {
-      frames[0].location.href = '/sendbox.html?t=' + hash
+      frames[0].location.href = '/demo/sendbox.html?t=' + hash
     }
   }))
 
@@ -68,7 +68,7 @@
           link.className = 'selected'
           const codefile = link.hash ? link.hash.slice(1) : 'index'
 
-          fetch(`/static/code/${codefile}.js`)
+          fetch(`/demo/static/code/${codefile}.js`)
             .then(res => res.text())
             .then(code => {
               editor.setValue(code)
