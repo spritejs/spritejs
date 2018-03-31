@@ -35,22 +35,26 @@ const version = require('../package.json').version
 
 export {
   version,
+
   BaseNode,
   BaseSprite,
   Sprite,
-  Resource,
   Label,
-  Layer,
   Path,
-  Color,
-  parseColor,
-  Axis,
-  registerNodeType,
-  createNode,
-  Effects,
-  Matrix,
   Group,
+  Axis,
+  Layer,
   Scene,
   Paper2D,
+
+  registerNodeType,
+  createNode,
+  Color,
+  parseColor,
+
+  Resource,
+  Effects,
+
+  Matrix,
   Vector,
 }

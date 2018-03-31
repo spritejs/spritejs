@@ -24,16 +24,17 @@ sprite.attr({
   pos: [10, 10],
   size: [100, 100],
 })
-
+let i = 0
+sprite.on('afterdraw', evt => {
+  const context = evt.context
+  context.font = '48px Arial'
+  context.strokeStyle = '#f00'
+  context.strokeText(String(++i), 10, 90)  
+})
 paper.layer().appendChild(sprite)
 
-let i = 0
 setInterval(() => {
-  sprite.drawOnce(context => {
-    context.font = '48px Arial'
-    context.strokeStyle = '#f00'
-    context.strokeText(String(++i), 10, 90)
-  })
+  sprite.forceUpdate(true)
 }, 1000)
   </script>
 </body>

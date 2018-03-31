@@ -63,7 +63,7 @@ class ExLayer extends Layer {
     }
     return true
   }
-  async getSnapshot() {
+  async takeSnapshot() {
     await this.prepareRender()
     const snapshotCanvas = this.canvas.cloneNode(true)
     snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0)

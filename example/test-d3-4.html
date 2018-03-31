@@ -60,30 +60,31 @@ d3.json("/data/miserables.json", function(error, graph) {
           .on("drag", dragged)
           .on("end", dragended))
 
-  function ticked() {
-    path.drawOnce(context => {
-      context.beginPath()
-      graph.links.forEach(d => {
-        const [sx, sy] = [d.source.x, d.source.y],
-              [tx, ty] = [d.target.x, d.target.y]
+  path.on('afterdraw', evt => {
+    const {context} = evt
+    graph.links.forEach(d => {
+      const [sx, sy] = [d.source.x, d.source.y],
+            [tx, ty] = [d.target.x, d.target.y]
 
-        context.moveTo(sx, sy);
-        context.lineTo(tx, ty);        
-      })
-      context.strokeStyle = "#aaa"
-      context.stroke()
-
-      context.beginPath()
-      graph.nodes.forEach(d => {
-        const [x, y] = [d.x, d.y]
-
-        context.moveTo(x + 3, y);
-        context.arc(x, y, 3, 0, 2 * Math.PI);        
-      })
-      context.fill()
-      context.strokeStyle = "#fff"
-      context.stroke()
+      context.moveTo(sx, sy);
+      context.lineTo(tx, ty);        
     })
+    context.strokeStyle = "#aaa"
+    context.stroke()
+
+    context.beginPath()
+    graph.nodes.forEach(d => {
+      const [x, y] = [d.x, d.y]
+
+      context.moveTo(x + 3, y);
+      context.arc(x, y, 3, 0, 2 * Math.PI);        
+    })
+    context.fill()
+    context.strokeStyle = "#fff"
+    context.stroke()
+  })
+  function ticked() {
+    path.forceUpdate(true)
   }
 
   function dragsubject() {
