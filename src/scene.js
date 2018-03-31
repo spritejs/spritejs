@@ -2,6 +2,7 @@ import Layer from './layer'
 import Resource from './resource'
 import {BaseNode} from 'sprite-core'
 import {createCanvas, getContainer} from './platform'
+import {setDeprecation} from 'sprite-utils'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
@@ -24,15 +25,34 @@ function sortLayer(paper) {
 }
 
 export default class extends BaseNode {
-  constructor(container, width, height) {
+  constructor(container, options = {}) {
     super()
 
     container = getContainer(container)
     this.container = container
 
-    this[_viewport] = [width || container.clientWidth,
-      height || container.clientHeight]
-    this[_resolution] = [this.viewport[0], this.viewport[1]]
+    if(arguments.length === 3) {
+      setDeprecation('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).')
+      /* eslint-disable prefer-rest-params */
+      options = {viewport: [arguments[1], arguments[2]]}
+      /* eslint-enabel prefer-rest-params */
+    }
+    let [width, height] = options.viewport || []
+    if(!width || width === 'auto') {
+      width = container.clientWidth
+    }
+    if(!height || height === 'auto') {
+      height = container.clientHeight
+    }
+    this[_viewport] = [width, height]
+
+    const resolution = options.resolution
+    if(!resolution) {
+      this[_resolution] = [this.viewport[0], this.viewport[1]]
+    } else {
+      this[_resolution] = resolution
+    }
+
     this[_zOrder] = 0
     this[_layerMap] = {}
     this[_layers] = []
@@ -79,10 +99,10 @@ export default class extends BaseNode {
   }
 
   set viewport([width, height]) {
-    if(width === 'auto') {
+    if(width === '' || width === 'auto') {
       width = this.container.clientWidth
     }
-    if(height === 'auto') {
+    if(height === '' || height === 'auto') {
       height = this.container.clientHeight
     }
     this[_viewport] = [width, height]
@@ -242,6 +262,9 @@ export default class extends BaseNode {
       canvas.style.position = 'absolute'
       canvas.style.left = 0
       canvas.style.top = 0
+      if(this.container.style && !this.container.style.position) {
+        this.container.style.position = 'relative'
+      }
       opts.context = context
       const layer = new Layer(opts)
       this.appendLayer(layer, zIndex)

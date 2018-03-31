@@ -69,7 +69,7 @@ async function drawText1(){
   }
 
   if(!snapshot1) {
-    snapshot1 = await fglayer.getSnapshot()
+    snapshot1 = await fglayer.takeSnapshot()
   }
 }
 
@@ -97,7 +97,7 @@ async function drawText2(){
   }
 
   if(!snapshot2) {
-    snapshot2 = await fglayer.getSnapshot()
+    snapshot2 = await fglayer.takeSnapshot()
   }
 }
 
