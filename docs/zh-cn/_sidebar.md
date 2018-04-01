@@ -8,7 +8,8 @@
 
 * 基础用法
 
-  * [坐标系](/zh-cn/guide/#坐标系)
+  * [绘图尺寸](/zh-cn/guide/#绘图尺寸)
+  * [锚点 anchor](/zh-cn/guide/#锚点-anchor)
   * [精灵 Sprite](/zh-cn/guide/#精灵-Sprite)
   * [文字 Label](/zh-cn/guide/#文字-Label)
   * [路径 Path](/zh-cn/guide/#路径-Path)
@@ -18,7 +19,7 @@
   * [渐变 gradient](/zh-cn/guide/#渐变-gradient)
   * [事件 event](/zh-cn/guide/#事件-event)
 
-* 深入学习
+* 高级用法
 
   * [屏幕适配](/zh-cn/guide/resolution)
   * [Sprite 盒模型](/zh-cn/guide/boxmodel)
