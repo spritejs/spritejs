@@ -13,31 +13,31 @@ scene.resolution = [layerWidth, layerHeight]
 
 scene.preload({
   id: 'logo',
-  src: 'https://p5.ssl.qhimg.com/t01a738735f0acfa768.png',
+  src: 'https://p0.ssl.qhimg.com/t01303199a8936edb79.png',
 }, {
   id: 'logo-lemon',
-  src: 'https://p3.ssl.qhimg.com/t0147c02fa0b9fb9bb5.png',
+  src: 'https://p4.ssl.qhimg.com/t01b299bd5c2ef4b627.png',
 }).then(function() {
   const fglayer = scene.layer('fglayer')
   const logo = new Sprite('logo')
   logo.attr({
     anchor: [0.5, 0.5],
     pos: [layerWidth / 2, layerHeight - 150],
-    scale: 1.0,
+    scale: 1.5,
   })
   fglayer.append(logo)
 
   const logoLemon = new Sprite('logo-lemon')
   logoLemon.attr({
     anchor: [0.5, 0.5],
-    pos: [layerWidth / 2 - 36, 30],
-    scale: 1.0,
+    pos: [layerWidth / 2 - 32, 30],
+    scale: 1.5,
     rotate: 90,
   })
   fglayer.append(logoLemon)
   logoLemon.animate([
     {y: 30},
-    {y: layerHeight - 196},
+    {y: layerHeight - 203},
   ], {
     duration: 800,
     fill: 'forwards',
@@ -59,7 +59,7 @@ scene.preload({
     const [layerWidth, layerHeight] = scene.viewport.map(function(i){return i * 2})
     scene.resolution = [layerWidth, layerHeight]
     logo.attr('pos', [layerWidth / 2, layerHeight - 150])
-    logoLemon.attr('x', layerWidth / 2 - 36)
+    logoLemon.attr('x', layerWidth / 2 - 32)
   }
 
   window.onresize = updateLogo
