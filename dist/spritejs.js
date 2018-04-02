@@ -7318,8 +7318,10 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
 
       var clipPath = this.attr('clip');
       if (clipPath) {
+        context.save();
         context.translate.apply(context, (0, _toConsumableArray3.default)(this.pathOffset));
         this.svg.beginPath().to(context);
+        context.restore();
         context.clip();
         context.clearRect(0, 0, this.originRect[2], this.originRect[3]);
       }
