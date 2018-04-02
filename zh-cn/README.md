@@ -13,10 +13,10 @@ scene.resolution = [layerWidth, layerHeight]
 
 scene.preload({
   id: 'logo',
-  src: '/res/logo-nolemon.png',
+  src: 'https://p5.ssl.qhimg.com/t01a738735f0acfa768.png',
 }, {
   id: 'logo-lemon',
-  src: '/res/logo-lemon.png',
+  src: 'https://p3.ssl.qhimg.com/t0147c02fa0b9fb9bb5.png',
 }).then(function() {
   const fglayer = scene.layer('fglayer')
   const logo = new Sprite('logo')
