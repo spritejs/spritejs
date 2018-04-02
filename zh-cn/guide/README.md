@@ -70,7 +70,7 @@ for(let i = 1, x = 200; i <= 4; i++) {
 }
 ```
 
-当我们不设置Scene的resolution和viewport时，spritejs会根据容器元素的实际占位（不是css宽高）来初始化大小。比如我们定义一个相对自适应的元素：
+当我们不设置Scene的viewport时，spritejs会根据容器元素的实际占位（不是css宽高）来初始化大小。比如我们定义一个相对自适应的元素：
 
 ```css
 #adaptive {
@@ -343,17 +343,262 @@ layer.append(s1, s2, s3, s4)
 
 ### 文字 Label
 
-Label是用来显示文字的元素，可以显示单行或多行文字。同加载图片的精灵元素类似，如果Label不指定宽高，可以自适应宽高。文字可以通过设置textAlign属性修改对齐方式，默认是居左对齐，可以支持居中和居右对齐。文字还可以支持行高lineHeight属性，如果不设置这个属性，默认行高是font指定字体像素大小的1.2倍。
+Label是用来显示文字的元素，可以显示单行或多行文字。通过Label的font属性可以改变字体样式、大小等，支持[css font](https://developer.mozilla.org/en-US/docs/Web/CSS/font)字符串。与加载图片的精灵元素类似，如果Label不指定宽高，可以自适应宽高。文字可以通过设置textAlign属性修改对齐方式，默认是居左对齐，可以支持居中和居右对齐。文字还可以支持行高lineHeight属性，如果不设置这个属性，默认行高是font指定字体像素大小的1.2倍。通过设置padding属性能够让文字周围保留一定的空白。
 
 <div id="label-text" class="sprite-container"></div>
+
+```js
+const scene = new Scene('#label-text', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+
+const text1 = new Label('SpriteJS.org')
+text1.attr({
+  pos: [100, 40],
+  fillColor: '#707',
+  font: "oblique small-caps bold 56px Arial",
+  border: [2.5, '#ccc'],
+})
+layer.append(text1)
+
+const text2 = new Label('从前有座\n灵剑山')
+text2.attr({
+  pos: [500, 40],
+  fillColor: '#077',
+  font: "64px 宋体",
+  lineHeight: 112,
+  textAlign: 'center',
+  padding: [0, 30],
+  border: [2.5, '#ccc'],
+})
+layer.append(text2)  
+
+const text3 = new Label('Hello')
+text3.attr({
+  pos: [100, 240],
+  strokeColor: '#fc7',
+  font: "bold italic 70px Microsoft Yahei ",
+  textAlign: 'center',
+  padding: [0, 30],
+  border: [2.5, '#ccc'],
+})
+layer.append(text3)  
+
+function createClockTexts(text, x, y) {
+  const len = text.length
+
+  for(let i = 0; i < len; i++) {
+    const char = text.charAt(i)
+    const label = new Label(char)
+    label.attr({
+      anchor: [0.5, 4.5],
+      pos: [x, y],
+      font: 'bold 44px Arial',
+      color: '#37c',
+      rotate: i * 360 / len,
+    })
+
+    layer.append(label)
+  }
+}
+createClockTexts('Sprite.js JavaScript Canvas...', 1200, 300)
+```
+
+label能够自适应大小，但是对于指定大小的Label，超出大小的部分文字将被遮挡，目前无法做到自动换行、撑开box等高级功能。这块内容后续可以通过为spritejs开发专门的文字类扩展库来实现。
 
 ### 路径 Path
 
 前面的例子里我们已经见过Path的使用，这是一个强大的用来绘制矢量图形的基础类。
 
+Path支持SVG的[Path路径](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Paths)，我们可以使用它来绘制复杂的几何图形。
+
+<div id="svgpath" class="sprite-container"></div>
+
+```js
+const scene = new Scene('#svgpath', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+
+const p1 = new Path()
+p1.attr({
+  path: {
+    d: 'M280,250A200,200,0,1,1,680,250A200,200,0,1,1,280,250Z',
+    transform: {
+      scale: 0.5,
+    },
+    trim: true,
+  },
+  strokeColor: '#033',
+  fillColor: '#839',
+  lineWidth: 12,
+  pos: [100, 50],
+})
+
+layer.appendChild(p1)
+
+const p2 = new Path()
+p2.attr({
+  path: {
+    d: 'M480,50L423.8,182.6L280,194.8L389.2,289.4L356.4,430L480,355.4L480,355.4L603.6,430L570.8,289.4L680,194.8L536.2,182.6Z',
+    transform: {
+      rotate: 45,
+    },
+    trim: true,
+  },
+  fillColor: '#ed8',
+  pos: [450, 100],
+})
+layer.appendChild(p2)
+
+const p3 = new Path()
+p3.attr({
+  path: {
+    d: 'M480,437l-29-26.4c-103-93.4-171-155-171-230.6c0-61.6,48.4-110,110-110c34.8,0,68.2,16.2,90,41.8C501.8,86.2,535.2,70,570,70c61.6,0,110,48.4,110,110c0,75.6-68,137.2-171,230.8L480,437z',
+    trim: true,
+  },
+  strokeColor: '#f37',
+  lineWidth: 20,
+  lineJoin: 'round',
+  lineCap: 'round',
+  pos: [1000, 100],
+})
+layer.appendChild(p3)
+```
+
+Path对象的path属性是一个非常重要而且强大的属性，通过它能够指定SVG Path的“d”属性，绘制一个矢量图形。path属性还包括transform，对矢量图进行变换。与精灵元素本身的transform不同的是，path的transform直接变换的是矢量路径，所以在进行缩放的时候能够保真。
+
+<div id="svgpath-transform" class="sprite-container"></div>
+
+可以看到左边的爱心在放大的时候会变模糊，右边则不会。因为右边是在放大的时候通过路径的transform重新生成的路径，这样可以保真，当然代价是运算量比较大，因此有利有弊，分场合使用。
+
+```js
+const scene = new Scene('#svgpath-transform', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const d =  'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z'
+
+const heart1 = new Path()
+heart1.attr({
+  anchor: [0.5, 0.5],
+  path: {
+    d,
+    transform: {
+      rotate: 45,
+    },
+    trim: true,
+  },
+  fillColor: '#f33',
+  pos: [300, 300],
+})
+layer.appendChild(heart1)
+
+heart1.animate([
+  {scale: 1},
+  {scale: 10}
+], {
+  duration: 5000,
+  iterations: Infinity,
+  direction: 'alternate',
+})
+
+const heart2 = new Path()
+heart2.attr({
+  anchor: [0.5, 0.5],
+  path: {
+    d,
+    transform: {
+      rotate: 45,
+    },
+    trim: true,
+  },
+  fillColor: '#f33',
+  pos: [900, 300],
+})
+heart2.animate([
+  {path: {d, trim: true, transform:{rotate: 45, scale: 1}}},
+  {path: {d, trim: true, transform:{rotate: 45, scale: 10}}},
+], {
+  duration: 5000,
+  iterations: Infinity,
+  direction: 'alternate',
+})
+layer.appendChild(heart2)
+```
+
+如上所见，使用Path对象可以绘制复杂的矢量图，不过我们需要对SVG的Path熟悉才会比较好用。spritejs本身不提供基础的简单图形的绘制，但我们可以使用[自定义绘图](/zh-cn/guide/userdraw)或者通过创建[自定义的精灵类型](/zh-cn/guide/nodes)来解决这样的需求。在未来，我们考虑提供专业的绘图扩展库，来解决各种图形相关的问题。
+
 ### 分组 Group
 
 就像DOM元素可以嵌套一样，当我们要批量操作多个元素时，我们可以使用Group元素将其他元素放到Group元素下。
+
+<div id="group" class="sprite-container"></div>
+
+对于Group元素的操作就像操作普通精灵那样，因此当我们把几个不同的元素放进Group之后，直接操作Group就可以让Group中的所有元素一起随着Group运动。
+
+
+```js
+const scene = new Scene('#group', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const group = new Group()
+const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
+
+group.attr({
+  size: [300, 300],
+  pos: [770, 300],
+  anchor: [0.5, 0.5],
+})
+layer.append(group)
+
+for(let i = 0; i < 6; i++) {
+  const arc = new Path()
+  arc.attr({
+    path: {
+      d: arcD,
+      transform: {scale: 3, rotate: -15},
+      trim: true,
+    },
+    pos: [150, 150],
+    anchor: [0, 0.5],
+    strokeColor: 'red',
+    rotate: i * 60,
+  })
+  arc.attr('fillColor', `rgb(${i * 139 % 255}, 0, 0)`)
+  group.append(arc)
+}
+
+group.animate([
+  {rotate: 0},
+  {rotate: 360},
+], {
+  duration: 3000,
+  iterations: Infinity,
+})
+```
+
+Group除了分组元素外，还有一个特别好的功能，那就是创建clip剪裁区域。
+
+<div id="group-clip" class="sprite-container"></div>
+
+```js
+const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
+const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const group = new Group()
+group.attr({
+  pos: [770, 300],
+  anchor: [0.5, 0.5],
+  clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
+})
+layer.append(group)
+
+const sprite = new Sprite(imgUrl)
+sprite.attr({
+  pos: [0, 0],
+  scale: 0.75,
+})
+group.append(sprite)
+```
+
+Group的clip属性和Path的path属性一样，可以设置d，表示剪裁区域，并且设置transform和trim。
+
+### 动画 Animate
 
 
 <!-- javascript -->
@@ -613,7 +858,220 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 }())
 
 ;(function(){
-  const scene = new Label('#label-text')
+  const scene = new Scene('#label-text', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  
+  const text1 = new Label('SpriteJS.org')
+  text1.attr({
+    pos: [100, 40],
+    fillColor: '#707',
+    font: "oblique small-caps bold 56px Arial",
+    border: [2.5, '#ccc'],
+  })
+  layer.append(text1)
 
+  const text2 = new Label('从前有座\n灵剑山')
+  text2.attr({
+    pos: [500, 40],
+    fillColor: '#077',
+    font: "64px 宋体",
+    lineHeight: 112,
+    textAlign: 'center',
+    padding: [0, 30],
+    border: [2.5, '#ccc'],
+  })
+  layer.append(text2)  
+
+  const text3 = new Label('Hello')
+  text3.attr({
+    pos: [100, 240],
+    strokeColor: '#fc7',
+    font: "bold italic 70px Microsoft Yahei ",
+    textAlign: 'center',
+    padding: [0, 30],
+    border: [2.5, '#ccc'],
+  })
+  layer.append(text3)  
+
+  function createClockTexts(text, x, y) {
+    const len = text.length
+
+    for(let i = 0; i < len; i++) {
+      const char = text.charAt(i)
+      const label = new Label(char)
+      label.attr({
+        anchor: [0.5, 4.5],
+        pos: [x, y],
+        font: 'bold 44px Arial',
+        color: '#37c',
+        rotate: i * 360 / len,
+      })
+
+      layer.append(label)
+    }
+  }
+  createClockTexts('Sprite.js JavaScript Canvas...', 1200, 300)
+}())
+
+;(function(){
+  const scene = new Scene('#svgpath', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  
+  const p1 = new Path()
+  p1.attr({
+    path: {
+      d: 'M280,250A200,200,0,1,1,680,250A200,200,0,1,1,280,250Z',
+      transform: {
+        scale: 0.5,
+      },
+      trim: true,
+    },
+    strokeColor: '#033',
+    fillColor: '#839',
+    lineWidth: 12,
+    pos: [100, 50],
+  })
+
+  layer.appendChild(p1)
+
+  const p2 = new Path()
+  p2.attr({
+    path: {
+      d: 'M480,50L423.8,182.6L280,194.8L389.2,289.4L356.4,430L480,355.4L480,355.4L603.6,430L570.8,289.4L680,194.8L536.2,182.6Z',
+      transform: {
+        rotate: 45,
+      },
+      trim: true,
+    },
+    fillColor: '#ed8',
+    pos: [450, 100],
+  })
+  layer.appendChild(p2)
+
+  const p3 = new Path()
+  p3.attr({
+    path: {
+      d: 'M480,437l-29-26.4c-103-93.4-171-155-171-230.6c0-61.6,48.4-110,110-110c34.8,0,68.2,16.2,90,41.8C501.8,86.2,535.2,70,570,70c61.6,0,110,48.4,110,110c0,75.6-68,137.2-171,230.8L480,437z',
+      trim: true,
+    },
+    strokeColor: '#f37',
+    lineWidth: 20,
+    lineJoin: 'round',
+    lineCap: 'round',
+    pos: [1000, 100],
+  })
+  layer.appendChild(p3)
+}())
+
+;(function(){
+  const scene = new Scene('#svgpath-transform', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  const d =  'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z'
+
+  const heart1 = new Path()
+  heart1.attr({
+    anchor: [0.5, 0.5],
+    path: {
+      d,
+      transform: {
+        rotate: 45,
+      },
+      trim: true,
+    },
+    fillColor: '#f33',
+    pos: [300, 300],
+  })
+  layer.appendChild(heart1)
+
+  heart1.animate([
+    {scale: 1},
+    {scale: 10}
+  ], {
+    duration: 5000,
+    iterations: Infinity,
+    direction: 'alternate',
+  })
+
+  const heart2 = new Path()
+  heart2.attr({
+    anchor: [0.5, 0.5],
+    path: {
+      d,
+      transform: {
+        rotate: 45,
+      },
+      trim: true,
+    },
+    fillColor: '#f33',
+    pos: [900, 300],
+  })
+  heart2.animate([
+    {path: {d, trim: true, transform:{rotate: 45, scale: 1}}},
+    {path: {d, trim: true, transform:{rotate: 45, scale: 10}}},
+  ], {
+    duration: 5000,
+    iterations: Infinity,
+    direction: 'alternate',
+  })
+  layer.appendChild(heart2)
+}())
+
+;(function(){
+  const scene = new Scene('#group', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  const group = new Group()
+  const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
+
+  group.attr({
+    size: [300, 300],
+    pos: [770, 300],
+    anchor: [0.5, 0.5],
+  })
+  layer.append(group)
+
+  for(let i = 0; i < 6; i++) {
+    const arc = new Path()
+    arc.attr({
+      path: {
+        d: arcD,
+        transform: {scale: 3, rotate: -15},
+        trim: true,
+      },
+      pos: [150, 150],
+      anchor: [0, 0.5],
+      strokeColor: 'red',
+      rotate: i * 60,
+    })
+    arc.attr('fillColor', `rgb(${i * 139 % 255}, 0, 0)`)
+    group.append(arc)
+  }
+
+  group.animate([
+    {rotate: 0},
+    {rotate: 360},
+  ], {
+    duration: 3000,
+    iterations: Infinity,
+  })
+}())
+
+;(function(){
+  const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
+  const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  const group = new Group()
+  group.attr({
+    pos: [770, 300],
+    anchor: [0.5, 0.5],
+    clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
+  })
+  layer.append(group)
+
+  const sprite = new Sprite(imgUrl)
+  sprite.attr({
+    pos: [-10, 0],
+    scale: 0.75,
+  })
+  group.append(sprite)
 }())
 </script>
