@@ -197,7 +197,7 @@ box.animate([
   duration: 3000,
 })
 
-anchorX.addEventListener('change', evt => {
+anchorX.addEventListener('change', function(evt) {
   const target = evt.target,
     [x, y] = box.attr('anchor')
   const value = target.value / 100
@@ -205,7 +205,7 @@ anchorX.addEventListener('change', evt => {
   box.attr('anchor', [value, y])
   label.text = `anchorX: ${value}, anchorY: ${y}`
 })
-anchorY.addEventListener('change', evt => {
+anchorY.addEventListener('change', function(evt) {
   const target = evt.target,
     [x, y] = box.attr('anchor')
   const value = target.value / 100
@@ -344,6 +344,8 @@ layer.append(s1, s2, s3, s4)
 ### 文字 Label
 
 Label是用来显示文字的元素，可以显示单行或多行文字。同加载图片的精灵元素类似，如果Label不指定宽高，可以自适应宽高。文字可以通过设置textAlign属性修改对齐方式，默认是居左对齐，可以支持居中和居右对齐。文字还可以支持行高lineHeight属性，如果不设置这个属性，默认行高是font指定字体像素大小的1.2倍。
+
+<div id="label-text" class="sprite-container"></div>
 
 ### 路径 Path
 
@@ -492,7 +494,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     duration: 3000,
   })
 
-  anchorX.addEventListener('change', evt => {
+  anchorX.addEventListener('change', function(evt) {
     const target = evt.target,
       [x, y] = box.attr('anchor')
     const value = target.value / 100
@@ -500,7 +502,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     box.attr('anchor', [value, y])
     label.text = `anchorX: ${value}, anchorY: ${y}`
   })
-  anchorY.addEventListener('change', evt => {
+  anchorY.addEventListener('change', function(evt) {
     const target = evt.target,
       [x, y] = box.attr('anchor')
     const value = target.value / 100
@@ -608,5 +610,10 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
 
   layer.append(s1, s2, s3, s4)
+}())
+
+;(function(){
+  const scene = new Label('#label-text')
+
 }())
 </script>
