@@ -4,15 +4,22 @@
   }
 </style>
 <script>
-  document.querySelector('.cover.show').style.background = 'linear-gradient(to left bottom, hsl(101, 100%, 85%) 0%,hsl(21, 100%, 85%) 100%)'
+document.querySelector('.cover.show').style.background = 'linear-gradient(to left bottom, hsl(101, 100%, 85%) 0%,hsl(21, 100%, 85%) 100%)'
 
-  const {Scene, Sprite} = spritejs
-  const scene = new Scene('#coverpage')
-  let [layerWidth, layerHeight] = scene.viewport.map(function(i){return i * 2})
-  scene.resolution = [layerWidth, layerHeight]
+const {Scene, Sprite} = spritejs
+const scene = new Scene('#coverpage')
+let [layerWidth, layerHeight] = scene.viewport.map(function(i){return i * 2})
+scene.resolution = [layerWidth, layerHeight]
+
+scene.preload({
+  id: 'logo',
+  src: 'https://p5.ssl.qhimg.com/t01c6d3ad8480a3b687.png',
+}, {
+  id: 'logo-lemon',
+  src: 'https://p3.ssl.qhimg.com/t018a16f34ff8773989.png',
+}).then(() => {
   const fglayer = scene.layer('fglayer')
-  
-  const logo = new Sprite('../res/logo-nolemon.png')
+  const logo = new Sprite('logo')
   logo.attr({
     anchor: [0.5, 0.5],
     pos: [layerWidth / 2, layerHeight - 150],
@@ -20,7 +27,7 @@
   })
   fglayer.append(logo)
 
-  const logoLemon = new Sprite('../res/logo-lemon.png')
+  const logoLemon = new Sprite('logo-lemon')
   logoLemon.attr({
     anchor: [0.5, 0.5],
     pos: [layerWidth / 2 - 30, 30],
@@ -56,4 +63,5 @@
   }
 
   window.onresize = updateLogo
+})
 </script>
