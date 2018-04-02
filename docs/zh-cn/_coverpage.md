@@ -1,6 +1,14 @@
 <!-- _coverpage.md -->
+<style>
+  #coverpage {
+    width: 100%;
+    height: 300px;
+    margin-top: -160px;
+    position: relative;
+  }
+</style>
 
-# spritejs <small>1.18</small>
+<div id="coverpage"></div>
 
 > 跨平台轻量级**渲染对象模型**
 
