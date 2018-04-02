@@ -1074,5 +1074,9 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     scale: 0.75,
   })
   group.append(sprite)
+
+  window.onresize = function() {
+    scene.viewport = ['auto', 'auto']
+  }
 }())
 </script>
