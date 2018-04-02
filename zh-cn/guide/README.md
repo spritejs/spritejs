@@ -1068,12 +1068,12 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
   layer.append(group)
 
-  const sprite = new Sprite(imgUrl)
-  sprite.attr({
-    pos: [-10, 0],
-    scale: 0.75,
-  })
-  group.append(sprite)
+  // const sprite = new Sprite(imgUrl)
+  // sprite.attr({
+  //   pos: [-10, 0],
+  //   scale: 0.75,
+  // })
+  // group.append(sprite)
 
   window.onresize = function() {
     scene.viewport = ['auto', 'auto']
