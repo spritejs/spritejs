@@ -1058,25 +1058,23 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 ;(function(){
   const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
   const scene = new Scene('#group-clip', {resolution: [1540, 600]})
-  const layer = scene.layer('fglayer')
-  const group = new Group()
-  group.attr({
-    pos: [770, 300],
-    anchor: [0.5, 0.5],
-    clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
-    bgcolor: 'red',
-  })
-  layer.append(group)
+  scene.preload({id: 'beauty', src: imgUrl})
+    .then(function(){
+      const layer = scene.layer('fglayer')
+      const group = new Group()
+      group.attr({
+        pos: [770, 300],
+        anchor: [0.5, 0.5],
+        clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
+      })
+      layer.append(group)
 
-  // const sprite = new Sprite(imgUrl)
-  // sprite.attr({
-  //   pos: [-10, 0],
-  //   scale: 0.75,
-  // })
-  // group.append(sprite)
-
-  window.onresize = function() {
-    scene.viewport = ['auto', 'auto']
-  }
+      const sprite = new Sprite('beauty')
+      sprite.attr({
+        pos: [-10, 0],
+        scale: 0.75,
+      })
+      group.append(sprite)
+    })
 }())
 </script>
