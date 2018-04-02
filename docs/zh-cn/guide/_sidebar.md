@@ -29,6 +29,7 @@
   * [路径相关](/zh-cn/guide/path)
   * [缓存策略](/zh-cn/guide/cache)
   * [事件与自定义事件](/zh-cn/guide/events)
+  * [自定义绘图](/zh-cn/guide/userdraw)
   * [创建新的精灵类型](/zh-cn/guide/nodes)
   * [与d3一同使用](/zh-cn/guide/d3)
   * [Layer快照](/zh-cn/guide/snapshot)

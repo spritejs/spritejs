@@ -70,7 +70,7 @@ for(let i = 1, x = 200; i <= 4; i++) {
 }
 ```
 
-当我们不设置Scene的resolution和viewport时，spritejs会根据容器元素的实际占位（不是css宽高）来初始化大小。比如我们定义一个相对自适应的元素：
+当我们不设置Scene的viewport时，spritejs会根据容器元素的实际占位（不是css宽高）来初始化大小。比如我们定义一个相对自适应的元素：
 
 ```css
 #adaptive {
@@ -522,11 +522,83 @@ heart2.animate([
 layer.appendChild(heart2)
 ```
 
+如上所见，使用Path对象可以绘制复杂的矢量图，不过我们需要对SVG的Path熟悉才会比较好用。spritejs本身不提供基础的简单图形的绘制，但我们可以使用[自定义绘图](/zh-cn/guide/userdraw)或者通过创建[自定义的精灵类型](/zh-cn/guide/nodes)来解决这样的需求。在未来，我们考虑提供专业的绘图扩展库，来解决各种图形相关的问题。
+
 ### 分组 Group
 
 就像DOM元素可以嵌套一样，当我们要批量操作多个元素时，我们可以使用Group元素将其他元素放到Group元素下。
 
 <div id="group" class="sprite-container"></div>
+
+对于Group元素的操作就像操作普通精灵那样，因此当我们把几个不同的元素放进Group之后，直接操作Group就可以让Group中的所有元素一起随着Group运动。
+
+
+```js
+const scene = new Scene('#group', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const group = new Group()
+const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
+
+group.attr({
+  size: [300, 300],
+  pos: [770, 300],
+  anchor: [0.5, 0.5],
+})
+layer.append(group)
+
+for(let i = 0; i < 6; i++) {
+  const arc = new Path()
+  arc.attr({
+    path: {
+      d: arcD,
+      transform: {scale: 3, rotate: -15},
+      trim: true,
+    },
+    pos: [150, 150],
+    anchor: [0, 0.5],
+    strokeColor: 'red',
+    rotate: i * 60,
+  })
+  arc.attr('fillColor', `rgb(${i * 139 % 255}, 0, 0)`)
+  group.append(arc)
+}
+
+group.animate([
+  {rotate: 0},
+  {rotate: 360},
+], {
+  duration: 3000,
+  iterations: Infinity,
+})
+```
+
+Group除了分组元素外，还有一个特别好的功能，那就是创建clip剪裁区域。
+
+<div id="group-clip" class="sprite-container"></div>
+
+```js
+const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
+const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const group = new Group()
+group.attr({
+  pos: [770, 300],
+  anchor: [0.5, 0.5],
+  clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
+})
+layer.append(group)
+
+const sprite = new Sprite(imgUrl)
+sprite.attr({
+  pos: [0, 0],
+  scale: 0.75,
+})
+group.append(sprite)
+```
+
+Group的clip属性和Path的path属性一样，可以设置d，表示剪裁区域，并且设置transform和trim。
+
+### 动画 Animate
 
 
 <!-- javascript -->
@@ -949,16 +1021,57 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   const layer = scene.layer('fglayer')
   const group = new Group()
   const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
-  const arc = new Path()
-  arc.attr({
-    path: {
-      d: arcD,
-      transform: {scale: 3},
-    },
+
+  group.attr({
+    size: [300, 300],
     pos: [770, 300],
-    anchor: [0, 0.5],
-    strokeColor: 'red',
+    anchor: [0.5, 0.5],
   })
-  layer.append(arc)
+  layer.append(group)
+
+  for(let i = 0; i < 6; i++) {
+    const arc = new Path()
+    arc.attr({
+      path: {
+        d: arcD,
+        transform: {scale: 3, rotate: -15},
+        trim: true,
+      },
+      pos: [150, 150],
+      anchor: [0, 0.5],
+      strokeColor: 'red',
+      rotate: i * 60,
+    })
+    arc.attr('fillColor', `rgb(${i * 139 % 255}, 0, 0)`)
+    group.append(arc)
+  }
+
+  group.animate([
+    {rotate: 0},
+    {rotate: 360},
+  ], {
+    duration: 3000,
+    iterations: Infinity,
+  })
+}())
+
+;(function(){
+  const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
+  const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  const group = new Group()
+  group.attr({
+    pos: [770, 300],
+    anchor: [0.5, 0.5],
+    clip: {d: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z', transform: {scale: 15}},
+  })
+  layer.append(group)
+
+  const sprite = new Sprite(imgUrl)
+  sprite.attr({
+    pos: [-10, 0],
+    scale: 0.75,
+  })
+  group.append(sprite)
 }())
 </script>
