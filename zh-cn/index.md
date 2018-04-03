@@ -95,11 +95,10 @@ layer.append(robot)
 <script>
 const {Scene, Sprite} = spritejs
 
-const scene = new Scene('#demo-quickStart', {viewport: [770, 200], resolution: [3080, 800]})
-
+const scene = new Scene('#demo-quickStart', {resolution: [3080, 800]})
 const layer = scene.layer()
 
-const robot = new Sprite('/res/robot.png')
+const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png')
 
 robot.attr({
   anchor: [0, 0.5],
@@ -118,4 +117,6 @@ robot.animate([
 })
 
 layer.append(robot)
+
+autoResize(scene)
 </script>
