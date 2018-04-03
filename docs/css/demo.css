@@ -1,0 +1,13 @@
+#adaptive {
+  width: 50%;
+  padding-bottom: 50%;
+}
+#adaptivesvg {
+  width: 80%;
+  height: 120px;
+  margin: auto;
+  padding: 0;
+}
+#adaptivesvg canvas {
+  background-color: #ddd;
+}

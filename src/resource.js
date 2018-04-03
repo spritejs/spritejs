@@ -36,11 +36,11 @@ const Resource = {
         })
       })
     }
-    return Promise.resolve({
+    return {
       img: loadedResources.get(mapKey),
       texture,
       fromCache: true,
-    })
+    }
   },
   /**
     u3d-json compatible: https://www.codeandweb.com/texturepacker

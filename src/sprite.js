@@ -35,21 +35,39 @@ class ResAttr extends Sprite.Attr {
 
   loadTextures(textures) {
     // adaptive textures
-    const promises = textures.map((texture) => {
+    let hasPromise = false
+    const tasks = textures.map((texture) => {
       if(texture.image) {
         return Promise.resolve({img: texture.image, texture})
       }
-      return Resource.loadTexture(texture)
+
+      const loadingTexture = Resource.loadTexture(texture)
+      if(loadingTexture instanceof Promise) {
+        hasPromise = true
+      }
+      return loadingTexture
     })
-    Promise.all(promises).then((textures) => {
-      const res = textures.map(({img, texture, fromCache}) => {
+
+    if(hasPromise) {
+      Promise.all(tasks).then((textures) => {
+        const res = textures.map(({img, texture, fromCache}) => {
+          if(!fromCache) {
+            this.clearCache()
+          }
+          return Object.assign({}, texture, {image: img})
+        })
+        super.loadTextures(res)
+      })
+    } else {
+      // if preload image, calculate the size of sprite synchronously
+      const res = tasks.map(({img, texture, fromCache}) => {
         if(!fromCache) {
           this.clearCache()
         }
         return Object.assign({}, texture, {image: img})
       })
       super.loadTextures(res)
-    })
+    }
   }
 }
 

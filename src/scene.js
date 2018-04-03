@@ -233,6 +233,9 @@ export default class extends BaseNode {
         const {id, src} = res
         task = Resource.loadTexture({id, src})
       }
+      if(!(task instanceof Promise)) {
+        task = Promise.resolve(task)
+      }
 
       tasks.push(task.then((r) => {
         ret.push(r)
