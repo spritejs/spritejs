@@ -8,7 +8,7 @@
 
 * 基础用法
 
-  * [绘图尺寸](/zh-cn/guide/#绘图尺寸)
+  * [绘图尺寸](/zh-cn/viewport#绘图尺寸)
   * [锚点 anchor](/zh-cn/guide/#锚点-anchor)
   * [精灵 Sprite](/zh-cn/guide/#精灵-Sprite)
   * [文字 Label](/zh-cn/guide/#文字-Label)
