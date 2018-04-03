@@ -96,28 +96,30 @@ layer.append(robot)
 const {Scene, Sprite} = spritejs
 
 const scene = new Scene('#demo-quickStart', {resolution: [3080, 800]})
-
 const layer = scene.layer()
 
-const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png')
+scene.preload({id: 'robot', src: 'https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png'})
+  .then(function(){
+    const robot = new Sprite('robot')
 
-robot.attr({
-  anchor: [0, 0.5],
-  pos: [0, 0],
-})
+    robot.attr({
+      anchor: [0, 0.5],
+      pos: [0, 0],
+    })
 
-robot.animate([
-  {pos: [0, 0]},
-  {pos: [0, 300]},
-  {pos: [2700, 300]},
-  {pos: [2700, 0]},
-], {
-  duration: 5000,
-  iterations: Infinity,
-  direction: 'alternate',
-})
+    robot.animate([
+      {pos: [0, 0]},
+      {pos: [0, 300]},
+      {pos: [2700, 300]},
+      {pos: [2700, 0]},
+    ], {
+      duration: 5000,
+      iterations: Infinity,
+      direction: 'alternate',
+    })
 
-layer.append(robot)
+    layer.append(robot)
+  })
 
 autoResize(scene)
 </script>
