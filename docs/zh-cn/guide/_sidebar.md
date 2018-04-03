@@ -7,18 +7,20 @@
   * [基本用法](/zh-cn/index#基本用法)
 
 * 基础用法
-
-  * [绘图尺寸](/zh-cn/viewport#绘图尺寸)
-  * [锚点和定位](/zh-cn/position#锚点和定位)
+  * 坐标
+    * [绘图尺寸](/zh-cn/layer#绘图尺寸)
+    * [锚点 anchor](/zh-cn/layer#锚点-anchor)
   * 元素
     * [精灵 Sprite](/zh-cn/elements#精灵-Sprite)
     * [文字 Label](/zh-cn/elements#文字-Label)
     * [路径 Path](/zh-cn/elements#路径-Path)
     * [分组 Group](/zh-cn/elements#分组-Group)
-  * [动画 animate](/zh-cn/guide/#动画-animate)
-  * [滤镜 filter](/zh-cn/guide/#滤镜-filter)
-  * [渐变 gradient](/zh-cn/guide/#渐变-gradient)
-  * [事件 event](/zh-cn/guide/#事件-event)
+  * 效果
+    * [动画 animate](/zh-cn/effect#动画-animate)
+    * [滤镜 filter](/zh-cn/effect#滤镜-filter)
+    * [渐变 gradient](/zh-cn/effect#渐变-gradient)
+  * 行为
+    * [事件 event](/zh-cn/behavior#事件-event)
 
 * 高级用法
 
