@@ -1,13 +1,10 @@
 <style>
   .sprite-container {
     width: 100%;
-    height: 300px;
+    padding-bottom: 39%;
   }
   .sprite-container canvas {
     border: solid 2px #333;
-  }
-  #coordinate {
-    height: 300px;
   }
   #adaptive {
     width: 50%;
@@ -17,6 +14,7 @@
     width: 80%;
     height: 120px;
     margin: auto;
+    padding: 0;
   }
   #adaptivesvg canvas {
     background-color: #ddd;
@@ -27,16 +25,22 @@
 
 我们知道，画布canvas的坐标范围它的宽高属性决定，而在网页中，canvas呈现在文档中的大小则由canvas对象的css样式决定，两者不一定相同。对应于spritejs，用**resolution**表示画布的宽高，而用**viewport**表示canvas呈现在文档中的宽高。
 
+```js
+const scene = new Scene('#coordinate', {viewport:[770, 300], resolution: [1540, 600]})
+```
+
+在一般情况下我们可以不设置viewport，这样的话默认的viewport会根据容器自动调整，便于我们按照不同窗口来适配我们的canvas。
+
 <div id="coordinate" class="sprite-container"></div>
 
 ```js
-const scene = new Scene('#coordinate', {viewport: [770, 300], resolution: [1540, 600]})
+const scene = new Scene('#coordinate', {resolution: [1540, 600]})
 const layer = scene.layer()
 
 const [width, height] = scene.resolution
 const viewport = scene.viewport 
 
-const label = new Label(`resolution: ${width}, ${height} | viewport: ${[...viewport]}`)
+const label = new Label(`resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`)
 
 label.attr({
   anchor: [0.5, 0],
@@ -49,7 +53,7 @@ layer.append(label)
 
 function createBox(x, size) {
   const box = new Label(`${size}px`)
-  const bgcolor = `rgb(${size % 128 + 128}, ${size % 100 + 59}, 0)`
+  const bgcolor = `rgb(${size % 128 + 100}, ${size % 66}, ${size % 77})`
 
   box.attr({
     anchor: [0.5, 0],
@@ -68,9 +72,14 @@ for(let i = 1, x = 200; i <= 4; i++) {
   x += 100 * (i + 1)
   layer.append(box)
 }
+
+window.addEventListener('resize', function(){
+  scene.viewport = ['auto', 'auto']
+  label.text = `resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`
+})
 ```
 
-当我们不设置Scene的viewport时，spritejs会根据容器元素的实际占位（不是css宽高）来初始化大小。比如我们定义一个相对自适应的元素：
+比如我们定义一个相对自适应的元素：
 
 ```css
 #adaptive {
@@ -105,7 +114,7 @@ window.onresize = function() {
 }
 ```
 
-有时候，我们需要让canvas的宽度或高度自适应，但是我们又希望精灵元素保持宽高比例不变，此时我们可以在窗口大小改变的时候同动态修改Scene的**resolution**属性，一旦它被改变，所有Layer的resolution一同改变，并重新绘制元素。
+有时候，我们需要让canvas的宽度或高度其中一项自适应，但是我们又希望精灵元素保持宽高比例不变，此时我们可以在窗口大小改变的时候同动态修改Scene的**resolution**属性，一旦它被改变，所有Layer的resolution一同改变，并重新绘制元素。
 
 <div id="adaptivesvg" class="sprite-container"></div>
 
@@ -158,11 +167,11 @@ const scene = new Scene('#anchor', {resolution: [1540, 600]})
 const layer = scene.layer()
 const box = new Sprite({
   anchor: [0.5, 0.5],
-  size: [100, 100],
+  size: [200, 200],
   pos: [770, 300],
   gradients: {
     bgcolor: {
-      vector: [0, 0, 100, 100],
+      vector: [0, 0, 200, 200],
       colors: [
         {offset: 0, color: 'red'},
         {offset: 1, color: 'green'},
@@ -606,13 +615,13 @@ Group的clip属性和Path的path属性一样，可以设置d，表示剪裁区�
 const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
 ;(function(){
-  const scene = new Scene('#coordinate', {viewport: [770, 300], resolution: [1540, 600]})
+  const scene = new Scene('#coordinate', {resolution: [1540, 600]})
   const layer = scene.layer()
   
   const [width, height] = scene.resolution
   const viewport = scene.viewport 
   
-  const label = new Label(`resolution: ${width}, ${height} | viewport: ${[...viewport]}`)
+  const label = new Label(`resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`)
 
   label.attr({
     anchor: [0.5, 0],
@@ -644,6 +653,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     x += 100 * (i + 1)
     layer.append(box)
   }
+
+  window.addEventListener('resize', function(){
+    scene.viewport = ['auto', 'auto']
+    label.text = `resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`
+  })
 }())
 
 ;(function(){
@@ -700,11 +714,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   const layer = scene.layer()
   const box = new Sprite({
     anchor: [0.5, 0.5],
-    size: [100, 100],
+    size: [200, 200],
     pos: [770, 300],
     gradients: {
       bgcolor: {
-        vector: [0, 0, 100, 100],
+        vector: [0, 0, 200, 200],
         colors: [
           {offset: 0, color: 'red'},
           {offset: 1, color: 'green'},
@@ -755,6 +769,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     box.attr('anchor', [x, value])
     label.text = `anchorX: ${x}, anchorY: ${value}`
   })
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -785,6 +801,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     borderRadius: 200,
   })
   layer.append(box1, box2, box3, box4)
+
+  autoResize(scene)
 })()
 
 ;(function(){
@@ -814,7 +832,9 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     bgcolor: 'hsl(180,50%,50%)',
     borderRadius: 200,
   })
-  layer.append(box1, box2, box3, box4)  
+  layer.append(box1, box2, box3, box4)
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -855,6 +875,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
 
   layer.append(s1, s2, s3, s4)
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -911,6 +933,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     }
   }
   createClockTexts('Sprite.js JavaScript Canvas...', 1200, 300)
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -961,6 +985,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     pos: [1000, 100],
   })
   layer.appendChild(p3)
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -1014,6 +1040,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     direction: 'alternate',
   })
   layer.appendChild(heart2)
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -1053,6 +1081,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     duration: 3000,
     iterations: Infinity,
   })
+
+  autoResize(scene)
 }())
 
 ;(function(){
@@ -1076,5 +1106,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       })
       group.append(sprite)
     })
+
+  autoResize(scene)
 }())
 </script>

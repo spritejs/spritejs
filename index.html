@@ -35,7 +35,14 @@
   <script src="//lib.baomitu.com/docsify/4.6.10/docsify.js"></script>
   <script src="//lib.baomitu.com/docsify/4.6.10/plugins/search.min.js"></script>
   <script src="//lib.baomitu.com/docsify/4.6.10/plugins/external-script.min.js"></script>
-  <script src="https://s1.ssl.qhres.com/!298dd68c/spritejs.min.js"></script>
-  <!-- <script src="/js/spritejs.js"></script> -->
+  <!-- <script src="https://s1.ssl.qhres.com/!298dd68c/spritejs.min.js"></script> -->
+  <script src="/js/spritejs.js"></script>
+  <script>
+    function autoResize(scene) {
+      window.addEventListener('resize', function(){
+        scene.viewport = ['auto', 'auto']
+      })
+    }
+  </script>
 </body>
 </html>

@@ -18,26 +18,33 @@ scene.preload({
   id: 'logo-lemon',
   src: 'https://p4.ssl.qhimg.com/t01b299bd5c2ef4b627.png',
 }).then(function() {
+  function getScale(width){
+    return Math.min(1.5, width * 0.8 / 510)
+  }
+
   const fglayer = scene.layer('fglayer')
   const logo = new Sprite('logo')
   logo.attr({
-    anchor: [0.5, 0.5],
-    pos: [layerWidth / 2, layerHeight - 150],
-    scale: 1.5,
+    anchor: [0.5, 1],
+    pos: [layerWidth / 2, layerHeight - 30],
+    scale: getScale(layerWidth),
   })
   fglayer.append(logo)
+  
+  const [left, top, width, height] = logo.renderRect
 
   const logoLemon = new Sprite('logo-lemon')
   logoLemon.attr({
     anchor: [0.5, 0.5],
-    pos: [layerWidth / 2 - 32, 30],
-    scale: 1.5,
+    pos: [left + 0.458 * width, 30],
+    scale: getScale(layerWidth),
     rotate: 90,
   })
+
   fglayer.append(logoLemon)
   logoLemon.animate([
     {y: 30},
-    {y: layerHeight - 203},
+    {y: top + 0.23 * height},
   ], {
     duration: 800,
     fill: 'forwards',
@@ -58,8 +65,16 @@ scene.preload({
     scene.viewport = ['auto', 'auto']
     const [layerWidth, layerHeight] = scene.viewport.map(function(i){return i * 2})
     scene.resolution = [layerWidth, layerHeight]
-    logo.attr('pos', [layerWidth / 2, layerHeight - 150])
-    logoLemon.attr('x', layerWidth / 2 - 32)
+    const scale = getScale(layerWidth)
+    logo.attr({
+      pos: [layerWidth / 2, layerHeight - 30],
+      scale,
+    })
+    const [left, top, width, height] = logo.renderRect
+    logoLemon.attr({
+      pos: [left + 0.458 * width, top + 0.23 * height],
+      scale,
+    })
   }
 
   window.onresize = updateLogo
