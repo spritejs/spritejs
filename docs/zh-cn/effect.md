@@ -193,11 +193,65 @@ spritejs动画功能非常丰富，关于动画的其他内容，可参考[高�
 
 ### 滤镜 filter
 
-spritejs支持canvas滤镜，
+spritejs支持[canvas滤镜](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter)，能够方便地给元素中的各个texture添加各种滤镜。
+
+<div id="filters" class="sprite-container"></div>
+
+```js
+const images = [
+    {id:'girl1', src:'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg'},
+    {id:'girl2', src:'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg'},
+  ]
+const scene = new Scene('#filters', {resolution: [1540, 600]})
+const layer = scene.layer('fglayer')
+const y1 = 50, y2 = 320
+
+function applyFilters(id, filters, y, scale = 1) {
+  filters.forEach(function(filter, i){
+    const s = new Sprite()
+    const textures = {id, filter: {}}
+    if(filter.length === 2) {
+      textures.filter[filter[0]] = filter[1]
+    }
+    s.attr({
+      textures,
+      pos: [50 + i * 250, y],
+      scale,
+    })
+    layer.append(s)
+  })    
+}
+
+scene.preload(...images).then(function(){
+  const filters1 = [
+    [],
+    ['brightness', '150%'],
+    ['grayscale', '50%'],
+    ['blur', '12px'],
+    ['dropShadow', [15, 15, 5, '#033']],
+    ['hueRotate', 45],
+  ]
+
+  applyFilters('girl1', filters1, y1, 0.5)
+
+  const filters2 = [
+    [],
+    ['invert', '100%'],
+    ['opacity', '70%'],
+    ['saturate', '20%'],
+    ['sepia', '100%'],
+    ['hueRotate', 135],
+  ]
+
+  applyFilters('girl2', filters2, y2)
+})
+```
 
 ### 渐变 gradient
 
-### 事件 event
+spritejs支持三种渐变，分别为两种标准的canvas渐变：[linearGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient)和[radialGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient)，以及一种微信小程序的特殊的渐变：circularGradient。spritejs中设置渐变很简单，只需要设置gradients属性，其中指定需要应用渐变的属性，目前支持border、bgcolor、fillColor和strokeColor四种属性的渐变。通过传递vector参数表示渐变的类型，根据个数自动识别为对应的渐变类型。
+
+<div id="gradients" class="sprite-container"></div>
 
 
 <!-- javascript -->
@@ -370,6 +424,136 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       })
     }
   })
+
+  autoResize(scene)
+}())
+
+;(function(){
+  const images = [
+      {id:'girl1', src:'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg'},
+      {id:'girl2', src:'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg'},
+    ]
+  const scene = new Scene('#filters', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+  const y1 = 50, y2 = 320
+
+  function applyFilters(id, filters, y, scale = 1) {
+    filters.forEach(function(filter, i){
+      const s = new Sprite()
+      const textures = {id, filter: {}}
+      if(filter.length === 2) {
+        textures.filter[filter[0]] = filter[1]
+      }
+      s.attr({
+        textures,
+        pos: [50 + i * 250, y],
+        scale,
+      })
+      layer.append(s)
+    })    
+  }
+
+  scene.preload(...images).then(function(){
+    const filters1 = [
+      [],
+      ['brightness', '150%'],
+      ['grayscale', '50%'],
+      ['blur', '12px'],
+      ['dropShadow', [15, 15, 5, '#033']],
+      ['hueRotate', 45],
+    ]
+
+    applyFilters('girl1', filters1, y1, 0.5)
+
+    const filters2 = [
+      [],
+      ['invert', '100%'],
+      ['opacity', '70%'],
+      ['saturate', '20%'],
+      ['sepia', '100%'],
+      ['hueRotate', 135],
+    ]
+
+    applyFilters('girl2', filters2, y2)
+  })
+
+  autoResize(scene)
+}())
+
+;(function(){
+  const scene = new Scene('#gradients', {resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+
+  const box = new Sprite()
+  box.attr({
+    border: 10,
+    gradients: {
+      border: {
+        vector: [0, 0, 170, 170],
+        colors: [
+          {offset:0, color:'red'},
+          {offset:0.5, color:'yellow'},
+          {offset:1, color:'green'},
+        ],
+      },
+      bgcolor: {
+        vector: [0, 150, 150, 0],
+        colors: [
+          {offset:0, color:'#fff'},
+          {offset:0.5, color:'rgba(33, 33, 77, 0.7)'},
+          {offset:1, color:'rgba(128, 45, 88, 0.5)'},
+        ],        
+      }
+    },
+    pos: [150, 50],
+    size: [150, 150],
+    borderRadius: 15,
+  })
+
+  layer.append(box)
+
+  const label = new Label('Hello SpriteJS~~')
+  label.attr({
+    lineWidth: 6,
+    gradients: {
+      fillColor: {
+        vector: [35, 35, 50, 350, 350, 600],
+        colors: [
+          {offset:0, color:'#777'},
+          {offset:0.5, color:'#ccc'},
+          {offset:1, color:'#333'},        
+        ],
+      }
+    },
+    pos: [500, 50],
+    font: '106px Arial',
+  })
+
+  layer.append(label)
+
+  const path = new Path()
+
+  path.attr({
+    path: {
+      d: 'M480,50L423.8,182.6L280,194.8L389.2,289.4L356.4,430L480,355.4L480,355.4L603.6,430L570.8,289.4L680,194.8L536.2,182.6Z',
+      trim: true,
+      transform: {scale: 0.7, rotate: 30},
+    },
+    gradients: {
+      fillColor: {
+        vector: [200, 200, 0, 0],
+        colors: [
+          {offset:0, color:'red'},
+          {offset:0.5, color:'yellow'},
+          {offset:1, color:'green'},        
+        ],
+      }
+    },
+    anchor: [0.5, 0.5],
+    pos: [700, 360],
+  })
+
+  layer.append(path)
 
   autoResize(scene)
 }())
