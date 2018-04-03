@@ -63,10 +63,11 @@
       s.animate([
         {x: 100},
         {x: 500},
-        {x: 100},
+        // {x: 100},
       ], {
-        duration: duration * 10,
+        duration: duration * 5,
         iterations: Infinity,
+        direction: 'alternate',
         easing: 'ease-in-out',        
       })
 
@@ -84,12 +85,10 @@
     }
 
     let block1 = new Sprite({
-      attr: {
-        anchor: [0.5, 0.5],
-        pos: [300, 200],
-        size: [100, 100],
-        bgcolor: 'red',
-      }
+      anchor: [0.5, 0.5],
+      pos: [300, 200],
+      size: [100, 100],
+      bgcolor: 'red',
     })
 
     layer.appendChild(block1)
@@ -112,7 +111,7 @@
       iterations: Infinity,
     })
 
-    for(let i = 0; i < 10; i++){
+    for(let i = 0; i < 1; i++){
       randomBirds(i)
     }
 
@@ -120,11 +119,13 @@
 
     speedUpBtn.onclick = function(){
       layer.timeline.playbackRate += 0.2
+      pausedPlaybackRate = null
       rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
     }
     
     slowDownBtn.onclick = function(){
       layer.timeline.playbackRate -= 0.2
+      pausedPlaybackRate = null
       rate.innerHTML = layer.timeline.playbackRate.toFixed(1)
     }
 

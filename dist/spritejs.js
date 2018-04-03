@@ -2984,7 +2984,8 @@ var Animator = function () {
         return initState;
       }
 
-      var entropy = this.timeline.entropy,
+      var currentTime = this.timeline.currentTime,
+          entropy = this.timeline.entropy,
           keyframes = this[_keyframes].slice(0);
 
       var inversed = false;
@@ -2993,10 +2994,10 @@ var Animator = function () {
         p = 1 - p;
         inversed = true;
       } else if (direction === 'alternate' || direction === 'alternate-reverse') {
-        var period = Math.floor(entropy / duration);
+        var period = Math.floor(currentTime / duration);
 
         if (p === 1) period--;
-        period = Math.max(0, period);
+        // period = Math.max(0, period)
 
         if (period % 2 ^ direction === 'alternate-reverse') {
           p = 1 - p;
@@ -8845,7 +8846,12 @@ var Layer = function (_BaseNode) {
     }
   }, {
     key: 'draw',
-    value: function draw() {
+    value: function draw(t) {
+      if (t && this.evaluateFPS) {
+        this[_tRecord].push(t);
+        this[_tRecord] = this[_tRecord].slice(-10);
+      }
+
       var updateSet = this[_updateSet];
       if (!updateSet.size) {
         return; // nothing to draw
@@ -8917,11 +8923,6 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'drawSprites',
     value: function drawSprites(renderEls, t) {
-      if (this.evaluateFPS) {
-        this[_tRecord].push(t);
-        this[_tRecord] = this[_tRecord].slice(-10);
-      }
-
       for (var i = 0; i < renderEls.length; i++) {
         var child = renderEls[i];
         if (child.parent === this) {
@@ -16918,11 +16919,11 @@ var Resource = {
         });
       });
     }
-    return _promise2.default.resolve({
+    return {
       img: loadedResources.get(mapKey),
       texture: texture,
       fromCache: true
-    });
+    };
   },
 
   /**
@@ -19626,6 +19627,9 @@ var _default = function (_BaseNode) {
 
                     task = _resource2.default.loadTexture({ id: id, src: src });
                   }
+                  if (!(task instanceof _promise2.default)) {
+                    task = _promise2.default.resolve(task);
+                  }
 
                   tasks.push(task.then(function (r) {
                     ret.push(r);
@@ -19946,25 +19950,47 @@ var ResAttr = (_class = function (_Sprite$Attr) {
       var _this2 = this;
 
       // adaptive textures
-      var promises = textures.map(function (texture) {
+      var hasPromise = false;
+      var tasks = textures.map(function (texture) {
         if (texture.image) {
           return _promise2.default.resolve({ img: texture.image, texture: texture });
         }
-        return _resource2.default.loadTexture(texture);
+
+        var loadingTexture = _resource2.default.loadTexture(texture);
+        if (loadingTexture instanceof _promise2.default) {
+          hasPromise = true;
+        }
+        return loadingTexture;
       });
-      _promise2.default.all(promises).then(function (textures) {
-        var res = textures.map(function (_ref) {
-          var img = _ref.img,
-              texture = _ref.texture,
-              fromCache = _ref.fromCache;
+
+      if (hasPromise) {
+        _promise2.default.all(tasks).then(function (textures) {
+          var res = textures.map(function (_ref) {
+            var img = _ref.img,
+                texture = _ref.texture,
+                fromCache = _ref.fromCache;
+
+            if (!fromCache) {
+              _this2.clearCache();
+            }
+            return (0, _assign2.default)({}, texture, { image: img });
+          });
+          (0, _get3.default)(ResAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(ResAttr.prototype), 'loadTextures', _this2).call(_this2, res);
+        });
+      } else {
+        // if preload image, calculate the size of sprite synchronously
+        var res = tasks.map(function (_ref2) {
+          var img = _ref2.img,
+              texture = _ref2.texture,
+              fromCache = _ref2.fromCache;
 
           if (!fromCache) {
             _this2.clearCache();
           }
           return (0, _assign2.default)({}, texture, { image: img });
         });
-        (0, _get3.default)(ResAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(ResAttr.prototype), 'loadTextures', _this2).call(_this2, res);
-      });
+        (0, _get3.default)(ResAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(ResAttr.prototype), 'loadTextures', this).call(this, res);
+      }
     }
   }, {
     key: 'textures',
