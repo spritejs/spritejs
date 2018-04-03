@@ -1,8 +1,4 @@
-<style>
-  main {
-    display: none;
-  }
-</style>
+
 <script>
 document.querySelector('.cover.show').style.background = 'linear-gradient(to left bottom, hsl(101, 100%, 85%) 0%,hsl(21, 100%, 85%) 100%)'
 
