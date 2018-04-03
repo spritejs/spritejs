@@ -96,7 +96,6 @@ layer.append(robot)
 const {Scene, Sprite} = spritejs
 
 const scene = new Scene('#demo-quickStart', {resolution: [3080, 800]})
-
 const layer = scene.layer()
 
 const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png')

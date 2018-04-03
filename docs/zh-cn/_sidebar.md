@@ -8,12 +8,13 @@
 
 * 基础用法
 
-  * [绘图尺寸](/zh-cn/guide/#绘图尺寸)
-  * [锚点 anchor](/zh-cn/guide/#锚点-anchor)
-  * [精灵 Sprite](/zh-cn/guide/#精灵-Sprite)
-  * [文字 Label](/zh-cn/guide/#文字-Label)
-  * [路径 Path](/zh-cn/guide/#路径-Path)
-  * [分组 Group](/zh-cn/guide/#分组-Group)
+  * [绘图尺寸](/zh-cn/viewport#绘图尺寸)
+  * [锚点和定位](/zh-cn/position#锚点和定位)
+  * 元素
+    * [精灵 Sprite](/zh-cn/elements#精灵-Sprite)
+    * [文字 Label](/zh-cn/elements#文字-Label)
+    * [路径 Path](/zh-cn/elements#路径-Path)
+    * [分组 Group](/zh-cn/elements#分组-Group)
   * [动画 animate](/zh-cn/guide/#动画-animate)
   * [滤镜 filter](/zh-cn/guide/#滤镜-filter)
   * [渐变 gradient](/zh-cn/guide/#渐变-gradient)

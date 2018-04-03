@@ -8132,7 +8132,8 @@ function nowtime() {
 }
 /* eslint-enable no-undef */
 
-var _requestAnimationFrame = void 0;
+var _requestAnimationFrame = void 0,
+    _cancelAnimationFrame = void 0;
 
 if (typeof requestAnimationFrame === 'undefined') {
   _requestAnimationFrame = function _requestAnimationFrame(fn) {
@@ -8140,8 +8141,12 @@ if (typeof requestAnimationFrame === 'undefined') {
       fn(nowtime());
     }, 16);
   };
+  _cancelAnimationFrame = function _cancelAnimationFrame(id) {
+    return clearTimeout(id);
+  };
 } else {
   _requestAnimationFrame = requestAnimationFrame;
+  _cancelAnimationFrame = cancelAnimationFrame;
 }
 
 var steps = [];
@@ -8169,6 +8174,10 @@ var FastAnimationFrame = {
   },
   cancelAnimationFrame: function cancelAnimationFrame(id) {
     delete steps[id];
+    if (!steps.length && timerId) {
+      _cancelAnimationFrame(timerId);
+      timerId = null;
+    }
   }
 };
 
@@ -9286,6 +9295,11 @@ var Layer = function (_BaseNode) {
     key: 'context',
     get: function get() {
       return this.shadowContext ? this.shadowContext : this.outputContext;
+    }
+  }, {
+    key: 'canvas',
+    get: function get() {
+      return this.context.canvas;
     }
   }, {
     key: 'fps',
@@ -10791,6 +10805,13 @@ var _default = function (_Animator) {
       var that = this;
       this.ready.then(function () {
         (0, _fastAnimationFrame.requestAnimationFrame)(function update() {
+          var target = that.target;
+          if (typeof document !== 'undefined' && document.contains && target.layer && target.layer.canvas && !document.contains(target.layer.canvas)) {
+            // if dom element has been removed stop animation.
+            // it usually occurs in single page applications.
+            that.cancel();
+            return;
+          }
           if (that.playState === 'idle') return;
           sprite.attr(that.frame);
           if (that.playState === 'running') {
