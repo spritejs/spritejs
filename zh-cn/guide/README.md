@@ -612,53 +612,53 @@ Group的clip属性和Path的path属性一样，可以设置d，表示剪裁区�
 
 <!-- javascript -->
 <script>
-// const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
+const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
-// ;(function(){
-//   const scene = new Scene('#coordinate', {resolution: [1540, 600]})
-//   const layer = scene.layer()
+;(function(){
+  const scene = new Scene('#coordinate', {resolution: [1540, 600]})
+  const layer = scene.layer()
   
-//   const [width, height] = scene.resolution
-//   const viewport = scene.viewport 
+  const [width, height] = scene.resolution
+  const viewport = scene.viewport 
   
-//   const label = new Label(`resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`)
+  const label = new Label(`resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`)
 
-//   label.attr({
-//     anchor: [0.5, 0],
-//     pos: [width/2, 10],
-//     font: '32px Arial',
-//     fillColor: '#aaa',
-//   })
+  label.attr({
+    anchor: [0.5, 0],
+    pos: [width/2, 10],
+    font: '32px Arial',
+    fillColor: '#aaa',
+  })
 
-//   layer.append(label)
+  layer.append(label)
 
-//   function createBox(x, size) {
-//     const box = new Label(`${size}px`)
-//     const bgcolor = `rgb(${size % 128 + 100}, ${size % 66}, ${size % 77})`
+  function createBox(x, size) {
+    const box = new Label(`${size}px`)
+    const bgcolor = `rgb(${size % 128 + 100}, ${size % 66}, ${size % 77})`
 
-//     box.attr({
-//       anchor: [0.5, 0],
-//       pos: [x, 100],
-//       size: [size, size],
-//       bgcolor,
-//       fillColor: '#eee',
-//       font: '24px Arial',
-//       textAlign: 'center',
-//     })
-//     return box
-//   }
+    box.attr({
+      anchor: [0.5, 0],
+      pos: [x, 100],
+      size: [size, size],
+      bgcolor,
+      fillColor: '#eee',
+      font: '24px Arial',
+      textAlign: 'center',
+    })
+    return box
+  }
 
-//   for(let i = 1, x = 200; i <= 4; i++) {
-//     const box = createBox(x, i * 100)
-//     x += 100 * (i + 1)
-//     layer.append(box)
-//   }
+  for(let i = 1, x = 200; i <= 4; i++) {
+    const box = createBox(x, i * 100)
+    x += 100 * (i + 1)
+    layer.append(box)
+  }
 
-//   window.addEventListener('resize', function(){
-//     scene.viewport = ['auto', 'auto']
-//     label.text = `resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`
-//   })
-// }())
+  window.addEventListener('resize', function(){
+    scene.viewport = ['auto', 'auto']
+    label.text = `resolution: ${[...scene.resolution]} | viewport: ${[...scene.viewport]}`
+  })
+}())
 
 // ;(function(){
 //   const scene = new Scene('#adaptive')
