@@ -38,22 +38,6 @@
   * [Layer快照](/zh-cn/guide/snapshot)
   * [跨平台](/zh-cn/guide/platforms)
 
-* API
-
-  * Sprite 属性
-  * Strite 方法
-  * Label 属性
-  * Label 方法
-  * Path 属性
-  * Path 方法
-  * Group 属性
-  * Group 方法
-  * Label 方法
-  * Scene 方法
-  * Matrix
-  * Vector
-  * utils
-
 * 例子
 
 * [相关资源](/zh-cn/resource)

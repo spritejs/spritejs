@@ -53,12 +53,11 @@ scene.preload([birdsRes, birdsJsonUrl]).then(function() {
   layer.append(path)
 
   const s = new Sprite('bird1.png')
-  const pathOffset = path.pathOffset,
-    pathSize = path.innerSize
+  const pathSize = path.pathSize
 
   s.attr({
     anchor: [0.5, 0.5],
-    pos: [770 + pathOffset[0] - pathSize[0] / 2, 300 + pathOffset[1] - pathSize[1] / 2],
+    pos: [770 + pathSize[0] / 2, 300 + pathSize[1] / 2],
     size: [80, 50],
     offsetPath: path.svg.d,
     zIndex: 200,
