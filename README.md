@@ -14,6 +14,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
 - [Server-side render](#server-side-render). Work with node-canvas.
@@ -22,7 +23,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Look
 
 ```html
-<script src="https://s5.ssl.qhres.com/!fce6a9ed/spritejs.min.js"></script>
+<script src="https://s0.ssl.qhres.com/!13bcfb63/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -43,21 +44,12 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 Learn more at [spritejs.org](http://spritejs.org/)
 
-## Fetures
-
-- Provide `attr()` methods to set sprite styles.
-- Provide [web animations api](https://w3c.github.io/web-animations/#the-animation-interface
-) to perform animations.
-- Provide filters.
-- Provide high-level mouse & touch events
-- Optimized rendering performance.
-
 ## Usage
 
 In browser:
 
 ```html
-<script src="https://s5.ssl.qhres.com/!fce6a9ed/spritejs.min.js"></script>
+<script src="https://s0.ssl.qhres.com/!13bcfb63/spritejs.min.js"></script>
 ```
 
 ## Quick Start

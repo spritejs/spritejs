@@ -2,11 +2,10 @@
 
 <body>
   <nav>
-    <a href="#/">简介</a>
-    <a href="#/api-doc/">API手册</a>
-    <a href="#/examples/">使用范例</a>
-    <a href="#/change-log/">更新日志</a>
-    <a href="#/en-US/">EN</a>
+    <a href="#/en/index">Guide</a>
+    <a href="#/api/">API Docs</a>
+    <a href="/demo" target="_blank">Demos</a>
+    <a href="#/en/changelogs">Changelogs</a>
+    <a href="#/zh-cn/index">中文</a>
   </nav>
-  <div id="app"></div>
 </body>

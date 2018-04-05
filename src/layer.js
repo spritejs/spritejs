@@ -16,9 +16,6 @@ class ExLayer extends Layer {
       this.resolution = resolution
     }
   }
-  get canvas() {
-    return this.outputContext.canvas
-  }
   get id() {
     return this.canvas.dataset.layerId
   }
