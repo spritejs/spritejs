@@ -6,8 +6,6 @@
 
 Set or get the textures of the Sprite. A texture is a local image or an image from URL.
 
-* textures - descriptions
-
 <code>
 const sprite = new Sprite()
 sprite.attr({
@@ -15,13 +13,13 @@ sprite.attr({
 })
 </code>
 
-see [proprety textures]().
+see [proprety textures](#public-textures-stringorobjectorarray-).
 
 ---
 
 - attribute texturesSize:Array
 
-**readonly** Get the bounding box size of the elements' textures.
+**readonly** Get the bounding box size of the elements' textures. When `attr.width` and `attr.height` is default, `sprite.contentSize` is equal to texturesSize.
 
 ---
 <!--properties-->
@@ -43,7 +41,7 @@ sprite.attr({
 })
 ```
 
-Texture can have some properties.
+`texture` attribute has some properties.
 
 * texture properties
 
