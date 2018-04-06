@@ -1,3 +1,5 @@
+[![spritejs.org](https://p4.ssl.qhimg.com/t01ef51d10b3e52e6e3.png)](http://spritejs.org)
+
 # spritejs 
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
