@@ -1,6 +1,8 @@
-[![spritejs.org](https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg)](http://spritejs.org)
+<p align="center">
+  <img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/>
+</p>
 
-# spritejs 
+<h1 align="center">SpriteJS</h1>
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
