@@ -9,7 +9,8 @@ const _layerMap = Symbol('layerMap'),
   _layers = Symbol('layers'),
   _snapshot = Symbol('snapshot'),
   _viewport = Symbol('viewport'),
-  _resolution = Symbol('resolution')
+  _resolution = Symbol('resolution'),
+  _resizeHandler = Symbol('_resizeHandler')
 
 function sortLayer(paper) {
   const layers = Object.values(paper[_layerMap])
@@ -82,25 +83,37 @@ export default class extends BaseNode {
   removeChild(layer) {
     return this.removeLayer(layer)
   }
-
+  updateViewport() {
+    this[_layers].forEach((layer) => {
+      layer.viewport = this.viewport
+    })
+  }
   get distortion() {
     return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1])
   }
 
   set viewport([width, height]) {
-    if(width === '' || width === 'auto') {
-      width = this.container.clientWidth
-    }
-    if(height === '' || height === 'auto') {
-      height = this.container.clientHeight
-    }
     this[_viewport] = [width, height]
-    this[_layers].forEach((layer) => {
-      layer.viewport = [width, height]
-    })
+    if(width === 'auto' || height === 'auto') {
+      if(!this[_resizeHandler]) {
+        this[_resizeHandler] = this.updateViewport.bind(this)
+        window.addEventListener('resize', this[_resizeHandler])
+      }
+    } else if(this[_resizeHandler]) {
+      window.removeEventListener('resize', this[_resizeHandler])
+      delete this[_resizeHandler]
+    }
+    this.updateViewport()
   }
   get viewport() {
-    return this[_viewport]
+    let [width, height] = this[_viewport]
+    if(width === '' || Number.isNaN(Number(width))) {
+      width = this.container.clientWidth
+    }
+    if(height === '' || Number.isNaN(Number(height))) {
+      height = this.container.clientHeight
+    }
+    return [width, height]
   }
 
   set resolution([width, height]) {
