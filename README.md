@@ -85,13 +85,22 @@ Compatible with [d3.js](https://github.com/d3/d3).
 - [D3.js Example 2](http://spritejs.org/#d3-2)
 - [D3.js Example 3](http://spritejs.org/#d3-3)
 
-### API Doc (中文）
+### Guide (中文）
 
-- [Architecture](docs#整体结构)
-- [paper & layers](docs#快速上手)
-- [Sprite](docs#sprite-类结构)
-- [Events](docs#事件机制)
-- [Performance](docs#性能)
+- [Introduction](http://spritejs.org/#/zh-cn/index)
+- [Scene & layers](http://spritejs.org/#/zh-cn/layer)
+- [Elements](http://spritejs.org/#/zh-cn/elements)
+- [Animations & Effects](http://spritejs.org/#/zh-cn/elements)
+- [Behaviors](http://spritejs.org/#/zh-cn/behavior)
+
+### API Doc
+
+- [Sprite](http://spritejs.org/#/api/sprite)
+- [Label](http://spritejs.org/#/api/label)
+- [Path](http://spritejs.org/#/api/path)
+- [Group](http://spritejs.org/#/api/group)
+- [Layer](http://spritejs.org/#/api/layer)
+- [Scene](http://spritejs.org/#/api/scene)
 
 ### Server-side Render
 
