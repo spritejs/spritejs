@@ -9,7 +9,7 @@ function parseApi(content) {
   var base = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
   level++;
-  var pattern = /([+-.])\s*(attribute|property|get|function)\s*(\w+)(?:\((.*?)\))?(?::(.+))?\s(.*?)\n([\s\S]*?)\n---/img;
+  var pattern = /([+-.])\s*(attribute|property|get|function|async)\s*(\w+)(?:\((.*?)\))?(?::((?:\w|\|)+))?\s(.*?)\n([\s\S]*?)\n---/img;
   var matched = pattern.exec(content);
   var api = {
     attributes: [],
@@ -33,6 +33,9 @@ function parseApi(content) {
 
     if (params) {
       params = params.split(/\s*,\s*/g).map(function (p) {
+        if (p.startsWith('...')) {
+          p = p + ':Array';
+        }
         return p.split(/\s*:\s*/);
       });
       params.forEach(function (param) {
@@ -50,11 +53,13 @@ function parseApi(content) {
           param.push('No');
           param[1] = param[1].replace(' optional', '');
         } else {
-          param.push('Yes');
           var _matched = param[1].match(/ = (.+)/);
           if (_matched) {
+            param.push('No');
             param.push(_matched[1]);
             param[1] = param[1].replace(_matched[0], '');
+          } else {
+            param.push('Yes');
           }
         }
       });
@@ -78,7 +83,7 @@ function parseApi(content) {
 
     if (type === 'attribute') {
       api.attributes.push(item);
-    } else if (type === 'function') {
+    } else if (type === 'function' || type === 'async') {
       api.methods.push(item);
     } else {
       api.properties.push(item);
@@ -224,7 +229,7 @@ function format(region, list, content) {
         defaultValue = matched[1];
         details = details.replace(defaultPattern, '');
       }
-      return '<tr><td> ' + name + ' </td><td> ' + returnType + ' </td><td> ' + defaultValue + ' </td><td> ' + details + ' </td></tr>';
+      return '<tr><td class="' + access + '" title="' + access + ' ' + name + '"> ' + name + ' </td><td> ' + returnType + ' </td><td> ' + defaultValue + ' </td><td> ' + details + ' </td></tr>';
     }).join('')) + '\n    </tbody>\n</table>\n';
   } else {
     list = list.map(function (item) {
@@ -245,10 +250,10 @@ function format(region, list, content) {
           return a[4] ? a[0] + ' = ' + a[4] : a[0];
         }).join(', ') + ')';
         paramTable = '\n* **Paramaters:**\n\n| Name | Type | Required | Description |\n| --- | --- | --- | --- |\n' + params.map(function (param) {
-          return '| ' + param[0] + ' | ' + param[1].replace(/\|/g, '<span class="or">or</span>') + ' | ' + param[3] + ' | ' + param[2] + ' |\n';
+          return '| ' + param[0].replace(/^\.\.\./, '') + ' | ' + param[1].replace(/\|/g, '<span class="or">or</span>') + ' | ' + param[3] + ' | ' + param[2] + ' |\n';
         }).join('') + '\n';
       }
-      return '\n### ' + (type !== 'attribute' ? '<span class="access">' + access + '</span>' : '') + (type === 'get' ? '<span class="readonly">readonly</span>' : '') + ' ' + name + (type === 'function' ? paramList : returnType ? ': ' + returnType : '') + ' <span class="inheritance">' + inheritance + '</span>\n\n' + (type === 'function' ? paramTable : '') + '\n\n\n' + (type === 'function' ? '* **Returns:** ' + returnType + (returnComment ? ' - ' : '') + returnComment : '') + '\n\n' + details + '\n\n';
+      return '\n### ' + (type !== 'attribute' ? '<span class="access">' + access + '</span>' : '') + (type === 'get' ? '<span class="readonly">readonly</span>' : '') + (type === 'async' ? '<span class="async">async</span>' : '') + ' ' + name + (type === 'function' || type === 'async' ? paramList : returnType ? ': ' + returnType : '') + ' <span class="inheritance">' + inheritance + '</span>\n\n' + (type === 'function' || type === 'async' ? paramTable : '') + '\n\n\n' + (type === 'function' || type === 'async' ? '* **Returns:** ' + returnType + (returnComment ? ' - ' : '') + returnComment : '') + '\n\n' + details + '\n\n';
     });
     text = '\n## ' + region + '\n\n' + list.join('\n\n') + '\n\n';
   }
@@ -310,16 +315,18 @@ window.generateApiPlugin = function (hook, vm) {
     var path = vm.route.path;
     if (path.startsWith('/api/')) {
       var searchIndexData = JSON.parse(localStorage.getItem('docsify.search.index'));
-      searchIndex.forEach(function (_ref3, i) {
-        var slug = _ref3.slug,
-            body = _ref3.body,
-            title = _ref3.title;
+      if (searchIndexData) {
+        searchIndexData[path] = searchIndexData[path] || {};
+        searchIndex.forEach(function (_ref3, i) {
+          var slug = _ref3.slug,
+              body = _ref3.body,
+              title = _ref3.title;
 
-        slug = '#' + path + slug;
-        searchIndexData[path][slug] = { slug: slug, body: body, title: title };
-      });
-      delete searchIndexData[path].searchIndex;
-      localStorage.setItem('docsify.search.index', JSON.stringify(searchIndexData));
+          slug = '#' + path + slug;
+          searchIndexData[path][slug] = { slug: slug, body: body, title: title };
+        });
+        localStorage.setItem('docsify.search.index', JSON.stringify(searchIndexData));
+      }
       next('<div id="api-doc">' + content + '</div>');
     } else {
       next(content);

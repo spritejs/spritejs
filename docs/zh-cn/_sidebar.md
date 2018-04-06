@@ -1,5 +1,4 @@
 * 快速入门
-
   * [简介](/zh-cn/index#简介)
   * [特性](/zh-cn/index#特性)
   * [安装和使用](/zh-cn/index#安装和使用)
@@ -23,7 +22,6 @@
     * [事件 event](/zh-cn/behavior#事件-event)
 
 * 高级用法
-
   * [屏幕适配](/zh-cn/guide/resolution)
   * [Sprite 盒模型](/zh-cn/guide/boxmodel)
   * [资源加载与雪碧图](/zh-cn/guide/resource)
@@ -38,7 +36,6 @@
   * [Layer快照](/zh-cn/guide/snapshot)
   * [跨平台](/zh-cn/guide/platforms)
 
-* 例子
-
-* [相关资源](/zh-cn/resource)
-* [更新日志](/zh-cn/changelog)
+* 其他
+  * [相关资源](/zh-cn/resource)
+  * [更新日志](/zh-cn/changelog)

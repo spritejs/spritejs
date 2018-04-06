@@ -1,7 +1,7 @@
 let level = 0
 function parseApi(content, base = '') {
   level++
-  const pattern = /([+-.])\s*(attribute|property|get|function)\s*(\w+)(?:\((.*?)\))?(?::(.+))?\s(.*?)\n([\s\S]*?)\n---/img
+  const pattern = /([+-.])\s*(attribute|property|get|function|async)\s*(\w+)(?:\((.*?)\))?(?::((?:\w|\|)+))?\s(.*?)\n([\s\S]*?)\n---/img
   let matched = pattern.exec(content)
   const api = {
     attributes: [],
@@ -15,6 +15,9 @@ function parseApi(content, base = '') {
     if(params) {
       params = params.split(/\s*,\s*/g)
         .map((p) => {
+          if(p.startsWith('...')) {
+            p = `${p}:Array`
+          }
           return p.split(/\s*:\s*/)
         })
       params.forEach((param) => {
@@ -32,11 +35,13 @@ function parseApi(content, base = '') {
           param.push('No')
           param[1] = param[1].replace(' optional', '')
         } else {
-          param.push('Yes')
           const matched = param[1].match(/ = (.+)/)
           if(matched) {
+            param.push('No')
             param.push(matched[1])
             param[1] = param[1].replace(matched[0], '')
+          } else {
+            param.push('Yes')
           }
         }
       })
@@ -60,7 +65,7 @@ function parseApi(content, base = '') {
 
     if(type === 'attribute') {
       api.attributes.push(item)
-    } else if(type === 'function') {
+    } else if(type === 'function' || type === 'async') {
       api.methods.push(item)
     } else {
       api.properties.push(item)
@@ -176,7 +181,7 @@ function format(region, list, content) {
         defaultValue = matched[1]
         details = details.replace(defaultPattern, '')
       }
-      return `<tr><td> ${name} </td><td> ${returnType} </td><td> ${defaultValue} </td><td> ${details} </td></tr>`
+      return `<tr><td class="${access}" title="${access} ${name}"> ${name} </td><td> ${returnType} </td><td> ${defaultValue} </td><td> ${details} </td></tr>`
     }).join('')}
     </tbody>
 </table>
@@ -195,18 +200,18 @@ function format(region, list, content) {
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
 ${params.map((param) => {
-    return `| ${param[0]} | ${param[1].replace(/\|/g, '<span class="or">or</span>')} | ${param[3]} | ${param[2]} |
+    return `| ${param[0].replace(/^\.\.\./, '')} | ${param[1].replace(/\|/g, '<span class="or">or</span>')} | ${param[3]} | ${param[2]} |
 `
   }).join('')}
 `
       }
       return `
-### ${type !== 'attribute' ? `<span class="access">${access}</span>` : ''}${type==='get' ? '<span class="readonly">readonly</span>' : ''} ${name}${type === 'function' ? paramList :returnType ? ': ' + returnType : ''} <span class="inheritance">${inheritance}</span>
+### ${type !== 'attribute' ? `<span class="access">${access}</span>` : ''}${type==='get' ? '<span class="readonly">readonly</span>' : ''}${type === 'async' ? '<span class="async">async</span>' : ''} ${name}${type === 'function' || type === 'async' ? paramList :returnType ? ': ' + returnType : ''} <span class="inheritance">${inheritance}</span>
 
-${type === 'function' ? paramTable : ''}
+${type === 'function' || type === 'async' ? paramTable : ''}
 
 
-${type === 'function' ? `* **Returns:** ${returnType}${returnComment ? ' - ' : ''}${returnComment}` : ''}
+${type === 'function' || type === 'async' ? `* **Returns:** ${returnType}${returnComment ? ' - ' : ''}${returnComment}` : ''}
 
 ${details}
 
@@ -274,12 +279,14 @@ window.generateApiPlugin = function (hook, vm) {
     const path = vm.route.path
     if(path.startsWith('/api/')) {
       const searchIndexData = JSON.parse(localStorage.getItem('docsify.search.index'))
-      searchIndex.forEach(({slug, body, title}, i) => {
-        slug = `#${path}${slug}`
-        searchIndexData[path][slug] = {slug, body, title}
-      })
-      delete searchIndexData[path].searchIndex
-      localStorage.setItem('docsify.search.index', JSON.stringify(searchIndexData))
+      if(searchIndexData) {
+        searchIndexData[path] = searchIndexData[path] || {}
+        searchIndex.forEach(({slug, body, title}, i) => {
+          slug = `#${path}${slug}`
+          searchIndexData[path][slug] = {slug, body, title}
+        })
+        localStorage.setItem('docsify.search.index', JSON.stringify(searchIndexData))
+      }
       next(`<div id="api-doc">${content}</div>`)
     } else {
       next(content)

@@ -54,14 +54,26 @@ span.or {
   font-size: 0.8rem;
   margin: 0 4px;
 }
+span.async {
+  color: #a00; 
+  font-weight: normal;
+  font-size: 1.2rem;
+  margin: 0 4px;
+}
 
 #api-doc table td:nth-child(3) {
   white-space: nowrap;
 }
 
-#api-doc table td:nth-child(1) {
+#api-doc table td.private,
+#api-doc table td.public {
   color: #a00;
   font-weight: bold;
+  text-decoration: none;
+}
+
+#api-doc table td.private {
+  font-style: italic;
 }
 
 @media only screen and (max-width: 479px) {

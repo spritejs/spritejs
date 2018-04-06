@@ -46,7 +46,7 @@ Abstract method. Detect whether elements bounding box intersects. Implements by 
 
 + function dispatchEvent(type:String, event:Object, forceTrigger:Boolean, terminated:Boolean):Boolean is mouseover.
 
-Dispatching events through every elements.
+Dispatching events to the node.
 
 * type - The event type specified.
 
