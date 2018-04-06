@@ -37,26 +37,15 @@ export default class extends BaseNode {
       options = {viewport: [arguments[1], arguments[2]]}
       /* eslint-enabel prefer-rest-params */
     }
-    let [width, height] = options.viewport || []
-    if(!width || width === 'auto') {
-      width = container.clientWidth
-    }
-    if(!height || height === 'auto') {
-      height = container.clientHeight
-    }
-    this[_viewport] = [width, height]
-
-    const resolution = options.resolution
-    if(!resolution) {
-      this[_resolution] = [this.viewport[0], this.viewport[1]]
-    } else {
-      this[_resolution] = resolution
-    }
 
     this[_zOrder] = 0
     this[_layerMap] = {}
     this[_layers] = []
     this[_snapshot] = createCanvas()
+
+    const [width, height] = options.viewport || ['', '']
+    this.viewport = [width, height]
+    this[_resolution] = options.resolution || [...this.viewport]
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene'
