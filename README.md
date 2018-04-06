@@ -1,4 +1,4 @@
-[![spritejs.org](https://p4.ssl.qhimg.com/t01ef51d10b3e52e6e3.png)](http://spritejs.org)
+[![spritejs.org](https://p2.ssl.qhimg.com/t01c7e3f176a5ae1a33.jpg)](http://spritejs.org)
 
 # spritejs 
 
