@@ -23,7 +23,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Look
 
 ```html
-<script src="https://s0.ssl.qhres.com/!13bcfb63/spritejs.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!28dd6ee0/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -49,7 +49,7 @@ Learn more at [spritejs.org](http://spritejs.org/)
 In browser:
 
 ```html
-<script src="https://s0.ssl.qhres.com/!13bcfb63/spritejs.min.js"></script>
+<script src="https://s4.ssl.qhres.com/!28dd6ee0/spritejs.min.js"></script>
 ```
 
 ## Quick Start
