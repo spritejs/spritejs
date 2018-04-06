@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/>
+  <a href="http://spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
 </p>
 
 <h1 align="center">SpriteJS</h1>
