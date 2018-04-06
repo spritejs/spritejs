@@ -44,7 +44,9 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-Learn more at [spritejs.org](http://spritejs.org/)
+<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/">spritejs.org</a></strong> </div>
+
+---
 
 ## Usage
 
