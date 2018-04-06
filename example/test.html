@@ -6,9 +6,8 @@
   <title>Demo</title>
   <style>
   #paper {
-    position: relative;
-    width: 600px;
-    height: 400px;
+    width: 100%;
+    padding-bottom: 66.7%;
   }
   </style>
 </head>
@@ -26,7 +25,7 @@
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
   ;(async function(){
-    const paper = spritejs.Paper2D('#paper', 600, 400)
+    const paper = spritejs.Paper2D('#paper', {viewport: ['auto', 'auto'], resolution: [600, 400]})
     const Sprite = spritejs.Sprite,
           Path = spritejs.Path,
           Label = spritejs.Label
