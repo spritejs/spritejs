@@ -537,7 +537,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
         anchor: [0.5, 4.5],
         pos: [x, y],
         font: 'bold 44px Arial',
-        color: '#37c',
+        fillColor: '#37c',
         rotate: i * 360 / len,
       })
 

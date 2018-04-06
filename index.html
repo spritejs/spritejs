@@ -12,6 +12,7 @@
 </head>
 <body>
   <div id="app"></div>
+  <script src="/js/plugin.js"></script>
   <script>
     // const language = navigator.language
     const language = 'zh-CN'
@@ -22,22 +23,24 @@
       executeScript: true,
       coverpage: language === 'zh-CN' ? 'zh-cn/_coverpage.md' : 'en/_coverpage.md',
       homepage: language === 'zh-CN' ? 'zh-cn/README.md' : 'en/README.md',
-      loadNavbar: false,
+      loadNavbar: true,
       loadSidebar: true,
-      // plugins: [
-      //   function (hook, vm) {
-      //     hook.beforeEach(function(content) {
-      //       console.log(content)
-      //       return content
-      //     })          
-      //   },
-      // ],
+      subMaxLevel: 3,
+      alias: {
+        '/zh-cn/.*/_sidebar.md': '/zh-cn/_sidebar.md',
+        '/zh-cn/.*/_navbar.md': '/zh-cn/_navbar.md',
+        '/en/.*/_sidebar.md': '/en/_sidebar.md',
+        '/api/_navbar.md': language === 'zh-CN' ? '/zh-cn/_navbar.md' : '/en/_navbar.md',
+      },
+      plugins: [
+        generateApiPlugin,
+      ],
     }
   </script>
   <script src="//lib.baomitu.com/docsify/4.6.10/docsify.js"></script>
   <script src="//lib.baomitu.com/docsify/4.6.10/plugins/search.min.js"></script>
   <script src="//lib.baomitu.com/docsify/4.6.10/plugins/external-script.min.js"></script>
-  <script src="https://s5.ssl.qhres.com/!fce6a9ed/spritejs.min.js"></script>
+  <script src="https://s4.ssl.qhres.com/!28dd6ee0/spritejs.min.js"></script>
   <!-- <script src="/js/spritejs.js"></script> -->
   <script>
     function autoResize(scene) {
