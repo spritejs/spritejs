@@ -14,14 +14,8 @@ export function createCanvas(width = 300, height = 150) {
   canvas.style = {}
   canvas.dataset = {}
 
-  canvas.cloneNode = function (copyContent) {
-    const {width, height} = this
-    const copied = createCanvas(width, height)
-    if(copyContent) {
-      const ctx = copied.getContext('2d')
-      ctx.drawImage(this, 0, 0, width, height)
-    }
-    return copied
+  canvas.cloneNode = function () {
+    return createCanvas(this.width, this.height)
   }
 
   return canvas

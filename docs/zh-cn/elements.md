@@ -11,7 +11,7 @@ spritejs里，一个不具有textures的Sprite元素默认大小为0，即使将
 不同线宽、大小、圆角的border：
 
 ```js
-  const scene = new Scene('#border-and-size', {resolution: [1540, 600]})
+  const scene = new Scene('#border-and-size', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer()
 
   const box1 = new Sprite({
@@ -47,7 +47,7 @@ spritejs背景色填充只需要设置bgcolor属性，支持所有css允许的�
 <div id="bgcolor" class="sprite-container"></div>
 
 ```js
-const scene = new Scene('#bgcolor', {resolution: [1540, 600]})
+const scene = new Scene('#bgcolor', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer()
 
 const box1 = new Sprite({
@@ -85,7 +85,7 @@ layer.append(box1, box2, box3, box4)
 如果指定图片不设置元素大小，sprite元素默认宽高为图片宽高（微信小程序版除外），如果设置元素大小，sprite图片默认大小被缩放为元素大小。此外，我们可以通过指定rect，来控制图片被加载到元素的哪个位置，这样我们可以平铺加载多张图片。最后，我们还可以通过指定srcRect来裁剪要加载的图片。以上是精灵图片的基本用法，更多加载图片相关的内容，参考[高级用法：资源加载与雪碧图](/zh-cn/guide/resource)。
 
 ```js
-const scene = new Scene('#textures', {resolution: [1540, 600]})
+const scene = new Scene('#textures', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer()
 const texture = 'https://p5.ssl.qhimg.com/t01a2bd87890397464a.png'
 
@@ -131,7 +131,7 @@ Label是用来显示文字的元素，可以显示单行或多行文字。通过
 <div id="label-text" class="sprite-container"></div>
 
 ```js
-const scene = new Scene('#label-text', {resolution: [1540, 600]})
+const scene = new Scene('#label-text', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 
 const text1 = new Label('SpriteJS.org')
@@ -197,7 +197,7 @@ Path支持SVG的[Path路径](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tu
 <div id="svgpath" class="sprite-container"></div>
 
 ```js
-const scene = new Scene('#svgpath', {resolution: [1540, 600]})
+const scene = new Scene('#svgpath', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 
 const p1 = new Path()
@@ -253,7 +253,7 @@ Path对象的path属性是一个非常重要而且强大的属性，通过它能
 可以看到左边的爱心在放大的时候会变模糊，右边则不会。因为右边是在放大的时候通过路径的transform重新生成的路径，这样可以保真，当然代价是运算量比较大，因此有利有弊，分场合使用。
 
 ```js
-const scene = new Scene('#svgpath-transform', {resolution: [1540, 600]})
+const scene = new Scene('#svgpath-transform', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 const d =  'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z'
 
@@ -317,7 +317,7 @@ layer.appendChild(heart2)
 
 
 ```js
-const scene = new Scene('#group', {resolution: [1540, 600]})
+const scene = new Scene('#group', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 const group = new Group()
 const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
@@ -361,7 +361,7 @@ Group除了分组元素外，还有一个特别好的功能，那就是创建cli
 
 ```js
 const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
-const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+const scene = new Scene('#group-clip', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 const group = new Group()
 group.attr({
@@ -386,7 +386,7 @@ Group的clip属性和Path的path属性一样，可以设置d，表示剪裁区�
 const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
 ;(function(){
-  const scene = new Scene('#border-and-size', {resolution: [1540, 600]})
+  const scene = new Scene('#border-and-size', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer()
 
   const box1 = new Sprite({
@@ -413,12 +413,10 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     borderRadius: 200,
   })
   layer.append(box1, box2, box3, box4)
-
-  autoResize(scene)
 })()
 
 ;(function(){
-  const scene = new Scene('#bgcolor', {resolution: [1540, 600]})
+  const scene = new Scene('#bgcolor', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer()
 
   const box1 = new Sprite({
@@ -446,11 +444,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
   layer.append(box1, box2, box3, box4)
 
-  autoResize(scene)
+  
 }())
 
 ;(function(){
-  const scene = new Scene('#textures', {resolution: [1540, 600]})
+  const scene = new Scene('#textures', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer()
   const texture = 'https://p5.ssl.qhimg.com/t01a2bd87890397464a.png'
 
@@ -488,11 +486,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(s1, s2, s3, s4)
 
-  autoResize(scene)
+  
 }())
 
 ;(function(){
-  const scene = new Scene('#label-text', {resolution: [1540, 600]})
+  const scene = new Scene('#label-text', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   
   const text1 = new Label('SpriteJS.org')
@@ -544,13 +542,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       layer.append(label)
     }
   }
-  createClockTexts('Sprite.js JavaScript Canvas...', 1200, 300)
-
-  autoResize(scene)
+  createClockTexts('Sprite.js JavaScript Canvas...', 1200, 300)  
 }())
 
 ;(function(){
-  const scene = new Scene('#svgpath', {resolution: [1540, 600]})
+  const scene = new Scene('#svgpath', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   
   const p1 = new Path()
@@ -596,13 +592,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     lineCap: 'round',
     pos: [1000, 100],
   })
-  layer.appendChild(p3)
-
-  autoResize(scene)
+  layer.appendChild(p3)  
 }())
 
 ;(function(){
-  const scene = new Scene('#svgpath-transform', {resolution: [1540, 600]})
+  const scene = new Scene('#svgpath-transform', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   const d =  'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z'
 
@@ -651,13 +645,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     iterations: Infinity,
     direction: 'alternate',
   })
-  layer.appendChild(heart2)
-
-  autoResize(scene)
+  layer.appendChild(heart2)  
 }())
 
 ;(function(){
-  const scene = new Scene('#group', {resolution: [1540, 600]})
+  const scene = new Scene('#group', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   const group = new Group()
   const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z'
@@ -692,14 +684,12 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   ], {
     duration: 3000,
     iterations: Infinity,
-  })
-
-  autoResize(scene)
+  })  
 }())
 
 ;(function(){
   const imgUrl = 'https://p4.ssl.qhimg.com/t01423053c4cb748581.jpg'
-  const scene = new Scene('#group-clip', {resolution: [1540, 600]})
+  const scene = new Scene('#group-clip', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   scene.preload({id: 'beauty', src: imgUrl})
     .then(function(){
       const layer = scene.layer('fglayer')
@@ -717,8 +707,6 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
         scale: 0.75,
       })
       group.append(sprite)
-    })
-
-  autoResize(scene)
+    })  
 }())
 </script>
