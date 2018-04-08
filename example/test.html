@@ -6,8 +6,12 @@
   <title>Demo</title>
   <style>
   #paper {
-    width: 100%;
-    padding-bottom: 66.7%;
+    width: 800px;
+    height: 300px;
+    border: solid 1px red;
+  }
+  #paper canvas {
+    background-color: #fdd;
   }
   </style>
 </head>
@@ -25,7 +29,14 @@
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
   ;(async function(){
-    const paper = spritejs.Paper2D('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 800]})
+    const paper = spritejs.Paper2D('#paper', 
+      {
+        viewport: ['auto', 'auto'], 
+        resolution: [800, 400], 
+        stickMode: 'height',
+        // stickExtend: true,
+      })
+    console.log(paper.distortion)
     const Sprite = spritejs.Sprite,
           Path = spritejs.Path,
           Label = spritejs.Label
@@ -185,7 +196,7 @@
       bgcolor: 'red',
       border: [15, 'blue'],
       opacity: 0.5,
-      zIndex: 500,
+      zIndex: -500,
     })
 
 
@@ -195,6 +206,10 @@
 
     s2.on('click', e => {
       console.log(111)
+      e.stopDispatch()
+    })
+    s3.on('click', e => {
+      console.log(222)
     })
 
     const s4 = new Path()

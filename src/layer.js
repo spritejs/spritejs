@@ -1,7 +1,5 @@
 import {Layer, createNode} from 'sprite-core'
 
-const _viewport = Symbol('_viewport')
-
 class ExLayer extends Layer {
   constructor({
     context,
@@ -23,7 +21,7 @@ class ExLayer extends Layer {
     return [this.canvas.width, this.canvas.height]
   }
   set resolution(resolution) {
-    const [width, height] = resolution
+    const [width, height, offsetLeft, offsetTop] = resolution
     const outputCanvas = this.outputContext.canvas
     outputCanvas.width = width
     outputCanvas.height = height
@@ -36,19 +34,18 @@ class ExLayer extends Layer {
       this.shadowContext.clearRect(0, 0, width, height)
     }
 
+    if(offsetLeft || offsetTop) {
+      this.outputContext.restore()
+      this.outputContext.translate(offsetLeft, offsetTop)
+      this.outputContext.save()
+    }
+
     this.children.forEach((child) => {
       delete child.lastRenderBox
       child.forceUpdate()
     })
   }
-  set viewport([width, height]) {
-    this.canvas.style.width = `${width}px`
-    this.canvas.style.height = `${height}px`
-    this[_viewport] = [width, height]
-  }
-  get viewport() {
-    return this[_viewport]
-  }
+
   isVisible(sprite) {
     if(!super.isVisible(sprite)) return false
     const [maxWidth, maxHeigth] = this.resolution

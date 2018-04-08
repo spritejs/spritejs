@@ -10,7 +10,7 @@ const _layerMap = Symbol('layerMap'),
   _snapshot = Symbol('snapshot'),
   _viewport = Symbol('viewport'),
   _resolution = Symbol('resolution'),
-  _resizeHandler = Symbol('_resizeHandler')
+  _resizeHandler = Symbol('resizeHandler')
 
 function sortLayer(paper) {
   const layers = Object.values(paper[_layerMap])
@@ -44,9 +44,15 @@ export default class extends BaseNode {
     this[_layers] = []
     this[_snapshot] = createCanvas()
 
+    // scale, width, height, top, bottom, left, right
+    // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
+    this.stickMode = options.stickMode || 'scale'
+    this.stickExtend = !!options.stickExtend
+    this.stickOffset = [0, 0]
+
+    this[_resolution] = options.resolution || [...this.viewport]
     const [width, height] = options.viewport || ['', '']
     this.viewport = [width, height]
-    this[_resolution] = options.resolution || [...this.viewport]
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene'
@@ -83,12 +89,55 @@ export default class extends BaseNode {
   removeChild(layer) {
     return this.removeLayer(layer)
   }
-  updateViewport() {
-    this[_layers].forEach((layer) => {
-      layer.viewport = this.viewport
+  get layerViewport() {
+    const [rw, rh] = this.resolution,
+      [vw, vh] = this.viewport,
+      stickMode = this.stickMode,
+      stickExtend = this.stickExtend
+
+    let width = vw,
+      height = vh
+
+    if(!stickExtend) {
+      if(stickMode === 'width' || stickMode === 'top' || stickMode === 'bottom') {
+        height = Math.min(rh, vw * rh / rw)
+      } else if(stickMode === 'height' || stickMode === 'left' || stickMode === 'right') {
+        width = Math.min(rw, vh * rw / rh)
+      }
+    }
+
+    return [width, height]
+  }
+  updateViewport(layer) {
+    const [width, height] = this.layerViewport,
+      layers = layer ? [layer] : this[_layers],
+      stickMode = this.stickMode,
+      stickExtend = this.stickExtend
+
+    layers.forEach((layer) => {
+      const canvas = layer.canvas
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      if(!stickExtend && (stickMode === 'width' || stickMode === 'height')) {
+        canvas.style.top = '50%'
+        canvas.style.left = '50%'
+        canvas.style.transform = 'translate(-50%, -50%)'
+      } else if(!stickExtend && (stickMode === 'right' || stickMode === 'bottom')) {
+        canvas.style.right = '0'
+        canvas.style.bottom = '0'
+      } else {
+        canvas.style.top = '0'
+        canvas.style.left = '0'
+      }
+      if(stickExtend) {
+        layer.resolution = this.layerResolution
+      }
     })
   }
   get distortion() {
+    if(this.stickMode !== 'scale') {
+      return 1.0
+    }
     return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1])
   }
 
@@ -96,14 +145,16 @@ export default class extends BaseNode {
     this[_viewport] = [width, height]
     if(width === 'auto' || height === 'auto') {
       if(!this[_resizeHandler]) {
-        this[_resizeHandler] = this.updateViewport.bind(this)
+        this[_resizeHandler] = () => this.updateViewport()
         window.addEventListener('resize', this[_resizeHandler])
       }
     } else if(this[_resizeHandler]) {
       window.removeEventListener('resize', this[_resizeHandler])
       delete this[_resizeHandler]
     }
-    this.updateViewport()
+    if(this[_layers].length) {
+      this.updateViewport()
+    }
   }
   get viewport() {
     let [width, height] = this[_viewport]
@@ -116,10 +167,46 @@ export default class extends BaseNode {
     return [width, height]
   }
 
+  get layerResolution() {
+    const [rw, rh] = this.resolution,
+      [vw, vh] = this.viewport,
+      stickMode = this.stickMode,
+      stickExtend = this.stickExtend
+
+    let width = rw,
+      height = rh,
+      offsetTop = 0,
+      offsetLeft = 0
+
+    if(stickExtend) {
+      if(stickMode === 'width' || stickMode === 'top' || stickMode === 'bottom') {
+        const vrh = rw * vh / vw
+        height = vrh
+
+        if(stickMode === 'width') {
+          offsetTop = Math.round((vrh - rh) / 2)
+        } else if(stickMode === 'bottom') {
+          offsetTop = vrh - rh
+        }
+      } else if(stickMode === 'height' || stickMode === 'left' || stickMode === 'right') {
+        const vrw = rh * vw / vh
+        width = vrw
+
+        if(stickMode === 'height') {
+          offsetLeft = Math.round((vrw - rw) / 2)
+        } else if(stickMode === 'right') {
+          offsetLeft = vrw - rw
+        }
+      }
+    }
+    this.stickOffset = [offsetLeft, offsetTop]
+    return [width, height, offsetLeft, offsetTop]
+  }
+
   set resolution([width, height]) {
     this[_resolution] = [width, height]
     this[_layers].forEach((layer) => {
-      layer.resolution = [width, height]
+      layer.resolution = this.layerResolution
     })
   }
   get resolution() {
@@ -137,8 +224,8 @@ export default class extends BaseNode {
   }
 
   toGlobalPos(x, y) {
-    const resolution = this.resolution,
-      viewport = this.viewport
+    const resolution = this.layerResolution,
+      viewport = this.layerViewport
 
     x = x * viewport[0] / resolution[0]
     y = y * viewport[1] / resolution[1]
@@ -146,8 +233,8 @@ export default class extends BaseNode {
     return [x, y]
   }
   toLocalPos(x, y) {
-    const resolution = this.resolution,
-      viewport = this.viewport
+    const resolution = this.layerResolution,
+      viewport = this.layerViewport
 
     x = x * resolution[0] / viewport[0]
     y = y * resolution[1] / viewport[1]
@@ -163,6 +250,10 @@ export default class extends BaseNode {
       const {type, passive} = event
 
       this.container.addEventListener(type, (e) => {
+        if(!e.target.dataset.layerId || !this[_layerMap][e.target.dataset.layerId]) {
+          return
+        }
+
         const layers = this[_layers]
         const evtArgs = {
           originalEvent: e,
@@ -197,7 +288,9 @@ export default class extends BaseNode {
             originalY = Math.round(e.clientY - top)
           }
 
-          const [layerX, layerY] = this.toLocalPos(originalX, originalY)
+          let [layerX, layerY] = this.toLocalPos(originalX, originalY)
+          layerX -= this.stickOffset[0]
+          layerY -= this.stickOffset[1]
 
           Object.assign(evtArgs, {
             layerX, layerY, originalX, originalY, x: layerX, y: layerY,
@@ -265,10 +358,12 @@ export default class extends BaseNode {
       const canvas = context.canvas
       canvas.dataset.layerId = id
       canvas.style.position = 'absolute'
-      canvas.style.left = 0
-      canvas.style.top = 0
-      if(this.container.style && !this.container.style.position) {
-        this.container.style.position = 'relative'
+      if(this.container.style) {
+        if(!this.container.style.position) {
+          this.container.style.position = 'relative'
+        } if(!this.container.style.overflow) {
+          this.container.style.overflow = 'hidden'
+        }
       }
       opts.context = context
       const layer = new Layer(opts)
@@ -288,8 +383,8 @@ export default class extends BaseNode {
 
     this[_layerMap][id] = layer
     layer.connect(this, this[_zOrder]++, zIndex)
-    layer.viewport = this.viewport
-    layer.resolution = this.resolution
+    this.updateViewport(layer)
+    layer.resolution = this.layerResolution
 
     sortLayer(this)
     return layer
