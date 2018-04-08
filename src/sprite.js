@@ -2,6 +2,8 @@ import {Sprite} from 'sprite-core'
 import {attr} from 'sprite-utils'
 import Resource from './resource'
 
+const _mapTextures = Symbol('mapTextures')
+
 class ResAttr extends Sprite.Attr {
   /*
     {
@@ -33,6 +35,18 @@ class ResAttr extends Sprite.Attr {
     this.loadTextures(textures)
   }
 
+  [_mapTextures](textures) {
+    let clearCache = false
+    const res = textures.map(({img, texture, fromCache}) => {
+      if(!fromCache) clearCache = true
+      return Object.assign({}, texture, {image: img})
+    })
+    if(clearCache) {
+      this.clearCache()
+    }
+    super.loadTextures(res)
+  }
+
   loadTextures(textures) {
     // adaptive textures
     let hasPromise = false
@@ -49,24 +63,10 @@ class ResAttr extends Sprite.Attr {
     })
 
     if(hasPromise) {
-      Promise.all(tasks).then((textures) => {
-        const res = textures.map(({img, texture, fromCache}) => {
-          if(!fromCache) {
-            this.clearCache()
-          }
-          return Object.assign({}, texture, {image: img})
-        })
-        super.loadTextures(res)
-      })
+      Promise.all(tasks).then(this[_mapTextures].bind(this))
     } else {
       // if preload image, calculate the size of sprite synchronously
-      const res = tasks.map(({img, texture, fromCache}) => {
-        if(!fromCache) {
-          this.clearCache()
-        }
-        return Object.assign({}, texture, {image: img})
-      })
-      super.loadTextures(res)
+      this[_mapTextures](tasks)
     }
   }
 }
