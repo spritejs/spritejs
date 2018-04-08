@@ -124,7 +124,7 @@ window.addEventListener('resize', function() {
 
 ## 锚点 anchor
 
-在前面的例子中，我们看到Sprite元素有不同的定位方式，具体表现为不同的anchor值。比如例1是`anchor:[0.5, 0]`，例2是`anchor:[0.5, 0.5]`，例3没有设定，是默认值`anchor:[0, 0]`。
+在前面的例子中，我们看到Sprite元素有不同的定位方式，具体表现为不同的anchor值。比如例1是`anchor:[0.5, 0.5]`，例2是`anchor:[0.5, 0]`，例3没有设定，是默认值`anchor:[0, 0]`。
 
 在spritejs中，元素的anchor属性用来表示它的参考点，坐标定位、transform都是根据anchor值来设定的，默认值为[0, 0]，即以元素的左上角位置为参考点，正常值取0~1之间，表示参考点坐标相对于元素宽高的比例，因此如果设置为[1, 1]则为右下角。
 
