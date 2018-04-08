@@ -337,16 +337,16 @@ export default class extends BaseNode {
       const canvas = context.canvas
       canvas.dataset.layerId = id
       canvas.style.position = 'absolute'
-      if(this.container.style) {
-        if(!this.container.style.position) {
-          this.container.style.position = 'relative'
-        } if(!this.container.style.overflow) {
-          this.container.style.overflow = 'hidden'
-        }
+
+      if(this.container.style && !this.container.style.position) {
+        this.container.style.position = 'relative'
       }
+      if(this.container.style && !this.container.style.overflow) {
+        this.container.style.overflow = 'hidden'
+      }
+
       opts.context = context
-      const layer = new Layer(opts)
-      this.appendLayer(layer, zIndex)
+      this.appendLayer(new Layer(opts), zIndex)
     }
 
     return this[_layerMap][id]
@@ -369,17 +369,12 @@ export default class extends BaseNode {
     return layer
   }
   removeLayer(layer) {
-    let layerID
     if(typeof layer === 'string') {
-      layerID = layer
       layer = this[_layerMap][layer]
-    } else {
-      layerID = layer.id
     }
-
     if(this.hasLayer(layer)) {
       layer.disconnect(this)
-      delete this[_layerMap][layerID]
+      delete this[_layerMap][layer.id]
       this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
       return layer
     }
