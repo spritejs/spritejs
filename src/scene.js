@@ -2,7 +2,7 @@ import Layer from './layer'
 import Resource from './resource'
 import {BaseNode} from 'sprite-core'
 import {createCanvas, getContainer} from './platform'
-import {setDeprecation} from 'sprite-utils'
+import {setDeprecation, sortOrderedSprites} from 'sprite-utils'
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
@@ -11,19 +11,6 @@ const _layerMap = Symbol('layerMap'),
   _viewport = Symbol('viewport'),
   _resolution = Symbol('resolution'),
   _resizeHandler = Symbol('resizeHandler')
-
-function sortLayer(paper) {
-  const layers = Object.values(paper[_layerMap])
-
-  layers.sort((a, b) => {
-    if(b.zIndex === a.zIndex) {
-      return b.zOrder - a.zOrder
-    }
-    return b.zIndex - a.zIndex
-  })
-
-  paper[_layers] = layers
-}
 
 export default class extends BaseNode {
   constructor(container, options = {}) {
@@ -44,15 +31,15 @@ export default class extends BaseNode {
     this[_layers] = []
     this[_snapshot] = createCanvas()
 
+    const [width, height] = options.viewport || ['', '']
+    this.viewport = [width, height]
+
     // scale, width, height, top, bottom, left, right
     // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
     this.stickMode = options.stickMode || 'scale'
     this.stickExtend = !!options.stickExtend
     this.stickOffset = [0, 0]
-
     this[_resolution] = options.resolution || [...this.viewport]
-    const [width, height] = options.viewport || ['', '']
-    this.viewport = [width, height]
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene'
@@ -275,18 +262,10 @@ export default class extends BaseNode {
           }
         } else {
           const {left, top} = e.target.getBoundingClientRect()
-          let originalX,
-            originalY
 
-          if(e.changedTouches) { // mobile
-            const {clientX, clientY} = e.changedTouches[0]
-
-            originalX = Math.round(clientX - left)
+          const {clientX, clientY} = e.changedTouches ? e.changedTouches[0] : e
+          const originalX = Math.round(clientX - left),
             originalY = Math.round(clientY - top)
-          } else {
-            originalX = Math.round(e.clientX - left)
-            originalY = Math.round(e.clientY - top)
-          }
 
           let [layerX, layerY] = this.toLocalPos(originalX, originalY)
           layerX -= this.stickOffset[0]
@@ -386,7 +365,7 @@ export default class extends BaseNode {
     this.updateViewport(layer)
     layer.resolution = this.layerResolution
 
-    sortLayer(this)
+    this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
     return layer
   }
   removeLayer(layer) {
@@ -401,7 +380,7 @@ export default class extends BaseNode {
     if(this.hasLayer(layer)) {
       layer.disconnect(this)
       delete this[_layerMap][layerID]
-      sortLayer(this)
+      this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
       return layer
     }
 
