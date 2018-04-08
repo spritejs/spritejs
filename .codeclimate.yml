@@ -24,6 +24,7 @@ exclude_patterns:
 - "dist/"
 - "lib/"
 - "example/"
+- "docs/"
 - "features/"
 - "**/node_modules/"
 - "script/"
