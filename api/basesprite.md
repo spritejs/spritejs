@@ -283,19 +283,19 @@ The same as offsetSize.
 
 ---
 
-- get boundRect:Array
+- get boundingRect:Array
 
 The element's drawing rect.
 
 ---
 
-- get originRect:Array
+- get originalRect:Array
 
-The element's boundRect before transform.
+The element's boundingRect before transform.
 
 ---
 
-+ get originRenderRect:Array
++ get originalRenderRect:Array
 
 The element's drawing rect on the layer, before transform.
 

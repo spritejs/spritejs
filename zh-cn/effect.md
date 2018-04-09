@@ -10,7 +10,7 @@
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-const scene = new Scene('#animations', {resolution: [1540, 600]})
+const scene = new Scene('#animations', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 
 const d = "M480,437l-29-26.4c-103-93.4-171-155-171-230.6c0-61.6,48.4-110,110-110c34.8,0,68.2,16.2,90,41.8C501.8,86.2,535.2,70,570,70c61.6,0,110,48.4,110,110c0,75.6-68,137.2-171,230.8L480,437z"
@@ -114,7 +114,7 @@ scene.preload([birdsRes, birdsJsonUrl]).then(function() {
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-const scene = new Scene('#animations-playback', {resolution: [1540, 600]})
+const scene = new Scene('#animations-playback', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 const timeline = layer.timeline
 
@@ -201,7 +201,7 @@ const images = [
     {id:'girl1', src:'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg'},
     {id:'girl2', src:'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg'},
   ]
-const scene = new Scene('#filters', {resolution: [1540, 600]})
+const scene = new Scene('#filters', {viewport:['auto', 'auto'], resolution: [1540, 600]})
 const layer = scene.layer('fglayer')
 const y1 = 50, y2 = 320
 
@@ -261,7 +261,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-  const scene = new Scene('#animations', {resolution: [1540, 600]})
+  const scene = new Scene('#animations', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
 
   const d = "M480,437l-29-26.4c-103-93.4-171-155-171-230.6c0-61.6,48.4-110,110-110c34.8,0,68.2,16.2,90,41.8C501.8,86.2,535.2,70,570,70c61.6,0,110,48.4,110,110c0,75.6-68,137.2-171,230.8L480,437z"
@@ -304,12 +304,11 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     layer.append(path)
 
     const s = new Sprite('bird1.png')
-    const pathOffset = path.pathOffset,
-      pathSize = path.innerSize
+    const pathSize = path.pathSize
 
     s.attr({
       anchor: [0.5, 0.5],
-      pos: [770 + pathOffset[0] - pathSize[0] / 2, 300 + pathOffset[1] - pathSize[1] / 2],
+      pos: [770 - pathSize[0] / 2, 300 - pathSize[1] / 2],
       size: [80, 50],
       offsetPath: path.svg.d,
       zIndex: 200,
@@ -346,15 +345,13 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
     layer.appendChild(s)
   })
-
-  autoResize(scene)
 }())
 
 ;(function(){
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   
-  const scene = new Scene('#animations-playback', {resolution: [1540, 600]})
+  const scene = new Scene('#animations-playback', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   const timeline = layer.timeline
 
@@ -423,8 +420,6 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       })
     }
   })
-
-  autoResize(scene)
 }())
 
 ;(function(){
@@ -432,7 +427,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       {id:'girl1', src:'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg'},
       {id:'girl2', src:'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg'},
     ]
-  const scene = new Scene('#filters', {resolution: [1540, 600]})
+  const scene = new Scene('#filters', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
   const y1 = 50, y2 = 320
 
@@ -475,12 +470,10 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
     applyFilters('girl2', filters2, y2)
   })
-
-  autoResize(scene)
 }())
 
 ;(function(){
-  const scene = new Scene('#gradients', {resolution: [1540, 600]})
+  const scene = new Scene('#gradients', {viewport:['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
 
   const box = new Sprite()
@@ -553,7 +546,5 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
 
   layer.append(path)
-
-  autoResize(scene)
 }())
 </script>

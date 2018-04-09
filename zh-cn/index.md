@@ -64,7 +64,7 @@ spritejs提供四类基础精灵元素、图层管理和负责协调多个图层
 <script>
 const {Scene, Sprite} = spritejs
 
-const scene = new Scene('#demo-quickStart', {viewport: [770, 200], resolution: [3080, 800]})
+const scene = new Scene('#demo-quickStart', {viewport:['auto', 'auto'], resolution: [3080, 800]})
 
 const layer = scene.layer()
 
@@ -95,7 +95,7 @@ layer.append(robot)
 <script>
 const {Scene, Sprite} = spritejs
 
-const scene = new Scene('#demo-quickStart', {resolution: [3080, 800]})
+const scene = new Scene('#demo-quickStart', {viewport:['auto', 'auto'], resolution: [3080, 800]})
 const layer = scene.layer()
 
 const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png')
@@ -117,6 +117,4 @@ robot.animate([
 })
 
 layer.append(robot)
-
-autoResize(scene)
 </script>
