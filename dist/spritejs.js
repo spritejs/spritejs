@@ -1805,7 +1805,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
             x = _transform$transformP2[0],
             y = _transform$transformP2[1];
 
-        return [Math.round(x0 + x), Math.round(y0 + y)];
+        return [x0 + x, y0 + y];
       });
     }
   }, {
