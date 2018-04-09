@@ -105,6 +105,13 @@ export default class extends BaseNode {
       const canvas = layer.canvas
       canvas.style.width = `${width}px`
       canvas.style.height = `${height}px`
+      Object.assign(canvas.style, {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        transform: '',
+      })
       if(!stickExtend && (stickMode === 'width' || stickMode === 'height')) {
         canvas.style.top = '50%'
         canvas.style.left = '50%'
@@ -120,6 +127,9 @@ export default class extends BaseNode {
         layer.resolution = this.layerResolution
       }
     })
+
+    this.dispatchEvent('viewportChange', {target: this, layers})
+    return this
   }
   get distortion() {
     if(this.stickMode !== 'scale') {
@@ -190,11 +200,19 @@ export default class extends BaseNode {
     return [width, height, offsetLeft, offsetTop]
   }
 
-  set resolution([width, height]) {
-    this[_resolution] = [width, height]
-    this[_layers].forEach((layer) => {
+  updateResolution(layer) {
+    const layers = layer ? [layer] : this[_layers]
+
+    layers.forEach((layer) => {
       layer.resolution = this.layerResolution
     })
+    this.dispatchEvent('resolutionChange', {target: this, layers})
+    return this
+  }
+
+  set resolution([width, height]) {
+    this[_resolution] = [width, height]
+    this.updateResolution()
   }
   get resolution() {
     return this[_resolution]

@@ -313,6 +313,8 @@ window.generateApiPlugin = function (hook, vm) {
   });
   hook.afterEach(function (content, next) {
     var path = vm.route.path;
+    var pageId = path.replace(/.*\//g, '') || 'index';
+
     if (path.startsWith('/api/')) {
       var searchIndexData = JSON.parse(localStorage.getItem('docsify.search.index'));
       if (searchIndexData) {
@@ -329,7 +331,17 @@ window.generateApiPlugin = function (hook, vm) {
       }
       next('<div id="api-doc">' + content + '</div>');
     } else {
-      next(content);
+      var _content$split = content.split('<script>'),
+          _content$split2 = _slicedToArray(_content$split, 2),
+          doc = _content$split2[0],
+          js = _content$split2[1];
+
+      if (!js) {
+        js = '';
+      } else {
+        js = '<script>' + js;
+      }
+      next('<div id="page-' + pageId + '">' + doc + '</div>' + js);
     }
   });
 };

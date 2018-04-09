@@ -277,6 +277,8 @@ window.generateApiPlugin = function (hook, vm) {
   })
   hook.afterEach((content, next) => {
     const path = vm.route.path
+    const pageId = path.replace(/.*\//g, '') || 'index'
+
     if(path.startsWith('/api/')) {
       const searchIndexData = JSON.parse(localStorage.getItem('docsify.search.index'))
       if(searchIndexData) {
@@ -289,7 +291,13 @@ window.generateApiPlugin = function (hook, vm) {
       }
       next(`<div id="api-doc">${content}</div>`)
     } else {
-      next(content)
+      let [doc, js] = content.split('<script>')
+      if(!js) {
+        js = ''
+      } else {
+        js = `<script>${js}`
+      }
+      next(`<div id="page-${pageId}">${doc}</div>${js}`)
     }
   })
 }
