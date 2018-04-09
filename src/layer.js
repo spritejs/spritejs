@@ -1,5 +1,7 @@
 import {Layer, createNode} from 'sprite-core'
 
+const _resolution = Symbol('resolution')
+
 class ExLayer extends Layer {
   constructor({
     context,
@@ -12,13 +14,15 @@ class ExLayer extends Layer {
 
     if(resolution) {
       this.resolution = resolution
+    } else {
+      this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0]
     }
   }
   get id() {
     return this.canvas.dataset.layerId
   }
   get resolution() {
-    return [this.canvas.width, this.canvas.height]
+    return this[_resolution]
   }
   set resolution(resolution) {
     const [width, height, offsetLeft, offsetTop] = resolution
@@ -35,15 +39,23 @@ class ExLayer extends Layer {
     }
 
     if(offsetLeft || offsetTop) {
-      this.outputContext.restore()
-      this.outputContext.translate(offsetLeft, offsetTop)
-      this.outputContext.save()
+      const context = this.shadowContext || this.outputContext
+      context.restore()
+      context.translate(offsetLeft, offsetTop)
+      context.save()
     }
 
     this.children.forEach((child) => {
       delete child.lastRenderBox
       child.forceUpdate()
     })
+
+    this[_resolution] = resolution
+  }
+  renderRepaintAll(t) {
+    const [width, height, offsetLeft, offsetTop] = this.resolution
+    this.shadowContext.clearRect(-offsetLeft, -offsetTop, width, height)
+    super.renderRepaintAll(t)
   }
 
   isVisible(sprite) {

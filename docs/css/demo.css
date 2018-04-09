@@ -1,13 +1,44 @@
-#adaptive {
+#page-layer #adaptive {
   width: 50%;
   padding-bottom: 50%;
 }
-#adaptivesvg {
+#page-layer #adaptivesvg {
   width: 80%;
   height: 120px;
   margin: auto;
   padding: 0;
 }
-#adaptivesvg canvas {
+#page-layer #adaptivesvg canvas {
   background-color: #ddd;
+}
+
+#page-resolution #adaptive {
+  width: 350px;
+  height: 350px;
+}
+
+#page-resolution #resize {
+  width: 50%;
+  padding-bottom: 50%;
+}
+
+#page-resolution #sticky {
+  display: flex;
+}
+
+#page-resolution #stickMode {
+  width: 50%;
+  padding-bottom: 50%;
+  border: solid 2px #336;
+}
+
+#page-resolution #stickMode canvas {
+  background: black;
+  border: none;
+}
+
+#page-resolution #control {
+  width: 50%;
+  text-align: right;
+  float: right;
 }
