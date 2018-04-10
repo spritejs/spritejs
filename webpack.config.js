@@ -5,6 +5,8 @@ module.exports = function (env = {}) {
     path = require('path'),
     fs = require('fs')
 
+  const outputPath = path.resolve(__dirname, env.outputPath || 'dist')
+
   const proxyPort = 9091,
     plugins = [],
     jsLoaders = []
@@ -36,7 +38,7 @@ module.exports = function (env = {}) {
     entry: './src/index.js',
     output: {
       filename: env.production ? 'spritejs.min.js' : 'spritejs.js',
-      path: path.resolve(__dirname, 'dist'),
+      path: outputPath,
       publicPath: '/js/',
       library: 'spritejs',
       libraryTarget: 'umd',
