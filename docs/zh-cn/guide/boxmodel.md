@@ -100,7 +100,7 @@ borderCtl.addEventListener('change', function(evt) {
 rotateCtl.addEventListener('change', function(evt) {
   const value = evt.target.value
   s1.attr('rotate', [value])
-  borderValue.innerHTML = value
+  rotateValue.innerHTML = value
   updateState()
 })
 
@@ -109,10 +109,9 @@ sizeCtl.addEventListener('change', function(evt) {
   const path = s1.attr('path')
   path.transform.scale = value
   s1.attr({path})
-  borderValue.innerHTML = value
+  sizeValue.innerHTML = value
   updateState()
 })
-
 ```
 
 **注意一个细节**，originalRect和boundingRect的坐标原点是sprite元素的anchor points，因为我们把anchor设为了[0.5, 0.5]所以我们看到的坐标起始点是负值。另外我们还可以直接拿到renderRect和originRect，对应元素transform之前和之后在画布上的实际坐标。
@@ -169,7 +168,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   rotateCtl.addEventListener('change', function(evt) {
     const value = evt.target.value
     s1.attr('rotate', [value])
-    borderValue.innerHTML = value
+    rotateValue.innerHTML = value
     updateState()
   })
 
@@ -178,7 +177,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     const path = s1.attr('path')
     path.transform.scale = value
     s1.attr({path})
-    borderValue.innerHTML = value
+    sizeValue.innerHTML = value
     updateState()
   })
 }())
