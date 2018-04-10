@@ -42,3 +42,16 @@
   text-align: right;
   float: right;
 }
+
+#box-rect-demo {
+  display: flex;
+}
+
+#page-boxmodel #box-rect,
+#page-boxmodel #box-setting {
+  width: 50%;
+}
+
+#page-boxmodel #box-setting {
+  padding-left: 20px;
+}
