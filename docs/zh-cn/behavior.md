@@ -199,7 +199,7 @@ s3.attr({
 layer.append(...[s1, s2, s3].map(draggable))
 
 layer.on('mousemove', function(evt) {
-  if(evt.targetSprites.some(function(target) target.isDraggable)){
+  if(evt.targetSprites.some(function(target){return target.isDraggable})){
     scene.container.style.cursor = 'move'
   } else {
     scene.container.style.cursor = 'default'
@@ -388,7 +388,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   layer.append(...[s1, s2, s3].map(draggable))
 
   layer.on('mousemove', function(evt) {
-    if(evt.targetSprites.some(function(target) target.isDraggable)){
+    if(evt.targetSprites.some(function(target){return target.isDraggable})){
       scene.container.style.cursor = 'move'
     } else {
       scene.container.style.cursor = 'default'
