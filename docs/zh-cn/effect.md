@@ -71,7 +71,7 @@ scene.preload([birdsRes, birdsJsonUrl]).then(function() {
   })
 
   let i = 0
-  setInterval(() => {
+  setInterval(function() {
     s.textures = [`bird${i++%3 + 1}.png`]
   }, 100)
 
@@ -322,7 +322,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     })
 
     let i = 0
-    setInterval(() => {
+    setInterval(function() {
       s.textures = [`bird${i++%3 + 1}.png`]
     }, 100)
 

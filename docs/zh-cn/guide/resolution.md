@@ -48,7 +48,7 @@ label.attr({
 
 layer.append(label)
 
-scene.on('viewportChange', () => {
+scene.on('viewportChange', function() {
   const viewport = scene.viewport
   label.text = `resolution: ${resolution} | viewport: ${viewport}`
 })
@@ -119,7 +119,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(label)
 
-  scene.on('viewportChange', () => {
+  scene.on('viewportChange', function() {
     const viewport = scene.viewport
     label.text = `resolution: ${resolution} | viewport: ${viewport}`
   })
@@ -133,12 +133,12 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
     // renderMode: 'repaintDirty',
   })
 
-  heightBtn.addEventListener('change', evt => {
+  heightBtn.addEventListener('change', function(evt) {
     stickMode.style.paddingBottom = `${50 + evt.target.value / 2}%`
     scene.updateViewport()
   })
 
-  extendBtn.addEventListener('click', evt => {
+  extendBtn.addEventListener('click', function(evt) {
     scene.stickExtend = evt.target.checked
     scene.updateViewport().updateResolution()
   })

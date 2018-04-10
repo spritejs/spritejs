@@ -4,8 +4,8 @@ const paper = spritejs.Paper2D('#paper'),
       Sprite = spritejs.Sprite,
       Label = spritejs.Label
 
-const earthCfg = '/static/image/earth.plist.json'
-const earthRes = '/static/image/earth.png'
+const earthCfg = 'static/image/earth.plist.json'
+const earthRes = 'static/image/earth.png'
 
 paper.setResolution(1600, 1200) 
 
@@ -23,11 +23,11 @@ paper.preload(
   [earthRes, earthCfg],
   {
     id : 'tree1',
-    src: '/static/image/tree1.png',
+    src: 'static/image/tree1.png',
   },
   {
     id: 'tree2',
-    src: '/static/image/tree2.png',
+    src: 'static/image/tree2.png',
   }
 ).then(function() {
   bglayer.removeChild(loading)

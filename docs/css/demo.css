@@ -55,3 +55,7 @@
 #page-boxmodel #box-setting {
   padding-left: 20px;
 }
+
+#page-resource #texturepacker {
+  background: black;
+}
