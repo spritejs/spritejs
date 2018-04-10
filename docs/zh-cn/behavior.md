@@ -21,10 +21,10 @@ s1.attr({
 
 layer.append(s1)
 
-s1.on('mouseenter', evt => {
+s1.on('mouseenter', function(evt) {
   s1.attr('border', [4, 'blue'])
 })
-s1.on('mouseleave', evt => {
+s1.on('mouseleave', function(evt) {
   s1.attr('border', [0, ''])
 })
 
@@ -49,7 +49,7 @@ label.attr({
 
 layer.append(label)
 
-layer.on('mousemove', evt => {
+layer.on('mousemove', function(evt) {
   const {x, y, targetSprites} = evt
 
   label.text = `鼠标位置：\n相对于 layer: ${x}, ${y}`
@@ -86,10 +86,10 @@ s1.attr({
 
 layer.append(s1)
 
-s1.on('mouseenter', evt => {
+s1.on('mouseenter', function(evt) {
   s1.attr('border', [4, 'blue'])
 })
-s1.on('mouseleave', evt => {
+s1.on('mouseleave', function(evt) {
   s1.attr('border', [0, ''])
 })
 
@@ -114,13 +114,13 @@ label.attr({
 
 layer.append(label)
 
-layer.on('mousemove', evt => {
+layer.on('mousemove', function(evt) {
   const {x, y, targetSprites} = evt
 
   label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}`
 })
 
-s1.on('mousemove', evt => {
+s1.on('mousemove', function(evt) {
   let {x, y, offsetX, offsetY} = evt
   label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}\n相对于元素：${Math.round(offsetX)}, ${Math.round(offsetY)}` 
 
@@ -154,7 +154,7 @@ function draggable(sprite) {
     evt.stopDispatch()
   }
 
-  sprite.on('mousedown', evt => {
+  sprite.on('mousedown', function(evt) {
     x0 = evt.x
     y0 = evt.y
     startPos = sprite.attr('pos')
@@ -163,7 +163,7 @@ function draggable(sprite) {
     evt.stopDispatch()
   })
 
-  document.documentElement.addEventListener('mouseup', () => {
+  document.documentElement.addEventListener('mouseup', function() {
     layer.off('mousemove', onMouseMove)
   })
 
@@ -198,8 +198,8 @@ s3.attr({
 
 layer.append(...[s1, s2, s3].map(draggable))
 
-layer.on('mousemove', evt => {
-  if(evt.targetSprites.some(target => target.isDraggable)){
+layer.on('mousemove', function(evt) {
+  if(evt.targetSprites.some(function(target) target.isDraggable)){
     scene.container.style.cursor = 'move'
   } else {
     scene.container.style.cursor = 'default'
@@ -226,10 +226,10 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(s1)
 
-  s1.on('mouseenter', evt => {
+  s1.on('mouseenter', function(evt) {
     s1.attr('border', [4, 'blue'])
   })
-  s1.on('mouseleave', evt => {
+  s1.on('mouseleave', function(evt) {
     s1.attr('border', [0, ''])
   })
 
@@ -254,7 +254,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(label)
 
-  layer.on('mousemove', evt => {
+  layer.on('mousemove', function(evt) {
     const {x, y, targetSprites} = evt
 
     label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}`
@@ -281,10 +281,10 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(s1)
 
-  s1.on('mouseenter', evt => {
+  s1.on('mouseenter', function(evt) {
     s1.attr('border', [4, 'blue'])
   })
-  s1.on('mouseleave', evt => {
+  s1.on('mouseleave', function(evt) {
     s1.attr('border', [0, ''])
   })
 
@@ -309,13 +309,13 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(label)
 
-  layer.on('mousemove', evt => {
+  layer.on('mousemove', function(evt) {
     const {x, y, targetSprites} = evt
 
     label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}`
   })
 
-  s1.on('mousemove', evt => {
+  s1.on('mousemove', function(evt) {
     let {x, y, offsetX, offsetY} = evt
     label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}\n相对于元素：${Math.round(offsetX)}, ${Math.round(offsetY)}` 
 
@@ -343,7 +343,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       evt.stopDispatch()
     }
 
-    sprite.on('mousedown', evt => {
+    sprite.on('mousedown', function(evt) {
       x0 = evt.x
       y0 = evt.y
       startPos = sprite.attr('pos')
@@ -352,7 +352,7 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
       evt.stopDispatch()
     })
 
-    document.documentElement.addEventListener('mouseup', () => {
+    document.documentElement.addEventListener('mouseup', function() {
       layer.off('mousemove', onMouseMove)
     })
 
@@ -387,8 +387,8 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
 
   layer.append(...[s1, s2, s3].map(draggable))
 
-  layer.on('mousemove', evt => {
-    if(evt.targetSprites.some(target => target.isDraggable)){
+  layer.on('mousemove', function(evt) {
+    if(evt.targetSprites.some(function(target) target.isDraggable)){
       scene.container.style.cursor = 'move'
     } else {
       scene.container.style.cursor = 'default'

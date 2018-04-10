@@ -83,28 +83,28 @@ function updateState() {
 }
 updateState()
 
-paddingCtl.addEventListener('change', evt => {
+paddingCtl.addEventListener('change', function(evt) {
   const value = evt.target.value
   s1.attr('padding', value)
   paddingValue.innerHTML = value
   updateState()
 })
 
-borderCtl.addEventListener('change', evt => {
+borderCtl.addEventListener('change', function(evt) {
   const value = evt.target.value
   s1.attr('border', [value])
   borderValue.innerHTML = value
   updateState()
 })
 
-rotateCtl.addEventListener('change', evt => {
+rotateCtl.addEventListener('change', function(evt) {
   const value = evt.target.value
   s1.attr('rotate', [value])
   borderValue.innerHTML = value
   updateState()
 })
 
-sizeCtl.addEventListener('change', evt => {
+sizeCtl.addEventListener('change', function(evt) {
   const value = evt.target.value
   const path = s1.attr('path')
   path.transform.scale = value
@@ -114,6 +114,8 @@ sizeCtl.addEventListener('change', evt => {
 })
 
 ```
+
+**注意一个细节**，originalRect和boundingRect的坐标原点是sprite元素的anchor points，因为我们把anchor设为了[0.5, 0.5]所以我们看到的坐标起始点是负值。另外我们还可以直接拿到renderRect和originRect，对应元素transform之前和之后在画布上的实际坐标。
 
 
 <script>
@@ -150,28 +152,28 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   }
   updateState()
 
-  paddingCtl.addEventListener('change', evt => {
+  paddingCtl.addEventListener('change', function(evt) {
     const value = evt.target.value
     s1.attr('padding', value)
     paddingValue.innerHTML = value
     updateState()
   })
 
-  borderCtl.addEventListener('change', evt => {
+  borderCtl.addEventListener('change', function(evt) {
     const value = evt.target.value
     s1.attr('border', [value])
     borderValue.innerHTML = value
     updateState()
   })
 
-  rotateCtl.addEventListener('change', evt => {
+  rotateCtl.addEventListener('change', function(evt) {
     const value = evt.target.value
     s1.attr('rotate', [value])
     borderValue.innerHTML = value
     updateState()
   })
 
-  sizeCtl.addEventListener('change', evt => {
+  sizeCtl.addEventListener('change', function(evt) {
     const value = evt.target.value
     const path = s1.attr('path')
     path.transform.scale = value
@@ -181,5 +183,3 @@ const {Scene, Layer, Sprite, Label, Path, Group} = spritejs
   })
 }())
 </script>
-
-**注意一个细节**，originalRect和boundingRect的坐标原点是sprite元素的anchor points，因为我们把anchor设为了[0.5, 0.5]所以我们看到的坐标起始点是负值。另外我们还可以直接拿到renderRect和originRect，对应元素transform之前和之后在画布上的实际坐标。
