@@ -1,22 +1,11 @@
 #!/usr/bin/env node
 
-const webpack = require('webpack')
 const fs = require('fs')
 const path = require('path')
 
-const webpackConf = require('../webpack.config.js')
+const buildTask = require('./build-task')
 
-function buildTask(options = {}) {
-  return new Promise((resolve, reject) => {
-    webpack(webpackConf(options), (err, status) => {
-      if(err) reject(err)
-      else {
-        resolve(status)
-      }
-    })
-  })
-}
-
+/* eslint-disable no-console */
 function uploadToCDN(stats) {
   const cdnUploader = require('./cdn-uploader'),
     output = stats.compilation.compiler.options.output,
@@ -37,6 +26,7 @@ function uploadToCDN(stats) {
     fs.writeFileSync(readmeFile, content)
   })
 }
+/* eslint-enable no-console */
 
 (async function () {
   await buildTask() // build uncompressed file
