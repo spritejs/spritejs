@@ -1,8 +1,14 @@
-# spritejs 
+<p align="center">
+  <a href="http://spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
+</p>
+
+<h1 align="center">SpriteJS</h1>
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
+[![Package Quality](http://npm.packagequality.com/shield/spritejs.svg)](http://packagequality.com/#?package=spritejs)
+ [![Code Climate](https://codeclimate.com/github/spritejs/spritejs/badges/gpa.svg)](https://codeclimate.com/github/spritejs/spritejs)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
 SpriteJS is a cross-platform lightweight 2D render object model.
@@ -14,6 +20,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
 - [Server-side render](#server-side-render). Work with node-canvas.
@@ -22,7 +29,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Look
 
 ```html
-<script src="https://s5.ssl.qhres.com/!4b1f1e80/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!b105d69a/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -41,23 +48,16 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-Learn more at [spritejs.org](http://spritejs.org/)
+<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/">spritejs.org</a></strong> </div>
 
-## Fetures
-
-- Provide `attr()` methods to set sprite styles.
-- Provide [web animations api](https://w3c.github.io/web-animations/#the-animation-interface
-) to perform animations.
-- Provide filters.
-- Provide high-level mouse & touch events
-- Optimized rendering performance.
+---
 
 ## Usage
 
 In browser:
 
 ```html
-<script src="https://s5.ssl.qhres.com/!4b1f1e80/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!b105d69a/spritejs.min.js"></script>
 ```
 
 ## Quick Start
@@ -65,33 +65,42 @@ In browser:
 ### Examples
 
 - [Overview](http://spritejs.org/)
-- [Sprites](http://spritejs.org/#basic_sprites)
-- [Textures](http://spritejs.org/#sprites_textures)
-- [Labels](http://spritejs.org/#labels)
-- [Buttons](http://spritejs.org/#buttons)
-- [Transforms](http://spritejs.org/#sprites_transforms)
-- [Events](http://spritejs.org/#sprite_events)
-- [Filters](http://spritejs.org/#filters)
-- [Animations](http://spritejs.org/#animations)
-- [SVG Paths](http://spritejs.org/#svg_path)
-- [Offset API](http://spritejs.org/#offset_api)
-- [OBB Hit](http://spritejs.org/#obb)
+- [Sprites](http://spritejs.org/demo/#basic_sprites)
+- [Textures](http://spritejs.org/demo/#sprites_textures)
+- [Labels](http://spritejs.org/demo/#labels)
+- [Buttons](http://spritejs.org/demo/#buttons)
+- [Transforms](http://spritejs.org/demo/#sprites_transforms)
+- [Events](http://spritejs.org/demo/#sprite_events)
+- [Filters](http://spritejs.org/demo/#filters)
+- [Animations](http://spritejs.org/demo/#animations)
+- [SVG Paths](http://spritejs.org/demo/#svg_path)
+- [Offset API](http://spritejs.org/demo/#offset_api)
+- [OBB Hit](http://spritejs.org/demo/#obb)
 
 #### D3 Examples
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [D3.js Example 1](http://spritejs.org/#d3)
-- [D3.js Example 2](http://spritejs.org/#d3-2)
-- [D3.js Example 3](http://spritejs.org/#d3-3)
+- [D3.js Example 1](http://spritejs.org/demo/#d3)
+- [D3.js Example 2](http://spritejs.org/demo/#d3-2)
+- [D3.js Example 3](http://spritejs.org/demo/#d3-3)
 
-### API Doc (中文）
+### Guide (中文）
 
-- [Architecture](docs#整体结构)
-- [paper & layers](docs#快速上手)
-- [Sprite](docs#sprite-类结构)
-- [Events](docs#事件机制)
-- [Performance](docs#性能)
+- [Introduction](http://spritejs.org/#/zh-cn/index)
+- [Scene & layers](http://spritejs.org/#/zh-cn/layer)
+- [Elements](http://spritejs.org/#/zh-cn/elements)
+- [Animations & Effects](http://spritejs.org/#/zh-cn/elements)
+- [Behaviors](http://spritejs.org/#/zh-cn/behavior)
+
+### API Doc
+
+- [Sprite](http://spritejs.org/#/api/sprite)
+- [Label](http://spritejs.org/#/api/label)
+- [Path](http://spritejs.org/#/api/path)
+- [Group](http://spritejs.org/#/api/group)
+- [Layer](http://spritejs.org/#/api/layer)
+- [Scene](http://spritejs.org/#/api/scene)
 
 ### Server-side Render
 

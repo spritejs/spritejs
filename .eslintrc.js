@@ -1,4 +1,8 @@
 module.exports = {
+  globals: {
+    spritejs: true,
+    axios: true,
+  },
   "extends":  "eslint-config-75team",
   rules: {
     // 'import/no-mutable-exports': 'off',
