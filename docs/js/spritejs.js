@@ -1620,7 +1620,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
       drawingContext.restore();
 
-      drawingContext.translate(borderWidth + attr.padding[0], borderWidth + attr.padding[3]);
+      drawingContext.translate(borderWidth + attr.padding[3], borderWidth + attr.padding[0]);
 
       return drawingContext;
     }
