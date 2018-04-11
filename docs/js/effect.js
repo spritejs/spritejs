@@ -104,108 +104,138 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       }
     }
   }, _callee, this);
-}))();(function () {
-  var birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
-  var birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
+}))();_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+  var birdsJsonUrl, birdsRes, scene, layer, timeline, playbackRate, speedUp, slowDown, pause, resume, updateSpeed, i, bird, delay;
+  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          updateSpeed = function updateSpeed() {
+            playbackRate.innerHTML = 'playbackRate: ' + timeline.playbackRate.toFixed(1);
+          };
 
-  var scene = new Scene('#animations-playback', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer('fglayer');
-  var timeline = layer.timeline;
+          birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
+          birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
+          scene = new Scene('#animations-playback', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+          layer = scene.layer('fglayer');
+          timeline = layer.timeline;
+          playbackRate = document.getElementById('playbackRate');
+          speedUp = document.getElementById('speedUp');
+          slowDown = document.getElementById('slowDown');
+          pause = document.getElementById('pause');
+          resume = document.getElementById('resume');
 
-  var playbackRate = document.getElementById('playbackRate');
-  var speedUp = document.getElementById('speedUp');
-  var slowDown = document.getElementById('slowDown');
-  var pause = document.getElementById('pause');
-  var resume = document.getElementById('resume');
+          speedUp.addEventListener('click', function () {
+            timeline.playbackRate += 0.5;
+            updateSpeed();
+          });
+          slowDown.addEventListener('click', function () {
+            timeline.playbackRate -= 0.5;
+            updateSpeed();
+          });
+          pause.addEventListener('click', function () {
+            timeline.playbackRate = 0;
+            updateSpeed();
+          });
+          resume.addEventListener('click', function () {
+            timeline.playbackRate = 1.0;
+            updateSpeed();
+          });
 
-  function updateSpeed() {
-    playbackRate.innerHTML = 'playbackRate: ' + timeline.playbackRate.toFixed(1);
-  }
-  speedUp.addEventListener('click', function () {
-    timeline.playbackRate += 0.5;
-    updateSpeed();
-  });
-  slowDown.addEventListener('click', function () {
-    timeline.playbackRate -= 0.5;
-    updateSpeed();
-  });
-  pause.addEventListener('click', function () {
-    timeline.playbackRate = 0;
-    updateSpeed();
-  });
-  resume.addEventListener('click', function () {
-    timeline.playbackRate = 1.0;
-    updateSpeed();
-  });
+          _context2.next = 17;
+          return scene.preload([birdsRes, birdsJsonUrl]);
 
-  scene.preload([birdsRes, birdsJsonUrl]).then(function () {
-    for (var i = 0; i < 10; i++) {
-      if (i !== 5 && i !== 9) {
-        var bird = new Sprite('bird1.png');
-        bird.attr({
-          anchor: [0.5, 0.5],
-          pos: [-50, 100 + i % 5 * 100]
-        });
-        layer.append(bird);
+        case 17:
 
-        bird.animate([{ textures: 'bird1.png' }, { textures: 'bird2.png' }, { textures: 'bird3.png' }, { textures: 'bird1.png' }], {
-          duration: 500,
-          iterations: Infinity,
-          easing: 'step-end'
-        });
+          for (i = 0; i < 10; i++) {
+            if (i !== 5 && i !== 9) {
+              bird = new Sprite('bird1.png');
 
-        var delay = i < 5 ? Math.abs(2 - i) * 300 : (4 - Math.abs(7 - i)) * 300;
-        bird.animate([{ x: -50 }, { x: 1600 }, { x: -50 }], {
-          delay: delay,
-          duration: 6000,
-          // direction: 'alternate',
-          iterations: Infinity
-        });
+              bird.attr({
+                anchor: [0.5, 0.5],
+                pos: [-50, 100 + i % 5 * 100]
+              });
+              layer.append(bird);
 
-        bird.animate([{ scale: [1, 1] }, { scale: [-1, 1] }, { scale: [1, 1] }], {
-          delay: delay,
-          duration: 6000,
-          iterations: Infinity,
-          easing: 'step-end'
-        });
+              bird.animate([{ textures: 'bird1.png' }, { textures: 'bird2.png' }, { textures: 'bird3.png' }, { textures: 'bird1.png' }], {
+                duration: 500,
+                iterations: Infinity,
+                easing: 'step-end'
+              });
+
+              delay = i < 5 ? Math.abs(2 - i) * 300 : (4 - Math.abs(7 - i)) * 300;
+
+              bird.animate([{ x: -50 }, { x: 1600 }, { x: -50 }], {
+                delay: delay,
+                duration: 6000,
+                // direction: 'alternate',
+                iterations: Infinity
+              });
+
+              bird.animate([{ scale: [1, 1] }, { scale: [-1, 1] }, { scale: [1, 1] }], {
+                delay: delay,
+                duration: 6000,
+                iterations: Infinity,
+                easing: 'step-end'
+              });
+            }
+          }
+
+        case 18:
+        case 'end':
+          return _context2.stop();
       }
     }
-  });
-})();(function () {
-  var images = [{ id: 'girl1', src: 'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg' }, { id: 'girl2', src: 'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg' }];
-  var scene = new Scene('#filters', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer('fglayer');
-  var y1 = 50,
-      y2 = 320;
+  }, _callee2, this);
+}))();_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+  var images, scene, layer, y1, y2, applyFilters, filters1, filters2;
+  return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          applyFilters = function applyFilters(id, filters, y) {
+            var scale = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 
-  function applyFilters(id, filters, y) {
-    var scale = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+            filters.forEach(function (filter, i) {
+              var s = new Sprite();
+              var textures = { id: id, filter: {} };
+              if (filter.length === 2) {
+                textures.filter[filter[0]] = filter[1];
+              }
+              s.attr({
+                textures: textures,
+                pos: [50 + i * 250, y],
+                scale: scale
+              });
+              layer.append(s);
+            });
+          };
 
-    filters.forEach(function (filter, i) {
-      var s = new Sprite();
-      var textures = { id: id, filter: {} };
-      if (filter.length === 2) {
-        textures.filter[filter[0]] = filter[1];
+          images = [{ id: 'girl1', src: 'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg' }, { id: 'girl2', src: 'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg' }];
+          scene = new Scene('#filters', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+          layer = scene.layer('fglayer');
+          y1 = 50, y2 = 320;
+          _context3.next = 7;
+          return scene.preload.apply(scene, images);
+
+        case 7:
+          filters1 = [[], ['brightness', '150%'], ['grayscale', '50%'], ['blur', '12px'], ['dropShadow', [15, 15, 5, '#033']], ['hueRotate', 45]];
+
+
+          applyFilters('girl1', filters1, y1, 0.5);
+
+          filters2 = [[], ['invert', '100%'], ['opacity', '70%'], ['saturate', '20%'], ['sepia', '100%'], ['hueRotate', 135]];
+
+
+          applyFilters('girl2', filters2, y2);
+
+        case 11:
+        case 'end':
+          return _context3.stop();
       }
-      s.attr({
-        textures: textures,
-        pos: [50 + i * 250, y],
-        scale: scale
-      });
-      layer.append(s);
-    });
-  }
-
-  scene.preload.apply(scene, images).then(function () {
-    var filters1 = [[], ['brightness', '150%'], ['grayscale', '50%'], ['blur', '12px'], ['dropShadow', [15, 15, 5, '#033']], ['hueRotate', 45]];
-
-    applyFilters('girl1', filters1, y1, 0.5);
-
-    var filters2 = [[], ['invert', '100%'], ['opacity', '70%'], ['saturate', '20%'], ['sepia', '100%'], ['hueRotate', 135]];
-
-    applyFilters('girl2', filters2, y2);
-  });
-})();(function () {
+    }
+  }, _callee3, this);
+}))();(function () {
   var scene = new Scene('#gradients', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
   var layer = scene.layer('fglayer');
 

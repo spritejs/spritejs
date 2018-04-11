@@ -1,5 +1,6 @@
 const {Scene, Sprite, Label, Path} = spritejs
 
+/* demo: animations */
 ;(async function () {
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
@@ -91,7 +92,8 @@ const {Scene, Sprite, Label, Path} = spritejs
   layer.appendChild(s)
 }())
 
-;(function () {
+/* demo: animations-playback */
+;(async function () {
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
@@ -125,55 +127,56 @@ const {Scene, Sprite, Label, Path} = spritejs
     updateSpeed()
   })
 
-  scene.preload([birdsRes, birdsJsonUrl]).then(() => {
-    for(let i = 0; i < 10; i++) {
-      if(i !== 5 && i !== 9) {
-        const bird = new Sprite('bird1.png')
-        bird.attr({
-          anchor: [0.5, 0.5],
-          pos: [-50, 100 + (i % 5) * 100],
-        })
-        layer.append(bird)
+  await scene.preload([birdsRes, birdsJsonUrl])
 
-        bird.animate([
-          {textures: 'bird1.png'},
-          {textures: 'bird2.png'},
-          {textures: 'bird3.png'},
-          {textures: 'bird1.png'},
-        ], {
-          duration: 500,
-          iterations: Infinity,
-          easing: 'step-end',
-        })
+  for(let i = 0; i < 10; i++) {
+    if(i !== 5 && i !== 9) {
+      const bird = new Sprite('bird1.png')
+      bird.attr({
+        anchor: [0.5, 0.5],
+        pos: [-50, 100 + (i % 5) * 100],
+      })
+      layer.append(bird)
 
-        const delay = i < 5 ? Math.abs(2 - i) * 300 : (4 - Math.abs(7 - i)) * 300
-        bird.animate([
-          {x: -50},
-          {x: 1600},
-          {x: -50},
-        ], {
-          delay,
-          duration: 6000,
-          // direction: 'alternate',
-          iterations: Infinity,
-        })
+      bird.animate([
+        {textures: 'bird1.png'},
+        {textures: 'bird2.png'},
+        {textures: 'bird3.png'},
+        {textures: 'bird1.png'},
+      ], {
+        duration: 500,
+        iterations: Infinity,
+        easing: 'step-end',
+      })
 
-        bird.animate([
-          {scale: [1, 1]},
-          {scale: [-1, 1]},
-          {scale: [1, 1]},
-        ], {
-          delay,
-          duration: 6000,
-          iterations: Infinity,
-          easing: 'step-end',
-        })
-      }
+      const delay = i < 5 ? Math.abs(2 - i) * 300 : (4 - Math.abs(7 - i)) * 300
+      bird.animate([
+        {x: -50},
+        {x: 1600},
+        {x: -50},
+      ], {
+        delay,
+        duration: 6000,
+        // direction: 'alternate',
+        iterations: Infinity,
+      })
+
+      bird.animate([
+        {scale: [1, 1]},
+        {scale: [-1, 1]},
+        {scale: [1, 1]},
+      ], {
+        delay,
+        duration: 6000,
+        iterations: Infinity,
+        easing: 'step-end',
+      })
     }
-  })
+  }
 }())
 
-;(function () {
+/* demo: filters */
+;(async function () {
   const images = [
     {id: 'girl1', src: 'https://p5.ssl.qhimg.com/t01feb7d2e05533ca2f.jpg'},
     {id: 'girl2', src: 'https://p5.ssl.qhimg.com/t01deebfb5b3ac6884e.jpg'},
@@ -199,31 +202,32 @@ const {Scene, Sprite, Label, Path} = spritejs
     })
   }
 
-  scene.preload(...images).then(() => {
-    const filters1 = [
-      [],
-      ['brightness', '150%'],
-      ['grayscale', '50%'],
-      ['blur', '12px'],
-      ['dropShadow', [15, 15, 5, '#033']],
-      ['hueRotate', 45],
-    ]
+  await scene.preload(...images)
 
-    applyFilters('girl1', filters1, y1, 0.5)
+  const filters1 = [
+    [],
+    ['brightness', '150%'],
+    ['grayscale', '50%'],
+    ['blur', '12px'],
+    ['dropShadow', [15, 15, 5, '#033']],
+    ['hueRotate', 45],
+  ]
 
-    const filters2 = [
-      [],
-      ['invert', '100%'],
-      ['opacity', '70%'],
-      ['saturate', '20%'],
-      ['sepia', '100%'],
-      ['hueRotate', 135],
-    ]
+  applyFilters('girl1', filters1, y1, 0.5)
 
-    applyFilters('girl2', filters2, y2)
-  })
+  const filters2 = [
+    [],
+    ['invert', '100%'],
+    ['opacity', '70%'],
+    ['saturate', '20%'],
+    ['sepia', '100%'],
+    ['hueRotate', 135],
+  ]
+
+  applyFilters('girl2', filters2, y2)
 }())
 
+/* demo: gradients */
 ;(function () {
   const scene = new Scene('#gradients', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
   const layer = scene.layer('fglayer')
