@@ -308,7 +308,36 @@ window.generateApiPlugin = function (hook, vm) {
         next(generateHtml(res, searchIndex));
       }
     } else {
-      next(content);
+      var externalJS = content.match(/\n<script src="\/js\/(.*?)">/);
+      if (externalJS) {
+        var jsFile = '/src/' + externalJS[1];
+        var matched = content.match(/<!-- demo: .*? -->/g);
+        if (matched) {
+          axios.get(jsFile).then(function (res) {
+            var jsContent = res.data;
+            matched.forEach(function (mark) {
+              var jsMark = mark.replace(/<!--/, '/*').replace(/-->/, '*/');
+              var parts = jsContent.split(jsMark);
+              if (parts[1]) {
+                var m = parts[1].match(/\n;?\((async )?function \(\) \{\n([\s\S]*?)\}\(\)\)/im);
+                if (m && m[2]) {
+                  if (!m[1]) {
+                    var code = m[2].replace(/^ {2}/mg, '');
+                    content = content.replace(mark, '```js\n' + code + '\n```');
+                  } else {
+                    content = content.replace(mark, '```js\n' + m[0].slice(1) + '\n```');
+                  }
+                }
+              }
+            });
+            next(content);
+          });
+        } else {
+          next(content);
+        }
+      } else {
+        next(content);
+      }
     }
   });
   hook.afterEach(function (content, next) {

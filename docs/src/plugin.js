@@ -272,7 +272,36 @@ window.generateApiPlugin = function (hook, vm) {
         next(generateHtml(res, searchIndex))
       }
     } else {
-      next(content)
+      const externalJS = content.match(/\n<script src="\/js\/(.*?)">/)
+      if(externalJS) {
+        const jsFile = `/src/${externalJS[1]}`
+        const matched = content.match(/<!-- demo: .*? -->/g)
+        if(matched) {
+          axios.get(jsFile).then((res) => {
+            const jsContent = res.data
+            matched.forEach((mark) => {
+              const jsMark = mark.replace(/<!--/, '/*').replace(/-->/, '*/')
+              const parts = jsContent.split(jsMark)
+              if(parts[1]) {
+                const m = parts[1].match(/\n;?\((async )?function \(\) \{\n([\s\S]*?)\}\(\)\)/im)
+                if(m && m[2]) {
+                  if(!m[1]) {
+                    const code = m[2].replace(/^ {2}/mg, '')
+                    content = content.replace(mark, `\`\`\`js\n${code}\n\`\`\``)
+                  } else {
+                    content = content.replace(mark, `\`\`\`js\n${m[0].slice(1)}\n\`\`\``)
+                  }
+                }
+              }
+            })
+            next(content)
+          })
+        } else {
+          next(content)
+        }
+      } else {
+        next(content)
+      }
     }
   })
   hook.afterEach((content, next) => {

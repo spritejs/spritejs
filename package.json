@@ -17,7 +17,7 @@
     "benchmark": "webpack-dev-server -d --quiet --port 9090 & http-server benchmark -c-1 -p 9091",
     "build": "rm -rf dist/* && ./script/build.js",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
-    "doc": "webpack-dev-server -d --quiet --port 9090 & babel docs/js/plugin.src.js -o docs/js/plugin.js --watch & http-server docs -c-1 -p 9091",
+    "doc": "webpack-dev-server -d --quiet --port 9090 & babel docs/src -d docs/js --watch & http-server docs -c-1 -p 9091",
     "precommit": "./script/precommit.js",
     "prepublishOnly": "rm -rf lib/* && babel src -d lib && npm run build"
   },
@@ -45,7 +45,7 @@
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
     "canvas": "^2.0.0-alpha.12",
-    "sprite-core": "^1.9.11",
+    "sprite-core": "^1.10.0",
     "sprite-math": "^1.0.0",
     "sprite-utils": "^1.2.0"
   },

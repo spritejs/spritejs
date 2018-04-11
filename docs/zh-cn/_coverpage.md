@@ -6,6 +6,9 @@
     margin-top: -160px;
     position: relative;
   }
+  .cover.show + main > aside.sidebar {
+    display: none
+  }
 </style>
 
 <div id="coverpage"></div>

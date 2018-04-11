@@ -65,25 +65,25 @@ In browser:
 ### Examples
 
 - [Overview](http://spritejs.org/)
-- [Sprites](http://spritejs.org/#basic_sprites)
-- [Textures](http://spritejs.org/#sprites_textures)
-- [Labels](http://spritejs.org/#labels)
-- [Buttons](http://spritejs.org/#buttons)
-- [Transforms](http://spritejs.org/#sprites_transforms)
-- [Events](http://spritejs.org/#sprite_events)
-- [Filters](http://spritejs.org/#filters)
-- [Animations](http://spritejs.org/#animations)
-- [SVG Paths](http://spritejs.org/#svg_path)
-- [Offset API](http://spritejs.org/#offset_api)
-- [OBB Hit](http://spritejs.org/#obb)
+- [Sprites](http://spritejs.org/demo/#basic_sprites)
+- [Textures](http://spritejs.org/demo/#sprites_textures)
+- [Labels](http://spritejs.org/demo/#labels)
+- [Buttons](http://spritejs.org/demo/#buttons)
+- [Transforms](http://spritejs.org/demo/#sprites_transforms)
+- [Events](http://spritejs.org/demo/#sprite_events)
+- [Filters](http://spritejs.org/demo/#filters)
+- [Animations](http://spritejs.org/demo/#animations)
+- [SVG Paths](http://spritejs.org/demo/#svg_path)
+- [Offset API](http://spritejs.org/demo/#offset_api)
+- [OBB Hit](http://spritejs.org/demo/#obb)
 
 #### D3 Examples
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [D3.js Example 1](http://spritejs.org/#d3)
-- [D3.js Example 2](http://spritejs.org/#d3-2)
-- [D3.js Example 3](http://spritejs.org/#d3-3)
+- [D3.js Example 1](http://spritejs.org/demo/#d3)
+- [D3.js Example 2](http://spritejs.org/demo/#d3-2)
+- [D3.js Example 3](http://spritejs.org/demo/#d3-3)
 
 ### Guide (中文）
 
