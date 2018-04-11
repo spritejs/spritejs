@@ -25,7 +25,6 @@
   * [屏幕适配](/zh-cn/guide/resolution)
   * [Sprite 盒模型](/zh-cn/guide/boxmodel)
   * [资源加载与雪碧图](/zh-cn/guide/resource)
-  * [Transforms](/zh-cn/guide/transforms)
   * [动画：Web Animation API](/zh-cn/guide/animations)
   * [碰撞检测](/zh-cn/guide/collision)
   * [缓存策略](/zh-cn/guide/cache)

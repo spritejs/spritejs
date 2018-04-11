@@ -2,6 +2,7 @@ module.exports = {
   globals: {
     spritejs: true,
     axios: true,
+    TWEEN: true,
   },
   "extends":  "eslint-config-75team",
   rules: {

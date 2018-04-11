@@ -59,3 +59,7 @@
 #page-resource #texturepacker {
   background: black;
 }
+
+#page-animations #timeline-ctrl {
+  margin-bottom: 10px;
+}
