@@ -1660,7 +1660,18 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'transform',
     get: function get() {
-      return new _spriteMath.Matrix(this[_attr].get('transformMatrix'));
+      var transform = new _spriteMath.Matrix(this[_attr].get('transformMatrix'));
+      var transformOrigin = this.attr('transformOrigin');
+      if (transformOrigin) {
+        var t = new _spriteMath.Matrix();
+        t.translate.apply(t, (0, _toConsumableArray3.default)(transformOrigin));
+        t.multiply(transform);
+        t.translate.apply(t, (0, _toConsumableArray3.default)(transformOrigin.map(function (v) {
+          return -v;
+        })));
+        return t;
+      }
+      return transform;
     }
   }, {
     key: 'contentSize',
@@ -1734,6 +1745,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       var transformed = vertexs.map(function (v) {
         return transform.transformPoint(v[0], v[1]);
       });
+
       var vx = transformed.map(function (v) {
         return v[0];
       }),
@@ -3328,7 +3340,8 @@ var Timeline = function () {
       globalTime: this.globalTime,
       localTime: -options.originTime,
       entropy: -options.originTime,
-      playbackRate: options.playbackRate
+      playbackRate: options.playbackRate,
+      globalEntropy: 0
     }];
 
     if (this[_parent]) {
@@ -3472,17 +3485,26 @@ var Timeline = function () {
 
       var timer = this[_timers].get(id);
       var delay = void 0,
-          timerID = null;
+          timerID = null,
+          startTime = void 0,
+          startEntropy = void 0;
 
       if (timer) {
         this.clearTimeout(id);
         if (time.isEntropy) {
           delay = (time.delay - (this.entropy - timer.startEntropy)) / Math.abs(this.playbackRate);
-        } else {
+        } else if (this.playbackRate >= 0) {
           delay = (time.delay - (this.currentTime - timer.startTime)) / this.playbackRate;
+        } else {
+          // playbackRate < 0, back to startPoint
+          delay = (timer.startTime - this.currentTime) / this.playbackRate;
         }
+        startTime = timer.startTime;
+        startEntropy = timer.startEntropy;
       } else {
         delay = time.delay / (time.isEntropy ? Math.abs(this.playbackRate) : this.playbackRate);
+        startTime = this.currentTime;
+        startEntropy = this.entropy;
       }
 
       // if playbackRate is zero, delay will be infinity.
@@ -3492,9 +3514,9 @@ var Timeline = function () {
         var parent = this[_parent],
             globalTimeout = parent ? parent.setTimeout.bind(parent) : setTimeout;
 
-        if (parent) {
-          delay = { delay: delay, isEntropy: true };
-        }
+        // if(parent) {
+        //   delay = {delay, isEntropy: true}
+        // }
 
         timerID = globalTimeout(function () {
           _this[_timers].delete(id);
@@ -3506,8 +3528,8 @@ var Timeline = function () {
         timerID: timerID,
         handler: handler,
         time: time,
-        startTime: this.currentTime,
-        startEntropy: this.entropy
+        startTime: startTime,
+        startEntropy: startEntropy
       });
 
       return id;
@@ -3533,11 +3555,9 @@ var Timeline = function () {
         entropy: this.entropy,
         playbackRate: this.playbackRate
       };
-
       if (this[_parent]) {
         timeMark.globalEntropy = this[_parent].entropy;
       }
-
       this[_timeMark].push(timeMark);
     }
     // Both currentTime and entropy should be influenced by playbackRate.
@@ -3565,13 +3585,16 @@ var Timeline = function () {
     set: function set(entropy) {
       var idx = this.seekTimeMark(entropy);
       this[_timeMark].length = idx + 1;
-
-      this[_timeMark].push({
+      var timeMark = {
         globalTime: this.globalTime,
         localTime: this.currentTime,
         entropy: entropy,
         playbackRate: this.playbackRate
-      });
+      };
+      if (this[_parent]) {
+        timeMark.globalEntropy = this[_parent].entropy;
+      }
+      this[_timeMark].push(timeMark);
     }
   }, {
     key: 'globalTime',
@@ -5231,10 +5254,10 @@ var Layer = function (_BaseNode) {
 
           for (var _i = 0; _i < unaffectedEls.length; _i++) {
             var _unaffectedEl = unaffectedEls[_i];
-
             if ((0, _dirtyCheck.isSpriteDirty)(_unaffectedEl, _affectedEls)) {
               affectedSet.add(_unaffectedEl);
               unaffectedSet.delete(_unaffectedEl);
+              changed = true;
               break;
             }
           }
@@ -6874,8 +6897,8 @@ var _default = function (_Animator) {
             that.cancel();
             return;
           }
-          if (that.playState === 'idle') return;
           sprite.attr(that.frame);
+          if (that.playState === 'idle') return;
           if (that.playState === 'running') {
             (0, _fastAnimationFrame.requestAnimationFrame)(update);
           } else if (that.playState === 'paused') {
@@ -7003,6 +7026,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
       translate: [0, 0],
       skew: [0, 0],
       transform: 'matrix(1,0,0,1,0,0)',
+      transformOrigin: '',
       transformMatrix: [1, 0, 0, 1, 0, 0],
       border: [0, 'rgba(0,0,0,0)'],
       borderRadius: 0,
@@ -7340,6 +7364,11 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
       }
     }
   }, {
+    key: 'transformOrigin',
+    set: function set(val) {
+      this.set('transformOrigin', val);
+    }
+  }, {
     key: 'rotate',
     set: function set(val) {
       var delta = this.get('rotate') - val;
@@ -7459,7 +7488,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     }
   }]);
   return SpriteAttr;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'id', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_spriteUtils.attr, _dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_spriteUtils.attr, _dec2], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_spriteUtils.attr, _dec3], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_spriteUtils.attr, _dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_spriteUtils.attr, _dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_spriteUtils.attr, _dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_spriteUtils.attr, _dec7], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype)), _class));
+}(), (_applyDecoratedDescriptor(_class.prototype, 'id', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_spriteUtils.attr, _dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_spriteUtils.attr, _dec2], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_spriteUtils.attr, _dec3], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_spriteUtils.attr, _dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_spriteUtils.attr, _dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_spriteUtils.attr, _dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_spriteUtils.attr, _dec7], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype)), _class));
 exports.default = SpriteAttr;
 
 /***/ }),
@@ -8227,7 +8256,7 @@ var _default = function () {
           _this2[_readyDefer].resolve();
           assert(_this2.playState === 'running' || _this2.playState === 'finished', 'An error occured: ' + _this2.playState);
           delete _this2[_readyDefer];
-        }, { entropy: -this.timeline.entropy });
+        }, { delay: -this.timeline.entropy });
       }
     }
   }, {
@@ -8243,7 +8272,10 @@ var _default = function () {
       if (this[_finishedDefer] && !this[_finishedDefer].timerID) {
         this[_finishedDefer].timerID = this.timeline.setTimeout(function () {
           _this3[_finishedDefer].resolve();
-        }, { entropy: duration * iterations + endDelay - this.timeline.entropy });
+          if (_this3.timeline.currentTime < 0) {
+            _this3.cancel();
+          }
+        }, { delay: duration * iterations + endDelay - this.timeline.currentTime });
       }
     }
   }, {
@@ -8254,6 +8286,9 @@ var _default = function () {
       }
 
       if (this.playState === 'idle') {
+        if (this.playbackRate <= 0) {
+          return;
+        }
         var _timing3 = this[_timing],
             delay = _timing3.delay,
             playbackRate = _timing3.playbackRate,
@@ -8297,6 +8332,7 @@ var _default = function () {
     key: 'finish',
     value: function finish() {
       this.timeline.entropy = Infinity;
+      this.timeline.currentTime = Infinity;
       this[_removeDefer](_readyDefer);
       this[_removeDefer](_finishedDefer, true);
     }
@@ -8331,11 +8367,11 @@ var _default = function () {
         state = 'idle';
       } else if (timeline.playbackRate === 0) {
         state = 'paused';
-      } else if (timeline.entropy < 0) {
+      } else if (timeline.currentTime < 0) {
         // 开始 pending
         state = 'pending';
       } else {
-        var ed = timeline.entropy - iterations * duration;
+        var ed = timeline.currentTime - iterations * duration;
         if (ed > 0 && ed < endDelay) {
           // 结束 pending
           state = 'pending';
