@@ -60,10 +60,10 @@ class ExLayer extends Layer {
 
   isVisible(sprite) {
     if(!super.isVisible(sprite)) return false
-    const [maxWidth, maxHeigth] = this.resolution
+    const [width, height, offsetLeft, offsetTop] = this.resolution
 
     const box = sprite.renderBox
-    if(box[0] > maxWidth || box[1] > maxHeigth
+    if(box[0] > width - offsetLeft || box[1] > height - offsetTop
       || box[2] < 0 || box[3] < 0) {
       return false
     }

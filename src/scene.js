@@ -359,9 +359,6 @@ export default class extends BaseNode {
       if(this.container.style && !this.container.style.position) {
         this.container.style.position = 'relative'
       }
-      if(this.container.style && !this.container.style.overflow) {
-        this.container.style.overflow = 'hidden'
-      }
 
       opts.context = context
       this.appendLayer(new Layer(opts), zIndex)

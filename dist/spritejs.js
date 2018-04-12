@@ -10809,12 +10809,14 @@ var ExLayer = function (_Layer) {
     value: function isVisible(sprite) {
       if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isVisible', this).call(this, sprite)) return false;
 
-      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
-          maxWidth = _resolution3[0],
-          maxHeigth = _resolution3[1];
+      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 4),
+          width = _resolution3[0],
+          height = _resolution3[1],
+          offsetLeft = _resolution3[2],
+          offsetTop = _resolution3[3];
 
       var box = sprite.renderBox;
-      if (box[0] > maxWidth || box[1] > maxHeigth || box[2] < 0 || box[3] < 0) {
+      if (box[0] > width - offsetLeft || box[1] > height - offsetTop || box[2] < 0 || box[3] < 0) {
         return false;
       }
       return true;
@@ -13137,9 +13139,6 @@ var _default = function (_BaseNode) {
 
         if (this.container.style && !this.container.style.position) {
           this.container.style.position = 'relative';
-        }
-        if (this.container.style && !this.container.style.overflow) {
-          this.container.style.overflow = 'hidden';
         }
 
         opts.context = context;
