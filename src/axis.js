@@ -173,8 +173,8 @@ class AxisSpriteAttr extends Group.Attr {
     ticksToD(this.subject)
   }
 
-  @attr
   @parseValue(parseStringFloat)
+  @attr
   set ticks(ticks) {
     this.clearCache()
     this.set('ticks', ticks.sort((a, b) => a - b))
@@ -196,8 +196,8 @@ class AxisSpriteAttr extends Group.Attr {
     ticksToD(this.subject)
   }
 
-  @attr
   @parseValue(parseColorString)
+  @attr
   set color(val) {
     this.clearCache()
     this.set('color', val)
