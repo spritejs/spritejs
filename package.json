@@ -19,7 +19,7 @@
     "compile": "rm -rf lib/* && babel src -d lib --watch",
     "doc": "webpack-dev-server -d --quiet --port 9090 & babel docs/src -d docs/js --watch & http-server docs -c-1 -p 9091",
     "precommit": "./script/precommit.js",
-    "prepublishOnly": "rm -rf lib/* && babel src -d lib && npm run build"
+    "prepublishOnly": "npm run precommit && rm -rf lib/* && babel src -d lib && npm run build"
   },
   "repository": {
     "type": "git",

@@ -30,6 +30,7 @@
   width: 50%;
   padding-bottom: 50%;
   border: solid 2px #336;
+  overflow: hidden;
 }
 
 #page-resolution #stickMode canvas {
