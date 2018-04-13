@@ -32,7 +32,7 @@
   * [创建新的精灵类型](/zh-cn/guide/nodes)
   * [缓存策略](/zh-cn/guide/cache)
   * [与d3一同使用](/zh-cn/guide/d3)
-  * [Layer快照](/zh-cn/guide/snapshot)
+  * [快照功能](/zh-cn/guide/snapshot)
   * [跨平台](/zh-cn/guide/platforms)
 
 * 其他
