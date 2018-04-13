@@ -1,8 +1,9 @@
 import Layer from './layer'
 import Resource from './resource'
-import {BaseNode} from 'sprite-core'
+import {BaseNode, utils} from 'sprite-core'
 import {createCanvas, getContainer} from './platform'
-import {setDeprecation, sortOrderedSprites} from 'sprite-utils'
+
+const {setDeprecation, sortOrderedSprites} = utils
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),

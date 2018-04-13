@@ -1,7 +1,7 @@
-import {Sprite} from 'sprite-core'
-import {attr} from 'sprite-utils'
+import {Sprite, utils} from 'sprite-core'
 import Resource from './resource'
 
+const attr = utils.attr
 const _mapTextures = Symbol('mapTextures')
 
 class ResAttr extends Sprite.Attr {

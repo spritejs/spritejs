@@ -39,53 +39,9 @@
     paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
     
     const BaseSprite = spritejs.BaseSprite,
-      Color = spritejs.Color,
-      Attr = BaseSprite.Attr
-
-    class ArcAttr extends Attr {
-      set radius(val) {
-        this.set('radius', val)
-        this.clearCache()
-      }
-      set fillColor(val) {
-        this.set('fillColor', new Color(val).str)
-        this.clearCache()
-      }
-      set strokeColor(val) {
-        this.set('strokeColor', new Color(val).str)
-        this.clearCache()
-      }
-      set renderMode(val) {
-        this.set('renderMode', val)
-        this.clearCache()
-      }
-      set lineWidth(val) {
-        this.set('lineWidth', val)
-        this.clearCache()
-      }
-      set angle(val) {
-        this.set('angle', val)
-        this.clearCache()
-      }
-      set direction(val) {
-        this.set('direction', val)
-        this.clearCache()
-      }
-    }
+      Color = spritejs.Color
 
     class Arc extends BaseSprite {
-      constructor(props) {
-        super(props);
-        this.initAttributes({
-          radius: 10,
-          fillColor: '',
-          strokeColor: '#000',
-          renderMode: 'stroke',
-          lineWidth: 1,
-          angle: [0, 360],
-          direction: 1,
-        })
-      }
       get contentSize() {
         let [width, height] = this.attr('size')
         const radius = this.attr('radius'),
@@ -143,7 +99,47 @@
       }
     }
 
-    Arc.Attr = ArcAttr
+    Arc.defineAttributes({
+      init(attr) {
+        attr.setDefault({
+          radius: 10,
+          fillColor: '',
+          strokeColor: '#000',
+          renderMode: 'stroke',
+          lineWidth: 1,
+          angle: [0, 360],
+          direction: 1,
+        })
+      },
+      radius(attr, val) {
+        attr.set('radius', val)
+        attr.clearCache()
+      },
+      fillColor(attr, val) {
+        attr.set('fillColor', new Color(val).str)
+        attr.clearCache()
+      },
+      strokeColor(attr, val) {
+        attr.set('strokeColor', new Color(val).str)
+        attr.clearCache()
+      },
+      renderMode(attr, val) {
+        attr.set('renderMode', val)
+        attr.clearCache()
+      },
+      lineWidth(attr, val) {
+        attr.set('lineWidth', val)
+        attr.clearCache()
+      },
+      angle(attr, val) {
+        attr.set('angle', val)
+        attr.clearCache()
+      },
+      direction(attr, val) {
+        attr.set('direction', val)
+        attr.clearCache()
+      }
+    })
 
     const arc = new Arc()
     arc.attr({

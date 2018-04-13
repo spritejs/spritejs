@@ -1,4 +1,3 @@
-import {Color, parseColor, setDeprecation} from 'sprite-utils'
 import {
   BaseNode,
   BaseSprite,
@@ -8,14 +7,19 @@ import {
   Path,
   registerNodeType,
   createNode,
+  Color,
+
+  utils,
+  math,
 } from 'sprite-core'
+
+const {setDeprecation} = utils
 
 import Sprite from './sprite'
 import Layer from './layer'
 import Scene from './scene'
 import Resource from './resource'
 import Axis from './axis'
-import {Matrix, Vector} from 'sprite-math'
 import {shim} from './platform'
 
 if(shim) {
@@ -35,6 +39,8 @@ const version = require('../package.json').version
 
 export {
   version,
+  math,
+  utils,
 
   BaseNode,
   BaseSprite,
@@ -50,11 +56,7 @@ export {
   registerNodeType,
   createNode,
   Color,
-  parseColor,
 
   Resource,
   Effects,
-
-  Matrix,
-  Vector,
 }
