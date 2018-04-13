@@ -44,7 +44,7 @@ Abstract method. Detect whether elements bounding box intersects. Implements by 
 
 ---
 
-+ function dispatchEvent(type:String, event:Object, forceTrigger:Boolean, terminated:Boolean):Boolean is mouseover.
++ function dispatchEvent(type:String, event:Object, collisonState:Boolean):Boolean is mouseover.
 
 Dispatching events to the node.
 
@@ -52,9 +52,7 @@ Dispatching events to the node.
 
 * event - The event arguments.
 
-* forceTrigger - Whether **NOT** checking mouse or touch positions, default is `false`. If set to be `true`, always trigger events regardless of whether the coordinates are inside the bounding box of the elements.
-
-* terminated - Whether **NOT** passing events to next element, default is `false`. If set to be `true`, event will not be passing to next element.
+* collisonState - Whether **NOT** checking mouse or touch positions, default is `false`. If set to be `true`, always trigger events regardless of whether the coordinates are inside the bounding box of the elements.
 
 ---
 

@@ -177,3 +177,114 @@ const {Scene, Sprite} = spritejs
   })
 }())
 
+/* demo: custom-event */
+;(async function () {
+  const chickRes = 'https://p5.ssl.qhimg.com/t01acd5010cb5a500d5.png',
+    chickJSON = 'https://s2.ssl.qhres.com/static/930e3b2e60496c6e.json'
+  const scene = new Scene('#custom-event', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer()
+
+  await scene.preload([chickRes, chickJSON])
+
+  const claw = new Sprite('chickclaw.png')
+  claw.attr({
+    anchor: [0.5, 0],
+    pos: [770, 0],
+    zIndex: 100,
+  })
+  layer.append(claw)
+
+  for(let i = 1; i <= 4; i++) {
+    const chick = new Sprite(`chick0${i}.png`)
+    chick.attr({
+      anchor: [0.5, 1],
+      pos: [300 + (i - 1) * 350, 600],
+      scale: 0.5,
+    })
+    layer.append(chick)
+  }
+
+  let pressed = false
+  let moving
+
+  async function moveClaw(speed) {
+    while(pressed) {
+      const x0 = claw.attr('x')
+      const anim = claw.animate([
+        {x: x0},
+        {x: x0 + speed},
+      ], {
+        duration: 500,
+        fill: 'forwards',
+      })
+      /* eslint-disable no-await-in-loop */
+      await anim.finished
+      /* eslint-enable no-await-in-loop */
+    }
+    const x0 = claw.attr('x')
+    await claw.animate([
+      {x: x0},
+      {x: x0 + speed / 5},
+    ], {
+      duration: 100,
+      fill: 'forwards',
+      easing: 'ease-out',
+    }).finished
+    moving = null
+  }
+
+  layer.on('buttonDown', async (evt) => {
+    pressed = true
+    const buttonId = evt.buttonId
+    if(!moving && buttonId === 'leftBtn') {
+      moving = moveClaw(-50)
+    } else if(!moving && buttonId === 'rightBtn') {
+      moving = moveClaw(50)
+    } else if(buttonId === 'downBtn') {
+      await moving
+      moving = (async () => {
+        await claw.animate([
+          {y: 0},
+          {y: 400},
+        ], {
+          duration: 2000,
+          fill: 'forwards',
+        }).finished
+        layer.children.forEach((child) => {
+          if(child !== claw && claw.OBBCollision(child)) {
+            child.attr('zIndex', 200)
+            child.animate([
+              {y: 600},
+              {y: 200},
+            ], {
+              duration: 3000,
+              fill: 'forwards',
+            }).finished.then(() => child.remove())
+          }
+        })
+        await claw.animate([
+          {y: 400},
+          {y: 0},
+        ], {
+          duration: 3000,
+          fill: 'forwards',
+        }).finished
+        moving = null
+      })()
+    }
+  })
+  layer.on('buttonUp', (evt) => {
+    pressed = false
+  })
+
+  const ctrl = document.querySelector('#zwwctrl')
+  ctrl.addEventListener('mousedown', (evt) => {
+    const target = evt.target
+    if(target.tagName === 'BUTTON') {
+      layer.dispatchEvent('buttonDown', {buttonId: target.id}, true, true)
+    }
+  })
+  document.documentElement.addEventListener('mouseup', (evt) => {
+    layer.dispatchEvent('buttonUp', {}, true, true)
+  })
+}())

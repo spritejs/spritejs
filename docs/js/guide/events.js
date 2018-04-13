@@ -6,6 +6,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -217,4 +219,208 @@ var _spritejs = spritejs,
       evt.target.attr('opacity', 0.5);
     });
   });
-})();
+})();_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+  var _this2 = this;
+
+  var moveClaw = function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(speed) {
+      var _x2, anim, x0;
+
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!pressed) {
+                _context.next = 7;
+                break;
+              }
+
+              _x2 = claw.attr('x');
+              anim = claw.animate([{ x: _x2 }, { x: _x2 + speed }], {
+                duration: 500,
+                fill: 'forwards'
+              });
+              /* eslint-disable no-await-in-loop */
+
+              _context.next = 5;
+              return anim.finished;
+
+            case 5:
+              _context.next = 0;
+              break;
+
+            case 7:
+              x0 = claw.attr('x');
+              _context.next = 10;
+              return claw.animate([{ x: x0 }, { x: x0 + speed / 5 }], {
+                duration: 100,
+                fill: 'forwards',
+                easing: 'ease-out'
+              }).finished;
+
+            case 10:
+              moving = null;
+
+            case 11:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    return function moveClaw(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var chickRes, chickJSON, scene, layer, claw, i, chick, pressed, moving, ctrl;
+  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          chickRes = 'https://p5.ssl.qhimg.com/t01acd5010cb5a500d5.png', chickJSON = 'https://s2.ssl.qhres.com/static/930e3b2e60496c6e.json';
+          scene = new Scene('#custom-event', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+          layer = scene.layer();
+          _context4.next = 5;
+          return scene.preload([chickRes, chickJSON]);
+
+        case 5:
+          claw = new Sprite('chickclaw.png');
+
+          claw.attr({
+            anchor: [0.5, 0],
+            pos: [770, 0],
+            zIndex: 100
+          });
+          layer.append(claw);
+
+          for (i = 1; i <= 4; i++) {
+            chick = new Sprite('chick0' + i + '.png');
+
+            chick.attr({
+              anchor: [0.5, 1],
+              pos: [300 + (i - 1) * 350, 600],
+              scale: 0.5
+            });
+            layer.append(chick);
+          }
+
+          pressed = false;
+          moving = void 0;
+
+
+          layer.on('buttonDown', function () {
+            var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(evt) {
+              var buttonId;
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      pressed = true;
+                      buttonId = evt.buttonId;
+
+                      if (!(!moving && buttonId === 'leftBtn')) {
+                        _context3.next = 6;
+                        break;
+                      }
+
+                      moving = moveClaw(-50);
+                      _context3.next = 14;
+                      break;
+
+                    case 6:
+                      if (!(!moving && buttonId === 'rightBtn')) {
+                        _context3.next = 10;
+                        break;
+                      }
+
+                      moving = moveClaw(50);
+                      _context3.next = 14;
+                      break;
+
+                    case 10:
+                      if (!(buttonId === 'downBtn')) {
+                        _context3.next = 14;
+                        break;
+                      }
+
+                      _context3.next = 13;
+                      return moving;
+
+                    case 13:
+                      moving = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                          while (1) {
+                            switch (_context2.prev = _context2.next) {
+                              case 0:
+                                _context2.next = 2;
+                                return claw.animate([{ y: 0 }, { y: 400 }], {
+                                  duration: 2000,
+                                  fill: 'forwards'
+                                }).finished;
+
+                              case 2:
+                                layer.children.forEach(function (child) {
+                                  if (child !== claw && claw.OBBCollision(child)) {
+                                    child.attr('zIndex', 200);
+                                    child.animate([{ y: 600 }, { y: 200 }], {
+                                      duration: 3000,
+                                      fill: 'forwards'
+                                    }).finished.then(function () {
+                                      return child.remove();
+                                    });
+                                  }
+                                });
+                                _context2.next = 5;
+                                return claw.animate([{ y: 400 }, { y: 0 }], {
+                                  duration: 3000,
+                                  fill: 'forwards'
+                                }).finished;
+
+                              case 5:
+                                moving = null;
+
+                              case 6:
+                              case 'end':
+                                return _context2.stop();
+                            }
+                          }
+                        }, _callee2, _this2);
+                      }))();
+
+                    case 14:
+                    case 'end':
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3, _this2);
+            }));
+
+            return function (_x3) {
+              return _ref3.apply(this, arguments);
+            };
+          }());
+          layer.on('buttonUp', function (evt) {
+            pressed = false;
+          });
+
+          ctrl = document.querySelector('#zwwctrl');
+
+          ctrl.addEventListener('mousedown', function (evt) {
+            var target = evt.target;
+            if (target.tagName === 'BUTTON') {
+              layer.dispatchEvent('buttonDown', { buttonId: target.id }, true, true);
+            }
+          });
+          document.documentElement.addEventListener('mouseup', function (evt) {
+            layer.dispatchEvent('buttonUp', {}, true, true);
+          });
+
+        case 16:
+        case 'end':
+          return _context4.stop();
+      }
+    }
+  }, _callee4, this);
+}))();

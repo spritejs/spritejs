@@ -73,7 +73,7 @@ Called by `sprite.draw`, draw the element to canvas.
 
 ---
 
-+ function dispatchEvent(type:String, event:Object, forceTrigger:Boolean, terminated:Boolean):Boolean is mouseover.
++ function dispatchEvent(type:String, event:Object, collisionState:Boolean, swallow:Boolean):Boolean is mouseover.
 
 Dispatching events to the group and childNodes.
 
@@ -81,8 +81,8 @@ Dispatching events to the group and childNodes.
 
 * event - The event arguments.
 
-* forceTrigger - Whether **NOT** checking mouse or touch positions, default is `false`. If set to be `true`, always trigger events regardless of whether the coordinates are inside the bounding box of the elements.
+* collisionState - Whether **NOT** checking mouse or touch positions, default is `false`. If set to be `true`, always trigger events regardless of whether the coordinates are inside the bounding box of the elements.
 
-* terminated - Whether **NOT** passing events to next element, default is `false`. If set to be `true`, event will not be passing to next element.
+* swallow - Whether **NOT** passing events to next element, default is `false`. If set to be `true`, event will not be passing to next element.
 
 ---
