@@ -24,8 +24,8 @@
 | --- | --- | --- | --- |
 | type | String |  | 派发事件的类型 |
 | evtArgs | Object |  | 事件参数 | 
-| forceTrigger | Boolean | false | 如果这个参数为`true`，忽略pointCollision，默认判定为命中事件区域 |
-| terminated | Boolean | false | 如果这个参数为`true`，事件执行完之后不再向后面的元素传播，这个参数只对Group、Layer类型有效 | 
+| collisionState | Boolean | false | 如果这个参数为`true`，忽略pointCollision，默认判定为命中事件区域 |
+| swallow | Boolean | false | 如果这个参数为`true`，事件执行完之后不再向后面的元素传播，这个参数只对Group、Layer类型有效 | 
 
 自定义事件可以让我们以松耦合的方式来完成canvas内部与外部文档的交互。
 
@@ -36,5 +36,7 @@
   <button id="downBtn">下</button>
   <button id="rightBtn">右</button>
 </div>
+
+<!-- demo: custom-event -->
 
 <script src="/js/guide/events.js"></script>

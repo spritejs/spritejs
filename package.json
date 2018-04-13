@@ -45,7 +45,7 @@
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
     "canvas": "^2.0.0-alpha.12",
-    "sprite-core": "^1.15.1",
+    "sprite-core": "^1.15.3",
     "sprite-math": "^1.0.0",
     "sprite-utils": "^1.3.2"
   },

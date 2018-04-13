@@ -66,6 +66,7 @@
 }
 
 #page-events #zwwctrl {
+  margin-top: 6px;
   text-align: center;
 }
 
@@ -75,7 +76,7 @@
   height: 80px;
   line-height: 80px;
   outline: none;
-  margin-right: 50px;
+  margin: 0 20px;
   color: white;
   cursor: pointer;
 }
