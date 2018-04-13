@@ -10,7 +10,8 @@ const _layerMap = Symbol('layerMap'),
   _snapshot = Symbol('snapshot'),
   _viewport = Symbol('viewport'),
   _resolution = Symbol('resolution'),
-  _resizeHandler = Symbol('resizeHandler')
+  _resizeHandler = Symbol('resizeHandler'),
+  _delegatedEvents = Symbol('delegatedEvents')
 
 export default class extends BaseNode {
   constructor(container, options = {}) {
@@ -30,6 +31,7 @@ export default class extends BaseNode {
     this[_layerMap] = {}
     this[_layers] = []
     this[_snapshot] = createCanvas()
+    this[_delegatedEvents] = new Set()
 
     const [width, height] = options.viewport || ['', '']
     this.viewport = [width, height]
@@ -248,6 +250,9 @@ export default class extends BaseNode {
   }
   delegateEvent(...events) {
     events.forEach((event) => {
+      if(this[_delegatedEvents].has(event)) return
+      this[_delegatedEvents].add(event)
+
       if(typeof event === 'string') {
         event = {type: event, passive: true}
       }
@@ -306,7 +311,9 @@ export default class extends BaseNode {
   }
   dispatchEvent(type, evt) {
     const container = this.container
-    container.dispatchEvent(new CustomEvent(type, {detail: evt}))
+    if(this[_delegatedEvents].has(type)) {
+      container.dispatchEvent(new CustomEvent(type, {detail: evt}))
+    }
     super.dispatchEvent(type, evt, true)
   }
   async preload(...resources) {

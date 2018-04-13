@@ -28,6 +28,27 @@ export function getContainer(container) {
   return container
 }
 
+// CustomEvent polyfill https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent/CustomEvent
+try {
+  // a : While a window.CustomEvent object exists, it cannot be called as a constructor.
+  // b : There is no window.CustomEvent object
+  new window.CustomEvent('T')
+} catch (e) {
+  const CustomEvent = function (event, params) {
+    params = params || {bubbles: false, cancelable: false, detail: undefined}
+
+    const evt = document.createEvent('CustomEvent')
+
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
+
+    return evt
+  }
+
+  CustomEvent.prototype = window.Event.prototype
+
+  window.CustomEvent = CustomEvent
+}
+
 export function shim() {
 
 }

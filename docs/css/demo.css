@@ -64,3 +64,30 @@
 #page-animations #timeline-ctrl {
   margin-bottom: 10px;
 }
+
+#page-events #zwwctrl {
+  text-align: center;
+}
+
+#page-events #zwwctrl > button{
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  outline: none;
+  margin-right: 50px;
+  color: white;
+  cursor: pointer;
+}
+
+#page-events #zwwctrl > button#leftBtn {
+  background: #339;
+}
+
+#page-events #zwwctrl > button#downBtn {
+  background: #933;
+}
+
+#page-events #zwwctrl > button#rightBtn {
+  background: #396;
+}
