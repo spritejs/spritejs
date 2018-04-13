@@ -39,4 +39,10 @@
 
 <!-- demo: custom-event -->
 
+## 绘图事件
+
+## scene的事件代理
+
+
+
 <script src="/js/guide/events.js"></script>

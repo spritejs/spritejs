@@ -60,42 +60,42 @@
 
           // console.log(new Color(color).toString())
 
-          return {rotate, bgcolor: color}
+          return {rotate, bgcolor: new Color(color).str}
         }
       })
 
-    // const animation = s.animate(
-    // [{
-    //   transform: {
-    //     rotate: 45,
-    //   },
-    //   bgcolor: 'red',
-    //   borderRadius: 0,
-    // }, 
-    // {
-    //   transform: {
-    //     rotate: 135,
-    //   },
-    //   bgcolor: 'green',
-    //   borderRadius: 25,
-    // },
-    // {
-    //   transform: {
-    //     rotate: 135,
-    //   },
-    //   bgcolor: 'green',
-    //   borderRadius: 25,
-    // },
-    // {
-    //   transform: {
-    //     rotate: 225,
-    //   },
-    //   bgcolor: 'blue',
-    //   borderRadius: 0,
-    // }], 
-    // {
-    //   duration: 2000,
-    // })
+    const animation = s.animate(
+    [{
+      transform: {
+        rotate: 45,
+      },
+      bgcolor: 'red',
+      borderRadius: 0,
+    }, 
+    {
+      transform: {
+        rotate: 135,
+      },
+      bgcolor: 'green',
+      borderRadius: 25,
+    },
+    {
+      transform: {
+        rotate: 135,
+      },
+      bgcolor: 'green',
+      borderRadius: 25,
+    },
+    {
+      transform: {
+        rotate: 225,
+      },
+      bgcolor: 'blue',
+      borderRadius: 0,
+    }], 
+    {
+      duration: 2000,
+    })
 
     // window.animation = animation
     // await animation.ready
@@ -125,7 +125,7 @@
     
     paper.layer().appendChild(s2)
 
-    // await animation.finished
+    await animation.finished
     // console.log('finished')
 
     const s3 = new Sprite()

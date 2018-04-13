@@ -1,5 +1,5 @@
-import {Label, Group, Path} from 'sprite-core'
-import {parseStringFloat, parseColorString, parseValue, attr} from 'sprite-utils'
+import {Label, Group, Path, utils} from 'sprite-core'
+const {parseStringFloat, parseColorString, parseValue, attr} = utils
 
 function ticksToD(axis) {
   if(!axis) return
