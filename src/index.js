@@ -19,7 +19,6 @@ import Sprite from './sprite'
 import Layer from './layer'
 import Scene from './scene'
 import Resource from './resource'
-import Axis from './axis'
 import {shim} from './platform'
 
 if(shim) {
@@ -28,7 +27,6 @@ if(shim) {
 
 registerNodeType('layer', Layer, true)
 registerNodeType('sprite', Sprite)
-registerNodeType('axis', Axis)
 
 function Paper2D(...args) {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.')
@@ -48,7 +46,6 @@ export {
   Label,
   Path,
   Group,
-  Axis,
   Layer,
   Scene,
   Paper2D,
