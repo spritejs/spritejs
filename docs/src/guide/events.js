@@ -1,4 +1,4 @@
-const {Scene, Sprite} = spritejs
+const {Scene, Sprite, Label} = spritejs
 
 /* demo: point-collision */
 ;(function () {
@@ -287,4 +287,102 @@ const {Scene, Sprite} = spritejs
   document.documentElement.addEventListener('mouseup', (evt) => {
     layer.dispatchEvent('buttonUp', {}, true, true)
   })
+}())
+
+/* demo: afterdraw */
+;(async function () {
+  const scene = new Scene('#afterdraw', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer()
+
+  await scene.preload({
+    id: 'beauty',
+    src: 'https://p0.ssl.qhimg.com/t01300d8189b2edf8ca.jpg',
+  })
+
+  const image = new Sprite('beauty')
+  image.attr({
+    anchor: [0.5, 0.5],
+    pos: [770, 300],
+    scale: [-0.8, 0.8],
+  })
+  layer.append(image)
+
+  image.on('afterdraw', ({context}) => {
+    const [width, height] = image.contentSize
+    const imageData = context.getImageData(0, 0, width, height)
+    const [cx, cy] = [width / 2, height / 2]
+
+    for(let i = 0; i < imageData.data.length; i += 4) {
+      const x = (i / 4) % width,
+        y = Math.floor((i / 4) / width)
+
+      const dist = Math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
+      imageData.data[i + 3] = 255 - Math.round(255 * dist / 600)
+    }
+    context.putImageData(imageData, 0, 0)
+  })
+}())
+
+/* demo: event-delegate */
+;(function () {
+  const scene = new Scene('#event-delegate', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer()
+
+  class KeyButton extends Label {
+    pointCollision(evt) {
+      return evt.originalEvent.key === this.text
+    }
+  }
+  KeyButton.defineAttributes({
+    init(attr) {
+      attr.setDefault({
+        font: '42px Arial',
+        border: [4, 'black'],
+        width: 50,
+        height: 50,
+        anchor: [0.5, 0.5],
+        textAlign: 'center',
+        lineHeight: 50,
+      })
+    },
+  })
+
+  const keys = [
+    'qwertyuiop',
+    'asdfghjkl',
+    'zxcvbnm',
+  ]
+  for(let i = 0; i < 3; i++) {
+    const keyButtons = [...keys[i]]
+    for(let j = 0; j < keyButtons.length; j++) {
+      const key = new KeyButton(keyButtons[j])
+      key.attr({
+        pos: [250 + j * 80, 200 + i * 100],
+      })
+      key.on('keydown', (evt) => {
+        key.attr({
+          bgcolor: 'grey',
+          fillColor: 'white',
+        })
+      })
+      key.on('keyup', (evt) => {
+        key.attr({
+          bgcolor: 'transparent',
+          fillColor: 'black',
+        })
+      })
+      layer.append(key)
+    }
+  }
+
+  const label = new Label('轻敲键盘')
+  label.attr({
+    anchor: [0.5, 0],
+    pos: [770, 50],
+    font: '42px Arial',
+  })
+  layer.append(label)
+
+  scene.delegateEvent('keydown', document)
+  scene.delegateEvent('keyup', document)
 }())

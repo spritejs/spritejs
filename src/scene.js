@@ -11,8 +11,7 @@ const _layerMap = Symbol('layerMap'),
   _snapshot = Symbol('snapshot'),
   _viewport = Symbol('viewport'),
   _resolution = Symbol('resolution'),
-  _resizeHandler = Symbol('resizeHandler'),
-  _delegatedEvents = Symbol('delegatedEvents')
+  _resizeHandler = Symbol('resizeHandler')
 
 export default class extends BaseNode {
   constructor(container, options = {}) {
@@ -32,7 +31,6 @@ export default class extends BaseNode {
     this[_layerMap] = {}
     this[_layers] = []
     this[_snapshot] = createCanvas()
-    this[_delegatedEvents] = new Set()
 
     const [width, height] = options.viewport || ['', '']
     this.viewport = [width, height]
@@ -57,7 +55,7 @@ export default class extends BaseNode {
       'touchstart', 'touchend', 'touchmove',
       'click', 'dblclick']
 
-    this.delegateEvent(...events)
+    events.forEach(event => this.delegateEvent(event))
   }
 
   get width() {
@@ -249,72 +247,67 @@ export default class extends BaseNode {
 
     return [x, y]
   }
-  delegateEvent(...events) {
-    events.forEach((event) => {
-      if(this[_delegatedEvents].has(event)) return
-      this[_delegatedEvents].add(event)
+  delegateEvent(event, receiver = this.container) {
+    if(typeof event === 'string') {
+      event = {type: event, passive: true}
+    }
 
-      if(typeof event === 'string') {
-        event = {type: event, passive: true}
+    const {type, passive} = event
+
+    receiver.addEventListener(type, (e) => {
+      const layers = this[_layers]
+      const evtArgs = {
+        originalEvent: e,
+        type,
+        stopDispatch() {
+          this.terminated = true
+        },
       }
 
-      const {type, passive} = event
+      // mouse event layerX, layerY value change while browser scaled.
+      let x = 0,
+        y = 0,
+        originalX = 0,
+        originalY = 0
 
-      this.container.addEventListener(type, (e) => {
-        if(!e.target.dataset.layerId || !this[_layerMap][e.target.dataset.layerId]) {
-          return
+      if(e instanceof CustomEvent) {
+        Object.assign(evtArgs, e.detail)
+        if(evtArgs.x != null && evtArgs.y != null) {
+          x = evtArgs.x
+          y = evtArgs.y
+          ;[originalX, originalY] = this.toGlobalPos(x, y)
+          x -= this.stickOffset[0]
+          x -= this.stickOffset[1]
         }
+      } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
+        const {left, top} = e.target.getBoundingClientRect()
+        const {clientX, clientY} = e.changedTouches ? e.changedTouches[0] : e
 
-        const layers = this[_layers]
-        const evtArgs = {
-          originalEvent: e,
-          type,
-          stopDispatch() {
-            this.terminated = true
-          },
+        originalX = Math.round((clientX | 0) - left)
+        originalY = Math.round((clientY | 0) - top)
+
+        ;[x, y] = this.toLocalPos(originalX, originalY)
+
+        x -= this.stickOffset[0]
+        x -= this.stickOffset[1]
+      }
+
+      Object.assign(evtArgs, {
+        layerX: x, layerY: y, originalX, originalY, x, y,
+      })
+
+      for(let i = 0; i < layers.length; i++) {
+        const layer = layers[i]
+
+        if(layer.handleEvent) {
+          layer.dispatchEvent(type, evtArgs)
         }
-
-        // mouse event layerX, layerY value change while browser scaled.
-        if(e instanceof CustomEvent) {
-          Object.assign(evtArgs, e.detail)
-          const {x, y} = evtArgs
-          if(x != null && y != null) {
-            const [originalX, originalY] = this.toGlobalPos(x, y)
-            Object.assign(evtArgs, {
-              layerX: x, layerY: y, originalX, originalY, x, y,
-            })
-          }
-        } else {
-          const {left, top} = e.target.getBoundingClientRect()
-
-          const {clientX, clientY} = e.changedTouches ? e.changedTouches[0] : e
-          const originalX = Math.round(clientX - left),
-            originalY = Math.round(clientY - top)
-
-          let [layerX, layerY] = this.toLocalPos(originalX, originalY)
-          layerX -= this.stickOffset[0]
-          layerY -= this.stickOffset[1]
-
-          Object.assign(evtArgs, {
-            layerX, layerY, originalX, originalY, x: layerX, y: layerY,
-          })
-        }
-
-        for(let i = 0; i < layers.length; i++) {
-          const layer = layers[i]
-
-          if(layer.handleEvent) {
-            layer.dispatchEvent(type, evtArgs)
-          }
-        }
-      }, {passive})
-    })
+      }
+    }, {passive})
   }
   dispatchEvent(type, evt) {
     const container = this.container
-    if(this[_delegatedEvents].has(type)) {
-      container.dispatchEvent(new CustomEvent(type, {detail: evt}))
-    }
+    container.dispatchEvent(new CustomEvent(type, {detail: evt}))
     super.dispatchEvent(type, evt, true)
   }
   async preload(...resources) {

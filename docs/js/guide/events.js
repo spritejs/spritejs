@@ -6,6 +6,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16,7 +18,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
-    Sprite = _spritejs.Sprite;
+    Sprite = _spritejs.Sprite,
+    Label = _spritejs.Label;
 (function () {
   var scene = new Scene('#point-collision', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
   var layer = scene.layer();
@@ -423,4 +426,132 @@ var _spritejs = spritejs,
       }
     }
   }, _callee4, this);
-}))();
+}))();_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+  var scene, layer, image;
+  return regeneratorRuntime.wrap(function _callee5$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          scene = new Scene('#afterdraw', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+          layer = scene.layer();
+          _context5.next = 4;
+          return scene.preload({
+            id: 'beauty',
+            src: 'https://p0.ssl.qhimg.com/t01300d8189b2edf8ca.jpg'
+          });
+
+        case 4:
+          image = new Sprite('beauty');
+
+          image.attr({
+            anchor: [0.5, 0.5],
+            pos: [770, 300],
+            scale: [-0.8, 0.8]
+          });
+          layer.append(image);
+
+          image.on('afterdraw', function (_ref6) {
+            var context = _ref6.context;
+
+            var _image$contentSize = _slicedToArray(image.contentSize, 2),
+                width = _image$contentSize[0],
+                height = _image$contentSize[1];
+
+            var imageData = context.getImageData(0, 0, width, height);
+            var cx = width / 2,
+                cy = height / 2;
+
+
+            for (var i = 0; i < imageData.data.length; i += 4) {
+              var x = i / 4 % width,
+                  y = Math.floor(i / 4 / width);
+
+              var dist = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2));
+              imageData.data[i + 3] = 255 - Math.round(255 * dist / 600);
+            }
+            context.putImageData(imageData, 0, 0);
+          });
+
+        case 8:
+        case 'end':
+          return _context5.stop();
+      }
+    }
+  }, _callee5, this);
+}))();(function () {
+  var scene = new Scene('#event-delegate', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+  var layer = scene.layer();
+
+  var KeyButton = function (_Label) {
+    _inherits(KeyButton, _Label);
+
+    function KeyButton() {
+      _classCallCheck(this, KeyButton);
+
+      return _possibleConstructorReturn(this, (KeyButton.__proto__ || Object.getPrototypeOf(KeyButton)).apply(this, arguments));
+    }
+
+    _createClass(KeyButton, [{
+      key: 'pointCollision',
+      value: function pointCollision(evt) {
+        return evt.originalEvent.key === this.text;
+      }
+    }]);
+
+    return KeyButton;
+  }(Label);
+
+  KeyButton.defineAttributes({
+    init: function init(attr) {
+      attr.setDefault({
+        font: '42px Arial',
+        border: [4, 'black'],
+        width: 50,
+        height: 50,
+        anchor: [0.5, 0.5],
+        textAlign: 'center',
+        lineHeight: 50
+      });
+    }
+  });
+
+  var keys = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+  for (var i = 0; i < 3; i++) {
+    var keyButtons = [].concat(_toConsumableArray(keys[i]));
+
+    var _loop = function _loop(j) {
+      var key = new KeyButton(keyButtons[j]);
+      key.attr({
+        pos: [250 + j * 80, 200 + i * 100]
+      });
+      key.on('keydown', function (evt) {
+        key.attr({
+          bgcolor: 'grey',
+          fillColor: 'white'
+        });
+      });
+      key.on('keyup', function (evt) {
+        key.attr({
+          bgcolor: 'transparent',
+          fillColor: 'black'
+        });
+      });
+      layer.append(key);
+    };
+
+    for (var j = 0; j < keyButtons.length; j++) {
+      _loop(j);
+    }
+  }
+
+  var label = new Label('轻敲键盘');
+  label.attr({
+    anchor: [0.5, 0],
+    pos: [770, 50],
+    font: '42px Arial'
+  });
+  layer.append(label);
+
+  scene.delegateEvent('keydown', document);
+  scene.delegateEvent('keyup', document);
+})();
