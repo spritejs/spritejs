@@ -1633,7 +1633,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       // draw bgcolor
       var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
 
-      if (bgcolor || borderRadius) {
+      if (borderWidth || borderRadius || bgcolor) {
         var _ref = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
             _x3 = _ref[0],
             _y = _ref[1],
@@ -1651,7 +1651,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         // we should always clip to prevent the subclass rendering not to overflow the box
         // but in some platform (eg. wxapp), clip regions has very high cost
         // for performance we allow the region clip only when sprite has borderRadius
-        if (borderRadius) {
+        if (borderWidth || borderRadius) {
           drawingContext.clip();
         }
       }
@@ -4913,7 +4913,7 @@ var parseColor = function parseColor(color) {
 };
 
 function parseColorString(color) {
-  if (typeof color === 'string') {
+  if (color && typeof color === 'string') {
     return parseColor(color).toString();
   }
   return color;
