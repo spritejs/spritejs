@@ -39,10 +39,37 @@
 
 <!-- demo: custom-event -->
 
-## 绘图事件
+## 元素和绘图事件
 
-## scene的事件代理
+spritejs提供几个系统事件，包括`append, remove, update, beforedraw, afterdraw, preload`，这些系统事件的触发时机如下：
 
+| 事件类型 | 事件参数 | 事件说明 |
+| --- | --- | --- |
+| append | {parent, zOrder} | 当元素被append到layer上时触发 |
+| remove | {parent, zOrder} | 当元素被从layer上remove时触发 |
+| update | {context, target, renderTime, fromCache} | 当元素被重新绘制时触发，发生重绘操作有可能是元素本身属性发生改变，也有可能是其他元素属性改变需要重绘，影响到当前元素。target是要绘制的元素，renderTime是当前layer的timeline的时间，fromCache为true，则说明元素缓存未失效 |
+| beforedraw | {context, target, renderTime, fromCache} | 当元素被重新绘制时触发，发生重绘操作有可能是元素本身属性发生改变，也有可能是其他元素属性改变需要重绘，影响到当前元素。target是要绘制的元素，renderTime是当前layer的timeline的时间，fromCache为true，则说明元素缓存未失效 |
+| afterdraw | {context, target, renderTime, fromCache} | 当元素被重新绘制时触发，发生重绘操作有可能是元素本身属性发生改变，也有可能是其他元素属性改变需要重绘，影响到当前元素。target是要绘制的元素，renderTime是当前layer的timeline的时间，fromCache为true，则说明元素缓存未失效 |
+| preload | {target, loaded, resources} | 这个事件只在scene预加载资源时触发，target是当前scene，loaded是已经加载的资源，resources是需要加载的所有资源 |
+
+`beforedraw`、`afterdraw`和`update`的时机一次是先`beforedraw`，然后绘制精灵到缓存canvas，然后`afterdraw`，然后将缓存canvas绘制到输出canvas，然后是`update`。
+
+<div id="afterdraw" class="sprite-container"></div>
+
+利用`afterdraw`来处理图片，可以实现更灵活的滤镜。
+
+<!-- demo: afterdraw -->
+
+
+## scene事件代理
+
+DOM基本事件实际上是通过scene代理给sprite元素的，我们可以通过scene的delegateEvent方法代理新的事件。如果结合元素的pointCollison检测，可以做一些有趣的事情。
+
+<div id="event-delegate" class="sprite-container"></div>
+
+**注意**为了避免污染原生的事件参数，spritejs代理的事件，要拿到原始事件的参数，需要通过`event.originalEvent`获得
+
+<!-- demo: event-delegate -->
 
 
 <script src="/js/guide/events.js"></script>

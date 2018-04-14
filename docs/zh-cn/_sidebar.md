@@ -28,7 +28,6 @@
   * [动画：Web Animation API](/zh-cn/guide/animations)
   * [碰撞检测](/zh-cn/guide/collision)
   * [事件与自定义事件](/zh-cn/guide/events)
-  * [自定义绘图](/zh-cn/guide/userdraw)
   * [创建新的精灵类型](/zh-cn/guide/nodes)
   * [缓存策略](/zh-cn/guide/cache)
   * [与d3一同使用](/zh-cn/guide/d3)
