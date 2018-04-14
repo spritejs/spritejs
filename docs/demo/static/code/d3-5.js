@@ -35,14 +35,14 @@ Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
     handleEvent: true
   })
 
-  d3.json("/static/data/us.json", function(error, us) {
+  d3.json("/res/data/us.json", function(error, us) {
     if (error) throw error
 
     d3.select(layer).selectAll('path')
       .data(topojson.feature(us, us.objects.states).features)
       .enter().append('path')
       .attr('d', path)
-      .attr('renderMode', 'fill')
+      .attr('strokeColor', 'black')
       .attr('fillColor', '#666')
       .on("click", d => {
         const paths = d3.event.targetPaths

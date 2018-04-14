@@ -1648,7 +1648,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           drawingContext.fillStyle = bgcolor;
           drawingContext.fill();
         }
-        // we should always clip to prevent the subclass rendering not overflow the box
+        // we should always clip to prevent the subclass rendering not to overflow the box
         // but in some platform (eg. wxapp), clip regions has very high cost
         // for performance we allow the region clip only when sprite has borderRadius
         if (borderRadius) {
@@ -6239,11 +6239,7 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
     key: 'getPointAtLength',
     value: function getPointAtLength(length) {
       if (this.svg) {
-        var _svg$getPointAtLength = this.svg.getPointAtLength(length),
-            x = _svg$getPointAtLength.x,
-            y = _svg$getPointAtLength.y;
-
-        return [x, y];
+        return this.svg.getPointAtLength(length);
       }
       return [0, 0];
     }

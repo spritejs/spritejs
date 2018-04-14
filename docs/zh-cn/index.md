@@ -31,7 +31,7 @@ npm install spritejs
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
-<script src="https://s5.ssl.qhres.com/!e6fa8a81/spritejs.min.js"></script>
+<script src="https://s0.ssl.qhres.com/!e0c863fa/spritejs.min.js"></script>
 ```
 
 如果你要在node服务端使用spritejs渲染，你需要安装[node-canvas](https://github.com/Automattic/node-canvas)

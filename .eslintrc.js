@@ -3,6 +3,7 @@ module.exports = {
     spritejs: true,
     axios: true,
     TWEEN: true,
+    d3: true,
   },
   "extends":  "eslint-config-75team",
   rules: {

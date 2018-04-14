@@ -29,7 +29,7 @@ const MapLoader = {
       return Promise.resolve(cached)
     }
 
-    const mapPath = `/static/mapData/${mapId}.json`
+    const mapPath = `/res/mapData/${mapId}.json`
     return new Promise((resolve, reject) => {
       d3.json(mapPath, (err, data) => {
         if(err){
@@ -148,7 +148,7 @@ class World {
       .enter()
       .append('path')
       .attr('d', path)
-      .attr('renderMode', 'fill')
+      .attr('strokeColor', 'black')
       .select(function(data) {
         const parentMeta = mapRelation[data.properties.id]
 

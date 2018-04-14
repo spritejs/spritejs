@@ -92,3 +92,11 @@
 #page-events #zwwctrl > button#rightBtn {
   background: #396;
 }
+
+#page-d3 #d3-hierarchy {
+  padding-bottom: 78%;
+}
+
+#page-d3 #d3-hierarchy canvas {
+  border: none;
+}

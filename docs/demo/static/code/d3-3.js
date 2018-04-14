@@ -29,7 +29,7 @@ loadScript(d3Url).then(function(){
 
   const path = d3.geoPath().projection(projection);
 
-  d3.json('/static/data/china.json', (err, data) => {
+  d3.json('/res/data/china.json', (err, data) => {
     if(err) throw new Error(err)
 
     //console.log(data, path)
