@@ -26,7 +26,7 @@ loadScript(d3Url).then(function(){
         .attr('text', '中国')
         .attr('color', '#fff')
 
-  d3.json('/static/data/city.json', (err, data) => {
+  d3.json('/res/data/city.json', (err, data) => {
     if(err) throw new Error(err)
 
     const root = d3.hierarchy(data)

@@ -26,7 +26,7 @@ loadScript(d3Url).then(function(){
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(400, 300));
 
-  d3.json("/static/data/miserables.json", function(error, graph) {
+  d3.json("/res/data/miserables.json", function(error, graph) {
     if (error) throw error
 
     simulation
@@ -52,32 +52,35 @@ loadScript(d3Url).then(function(){
             .on("drag", dragged)
             .on("end", dragended))
 
-    function ticked() {
-      path.drawOnce(context => {
-        context.beginPath()
-        graph.links.forEach(d => {
-          const [sx, sy] = [d.source.x, d.source.y],
-                [tx, ty] = [d.target.x, d.target.y]
 
-          context.moveTo(sx, sy);
-          context.lineTo(tx, ty);        
-        })
-        context.strokeStyle = "#aaa"
-        context.stroke()
+    path.on('afterdraw', ({context}) => {
+      context.beginPath()
+      graph.links.forEach(d => {
+        const [sx, sy] = [d.source.x, d.source.y],
+              [tx, ty] = [d.target.x, d.target.y]
 
-        context.beginPath()
-        graph.nodes.forEach(d => {
-          const [x, y] = [d.x, d.y]
-
-          context.moveTo(x + 3, y);
-          context.arc(x, y, 3, 0, 2 * Math.PI);        
-        })
-        context.fill()
-        context.strokeStyle = "#fff"
-        context.stroke()
+        context.moveTo(sx, sy);
+        context.lineTo(tx, ty);        
       })
-    }
+      context.strokeStyle = "#aaa"
+      context.stroke()
 
+      context.beginPath()
+      graph.nodes.forEach(d => {
+        const [x, y] = [d.x, d.y]
+
+        context.moveTo(x + 3, y);
+        context.arc(x, y, 3, 0, 2 * Math.PI);        
+      })
+      context.fill()
+      context.strokeStyle = "#fff"
+      context.stroke()
+    })
+
+    function ticked() {
+      path.forceUpdate(true)
+    }
+  
     function dragsubject() {
       const [x, y] = paper.toLocalPos(d3.event.x, d3.event.y)
       return simulation.find(x, y - 100);
