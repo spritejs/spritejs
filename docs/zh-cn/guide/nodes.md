@@ -4,7 +4,7 @@
 
 <div id="progressbar" class="sprite-container"></div>
 
-我们可以很容易制作一组进度条UI组件，在这里我简单写了一个可以有三种展现类型的ProgressBar类（当然也可以将它拆分成3个不同的类型），可以看到通过spritejs实现UI组件是一件很容易的事情。
+我们可以很容易制作一组进度条UI组件，在这里我简单写了一个可以有三种展现类型的ProgressBar类（当然也可以将它拆分成3个不同的子类），可以看到通过spritejs实现UI组件是一件很容易的事情。
 
 <!-- demo: progressbar -->
 
@@ -73,7 +73,7 @@ class MyElement extends Sprite {
 }
 ```
 
-一个[例子](https://github.com/spritejs/sprite-extend-d3axis)，通过集成Group类实现D3可用的坐标轴元素。
+一个[例子](https://github.com/spritejs/sprite-extend-d3axis)，通过继承Group类实现D3可用的坐标轴元素。
 
 
 <script src="/js/guide/nodes.js"></src>
