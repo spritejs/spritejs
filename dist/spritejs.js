@@ -5633,22 +5633,20 @@ var Layer = function (_BaseNode) {
       }
 
       var updateSet = this[_updateSet];
-      if (!updateSet.size) {
-        return; // nothing to draw
-      }
+      if (updateSet.size) {
+        var renderer = void 0;
+        if (this.renderMode === 'repaintDirty') {
+          renderer = this.renderRepaintDirty.bind(this);
+        } else if (this.renderMode === 'repaintAll') {
+          renderer = this.renderRepaintAll.bind(this);
+        } else {
+          throw new Error('unknown render mode!');
+        }
+        var currentTime = this.timeline.currentTime;
+        renderer(currentTime);
 
-      var renderer = void 0;
-      if (this.renderMode === 'repaintDirty') {
-        renderer = this.renderRepaintDirty.bind(this);
-      } else if (this.renderMode === 'repaintAll') {
-        renderer = this.renderRepaintAll.bind(this);
-      } else {
-        throw new Error('unknown render mode!');
+        (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
       }
-      var currentTime = this.timeline.currentTime;
-      renderer(currentTime);
-
-      (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
       if (this[_renderDeferer]) {
         this[_renderDeferer].resolve();
         this[_renderDeferer] = null;
@@ -12069,7 +12067,7 @@ var ExLayer = function (_Layer) {
     key: 'takeSnapshot',
     value: function () {
       var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-        var snapshotCanvas, children;
+        var snapshotCanvas, context, children;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -12078,13 +12076,14 @@ var ExLayer = function (_Layer) {
                 return this.prepareRender();
 
               case 2:
-                snapshotCanvas = this.canvas.cloneNode(true);
+                snapshotCanvas = this.canvas.cloneNode(true), context = snapshotCanvas.getContext('2d');
 
-                snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0);
+
+                context.drawImage(this.canvas, 0, 0);
                 children = this.children.map(function (child) {
                   return child.serialize();
                 });
-                return _context.abrupt('return', { context: snapshotCanvas, children: children });
+                return _context.abrupt('return', { context: context, children: children });
 
               case 6:
               case 'end':
@@ -12112,7 +12111,7 @@ var ExLayer = function (_Layer) {
           height = _resolution4[1];
 
       outputContext.clearRect(0, 0, width, height);
-      outputContext.drawImage(snapshot.context, 0, 0);
+      outputContext.drawImage(snapshot.context.canvas, 0, 0);
 
       this.clearUpdate();
 
@@ -13877,15 +13876,14 @@ var _default = function (_BaseNode) {
     key: 'snapshot',
     value: function () {
       var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-        var canvas, _viewport2, width, height, layers, ctx, renderTasks;
-
+        var width = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.viewport[0];
+        var height = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.viewport[1];
+        var canvas, layers, ctx, renderTasks;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 canvas = this[_snapshot];
-                _viewport2 = (0, _slicedToArray3.default)(this.viewport, 2), width = _viewport2[0], height = _viewport2[1];
-
 
                 canvas.width = width;
                 canvas.height = height;
@@ -13895,10 +13893,10 @@ var _default = function (_BaseNode) {
                 renderTasks = layers.map(function (layer) {
                   return layer.prepareRender();
                 });
-                _context2.next = 9;
+                _context2.next = 8;
                 return _promise2.default.all(renderTasks);
 
-              case 9:
+              case 8:
 
                 layers.forEach(function (layer) {
                   return ctx.drawImage(layer.canvas, 0, 0, width, height);
@@ -13906,7 +13904,7 @@ var _default = function (_BaseNode) {
 
                 return _context2.abrupt('return', canvas);
 
-              case 11:
+              case 10:
               case 'end':
                 return _context2.stop();
             }
@@ -13936,9 +13934,9 @@ var _default = function (_BaseNode) {
       var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 2),
           rw = _resolution2[0],
           rh = _resolution2[1],
-          _viewport3 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport3[0],
-          vh = _viewport3[1],
+          _viewport2 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport2[0],
+          vh = _viewport2[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
@@ -13989,9 +13987,9 @@ var _default = function (_BaseNode) {
       }
     },
     get: function get() {
-      var _viewport4 = (0, _slicedToArray3.default)(this[_viewport], 2),
-          width = _viewport4[0],
-          height = _viewport4[1];
+      var _viewport3 = (0, _slicedToArray3.default)(this[_viewport], 2),
+          width = _viewport3[0],
+          height = _viewport3[1];
 
       if (width === '' || (0, _isNan2.default)(Number(width))) {
         width = this.container.clientWidth;
@@ -14007,9 +14005,9 @@ var _default = function (_BaseNode) {
       var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
           rw = _resolution3[0],
           rh = _resolution3[1],
-          _viewport5 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport5[0],
-          vh = _viewport5[1],
+          _viewport4 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport4[0],
+          vh = _viewport4[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
