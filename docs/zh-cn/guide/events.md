@@ -71,5 +71,15 @@ DOM基本事件实际上是通过scene代理给sprite元素的，我们可以通
 
 <!-- demo: event-delegate -->
 
+## 屏蔽代理给layer的事件
+
+由于Scene默认代理了几乎所有的mouse、touch事件，这些事件都会被传递给layer，并排发给layer下的所有元素。如果layer的元素很多的话，这也会造成一定的性能开销。
+
+假如明确当前layer不需要响应事件，可以将layer的handleEvent属性设置为false，这样的话scene就不会把事件传给这个layer。不过在layer和layer之下的元素上主动调用dispatchEvent以及前面提到的系统事件还是会正常触发。
+
+```js
+const layer = scene.layer('fglayer', {handleEvent: true})
+```
+
 
 <script src="/js/guide/events.js"></script>

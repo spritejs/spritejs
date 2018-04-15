@@ -407,10 +407,8 @@ export default class extends BaseNode {
     }
     return layer && this[_layerMap][layerID] === layer
   }
-  async snapshot() {
+  async snapshot(width = this.viewport[0], height = this.viewport[1]) {
     const canvas = this[_snapshot]
-    const [width, height] = this.viewport
-
     canvas.width = width
     canvas.height = height
 

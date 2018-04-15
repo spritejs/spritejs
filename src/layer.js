@@ -71,10 +71,12 @@ class ExLayer extends Layer {
   }
   async takeSnapshot() {
     await this.prepareRender()
-    const snapshotCanvas = this.canvas.cloneNode(true)
-    snapshotCanvas.getContext('2d').drawImage(this.canvas, 0, 0)
+    const snapshotCanvas = this.canvas.cloneNode(true),
+      context = snapshotCanvas.getContext('2d')
+
+    context.drawImage(this.canvas, 0, 0)
     const children = this.children.map(child => child.serialize())
-    return {context: snapshotCanvas, children}
+    return {context, children}
   }
   putSnapshot(snapshot) {
     const outputContext = this.outputContext
@@ -82,7 +84,7 @@ class ExLayer extends Layer {
     const [width, height] = this.resolution
 
     outputContext.clearRect(0, 0, width, height)
-    outputContext.drawImage(snapshot.context, 0, 0)
+    outputContext.drawImage(snapshot.context.canvas, 0, 0)
 
     this.clearUpdate()
 

@@ -1,5 +1,7 @@
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _spritejs = spritejs,
     Scene = _spritejs.Scene;
 (function () {
@@ -85,4 +87,157 @@ var _spritejs = spritejs,
       d3.event.target.attr('border', [0, 'transparent']);
     });
   });
+})();(function () {
+  var scene = new Scene('#d3-map', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+
+  var layer = d3.select(scene).append('fglayer');
+
+  var width = 1540;
+  var height = 600;
+
+  var projection = d3.geoMercator().center([107, 38]).scale(width / 2 - 40).translate([width / 4 + 80, height / 2]);
+
+  var path = d3.geoPath().projection(projection);
+
+  d3.json('/res/data/china.json', function (err, data) {
+    if (err) throw new Error(err);
+
+    var selectedTarget = null;
+
+    layer.selectAll('path').data(data.features).enter().append('path').attr('color', 'black').attr('lineWidth', 1).attr('d', path).attr('renderMode', 'fill').attr('fillColor', '#d1eeee').on('click', function (d) {
+      var paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY);
+
+      if (paths.length) {
+        /* eslint-disable no-console */
+        console.log(d.properties.name);
+        /* eslint-enable no-console */
+      }
+    }).on('mousemove', function (d) {
+      var event = d3.event;
+      if (event.target !== selectedTarget) {
+        var paths = event.target.findPath(event.offsetX, event.offsetY);
+
+        if (paths.length) {
+          if (selectedTarget) {
+            selectedTarget.attr('fillColor', '#d1eeee');
+          }
+          selectedTarget = event.target;
+          event.target.attr('fillColor', '#c73');
+        }
+      }
+    });
+  });
+})();(function () {
+  var scene = new Scene('#d3-link', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+
+  var layer = scene.layer('fglayer', {
+    handleEvent: false
+  });
+
+  var simulation = d3.forceSimulation().force('link', d3.forceLink().id(function (d) {
+    return d.id;
+  })).force('charge', d3.forceManyBody()).force('center', d3.forceCenter(400, 300));
+
+  d3.json('/res/data/miserables.json', function (error, graph) {
+    if (error) throw error;
+
+    simulation.nodes(graph.nodes).on('tick', ticked);
+
+    simulation.force('link').links(graph.links);
+
+    var path = new spritejs.Path();
+
+    path.attr({
+      size: [1200, 800],
+      pos: [0, 100]
+    });
+    layer.appendChild(path);
+
+    d3.select(layer.canvas).call(d3.drag().container(layer.canvas).subject(dragsubject).on('start', dragstarted).on('drag', dragged).on('end', dragended));
+
+    path.on('afterdraw', function (_ref) {
+      var context = _ref.context;
+
+      context.beginPath();
+      graph.links.forEach(function (d) {
+        var _ref2 = [d.source.x, d.source.y],
+            sx = _ref2[0],
+            sy = _ref2[1],
+            _ref3 = [d.target.x, d.target.y],
+            tx = _ref3[0],
+            ty = _ref3[1];
+
+
+        context.moveTo(sx, sy);
+        context.lineTo(tx, ty);
+      });
+      context.strokeStyle = '#aaa';
+      context.stroke();
+
+      context.beginPath();
+      graph.nodes.forEach(function (d) {
+        var _ref4 = [d.x, d.y],
+            x = _ref4[0],
+            y = _ref4[1];
+
+
+        context.moveTo(x + 3, y);
+        context.arc(x, y, 3, 0, 2 * Math.PI);
+      });
+      context.fill();
+      context.strokeStyle = '#fff';
+      context.stroke();
+    });
+
+    function ticked() {
+      path.forceUpdate(true);
+    }
+
+    function dragsubject() {
+      var _scene$toLocalPos = scene.toLocalPos(d3.event.x, d3.event.y),
+          _scene$toLocalPos2 = _slicedToArray(_scene$toLocalPos, 2),
+          x = _scene$toLocalPos2[0],
+          y = _scene$toLocalPos2[1];
+
+      return simulation.find(x, y - 100);
+    }
+  });
+
+  function dragstarted() {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+
+    var _ref5 = [d3.event.subject.x, d3.event.subject.y],
+        x = _ref5[0],
+        y = _ref5[1];
+
+
+    d3.event.subject.fx = x;
+    d3.event.subject.fy = y;
+
+    d3.event.subject.x0 = x;
+    d3.event.subject.y0 = y;
+  }
+
+  function dragged() {
+    var _ref6 = [d3.event.x, d3.event.y],
+        x = _ref6[0],
+        y = _ref6[1],
+        _d3$event$subject = d3.event.subject,
+        x0 = _d3$event$subject.x0,
+        y0 = _d3$event$subject.y0;
+
+    var _scene$toLocalPos3 = scene.toLocalPos(x - x0, y - y0),
+        _scene$toLocalPos4 = _slicedToArray(_scene$toLocalPos3, 2),
+        dx = _scene$toLocalPos4[0],
+        dy = _scene$toLocalPos4[1];
+
+    d3.event.subject.fx = x0 + dx;
+    d3.event.subject.fy = y0 + dy;
+  }
+
+  function dragended() {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d3.event.subject.fx = null;
+    d3.event.subject.fy = null;
+  }
 })();

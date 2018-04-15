@@ -100,3 +100,13 @@
 #page-d3 #d3-hierarchy canvas {
   border: none;
 }
+
+#page-snapshot #snapshot-list {
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+}
+
+#page-snapshot #snapshot-list li {
+  border: solid 1px #336;
+}
