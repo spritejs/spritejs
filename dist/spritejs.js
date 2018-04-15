@@ -5370,12 +5370,12 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
         }
 
         var fillColor = (0, _render.findColor)(context, this, 'fillColor');
-        if (fillColor) {
-          context.fillStyle = fillColor;
-        }
 
         if (!strokeColor && !fillColor) {
           fillColor = (0, _spriteUtils.parseColorString)('black');
+        }
+        if (fillColor) {
+          context.fillStyle = fillColor;
         }
 
         var top = 0,
@@ -6291,12 +6291,12 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
         }
 
         var strokeColor = (0, _render.findColor)(context, this, 'strokeColor');
-        if (strokeColor) {
-          context.strokeStyle = strokeColor;
-        }
 
         if (!strokeColor && !fillColor) {
           strokeColor = (0, _spriteUtils.parseColorString)('black');
+        }
+        if (strokeColor) {
+          context.strokeStyle = strokeColor;
         }
 
         if (fillColor) {
