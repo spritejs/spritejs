@@ -19,7 +19,7 @@ import Sprite from './sprite'
 import Layer from './layer'
 import Scene from './scene'
 import Resource from './resource'
-import {shim} from './platform'
+import {shim, _debugger} from './platform'
 
 if(shim) {
   shim()
@@ -36,6 +36,7 @@ function Paper2D(...args) {
 const version = require('../package.json').version
 
 export {
+  _debugger,
   version,
   math,
   utils,
