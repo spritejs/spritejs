@@ -1,7 +1,7 @@
 import Layer from './layer'
 import Resource from './resource'
 import {BaseNode, utils} from 'sprite-core'
-import {createCanvas, getContainer} from './platform'
+import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform'
 
 const {setDeprecation, sortOrderedSprites} = utils
 
@@ -367,6 +367,9 @@ export default class extends BaseNode {
 
     return this[_layerMap][id]
   }
+  get layers() {
+    return this[_layers]
+  }
   appendLayer(layer, zIndex = 0) {
     const id = layer.id
 
@@ -382,6 +385,9 @@ export default class extends BaseNode {
     layer.resolution = this.layerResolution
 
     this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
+    if(setDebugToolsObserver && layer.id !== '__debuglayer__') {
+      setDebugToolsObserver(this, layer)
+    }
     return layer
   }
   removeLayer(layer) {
@@ -392,6 +398,9 @@ export default class extends BaseNode {
       layer.disconnect(this)
       delete this[_layerMap][layer.id]
       this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
+      if(removeDebugToolsObserver) {
+        removeDebugToolsObserver(layer)
+      }
       return layer
     }
 
