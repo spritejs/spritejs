@@ -15320,7 +15320,7 @@ function setDebugToolsObserver(scene, layer) {
 
   var debugToolsHandler = layer[_debugToolsHandler];
   document.addEventListener('spritejs: devtools-opened', debugToolsHandler.initObserver);
-  document.addEventListener('spritejs: devtools-close', debugToolsHandler.removeObserver);
+  document.addEventListener('spritejs: devtools-closed', debugToolsHandler.removeObserver);
   document.addEventListener('spritejs: attr-change', debugToolsHandler.attrChange);
 }
 
