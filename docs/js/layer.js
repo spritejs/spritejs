@@ -141,7 +141,7 @@ var _spritejs = spritejs,
 
   anchorX.addEventListener('change', function (evt) {
     var target = evt.target,
-        y = box.attr('anchor').y;
+        y = box.attr('anchor')[1];
     var value = target.value / 100;
 
     box.attr('anchor', [value, y]);
@@ -149,7 +149,7 @@ var _spritejs = spritejs,
   });
   anchorY.addEventListener('change', function (evt) {
     var target = evt.target,
-        x = box.attr('anchor').x;
+        x = box.attr('anchor')[0];
     var value = target.value / 100;
 
     box.attr('anchor', [x, value]);
