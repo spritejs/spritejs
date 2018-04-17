@@ -17,7 +17,16 @@ export function setDebugToolsObserver(scene, layer) {
     let handler
 
     debugLayer = scene.layer('__debuglayer__')
+    debugLayer.canvas.style.background = 'transparent'
     debugLayer.zIndex = 2147483647
+
+    function hideMouseTip() {
+      _debugger.selectedSprite.off('update', handler)
+      _debugger.selectedSprite = null
+      if(tipEl) {
+        tipEl.attr('opacity', 0)
+      }
+    }
 
     observer = (evt) => {
       const sprites = evt.targetSprites
@@ -49,6 +58,8 @@ export function setDebugToolsObserver(scene, layer) {
           _debugger.selectedSprite = sprite
           evt.stopDispatch()
         }
+      } else {
+        hideMouseTip()
       }
     }
     layer.on('click', observer)

@@ -143,7 +143,7 @@ const {Scene, Sprite, Label, Path} = spritejs
 
   anchorX.addEventListener('change', (evt) => {
     const target = evt.target,
-      y = box.attr('anchor').y
+      y = box.attr('anchor')[1]
     const value = target.value / 100
 
     box.attr('anchor', [value, y])
@@ -151,7 +151,7 @@ const {Scene, Sprite, Label, Path} = spritejs
   })
   anchorY.addEventListener('change', (evt) => {
     const target = evt.target,
-      x = box.attr('anchor').x
+      x = box.attr('anchor')[0]
     const value = target.value / 100
 
     box.attr('anchor', [x, value])
