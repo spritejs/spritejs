@@ -15198,10 +15198,14 @@ function setDebugToolsObserver(scene, layer) {
     debugLayer.zIndex = 2147483647;
 
     function hideMouseTip() {
-      _debugger.selectedSprite.off('update', handler);
-      _debugger.selectedSprite = null;
-      if (tipEl) {
-        tipEl.attr('opacity', 0);
+      if (_debugger.selectedSprite) {
+        _debugger.selectedSprite.off('update', handler);
+        _debugger.selectedSprite = null;
+        var event = new CustomEvent('spritejs: observer', { detail: '' });
+        document.dispatchEvent(event);
+        if (tipEl) {
+          tipEl.attr('opacity', 0);
+        }
       }
     }
 
@@ -15213,6 +15217,8 @@ function setDebugToolsObserver(scene, layer) {
           if (_debugger.selectedSprite === sprite) {
             return;
           } else if (_debugger.selectedSprite) {
+            var _event = new CustomEvent('spritejs: observer', { detail: '' });
+            document.dispatchEvent(_event);
             _debugger.selectedSprite.off('update', handler);
           }
 
