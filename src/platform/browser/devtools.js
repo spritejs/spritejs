@@ -21,10 +21,14 @@ export function setDebugToolsObserver(scene, layer) {
     debugLayer.zIndex = 2147483647
 
     function hideMouseTip() {
-      _debugger.selectedSprite.off('update', handler)
-      _debugger.selectedSprite = null
-      if(tipEl) {
-        tipEl.attr('opacity', 0)
+      if(_debugger.selectedSprite) {
+        _debugger.selectedSprite.off('update', handler)
+        _debugger.selectedSprite = null
+        const event = new CustomEvent('spritejs: observer', {detail: ''})
+        document.dispatchEvent(event)
+        if(tipEl) {
+          tipEl.attr('opacity', 0)
+        }
       }
     }
 
@@ -36,6 +40,8 @@ export function setDebugToolsObserver(scene, layer) {
           if(_debugger.selectedSprite === sprite) {
             return
           } else if(_debugger.selectedSprite) {
+            const event = new CustomEvent('spritejs: observer', {detail: ''})
+            document.dispatchEvent(event)
             _debugger.selectedSprite.off('update', handler)
           }
 
