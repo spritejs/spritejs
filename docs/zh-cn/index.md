@@ -25,13 +25,13 @@ sprite.js 是跨平台的2D绘图对象模型库，它能够支持web、node、�
 如果你使用NPM进行包管理，可以直接使用npm命令安装
 
 ```bash
-npm install spritejs
+npm install spritejs@next
 ```
 
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
-<script src="https://s3.ssl.qhres.com/!91de8cfb/spritejs.min.js"></script>
+<script src="https://s2.ssl.qhres.com/!60beac62/spritejs.min.js"></script>
 ```
 
 如果你要在node服务端使用spritejs渲染，你需要安装[node-canvas](https://github.com/Automattic/node-canvas)
