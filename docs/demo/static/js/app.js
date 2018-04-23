@@ -30,8 +30,9 @@
     frames[0].exec(editor.getValue())
 
     const scriptPath = frames[0].document.querySelector('script').src
-    const versionInfo = frames[0].spritejs.version
+    let versionInfo = frames[0].spritejs.version
     if(versionInfo){
+    versionInfo = versionInfo.replace(/-.*$/g, '')
       libVersion.innerHTML = 'v' + versionInfo
       libVersion.href = scriptPath
     }
