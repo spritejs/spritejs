@@ -1,14 +1,13 @@
 {
   "name": "spritejs",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
     "example": "example"
   },
   "browser": {
-    "./src/platform": "./src/platform/browser",
-    "sprite-core": "./node_modules/sprite-core/dist/sprite-core.module"
+    "./src/platform": "./src/platform/browser"
   },
   "scripts": {
     "test": "nyc ava",
@@ -44,7 +43,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.16.13"
+    "sprite-core": "^1.16.14"
   },
   "devDependencies": {
     "ava": "^0.21.0",

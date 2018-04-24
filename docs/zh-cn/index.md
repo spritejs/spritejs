@@ -28,6 +28,12 @@ sprite.js 是跨平台的2D绘图对象模型库，它能够支持web、node、�
 npm install spritejs
 ```
 
+由于spritejs是跨平台的，如果在node环境中跑，需要自行安装依赖库[node-canvas](https://github.com/Automattic/node-canvas)
+
+```bash
+npm install canvas@next
+```
+
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
