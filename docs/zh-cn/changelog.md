@@ -60,3 +60,14 @@
 ### bug修复
 
 - 修复bug: Group元素如果设置了宽高，会导致Label子元素定位错误
+
+## [2.0.0-alpha.5][2018-04-28]
+
+### bug修复
+
+- 修复bug: Group添加child时不能触发渲染刷新
+- 修复bug: Group元素不能触发mouseleave
+
+### 其他
+
+- 更新了doc封面，修复了examples中的部分例子错误

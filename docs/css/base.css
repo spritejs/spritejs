@@ -1,3 +1,7 @@
+section.cover.show {
+  opacity: 0;
+}
+
 .cover.show + main {
   display: none;
 }

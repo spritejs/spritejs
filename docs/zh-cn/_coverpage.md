@@ -1,26 +1,30 @@
 <!-- _coverpage.md -->
 <style>
+  html, body, 
+  section.cover.show .cover-main {
+    width: 100%;
+    height: 100%;
+    overflow: hideen;
+    padding: 0;
+    margin: 0;
+  }
+  section.cover.show .cover-main {
+    background-color: #1eac61;
+  }
+  section.cover.show {
+    opacity: 1;
+  }
   #coverpage {
     width: 100%;
-    height: 300px;
-    margin-top: -160px;
+    height: 100%;
     position: relative;
   }
   .cover.show + main > aside.sidebar {
     display: none
   }
+  .github-corner {
+    z-index: 999999;
+  }
 </style>
 
 <div id="coverpage"></div>
-
-> 跨平台**绘图对象模型**
-
-* 使用ES6+，面向对象设计和开发
-* 支持元素嵌套和事件分发
-* 对元素进行缓存以提升渲染性能
-* 支持标准的 Web Animation API
-* 支持node服务器端渲染
-* 支持微信小程序
-
-[GitHub](https://github.com/spritejs/spritejs)
-[Get Started](zh-cn/index)

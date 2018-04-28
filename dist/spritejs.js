@@ -5875,6 +5875,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     value: function appendChild(sprite) {
       this[_children].push(sprite);
       sprite.connect(this, this[_zOrder]++);
+      this.forceUpdate(true);
     }
   }, {
     key: 'append',
@@ -5979,8 +5980,9 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
         }
 
         evt.targetSprites = targetSprites;
-        return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState);
       }
+      // support mouseleave
+      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState);
     }
   }, {
     key: 'render',
