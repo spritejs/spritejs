@@ -111,7 +111,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
 
           anim = introText.animate([{ x: 1080 }, { x: 980 }], {
-            duration: 150,
+            duration: 500,
             fill: 'forwards',
             easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           });
@@ -194,6 +194,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           return anim2.finished;
 
         case 34:
+
+          huanhuanGroup.animate([{ y: 320 }, { y: 325 }, { y: 320 }, { y: 315 }, { y: 320 }], {
+            duration: 2000,
+            iterations: Infinity
+          });
+
           guanguan = new Sprite('guanguan3.png');
 
           guanguan.attr({
@@ -204,33 +210,42 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           fglayer.append(guanguan);
 
           anim3 = guanguan.animate([{ x: 1600 }, { x: 1500 }], {
-            duration: 200,
+            duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 40;
+          _context2.next = 41;
           return anim3.finished;
 
-        case 40:
+        case 41:
           guanguan.textures = 'guanguan1.png';
 
-          _context2.next = 43;
-          return wait(500);
+          _context2.next = 44;
+          return wait(800);
 
-        case 43:
+        case 44:
           guanguan.textures = 'guanguan3.png';
 
           anim4 = guanguan.animate([{ x: 1500 }, { x: 1180 }], {
-            duration: 300,
+            duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 47;
+          _context2.next = 48;
           return anim4.finished;
 
-        case 47:
+        case 48:
           guanguan.textures = 'guanguan1.png';
           guanguan.attr({
             zIndex: -1,
-            rotate: 30
+            rotate: 20
+          });
+
+          guanguan.on('mouseenter', function (evt) {
+            guanguan.textures = 'guanguan2.png';
+            guanguan.attr({ rotate: 30 });
+          });
+          guanguan.on('mouseleave', function (evt) {
+            guanguan.textures = 'guanguan1.png';
+            guanguan.attr({ rotate: 20 });
           });
 
           githubBtn = new Label('GitHub');
@@ -298,7 +313,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             });
           });
 
-        case 60:
+        case 63:
         case 'end':
           return _context2.stop();
       }
