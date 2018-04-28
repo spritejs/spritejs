@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-# spritejs <small>1.18</small>
+# spritejs <small>2.0 alpha</small>
 
 > A cross-platform lightweight 2D Render Object Model.
 

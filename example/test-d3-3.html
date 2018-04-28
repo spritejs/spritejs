@@ -51,7 +51,7 @@ d3.json('/data/mapdata/china.json', (err, data) => {
       .attr('fillColor', '#d1eeee')
       //.attr('bgcolor', 'red')
       .on('click', d => {
-        const paths = d3.event.target.findPath(d3.event.x, d3.event.y)
+        const paths = d3.event.targetPaths
 
         if(paths.length){
           console.log(d.properties.name)
@@ -59,10 +59,9 @@ d3.json('/data/mapdata/china.json', (err, data) => {
       })
       .on('mousemove', d => {
         const event = d3.event
-        if(event.target !== selectedTarget){
-          const paths = event.target.findPath(event.x, event.y)
 
-          if(paths.length){
+        if(event.target !== selectedTarget){
+          if(event.targetPaths.length){
             if(selectedTarget){
               selectedTarget.attr('fillColor', '#d1eeee')
             }

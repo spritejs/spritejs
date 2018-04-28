@@ -1,74 +1,248 @@
-document.querySelector('.cover.show').style.background = 'linear-gradient(to left bottom, hsl(101, 100%, 85%) 0%,hsl(21, 100%, 85%) 100%)'
 
-const {Scene, Sprite} = spritejs
-const scene = new Scene('#coverpage', {viewport: ['auto', 'auto']})
-const [layerWidth, layerHeight] = scene.viewport.map(i => i * 2)
-scene.resolution = [layerWidth, layerHeight]
+(async function () {
+  const {Scene, Sprite, Group, Label, Path} = spritejs
+  const scene = new Scene('#coverpage', {
+    viewport: ['auto', 'auto'],
+    resolution: [1920, 1080],
+    stickMode: 'width',
+  })
 
-scene.preload({
-  id: 'logo',
-  src: 'https://p0.ssl.qhimg.com/t01303199a8936edb79.png',
-}, {
-  id: 'logo-lemon',
-  src: 'https://p4.ssl.qhimg.com/t01b299bd5c2ef4b627.png',
-}).then(() => {
-  function getScale(width) {
-    return Math.min(1.5, width * 0.8 / 510)
-  }
+  await scene.preload([
+    'https://p5.ssl.qhimg.com/t0100238c57e97a8268.png',
+    'https://s1.ssl.qhres.com/static/6d5d24a08e6d6bc1.json',
+  ])
 
   const fglayer = scene.layer('fglayer')
-  const logo = new Sprite('logo')
-  logo.attr({
-    anchor: [0.5, 1],
-    pos: [layerWidth / 2, layerHeight - 30],
-    scale: getScale(layerWidth),
+  const logotext = new Group()
+  logotext.attr({
+    anchor: 0.5,
+    pos: [960, 540],
+    size: [849, 414],
   })
-  fglayer.append(logo)
+  fglayer.append(logotext)
 
-  const [left, top, width, height] = logo.renderRect
-
-  const logoLemon = new Sprite('logo-lemon')
-  logoLemon.attr({
-    anchor: [0.5, 0.5],
-    pos: [left + 0.458 * width, 30],
-    scale: getScale(layerWidth),
-    rotate: 90,
-  })
-
-  fglayer.append(logoLemon)
-  logoLemon.animate([
-    {y: 30},
-    {y: top + 0.23 * height},
-  ], {
-    duration: 800,
-    fill: 'forwards',
-    easing: 'ease-in',
-  }).finished
-    .then(() => {
-      logoLemon.animate([
-        {rotate: 90},
-        {rotate: 360},
-      ], {
-        duration: 500,
-        fill: 'forwards',
-        easing: 'ease-in',
-      })
-    })
-
-  function updateLogo() {
-    const [layerWidth, layerHeight] = scene.viewport.map(i => i * 2)
-    scene.resolution = [layerWidth, layerHeight]
-    const scale = getScale(layerWidth)
-    logo.attr({
-      pos: [layerWidth / 2, layerHeight - 30],
-      scale,
-    })
-    const [left, top, width, height] = logo.renderRect
-    logoLemon.attr({
-      pos: [left + 0.458 * width, top + 0.23 * height],
-      scale,
+  function wait(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms)
     })
   }
 
-  window.onresize = updateLogo
-})
+  async function showLogoText(text, posList, delay = 0) {
+    const els = []
+    for(let i = 0; i < text.length; i++) {
+      const letter = text.charAt(i),
+        x = posList[i]
+
+      const letterEl = new Sprite(`letter-${letter}.png`)
+      letterEl.attr({x})
+      els.push(letterEl)
+      /* eslint-disable no-await-in-loop */
+      await wait(delay)
+      /* eslint-enable no-await-in-loop */
+      logotext.append(letterEl)
+    }
+    return els
+  }
+
+  await showLogoText('spritejs', [0, 128, 250, 380, 424, 539, 643, 744], 200)
+
+  const introText = new Group()
+  introText.attr({
+    anchor: 0.5,
+    pos: [1080, 540],
+    size: [360, 24],
+    // bgcolor: 'rgba(0, 0, 0, 0.3)',
+  })
+  fglayer.append(introText)
+
+  ;[...'跨平台绘图对象模型'].forEach((char, i) => {
+    const label = new Label(char)
+    label.attr({
+      pos: [i * 40, 0],
+      font: '20px "宋体"',
+      fillColor: '#fff',
+    })
+    introText.append(label)
+  })
+
+  const anim = introText.animate([
+    {x: 1080},
+    {x: 980},
+  ], {
+    duration: 150,
+    fill: 'forwards',
+    easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+  })
+
+  await anim.finished
+
+  const huanhuanGroup = new Group()
+  huanhuanGroup.attr({
+    anchor: 0.5,
+    pos: [490, 372],
+    rotate: 30,
+    size: [100, 160],
+    opacity: 0,
+  })
+  fglayer.append(huanhuanGroup)
+  // 60, 104
+
+  const huanhuan = new Sprite('huanhuan.png')
+  huanhuan.attr({
+    pos: [0, 0],
+  })
+  huanhuanGroup.append(huanhuan)
+
+  const huanhuanFire = new Path('M0,0Q-1,12,5,36Q30,22,30,0z')
+  huanhuanFire.attr({
+    anchor: [0, 0],
+    fillColor: '#FEE139',
+    pos: [23, 100],
+    lineWidth: 6,
+    strokeColor: '#FB6F4A',
+    zIndex: -1,
+    rotate: -5,
+  })
+  huanhuanGroup.append(huanhuanFire)
+
+  // random burn fire
+  let fx = 5,
+    fy = 6
+
+  fglayer.timeline.setInterval(() => {
+    const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
+      deltaY = Math.floor(Math.random() * 3) - 1
+
+    fx += deltaX
+    if(fx < 0) fx = 0
+    if(fx > 15) fx = 15
+
+    fx += deltaY
+    if(fy < 0) fy = 0
+    if(fy > 20) fy = 20
+
+    const q1 = [-1, 12, -5 + fx, 30 + fy]
+    const q2 = [30, 22, 30, 0]
+    const d = `M0,0Q${q1}Q${q2}z`
+    huanhuanFire.attr({
+      path: {d},
+    })
+  }, 100)
+
+  const anim2 = huanhuanGroup.animate([
+    {pos: [490, 372], opacity: 0},
+    {pos: [520, 320], opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+
+  huanhuanGroup.on('mouseenter', (evt) => {
+    huanhuan.textures = 'huanhuan2.png'
+  })
+
+  huanhuanGroup.on('mouseleave', (evt) => {
+    huanhuan.textures = 'huanhuan.png'
+  })
+
+  await anim2.finished
+
+  const guanguan = new Sprite('guanguan3.png')
+  guanguan.attr({
+    anchor: 0.5,
+    scale: [-1, 1],
+    pos: [1600, 660],
+  })
+  fglayer.append(guanguan)
+
+  const anim3 = guanguan.animate([
+    {x: 1600},
+    {x: 1500},
+  ], {
+    duration: 200,
+    fill: 'forwards',
+  })
+
+  await anim3.finished
+  guanguan.textures = 'guanguan1.png'
+
+  await wait(500)
+  guanguan.textures = 'guanguan3.png'
+
+  const anim4 = guanguan.animate([
+    {x: 1500},
+    {x: 1180},
+  ], {
+    duration: 300,
+    fill: 'forwards',
+  })
+
+  await anim4.finished
+  guanguan.textures = 'guanguan1.png'
+  guanguan.attr({
+    zIndex: -1,
+    rotate: 30,
+  })
+
+  const githubBtn = new Label('GitHub')
+  githubBtn.attr({
+    anchor: [0.5, 0],
+    size: [160, 48],
+    border: [2, '#208b50'],
+    pos: [760, 828],
+    zIndex: 99999,
+    borderRadius: 24,
+    textAlign: 'center',
+    font: '24px "宋体"',
+    lineHeight: 48,
+    fillColor: '#11773d',
+    // bgcolor: 'red',
+  })
+  fglayer.append(githubBtn)
+
+  const getStartBtn = githubBtn.cloneNode()
+  getStartBtn.attr({
+    text: 'Get Started',
+    pos: [960, 828],
+  })
+  fglayer.append(getStartBtn)
+
+  const demoBtn = githubBtn.cloneNode()
+  demoBtn.attr({
+    text: 'Demo',
+    pos: [1160, 828],
+  })
+  fglayer.append(demoBtn)
+
+  const links = ['https://github.com/spritejs/spritejs', '/#/zh-cn/index', '/demo']
+  ;[githubBtn, getStartBtn, demoBtn].forEach((button, i) => {
+    button.on('mouseenter', (evt) => {
+      document.documentElement.style.cursor = 'pointer'
+    })
+    button.on('mouseleave', (evt) => {
+      document.documentElement.style.cursor = 'default'
+    })
+    const btnPressDown = (evt) => {
+      button.attr({
+        bgcolor: '#1e9d5a',
+        fillColor: '#fff',
+      })
+    }
+    button.on('mousedown', btnPressDown)
+    button.on('touchstart', btnPressDown)
+
+    const btnPressUp = (evt) => {
+      button.attr({
+        bgcolor: '',
+        fillColor: '#11773d',
+      })
+    }
+
+    document.documentElement.addEventListener('mouseup', btnPressUp)
+    document.documentElement.addEventListener('touchend', btnPressUp)
+
+    button.on('click', (evt) => {
+      window.location.href = links[i]
+    })
+  })
+}())
