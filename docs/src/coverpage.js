@@ -7,6 +7,20 @@
     stickMode: 'width',
   })
 
+  const [width] = scene.viewport
+  if(width <= 480) {
+    scene.container.style.transform = 'scale(2)'
+  }
+
+  window.addEventListener('resize', (evt) => {
+    const [width] = scene.viewport
+    if(width <= 480) {
+      scene.container.style.transform = 'scale(2)'
+    } else {
+      scene.container.style.transform = ''
+    }
+  })
+
   await scene.preload([
     'https://p5.ssl.qhimg.com/t0100238c57e97a8268.png',
     'https://s1.ssl.qhres.com/static/6d5d24a08e6d6bc1.json',
@@ -50,7 +64,8 @@
   introText.attr({
     anchor: 0.5,
     pos: [1080, 540],
-    size: [360, 24],
+    size: [360, 40],
+    opacity: 0,
     // bgcolor: 'rgba(0, 0, 0, 0.3)',
   })
   fglayer.append(introText)
@@ -59,15 +74,15 @@
     const label = new Label(char)
     label.attr({
       pos: [i * 40, 0],
-      font: '20px "宋体"',
+      font: '32px "宋体"',
       fillColor: '#fff',
     })
     introText.append(label)
   })
 
   const anim = introText.animate([
-    {x: 1080},
-    {x: 980},
+    {x: 1080, opacity: 0},
+    {x: 980, opacity: 0.8},
   ], {
     duration: 500,
     fill: 'forwards',
@@ -204,66 +219,7 @@
     guanguan.attr({rotate: 20})
   })
 
-  const githubBtn = new Label('GitHub')
-  githubBtn.attr({
-    anchor: [0.5, 0],
-    size: [160, 48],
-    border: [2, '#208b50'],
-    pos: [760, 828],
-    zIndex: 99999,
-    borderRadius: 24,
-    textAlign: 'center',
-    font: '24px "宋体"',
-    lineHeight: 48,
-    fillColor: '#11773d',
-    opacity: 0,
-    // bgcolor: 'red',
-  })
-  fglayer.append(githubBtn)
-
-  const anim5 = githubBtn.animate([
-    {opacity: 0},
-    {opacity: 1},
-  ], {
-    duration: 500,
-    fill: 'forwards',
-  })
-  await anim5.finished
-
-  const getStartBtn = githubBtn.cloneNode()
-  getStartBtn.attr({
-    text: 'Get Started',
-    pos: [960, 828],
-  })
-  fglayer.append(getStartBtn)
-
-  const anim6 = getStartBtn.animate([
-    {opacity: 0},
-    {opacity: 1},
-  ], {
-    duration: 500,
-    fill: 'forwards',
-  })
-  await anim6.finished
-
-  const demoBtn = githubBtn.cloneNode()
-  demoBtn.attr({
-    text: 'Demo',
-    pos: [1160, 828],
-  })
-  fglayer.append(demoBtn)
-
-  const anim7 = demoBtn.animate([
-    {opacity: 0},
-    {opacity: 1},
-  ], {
-    duration: 500,
-    fill: 'forwards',
-  })
-  await anim7.finished
-
-  const links = ['https://github.com/spritejs/spritejs', '/#/zh-cn/index', '/demo']
-  ;[githubBtn, getStartBtn, demoBtn].forEach((button, i) => {
+  function registerButton(button, link) {
     button.on('mouseenter', (evt) => {
       document.documentElement.style.cursor = 'pointer'
     })
@@ -290,7 +246,68 @@
     document.documentElement.addEventListener('touchend', btnPressUp)
 
     button.on('click', (evt) => {
-      window.location.href = links[i]
+      window.location.href = link
     })
+  }
+
+  const githubBtn = new Label('GitHub')
+  githubBtn.attr({
+    anchor: [0.5, 0],
+    size: [260, 60],
+    border: [2, '#208b50'],
+    pos: [660, 828],
+    zIndex: 99999,
+    borderRadius: 30,
+    textAlign: 'center',
+    font: '36px "宋体"',
+    lineHeight: 60,
+    fillColor: '#11773d',
+    opacity: 0,
+    // bgcolor: 'red',
   })
+  fglayer.append(githubBtn)
+  registerButton(githubBtn, 'https://github.com/spritejs/spritejs')
+
+  const anim5 = githubBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim5.finished
+
+  const getStartBtn = githubBtn.cloneNode()
+  getStartBtn.attr({
+    text: 'Get Started',
+    pos: [960, 828],
+  })
+  fglayer.append(getStartBtn)
+  registerButton(getStartBtn, '/#/zh-cn/index')
+
+  const anim6 = getStartBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim6.finished
+
+  const demoBtn = githubBtn.cloneNode()
+  demoBtn.attr({
+    text: 'Demo',
+    pos: [1260, 828],
+  })
+  fglayer.append(demoBtn)
+
+  registerButton(demoBtn, '/demo')
+  const anim7 = demoBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim7.finished
 }())

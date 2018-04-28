@@ -1,6 +1,6 @@
 import Layer from './layer'
 import Resource from './resource'
-import {BaseNode, utils} from 'sprite-core'
+import {BaseNode, utils, math} from 'sprite-core'
 import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform'
 
 const {setDeprecation, sortOrderedSprites} = utils
@@ -236,14 +236,32 @@ export default class extends BaseNode {
     x = x * viewport[0] / resolution[0]
     y = y * viewport[1] / resolution[1]
 
+    const {transform} = window.getComputedStyle(this.container)
+    if(transform !== 'none') {
+      const matched = transform.match(/matrix\((.*)\)/)
+      if(matched && matched[1]) {
+        const matrix = new math.Matrix(matched[1].split(/\s*,\s*/g).map(n => Number(n)))
+        return matrix.transformPoint(x, y)
+      }
+    }
+
     return [x, y]
   }
   toLocalPos(x, y) {
     const resolution = this.layerResolution,
       viewport = this.layerViewport
+    const {transform} = window.getComputedStyle(this.container)
 
     x = x * resolution[0] / viewport[0]
     y = y * resolution[1] / viewport[1]
+
+    if(transform !== 'none') {
+      const matched = transform.match(/matrix\((.*)\)/)
+      if(matched && matched[1]) {
+        const matrix = new math.Matrix(matched[1].split(/\s*,\s*/g).map(n => Number(n))).inverse()
+        return matrix.transformPoint(x, y)
+      }
+    }
 
     return [x, y]
   }

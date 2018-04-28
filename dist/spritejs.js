@@ -7236,6 +7236,19 @@ var _default = function (_BaseNode) {
       x = x * viewport[0] / resolution[0];
       y = y * viewport[1] / resolution[1];
 
+      var _window$getComputedSt = window.getComputedStyle(this.container),
+          transform = _window$getComputedSt.transform;
+
+      if (transform !== 'none') {
+        var matched = transform.match(/matrix\((.*)\)/);
+        if (matched && matched[1]) {
+          var matrix = new _spriteCore.math.Matrix(matched[1].split(/\s*,\s*/g).map(function (n) {
+            return Number(n);
+          }));
+          return matrix.transformPoint(x, y);
+        }
+      }
+
       return [x, y];
     }
   }, {
@@ -7244,8 +7257,21 @@ var _default = function (_BaseNode) {
       var resolution = this.layerResolution,
           viewport = this.layerViewport;
 
+      var _window$getComputedSt2 = window.getComputedStyle(this.container),
+          transform = _window$getComputedSt2.transform;
+
       x = x * resolution[0] / viewport[0];
       y = y * resolution[1] / viewport[1];
+
+      if (transform !== 'none') {
+        var matched = transform.match(/matrix\((.*)\)/);
+        if (matched && matched[1]) {
+          var matrix = new _spriteCore.math.Matrix(matched[1].split(/\s*,\s*/g).map(function (n) {
+            return Number(n);
+          })).inverse();
+          return matrix.transformPoint(x, y);
+        }
+      }
 
       return [x, y];
     }
@@ -9079,7 +9105,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.5';
+var version = '2.0.0-alpha.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
