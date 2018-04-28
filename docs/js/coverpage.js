@@ -56,7 +56,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, logotext, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, githubBtn, getStartBtn, demoBtn, links;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, logotext, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7, links;
 
   return regeneratorRuntime.wrap(function _callee2$(_context2) {
     while (1) {
@@ -260,11 +260,20 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             textAlign: 'center',
             font: '24px "宋体"',
             lineHeight: 48,
-            fillColor: '#11773d'
+            fillColor: '#11773d',
+            opacity: 0
             // bgcolor: 'red',
           });
           fglayer.append(githubBtn);
 
+          anim5 = githubBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 500,
+            fill: 'forwards'
+          });
+          _context2.next = 58;
+          return anim5.finished;
+
+        case 58:
           getStartBtn = githubBtn.cloneNode();
 
           getStartBtn.attr({
@@ -273,6 +282,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
           fglayer.append(getStartBtn);
 
+          anim6 = getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 500,
+            fill: 'forwards'
+          });
+          _context2.next = 64;
+          return anim6.finished;
+
+        case 64:
           demoBtn = githubBtn.cloneNode();
 
           demoBtn.attr({
@@ -281,6 +298,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
           fglayer.append(demoBtn);
 
+          anim7 = demoBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 500,
+            fill: 'forwards'
+          });
+          _context2.next = 70;
+          return anim7.finished;
+
+        case 70:
           links = ['https://github.com/spritejs/spritejs', '/#/zh-cn/index', '/demo'];
           [githubBtn, getStartBtn, demoBtn].forEach(function (button, i) {
             button.on('mouseenter', function (evt) {
@@ -313,7 +338,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             });
           });
 
-        case 63:
+        case 72:
         case 'end':
           return _context2.stop();
       }

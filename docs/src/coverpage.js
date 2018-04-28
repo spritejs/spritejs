@@ -216,9 +216,19 @@
     font: '24px "宋体"',
     lineHeight: 48,
     fillColor: '#11773d',
+    opacity: 0,
     // bgcolor: 'red',
   })
   fglayer.append(githubBtn)
+
+  const anim5 = githubBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim5.finished
 
   const getStartBtn = githubBtn.cloneNode()
   getStartBtn.attr({
@@ -227,12 +237,30 @@
   })
   fglayer.append(getStartBtn)
 
+  const anim6 = getStartBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim6.finished
+
   const demoBtn = githubBtn.cloneNode()
   demoBtn.attr({
     text: 'Demo',
     pos: [1160, 828],
   })
   fglayer.append(demoBtn)
+
+  const anim7 = demoBtn.animate([
+    {opacity: 0},
+    {opacity: 1},
+  ], {
+    duration: 500,
+    fill: 'forwards',
+  })
+  await anim7.finished
 
   const links = ['https://github.com/spritejs/spritejs', '/#/zh-cn/index', '/demo']
   ;[githubBtn, getStartBtn, demoBtn].forEach((button, i) => {
