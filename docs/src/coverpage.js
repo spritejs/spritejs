@@ -69,7 +69,7 @@
     {x: 1080},
     {x: 980},
   ], {
-    duration: 150,
+    duration: 500,
     fill: 'forwards',
     easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   })
@@ -147,6 +147,17 @@
 
   await anim2.finished
 
+  huanhuanGroup.animate([
+    {y: 320},
+    {y: 325},
+    {y: 320},
+    {y: 315},
+    {y: 320},
+  ], {
+    duration: 2000,
+    iterations: Infinity,
+  })
+
   const guanguan = new Sprite('guanguan3.png')
   guanguan.attr({
     anchor: 0.5,
@@ -159,21 +170,21 @@
     {x: 1600},
     {x: 1500},
   ], {
-    duration: 200,
+    duration: 500,
     fill: 'forwards',
   })
 
   await anim3.finished
   guanguan.textures = 'guanguan1.png'
 
-  await wait(500)
+  await wait(800)
   guanguan.textures = 'guanguan3.png'
 
   const anim4 = guanguan.animate([
     {x: 1500},
     {x: 1180},
   ], {
-    duration: 300,
+    duration: 500,
     fill: 'forwards',
   })
 
@@ -181,7 +192,16 @@
   guanguan.textures = 'guanguan1.png'
   guanguan.attr({
     zIndex: -1,
-    rotate: 30,
+    rotate: 20,
+  })
+
+  guanguan.on('mouseenter', (evt) => {
+    guanguan.textures = 'guanguan2.png'
+    guanguan.attr({rotate: 30})
+  })
+  guanguan.on('mouseleave', (evt) => {
+    guanguan.textures = 'guanguan1.png'
+    guanguan.attr({rotate: 20})
   })
 
   const githubBtn = new Label('GitHub')

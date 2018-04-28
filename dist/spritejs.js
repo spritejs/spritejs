@@ -9079,7 +9079,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.4';
+var version = '2.0.0-alpha.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
