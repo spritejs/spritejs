@@ -1,5 +1,7 @@
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -56,12 +58,43 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, logotext, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7, links;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, logotext, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, registerButton, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7;
 
   return regeneratorRuntime.wrap(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
+          registerButton = function registerButton(button, link) {
+            button.on('mouseenter', function (evt) {
+              document.documentElement.style.cursor = 'pointer';
+            });
+            button.on('mouseleave', function (evt) {
+              document.documentElement.style.cursor = 'default';
+            });
+            var btnPressDown = function btnPressDown(evt) {
+              button.attr({
+                bgcolor: '#1e9d5a',
+                fillColor: '#fff'
+              });
+            };
+            button.on('mousedown', btnPressDown);
+            button.on('touchstart', btnPressDown);
+
+            var btnPressUp = function btnPressUp(evt) {
+              button.attr({
+                bgcolor: '',
+                fillColor: '#11773d'
+              });
+            };
+
+            document.documentElement.addEventListener('mouseup', btnPressUp);
+            document.documentElement.addEventListener('touchend', btnPressUp);
+
+            button.on('click', function (evt) {
+              window.location.href = link;
+            });
+          };
+
           wait = function wait(ms) {
             return new Promise(function (resolve) {
               setTimeout(resolve, ms);
@@ -74,10 +107,27 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             resolution: [1920, 1080],
             stickMode: 'width'
           });
-          _context2.next = 5;
+          _scene$viewport = _slicedToArray(scene.viewport, 1), width = _scene$viewport[0];
+
+          if (width <= 480) {
+            scene.container.style.transform = 'scale(2)';
+          }
+
+          window.addEventListener('resize', function (evt) {
+            var _scene$viewport2 = _slicedToArray(scene.viewport, 1),
+                width = _scene$viewport2[0];
+
+            if (width <= 480) {
+              scene.container.style.transform = 'scale(2)';
+            } else {
+              scene.container.style.transform = '';
+            }
+          });
+
+          _context2.next = 9;
           return scene.preload(['https://p5.ssl.qhimg.com/t0100238c57e97a8268.png', 'https://s1.ssl.qhres.com/static/6d5d24a08e6d6bc1.json']);
 
-        case 5:
+        case 9:
           fglayer = scene.layer('fglayer');
           logotext = new Group();
 
@@ -88,37 +138,38 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
           fglayer.append(logotext);
 
-          _context2.next = 11;
+          _context2.next = 15;
           return showLogoText('spritejs', [0, 128, 250, 380, 424, 539, 643, 744], 200);
 
-        case 11:
+        case 15:
           introText = new Group();
 
           introText.attr({
             anchor: 0.5,
             pos: [1080, 540],
-            size: [360, 24]
+            size: [360, 40],
+            opacity: 0
             // bgcolor: 'rgba(0, 0, 0, 0.3)',
           });
           fglayer.append(introText);[].concat(_toConsumableArray('跨平台绘图对象模型')).forEach(function (char, i) {
             var label = new Label(char);
             label.attr({
               pos: [i * 40, 0],
-              font: '20px "宋体"',
+              font: '32px "宋体"',
               fillColor: '#fff'
             });
             introText.append(label);
           });
 
-          anim = introText.animate([{ x: 1080 }, { x: 980 }], {
+          anim = introText.animate([{ x: 1080, opacity: 0 }, { x: 980, opacity: 0.8 }], {
             duration: 500,
             fill: 'forwards',
             easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           });
-          _context2.next = 18;
+          _context2.next = 22;
           return anim.finished;
 
-        case 18:
+        case 22:
           huanhuanGroup = new Group();
 
           huanhuanGroup.attr({
@@ -190,10 +241,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             huanhuan.textures = 'huanhuan.png';
           });
 
-          _context2.next = 34;
+          _context2.next = 38;
           return anim2.finished;
 
-        case 34:
+        case 38:
 
           huanhuanGroup.animate([{ y: 320 }, { y: 325 }, { y: 320 }, { y: 315 }, { y: 320 }], {
             duration: 2000,
@@ -213,26 +264,26 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 41;
+          _context2.next = 45;
           return anim3.finished;
 
-        case 41:
+        case 45:
           guanguan.textures = 'guanguan1.png';
 
-          _context2.next = 44;
+          _context2.next = 48;
           return wait(800);
 
-        case 44:
+        case 48:
           guanguan.textures = 'guanguan3.png';
 
           anim4 = guanguan.animate([{ x: 1500 }, { x: 1180 }], {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 48;
+          _context2.next = 52;
           return anim4.finished;
 
-        case 48:
+        case 52:
           guanguan.textures = 'guanguan1.png';
           guanguan.attr({
             zIndex: -1,
@@ -252,28 +303,29 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
           githubBtn.attr({
             anchor: [0.5, 0],
-            size: [160, 48],
+            size: [260, 60],
             border: [2, '#208b50'],
-            pos: [760, 828],
+            pos: [660, 828],
             zIndex: 99999,
-            borderRadius: 24,
+            borderRadius: 30,
             textAlign: 'center',
-            font: '24px "宋体"',
-            lineHeight: 48,
+            font: '36px "宋体"',
+            lineHeight: 60,
             fillColor: '#11773d',
             opacity: 0
             // bgcolor: 'red',
           });
           fglayer.append(githubBtn);
+          registerButton(githubBtn, 'https://github.com/spritejs/spritejs');
 
           anim5 = githubBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 58;
+          _context2.next = 63;
           return anim5.finished;
 
-        case 58:
+        case 63:
           getStartBtn = githubBtn.cloneNode();
 
           getStartBtn.attr({
@@ -281,64 +333,33 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             pos: [960, 828]
           });
           fglayer.append(getStartBtn);
+          registerButton(getStartBtn, '/#/zh-cn/index');
 
           anim6 = getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 64;
+          _context2.next = 70;
           return anim6.finished;
 
-        case 64:
+        case 70:
           demoBtn = githubBtn.cloneNode();
 
           demoBtn.attr({
             text: 'Demo',
-            pos: [1160, 828]
+            pos: [1260, 828]
           });
           fglayer.append(demoBtn);
 
+          registerButton(demoBtn, '/demo');
           anim7 = demoBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 70;
+          _context2.next = 77;
           return anim7.finished;
 
-        case 70:
-          links = ['https://github.com/spritejs/spritejs', '/#/zh-cn/index', '/demo'];
-          [githubBtn, getStartBtn, demoBtn].forEach(function (button, i) {
-            button.on('mouseenter', function (evt) {
-              document.documentElement.style.cursor = 'pointer';
-            });
-            button.on('mouseleave', function (evt) {
-              document.documentElement.style.cursor = 'default';
-            });
-            var btnPressDown = function btnPressDown(evt) {
-              button.attr({
-                bgcolor: '#1e9d5a',
-                fillColor: '#fff'
-              });
-            };
-            button.on('mousedown', btnPressDown);
-            button.on('touchstart', btnPressDown);
-
-            var btnPressUp = function btnPressUp(evt) {
-              button.attr({
-                bgcolor: '',
-                fillColor: '#11773d'
-              });
-            };
-
-            document.documentElement.addEventListener('mouseup', btnPressUp);
-            document.documentElement.addEventListener('touchend', btnPressUp);
-
-            button.on('click', function (evt) {
-              window.location.href = links[i];
-            });
-          });
-
-        case 72:
+        case 77:
         case 'end':
           return _context2.stop();
       }
