@@ -77,7 +77,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 fillColor: '#fff'
               });
             };
-            button.on('mousedown', btnPressDown);
+            button.on('mouseenter', btnPressDown);
             button.on('touchstart', btnPressDown);
 
             var btnPressUp = function btnPressUp(evt) {
@@ -87,7 +87,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
               });
             };
 
-            document.documentElement.addEventListener('mouseup', btnPressUp);
+            button.on('mouseleave', btnPressUp);
             document.documentElement.addEventListener('touchend', btnPressUp);
 
             button.on('click', function (evt) {

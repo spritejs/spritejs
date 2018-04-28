@@ -1,27 +1,13 @@
 section.cover.show {
   opacity: 0;
-}
-
-.cover.show + main {
-  display: none;
-}
-
-.cover.show + button.sidebar-toggle {
-  display: none;
-}
-
-.cover.show + button.sidebar-toggle + .sidebar {
-  display: none;
-}
-
-.cover.show + button.sidebar-toggle + .sidebar + main {
-  display: none;
+  overflow: hidden;
 }
 
 .sprite-container {
   width: 100%;
   padding-bottom: 39%;
 }
+
 .sprite-container canvas {
   border: solid 2px #333;
 }
