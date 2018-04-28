@@ -232,7 +232,7 @@
         fillColor: '#fff',
       })
     }
-    button.on('mousedown', btnPressDown)
+    button.on('mouseenter', btnPressDown)
     button.on('touchstart', btnPressDown)
 
     const btnPressUp = (evt) => {
@@ -242,7 +242,7 @@
       })
     }
 
-    document.documentElement.addEventListener('mouseup', btnPressUp)
+    button.on('mouseleave', btnPressUp)
     document.documentElement.addEventListener('touchend', btnPressUp)
 
     button.on('click', (evt) => {
