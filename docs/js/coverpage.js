@@ -20,32 +20,35 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
             case 2:
               if (!(i < text.length)) {
-                _context.next = 13;
+                _context.next = 14;
                 break;
               }
 
               letter = text.charAt(i), x = posList[i];
               letterEl = new Sprite('letter-' + letter + '.png');
 
-              letterEl.attr({ x: x });
+              letterEl.attr({ pos: [535 + x, 333] });
+              if (letter === 'j') {
+                letterEl.attr({ zIndex: 20 });
+              }
               els.push(letterEl);
               /* eslint-disable no-await-in-loop */
-              _context.next = 9;
+              _context.next = 10;
               return wait(delay);
 
-            case 9:
-              /* eslint-enable no-await-in-loop */
-              logotext.append(letterEl);
-
             case 10:
+              /* eslint-enable no-await-in-loop */
+              fglayer.append(letterEl);
+
+            case 11:
               i++;
               _context.next = 2;
               break;
 
-            case 13:
+            case 14:
               return _context.abrupt('return', els);
 
-            case 14:
+            case 15:
             case 'end':
               return _context.stop();
           }
@@ -58,7 +61,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, logotext, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, registerButton, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, registerButton, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7;
 
   return regeneratorRuntime.wrap(function _callee2$(_context2) {
     while (1) {
@@ -129,19 +132,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
         case 9:
           fglayer = scene.layer('fglayer');
-          logotext = new Group();
-
-          logotext.attr({
-            anchor: 0.5,
-            pos: [960, 540],
-            size: [849, 414]
-          });
-          fglayer.append(logotext);
-
-          _context2.next = 15;
+          _context2.next = 12;
           return showLogoText('spritejs', [0, 128, 250, 380, 424, 539, 643, 744], 200);
 
-        case 15:
+        case 12:
           introText = new Group();
 
           introText.attr({
@@ -166,10 +160,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             fill: 'forwards',
             easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           });
-          _context2.next = 22;
+          _context2.next = 19;
           return anim.finished;
 
-        case 22:
+        case 19:
           huanhuanGroup = new Group();
 
           huanhuanGroup.attr({
@@ -241,10 +235,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             huanhuan.textures = 'huanhuan.png';
           });
 
-          _context2.next = 38;
+          _context2.next = 35;
           return anim2.finished;
 
-        case 38:
+        case 35:
 
           huanhuanGroup.animate([{ y: 320 }, { y: 325 }, { y: 320 }, { y: 315 }, { y: 320 }], {
             duration: 2000,
@@ -264,26 +258,26 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 45;
+          _context2.next = 42;
           return anim3.finished;
 
-        case 45:
+        case 42:
           guanguan.textures = 'guanguan1.png';
 
-          _context2.next = 48;
+          _context2.next = 45;
           return wait(800);
 
-        case 48:
+        case 45:
           guanguan.textures = 'guanguan3.png';
 
           anim4 = guanguan.animate([{ x: 1500 }, { x: 1180 }], {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 52;
+          _context2.next = 49;
           return anim4.finished;
 
-        case 52:
+        case 49:
           guanguan.textures = 'guanguan1.png';
           guanguan.attr({
             zIndex: -1,
@@ -322,10 +316,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 63;
+          _context2.next = 60;
           return anim5.finished;
 
-        case 63:
+        case 60:
           getStartBtn = githubBtn.cloneNode();
 
           getStartBtn.attr({
@@ -339,10 +333,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 70;
+          _context2.next = 67;
           return anim6.finished;
 
-        case 70:
+        case 67:
           demoBtn = githubBtn.cloneNode();
 
           demoBtn.attr({
@@ -356,10 +350,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             duration: 500,
             fill: 'forwards'
           });
-          _context2.next = 77;
+          _context2.next = 74;
           return anim7.finished;
 
-        case 77:
+        case 74:
         case 'end':
           return _context2.stop();
       }

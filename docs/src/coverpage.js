@@ -27,13 +27,6 @@
   ])
 
   const fglayer = scene.layer('fglayer')
-  const logotext = new Group()
-  logotext.attr({
-    anchor: 0.5,
-    pos: [960, 540],
-    size: [849, 414],
-  })
-  fglayer.append(logotext)
 
   function wait(ms) {
     return new Promise((resolve) => {
@@ -48,12 +41,15 @@
         x = posList[i]
 
       const letterEl = new Sprite(`letter-${letter}.png`)
-      letterEl.attr({x})
+      letterEl.attr({pos: [535 + x, 333]})
+      if(letter === 'j') {
+        letterEl.attr({zIndex: 20})
+      }
       els.push(letterEl)
       /* eslint-disable no-await-in-loop */
       await wait(delay)
       /* eslint-enable no-await-in-loop */
-      logotext.append(letterEl)
+      fglayer.append(letterEl)
     }
     return els
   }
