@@ -2122,7 +2122,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           width = _offsetSize2[0],
           height = _offsetSize2[1];
 
-      var vertexs = [[ox, oy], [width - ox, oy], [ox, height - oy], [width - ox, height - oy]];
+      var vertexs = [[ox, oy], [width + ox, oy], [ox, height + oy], [width + ox, height + oy]];
 
       var transformed = vertexs.map(function (v) {
         return transform.transformPoint(v[0], v[1]);
