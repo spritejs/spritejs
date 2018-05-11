@@ -1910,7 +1910,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
       var bound = this.originalRect;
 
-      var cachableContext = this.cache || (0, _render.copyContext)(drawingContext, bound[2], bound[3]);
+      var cachableContext = this.cache || (0, _render.copyContext)(drawingContext, Math.ceil(bound[2]), Math.ceil(bound[3]));
       var evtArgs = { context: cachableContext || drawingContext, target: this, renderTime: t, fromCache: !!this.cache };
 
       if (!cachableContext) {
