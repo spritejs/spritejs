@@ -4,6 +4,7 @@ module.exports = {
     axios: true,
     TWEEN: true,
     d3: true,
+    Docsify: true,
   },
   "extends":  "eslint-config-75team",
   rules: {
