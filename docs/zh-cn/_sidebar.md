@@ -31,6 +31,7 @@
   * [创建新的精灵类型](/zh-cn/guide/nodes)
   * [缓存策略](/zh-cn/guide/cache)
   * [与d3一同使用](/zh-cn/guide/d3)
+  * [物理引擎](/zh-cn/guide/matter)
   * [快照](/zh-cn/guide/snapshot)
   * [开发者工具](/zh-cn/guide/devtools)
   * [跨平台](/zh-cn/guide/platforms)
