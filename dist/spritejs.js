@@ -2112,18 +2112,17 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'boundingRect',
     get: function get() {
-      var anchor = this.attr('anchor'),
-          transform = this.transform;
+      var transform = this.transform;
+
+      var _originalRect2 = (0, _slicedToArray3.default)(this.originalRect, 2),
+          ox = _originalRect2[0],
+          oy = _originalRect2[1];
 
       var _offsetSize2 = (0, _slicedToArray3.default)(this.offsetSize, 2),
           width = _offsetSize2[0],
           height = _offsetSize2[1];
 
-      var _anchor = (0, _slicedToArray3.default)(anchor, 2),
-          anchorX = _anchor[0],
-          anchorY = _anchor[1];
-
-      var vertexs = [[-anchorX * width, -anchorY * height], [(1 - anchorX) * width, -anchorY * height], [-anchorX * width, (1 - anchorY) * height], [(1 - anchorX) * width, (1 - anchorY) * height]];
+      var vertexs = [[ox, oy], [width - ox, oy], [ox, height - oy], [width - ox, height - oy]];
 
       var transformed = vertexs.map(function (v) {
         return transform.transformPoint(v[0], v[1]);
@@ -2141,7 +2140,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           maxX = Math.max.apply(Math, (0, _toConsumableArray3.default)(vx)),
           maxY = Math.max.apply(Math, (0, _toConsumableArray3.default)(vy));
 
-      return [].concat((0, _toConsumableArray3.default)([minX, minY].map(Math.floor)), (0, _toConsumableArray3.default)([maxX - minX, maxY - minY].map(Math.ceil)));
+      return [minX, minY].concat([maxX - minX, maxY - minY]);
     }
 
     // rect before transform
@@ -2157,7 +2156,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           anchorX = _attr9[0],
           anchorY = _attr9[1];
 
-      return [Math.floor(-anchorX * width), Math.floor(-anchorY * height), width, height];
+      return [-anchorX * width, -anchorY * height, width, height];
     }
   }, {
     key: 'originalRenderRect',
@@ -4368,7 +4367,7 @@ var ResAttr = (_class = function (_Sprite$Attr) {
       var hasPromise = false;
       var tasks = textures.map(function (texture) {
         if (texture.image) {
-          return _promise2.default.resolve({ img: texture.image, texture: texture });
+          return { img: texture.image, texture: texture };
         }
 
         var loadingTexture = _resource2.default.loadTexture(texture);
@@ -7450,7 +7449,7 @@ var _default = function (_BaseNode) {
         canvas.dataset.layerId = id;
         canvas.style.position = 'absolute';
 
-        if (this.container.style && !this.container.style.position) {
+        if (this.container.style && (window.getComputedStyle && window.getComputedStyle(this.container).position) !== 'absolute') {
           this.container.style.position = 'relative';
         }
 
@@ -9105,7 +9104,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.6';
+var version = '2.0.0-alpha.7';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -13457,12 +13456,12 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
   }, {
     key: 'x',
     set: function set(val) {
-      this.set('x', Math.round(val));
+      this.set('x', val);
     }
   }, {
     key: 'y',
     set: function set(val) {
-      this.set('y', Math.round(val));
+      this.set('y', val);
     }
   }, {
     key: 'pos',
@@ -13494,13 +13493,13 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     key: 'width',
     set: function set(val) {
       this.clearCache();
-      this.set('width', Math.round(val));
+      this.set('width', val);
     }
   }, {
     key: 'height',
     set: function set(val) {
       this.clearCache();
-      this.set('height', Math.round(val));
+      this.set('height', val);
     }
   }, {
     key: 'size',
@@ -15067,13 +15066,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _slicedToArray2 = __webpack_require__(1);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
 var _toConsumableArray2 = __webpack_require__(6);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _slicedToArray2 = __webpack_require__(1);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
 var _get2 = __webpack_require__(15);
 
@@ -15284,6 +15283,12 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
         var offsetX = evt.offsetX,
             offsetY = evt.offsetY;
 
+        var svg = this.svg;
+        if (svg) {
+          var bounds = svg.bounds;
+          offsetX += Math.min(0, bounds[0]);
+          offsetY += Math.min(0, bounds[1]);
+        }
         evt.targetPaths = this.findPath(offsetX, offsetY);
         return true;
       }
@@ -15296,8 +15301,17 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
           attr = this.attr();
 
       if (attr.d) {
+        var svg = this.svg;
+
+        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 2),
+            ox = _svg$bounds[0],
+            oy = _svg$bounds[1];
+
+        if (ox < 0 || oy < 0) {
+          context.translate(-Math.min(0, ox), -Math.min(0, oy));
+        }
         context.translate.apply(context, (0, _toConsumableArray3.default)(this.pathOffset));
-        this.svg.beginPath().to(context);
+        svg.beginPath().to(context);
 
         context.lineWidth = attr.lineWidth;
         context.lineCap = attr.lineCap;
@@ -15378,13 +15392,25 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
       var lineWidth = this.lineWidth;
 
       if (width === '') {
-        width = bounds[2] + 2 * 1.414 * lineWidth | 0;
+        width = bounds[2] - Math.min(0, bounds[0]) + 2 * 1.414 * lineWidth | 0;
       }
       if (height === '') {
-        height = bounds[3] + 2 * 1.414 * lineWidth | 0;
+        height = bounds[3] - Math.min(0, bounds[1]) + 2 * 1.414 * lineWidth | 0;
       }
 
       return [width, height];
+    }
+  }, {
+    key: 'originalRect',
+    get: function get() {
+      var rect = (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this),
+          svg = this.svg;
+      if (svg) {
+        var bounds = svg.bounds;
+        rect[0] += Math.min(0, bounds[0]);
+        rect[1] += Math.min(0, bounds[1]);
+      }
+      return rect;
     }
   }]);
   return Path;
