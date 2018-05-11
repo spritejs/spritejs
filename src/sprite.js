@@ -52,7 +52,7 @@ class ResAttr extends Sprite.Attr {
     let hasPromise = false
     const tasks = textures.map((texture) => {
       if(texture.image) {
-        return Promise.resolve({img: texture.image, texture})
+        return {img: texture.image, texture}
       }
 
       const loadingTexture = Resource.loadTexture(texture)
