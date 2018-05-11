@@ -2753,10 +2753,8 @@ function createCanvas() {
 }
 
 function loadImage(src) {
-  var crossOrigin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
   var img = document.createElement('img');
-  if (crossOrigin) img.crossOrigin = 'anonymous';
+  img.crossOrigin = 'anonymous';
 
   var promise = new _promise2.default(function (resolve) {
     img.addEventListener('load', function () {
@@ -2855,8 +2853,7 @@ var loadedResources = new _map2.default();
 
 var Resource = {
   loadTexture: function loadTexture(texture) {
-    var crossOrigin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 30000;
+    var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30000;
 
     if (typeof texture === 'string') {
       texture = { src: texture };
@@ -2873,7 +2870,7 @@ var Resource = {
           reject(new Error('load img timeout'));
         }, timeout);
 
-        (0, _platform.loadImage)(texture.src, crossOrigin).then(function (img) {
+        (0, _platform.loadImage)(texture.src).then(function (img) {
           // save image not canvas for svg preserveAspectRatio
           resolve({ img: img, texture: texture, fromCache: false });
           loadedResources.set(mapKey, img);
@@ -2924,7 +2921,7 @@ var Resource = {
 
             case 5:
               _context.next = 7;
-              return this.loadTexture(src, true);
+              return this.loadTexture(src);
 
             case 7:
               texture = _context.sent;
@@ -2978,7 +2975,7 @@ var Resource = {
       }, _callee, this);
     }));
 
-    function loadFrames(_x3, _x4) {
+    function loadFrames(_x2, _x3) {
       return _ref.apply(this, arguments);
     }
 
