@@ -12,7 +12,7 @@ const loadedResources = new Map()
  */
 
 const Resource = {
-  loadTexture(texture, timeout = 30000) {
+  loadTexture(texture, crossOrigin = false, timeout = 30000) {
     if(typeof texture === 'string') {
       texture = {src: texture}
     }
@@ -28,7 +28,7 @@ const Resource = {
           reject(new Error('load img timeout'))
         }, timeout)
 
-        loadImage(texture.src).then((img) => {
+        loadImage(texture.src, crossOrigin).then((img) => {
           // save image not canvas for svg preserveAspectRatio
           resolve({img, texture, fromCache: false})
           loadedResources.set(mapKey, img)
@@ -62,7 +62,7 @@ const Resource = {
       frameData = frameData.data
     }
 
-    const texture = await this.loadTexture(src)
+    const texture = await this.loadTexture(src, true)
     const frames = frameData.frames
 
     Object.entries(frames).forEach(([key, frame]) => {

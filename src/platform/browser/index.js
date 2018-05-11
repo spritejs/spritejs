@@ -5,9 +5,9 @@ export function createCanvas(width = 300, height = 150) {
   return canvas
 }
 
-export function loadImage(src) {
+export function loadImage(src, crossOrigin = false) {
   const img = document.createElement('img')
-  img.crossOrigin = 'anonymous'
+  if(crossOrigin) img.crossOrigin = 'anonymous'
 
   const promise = new Promise((resolve) => {
     img.addEventListener('load', () => {
