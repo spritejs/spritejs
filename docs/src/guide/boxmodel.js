@@ -38,14 +38,19 @@ const {Scene, Path} = spritejs
     sizeValue = document.getElementById('sizeValue'),
     borderValue = document.getElementById('borderValue')
 
+  function box(rect) {
+    const [x, y, w, h] = rect
+    return [...[x, y].map(Math.floor), ...[w, h].map(Math.ceil)]
+  }
+
   function updateState() {
     contentSize.innerHTML = s1.contentSize
     clientSize.innerHTML = s1.clientSize
     offsetSize.innerHTML = s1.offsetSize
-    originalRect.innerHTML = s1.originalRect
-    boundingRect.innerHTML = s1.boundingRect
-    originalRenderRect.innerHTML = s1.originalRenderRect
-    renderRect.innerHTML = s1.renderRect
+    originalRect.innerHTML = box(s1.originalRect)
+    boundingRect.innerHTML = box(s1.boundingRect)
+    originalRenderRect.innerHTML = box(s1.originalRenderRect)
+    renderRect.innerHTML = box(s1.renderRect)
   }
   updateState()
 
