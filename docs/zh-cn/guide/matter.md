@@ -23,5 +23,7 @@
 
 <div id="render-demo" class="sprite-container"></div>
 
+<!-- demo: render-demo -->
+
 <script src="https://s5.ssl.qhres.com/!a75e6d57/sprite-extend-matter.js"></script>
 <script src="/js/guide/matter.js"></script>
