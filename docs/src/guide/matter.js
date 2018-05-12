@@ -53,10 +53,10 @@ const {Scene, Path, Matter} = spritejs
       const body = bodies[i],
         {vertices, position, angle} = body
       const pos = [
-          Math.round(position.x * 100) / 100,
-          Math.round(position.y * 100) / 100,
+          Math.round(position.x * 10) / 10,
+          Math.round(position.y * 10) / 10,
         ],
-        rotate = Math.round(180 * angle * 100 / Math.PI) / 100
+        rotate = Math.round(180 * angle * 10 / Math.PI) / 10
 
       let path = blocks[i]
       if(!path) {
@@ -75,8 +75,7 @@ const {Scene, Path, Matter} = spritejs
           pos,
           rotate,
           // strokeColor: 'black',
-          // fillColor: body.render.fillStyle,
-          fillColor: 'red',
+          fillColor: body.render.fillStyle,
         })
         blocks[i] = path
         fglayer.append(path)
