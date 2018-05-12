@@ -1,4 +1,4 @@
-const {Scene, Path, Matter} = spritejs
+const {Scene, Sprite, Matter} = spritejs
 
 /* demo: simple-demo */
 ;(function () {
@@ -40,7 +40,7 @@ const {Scene, Path, Matter} = spritejs
     }),
   ])
 
-  const scene = new Scene('#simple-demo', {resolution: [800, 600]})
+  const scene = new Scene('#simple-demo', {viewport: ['auto', 'auto'], resolution: [800, 600]})
   const fglayer = scene.layer('fglayer')
 
   const blocks = []
@@ -51,36 +51,28 @@ const {Scene, Path, Matter} = spritejs
     // console.log(bodies)
     for(let i = 0; i < bodies.length; i++) {
       const body = bodies[i],
-        {vertices, position, angle} = body
+        {position, angle} = body
       const pos = [
           Math.round(position.x * 10) / 10,
           Math.round(position.y * 10) / 10,
         ],
         rotate = Math.round(180 * angle * 10 / Math.PI) / 10
 
-      let path = blocks[i]
-      if(!path) {
-        const {x: x0, y: y0} = vertices[0]
-        let d = `M${x0},${y0}`
-        for(let j = 1; j < vertices.length; j++) {
-          const x = vertices[j].x,
-            y = vertices[j].y
-          d += `L${x},${y}`
-        }
-        d += 'z'
-        path = new Path()
-        path.attr({
+      let block = blocks[i]
+      if(!block) {
+        const {min, max} = body.bounds
+        block = new Sprite()
+        block.attr({
           anchor: 0.5,
-          path: {d, trim: true},
+          size: [max.x - min.x, max.y - min.y],
           pos,
           rotate,
-          // strokeColor: 'black',
-          fillColor: body.render.fillStyle,
+          bgcolor: body.render.fillStyle,
         })
-        blocks[i] = path
-        fglayer.append(path)
+        blocks[i] = block
+        fglayer.append(block)
       } else {
-        path.attr({
+        block.attr({
           pos,
           rotate,
         })
@@ -93,7 +85,7 @@ const {Scene, Path, Matter} = spritejs
 }())
 
 ;(function () {
-  const scene = new Scene('#render-demo', {resolution: [800, 600]})
+  const scene = new Scene('#render-demo', {viewport: ['auto', 'auto'], resolution: [800, 600]})
   const fglayer = scene.layer('fglayer')
 
   const {Engine, World, Render, Runner, Common, Composites, Mouse, MouseConstraint, Bodies} = Matter

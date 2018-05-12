@@ -2,7 +2,7 @@
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
-    Path = _spritejs.Path,
+    Sprite = _spritejs.Sprite,
     Matter = _spritejs.Matter;
 (function () {
   // module aliases
@@ -43,7 +43,7 @@ var _spritejs = spritejs,
     isStatic: true
   })]);
 
-  var scene = new Scene('#simple-demo', { resolution: [800, 600] });
+  var scene = new Scene('#simple-demo', { viewport: ['auto', 'auto'], resolution: [800, 600] });
   var fglayer = scene.layer('fglayer');
 
   var blocks = [];
@@ -54,39 +54,30 @@ var _spritejs = spritejs,
     // console.log(bodies)
     for (var i = 0; i < bodies.length; i++) {
       var body = bodies[i],
-          vertices = body.vertices,
           position = body.position,
           angle = body.angle;
 
       var pos = [Math.round(position.x * 10) / 10, Math.round(position.y * 10) / 10],
           rotate = Math.round(180 * angle * 10 / Math.PI) / 10;
 
-      var path = blocks[i];
-      if (!path) {
-        var _vertices$ = vertices[0],
-            x0 = _vertices$.x,
-            y0 = _vertices$.y;
+      var block = blocks[i];
+      if (!block) {
+        var _body$bounds = body.bounds,
+            min = _body$bounds.min,
+            max = _body$bounds.max;
 
-        var d = 'M' + x0 + ',' + y0;
-        for (var j = 1; j < vertices.length; j++) {
-          var x = vertices[j].x,
-              y = vertices[j].y;
-          d += 'L' + x + ',' + y;
-        }
-        d += 'z';
-        path = new Path();
-        path.attr({
+        block = new Sprite();
+        block.attr({
           anchor: 0.5,
-          path: { d: d, trim: true },
+          size: [max.x - min.x, max.y - min.y],
           pos: pos,
           rotate: rotate,
-          // strokeColor: 'black',
-          fillColor: body.render.fillStyle
+          bgcolor: body.render.fillStyle
         });
-        blocks[i] = path;
-        fglayer.append(path);
+        blocks[i] = block;
+        fglayer.append(block);
       } else {
-        path.attr({
+        block.attr({
           pos: pos,
           rotate: rotate
         });
@@ -97,7 +88,7 @@ var _spritejs = spritejs,
 
   render();
 })();(function () {
-  var scene = new Scene('#render-demo', { resolution: [800, 600] });
+  var scene = new Scene('#render-demo', { viewport: ['auto', 'auto'], resolution: [800, 600] });
   var fglayer = scene.layer('fglayer');
 
   var Engine = Matter.Engine,
