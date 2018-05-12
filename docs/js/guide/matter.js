@@ -81,7 +81,8 @@ var _spritejs = spritejs,
           pos: pos,
           rotate: rotate,
           // strokeColor: 'black',
-          fillColor: body.render.fillStyle
+          // fillColor: body.render.fillStyle,
+          fillColor: 'red'
         });
         blocks[i] = path;
         fglayer.append(path);

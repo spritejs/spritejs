@@ -75,7 +75,8 @@ const {Scene, Path, Matter} = spritejs
           pos,
           rotate,
           // strokeColor: 'black',
-          fillColor: body.render.fillStyle,
+          // fillColor: body.render.fillStyle,
+          fillColor: 'red',
         })
         blocks[i] = path
         fglayer.append(path)
