@@ -84,6 +84,7 @@ const {Scene, Sprite, Matter} = spritejs
   render()
 }())
 
+/* demo: render-demo */
 ;(function () {
   const scene = new Scene('#render-demo', {viewport: ['auto', 'auto'], resolution: [800, 600]})
   const fglayer = scene.layer('fglayer')
