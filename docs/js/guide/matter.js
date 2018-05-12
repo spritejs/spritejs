@@ -43,7 +43,7 @@ var _spritejs = spritejs,
     isStatic: true
   })]);
 
-  var scene = new Scene('#simple-demo', { viewport: [800, 600], resolution: [800, 600] });
+  var scene = new Scene('#simple-demo', { resolution: [800, 600] });
   var fglayer = scene.layer('fglayer');
 
   var blocks = [];
