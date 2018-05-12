@@ -57,25 +57,29 @@ var _spritejs = spritejs,
           vertices = body.vertices,
           position = body.position,
           angle = body.angle;
-      var _vertices$ = vertices[0],
-          x0 = _vertices$.x,
-          y0 = _vertices$.y;
 
-      var d = 'M' + x0 + ',' + y0;
-      for (var j = 1; j < vertices.length; j++) {
-        var x = vertices[j].x,
-            y = vertices[j].y;
-        d += 'L' + x + ',' + y;
-      }
-      d += 'z';
+      var pos = [Math.round(position.x * 100) / 100, Math.round(position.y * 100) / 100],
+          rotate = Math.round(180 * angle * 100 / Math.PI) / 100;
+
       var path = blocks[i];
       if (!path) {
+        var _vertices$ = vertices[0],
+            x0 = _vertices$.x,
+            y0 = _vertices$.y;
+
+        var d = 'M' + x0 + ',' + y0;
+        for (var j = 1; j < vertices.length; j++) {
+          var x = vertices[j].x,
+              y = vertices[j].y;
+          d += 'L' + x + ',' + y;
+        }
+        d += 'z';
         path = new Path();
         path.attr({
           anchor: 0.5,
           path: { d: d, trim: true },
-          pos: [position.x, position.y],
-          rotate: 180 * angle / Math.PI,
+          pos: pos,
+          rotate: rotate,
           // strokeColor: 'black',
           fillColor: body.render.fillStyle
         });
@@ -83,8 +87,8 @@ var _spritejs = spritejs,
         fglayer.append(path);
       } else {
         path.attr({
-          pos: [position.x, position.y],
-          rotate: 180 * angle / Math.PI
+          pos: pos,
+          rotate: rotate
         });
       }
     }
