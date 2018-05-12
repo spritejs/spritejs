@@ -40,7 +40,7 @@ const {Scene, Path, Matter} = spritejs
     }),
   ])
 
-  const scene = new Scene('#simple-demo', {resolution: [800, 600]})
+  const scene = new Scene('#simple-demo', {viewport: [800, 600], resolution: [800, 600]})
   const fglayer = scene.layer('fglayer')
 
   const blocks = []
