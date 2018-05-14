@@ -16,7 +16,7 @@
   #coverpage {
     width: 100%;
     height: 100%;
-    position: relative;
+    position: fixed;
   }
   .cover.show + main > aside.sidebar {
     display: none

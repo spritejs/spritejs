@@ -6,4 +6,7 @@
     display: none;
   }
 </style>
+
+
+
 <script src="/js/coverpage.js"></script>

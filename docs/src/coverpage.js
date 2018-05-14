@@ -3,7 +3,7 @@
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {
     viewport: ['auto', 'auto'],
-    resolution: [1920, 1080],
+    resolution: [3840, 2160],
     stickMode: 'width',
   })
 
@@ -22,8 +22,8 @@
   })
 
   await scene.preload([
-    'https://p5.ssl.qhimg.com/t0100238c57e97a8268.png',
-    'https://s1.ssl.qhres.com/static/6d5d24a08e6d6bc1.json',
+    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
   ])
 
   const fglayer = scene.layer('fglayer')
@@ -34,14 +34,14 @@
     })
   }
 
-  async function showLogoText(text, posList, delay = 0) {
+  async function showLogoText(text, pos, posList, delay = 0) {
     const els = []
     for(let i = 0; i < text.length; i++) {
       const letter = text.charAt(i),
         x = posList[i]
 
       const letterEl = new Sprite(`letter-${letter}.png`)
-      letterEl.attr({pos: [535 + x, 333]})
+      letterEl.attr({pos: [pos[0] + x, pos[1]]})
       if(letter === 'j') {
         letterEl.attr({zIndex: 20})
       }
@@ -54,13 +54,13 @@
     return els
   }
 
-  await showLogoText('spritejs', [0, 128, 250, 380, 424, 539, 643, 744], 200)
+  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
 
   const introText = new Group()
   introText.attr({
     anchor: 0.5,
-    pos: [1080, 540],
-    size: [360, 40],
+    pos: [2160, 910],
+    size: [720, 80],
     opacity: 0,
     // bgcolor: 'rgba(0, 0, 0, 0.3)',
   })
@@ -69,16 +69,16 @@
   ;[...'跨平台绘图对象模型'].forEach((char, i) => {
     const label = new Label(char)
     label.attr({
-      pos: [i * 40, 0],
-      font: '32px "宋体"',
+      pos: [i * 80, 0],
+      font: '54px "宋体"',
       fillColor: '#fff',
     })
     introText.append(label)
   })
 
   const anim = introText.animate([
-    {x: 1080, opacity: 0},
-    {x: 980, opacity: 0.8},
+    {x: 2160, opacity: 0},
+    {x: 2000, opacity: 0.8},
   ], {
     duration: 500,
     fill: 'forwards',
@@ -90,9 +90,9 @@
   const huanhuanGroup = new Group()
   huanhuanGroup.attr({
     anchor: 0.5,
-    pos: [490, 372],
+    pos: [980, 744],
     rotate: 30,
-    size: [100, 160],
+    size: [200, 320],
     opacity: 0,
   })
   fglayer.append(huanhuanGroup)
@@ -104,11 +104,12 @@
   })
   huanhuanGroup.append(huanhuan)
 
-  const huanhuanFire = new Path('M0,0Q-1,12,5,36Q30,22,30,0z')
+  const huanhuanFire = new Path()
   huanhuanFire.attr({
+    path: {d: 'M0,0Q-1,12,5,36Q30,22,30,0z', transform: {scale: 2}},
     anchor: [0, 0],
     fillColor: '#FEE139',
-    pos: [23, 100],
+    pos: [46, 220],
     lineWidth: 6,
     strokeColor: '#FB6F4A',
     zIndex: -1,
@@ -136,13 +137,13 @@
     const q2 = [30, 22, 30, 0]
     const d = `M0,0Q${q1}Q${q2}z`
     huanhuanFire.attr({
-      path: {d},
+      path: {d, transform: {scale: 2}},
     })
   }, 100)
 
   const anim2 = huanhuanGroup.animate([
-    {pos: [490, 372], opacity: 0},
-    {pos: [520, 320], opacity: 1},
+    {pos: [980, 744], opacity: 0},
+    {pos: [1080, 450], opacity: 1},
   ], {
     duration: 500,
     fill: 'forwards',
@@ -159,11 +160,11 @@
   await anim2.finished
 
   huanhuanGroup.animate([
-    {y: 320},
-    {y: 325},
-    {y: 320},
-    {y: 315},
-    {y: 320},
+    {y: 450},
+    {y: 460},
+    {y: 450},
+    {y: 440},
+    {y: 450},
   ], {
     duration: 2000,
     iterations: Infinity,
@@ -173,13 +174,13 @@
   guanguan.attr({
     anchor: 0.5,
     scale: [-1, 1],
-    pos: [1600, 660],
+    pos: [3200, 1150],
   })
   fglayer.append(guanguan)
 
   const anim3 = guanguan.animate([
-    {x: 1600},
-    {x: 1500},
+    {x: 3200},
+    {x: 3000},
   ], {
     duration: 500,
     fill: 'forwards',
@@ -192,8 +193,8 @@
   guanguan.textures = 'guanguan3.png'
 
   const anim4 = guanguan.animate([
-    {x: 1500},
-    {x: 1180},
+    {x: 3000},
+    {x: 2380},
   ], {
     duration: 500,
     fill: 'forwards',
@@ -202,8 +203,8 @@
   await anim4.finished
   guanguan.textures = 'guanguan1.png'
   guanguan.attr({
-    zIndex: -1,
-    rotate: 20,
+    zIndex: 100,
+    // rotate: 20,
   })
 
   guanguan.on('mouseenter', (evt) => {
@@ -212,7 +213,7 @@
   })
   guanguan.on('mouseleave', (evt) => {
     guanguan.textures = 'guanguan1.png'
-    guanguan.attr({rotate: 20})
+    guanguan.attr({rotate: 0})
   })
 
   function registerButton(button, link) {
@@ -241,22 +242,26 @@
     button.on('mouseleave', btnPressUp)
     document.documentElement.addEventListener('touchend', btnPressUp)
 
-    button.on('click', (evt) => {
-      window.location.href = link
-    })
+    if(typeof link === 'string') {
+      button.on('click', (evt) => {
+        window.location.href = link
+      })
+    } else if(typeof link === 'function') {
+      button.on('click', link)
+    }
   }
 
   const githubBtn = new Label('GitHub')
   githubBtn.attr({
     anchor: [0.5, 0],
-    size: [260, 60],
+    size: [520, 120],
     border: [2, '#208b50'],
-    pos: [660, 828],
+    pos: [1320, 1456],
     zIndex: 99999,
     borderRadius: 30,
     textAlign: 'center',
-    font: '36px "宋体"',
-    lineHeight: 60,
+    font: '72px "宋体"',
+    lineHeight: 120,
     fillColor: '#11773d',
     opacity: 0,
     // bgcolor: 'red',
@@ -276,7 +281,7 @@
   const getStartBtn = githubBtn.cloneNode()
   getStartBtn.attr({
     text: 'Get Started',
-    pos: [960, 828],
+    pos: [1920, 1456],
   })
   fglayer.append(getStartBtn)
   registerButton(getStartBtn, '/#/zh-cn/index')
@@ -293,7 +298,7 @@
   const demoBtn = githubBtn.cloneNode()
   demoBtn.attr({
     text: 'Demo',
-    pos: [1260, 828],
+    pos: [2520, 1456],
   })
   fglayer.append(demoBtn)
 
@@ -306,4 +311,27 @@
     fill: 'forwards',
   })
   await anim7.finished
+
+  const more = new Sprite()
+  more.attr({
+    textures: 'more.png',
+    anchor: 0.5,
+    pos: [1920, 1800],
+  })
+  fglayer.append(more)
+
+  more.animate([
+    {scale: 1, opacity: 1},
+    {scale: 1.2, opacity: 0.618},
+  ], {
+    duration: 1000,
+    iterations: Infinity,
+    direction: 'alternate',
+  })
+
+  registerButton(more, () => {
+
+  })
+
+  document.querySelector('main').style.display = 'block'
 }())
