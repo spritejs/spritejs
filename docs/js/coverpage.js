@@ -8,8 +8,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
   var showLogoText = function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(text, posList) {
-      var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(text, pos, posList) {
+      var delay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
       var els, i, letter, x, letterEl;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -27,7 +27,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
               letter = text.charAt(i), x = posList[i];
               letterEl = new Sprite('letter-' + letter + '.png');
 
-              letterEl.attr({ pos: [535 + x, 333] });
+              letterEl.attr({ pos: [pos[0] + x, pos[1]] });
               if (letter === 'j') {
                 letterEl.attr({ zIndex: 20 });
               }
@@ -56,12 +56,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       }, _callee, this);
     }));
 
-    return function showLogoText(_x2, _x3) {
+    return function showLogoText(_x2, _x3, _x4) {
       return _ref2.apply(this, arguments);
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, registerButton, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, introText, anim, huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, guanguan, anim3, anim4, registerButton, githubBtn, anim5, getStartBtn, anim6, demoBtn, anim7, more;
 
   return regeneratorRuntime.wrap(function _callee2$(_context2) {
     while (1) {
@@ -93,9 +93,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             button.on('mouseleave', btnPressUp);
             document.documentElement.addEventListener('touchend', btnPressUp);
 
-            button.on('click', function (evt) {
-              window.location.href = link;
-            });
+            if (typeof link === 'string') {
+              button.on('click', function (evt) {
+                window.location.href = link;
+              });
+            } else if (typeof link === 'function') {
+              button.on('click', link);
+            }
           };
 
           wait = function wait(ms) {
@@ -107,7 +111,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
             viewport: ['auto', 'auto'],
-            resolution: [1920, 1080],
+            resolution: [3840, 2160],
             stickMode: 'width'
           });
           _scene$viewport = _slicedToArray(scene.viewport, 1), width = _scene$viewport[0];
@@ -128,34 +132,34 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
 
           _context2.next = 9;
-          return scene.preload(['https://p5.ssl.qhimg.com/t0100238c57e97a8268.png', 'https://s1.ssl.qhres.com/static/6d5d24a08e6d6bc1.json']);
+          return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
         case 9:
           fglayer = scene.layer('fglayer');
           _context2.next = 12;
-          return showLogoText('spritejs', [0, 128, 250, 380, 424, 539, 643, 744], 200);
+          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
         case 12:
           introText = new Group();
 
           introText.attr({
             anchor: 0.5,
-            pos: [1080, 540],
-            size: [360, 40],
+            pos: [2160, 910],
+            size: [720, 80],
             opacity: 0
             // bgcolor: 'rgba(0, 0, 0, 0.3)',
           });
           fglayer.append(introText);[].concat(_toConsumableArray('跨平台绘图对象模型')).forEach(function (char, i) {
             var label = new Label(char);
             label.attr({
-              pos: [i * 40, 0],
-              font: '32px "宋体"',
+              pos: [i * 80, 0],
+              font: '54px "宋体"',
               fillColor: '#fff'
             });
             introText.append(label);
           });
 
-          anim = introText.animate([{ x: 1080, opacity: 0 }, { x: 980, opacity: 0.8 }], {
+          anim = introText.animate([{ x: 2160, opacity: 0 }, { x: 2000, opacity: 0.8 }], {
             duration: 500,
             fill: 'forwards',
             easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
@@ -168,9 +172,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
           huanhuanGroup.attr({
             anchor: 0.5,
-            pos: [490, 372],
+            pos: [980, 744],
             rotate: 30,
-            size: [100, 160],
+            size: [200, 320],
             opacity: 0
           });
           fglayer.append(huanhuanGroup);
@@ -183,12 +187,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
           huanhuanGroup.append(huanhuan);
 
-          huanhuanFire = new Path('M0,0Q-1,12,5,36Q30,22,30,0z');
+          huanhuanFire = new Path();
 
           huanhuanFire.attr({
+            path: { d: 'M0,0Q-1,12,5,36Q30,22,30,0z', transform: { scale: 2 } },
             anchor: [0, 0],
             fillColor: '#FEE139',
-            pos: [23, 100],
+            pos: [46, 220],
             lineWidth: 6,
             strokeColor: '#FB6F4A',
             zIndex: -1,
@@ -217,11 +222,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             var q2 = [30, 22, 30, 0];
             var d = 'M0,0Q' + q1 + 'Q' + q2 + 'z';
             huanhuanFire.attr({
-              path: { d: d }
+              path: { d: d, transform: { scale: 2 } }
             });
           }, 100);
 
-          anim2 = huanhuanGroup.animate([{ pos: [490, 372], opacity: 0 }, { pos: [520, 320], opacity: 1 }], {
+          anim2 = huanhuanGroup.animate([{ pos: [980, 744], opacity: 0 }, { pos: [1080, 450], opacity: 1 }], {
             duration: 500,
             fill: 'forwards'
           });
@@ -240,7 +245,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
         case 35:
 
-          huanhuanGroup.animate([{ y: 320 }, { y: 325 }, { y: 320 }, { y: 315 }, { y: 320 }], {
+          huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
             duration: 2000,
             iterations: Infinity
           });
@@ -250,11 +255,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           guanguan.attr({
             anchor: 0.5,
             scale: [-1, 1],
-            pos: [1600, 660]
+            pos: [3200, 1150]
           });
           fglayer.append(guanguan);
 
-          anim3 = guanguan.animate([{ x: 1600 }, { x: 1500 }], {
+          anim3 = guanguan.animate([{ x: 3200 }, { x: 3000 }], {
             duration: 500,
             fill: 'forwards'
           });
@@ -270,7 +275,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
         case 45:
           guanguan.textures = 'guanguan3.png';
 
-          anim4 = guanguan.animate([{ x: 1500 }, { x: 1180 }], {
+          anim4 = guanguan.animate([{ x: 3000 }, { x: 2380 }], {
             duration: 500,
             fill: 'forwards'
           });
@@ -280,8 +285,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
         case 49:
           guanguan.textures = 'guanguan1.png';
           guanguan.attr({
-            zIndex: -1,
-            rotate: 20
+            zIndex: 100
+            // rotate: 20,
           });
 
           guanguan.on('mouseenter', function (evt) {
@@ -290,21 +295,21 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           });
           guanguan.on('mouseleave', function (evt) {
             guanguan.textures = 'guanguan1.png';
-            guanguan.attr({ rotate: 20 });
+            guanguan.attr({ rotate: 0 });
           });
 
           githubBtn = new Label('GitHub');
 
           githubBtn.attr({
             anchor: [0.5, 0],
-            size: [260, 60],
+            size: [520, 120],
             border: [2, '#208b50'],
-            pos: [660, 828],
+            pos: [1320, 1456],
             zIndex: 99999,
             borderRadius: 30,
             textAlign: 'center',
-            font: '36px "宋体"',
-            lineHeight: 60,
+            font: '72px "宋体"',
+            lineHeight: 120,
             fillColor: '#11773d',
             opacity: 0
             // bgcolor: 'red',
@@ -324,7 +329,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
           getStartBtn.attr({
             text: 'Get Started',
-            pos: [960, 828]
+            pos: [1920, 1456]
           });
           fglayer.append(getStartBtn);
           registerButton(getStartBtn, '/#/zh-cn/index');
@@ -341,7 +346,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 
           demoBtn.attr({
             text: 'Demo',
-            pos: [1260, 828]
+            pos: [2520, 1456]
           });
           fglayer.append(demoBtn);
 
@@ -354,6 +359,26 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
           return anim7.finished;
 
         case 74:
+          more = new Sprite();
+
+          more.attr({
+            textures: 'more.png',
+            anchor: 0.5,
+            pos: [1920, 1800]
+          });
+          fglayer.append(more);
+
+          more.animate([{ scale: 1, opacity: 1 }, { scale: 1.2, opacity: 0.618 }], {
+            duration: 1000,
+            iterations: Infinity,
+            direction: 'alternate'
+          });
+
+          registerButton(more, function () {});
+
+          document.querySelector('main').style.display = 'block';
+
+        case 80:
         case 'end':
           return _context2.stop();
       }

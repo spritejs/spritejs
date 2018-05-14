@@ -201,7 +201,6 @@
             <key type="filename">letter-s.png</key>
             <key type="filename">letter-t.png</key>
             <key type="filename">more.png</key>
-            <key type="filename">pointer.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -209,12 +208,12 @@
         </map>
         <key>fileList</key>
         <array>
+            <filename>guanguan3.png</filename>
+            <filename>more.png</filename>
             <filename>guanguan1.png</filename>
             <filename>guanguan2.png</filename>
-            <filename>guanguan3.png</filename>
             <filename>huanhuan.png</filename>
             <filename>huanhuan2.png</filename>
-            <filename>more.png</filename>
             <filename>letter-e.png</filename>
             <filename>letter-i.png</filename>
             <filename>letter-j.png</filename>
@@ -222,7 +221,6 @@
             <filename>letter-r.png</filename>
             <filename>letter-s.png</filename>
             <filename>letter-t.png</filename>
-            <filename>pointer.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

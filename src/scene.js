@@ -374,8 +374,9 @@ export default class extends BaseNode {
       const canvas = context.canvas
       canvas.dataset.layerId = id
       canvas.style.position = 'absolute'
+      const pos = window.getComputedStyle && window.getComputedStyle(this.container).position
 
-      if(this.container.style && (window.getComputedStyle && window.getComputedStyle(this.container).position) !== 'absolute') {
+      if(this.container.style && (pos !== 'absolute' && pos !== 'fixed')) {
         this.container.style.position = 'relative'
       }
 
