@@ -1,38 +1,32 @@
 const {createCanvas} = require('canvas')
 const fs = require('fs')
 
-const Label = require('../../lib/label').default
+const {BaseSprite} = require('sprite-core')
 
-async function drawSprites(canvas, sprites) {
+function drawSprites(canvas, sprites) {
   const {width, height} = canvas,
     context = canvas.getContext('2d')
 
   context.clearRect(0, 0, width, height)
   for(let i = 0; i < sprites.length; i++) {
-    /* eslint-disable no-await-in-loop */
-    await sprites[i].draw(context, true)
-    /* eslint-enabel no-await-in-loop */
+    sprites[i].connect(context).draw()
   }
   return canvas.toBuffer()
 }
 
-const text1 = new Label('SpriteJS.org 中国')
+const s = new BaseSprite()
 
-text1.attr({
-  anchor: 0.5,
-  pos: [400, 300],
-  font: '48px Arial',
-  color: '#fff',
-  bgcolor: 'blue',
-  renderMode: 'stroke',
-  lineHeight: 75,
-  padding: [0, 50, 0, 50],
+s.attr({
+  bgcolor: 'red',
+  anchor: [0.5, 0.5],
+  pos: [100, 100],
+  size: [50, 50],
 })
 
-const canvas = createCanvas(800, 600)
+const canvas = createCanvas(200, 200)
 
 ;(async function () {
-  const buffer = await drawSprites(canvas, [text1])
-  fs.writeFileSync('../../test/img/label-48px-Arial.png', buffer)
+  const buffer = await drawSprites(canvas, [s])
+  fs.writeFileSync('../../test/img/basesprite-bgcolor-red.png', buffer)
 }())
 
