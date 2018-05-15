@@ -14,9 +14,9 @@ export async function createCanvasFromFile(src) {
   return canvas
 }
 
-export async function compare(canvas, imgFile) {
+export async function compare(canvas, caseId) {
   const srcData = canvas.toBuffer()
-  const desCanvas = await createCanvasFromFile(`./test/img/${imgFile}`)
+  const desCanvas = await createCanvasFromFile(`./test/img/${caseId}.png`)
 
   const desData = desCanvas.toBuffer()
   const N = 32
@@ -26,9 +26,10 @@ export async function compare(canvas, imgFile) {
   const results = await Promise.all([hash1, hash2])
 
   const dist = hamming(...results)
-  console.warn(colors.cyan(`Hamming distance between canvas and ${imgFile} should be: ${dist}`))
+  console.warn(colors.cyan(`Hamming distance between canvas and ${caseId} is: ${dist}`))
 
-  const diffFile = `./test/img-diff/${imgFile}`
+  const diffFile = `./test/img-diff/${caseId}.diff.png`
+  const srcFile = `./test/img-diff/${caseId}.src.png`
 
   const width = canvas.width,
     height = canvas.height
@@ -69,6 +70,7 @@ export async function compare(canvas, imgFile) {
 
   if(!isEqual) {
     fs.writeFileSync(diffFile, diffCanvas.toBuffer())
+    fs.writeFileSync(srcFile, canvas.toBuffer())
   } else if(fs.existsSync(diffFile)) {
     fs.unlinkSync(diffFile)
   }
