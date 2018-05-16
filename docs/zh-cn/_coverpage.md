@@ -8,6 +8,7 @@
     margin: 0;
   }
   body, 
+  .cover,
   .cover-main {
     overflow-x: hidden;
   }
