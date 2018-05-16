@@ -7,19 +7,19 @@
   })
 
   // 适配移动端
-  const [width] = scene.viewport
-  if(width <= 480) {
-    scene.container.style.transform = 'scale(2)'
-  }
+  // const [width] = scene.viewport
+  // if(width <= 480) {
+  //   scene.container.style.transform = 'scale(2)'
+  // }
 
-  window.addEventListener('resize', (evt) => {
-    const [width] = scene.viewport
-    if(width <= 480) {
-      scene.container.style.transform = 'scale(2)'
-    } else {
-      scene.container.style.transform = ''
-    }
-  })
+  // window.addEventListener('resize', (evt) => {
+  //   const [width] = scene.viewport
+  //   if(width <= 480) {
+  //     scene.container.style.transform = 'scale(2)'
+  //   } else {
+  //     scene.container.style.transform = ''
+  //   }
+  // })
 
   // 预加载资源
   await scene.preload([
