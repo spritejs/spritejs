@@ -593,33 +593,33 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             if (yOffset < 0) return;
 
             // console.log(yOffset)
-            // if(!scrolled && yOffset) {
-            //   scrolled = true
-            //   hideSprites([text, ...buttons, more])
-            //   guanguan.attr({
-            //     textures: ['guanguan3.png'],
-            //   })
-            // } else if(scrolled && yOffset === 0) {
-            //   scrolled = false
-            //   showSprites([text, ...buttons, more])
-            //   guanguan.attr({
-            //     textures: ['guanguan1.png'],
-            //   })
-            // }
+            if (!scrolled && yOffset) {
+              scrolled = true;
+              hideSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            } else if (scrolled && yOffset === 0) {
+              scrolled = false;
+              showSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            }
 
             if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-              // coverpage.style.position = 'absolute'
-              // coverpage.style.top = `${maxScroll}px`
+              coverpage.style.position = 'absolute';
+              coverpage.style.top = maxScroll + 'px';
               // guanguan.attr({
               //   textures: ['guanguan1.png'],
               // })
-            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {}
-            // coverpage.style.position = ''
-            // coverpage.style.top = ''
-            // guanguan.attr({
-            //   textures: ['guanguan3.png'],
-            // })
-
+            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
+              coverpage.style.position = '';
+              coverpage.style.top = '';
+              // guanguan.attr({
+              //   textures: ['guanguan3.png'],
+              // })
+            }
 
             // const p = Math.min(maxScroll, yOffset) / maxScroll
             // const x1 = 2380 - 1400 * p * p,
