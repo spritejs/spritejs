@@ -22,12 +22,12 @@
     position: absolute;
     overflow: hidden;
   }
-  .cover.show + main > aside.sidebar {
+  /* .cover.show + main > aside.sidebar {
     display: none
-  }
+  } */
   .github-corner {
     z-index: 999999;
   }
 </style>
 
-<div id="coverpage"></div>
+<div>111</div>
