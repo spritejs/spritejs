@@ -462,7 +462,7 @@
     autoScroll(maxScroll, 1000)
   })
 
-  coverpage.style.position = 'absolute'
+  // coverpage.style.position = 'absolute'
 
   // window.addEventListener('scroll', _.throttle((evt) => {
   //   const yOffset = window.pageYOffset || document.documentElement.scrollTop
