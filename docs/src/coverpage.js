@@ -361,8 +361,9 @@
           pos: [100 + 200 * p, 100],
           // bgcolor: 'blue',
         })
+        more.cache = null
       } catch(ex) {
-        
+
       }
       requestAnimationFrame(step)
     })

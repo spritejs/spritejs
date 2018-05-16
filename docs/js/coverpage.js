@@ -486,6 +486,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                   pos: [100 + 200 * p, 100]
                   // bgcolor: 'blue',
                 });
+                more.cache = null;
               } catch (ex) {}
               requestAnimationFrame(step);
             });
