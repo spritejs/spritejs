@@ -468,16 +468,16 @@
   // const featureGroup = showFeatures()
 
   let scrolled = false
-  const features = document.getElementById('features')
-  const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
+  // const features = document.getElementById('features')
+  // const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
   // more.on('mouseenter', () => {
   //   autoScroll(maxScroll, 1000)
   // })
 
-  window.addEventListener('scroll', _.throttle((evt) => {
-    const yOffset = window.pageYOffset || document.documentElement.scrollTop
-    if(yOffset < 0) return
+  // window.addEventListener('scroll', _.throttle((evt) => {
+    // const yOffset = window.pageYOffset || document.documentElement.scrollTop
+    // if(yOffset < 0) return
 
     // console.log(yOffset)
     // if(!scrolled && yOffset) {
@@ -494,19 +494,19 @@
     //   })
     // }
 
-    if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      coverpage.style.position = 'absolute'
-      coverpage.style.top = `${maxScroll}px`
+    // if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+      // coverpage.style.position = 'absolute'
+      // coverpage.style.top = `${maxScroll}px`
       // guanguan.attr({
       //   textures: ['guanguan1.png'],
       // })
-    } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-      coverpage.style.position = 'fixed'
-      coverpage.style.top = '0'
+    // } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
+      // coverpage.style.position = 'fixed'
+      // coverpage.style.top = '0'
       // guanguan.attr({
       //   textures: ['guanguan3.png'],
       // })
-    }
+    // }
 
     // const p = Math.min(maxScroll, yOffset) / maxScroll
     // const x1 = 2380 - 1400 * p * p,
@@ -541,5 +541,5 @@
     // huanhuan.attr({
     //   x: x2,
     // })
-  }, 16))
+  // }, 16))
 }())
