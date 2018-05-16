@@ -370,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -563,19 +563,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
         case 17:
           text = _context6.sent;
           _context6.next = 20;
-          return showHuanHuan();
-
-        case 20:
-          huanhuan = _context6.sent;
-          _context6.next = 23;
           return showGuanGuan();
 
-        case 23:
+        case 20:
           guanguan = _context6.sent;
-          _context6.next = 26;
+          _context6.next = 23;
           return showButtons();
 
-        case 26:
+        case 23:
           buttons = _context6.sent;
           more = showMore();
 
@@ -657,7 +652,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 32:
+        case 29:
         case 'end':
           return _context6.stop();
       }

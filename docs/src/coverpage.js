@@ -445,7 +445,7 @@
 
   await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
   const text = await showIntroText('跨平台绘图对象模型')
-  const huanhuan = await showHuanHuan()
+  // const huanhuan = await showHuanHuan()
   const guanguan = await showGuanGuan()
   const buttons = await showButtons()
   const more = showMore()
