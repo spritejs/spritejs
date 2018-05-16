@@ -457,78 +457,75 @@
     features = document.getElementById('features')
   const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
-
   more.on('mouseenter', () => {
     autoScroll(maxScroll, 1000)
   })
 
-  // coverpage.style.position = 'absolute'
+  window.addEventListener('scroll', _.throttle((evt) => {
+    const yOffset = window.pageYOffset || document.documentElement.scrollTop
+    if(yOffset < 0) return
 
-  // window.addEventListener('scroll', _.throttle((evt) => {
-  //   const yOffset = window.pageYOffset || document.documentElement.scrollTop
-  //   if(yOffset < 0) return
+    // console.log(yOffset)
+    if(!scrolled && yOffset) {
+      scrolled = true
+      hideSprites([text, ...buttons, more])
+      guanguan.attr({
+        textures: ['guanguan3.png'],
+      })
+    } else if(scrolled && yOffset === 0) {
+      scrolled = false
+      showSprites([text, ...buttons, more])
+      guanguan.attr({
+        textures: ['guanguan1.png'],
+      })
+    }
 
-  //   // console.log(yOffset)
-  //   // if(!scrolled && yOffset) {
-  //   //   scrolled = true
-  //   //   hideSprites([text, ...buttons, more])
-  //   //   guanguan.attr({
-  //   //     textures: ['guanguan3.png'],
-  //   //   })
-  //   // } else if(scrolled && yOffset === 0) {
-  //   //   scrolled = false
-  //   //   showSprites([text, ...buttons, more])
-  //   //   guanguan.attr({
-  //   //     textures: ['guanguan1.png'],
-  //   //   })
-  //   // }
+    if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+      coverpage.style.position = 'absolute'
+      coverpage.style.top = `${maxScroll}px`
+      guanguan.attr({
+        textures: ['guanguan1.png'],
+      })
+    } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
+      coverpage.style.position = ''
+      coverpage.style.top = ''
+      guanguan.attr({
+        textures: ['guanguan3.png'],
+      })
+    }
 
-  //   if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-  //     // coverpage.style.position = 'absolute'
-  //     // coverpage.style.top = `${maxScroll}px`
-  //     // guanguan.attr({
-  //     //   textures: ['guanguan1.png'],
-  //     // })
-  //   } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-  //     // coverpage.style.position = ''
-  //     // coverpage.style.top = ''
-  //     // guanguan.attr({
-  //     //   textures: ['guanguan3.png'],
-  //     // })
-  //   }
+    const p = Math.min(maxScroll, yOffset) / maxScroll
+    const x1 = 2380 - 1400 * p * p,
+      x2 = 1080 + 1900 * p * p
 
-  //   // const p = Math.min(maxScroll, yOffset) / maxScroll
-  //   // const x1 = 2380 - 1400 * p * p,
-  //   //   x2 = 1080 + 1900 * p * p
+    if(p < 0 || p > 1) {
+      return
+    }
 
-  //   // if(p < 0 || p > 1) {
-  //   //   return
-  //   // }
+    // p = 0.588
+    // x1 = 1896
+    // x2 = 1736
+    // x2e = 1244
+    // x1e = 916
 
-  //   // p = 0.588
-  //   // x1 = 1896
-  //   // x2 = 1736
-  //   // x2e = 1244
-  //   // x1e = 916
-
-  //   // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-  //   //   featureGroup._clipDX = x2 - x1
-  //   //   const l = 916 - (1896 - x1),
-  //   //     r = 916 + x2 - 1736
-  //   //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-  //   //   featureGroup.attr({
-  //   //     clip: {d},
-  //   //   })
-  //   // } else if(x2 - x1 <= 0) {
-  //   //   featureGroup.attr({
-  //   //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
-  //   //   })
-  //   // }
-  //   // guanguan.attr({
-  //   //   x: x1,
-  //   // })
-  //   // huanhuan.attr({
-  //   //   x: x2,
-  //   // })
-  // }, 16))
+    if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+      featureGroup._clipDX = x2 - x1
+      const l = 916 - (1896 - x1),
+        r = 916 + x2 - 1736
+      const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+      featureGroup.attr({
+        clip: {d},
+      })
+    } else if(x2 - x1 <= 0) {
+      featureGroup.attr({
+        clip: {d: 'M0,0L0,0L0,0L0,0z'},
+      })
+    }
+    guanguan.attr({
+      x: x1,
+    })
+    huanhuan.attr({
+      x: x2,
+    })
+  }, 16))
 }())
