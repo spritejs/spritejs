@@ -495,19 +495,19 @@
       })
     }
 
-    // if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-    //   coverpage.style.position = 'absolute'
-    //   coverpage.style.top = `${maxScroll}px`
-    //   guanguan.attr({
-    //     textures: ['guanguan1.png'],
-    //   })
-    // } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-    //   coverpage.style.position = ''
-    //   coverpage.style.top = ''
-    //   guanguan.attr({
-    //     textures: ['guanguan3.png'],
-    //   })
-    // }
+    if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+      coverpage.style.position = 'absolute'
+      coverpage.style.top = `${maxScroll}px`
+      guanguan.attr({
+        textures: ['guanguan1.png'],
+      })
+    } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
+      coverpage.style.position = ''
+      coverpage.style.top = ''
+      guanguan.attr({
+        textures: ['guanguan3.png'],
+      })
+    }
 
     // const p = Math.min(maxScroll, yOffset) / maxScroll
     // const x1 = 2380 - 1400 * p * p,
