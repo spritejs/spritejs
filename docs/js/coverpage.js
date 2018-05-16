@@ -565,7 +565,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           scrolled = false;
           features = document.getElementById('features');
-          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
+          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.5;
 
           // more.on('mouseenter', () => {
           //   autoScroll(maxScroll, 1000)
@@ -591,18 +591,19 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // }
 
             if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-              // coverpage.style.position = 'absolute'
-              // coverpage.style.top = `${maxScroll}px`
+              console.log(coverpage);
+              coverpage.style.position = 'absolute';
+              coverpage.style.top = maxScroll + 'px';
               // guanguan.attr({
               //   textures: ['guanguan1.png'],
               // })
-            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {}
-            // coverpage.style.position = 'fixed'
-            // coverpage.style.top = '0'
-            // guanguan.attr({
-            //   textures: ['guanguan3.png'],
-            // })
-
+            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
+              coverpage.style.position = 'fixed';
+              coverpage.style.top = '0';
+              // guanguan.attr({
+              //   textures: ['guanguan3.png'],
+              // })
+            }
 
             // const p = Math.min(maxScroll, yOffset) / maxScroll
             // const x1 = 2380 - 1400 * p * p,
