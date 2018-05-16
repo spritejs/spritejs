@@ -19,7 +19,7 @@
   #coverpage {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     overflow: hidden;
   }
   .cover.show + main > aside.sidebar {
