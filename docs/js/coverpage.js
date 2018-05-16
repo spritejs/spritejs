@@ -633,6 +633,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             var x1 = 2380 - 1400 * p * p,
                 x2 = 1080 + 1900 * p * p;
 
+            if (p < 0 || p > 1) {
+              return;
+            }
+
             // p = 0.588
             // x1 = 1896
             // x2 = 1736
