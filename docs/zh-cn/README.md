@@ -27,8 +27,10 @@
   .markdown-section .info {
     text-align: center;
     font-size: 1.0rem;
+    margin: 20px auto 80px;
   }
   .demos {
+    text-align: center;
     display: flex;
     flex-flow: row;
     flex-wrap: wrap;
@@ -97,7 +99,7 @@
     border-radius: 100px;
     text-align: center;
     line-height: 48px;
-    margin: 20px auto;
+    margin: 60px auto;
   }
   #more-demos a {
     text-decoration: none;
@@ -112,7 +114,7 @@
 
 <h1>使用范例</h1>
 
-<div class="info">通过SpriteJS，您可以快速实现不同组合的动画效果<div>
+<div class="info">通过SpriteJS，您可以快速实现不同组合的动画效果</div>
 
 <ul class="demos">
   <li>
