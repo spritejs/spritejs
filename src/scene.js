@@ -18,6 +18,7 @@ export default class extends BaseNode {
     super()
 
     container = getContainer(container)
+
     this.container = container
 
     if(arguments.length === 3) {
@@ -56,6 +57,13 @@ export default class extends BaseNode {
       'click', 'dblclick']
 
     events.forEach(event => this.delegateEvent(event))
+
+    container.addEventListener('DOMNodeRemovedFromDocument', () => {
+      if(this[_resizeHandler]) {
+        window.removeEventListener('resize', this[_resizeHandler])
+        delete this[_resizeHandler]
+      }
+    })
   }
 
   get width() {

@@ -330,7 +330,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 pos: [1920, 1456]
               });
               fglayer.append(getStartBtn);
-              registerButton(getStartBtn, '/#/zh-cn/index');
+              registerButton(getStartBtn, window.location + 'zh-cn/index');
 
               anim6 = getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
                 duration: 500,
@@ -592,6 +592,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           });
 
           window.addEventListener('scroll', _.throttle(function (evt) {
+            console.log(111);
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
