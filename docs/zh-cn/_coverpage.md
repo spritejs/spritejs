@@ -7,9 +7,9 @@
     padding: 0;
     margin: 0;
   }
-  .cover-main {
+  /* .cover-main {
     overflow: hidden;
-  }
+  } */
   section.cover.show .cover-main {
     background-color: #1eac61;
   }
