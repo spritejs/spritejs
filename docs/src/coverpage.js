@@ -302,7 +302,7 @@
       pos: [1920, 1456],
     })
     fglayer.append(getStartBtn)
-    registerButton(getStartBtn, '/#/zh-cn/index')
+    registerButton(getStartBtn, `${window.location}zh-cn/index`)
 
     const anim6 = getStartBtn.animate([
       {opacity: 0},
@@ -465,6 +465,7 @@
   })
 
   window.addEventListener('scroll', _.throttle((evt) => {
+    console.log(111)
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 

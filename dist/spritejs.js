@@ -7119,6 +7119,7 @@ var _default = function (_BaseNode) {
     var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || (0, _getPrototypeOf2.default)(_default)).call(this));
 
     container = (0, _platform.getContainer)(container);
+
     _this.container = container;
 
     if (arguments.length === 3) {
@@ -7161,6 +7162,13 @@ var _default = function (_BaseNode) {
 
     events.forEach(function (event) {
       return _this.delegateEvent(event);
+    });
+
+    container.addEventListener('DOMNodeRemovedFromDocument', function () {
+      if (_this[_resizeHandler]) {
+        window.removeEventListener('resize', _this[_resizeHandler]);
+        delete _this[_resizeHandler];
+      }
     });
     return _this;
   }
@@ -14609,6 +14617,13 @@ var Layer = function (_BaseNode) {
     if (context.canvas && context.canvas.cloneNode) {
       var shadowCanvas = context.canvas.cloneNode();
       _this.shadowContext = shadowCanvas.getContext('2d');
+    }
+
+    // auto release
+    if (context.canvas && context.canvas.addEventListener) {
+      context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
+        _this.remove();
+      });
     }
 
     _this[_children] = [];
