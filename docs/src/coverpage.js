@@ -352,7 +352,7 @@
 
     registerButton(more, () => {})
 
-    document.querySelector('.wrap').style.display = 'block'
+    // document.querySelector('.wrap').style.display = 'block'
     return more
   }
 
@@ -445,11 +445,11 @@
     })
   }
 
-  // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-  // const text = await showIntroText('跨平台绘图对象模型')
-  // const huanhuan = await showHuanHuan()
-  // const guanguan = await showGuanGuan()
-  // const buttons = await showButtons()
+  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+  const text = await showIntroText('跨平台绘图对象模型')
+  const huanhuan = await showHuanHuan()
+  const guanguan = await showGuanGuan()
+  const buttons = await showButtons()
   const more = showMore()
 
   // const featureGroup = showFeatures()
@@ -461,9 +461,10 @@
   // more.on('mouseenter', () => {
   //   autoScroll(maxScroll, 1000)
   // })
+  const scroller = document.querySelector('main')
 
-  window.addEventListener('scroll', _.throttle((evt) => {
-    const yOffset = window.pageYOffset || document.documentElement.scrollTop
+  scroller.addEventListener('scroll', _.throttle((evt) => {
+    const yOffset = scroller.scrollTop
     if(yOffset < 0) return
 
     // console.log(yOffset)
@@ -480,9 +481,8 @@
     //     textures: ['guanguan1.png'],
     //   })
     // }
-
+    console.log(yOffset, maxScroll)
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      console.log(coverpage)
       coverpage.style.position = 'absolute'
       coverpage.style.top = `${maxScroll}px`
       // guanguan.attr({
