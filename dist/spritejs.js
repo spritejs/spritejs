@@ -13162,6 +13162,7 @@ var _default = function (_Animator) {
             return;
           }
           // sprite.attr(that.frame);
+          console.log(that.frame)
           if (that.playState === 'idle') return;
           if (that.playState === 'running') {
             (0, _fastAnimationFrame.requestAnimationFrame)(update);
