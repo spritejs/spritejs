@@ -590,6 +590,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           document.addEventListener('scroll', function (evt) {
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
+            if (yOffset < 0) return;
+
             // console.log(yOffset)
             if (!scrolled && yOffset) {
               scrolled = true;
