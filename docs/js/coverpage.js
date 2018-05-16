@@ -615,27 +615,27 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
-            if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-              coverpage.style.position = 'absolute';
-              coverpage.style.top = maxScroll + 'px';
-              guanguan.attr({
-                textures: ['guanguan1.png']
-              });
-            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
-              coverpage.style.position = '';
-              coverpage.style.top = '';
-              guanguan.attr({
-                textures: ['guanguan3.png']
-              });
-            }
+            // if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+            //   coverpage.style.position = 'absolute'
+            //   coverpage.style.top = `${maxScroll}px`
+            //   guanguan.attr({
+            //     textures: ['guanguan1.png'],
+            //   })
+            // } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
+            //   coverpage.style.position = ''
+            //   coverpage.style.top = ''
+            //   guanguan.attr({
+            //     textures: ['guanguan3.png'],
+            //   })
+            // }
 
-            var p = Math.min(maxScroll, yOffset) / maxScroll;
-            var x1 = 2380 - 1400 * p * p,
-                x2 = 1080 + 1900 * p * p;
+            // const p = Math.min(maxScroll, yOffset) / maxScroll
+            // const x1 = 2380 - 1400 * p * p,
+            //   x2 = 1080 + 1900 * p * p
 
-            if (p < 0 || p > 1) {
-              return;
-            }
+            // if(p < 0 || p > 1) {
+            //   return
+            // }
 
             // p = 0.588
             // x1 = 1896
@@ -656,12 +656,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
             //   })
             // }
-            guanguan.attr({
-              x: x1
-            });
-            huanhuan.attr({
-              x: x2
-            });
+            // guanguan.attr({
+            //   x: x1,
+            // })
+            // huanhuan.attr({
+            //   x: x2,
+            // })
           }, 16);
 
         case 37:
