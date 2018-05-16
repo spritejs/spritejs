@@ -341,14 +341,14 @@
     })
     fglayer.append(more)
 
-    more.animate([
-      {scale: 1},
-      {scale: 1.2},
-    ], {
-      duration: 1000,
-      iterations: Infinity,
-      direction: 'alternate',
-    })
+    // more.animate([
+    //   {scale: 1},
+    //   {scale: 1.2},
+    // ], {
+    //   duration: 1000,
+    //   iterations: Infinity,
+    //   direction: 'alternate',
+    // })
 
     document.querySelector('main').style.display = 'block'
     return more
