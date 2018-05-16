@@ -502,6 +502,12 @@
       })
     }
 
+    if(yOffset > coverpage.clientHeight + features.clientHeight) {
+      fglayer.timeline.playbackRate = 0
+    } else {
+      fglayer.timeline.playbackRate = 1
+    }
+
     const p = Math.min(maxScroll, yOffset) / maxScroll
     const x1 = 2380 - 1400 * p * p,
       x2 = 1080 + 1900 * p * p

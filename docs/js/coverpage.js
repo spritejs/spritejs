@@ -634,6 +634,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
+            if (yOffset > coverpage.clientHeight + features.clientHeight) {
+              fglayer.timeline.playbackRate = 0;
+            } else {
+              fglayer.timeline.playbackRate = 1;
+            }
+
             var p = Math.min(maxScroll, yOffset) / maxScroll;
             var x1 = 2380 - 1400 * p * p,
                 x2 = 1080 + 1900 * p * p;
