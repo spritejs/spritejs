@@ -1,15 +1,17 @@
 <style>
-  html, body, main, section, article, #page-index {
+  html, body, section, article, #page-index {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
   }
+  main {
+    height: 100%!important;
+  }
   .coverpage {
     width: 100%;
     height: 100%;
     position: relative;
-    overflow: hidden;
     background-color: #1eac61;
   }
   .coverpage #container {
@@ -18,7 +20,7 @@
     position: fixed; 
   }
   #page-index .wrap {
-    display: none;
+    height: 100%;
   }
 
   .app-nav,
