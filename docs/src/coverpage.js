@@ -3,7 +3,7 @@
   const scene = new Scene('#coverpage', {
     viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
-    // stickMode: 'width',
+    stickMode: 'width',
   })
 
   // 适配移动端

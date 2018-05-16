@@ -523,8 +523,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
             viewport: ['auto', 'auto'],
-            resolution: [3840, 2160]
-            // stickMode: 'width',
+            resolution: [3840, 2160],
+            stickMode: 'width'
           });
 
           // 适配移动端
