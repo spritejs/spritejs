@@ -471,6 +471,12 @@
   // const buttons = await showButtons()
   const more = showMore()
   window.more = more
+  more.c1 = function () {
+    this.attr('bgcolor', 'green')
+  }
+  more.c2 = function () {
+    this.attr('bgcolor', 'red')
+  }
 
   // const featureGroup = showFeatures()
 
