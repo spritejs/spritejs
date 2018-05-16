@@ -357,6 +357,7 @@
       try {
         more.attr({
           bgcolor,
+          pos: [100 + 10 * (i % 10), 100],
           // bgcolor: 'blue',
         })
         more.cache = null
