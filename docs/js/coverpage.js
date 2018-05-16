@@ -643,19 +643,19 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // x2e = 1244
             // x1e = 916
 
-            if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-              featureGroup._clipDX = x2 - x1;
-              var l = 916 - (1896 - x1),
-                  r = 916 + x2 - 1736;
-              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
-              featureGroup.attr({
-                clip: { d: d }
-              });
-            } else if (x2 - x1 <= 0) {
-              featureGroup.attr({
-                clip: { d: 'M0,0L0,0L0,0L0,0z' }
-              });
-            }
+            // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+            //   featureGroup._clipDX = x2 - x1
+            //   const l = 916 - (1896 - x1),
+            //     r = 916 + x2 - 1736
+            //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+            //   featureGroup.attr({
+            //     clip: {d},
+            //   })
+            // } else if(x2 - x1 <= 0) {
+            //   featureGroup.attr({
+            //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
+            //   })
+            // }
             guanguan.attr({
               x: x1
             });
