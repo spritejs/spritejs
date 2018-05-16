@@ -629,8 +629,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
-            if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight && moreAnim.playState !== 'paused') {
-              moreAnim.pause();
+            if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
+              if (moreAnim.playState !== 'paused') {
+                moreAnim.pause();
+              }
             } else if (moreAnim.playState === 'paused') {
               moreAnim.play();
             }
