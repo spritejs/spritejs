@@ -446,23 +446,23 @@
     })
   }
 
-  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-  const text = await showIntroText('跨平台绘图对象模型')
-  const huanhuan = await showHuanHuan()
-  const guanguan = await showGuanGuan()
+  // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+  // const text = await showIntroText('跨平台绘图对象模型')
+  // const huanhuan = await showHuanHuan()
+  // const guanguan = await showGuanGuan()
   const buttons = await showButtons()
   const more = showMore()
 
-  const featureGroup = showFeatures()
+  // const featureGroup = showFeatures()
 
   let scrolled = false
   const coverpage = document.getElementById('coverpage'),
     features = document.getElementById('features')
   const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
-  more.on('mouseenter', () => {
-    autoScroll(maxScroll, 1000)
-  })
+  // more.on('mouseenter', () => {
+  //   autoScroll(maxScroll, 1000)
+  // })
 
   window.addEventListener('scroll', _.throttle((evt) => {
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
