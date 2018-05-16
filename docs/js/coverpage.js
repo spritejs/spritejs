@@ -113,7 +113,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
   var showHuanHuan = function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-      var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2;
+      var huanhuanGroup, huanhuan, huanhuanFire, anim2;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -153,29 +153,28 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               huanhuanGroup.append(huanhuanFire);
 
               // random burn fire
-              fx = 5, fy = 6;
+              // let fx = 5,
+              //   fy = 6
 
+              // fglayer.timeline.setInterval(() => {
+              //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
+              //     deltaY = Math.floor(Math.random() * 3) - 1
 
-              fglayer.timeline.setInterval(function () {
-                var deltaX = Math.floor(Math.random() * 3) - 1,
-                    // -1 0 1,
-                deltaY = Math.floor(Math.random() * 3) - 1;
+              //   fx += deltaX
+              //   if(fx < 0) fx = 0
+              //   if(fx > 15) fx = 15
 
-                fx += deltaX;
-                if (fx < 0) fx = 0;
-                if (fx > 15) fx = 15;
+              //   fx += deltaY
+              //   if(fy < 0) fy = 0
+              //   if(fy > 20) fy = 20
 
-                fx += deltaY;
-                if (fy < 0) fy = 0;
-                if (fy > 20) fy = 20;
-
-                var q1 = [-1, 12, -5 + fx, 30 + fy];
-                var q2 = [30, 22, 30, 0];
-                var d = 'M0,0Q' + q1 + 'Q' + q2 + 'z';
-                huanhuanFire.attr({
-                  path: { d: d, transform: { scale: 2 } }
-                });
-              }, 100);
+              //   const q1 = [-1, 12, -5 + fx, 30 + fy]
+              //   const q2 = [30, 22, 30, 0]
+              //   const d = `M0,0Q${q1}Q${q2}z`
+              //   huanhuanFire.attr({
+              //     path: {d, transform: {scale: 2}},
+              //   })
+              // }, 100)
 
               anim2 = huanhuanGroup.animate([{ pos: [980, 744], opacity: 0 }, { pos: [1080, 450], opacity: 1 }], {
                 duration: 500,
@@ -191,10 +190,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 huanhuan.textures = 'huanhuan.png';
               });
 
-              _context3.next = 16;
+              _context3.next = 14;
               return anim2.finished;
 
-            case 16:
+            case 14:
 
               huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
                 duration: 2000,
@@ -203,7 +202,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
               return _context3.abrupt('return', huanhuanGroup);
 
-            case 18:
+            case 16:
             case 'end':
               return _context3.stop();
           }
@@ -592,7 +591,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           });
 
           window.addEventListener('scroll', _.throttle(function (evt) {
-            console.log(111);
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
