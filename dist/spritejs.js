@@ -13164,7 +13164,7 @@ var _default = function (_Animator) {
           sprite.attr(that.frame);
           if (that.playState === 'idle') return;
           if (that.playState === 'running') {
-            (0, _fastAnimationFrame.requestAnimationFrame)(update);
+            // (0, _fastAnimationFrame.requestAnimationFrame)(update);
           } else if (that.playState === 'paused') {
             that.ready.then(function () {
               (0, _fastAnimationFrame.requestAnimationFrame)(update);
