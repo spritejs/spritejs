@@ -482,7 +482,7 @@
     // }
 
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      // coverpage.style.position = 'absolute'
+      coverpage.style.position = 'absolute'
       // coverpage.style.top = `${maxScroll}px`
       // guanguan.attr({
       //   textures: ['guanguan1.png'],
