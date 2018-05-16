@@ -195,15 +195,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               return anim2.finished;
 
             case 16:
-
-              huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
-                duration: 2000,
-                iterations: Infinity
-              });
-
               return _context3.abrupt('return', huanhuanGroup);
 
-            case 18:
+            case 17:
             case 'end':
               return _context3.stop();
           }
@@ -469,11 +463,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            more.animate([{ scale: 1 }, { scale: 1.2 }], {
-              duration: 1000,
-              iterations: Infinity,
-              direction: 'alternate'
-            });
+            // more.animate([
+            //   {scale: 1},
+            //   {scale: 1.2},
+            // ], {
+            //   duration: 1000,
+            //   iterations: Infinity,
+            //   direction: 'alternate',
+            // })
 
             registerButton(more, function () {});
 
@@ -634,13 +631,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
-            if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
-              console.log(fglayer.timeline);
-              fglayer.timeline.playbackRate = 0;
-            } else {
-              fglayer.timeline.playbackRate = 1;
-            }
-            window.fglayer = fglayer;
+            // if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
+            //   fglayer.timeline.playbackRate = 0
+            // } else {
+            //   fglayer.timeline.playbackRate = 1
+            // }
+
             var p = Math.min(maxScroll, yOffset) / maxScroll;
             var x1 = 2380 - 1400 * p * p,
                 x2 = 1080 + 1900 * p * p;
