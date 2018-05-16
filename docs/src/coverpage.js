@@ -256,7 +256,7 @@
     }
 
     button.on('mouseleave', btnPressUp)
-    document.documentElement.addEventListener('touchend', btnPressUp)
+    button.on('touchend', btnPressUp)
 
     if(typeof link === 'string') {
       button.on('click', (evt) => {
