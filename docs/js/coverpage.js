@@ -588,7 +588,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             autoScroll(maxScroll, 1000);
           });
 
-          document.addEventListener('scroll', function (evt) {
+          document.addEventListener('scroll', _.throttle(function (evt) {
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
@@ -608,7 +608,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // }
 
             if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-              coverpage.style.position = 'absolute';
+              // coverpage.style.position = 'absolute'
               // coverpage.style.top = `${maxScroll}px`
               // guanguan.attr({
               //   textures: ['guanguan1.png'],
@@ -654,7 +654,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // huanhuan.attr({
             //   x: x2,
             // })
-          }, 16);
+          }, 16));
 
         case 37:
         case 'end':
