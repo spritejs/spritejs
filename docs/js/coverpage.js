@@ -481,7 +481,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               var p = (startTime - Date.now()) / 1000;
               p -= Math.floor(p);
               // more.attr('scale', 1 + 0.5 * p)
-              more.attr('pos', [100, 100]);
+              more.attr({
+                pos: [100, 100],
+                bgcolor: 'blue'
+              });
               requestAnimationFrame(step);
             });
 
