@@ -1713,6 +1713,24 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       return this[_attr].attrs;
     }
   }, {
+    key: 'isVisible',
+    value: function isVisible() {
+      var opacity = this.attr('opacity');
+      if (opacity <= 0) {
+        return false;
+      }
+
+      var _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
+          width = _offsetSize[0],
+          height = _offsetSize[1];
+
+      if (width <= 0 || height <= 0) {
+        return false;
+      }
+
+      return true;
+    }
+  }, {
     key: 'animate',
     value: function animate(frames, timing) {
       var _this2 = this;
@@ -1814,6 +1832,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'pointCollision',
     value: function pointCollision(evt) {
+      if (!this.isVisible()) {
+        return false;
+      }
+
       var parentX = void 0,
           parentY = void 0;
 
@@ -1910,11 +1932,15 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
       var bound = this.originalRect;
 
-      var cachableContext = this.cache || (0, _render.copyContext)(drawingContext, Math.ceil(bound[2]), Math.ceil(bound[3]));
+      // solve 1px problem
+      var cachableContext = this.cache || (0, _render.copyContext)(drawingContext, Math.ceil(bound[2]) + 2, Math.ceil(bound[3]) + 2);
       var evtArgs = { context: cachableContext || drawingContext, target: this, renderTime: t, fromCache: !!this.cache };
 
       if (!cachableContext) {
         drawingContext.translate(bound[0], bound[1]);
+      } else {
+        // solve 1px problem
+        cachableContext.translate(1, 1);
       }
 
       this.dispatchEvent('beforedraw', evtArgs, true, true);
@@ -1932,7 +1958,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       this.dispatchEvent('afterdraw', evtArgs, true, true);
 
       if (cachableContext) {
-        drawingContext.drawImage(cachableContext.canvas, bound[0], bound[1]);
+        drawingContext.drawImage(cachableContext.canvas, bound[0] - 1, bound[1] - 1);
       }
       drawingContext.restore();
 
@@ -1945,9 +1971,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     key: 'render',
     value: function render(t, drawingContext) {
       var attr = this.attr(),
-          _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
-          offsetWidth = _offsetSize[0],
-          offsetHeight = _offsetSize[1],
+          _offsetSize2 = (0, _slicedToArray3.default)(this.offsetSize, 2),
+          offsetWidth = _offsetSize2[0],
+          offsetHeight = _offsetSize2[1],
           _clientSize = (0, _slicedToArray3.default)(this.clientSize, 2),
           clientWidth = _clientSize[0],
           clientHeight = _clientSize[1];
@@ -2118,9 +2144,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           ox = _originalRect2[0],
           oy = _originalRect2[1];
 
-      var _offsetSize2 = (0, _slicedToArray3.default)(this.offsetSize, 2),
-          width = _offsetSize2[0],
-          height = _offsetSize2[1];
+      var _offsetSize3 = (0, _slicedToArray3.default)(this.offsetSize, 2),
+          width = _offsetSize3[0],
+          height = _offsetSize3[1];
 
       var vertexs = [[ox, oy], [width + ox, oy], [ox, height + oy], [width + ox, height + oy]];
 
@@ -2148,9 +2174,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'originalRect',
     get: function get() {
-      var _offsetSize3 = (0, _slicedToArray3.default)(this.offsetSize, 2),
-          width = _offsetSize3[0],
-          height = _offsetSize3[1],
+      var _offsetSize4 = (0, _slicedToArray3.default)(this.offsetSize, 2),
+          width = _offsetSize4[0],
+          height = _offsetSize4[1],
           _attr8 = this.attr('anchor'),
           _attr9 = (0, _slicedToArray3.default)(_attr8, 2),
           anchorX = _attr9[0],
@@ -7228,9 +7254,9 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'toGlobalPos',
-    value: function toGlobalPos(x, y) {
+    value: function toGlobalPos(canvas, x, y) {
       var resolution = this.layerResolution,
-          viewport = this.layerViewport;
+          viewport = [canvas.clientWidth, canvas.clientHeight];
 
       x = x * viewport[0] / resolution[0];
       y = y * viewport[1] / resolution[1];
@@ -7252,15 +7278,15 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'toLocalPos',
-    value: function toLocalPos(x, y) {
+    value: function toLocalPos(canvas, x, y) {
       var resolution = this.layerResolution,
-          viewport = this.layerViewport;
-
-      var _window$getComputedSt2 = window.getComputedStyle(this.container),
-          transform = _window$getComputedSt2.transform;
+          viewport = [canvas.clientWidth, canvas.clientHeight];
 
       x = x * resolution[0] / viewport[0];
       y = y * resolution[1] / viewport[1];
+
+      var _window$getComputedSt2 = window.getComputedStyle(this.container),
+          transform = _window$getComputedSt2.transform;
 
       if (transform !== 'none') {
         var matched = transform.match(/matrix\((.*)\)/);
@@ -7311,7 +7337,7 @@ var _default = function (_BaseNode) {
           if (evtArgs.x != null && evtArgs.y != null) {
             x = evtArgs.x;
             y = evtArgs.y;
-            var _toGlobalPos = _this4.toGlobalPos(x, y);
+            var _toGlobalPos = _this4.toGlobalPos(e.target, x, y);
 
             var _toGlobalPos2 = (0, _slicedToArray3.default)(_toGlobalPos, 2);
 
@@ -7319,7 +7345,7 @@ var _default = function (_BaseNode) {
             originalY = _toGlobalPos2[1];
 
             x -= _this4.stickOffset[0];
-            x -= _this4.stickOffset[1];
+            y -= _this4.stickOffset[1];
           }
         } else if (e.target.dataset.layerId && _this4[_layerMap][e.target.dataset.layerId]) {
           var _e$target$getBounding = e.target.getBoundingClientRect(),
@@ -7332,7 +7358,7 @@ var _default = function (_BaseNode) {
 
           originalX = Math.round((clientX | 0) - left);
           originalY = Math.round((clientY | 0) - top);
-          var _toLocalPos = _this4.toLocalPos(originalX, originalY);
+          var _toLocalPos = _this4.toLocalPos(e.target, originalX, originalY);
 
           var _toLocalPos2 = (0, _slicedToArray3.default)(_toLocalPos, 2);
 
@@ -7341,7 +7367,7 @@ var _default = function (_BaseNode) {
 
 
           x -= _this4.stickOffset[0];
-          x -= _this4.stickOffset[1];
+          y -= _this4.stickOffset[1];
         }
 
         (0, _assign2.default)(evtArgs, {
@@ -7448,8 +7474,9 @@ var _default = function (_BaseNode) {
         var canvas = context.canvas;
         canvas.dataset.layerId = id;
         canvas.style.position = 'absolute';
+        var pos = window.getComputedStyle && window.getComputedStyle(this.container).position;
 
-        if (this.container.style && (window.getComputedStyle && window.getComputedStyle(this.container).position) !== 'absolute') {
+        if (this.container.style && pos !== 'absolute' && pos !== 'fixed') {
           this.container.style.position = 'relative';
         }
 
@@ -9104,7 +9131,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.7';
+var version = '2.0.0-alpha.8';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14484,10 +14511,6 @@ var _from = __webpack_require__(59);
 
 var _from2 = _interopRequireDefault(_from);
 
-var _slicedToArray2 = __webpack_require__(1);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
 var _assign = __webpack_require__(7);
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -14684,23 +14707,12 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'isVisible',
     value: function isVisible(sprite) {
-      if (sprite.isVisible) {
-        return sprite.isVisible();
-      }
-
-      var opacity = sprite.attr('opacity');
-      if (opacity <= 0) {
+      if (!sprite.isVisible()) {
         return false;
       }
-
-      var _sprite$offsetSize = (0, _slicedToArray3.default)(sprite.offsetSize, 2),
-          width = _sprite$offsetSize[0],
-          height = _sprite$offsetSize[1];
-
-      if (width <= 0 || height <= 0) {
+      if (sprite.parent !== this) {
         return false;
       }
-
       return true;
     }
   }, {
@@ -15662,6 +15674,7 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
         }
         return true;
       }
+      return false;
     }
   }, {
     key: 'render',

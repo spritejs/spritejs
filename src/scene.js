@@ -229,9 +229,9 @@ export default class extends BaseNode {
     return this
   }
 
-  toGlobalPos(x, y) {
+  toGlobalPos(canvas, x, y) {
     const resolution = this.layerResolution,
-      viewport = this.layerViewport
+      viewport = [canvas.clientWidth, canvas.clientHeight]
 
     x = x * viewport[0] / resolution[0]
     y = y * viewport[1] / resolution[1]
@@ -247,14 +247,14 @@ export default class extends BaseNode {
 
     return [x, y]
   }
-  toLocalPos(x, y) {
+  toLocalPos(canvas, x, y) {
     const resolution = this.layerResolution,
-      viewport = this.layerViewport
-    const {transform} = window.getComputedStyle(this.container)
+      viewport = [canvas.clientWidth, canvas.clientHeight]
 
     x = x * resolution[0] / viewport[0]
     y = y * resolution[1] / viewport[1]
 
+    const {transform} = window.getComputedStyle(this.container)
     if(transform !== 'none') {
       const matched = transform.match(/matrix\((.*)\)/)
       if(matched && matched[1]) {
@@ -293,9 +293,9 @@ export default class extends BaseNode {
         if(evtArgs.x != null && evtArgs.y != null) {
           x = evtArgs.x
           y = evtArgs.y
-          ;[originalX, originalY] = this.toGlobalPos(x, y)
+          ;[originalX, originalY] = this.toGlobalPos(e.target, x, y)
           x -= this.stickOffset[0]
-          x -= this.stickOffset[1]
+          y -= this.stickOffset[1]
         }
       } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
         const {left, top} = e.target.getBoundingClientRect()
@@ -304,10 +304,10 @@ export default class extends BaseNode {
         originalX = Math.round((clientX | 0) - left)
         originalY = Math.round((clientY | 0) - top)
 
-        ;[x, y] = this.toLocalPos(originalX, originalY)
+        ;[x, y] = this.toLocalPos(e.target, originalX, originalY)
 
         x -= this.stickOffset[0]
-        x -= this.stickOffset[1]
+        y -= this.stickOffset[1]
       }
 
       Object.assign(evtArgs, {
