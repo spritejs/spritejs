@@ -122,28 +122,28 @@
     huanhuanGroup.append(huanhuanFire)
 
     // random burn fire
-    let fx = 5,
-      fy = 6
+    // let fx = 5,
+    //   fy = 6
 
-    fglayer.timeline.setInterval(() => {
-      const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-        deltaY = Math.floor(Math.random() * 3) - 1
+    // fglayer.timeline.setInterval(() => {
+    //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
+    //     deltaY = Math.floor(Math.random() * 3) - 1
 
-      fx += deltaX
-      if(fx < 0) fx = 0
-      if(fx > 15) fx = 15
+    //   fx += deltaX
+    //   if(fx < 0) fx = 0
+    //   if(fx > 15) fx = 15
 
-      fx += deltaY
-      if(fy < 0) fy = 0
-      if(fy > 20) fy = 20
+    //   fx += deltaY
+    //   if(fy < 0) fy = 0
+    //   if(fy > 20) fy = 20
 
-      const q1 = [-1, 12, -5 + fx, 30 + fy]
-      const q2 = [30, 22, 30, 0]
-      const d = `M0,0Q${q1}Q${q2}z`
-      huanhuanFire.attr({
-        path: {d, transform: {scale: 2}},
-      })
-    }, 100)
+    //   const q1 = [-1, 12, -5 + fx, 30 + fy]
+    //   const q2 = [30, 22, 30, 0]
+    //   const d = `M0,0Q${q1}Q${q2}z`
+    //   huanhuanFire.attr({
+    //     path: {d, transform: {scale: 2}},
+    //   })
+    // }, 100)
 
     const anim2 = huanhuanGroup.animate([
       {pos: [980, 744], opacity: 0},
@@ -465,7 +465,6 @@
   })
 
   window.addEventListener('scroll', _.throttle((evt) => {
-    console.log(111)
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 
