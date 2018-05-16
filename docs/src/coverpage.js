@@ -467,19 +467,19 @@
     if(yOffset < 0) return
 
     // console.log(yOffset)
-    if(!scrolled && yOffset) {
-      scrolled = true
-      hideSprites([text, ...buttons, more])
-      guanguan.attr({
-        textures: ['guanguan3.png'],
-      })
-    } else if(scrolled && yOffset === 0) {
-      scrolled = false
-      showSprites([text, ...buttons, more])
-      guanguan.attr({
-        textures: ['guanguan1.png'],
-      })
-    }
+    // if(!scrolled && yOffset) {
+    //   scrolled = true
+    //   hideSprites([text, ...buttons, more])
+    //   guanguan.attr({
+    //     textures: ['guanguan3.png'],
+    //   })
+    // } else if(scrolled && yOffset === 0) {
+    //   scrolled = false
+    //   showSprites([text, ...buttons, more])
+    //   guanguan.attr({
+    //     textures: ['guanguan1.png'],
+    //   })
+    // }
 
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
       // coverpage.style.position = 'absolute'
