@@ -584,6 +584,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           more = showMore();
 
           window.more = more;
+          more.c1 = function () {
+            this.attr('bgcolor', 'green');
+          };
+          more.c2 = function () {
+            this.attr('bgcolor', 'red');
+          };
 
           // const featureGroup = showFeatures()
 
@@ -663,7 +669,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           // })
           // }, 16))
 
-        case 17:
+        case 19:
         case 'end':
           return _context6.stop();
       }
