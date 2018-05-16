@@ -464,6 +464,8 @@
 
   document.addEventListener('scroll', (evt) => {
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
+    if(yOffset < 0) return
+
     // console.log(yOffset)
     if(!scrolled && yOffset) {
       scrolled = true
