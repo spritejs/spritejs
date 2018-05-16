@@ -522,7 +522,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             };
 
             button.on('mouseleave', btnPressUp);
-            document.documentElement.addEventListener('touchend', btnPressUp);
+            button.on('touchend', btnPressUp);
 
             if (typeof link === 'string') {
               button.on('click', function (evt) {
