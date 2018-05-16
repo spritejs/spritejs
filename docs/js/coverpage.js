@@ -634,7 +634,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
-            if (yOffset > coverpage.clientHeight + features.clientHeight) {
+            if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
               fglayer.timeline.playbackRate = 0;
             } else {
               fglayer.timeline.playbackRate = 1;
