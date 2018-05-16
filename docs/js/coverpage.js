@@ -476,20 +476,18 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             //   direction: 'alternate',
             // })
 
-            var startTime = Date.now();
+            var i = 0,
+                colors = ['red', 'blue'];
             setInterval(function step() {
-              var p = (startTime - Date.now()) / 1000;
-              p -= Math.floor(p);
-              // more.attr('scale', 1 + 0.5 * p)
+              var bgcolor = colors[i++ % 2];
               try {
                 more.attr({
-                  pos: [100 + 200 * p, 100]
+                  bgcolor: bgcolor
                   // bgcolor: 'blue',
                 });
-                console.log(more.attr('bgcolor'));
                 more.cache = null;
               } catch (ex) {}
-            }, 200);
+            }, 1000);
 
             // registerButton(more, () => {})
 
