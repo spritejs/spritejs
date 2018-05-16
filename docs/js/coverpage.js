@@ -370,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -466,14 +466,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            // more.animate([
-            //   {scale: 1},
-            //   {scale: 1.2},
-            // ], {
-            //   duration: 1000,
-            //   iterations: Infinity,
-            //   direction: 'alternate',
-            // })
+            more.animate([{ scale: 1 }, { scale: 1.2 }], {
+              duration: 1000,
+              iterations: Infinity,
+              direction: 'alternate'
+            });
 
             document.querySelector('main').style.display = 'block';
             return more;
@@ -526,8 +523,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
             viewport: ['auto', 'auto'],
-            resolution: [3840, 2160],
-            stickMode: 'width'
+            resolution: [3840, 2160]
+            // stickMode: 'width',
           });
 
           // 适配移动端
@@ -553,30 +550,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
         case 11:
           fglayer = scene.layer('fglayer');
           requestId = null;
-          _context6.next = 15;
-          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 15:
-          _context6.next = 17;
-          return showIntroText('跨平台绘图对象模型');
 
-        case 17:
-          text = _context6.sent;
-          _context6.next = 20;
-          return showHuanHuan();
-
-        case 20:
-          huanhuan = _context6.sent;
-          _context6.next = 23;
-          return showGuanGuan();
-
-        case 23:
-          guanguan = _context6.sent;
-          _context6.next = 26;
-          return showButtons();
-
-        case 26:
-          buttons = _context6.sent;
+          // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+          // const text = await showIntroText('跨平台绘图对象模型')
+          // const huanhuan = await showHuanHuan()
+          // const guanguan = await showGuanGuan()
+          // const buttons = await showButtons()
           more = showMore();
 
           // const featureGroup = showFeatures()
@@ -657,7 +637,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 32:
+        case 18:
         case 'end':
           return _context6.stop();
       }
