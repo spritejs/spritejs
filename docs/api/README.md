@@ -20,7 +20,7 @@ It is can not only support web apps but also support node (use node-canvas) apps
 ## Quick Look
 
 ```html
-<script src="https://s3.ssl.qhres.com/!340895d0/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!7a9ff1f7/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -44,7 +44,7 @@ It is can not only support web apps but also support node (use node-canvas) apps
 In browser:
 
 ```html
-<script src="https://s3.ssl.qhres.com/!340895d0/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!7a9ff1f7/spritejs.min.js"></script>
 ```
 
 With Node:
