@@ -351,22 +351,19 @@
     //   direction: 'alternate',
     // })
 
-    const startTime = Date.now()
+    let i = 0, colors = ['red', 'blue']
     setInterval(function step() {
-      let p = (startTime - Date.now()) / 1000
-      p -= Math.floor(p)
-      // more.attr('scale', 1 + 0.5 * p)
+      const bgcolor = colors[i++ % 2]
       try {
         more.attr({
-          pos: [100 + 200 * p, 100],
+          bgcolor,
           // bgcolor: 'blue',
         })
-        console.log(more.attr('bgcolor'))
         more.cache = null
       } catch(ex) {
 
       }
-    }, 200)
+    }, 1000)
 
     // registerButton(more, () => {})
 
