@@ -482,7 +482,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               p -= Math.floor(p);
               // more.attr('scale', 1 + 0.5 * p)
               more.attr({
-                pos: [100, 100],
+                pos: [100 + 200 * p, 100],
                 bgcolor: 'blue'
               });
               requestAnimationFrame(step);
