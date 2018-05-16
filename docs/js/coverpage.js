@@ -476,23 +476,20 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             //   direction: 'alternate',
             // })
 
-            // const startTime = Date.now()
-            // requestAnimationFrame(function step() {
-            //   let p = (startTime - Date.now()) / 1000
-            //   p -= Math.floor(p)
-            //   // more.attr('scale', 1 + 0.5 * p)
-            //   try {
-            //     more.attr({
-            //       pos: [100 + 200 * p, 100],
-            //       // bgcolor: 'blue',
-            //     })
-            //     console.log(more.attr('bgcolor'))
-            //     more.cache = null
-            //   } catch(ex) {
-
-            //   }
-            //   requestAnimationFrame(step)
-            // })
+            var startTime = Date.now();
+            setInterval(function step() {
+              var p = (startTime - Date.now()) / 1000;
+              p -= Math.floor(p);
+              // more.attr('scale', 1 + 0.5 * p)
+              try {
+                more.attr({
+                  pos: [100 + 200 * p, 100]
+                  // bgcolor: 'blue',
+                });
+                console.log(more.attr('bgcolor'));
+                more.cache = null;
+              } catch (ex) {}
+            }, 200);
 
             // registerButton(more, () => {})
 
