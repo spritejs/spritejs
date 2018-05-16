@@ -26,7 +26,7 @@
   }
   .markdown-section .info {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
   }
   .demos {
     display: flex;
@@ -67,11 +67,12 @@
   }
   .footer dt {
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
   }
   .footer dl {
     display: table-cell;
     text-align: left;
+    white-space: nowrap;
   }
   .footer dd {
     margin: 0;
