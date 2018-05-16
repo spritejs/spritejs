@@ -482,7 +482,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               var bgcolor = colors[i++ % 2];
               try {
                 more.attr({
-                  bgcolor: bgcolor
+                  bgcolor: bgcolor,
+                  pos: [100 + 10 * (i % 10), 100]
                   // bgcolor: 'blue',
                 });
                 more.cache = null;
