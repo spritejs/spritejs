@@ -352,7 +352,7 @@
 
     registerButton(more, () => {})
 
-    // document.querySelector('.wrap').style.display = 'block'
+    document.querySelector('.wrap').style.display = 'block'
     return more
   }
 

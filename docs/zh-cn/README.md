@@ -20,6 +20,7 @@
     position: fixed; 
   }
   #page-index .wrap {
+    display: none;
     height: 100%;
   }
 
