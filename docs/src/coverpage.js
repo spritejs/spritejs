@@ -462,7 +462,7 @@
     autoScroll(maxScroll, 1000)
   })
 
-  document.addEventListener('scroll', (evt) => {
+  document.addEventListener('scroll', _.throttle((evt) => {
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 
@@ -482,7 +482,7 @@
     // }
 
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      coverpage.style.position = 'absolute'
+      // coverpage.style.position = 'absolute'
       // coverpage.style.top = `${maxScroll}px`
       // guanguan.attr({
       //   textures: ['guanguan1.png'],
@@ -528,5 +528,5 @@
     // huanhuan.attr({
     //   x: x2,
     // })
-  }, 16)
+  }, 16))
 }())
