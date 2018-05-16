@@ -448,25 +448,15 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           };
 
           showSprites = function showSprites(sprites) {
-            var tasks = sprites.map(function (sprite) {
-              var anim = sprite.animate([{ opacity: 0 }, { opacity: 1 }], {
-                duration: 100,
-                fill: 'forwards'
-              });
-              return anim.finished;
+            sprites.forEach(function (sprite) {
+              sprite.attr({ opacity: 1 });
             });
-            return Promise.all(tasks);
           };
 
           hideSprites = function hideSprites(sprites) {
-            var tasks = sprites.map(function (sprite) {
-              var anim = sprite.animate([{ opacity: 1 }, { opacity: 0 }], {
-                duration: 100,
-                fill: 'forwards'
-              });
-              return anim.finished;
+            sprites.forEach(function (sprite) {
+              sprite.attr({ opacity: 0 });
             });
-            return Promise.all(tasks);
           };
 
           showMore = function showMore() {

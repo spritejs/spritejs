@@ -355,30 +355,14 @@
   }
 
   function hideSprites(sprites) {
-    const tasks = sprites.map((sprite) => {
-      const anim = sprite.animate([
-        {opacity: 1},
-        {opacity: 0},
-      ], {
-        duration: 100,
-        fill: 'forwards',
-      })
-      return anim.finished
+    sprites.forEach((sprite) => {
+      sprite.attr({opacity: 0})
     })
-    return Promise.all(tasks)
   }
   function showSprites(sprites) {
-    const tasks = sprites.map((sprite) => {
-      const anim = sprite.animate([
-        {opacity: 0},
-        {opacity: 1},
-      ], {
-        duration: 100,
-        fill: 'forwards',
-      })
-      return anim.finished
+    sprites.forEach((sprite) => {
+      sprite.attr({opacity: 1})
     })
-    return Promise.all(tasks)
   }
 
   function showFeatures() {
