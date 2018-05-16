@@ -486,12 +486,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                   pos: [100 + 200 * p, 100]
                   // bgcolor: 'blue',
                 });
+                console.log(more.attr('bgcolor'));
                 more.cache = null;
               } catch (ex) {}
               requestAnimationFrame(step);
             });
 
-            registerButton(more, function () {});
+            // registerButton(more, () => {})
 
             document.querySelector('.wrap').style.display = 'block';
             return more;
@@ -580,6 +581,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           // const buttons = await showButtons()
           more = showMore();
 
+          window.more = more;
+
           // const featureGroup = showFeatures()
 
           scrolled = false;
@@ -658,7 +661,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           // })
           // }, 16))
 
-        case 16:
+        case 17:
         case 'end':
           return _context6.stop();
       }

@@ -361,6 +361,7 @@
           pos: [100 + 200 * p, 100],
           // bgcolor: 'blue',
         })
+        console.log(more.attr('bgcolor'))
         more.cache = null
       } catch(ex) {
 
@@ -368,7 +369,7 @@
       requestAnimationFrame(step)
     })
 
-    registerButton(more, () => {})
+    // registerButton(more, () => {})
 
     document.querySelector('.wrap').style.display = 'block'
     return more
@@ -469,6 +470,7 @@
   // const guanguan = await showGuanGuan()
   // const buttons = await showButtons()
   const more = showMore()
+  window.more = more
 
   // const featureGroup = showFeatures()
 
