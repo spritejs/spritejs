@@ -113,7 +113,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
   var showHuanHuan = function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-      var huanhuanGroup, huanhuan, huanhuanFire, anim2;
+      var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -153,28 +153,29 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               huanhuanGroup.append(huanhuanFire);
 
               // random burn fire
-              // let fx = 5,
-              //   fy = 6
+              fx = 5, fy = 6;
 
-              // fglayer.timeline.setInterval(() => {
-              //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-              //     deltaY = Math.floor(Math.random() * 3) - 1
 
-              //   fx += deltaX
-              //   if(fx < 0) fx = 0
-              //   if(fx > 15) fx = 15
+              fglayer.timeline.setInterval(function () {
+                var deltaX = Math.floor(Math.random() * 3) - 1,
+                    // -1 0 1,
+                deltaY = Math.floor(Math.random() * 3) - 1;
 
-              //   fx += deltaY
-              //   if(fy < 0) fy = 0
-              //   if(fy > 20) fy = 20
+                fx += deltaX;
+                if (fx < 0) fx = 0;
+                if (fx > 15) fx = 15;
 
-              //   const q1 = [-1, 12, -5 + fx, 30 + fy]
-              //   const q2 = [30, 22, 30, 0]
-              //   const d = `M0,0Q${q1}Q${q2}z`
-              //   huanhuanFire.attr({
-              //     path: {d, transform: {scale: 2}},
-              //   })
-              // }, 100)
+                fx += deltaY;
+                if (fy < 0) fy = 0;
+                if (fy > 20) fy = 20;
+
+                var q1 = [-1, 12, -5 + fx, 30 + fy];
+                var q2 = [30, 22, 30, 0];
+                var d = 'M0,0Q' + q1 + 'Q' + q2 + 'z';
+                huanhuanFire.attr({
+                  path: { d: d, transform: { scale: 2 } }
+                });
+              }, 100);
 
               anim2 = huanhuanGroup.animate([{ pos: [980, 744], opacity: 0 }, { pos: [1080, 450], opacity: 1 }], {
                 duration: 500,
@@ -190,10 +191,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 huanhuan.textures = 'huanhuan.png';
               });
 
-              _context3.next = 14;
+              _context3.next = 16;
               return anim2.finished;
 
-            case 14:
+            case 16:
 
               huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
                 duration: 2000,
@@ -202,7 +203,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
               return _context3.abrupt('return', huanhuanGroup);
 
-            case 16:
+            case 18:
             case 'end':
               return _context3.stop();
           }
@@ -595,41 +596,41 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             if (yOffset < 0) return;
 
             // console.log(yOffset)
-            if (!scrolled && yOffset) {
-              scrolled = true;
-              hideSprites([text].concat(_toConsumableArray(buttons), [more]));
-              guanguan.attr({
-                textures: ['guanguan3.png']
-              });
-            } else if (scrolled && yOffset === 0) {
-              scrolled = false;
-              showSprites([text].concat(_toConsumableArray(buttons), [more]));
-              guanguan.attr({
-                textures: ['guanguan1.png']
-              });
-            }
+            // if(!scrolled && yOffset) {
+            //   scrolled = true
+            //   hideSprites([text, ...buttons, more])
+            //   guanguan.attr({
+            //     textures: ['guanguan3.png'],
+            //   })
+            // } else if(scrolled && yOffset === 0) {
+            //   scrolled = false
+            //   showSprites([text, ...buttons, more])
+            //   guanguan.attr({
+            //     textures: ['guanguan1.png'],
+            //   })
+            // }
 
             if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
               coverpage.style.position = 'absolute';
               coverpage.style.top = maxScroll + 'px';
-              guanguan.attr({
-                textures: ['guanguan1.png']
-              });
+              // guanguan.attr({
+              //   textures: ['guanguan1.png'],
+              // })
             } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
               coverpage.style.position = '';
               coverpage.style.top = '';
-              guanguan.attr({
-                textures: ['guanguan3.png']
-              });
+              // guanguan.attr({
+              //   textures: ['guanguan3.png'],
+              // })
             }
 
-            var p = Math.min(maxScroll, yOffset) / maxScroll;
-            var x1 = 2380 - 1400 * p * p,
-                x2 = 1080 + 1900 * p * p;
+            // const p = Math.min(maxScroll, yOffset) / maxScroll
+            // const x1 = 2380 - 1400 * p * p,
+            //   x2 = 1080 + 1900 * p * p
 
-            if (p < 0 || p > 1) {
-              return;
-            }
+            // if(p < 0 || p > 1) {
+            //   return
+            // }
 
             // p = 0.588
             // x1 = 1896
@@ -637,25 +638,25 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // x2e = 1244
             // x1e = 916
 
-            if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-              featureGroup._clipDX = x2 - x1;
-              var l = 916 - (1896 - x1),
-                  r = 916 + x2 - 1736;
-              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
-              featureGroup.attr({
-                clip: { d: d }
-              });
-            } else if (x2 - x1 <= 0) {
-              featureGroup.attr({
-                clip: { d: 'M0,0L0,0L0,0L0,0z' }
-              });
-            }
-            guanguan.attr({
-              x: x1
-            });
-            huanhuan.attr({
-              x: x2
-            });
+            // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+            //   featureGroup._clipDX = x2 - x1
+            //   const l = 916 - (1896 - x1),
+            //     r = 916 + x2 - 1736
+            //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+            //   featureGroup.attr({
+            //     clip: {d},
+            //   })
+            // } else if(x2 - x1 <= 0) {
+            //   featureGroup.attr({
+            //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
+            //   })
+            // }
+            // guanguan.attr({
+            //   x: x1,
+            // })
+            // huanhuan.attr({
+            //   x: x2,
+            // })
           }, 16));
 
         case 37:
