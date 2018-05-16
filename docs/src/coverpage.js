@@ -1,7 +1,7 @@
 (async function () {
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {
-    viewport: ['auto', 'auto'],
+    // viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
