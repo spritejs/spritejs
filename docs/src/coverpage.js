@@ -364,7 +364,7 @@
       } catch(ex) {
 
       }
-    }, 1000)
+    }, 100)
 
     // registerButton(more, () => {})
 

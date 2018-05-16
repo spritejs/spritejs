@@ -488,7 +488,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 });
                 more.cache = null;
               } catch (ex) {}
-            }, 1000);
+            }, 100);
 
             // registerButton(more, () => {})
 
