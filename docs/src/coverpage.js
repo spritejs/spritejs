@@ -259,6 +259,7 @@
 
     if(typeof link === 'string') {
       button.on('click', (evt) => {
+        scene.removeLayer(fglayer)
         const coverpage = document.querySelector('#coverpage')
         coverpage.remove()
         window.location.href = link
