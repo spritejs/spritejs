@@ -334,25 +334,25 @@
 
   function showMore() {
     const more = new Sprite()
-    more.attr({
-      textures: 'more.png',
-      anchor: 0.5,
-      pos: [1920, 1800],
-    })
-    fglayer.append(more)
+    // more.attr({
+    //   textures: 'more.png',
+    //   anchor: 0.5,
+    //   pos: [1920, 1800],
+    // })
+    // fglayer.append(more)
 
-    more.animate([
-      {scale: 1},
-      {scale: 1.2},
-    ], {
-      duration: 1000,
-      iterations: Infinity,
-      direction: 'alternate',
-    })
+    // more.animate([
+    //   {scale: 1},
+    //   {scale: 1.2},
+    // ], {
+    //   duration: 1000,
+    //   iterations: Infinity,
+    //   direction: 'alternate',
+    // })
 
-    registerButton(more, () => {
+    // registerButton(more, () => {
 
-    })
+    // })
     document.querySelector('main').style.display = 'block'
     return more
   }
