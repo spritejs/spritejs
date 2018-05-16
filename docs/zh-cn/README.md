@@ -1,5 +1,5 @@
 <style>
-  html, body, section, article, #page-index {
+  /* html, body, section, article, #page-index {
     width: 100%;
     height: 100%;
     padding: 0;
@@ -18,7 +18,7 @@
     width: 100%;
     height: 100%;   
     position: fixed; 
-  }
+  } */
   #page-index .wrap {
     display: none;
     height: 100%;
@@ -134,10 +134,6 @@
     background: #fff;
   } */
 </style>
-
-<div class="coverpage">
-  <div id="container"></div>
-</div>
 
 <div class="wrap">
   <div id="features"></div>

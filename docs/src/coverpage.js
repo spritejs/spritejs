@@ -1,11 +1,11 @@
 (async function () {
   const {Scene, Sprite, Group, Label, Path} = spritejs
-  const scene = new Scene('#container', {
+  const scene = new Scene('#coverpage', {
     viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
-  const coverpage = document.querySelector('.coverpage #container')
+  const coverpage = document.querySelector('#coverpage')
 
   // 适配移动端
   // const [width] = scene.viewport
@@ -354,7 +354,7 @@
     requestAnimationFrame(function step() {
       let p = (startTime - Date.now()) / 1000
       p -= Math.floor(p)
-      more.attr('scale', 1 + 0.2 * p)
+      more.attr('scale', 1 + 0.5 * p)
       requestAnimationFrame(step)
     })
 
@@ -464,15 +464,14 @@
 
   let scrolled = false
   const features = document.getElementById('features')
-  const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.5
+  const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
   // more.on('mouseenter', () => {
   //   autoScroll(maxScroll, 1000)
   // })
-  const scroller = document.querySelector('main')
 
-  scroller.addEventListener('scroll', _.throttle((evt) => {
-    const yOffset = scroller.scrollTop
+  window.addEventListener('scroll', _.throttle((evt) => {
+    const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 
     // console.log(yOffset)
