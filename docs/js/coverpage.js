@@ -372,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -527,7 +527,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
-            // viewport: ['auto', 'auto'],
+            viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
             stickMode: 'width'
           });
@@ -558,13 +558,30 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
         case 14:
           fglayer = scene.layer('fglayer');
           requestId = null;
+          _context6.next = 18;
+          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
+        case 18:
+          _context6.next = 20;
+          return showIntroText('跨平台绘图对象模型');
 
-          // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-          // const text = await showIntroText('跨平台绘图对象模型')
-          // const huanhuan = await showHuanHuan()
-          // const guanguan = await showGuanGuan()
-          // const buttons = await showButtons()
+        case 20:
+          text = _context6.sent;
+          _context6.next = 23;
+          return showHuanHuan();
+
+        case 23:
+          huanhuan = _context6.sent;
+          _context6.next = 26;
+          return showGuanGuan();
+
+        case 26:
+          guanguan = _context6.sent;
+          _context6.next = 29;
+          return showButtons();
+
+        case 29:
+          buttons = _context6.sent;
           more = showMore();
 
           // const featureGroup = showFeatures()
@@ -645,7 +662,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 21:
+        case 35:
         case 'end':
           return _context6.stop();
       }

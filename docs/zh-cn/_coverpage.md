@@ -7,10 +7,8 @@
     padding: 0;
     margin: 0;
   }
-  body, 
-  .cover,
   .cover-main {
-    overflow-x: hidden;
+    overflow: hidden;
   }
   section.cover.show .cover-main {
     background-color: #1eac61;
