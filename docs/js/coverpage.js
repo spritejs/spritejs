@@ -598,67 +598,69 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             autoScroll(maxScroll, 1000);
           });
 
-          // document.addEventListener('scroll', (evt) => {
-          //   const yOffset = window.pageYOffset || document.documentElement.scrollTop
-          //   // console.log(yOffset)
-          //   if(!scrolled && yOffset) {
-          //     scrolled = true
-          //     hideSprites([text, ...buttons, more])
-          //     guanguan.attr({
-          //       textures: ['guanguan3.png'],
-          //     })
-          //   } else if(scrolled && yOffset === 0) {
-          //     scrolled = false
-          //     showSprites([text, ...buttons, more])
-          //     guanguan.attr({
-          //       textures: ['guanguan1.png'],
-          //     })
-          //   }
+          document.addEventListener('scroll', function (evt) {
+            var yOffset = window.pageYOffset || document.documentElement.scrollTop;
+            // console.log(yOffset)
+            if (!scrolled && yOffset) {
+              scrolled = true;
+              hideSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            } else if (scrolled && yOffset === 0) {
+              scrolled = false;
+              showSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            }
 
-          //   if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-          //     coverpage.style.position = 'absolute'
-          //     coverpage.style.top = `${maxScroll}px`
-          //     guanguan.attr({
-          //       textures: ['guanguan1.png'],
-          //     })
-          //   } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-          //     coverpage.style.position = ''
-          //     coverpage.style.top = ''
-          //     guanguan.attr({
-          //       textures: ['guanguan3.png'],
-          //     })
-          //   }
+            if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+              coverpage.style.position = 'absolute';
+              coverpage.style.top = maxScroll + 'px';
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
+              coverpage.style.position = '';
+              coverpage.style.top = '';
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            }
 
-          //   const p = Math.min(maxScroll, yOffset) / maxScroll
-          //   const x1 = 2380 - 1400 * p * p,
-          //     x2 = 1080 + 1900 * p * p
+            var p = Math.min(maxScroll, yOffset) / maxScroll;
+            var x1 = 2380 - 1400 * p * p,
+                x2 = 1080 + 1900 * p * p;
 
-          //   // p = 0.588
-          //   // x1 = 1896
-          //   // x2 = 1736
-          //   // x2e = 1244
-          //   // x1e = 916
-          //   if(x2 - x1 > 0) {
-          //     const l = 916 - (1896 - x1),
-          //       r = 916 + x2 - 1736
-          //     const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-          //     featureGroup.attr({
-          //       clip: {d},
-          //     })
-          //   } else {
-          //     featureGroup.attr({
-          //       clip: {d: 'M0,0L0,0L0,0L0,0z'},
-          //     })
-          //   }
-          //   guanguan.attr({
-          //     x: x1,
-          //   })
-          //   huanhuan.attr({
-          //     x: x2,
-          //   })
-          // }, 16)
+            // p = 0.588
+            // x1 = 1896
+            // x2 = 1736
+            // x2e = 1244
+            // x1e = 916
 
-        case 36:
+            if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+              featureGroup._clipDX = x2 - x1;
+              var l = 916 - (1896 - x1),
+                  r = 916 + x2 - 1736;
+              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
+              featureGroup.attr({
+                clip: { d: d }
+              });
+            } else if (x2 - x1 <= 0) {
+              featureGroup.attr({
+                clip: { d: 'M0,0L0,0L0,0L0,0z' }
+              });
+            }
+            guanguan.attr({
+              x: x1
+            });
+            huanhuan.attr({
+              x: x2
+            });
+          }, 16);
+
+        case 37:
         case 'end':
           return _context6.stop();
       }
