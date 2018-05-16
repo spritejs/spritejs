@@ -332,6 +332,8 @@
     return [githubBtn, getStartBtn, demoBtn]
   }
 
+  let moreAnim
+
   function showMore() {
     const more = new Sprite()
     more.attr({
@@ -342,14 +344,14 @@
     })
     fglayer.append(more)
 
-    // more.animate([
-    //   {scale: 1},
-    //   {scale: 1.2},
-    // ], {
-    //   duration: 1000,
-    //   iterations: Infinity,
-    //   direction: 'alternate',
-    // })
+    moreAnim = more.animate([
+      {scale: 1},
+      {scale: 1.2},
+    ], {
+      duration: 1000,
+      iterations: Infinity,
+      direction: 'alternate',
+    })
 
     registerButton(more, () => {})
 
@@ -502,11 +504,11 @@
       })
     }
 
-    // if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
-    //   fglayer.timeline.playbackRate = 0
-    // } else {
-    //   fglayer.timeline.playbackRate = 1
-    // }
+    if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight && moreAnim.playState !== 'paused') {
+      moreAnim.pause()
+    } else if(moreAnim.playState === 'paused') {
+      moreAnim.play()
+    }
 
     const p = Math.min(maxScroll, yOffset) / maxScroll
     const x1 = 2380 - 1400 * p * p,
