@@ -450,8 +450,8 @@
   // const text = await showIntroText('跨平台绘图对象模型')
   // const huanhuan = await showHuanHuan()
   // const guanguan = await showGuanGuan()
-  const buttons = await showButtons()
-  // const more = showMore()
+  // const buttons = await showButtons()
+  const more = showMore()
 
   // const featureGroup = showFeatures()
 

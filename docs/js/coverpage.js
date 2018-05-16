@@ -372,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, buttons, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -556,13 +556,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
         case 14:
           fglayer = scene.layer('fglayer');
           requestId = null;
-          _context6.next = 18;
-          return showButtons();
 
-        case 18:
-          buttons = _context6.sent;
 
-          // const more = showMore()
+          // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+          // const text = await showIntroText('跨平台绘图对象模型')
+          // const huanhuan = await showHuanHuan()
+          // const guanguan = await showGuanGuan()
+          // const buttons = await showButtons()
+          more = showMore();
 
           // const featureGroup = showFeatures()
 
@@ -642,7 +643,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 23:
+        case 21:
         case 'end':
           return _context6.stop();
       }
