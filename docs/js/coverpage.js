@@ -366,7 +366,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, _scene$viewport, width, fglayer, wait, registerButton, moreAnim, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -463,14 +463,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            // more.animate([
-            //   {scale: 1},
-            //   {scale: 1.2},
-            // ], {
-            //   duration: 1000,
-            //   iterations: Infinity,
-            //   direction: 'alternate',
-            // })
+            moreAnim = more.animate([{ scale: 1 }, { scale: 1.2 }], {
+              duration: 1000,
+              iterations: Infinity,
+              direction: 'alternate'
+            });
 
             registerButton(more, function () {});
 
@@ -554,30 +551,31 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
         case 15:
           fglayer = scene.layer('fglayer');
+          moreAnim = void 0;
           requestId = null;
-          _context6.next = 19;
+          _context6.next = 20;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 19:
-          _context6.next = 21;
+        case 20:
+          _context6.next = 22;
           return showIntroText('跨平台绘图对象模型');
 
-        case 21:
+        case 22:
           text = _context6.sent;
-          _context6.next = 24;
+          _context6.next = 25;
           return showHuanHuan();
 
-        case 24:
+        case 25:
           huanhuan = _context6.sent;
-          _context6.next = 27;
+          _context6.next = 28;
           return showGuanGuan();
 
-        case 27:
+        case 28:
           guanguan = _context6.sent;
-          _context6.next = 30;
+          _context6.next = 31;
           return showButtons();
 
-        case 30:
+        case 31:
           buttons = _context6.sent;
           more = showMore();
 
@@ -631,11 +629,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               });
             }
 
-            // if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
-            //   fglayer.timeline.playbackRate = 0
-            // } else {
-            //   fglayer.timeline.playbackRate = 1
-            // }
+            if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight && moreAnim.playState !== 'paused') {
+              moreAnim.pause();
+            } else if (moreAnim.playState === 'paused') {
+              moreAnim.play();
+            }
 
             var p = Math.min(maxScroll, yOffset) / maxScroll;
             var x1 = 2380 - 1400 * p * p,
@@ -672,7 +670,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
           }, 16));
 
-        case 41:
+        case 42:
         case 'end':
           return _context6.stop();
       }
