@@ -588,7 +588,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             autoScroll(maxScroll, 1000);
           });
 
-          document.addEventListener('scroll', _.throttle(function (evt) {
+          window.addEventListener('scroll', _.throttle(function (evt) {
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
