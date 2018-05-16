@@ -370,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, features, maxScroll, scroller;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, features, maxScroll, scroller;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -552,30 +552,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
         case 12:
           fglayer = scene.layer('fglayer');
           requestId = null;
-          _context6.next = 16;
-          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 16:
-          _context6.next = 18;
-          return showIntroText('跨平台绘图对象模型');
 
-        case 18:
-          text = _context6.sent;
-          _context6.next = 21;
-          return showHuanHuan();
-
-        case 21:
-          huanhuan = _context6.sent;
-          _context6.next = 24;
-          return showGuanGuan();
-
-        case 24:
-          guanguan = _context6.sent;
-          _context6.next = 27;
-          return showButtons();
-
-        case 27:
-          buttons = _context6.sent;
+          // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+          // const text = await showIntroText('跨平台绘图对象模型')
+          // const huanhuan = await showHuanHuan()
+          // const guanguan = await showGuanGuan()
+          // const buttons = await showButtons()
           more = showMore();
 
           // const featureGroup = showFeatures()
@@ -609,7 +592,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             //     textures: ['guanguan1.png'],
             //   })
             // }
-            console.log(yOffset, maxScroll);
+
             if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
               coverpage.style.position = 'absolute';
               coverpage.style.top = maxScroll + 'px';
@@ -659,7 +642,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 34:
+        case 20:
         case 'end':
           return _context6.stop();
       }
