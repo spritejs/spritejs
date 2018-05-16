@@ -481,14 +481,14 @@
     // }
 
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      coverpage.style.position = 'absolute'
-      coverpage.style.top = `${maxScroll}px`
+      // coverpage.style.position = 'absolute'
+      // coverpage.style.top = `${maxScroll}px`
       // guanguan.attr({
       //   textures: ['guanguan1.png'],
       // })
     } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-      coverpage.style.position = 'fixed'
-      coverpage.style.top = '0'
+      // coverpage.style.position = 'fixed'
+      // coverpage.style.top = '0'
       // guanguan.attr({
       //   textures: ['guanguan3.png'],
       // })
