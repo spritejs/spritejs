@@ -372,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, buttons, featureGroup, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -507,6 +507,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             if (typeof link === 'string') {
               button.on('click', function (evt) {
+                var coverpage = document.querySelector('#coverpage');
+                coverpage.remove();
                 window.location.href = link;
               });
             } else if (typeof link === 'function') {
@@ -554,13 +556,109 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           fglayer = scene.layer('fglayer');
           requestId = null;
           _context6.next = 18;
-          return showButtons();
+          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
         case 18:
-          buttons = _context6.sent;
-          return _context6.abrupt('return');
+          _context6.next = 20;
+          return showIntroText('跨平台绘图对象模型');
+
+        case 20:
+          text = _context6.sent;
+          _context6.next = 23;
+          return showHuanHuan();
+
+        case 23:
+          huanhuan = _context6.sent;
+          _context6.next = 26;
+          return showGuanGuan();
 
         case 26:
+          guanguan = _context6.sent;
+          _context6.next = 29;
+          return showButtons();
+
+        case 29:
+          buttons = _context6.sent;
+          more = showMore();
+          featureGroup = showFeatures();
+          scrolled = false;
+          coverpage = document.getElementById('coverpage'), features = document.getElementById('features');
+          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
+
+
+          more.on('mouseenter', function () {
+            autoScroll(maxScroll, 1000);
+          });
+
+          window.addEventListener('scroll', _.throttle(function (evt) {
+            var yOffset = window.pageYOffset || document.documentElement.scrollTop;
+            if (yOffset < 0) return;
+
+            // console.log(yOffset)
+            if (!scrolled && yOffset) {
+              scrolled = true;
+              hideSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            } else if (scrolled && yOffset === 0) {
+              scrolled = false;
+              showSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            }
+
+            if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+              coverpage.style.position = 'absolute';
+              coverpage.style.top = maxScroll + 'px';
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
+              coverpage.style.position = '';
+              coverpage.style.top = '';
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            }
+
+            var p = Math.min(maxScroll, yOffset) / maxScroll;
+            var x1 = 2380 - 1400 * p * p,
+                x2 = 1080 + 1900 * p * p;
+
+            if (p < 0 || p > 1) {
+              return;
+            }
+
+            // p = 0.588
+            // x1 = 1896
+            // x2 = 1736
+            // x2e = 1244
+            // x1e = 916
+
+            if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+              featureGroup._clipDX = x2 - x1;
+              var l = 916 - (1896 - x1),
+                  r = 916 + x2 - 1736;
+              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
+              featureGroup.attr({
+                clip: { d: d }
+              });
+            } else if (x2 - x1 <= 0) {
+              featureGroup.attr({
+                clip: { d: 'M0,0L0,0L0,0L0,0z' }
+              });
+            }
+            guanguan.attr({
+              x: x1
+            });
+            huanhuan.attr({
+              x: x2
+            });
+          }, 16));
+
+        case 37:
         case 'end':
           return _context6.stop();
       }
