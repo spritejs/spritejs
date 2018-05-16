@@ -1,7 +1,7 @@
 (async function () {
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {
-    // viewport: ['auto', 'auto'],
+    viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
@@ -443,11 +443,11 @@
     })
   }
 
-  // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-  // const text = await showIntroText('跨平台绘图对象模型')
-  // const huanhuan = await showHuanHuan()
-  // const guanguan = await showGuanGuan()
-  // const buttons = await showButtons()
+  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+  const text = await showIntroText('跨平台绘图对象模型')
+  const huanhuan = await showHuanHuan()
+  const guanguan = await showGuanGuan()
+  const buttons = await showButtons()
   const more = showMore()
 
   // const featureGroup = showFeatures()
