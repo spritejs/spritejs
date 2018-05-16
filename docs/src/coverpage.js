@@ -451,7 +451,7 @@
   // const huanhuan = await showHuanHuan()
   // const guanguan = await showGuanGuan()
   const buttons = await showButtons()
-  const more = showMore()
+  // const more = showMore()
 
   // const featureGroup = showFeatures()
 

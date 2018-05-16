@@ -372,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, buttons, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, buttons, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -561,7 +561,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
         case 18:
           buttons = _context6.sent;
-          more = showMore();
+
+          // const more = showMore()
 
           // const featureGroup = showFeatures()
 
@@ -641,7 +642,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 24:
+        case 23:
         case 'end':
           return _context6.stop();
       }
