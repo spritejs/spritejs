@@ -1,10 +1,11 @@
 (async function () {
   const {Scene, Sprite, Group, Label, Path} = spritejs
-  const scene = new Scene('#coverpage', {
+  const scene = new Scene('#container', {
     viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
+  const coverpage = document.querySelector('.coverpage #container')
 
   // 适配移动端
   // const [width] = scene.viewport
@@ -260,7 +261,6 @@
     if(typeof link === 'string') {
       button.on('click', (evt) => {
         scene.removeLayer(fglayer)
-        const coverpage = document.querySelector('#coverpage')
         coverpage.remove()
         window.location.href = link
       })
@@ -350,7 +350,9 @@
       direction: 'alternate',
     })
 
-    document.querySelector('main').style.display = 'block'
+    registerButton(more, () => {})
+
+    document.querySelector('.wrap').style.display = 'block'
     return more
   }
 
@@ -453,8 +455,7 @@
   // const featureGroup = showFeatures()
 
   let scrolled = false
-  const coverpage = document.getElementById('coverpage'),
-    features = document.getElementById('features')
+  const features = document.getElementById('features')
   const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
   // more.on('mouseenter', () => {

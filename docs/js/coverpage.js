@@ -370,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -472,7 +472,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               direction: 'alternate'
             });
 
-            document.querySelector('main').style.display = 'block';
+            registerButton(more, function () {});
+
+            document.querySelector('.wrap').style.display = 'block';
             return more;
           };
 
@@ -505,7 +507,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             if (typeof link === 'string') {
               button.on('click', function (evt) {
                 scene.removeLayer(fglayer);
-                var coverpage = document.querySelector('#coverpage');
                 coverpage.remove();
                 window.location.href = link;
               });
@@ -521,11 +522,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           };
 
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
-          scene = new Scene('#coverpage', {
+          scene = new Scene('#container', {
             viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
             stickMode: 'width'
           });
+          coverpage = document.querySelector('.coverpage #container');
 
           // 适配移动端
           // const [width] = scene.viewport
@@ -544,10 +546,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           // 预加载资源
 
-          _context6.next = 11;
+          _context6.next = 12;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 11:
+        case 12:
           fglayer = scene.layer('fglayer');
           requestId = null;
 
@@ -562,7 +564,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           // const featureGroup = showFeatures()
 
           scrolled = false;
-          coverpage = document.getElementById('coverpage'), features = document.getElementById('features');
+          features = document.getElementById('features');
           maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
 
           // more.on('mouseenter', () => {
@@ -637,7 +639,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 18:
+        case 19:
         case 'end':
           return _context6.stop();
       }
