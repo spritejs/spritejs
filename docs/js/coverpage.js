@@ -466,10 +466,21 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            more.animate([{ scale: 1 }, { scale: 1.2 }], {
-              duration: 1000,
-              iterations: Infinity,
-              direction: 'alternate'
+            // more.animate([
+            //   {scale: 1},
+            //   {scale: 1.2},
+            // ], {
+            //   duration: 1000,
+            //   iterations: Infinity,
+            //   direction: 'alternate',
+            // })
+
+            var startTime = Date.now();
+            requestAnimationFrame(function step() {
+              var p = (startTime - Date.now()) / 1000;
+              p -= Math.floor(p);
+              more.attr('scale', 1 + 0.2 * p);
+              requestAnimationFrame(step);
             });
 
             registerButton(more, function () {});

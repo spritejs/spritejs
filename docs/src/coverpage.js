@@ -341,13 +341,21 @@
     })
     fglayer.append(more)
 
-    more.animate([
-      {scale: 1},
-      {scale: 1.2},
-    ], {
-      duration: 1000,
-      iterations: Infinity,
-      direction: 'alternate',
+    // more.animate([
+    //   {scale: 1},
+    //   {scale: 1.2},
+    // ], {
+    //   duration: 1000,
+    //   iterations: Infinity,
+    //   direction: 'alternate',
+    // })
+
+    const startTime = Date.now()
+    requestAnimationFrame(function step() {
+      let p = (startTime - Date.now()) / 1000
+      p -= Math.floor(p)
+      more.attr('scale', 1 + 0.2 * p)
+      requestAnimationFrame(step)
     })
 
     registerButton(more, () => {})
