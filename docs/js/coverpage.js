@@ -616,6 +616,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
               coverpage.style.position = '';
               coverpage.style.top = '';
+              alert(yOffset);
               // guanguan.attr({
               //   textures: ['guanguan3.png'],
               // })
