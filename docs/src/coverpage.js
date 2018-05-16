@@ -259,6 +259,8 @@
 
     if(typeof link === 'string') {
       button.on('click', (evt) => {
+        const coverpage = document.querySelector('#coverpage')
+        coverpage.remove()
         window.location.href = link
       })
     } else if(typeof link === 'function') {
@@ -443,13 +445,12 @@
     })
   }
 
-  // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-  // const text = await showIntroText('跨平台绘图对象模型')
-  // const huanhuan = await showHuanHuan()
-  // const guanguan = await showGuanGuan()
+  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+  const text = await showIntroText('跨平台绘图对象模型')
+  const huanhuan = await showHuanHuan()
+  const guanguan = await showGuanGuan()
   const buttons = await showButtons()
-  // const more = showMore()
-  return;
+  const more = showMore()
 
   const featureGroup = showFeatures()
 
