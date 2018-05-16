@@ -462,7 +462,7 @@
     autoScroll(maxScroll, 1000)
   })
 
-  document.addEventListener('scroll', _.throttle((evt) => {
+  window.addEventListener('scroll', _.throttle((evt) => {
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 
