@@ -19,15 +19,15 @@
   #coverpage {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     overflow: hidden;
   }
-  /* .cover.show + main > aside.sidebar {
+  .cover.show + main > aside.sidebar {
     display: none
-  } */
+  }
   .github-corner {
     z-index: 999999;
   }
 </style>
 
-<div>111</div>
+<div id="coverpage"></div>

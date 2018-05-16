@@ -370,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, features, maxScroll, scroller;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -479,7 +479,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             requestAnimationFrame(function step() {
               var p = (startTime - Date.now()) / 1000;
               p -= Math.floor(p);
-              more.attr('scale', 1 + 0.2 * p);
+              more.attr('scale', 1 + 0.5 * p);
               requestAnimationFrame(step);
             });
 
@@ -533,12 +533,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           };
 
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
-          scene = new Scene('#container', {
+          scene = new Scene('#coverpage', {
             viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
             stickMode: 'width'
           });
-          coverpage = document.querySelector('.coverpage #container');
+          coverpage = document.querySelector('#coverpage');
 
           // 适配移动端
           // const [width] = scene.viewport
@@ -576,17 +576,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           scrolled = false;
           features = document.getElementById('features');
-          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.5;
+          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
 
           // more.on('mouseenter', () => {
           //   autoScroll(maxScroll, 1000)
           // })
 
-          scroller = document.querySelector('main');
-
-
-          scroller.addEventListener('scroll', _.throttle(function (evt) {
-            var yOffset = scroller.scrollTop;
+          window.addEventListener('scroll', _.throttle(function (evt) {
+            var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
             // console.log(yOffset)
@@ -653,7 +650,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 20:
+        case 19:
         case 'end':
           return _context6.stop();
       }
