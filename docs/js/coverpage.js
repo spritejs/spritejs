@@ -474,7 +474,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             registerButton(more, function () {});
 
-            // document.querySelector('.wrap').style.display = 'block'
+            document.querySelector('.wrap').style.display = 'block';
             return more;
           };
 
