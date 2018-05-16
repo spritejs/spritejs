@@ -445,7 +445,7 @@
 
   let requestId = null
   function autoScroll(scrollBy, time = 1000) {
-    if(requestId) return
+    if(requestId !== null) return
     const startTime = Date.now()
     requestId = requestAnimationFrame(function step() {
       const p = (Date.now() - startTime) / time,
@@ -453,6 +453,8 @@
       window.scrollTo(0, scrollY)
       if(p < 1) {
         requestId = requestAnimationFrame(step)
+      } else {
+        requestId = null
       }
     })
   }
