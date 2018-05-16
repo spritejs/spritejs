@@ -461,12 +461,12 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           showMore = function showMore() {
             var more = new Sprite();
-            // more.attr({
-            //   textures: 'more.png',
-            //   anchor: 0.5,
-            //   pos: [1920, 1800],
-            // })
-            // fglayer.append(more)
+            more.attr({
+              textures: 'more.png',
+              anchor: 0.5,
+              pos: [1920, 1800]
+            });
+            fglayer.append(more);
 
             // more.animate([
             //   {scale: 1},
