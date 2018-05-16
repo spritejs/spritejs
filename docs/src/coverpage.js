@@ -122,28 +122,28 @@
     huanhuanGroup.append(huanhuanFire)
 
     // random burn fire
-    // let fx = 5,
-    //   fy = 6
+    let fx = 5,
+      fy = 6
 
-    // fglayer.timeline.setInterval(() => {
-    //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-    //     deltaY = Math.floor(Math.random() * 3) - 1
+    fglayer.timeline.setInterval(() => {
+      const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
+        deltaY = Math.floor(Math.random() * 3) - 1
 
-    //   fx += deltaX
-    //   if(fx < 0) fx = 0
-    //   if(fx > 15) fx = 15
+      fx += deltaX
+      if(fx < 0) fx = 0
+      if(fx > 15) fx = 15
 
-    //   fx += deltaY
-    //   if(fy < 0) fy = 0
-    //   if(fy > 20) fy = 20
+      fx += deltaY
+      if(fy < 0) fy = 0
+      if(fy > 20) fy = 20
 
-    //   const q1 = [-1, 12, -5 + fx, 30 + fy]
-    //   const q2 = [30, 22, 30, 0]
-    //   const d = `M0,0Q${q1}Q${q2}z`
-    //   huanhuanFire.attr({
-    //     path: {d, transform: {scale: 2}},
-    //   })
-    // }, 100)
+      const q1 = [-1, 12, -5 + fx, 30 + fy]
+      const q2 = [30, 22, 30, 0]
+      const d = `M0,0Q${q1}Q${q2}z`
+      huanhuanFire.attr({
+        path: {d, transform: {scale: 2}},
+      })
+    }, 100)
 
     const anim2 = huanhuanGroup.animate([
       {pos: [980, 744], opacity: 0},
@@ -469,41 +469,41 @@
     if(yOffset < 0) return
 
     // console.log(yOffset)
-    if(!scrolled && yOffset) {
-      scrolled = true
-      hideSprites([text, ...buttons, more])
-      guanguan.attr({
-        textures: ['guanguan3.png'],
-      })
-    } else if(scrolled && yOffset === 0) {
-      scrolled = false
-      showSprites([text, ...buttons, more])
-      guanguan.attr({
-        textures: ['guanguan1.png'],
-      })
-    }
+    // if(!scrolled && yOffset) {
+    //   scrolled = true
+    //   hideSprites([text, ...buttons, more])
+    //   guanguan.attr({
+    //     textures: ['guanguan3.png'],
+    //   })
+    // } else if(scrolled && yOffset === 0) {
+    //   scrolled = false
+    //   showSprites([text, ...buttons, more])
+    //   guanguan.attr({
+    //     textures: ['guanguan1.png'],
+    //   })
+    // }
 
     if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
       coverpage.style.position = 'absolute'
       coverpage.style.top = `${maxScroll}px`
-      guanguan.attr({
-        textures: ['guanguan1.png'],
-      })
+      // guanguan.attr({
+      //   textures: ['guanguan1.png'],
+      // })
     } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
       coverpage.style.position = ''
       coverpage.style.top = ''
-      guanguan.attr({
-        textures: ['guanguan3.png'],
-      })
+      // guanguan.attr({
+      //   textures: ['guanguan3.png'],
+      // })
     }
 
-    const p = Math.min(maxScroll, yOffset) / maxScroll
-    const x1 = 2380 - 1400 * p * p,
-      x2 = 1080 + 1900 * p * p
+    // const p = Math.min(maxScroll, yOffset) / maxScroll
+    // const x1 = 2380 - 1400 * p * p,
+    //   x2 = 1080 + 1900 * p * p
 
-    if(p < 0 || p > 1) {
-      return
-    }
+    // if(p < 0 || p > 1) {
+    //   return
+    // }
 
     // p = 0.588
     // x1 = 1896
@@ -511,24 +511,24 @@
     // x2e = 1244
     // x1e = 916
 
-    if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-      featureGroup._clipDX = x2 - x1
-      const l = 916 - (1896 - x1),
-        r = 916 + x2 - 1736
-      const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-      featureGroup.attr({
-        clip: {d},
-      })
-    } else if(x2 - x1 <= 0) {
-      featureGroup.attr({
-        clip: {d: 'M0,0L0,0L0,0L0,0z'},
-      })
-    }
-    guanguan.attr({
-      x: x1,
-    })
-    huanhuan.attr({
-      x: x2,
-    })
+    // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+    //   featureGroup._clipDX = x2 - x1
+    //   const l = 916 - (1896 - x1),
+    //     r = 916 + x2 - 1736
+    //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+    //   featureGroup.attr({
+    //     clip: {d},
+    //   })
+    // } else if(x2 - x1 <= 0) {
+    //   featureGroup.attr({
+    //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
+    //   })
+    // }
+    // guanguan.attr({
+    //   x: x1,
+    // })
+    // huanhuan.attr({
+    //   x: x2,
+    // })
   }, 16))
 }())
