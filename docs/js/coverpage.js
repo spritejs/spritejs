@@ -507,6 +507,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             if (typeof link === 'string') {
               button.on('click', function (evt) {
+                scene.removeLayer(fglayer);
                 var coverpage = document.querySelector('#coverpage');
                 coverpage.remove();
                 window.location.href = link;
