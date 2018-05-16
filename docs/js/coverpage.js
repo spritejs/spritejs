@@ -1,5 +1,7 @@
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -370,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, more, scrolled;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -462,35 +464,18 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             more.attr({
               textures: 'more.png',
               anchor: 0.5,
-              pos: [1920, 1800],
-              bgcolor: 'red'
+              pos: [1920, 1800]
+              // bgcolor: 'red',
             });
             fglayer.append(more);
 
-            // more.animate([
-            //   {scale: 1},
-            //   {scale: 1.2},
-            // ], {
-            //   duration: 1000,
-            //   iterations: Infinity,
-            //   direction: 'alternate',
-            // })
+            more.animate([{ scale: 1 }, { scale: 1.2 }], {
+              duration: 1000,
+              iterations: Infinity,
+              direction: 'alternate'
+            });
 
-            var i = 0,
-                colors = ['red', 'blue'];
-            setInterval(function step() {
-              var bgcolor = colors[i++ % 2];
-              try {
-                more.attr({
-                  bgcolor: bgcolor
-                  // pos: [100 + 10 * (i % 10), 100],
-                  // bgcolor: 'blue',
-                });
-                more.cache = null;
-              } catch (ex) {}
-            }, 100);
-
-            // registerButton(more, () => {})
+            registerButton(more, function () {});
 
             document.querySelector('.wrap').style.display = 'block';
             return more;
@@ -548,35 +533,55 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           coverpage = document.querySelector('#coverpage');
 
           // 适配移动端
-          // const [width] = scene.viewport
-          // if(width <= 480) {
-          //   scene.container.style.transform = 'scale(2)'
-          // }
 
-          // window.addEventListener('resize', (evt) => {
-          //   const [width] = scene.viewport
-          //   if(width <= 480) {
-          //     scene.container.style.transform = 'scale(2)'
-          //   } else {
-          //     scene.container.style.transform = ''
-          //   }
-          // })
+          _scene$viewport = _slicedToArray(scene.viewport, 1), width = _scene$viewport[0];
+
+          if (width <= 480) {
+            scene.container.style.transform = 'scale(2)';
+          }
+
+          window.addEventListener('resize', function (evt) {
+            var _scene$viewport2 = _slicedToArray(scene.viewport, 1),
+                width = _scene$viewport2[0];
+
+            if (width <= 480) {
+              scene.container.style.transform = 'scale(2)';
+            } else {
+              scene.container.style.transform = '';
+            }
+          });
 
           // 预加载资源
-
-          _context6.next = 12;
+          _context6.next = 15;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 12:
+        case 15:
           fglayer = scene.layer('fglayer');
           requestId = null;
+          _context6.next = 19;
+          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
+        case 19:
+          _context6.next = 21;
+          return showIntroText('跨平台绘图对象模型');
 
-          // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-          // const text = await showIntroText('跨平台绘图对象模型')
-          // const huanhuan = await showHuanHuan()
-          // const guanguan = await showGuanGuan()
-          // const buttons = await showButtons()
+        case 21:
+          text = _context6.sent;
+          _context6.next = 24;
+          return showHuanHuan();
+
+        case 24:
+          huanhuan = _context6.sent;
+          _context6.next = 27;
+          return showGuanGuan();
+
+        case 27:
+          guanguan = _context6.sent;
+          _context6.next = 30;
+          return showButtons();
+
+        case 30:
+          buttons = _context6.sent;
           more = showMore();
 
           window.more = more;
@@ -587,85 +592,84 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             this.attr('bgcolor', 'red');
           };
 
-          // const featureGroup = showFeatures()
-
+          featureGroup = showFeatures();
           scrolled = false;
-          // const features = document.getElementById('features')
-          // const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
+          features = document.getElementById('features');
+          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
 
-          // more.on('mouseenter', () => {
-          //   autoScroll(maxScroll, 1000)
-          // })
 
-          // window.addEventListener('scroll', _.throttle((evt) => {
-          // const yOffset = window.pageYOffset || document.documentElement.scrollTop
-          // if(yOffset < 0) return
+          more.on('mouseenter', function () {
+            autoScroll(maxScroll, 1000);
+          });
 
-          // console.log(yOffset)
-          // if(!scrolled && yOffset) {
-          //   scrolled = true
-          //   hideSprites([text, ...buttons, more])
-          //   guanguan.attr({
-          //     textures: ['guanguan3.png'],
-          //   })
-          // } else if(scrolled && yOffset === 0) {
-          //   scrolled = false
-          //   showSprites([text, ...buttons, more])
-          //   guanguan.attr({
-          //     textures: ['guanguan1.png'],
-          //   })
-          // }
+          window.addEventListener('scroll', _.throttle(function (evt) {
+            var yOffset = window.pageYOffset || document.documentElement.scrollTop;
+            if (yOffset < 0) return;
 
-          // if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-          // coverpage.style.position = 'absolute'
-          // coverpage.style.top = `${maxScroll}px`
-          // guanguan.attr({
-          //   textures: ['guanguan1.png'],
-          // })
-          // } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-          // coverpage.style.position = 'fixed'
-          // coverpage.style.top = '0'
-          // guanguan.attr({
-          //   textures: ['guanguan3.png'],
-          // })
-          // }
+            if (!scrolled && yOffset) {
+              scrolled = true;
+              hideSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            } else if (scrolled && yOffset === 0) {
+              scrolled = false;
+              showSprites([text].concat(_toConsumableArray(buttons), [more]));
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            }
 
-          // const p = Math.min(maxScroll, yOffset) / maxScroll
-          // const x1 = 2380 - 1400 * p * p,
-          //   x2 = 1080 + 1900 * p * p
+            if (yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+              coverpage.style.position = 'absolute';
+              coverpage.style.top = maxScroll + 'px';
+              guanguan.attr({
+                textures: ['guanguan1.png']
+              });
+            } else if (yOffset < maxScroll && coverpage.style.position === 'absolute') {
+              coverpage.style.position = 'fixed';
+              coverpage.style.top = '0';
+              guanguan.attr({
+                textures: ['guanguan3.png']
+              });
+            }
 
-          // if(p < 0 || p > 1) {
-          //   return
-          // }
+            var p = Math.min(maxScroll, yOffset) / maxScroll;
+            var x1 = 2380 - 1400 * p * p,
+                x2 = 1080 + 1900 * p * p;
 
-          // p = 0.588
-          // x1 = 1896
-          // x2 = 1736
-          // x2e = 1244
-          // x1e = 916
+            if (p < 0 || p > 1) {
+              return;
+            }
 
-          // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-          //   featureGroup._clipDX = x2 - x1
-          //   const l = 916 - (1896 - x1),
-          //     r = 916 + x2 - 1736
-          //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-          //   featureGroup.attr({
-          //     clip: {d},
-          //   })
-          // } else if(x2 - x1 <= 0) {
-          //   featureGroup.attr({
-          //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
-          //   })
-          // }
-          // guanguan.attr({
-          //   x: x1,
-          // })
-          // huanhuan.attr({
-          //   x: x2,
-          // })
-          // }, 16))
+            // p = 0.588
+            // x1 = 1896
+            // x2 = 1736
+            // x2e = 1244
+            // x1e = 916
 
-        case 19:
+            if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+              featureGroup._clipDX = x2 - x1;
+              var l = 916 - (1896 - x1),
+                  r = 916 + x2 - 1736;
+              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
+              featureGroup.attr({
+                clip: { d: d }
+              });
+            } else if (x2 - x1 <= 0) {
+              featureGroup.attr({
+                clip: { d: 'M0,0L0,0L0,0L0,0z' }
+              });
+            }
+            guanguan.attr({
+              x: x1
+            });
+            huanhuan.attr({
+              x: x2
+            });
+          }, 16));
+
+        case 41:
         case 'end':
           return _context6.stop();
       }

@@ -128,9 +128,7 @@
   #more-demos a {
     text-decoration: none;
   }
-  #page-index .wrap {
-    height: 2000px;
-  }
+  
   /* article {
     z-index: 99999;
     background: #fff;
@@ -138,7 +136,93 @@
 </style>
 
 <div class="wrap">
+  <div id="features"></div>
 
+  <h1>使用范例</h1>
+
+  <div class="info">通过SpriteJS，您可以快速实现不同组合的动画效果</div>
+
+  <ul class="demos">
+    <li>
+      <a href="/demo">
+        <img src="/res/demos/quick_start.png">
+        <span>quick start</span>
+      </a>
+    </li>
+    <li>
+      <a href="/demo">
+        <img src="/res/demos/basic_sprites.png">
+        <span>basic sprites</span>
+      </a>
+    </li>
+    <li>
+      <a href="/demo">
+        <img src="/res/demos/textures.png">
+        <span>sprite &amp; textures</span>
+      </a>
+    </li>
+    <li>
+      <a href="/demo">
+        <img src="/res/demos/labels.png">
+        <span>labels</span>
+      </a>
+    </li>
+    <li>
+      <a href="/demo/">
+        <img src="/res/demos/buttons.png">
+        <span>buttons</span>
+      </index>
+    </li>
+    <li>
+      <a href="/demo">
+        <img src="/res/demos/transforms.png">
+        <span>transforms</span>
+      </a>
+    </li>
+  </ul>
+
+  <div id="more-demos"><a href="/demo">更多范例</a></div>
+
+  <div class="footer">
+    <div class="ft-info">
+      <dl>
+        <dt>友情链接</dt>
+        <dd>
+          <a href="https://75team.com/">奇舞团</a>
+          <a href="http://study.qiyun.360.cn/">奇舞学院</a>
+        </dd>
+      </dl>
+      <dl>
+        <dt>其他项目</dt>
+        <dd>
+          <a href="https://thinkjs.org/">ThinkJS</a>
+          <a href="https://github.com/75team/firekylin">FireKylin</a>
+        </dd>
+      </dl>
+      <dl>
+        <dt>切换语言</dt>
+        <dd>
+          <a href="#/zh-cn/index">简体中文</a>
+          <a href="#/en/index">英文</a>
+        </dd>
+      </dl>
+      <dl>
+        <dt>参与项目</dt>
+        <dd>
+          <a href="https://github.com/spritejs/spritejs">Github 源码</a>
+          <a href="https://github.com/spritejs/spritejs/issues">问题反馈</a>
+        </dd>
+      </dl>
+      <dl>
+        <dt>合作伙伴</dt>
+        <dd>
+          <a href="https://weekly.75team.com/">奇舞周刊</a>
+          <a href="http://zcfy.cc">众成翻译</a>
+        </dd>
+      </dl>
+    </div>
+    <div class="ft-copy">@2017 - 2018 SpriteJS Team</div>
+  </div>
 </div>
 
 <script src="/js/coverpage.js"></script>

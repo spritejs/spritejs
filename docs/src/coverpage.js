@@ -8,19 +8,19 @@
   const coverpage = document.querySelector('#coverpage')
 
   // 适配移动端
-  // const [width] = scene.viewport
-  // if(width <= 480) {
-  //   scene.container.style.transform = 'scale(2)'
-  // }
+  const [width] = scene.viewport
+  if(width <= 480) {
+    scene.container.style.transform = 'scale(2)'
+  }
 
-  // window.addEventListener('resize', (evt) => {
-  //   const [width] = scene.viewport
-  //   if(width <= 480) {
-  //     scene.container.style.transform = 'scale(2)'
-  //   } else {
-  //     scene.container.style.transform = ''
-  //   }
-  // })
+  window.addEventListener('resize', (evt) => {
+    const [width] = scene.viewport
+    if(width <= 480) {
+      scene.container.style.transform = 'scale(2)'
+    } else {
+      scene.container.style.transform = ''
+    }
+  })
 
   // 预加载资源
   await scene.preload([
@@ -338,35 +338,20 @@
       textures: 'more.png',
       anchor: 0.5,
       pos: [1920, 1800],
-      bgcolor: 'red',
+      // bgcolor: 'red',
     })
     fglayer.append(more)
 
-    // more.animate([
-    //   {scale: 1},
-    //   {scale: 1.2},
-    // ], {
-    //   duration: 1000,
-    //   iterations: Infinity,
-    //   direction: 'alternate',
-    // })
+    more.animate([
+      {scale: 1},
+      {scale: 1.2},
+    ], {
+      duration: 1000,
+      iterations: Infinity,
+      direction: 'alternate',
+    })
 
-    let i = 0, colors = ['red', 'blue']
-    setInterval(function step() {
-      const bgcolor = colors[i++ % 2]
-      try {
-        more.attr({
-          bgcolor,
-          // pos: [100 + 10 * (i % 10), 100],
-          // bgcolor: 'blue',
-        })
-        more.cache = null
-      } catch(ex) {
-
-      }
-    }, 100)
-
-    // registerButton(more, () => {})
+    registerButton(more, () => {})
 
     document.querySelector('.wrap').style.display = 'block'
     return more
@@ -461,11 +446,11 @@
     })
   }
 
-  // await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
-  // const text = await showIntroText('跨平台绘图对象模型')
-  // const huanhuan = await showHuanHuan()
-  // const guanguan = await showGuanGuan()
-  // const buttons = await showButtons()
+  await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
+  const text = await showIntroText('跨平台绘图对象模型')
+  const huanhuan = await showHuanHuan()
+  const guanguan = await showGuanGuan()
+  const buttons = await showButtons()
   const more = showMore()
   window.more = more
   more.c1 = function () {
@@ -475,56 +460,55 @@
     this.attr('bgcolor', 'red')
   }
 
-  // const featureGroup = showFeatures()
+  const featureGroup = showFeatures()
 
   let scrolled = false
-  // const features = document.getElementById('features')
-  // const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
+  const features = document.getElementById('features')
+  const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
 
-  // more.on('mouseenter', () => {
-  //   autoScroll(maxScroll, 1000)
-  // })
+  more.on('mouseenter', () => {
+    autoScroll(maxScroll, 1000)
+  })
 
-  // window.addEventListener('scroll', _.throttle((evt) => {
-    // const yOffset = window.pageYOffset || document.documentElement.scrollTop
-    // if(yOffset < 0) return
+  window.addEventListener('scroll', _.throttle((evt) => {
+    const yOffset = window.pageYOffset || document.documentElement.scrollTop
+    if(yOffset < 0) return
 
-    // console.log(yOffset)
-    // if(!scrolled && yOffset) {
-    //   scrolled = true
-    //   hideSprites([text, ...buttons, more])
-    //   guanguan.attr({
-    //     textures: ['guanguan3.png'],
-    //   })
-    // } else if(scrolled && yOffset === 0) {
-    //   scrolled = false
-    //   showSprites([text, ...buttons, more])
-    //   guanguan.attr({
-    //     textures: ['guanguan1.png'],
-    //   })
-    // }
+    if(!scrolled && yOffset) {
+      scrolled = true
+      hideSprites([text, ...buttons, more])
+      guanguan.attr({
+        textures: ['guanguan3.png'],
+      })
+    } else if(scrolled && yOffset === 0) {
+      scrolled = false
+      showSprites([text, ...buttons, more])
+      guanguan.attr({
+        textures: ['guanguan1.png'],
+      })
+    }
 
-    // if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
-      // coverpage.style.position = 'absolute'
-      // coverpage.style.top = `${maxScroll}px`
-      // guanguan.attr({
-      //   textures: ['guanguan1.png'],
-      // })
-    // } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
-      // coverpage.style.position = 'fixed'
-      // coverpage.style.top = '0'
-      // guanguan.attr({
-      //   textures: ['guanguan3.png'],
-      // })
-    // }
+    if(yOffset >= maxScroll && coverpage.style.position !== 'absolute') {
+      coverpage.style.position = 'absolute'
+      coverpage.style.top = `${maxScroll}px`
+      guanguan.attr({
+        textures: ['guanguan1.png'],
+      })
+    } else if(yOffset < maxScroll && coverpage.style.position === 'absolute') {
+      coverpage.style.position = 'fixed'
+      coverpage.style.top = '0'
+      guanguan.attr({
+        textures: ['guanguan3.png'],
+      })
+    }
 
-    // const p = Math.min(maxScroll, yOffset) / maxScroll
-    // const x1 = 2380 - 1400 * p * p,
-    //   x2 = 1080 + 1900 * p * p
+    const p = Math.min(maxScroll, yOffset) / maxScroll
+    const x1 = 2380 - 1400 * p * p,
+      x2 = 1080 + 1900 * p * p
 
-    // if(p < 0 || p > 1) {
-    //   return
-    // }
+    if(p < 0 || p > 1) {
+      return
+    }
 
     // p = 0.588
     // x1 = 1896
@@ -532,24 +516,24 @@
     // x2e = 1244
     // x1e = 916
 
-    // if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-    //   featureGroup._clipDX = x2 - x1
-    //   const l = 916 - (1896 - x1),
-    //     r = 916 + x2 - 1736
-    //   const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-    //   featureGroup.attr({
-    //     clip: {d},
-    //   })
-    // } else if(x2 - x1 <= 0) {
-    //   featureGroup.attr({
-    //     clip: {d: 'M0,0L0,0L0,0L0,0z'},
-    //   })
-    // }
-    // guanguan.attr({
-    //   x: x1,
-    // })
-    // huanhuan.attr({
-    //   x: x2,
-    // })
-  // }, 16))
+    if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+      featureGroup._clipDX = x2 - x1
+      const l = 916 - (1896 - x1),
+        r = 916 + x2 - 1736
+      const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+      featureGroup.attr({
+        clip: {d},
+      })
+    } else if(x2 - x1 <= 0) {
+      featureGroup.attr({
+        clip: {d: 'M0,0L0,0L0,0L0,0z'},
+      })
+    }
+    guanguan.attr({
+      x: x1,
+    })
+    huanhuan.attr({
+      x: x2,
+    })
+  }, 16))
 }())
