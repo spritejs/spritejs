@@ -1,7 +1,5 @@
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -372,7 +370,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, _scene$viewport, width, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
+  var _spritejs, Scene, Sprite, Group, Label, Path, scene, fglayer, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, scrolled, coverpage, features, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -533,54 +531,51 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           });
 
           // 适配移动端
+          // const [width] = scene.viewport
+          // if(width <= 480) {
+          //   scene.container.style.transform = 'scale(2)'
+          // }
 
-          _scene$viewport = _slicedToArray(scene.viewport, 1), width = _scene$viewport[0];
-
-          if (width <= 480) {
-            scene.container.style.transform = 'scale(2)';
-          }
-
-          window.addEventListener('resize', function (evt) {
-            var _scene$viewport2 = _slicedToArray(scene.viewport, 1),
-                width = _scene$viewport2[0];
-
-            if (width <= 480) {
-              scene.container.style.transform = 'scale(2)';
-            } else {
-              scene.container.style.transform = '';
-            }
-          });
+          // window.addEventListener('resize', (evt) => {
+          //   const [width] = scene.viewport
+          //   if(width <= 480) {
+          //     scene.container.style.transform = 'scale(2)'
+          //   } else {
+          //     scene.container.style.transform = ''
+          //   }
+          // })
 
           // 预加载资源
-          _context6.next = 14;
+
+          _context6.next = 11;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 14:
+        case 11:
           fglayer = scene.layer('fglayer');
           requestId = null;
-          _context6.next = 18;
+          _context6.next = 15;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 18:
-          _context6.next = 20;
+        case 15:
+          _context6.next = 17;
           return showIntroText('跨平台绘图对象模型');
 
-        case 20:
+        case 17:
           text = _context6.sent;
-          _context6.next = 23;
+          _context6.next = 20;
           return showHuanHuan();
 
-        case 23:
+        case 20:
           huanhuan = _context6.sent;
-          _context6.next = 26;
+          _context6.next = 23;
           return showGuanGuan();
 
-        case 26:
+        case 23:
           guanguan = _context6.sent;
-          _context6.next = 29;
+          _context6.next = 26;
           return showButtons();
 
-        case 29:
+        case 26:
           buttons = _context6.sent;
           more = showMore();
 
@@ -662,7 +657,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             // })
           }, 16));
 
-        case 35:
+        case 32:
         case 'end':
           return _context6.stop();
       }
