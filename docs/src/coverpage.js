@@ -91,8 +91,6 @@
     return introText
   }
 
-  let fireInterval
-
   async function showHuanHuan() {
     const huanhuanGroup = new Group()
     huanhuanGroup.attr({
@@ -129,7 +127,7 @@
     let fx = 5,
       fy = 6
 
-    fireInterval = fglayer.timeline.setInterval(() => {
+    fglayer.timeline.setInterval(() => {
       const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
         deltaY = Math.floor(Math.random() * 3) - 1
 
@@ -265,9 +263,6 @@
 
     if(typeof link === 'string') {
       button.on('click', (evt) => {
-        if(fireInterval) {
-          fglayer.timeline.clearInterval(fireInterval)
-        }
         scene.removeLayer(fglayer)
         coverpage.remove()
         if(scene[_onScroll]) {

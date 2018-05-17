@@ -6333,13 +6333,13 @@ var _slicedToArray2 = __webpack_require__(1);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _toConsumableArray2 = __webpack_require__(6);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 var _isFinite = __webpack_require__(151);
 
 var _isFinite2 = _interopRequireDefault(_isFinite);
+
+var _toConsumableArray2 = __webpack_require__(6);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _map = __webpack_require__(31);
 
@@ -6510,6 +6510,16 @@ var Timeline = function () {
     value: function clearInterval(id) {
       return this.clearTimeout(id);
     }
+  }, {
+    key: 'clear',
+    value: function clear() {
+      var _this = this;
+
+      // clear all running timers
+      var timers = this[_timers];[].concat((0, _toConsumableArray3.default)(timers.keys())).forEach(function (id) {
+        _this.clearTimeout(id);
+      });
+    }
     /*
       setTimeout(func, {delay: 100, isEntropy: true})
       setTimeout(func, {entropy: 100})
@@ -6540,7 +6550,7 @@ var Timeline = function () {
   }, {
     key: _setTimer,
     value: function value(handler, time) {
-      var _this = this;
+      var _this2 = this;
 
       var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ++this[_timerID];
 
@@ -6582,7 +6592,7 @@ var Timeline = function () {
         // }
 
         timerID = globalTimeout(function () {
-          _this[_timers].delete(id);
+          _this2[_timers].delete(id);
           handler();
         }, delay);
       }
@@ -6674,7 +6684,7 @@ var Timeline = function () {
       return this[_playbackRate];
     },
     set: function set(rate) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (rate !== this.playbackRate) {
         var currentTime = this.currentTime;
@@ -6690,7 +6700,7 @@ var Timeline = function () {
               id = _ref2[0],
               timer = _ref2[1];
 
-          _this2[_setTimer](timer.handler, timer.time, id);
+          _this3[_setTimer](timer.handler, timer.time, id);
         });
       }
     }
@@ -9139,7 +9149,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.8';
+var version = '2.0.0-alpha.9';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -12387,7 +12397,6 @@ module.exports = function isArrayish(obj) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = undefined;
 
 var _promise = __webpack_require__(22);
 
@@ -12461,11 +12470,11 @@ var defaultTiming = {
     playState: idle --> pending --> running --> pending --> finished
    */
 };
-var _default = function () {
-  function _default(initState, keyframes, timing) {
+var _class = function () {
+  function _class(initState, keyframes, timing) {
     var _this = this;
 
-    (0, _classCallCheck3.default)(this, _default);
+    (0, _classCallCheck3.default)(this, _class);
 
     if (Array.isArray(initState)) {
       var _ref = [initState[0], initState, keyframes];
@@ -12507,7 +12516,7 @@ var _default = function () {
     this.timeline = null; // idle, no effect
   }
 
-  (0, _createClass3.default)(_default, [{
+  (0, _createClass3.default)(_class, [{
     key: 'pause',
     value: function pause() {
       this.timeline.playbackRate = 0;
@@ -12760,10 +12769,10 @@ var _default = function () {
       return this[_finishedDefer].promise;
     }
   }]);
-  return _default;
+  return _class;
 }();
 
-exports.default = _default;
+exports.default = _class;
 
 /***/ }),
 /* 235 */
@@ -14622,6 +14631,7 @@ var Layer = function (_BaseNode) {
     // auto release
     if (context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
+        _this.timeline.clear();
         _this.remove();
       });
     }
