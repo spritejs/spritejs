@@ -1,7 +1,6 @@
 <style>
   main {
     display: none;
-    height: 100%;
   }
   .app-nav,
   button.sidebar-toggle,
