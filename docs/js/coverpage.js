@@ -156,7 +156,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               fx = 5, fy = 6;
 
 
-              fireInterval = fglayer.timeline.setInterval(function () {
+              fglayer.timeline.setInterval(function () {
                 var deltaX = Math.floor(Math.random() * 3) - 1,
                     // -1 0 1,
                 deltaY = Math.floor(Math.random() * 3) - 1;
@@ -374,7 +374,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, animations, wait, fireInterval, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
+  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, animations, wait, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -513,9 +513,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             if (typeof link === 'string') {
               button.on('click', function (evt) {
-                if (fireInterval) {
-                  fglayer.timeline.clearInterval(fireInterval);
-                }
                 scene.removeLayer(fglayer);
                 coverpage.remove();
                 if (scene[_onScroll]) {
@@ -572,31 +569,30 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
         case 17:
-          fireInterval = void 0;
           requestId = null;
-          _context6.next = 21;
+          _context6.next = 20;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 21:
-          _context6.next = 23;
+        case 20:
+          _context6.next = 22;
           return showIntroText('跨平台绘图对象模型');
 
-        case 23:
+        case 22:
           text = _context6.sent;
-          _context6.next = 26;
+          _context6.next = 25;
           return showHuanHuan();
 
-        case 26:
+        case 25:
           huanhuan = _context6.sent;
-          _context6.next = 29;
+          _context6.next = 28;
           return showGuanGuan();
 
-        case 29:
+        case 28:
           guanguan = _context6.sent;
-          _context6.next = 32;
+          _context6.next = 31;
           return showButtons();
 
-        case 32:
+        case 31:
           buttons = _context6.sent;
           more = showMore();
 
@@ -704,7 +700,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 48:
+        case 47:
         case 'end':
           return _context6.stop();
       }
