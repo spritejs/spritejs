@@ -1,34 +1,33 @@
 (async function () {
+  const _onScroll = Symbol('onScroll')
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {
-    viewport: ['auto', 'auto'],
+    // viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
   const coverpage = document.querySelector('#coverpage')
 
-  // 适配移动端
-  const [width] = scene.viewport
-  if(width <= 480) {
-    scene.container.style.transform = 'scale(2)'
-  }
+  const fglayer = scene.layer('fglayer')
 
-  window.addEventListener('resize', (evt) => {
+  // 适配移动端
+  function fixMobile() {
     const [width] = scene.viewport
     if(width <= 480) {
-      scene.container.style.transform = 'scale(2)'
-    } else {
-      scene.container.style.transform = ''
+      const {width: w, height: h} = fglayer.canvas.style
+      fglayer.canvas.style.width = `${parseInt(w, 10) * 2}px`
+      fglayer.canvas.style.height = `${parseInt(h, 10) * 2}px`
     }
-  })
+  }
+  fixMobile()
+
+  // window.addEventListener('resize', fixMobile)
 
   // 预加载资源
   await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
   ])
-
-  const fglayer = scene.layer('fglayer')
 
   function wait(ms) {
     return new Promise((resolve) => {
@@ -90,6 +89,8 @@
     return introText
   }
 
+  let fireInterval
+
   async function showHuanHuan() {
     const huanhuanGroup = new Group()
     huanhuanGroup.attr({
@@ -123,28 +124,28 @@
     huanhuanGroup.append(huanhuanFire)
 
     // random burn fire
-    // let fx = 5,
-    //   fy = 6
+    let fx = 5,
+      fy = 6
 
-    // fglayer.timeline.setInterval(() => {
-    //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-    //     deltaY = Math.floor(Math.random() * 3) - 1
+    fireInterval = fglayer.timeline.setInterval(() => {
+      const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
+        deltaY = Math.floor(Math.random() * 3) - 1
 
-    //   fx += deltaX
-    //   if(fx < 0) fx = 0
-    //   if(fx > 15) fx = 15
+      fx += deltaX
+      if(fx < 0) fx = 0
+      if(fx > 15) fx = 15
 
-    //   fx += deltaY
-    //   if(fy < 0) fy = 0
-    //   if(fy > 20) fy = 20
+      fx += deltaY
+      if(fy < 0) fy = 0
+      if(fy > 20) fy = 20
 
-    //   const q1 = [-1, 12, -5 + fx, 30 + fy]
-    //   const q2 = [30, 22, 30, 0]
-    //   const d = `M0,0Q${q1}Q${q2}z`
-    //   huanhuanFire.attr({
-    //     path: {d, transform: {scale: 2}},
-    //   })
-    // }, 100)
+      const q1 = [-1, 12, -5 + fx, 30 + fy]
+      const q2 = [30, 22, 30, 0]
+      const d = `M0,0Q${q1}Q${q2}z`
+      huanhuanFire.attr({
+        path: {d, transform: {scale: 2}},
+      })
+    }, 100)
 
     const anim2 = huanhuanGroup.animate([
       {pos: [980, 744], opacity: 0},
@@ -164,16 +165,16 @@
 
     await anim2.finished
 
-    // huanhuanGroup.animate([
-    //   {y: 450},
-    //   {y: 460},
-    //   {y: 450},
-    //   {y: 440},
-    //   {y: 450},
-    // ], {
-    //   duration: 2000,
-    //   iterations: Infinity,
-    // })
+    huanhuanGroup.animate([
+      {y: 450},
+      {y: 460},
+      {y: 450},
+      {y: 440},
+      {y: 450},
+    ], {
+      duration: 2000,
+      iterations: Infinity,
+    })
 
     return huanhuanGroup
   }
@@ -260,8 +261,14 @@
 
     if(typeof link === 'string') {
       button.on('click', (evt) => {
+        if(fireInterval) {
+          fglayer.timeline.clearInterval(fireInterval)
+        }
         scene.removeLayer(fglayer)
         coverpage.remove()
+        if(scene[_onScroll]) {
+          window.removeEventListener('scroll', scene[_onScroll])
+        }
         window.location.href = link
       })
     } else if(typeof link === 'function') {
@@ -332,8 +339,6 @@
     return [githubBtn, getStartBtn, demoBtn]
   }
 
-  let moreAnim
-
   function showMore() {
     const more = new Sprite()
     more.attr({
@@ -344,7 +349,7 @@
     })
     fglayer.append(more)
 
-    moreAnim = more.animate([
+    more.animate([
       {scale: 1},
       {scale: 1.2},
     ], {
@@ -355,7 +360,7 @@
 
     registerButton(more, () => {})
 
-    document.querySelector('.wrap').style.display = 'block'
+    document.querySelector('main').style.display = 'block'
     return more
   }
 
@@ -466,13 +471,18 @@
 
   let scrolled = false
   const features = document.getElementById('features')
-  const maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65
+
+  const r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0]
+  const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
+  const b = (440 + 465) * r
+  const c = features.clientHeight / 2
+  const maxScroll = coverpage.clientHeight - a - b + c
 
   more.on('mouseenter', () => {
     autoScroll(maxScroll, 1000)
   })
 
-  window.addEventListener('scroll', _.throttle((evt) => {
+  scene[_onScroll] = _.throttle((evt) => {
     const yOffset = window.pageYOffset || document.documentElement.scrollTop
     if(yOffset < 0) return
 
@@ -505,11 +515,11 @@
     }
 
     if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
-      if(moreAnim.playState !== 'paused') {
-        moreAnim.pause()
+      if(fglayer.timeline.playbackRate > 0) {
+        fglayer.timeline.playbackRate = 0
       }
-    } else if(moreAnim.playState === 'paused') {
-      moreAnim.play()
+    } else if(fglayer.timeline.playbackRate === 0) {
+      fglayer.timeline.playbackRate = 1
     }
 
     const p = Math.min(maxScroll, yOffset) / maxScroll
@@ -545,5 +555,6 @@
     huanhuan.attr({
       x: x2,
     })
-  }, 16))
+  }, 16)
+  window.addEventListener('scroll', scene[_onScroll])
 }())

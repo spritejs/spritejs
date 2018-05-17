@@ -113,7 +113,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
   var showHuanHuan = function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-      var huanhuanGroup, huanhuan, huanhuanFire, anim2;
+      var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -153,28 +153,29 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               huanhuanGroup.append(huanhuanFire);
 
               // random burn fire
-              // let fx = 5,
-              //   fy = 6
+              fx = 5, fy = 6;
 
-              // fglayer.timeline.setInterval(() => {
-              //   const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-              //     deltaY = Math.floor(Math.random() * 3) - 1
 
-              //   fx += deltaX
-              //   if(fx < 0) fx = 0
-              //   if(fx > 15) fx = 15
+              fireInterval = fglayer.timeline.setInterval(function () {
+                var deltaX = Math.floor(Math.random() * 3) - 1,
+                    // -1 0 1,
+                deltaY = Math.floor(Math.random() * 3) - 1;
 
-              //   fx += deltaY
-              //   if(fy < 0) fy = 0
-              //   if(fy > 20) fy = 20
+                fx += deltaX;
+                if (fx < 0) fx = 0;
+                if (fx > 15) fx = 15;
 
-              //   const q1 = [-1, 12, -5 + fx, 30 + fy]
-              //   const q2 = [30, 22, 30, 0]
-              //   const d = `M0,0Q${q1}Q${q2}z`
-              //   huanhuanFire.attr({
-              //     path: {d, transform: {scale: 2}},
-              //   })
-              // }, 100)
+                fx += deltaY;
+                if (fy < 0) fy = 0;
+                if (fy > 20) fy = 20;
+
+                var q1 = [-1, 12, -5 + fx, 30 + fy];
+                var q2 = [30, 22, 30, 0];
+                var d = 'M0,0Q' + q1 + 'Q' + q2 + 'z';
+                huanhuanFire.attr({
+                  path: { d: d, transform: { scale: 2 } }
+                });
+              }, 100);
 
               anim2 = huanhuanGroup.animate([{ pos: [980, 744], opacity: 0 }, { pos: [1080, 450], opacity: 1 }], {
                 duration: 500,
@@ -190,13 +191,19 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 huanhuan.textures = 'huanhuan.png';
               });
 
-              _context3.next = 14;
+              _context3.next = 16;
               return anim2.finished;
 
-            case 14:
+            case 16:
+
+              huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
+                duration: 2000,
+                iterations: Infinity
+              });
+
               return _context3.abrupt('return', huanhuanGroup);
 
-            case 15:
+            case 18:
             case 'end':
               return _context3.stop();
           }
@@ -365,7 +372,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, _scene$viewport, width, fglayer, wait, registerButton, moreAnim, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, maxScroll;
+  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, wait, fireInterval, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -462,7 +469,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            moreAnim = more.animate([{ scale: 1 }, { scale: 1.2 }], {
+            more.animate([{ scale: 1 }, { scale: 1.2 }], {
               duration: 1000,
               iterations: Infinity,
               direction: 'alternate'
@@ -470,7 +477,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             registerButton(more, function () {});
 
-            document.querySelector('.wrap').style.display = 'block';
+            document.querySelector('main').style.display = 'block';
             return more;
           };
 
@@ -502,8 +509,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             if (typeof link === 'string') {
               button.on('click', function (evt) {
+                if (fireInterval) {
+                  fglayer.timeline.clearInterval(fireInterval);
+                }
                 scene.removeLayer(fglayer);
                 coverpage.remove();
+                if (scene[_onScroll]) {
+                  window.removeEventListener('scroll', scene[_onScroll]);
+                }
                 window.location.href = link;
               });
             } else if (typeof link === 'function') {
@@ -517,40 +530,42 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
           };
 
+          fixMobile = function fixMobile() {
+            var _scene$viewport = _slicedToArray(scene.viewport, 1),
+                width = _scene$viewport[0];
+
+            if (width <= 480) {
+              var _fglayer$canvas$style = fglayer.canvas.style,
+                  w = _fglayer$canvas$style.width,
+                  h = _fglayer$canvas$style.height;
+
+              fglayer.canvas.style.width = parseInt(w, 10) * 2 + 'px';
+              fglayer.canvas.style.height = parseInt(h, 10) * 2 + 'px';
+            }
+          };
+
+          _onScroll = Symbol('onScroll');
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
-            viewport: ['auto', 'auto'],
+            // viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
             stickMode: 'width'
           });
           coverpage = document.querySelector('#coverpage');
+          fglayer = scene.layer('fglayer');
 
           // 适配移动端
 
-          _scene$viewport = _slicedToArray(scene.viewport, 1), width = _scene$viewport[0];
+          fixMobile();
 
-          if (width <= 480) {
-            scene.container.style.transform = 'scale(2)';
-          }
-
-          window.addEventListener('resize', function (evt) {
-            var _scene$viewport2 = _slicedToArray(scene.viewport, 1),
-                width = _scene$viewport2[0];
-
-            if (width <= 480) {
-              scene.container.style.transform = 'scale(2)';
-            } else {
-              scene.container.style.transform = '';
-            }
-          });
+          // window.addEventListener('resize', fixMobile)
 
           // 预加载资源
-          _context6.next = 15;
+          _context6.next = 16;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 15:
-          fglayer = scene.layer('fglayer');
-          moreAnim = void 0;
+        case 16:
+          fireInterval = void 0;
           requestId = null;
           _context6.next = 20;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
@@ -589,14 +604,18 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           featureGroup = showFeatures();
           scrolled = false;
           features = document.getElementById('features');
-          maxScroll = coverpage.clientHeight * 0.5 + features.clientHeight * 0.65;
+          r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
+          a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
+          b = (440 + 465) * r;
+          c = features.clientHeight / 2;
+          maxScroll = coverpage.clientHeight - a - b + c;
 
 
           more.on('mouseenter', function () {
             autoScroll(maxScroll, 1000);
           });
 
-          window.addEventListener('scroll', _.throttle(function (evt) {
+          scene[_onScroll] = _.throttle(function (evt) {
             var yOffset = window.pageYOffset || document.documentElement.scrollTop;
             if (yOffset < 0) return;
 
@@ -629,11 +648,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             }
 
             if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
-              if (moreAnim.playState !== 'paused') {
-                moreAnim.pause();
+              if (fglayer.timeline.playbackRate > 0) {
+                fglayer.timeline.playbackRate = 0;
               }
-            } else if (moreAnim.playState === 'paused') {
-              moreAnim.play();
+            } else if (fglayer.timeline.playbackRate === 0) {
+              fglayer.timeline.playbackRate = 1;
             }
 
             var p = Math.min(maxScroll, yOffset) / maxScroll;
@@ -653,8 +672,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
               featureGroup._clipDX = x2 - x1;
               var l = 916 - (1896 - x1),
-                  r = 916 + x2 - 1736;
-              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
+                  _r = 916 + x2 - 1736;
+              var d = 'M' + l + ',0L' + _r + ',0L' + _r + ',' + 930 + 'L' + l + ',930z';
               featureGroup.attr({
                 clip: { d: d }
               });
@@ -669,9 +688,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             huanhuan.attr({
               x: x2
             });
-          }, 16));
+          }, 16);
+          window.addEventListener('scroll', scene[_onScroll]);
 
-        case 42:
+        case 47:
         case 'end':
           return _context6.stop();
       }

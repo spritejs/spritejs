@@ -1,9 +1,8 @@
 <style>
-  #page-index .wrap {
+  main {
     display: none;
     height: 100%;
   }
-
   .app-nav,
   button.sidebar-toggle,
   .sidebar {
@@ -20,7 +19,7 @@
   }
   #features {
     width: 100%;
-    padding-bottom: 55%;
+    padding-bottom: 56.25%;
     background: #eee;
   }
   .markdown-section h1 {
@@ -109,10 +108,10 @@
     text-decoration: none;
   }
   
-  /* article {
+  article {
     z-index: 99999;
     background: #fff;
-  } */
+  }
 </style>
 
 <div class="wrap">
