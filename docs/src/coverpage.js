@@ -21,6 +21,8 @@
   }
   fixMobile()
 
+  const animations = []
+
   // window.addEventListener('resize', fixMobile)
 
   // 预加载资源
@@ -165,7 +167,7 @@
 
     await anim2.finished
 
-    huanhuanGroup.animate([
+    const anim = huanhuanGroup.animate([
       {y: 450},
       {y: 460},
       {y: 450},
@@ -175,6 +177,8 @@
       duration: 2000,
       iterations: Infinity,
     })
+
+    animations.push(anim)
 
     return huanhuanGroup
   }
@@ -349,7 +353,7 @@
     })
     fglayer.append(more)
 
-    more.animate([
+    const anim = more.animate([
       {scale: 1},
       {scale: 1.2},
     ], {
@@ -357,6 +361,8 @@
       iterations: Infinity,
       direction: 'alternate',
     })
+
+    animations.push(anim)
 
     registerButton(more, () => {})
 
@@ -517,9 +523,15 @@
     if(yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
       if(fglayer.timeline.playbackRate > 0) {
         fglayer.timeline.playbackRate = 0
+        animations.forEach((anim) => {
+          anim.pause()
+        })
       }
     } else if(fglayer.timeline.playbackRate === 0) {
       fglayer.timeline.playbackRate = 1
+      animations.forEach((anim) => {
+        anim.play()
+      })
     }
 
     const p = Math.min(maxScroll, yOffset) / maxScroll
