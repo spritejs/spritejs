@@ -113,7 +113,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
   var showHuanHuan = function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-      var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2;
+      var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, anim;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -195,15 +195,17 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               return anim2.finished;
 
             case 16:
-
-              huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
+              anim = huanhuanGroup.animate([{ y: 450 }, { y: 460 }, { y: 450 }, { y: 440 }, { y: 450 }], {
                 duration: 2000,
                 iterations: Infinity
               });
 
+
+              animations.push(anim);
+
               return _context3.abrupt('return', huanhuanGroup);
 
-            case 18:
+            case 19:
             case 'end':
               return _context3.stop();
           }
@@ -372,7 +374,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
     };
   }();
 
-  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, wait, fireInterval, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
+  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, animations, wait, fireInterval, registerButton, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, huanhuan, guanguan, buttons, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
@@ -469,11 +471,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             });
             fglayer.append(more);
 
-            more.animate([{ scale: 1 }, { scale: 1.2 }], {
+            var anim = more.animate([{ scale: 1 }, { scale: 1.2 }], {
               duration: 1000,
               iterations: Infinity,
               direction: 'alternate'
             });
+
+            animations.push(anim);
 
             registerButton(more, function () {});
 
@@ -558,38 +562,41 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           fixMobile();
 
+          animations = [];
+
           // window.addEventListener('resize', fixMobile)
 
           // 预加载资源
-          _context6.next = 16;
+
+          _context6.next = 17;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 16:
+        case 17:
           fireInterval = void 0;
           requestId = null;
-          _context6.next = 20;
+          _context6.next = 21;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 20:
-          _context6.next = 22;
+        case 21:
+          _context6.next = 23;
           return showIntroText('跨平台绘图对象模型');
 
-        case 22:
+        case 23:
           text = _context6.sent;
-          _context6.next = 25;
+          _context6.next = 26;
           return showHuanHuan();
 
-        case 25:
+        case 26:
           huanhuan = _context6.sent;
-          _context6.next = 28;
+          _context6.next = 29;
           return showGuanGuan();
 
-        case 28:
+        case 29:
           guanguan = _context6.sent;
-          _context6.next = 31;
+          _context6.next = 32;
           return showButtons();
 
-        case 31:
+        case 32:
           buttons = _context6.sent;
           more = showMore();
 
@@ -650,9 +657,15 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             if (yOffset > coverpage.clientHeight + 0.5 * features.clientHeight) {
               if (fglayer.timeline.playbackRate > 0) {
                 fglayer.timeline.playbackRate = 0;
+                animations.forEach(function (anim) {
+                  anim.pause();
+                });
               }
             } else if (fglayer.timeline.playbackRate === 0) {
               fglayer.timeline.playbackRate = 1;
+              animations.forEach(function (anim) {
+                anim.play();
+              });
             }
 
             var p = Math.min(maxScroll, yOffset) / maxScroll;
@@ -691,7 +704,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 47:
+        case 48:
         case 'end':
           return _context6.stop();
       }
