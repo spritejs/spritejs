@@ -482,7 +482,7 @@
   const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
   const b = (440 + 465) * r
   const c = features.clientHeight / 2
-  const maxScroll = coverpage.clientHeight - a - b + c
+  const maxScroll = (window.screen.height || coverpage.clientHeight) - a - b + c
 
   more.on('mouseenter', () => {
     autoScroll(maxScroll, 1000)
