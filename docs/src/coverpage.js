@@ -483,7 +483,6 @@
   const b = (440 + 465) * r
   const c = features.clientHeight / 2
   const maxScroll = (window.screen.height || coverpage.clientHeight) - a - b + c
-  console.log(maxScroll, window.screen.height, coverpage.clientHeight, a, b, c)
 
   more.on('mouseenter', () => {
     autoScroll(maxScroll, 1000)
