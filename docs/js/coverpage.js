@@ -615,7 +615,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
           b = (440 + 465) * r;
           c = features.clientHeight / 2;
-          maxScroll = coverpage.clientHeight - a - b + c;
+          maxScroll = (window.screen.height || coverpage.clientHeight) - a - b + c;
 
 
           more.on('mouseenter', function () {
