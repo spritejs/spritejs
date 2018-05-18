@@ -64,7 +64,7 @@
     "eslint-config-75team": "^1.0.2",
     "gifencoder": "^1.1.0",
     "hamming-distance": "^1.0.0",
-    "http-server": "^0.9.0",
+    "http-server": "^0.11.1",
     "imghash": "0.0.3",
     "nyc": "^11.1.0",
     "pixelmatch": "^4.0.2",
