@@ -42,7 +42,7 @@ class ResAttr extends Sprite.Attr {
       return Object.assign({}, texture, {image: img})
     })
     if(clearCache) {
-      this.forceUpdate(true)
+      this.subject.forceUpdate(true)
     }
     super.loadTextures(res)
   }

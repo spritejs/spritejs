@@ -69,6 +69,14 @@ class ExLayer extends Layer {
     }
     return true
   }
+
+  toLocalPos(x, y) {
+    return this.parent.toLocalPos(this.canvas, x, y)
+  }
+  toGlobalPos(x, y) {
+    return this.parent.toGlobalPos(this.canvas, x, y)
+  }
+
   async takeSnapshot() {
     await this.prepareRender()
     const snapshotCanvas = this.canvas.cloneNode(true),
