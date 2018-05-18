@@ -6,6 +6,7 @@ module.exports = {
     d3: true,
     Docsify: true,
     _: true,
+    CodeMirror: true,
   },
   "extends":  "eslint-config-75team",
   rules: {

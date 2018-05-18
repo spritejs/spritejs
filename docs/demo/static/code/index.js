@@ -1,126 +1,167 @@
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
 ;(async function(){
-  const paper = spritejs.Paper2D('#paper')
-  paper.setResolution(1600, 1200) 
+  const {Scene, Sprite, Group} = spritejs
+  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [3000, 3000]})
   
-  await paper.preload(
-    [birdsRes, birdsJsonUrl]   
-  )  
+  await scene.preload([
+    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+  ])
   
-  const bglayer = paper.layer('bg'), 
-        fglayer = paper.layer('fg', {
+  const fglayer = scene.layer('fg', {
               handleEvent: false,
-              evaluateFPS: true,
-              renderMode: 'repaintAll',
         })   
   
-  const axisZero = [800, 600]
-  const circle = new spritejs.Sprite()
+  const center = [1500, 1600]
+  const region = new Group()
   
-  circle.attr({
-    anchor: [0.5, 0.5],
-    size: [800, 800],
-    pos: axisZero,
-    bgcolor: '#139',
-    opacity: 0.5,
-    borderRadius: 400,
+  region.attr({
+    anchor: 0.5,
+    size: [2300, 2300],
+    pos: center,
+    bgcolor: 'rgba(17, 51, 153, 0.5)',
+    borderRadius: 300,
   })
   
-  bglayer.appendChild(circle)
+  fglayer.append(region)
 
-  const birdCountLabel = new spritejs.Label()
-  birdCountLabel.attr({
-    pos: [30, 50],
-    font: '32px Arial',
-    color: 'white',
+  const robot = new Sprite('guanguan1.png')
+  robot.attr({
+    anchor: [0.5, 1],
+    pos: [350, 650],
+    transformOrigin: [0, -300],
   })
+  region.append(robot)
 
-  bglayer.appendChild(birdCountLabel) 
-  
-  function pointAdd(p1, p2 = [0, 0]){
-    return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
-  }
-  
-  function pointSub(p1, p2 = [0, 0]){
-    return [p1[0] - p2[0], p1[1] - p2[1]].map(Math.round)
-  }
-  
-  async function randomAnimate(bird){
-    const birdPoint = bird.attr('pos')
-    const randomArc = Math.random() * 2 * Math.PI
-    const randomPoint = pointAdd([350 * Math.cos(randomArc), 
-                                  350 * Math.sin(randomArc)], axisZero)
-    
-    const dist = pointSub(randomPoint, birdPoint)
-    const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
-    const deg = Math.round(180 * Math.atan(dist[1] / dist[0]) / Math.PI)
-    const flip = dist[0] < 0 ? -1 : 1
-    const duration = 5 * distance + 100
-
-    bird.attr('scale', [flip, 1]) 
-    
-    const anim = bird.animate([
-      {pos: birdPoint},
-      {pos: randomPoint}
+  async function robotMotion() {
+    await robot.animate([
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+      {textures: 'guanguan3.png'},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
+      {textures: 'guanguan1.png', scale: [1, 1]},
     ], {
-      duration,
-      endDelay: 500,
-      fill: 'both'
-    })
-
-    await anim.finished
-  }
-
-  let birdCount = 0
-  async function addBird(){
-    birdCountLabel.text = `sprites: ${++birdCount} | fps: ${fglayer.fps}`
-    const bird = new spritejs.Sprite('bird1.png') 
-
-    bird.attr({
-      anchor: [0.5, 0.5],
-      pos: axisZero,
-      transform: {
-        rotate: 0,
-      }
-    })
-
-    fglayer.appendChild(bird)
-    
-    let idx = 0
-    setInterval(() => {
-      bird.textures = [`bird${++idx % 3 + 1}.png`]
-    }, 100)
-
-    // bird.animate([
-    //   {textures: 'bird1.png'},
-    //   {textures: 'bird2.png'},
-    //   {textures: 'bird3.png'},
-    // ], {
-    //   duration: 300,
-    //   direction: 'alternate',
-    //   iterations: Infinity,
-    // })
-    
-    //noprotect
-    do{
-      await randomAnimate(bird)
-    }while(1) 
-  }
-
-  addBird()
-  circle.on('click', evt => {
-    addBird()
-  })
-
-  console.log('Click in the circle to add bird...')
+      duration: 3000,
+      easing: 'step-end',
+      fill: 'forwards',
+    }).finished
   
-  setInterval(() => {
-    birdCountLabel.text = `sprites: ${birdCount} | fps: ${fglayer.fps}`
-  }, 1000)
+    await robot.animate([
+      {y: 650},
+      {y: 2300}, 
+    ], {
+      duration: 500,
+      easing: 'ease-in',
+      fill: 'forwards',
+    }).finished
+    
+    await robot.animate([
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+      {textures: 'guanguan3.png', scale: [1, 1]},
+    ], {
+      duration: 2000,
+      easing: 'step-end',
+      fill: 'forwards',
+    }).finished
+  
+    await robot.animate([
+      {x: 350},
+      {x: 2000},
+    ], {
+      duration: 2000,
+      easing: 'ease-in-out',
+      fill: 'forwards',
+    }).finished
 
-  window.addEventListener('resize', evt => {
-    paper.setViewport('auto', 'auto')
-  })
+    await robot.animate([
+      {rotate: 0},
+      {rotate: -70},
+    ], {
+      duration: 1000,
+      easing: 'ease-in-out',
+      direction: 'alternate',
+      iterations: 2,
+      fill: 'forwards',
+    }).finished
+
+    await robot.animate([
+      {textures: 'guanguan3.png'},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan3.png'},
+    ], {
+      duration: 2500,
+      easing: 'step-end',
+      fill: 'forwards',
+    }).finished
+
+    await robot.animate([
+      {rotate: 0},
+      {rotate: -70},
+    ], {
+      duration: 1000,
+      easing: 'ease-in-out',
+      direction: 'alternate',
+      iterations: 2,
+      fill: 'forwards',
+    }).finished
+  
+    await robot.animate([
+      {textures: 'guanguan3.png'},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
+    ], {
+      duration: 2500,
+      easing: 'step-end',
+      fill: 'forwards',
+    }).finished
+  
+    await robot.animate([
+      {x: 2000},
+      {x: 350, offset: 0.99, scale: [-1, 1]},
+      {x: 350, scale: [1, 1]},
+    ], {
+      duration: 1000,
+      easing: 'ease-in-out',
+      fill: 'forwards',
+    }).finished
+  
+    await robot.animate([
+      {x: 350, y: 2300, rotate: 0},
+      {x: 2000, y: 2300, rotate: 0, offset: 0.3},
+      {x: 2000, y: 2300, rotate: -90, offset: 0.35},
+      {x: 2000, y: 600, rotate: -90, offset: 0.65},
+      {x: 2000, y: 600, rotate: -180, offset: 0.7},
+      {x: 350, y: 600, rotate: -180},
+    ], {
+      delay: 500,
+      duration: 3500,
+      easing: 'ease-in',
+      fill: 'forwards',
+    }).finished
+
+    robot.attr({
+      textures: 'guanguan1.png'
+    })
+
+    await robot.animate([
+      {y: 600, rotate: -180}, 
+      {y: 650, rotate: 0},
+    ], {
+      delay: 1000,
+      duration: 1000,
+      fill: 'forwards',
+    }).finished
+  }
+
+  while(1) {
+    await robotMotion()
+  }
 })()

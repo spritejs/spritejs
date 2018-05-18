@@ -24,23 +24,11 @@
       const paper = spritejs.Paper2D('#container')
       //paper.setResolution(400, 400)
 
-      var _getTexture = function(render, imagePath) {
-          var image = render.textures[imagePath];
-
-          if (image)
-              return image;
-
-          image = render.textures[imagePath] = new Image();
-          image.src = imagePath;
-
-          return image;
-      };
       const render = {textures: {}}
-      const img = _getTexture(render, imgUrl)
 
       const sprite = new spritejs.Sprite()
       sprite.attr({
-        textures: [{image: img}],
+        textures: [imgUrl],
         bgcolor: '#fff',
         //anchor: [0.5, 0.5],
         pos: [0, 0],

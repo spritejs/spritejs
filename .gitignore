@@ -41,7 +41,6 @@ ffmpeg.sh
 .DS_Store
 
 sftp-config.json
-package-lock.json
 
 .vscode
 jsconfig.json
