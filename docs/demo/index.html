@@ -7,16 +7,19 @@
   <link rel="stylesheet" href="static/css/codemirror.css">
   <link rel="stylesheet" href="static/css/theme/seti.css">
   <link rel="stylesheet" href="static/css/style.css">
-  <script src="static/js/codemirror.js"></script>
-  <script src="static/js/javascript.js"></script>
+  <script src="/js/codemirror/codemirror.js"></script>
+  <script src="/js/codemirror/javascript.js"></script>
   <script src="//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js"></script>
+  <script src="//lib.baomitu.com/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
 <body>
 <div id="main">
-  <div id="menu">
+  <div id="menu" class="hide">
+    <div class="wrap">
+      <div class="header"></div>
+    </div>
     <ul>
-      <li class="header">SpriteJS <a id="libVersion" href="###">v</a></li>
-      <li class="title"><a href="https://github.com/spritejs/spritejs/tree/master/docs">Docs</a></li>
+      <li class="title"><a href="http://spritejs.org">Docs</a></li>
       <li class="title">Examples</li>
       <li><a href="#">index</a></li>
       <li><a href="#basic_sprites">basic sprites</a></li>
@@ -42,9 +45,10 @@
   </div>
   <div id="demo">
     <div id="paper">
+      <div class="loading">Loading</div>
       <iframe id="sandbox"></iframe>
     </div>
-    <div id="console-panel">console<a href="###">clear</a></div>
+    <div id="console-panel"><span>console</span><a href="#">clear</a></div>
     <div id="output"></div>
   </div>
   <div id="code">
@@ -53,7 +57,7 @@
   <div id="fork">
     <a href="https://github.com/spritejs/spritejs"><img src="static/image/github.png"></a>
   </div>
-  <script src="static/js/app.js"></script>
+  <script src="/js/demo/app.js"></script>
 </div>
 </body>
 </html>

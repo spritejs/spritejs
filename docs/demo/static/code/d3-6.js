@@ -1,5 +1,7 @@
-const paper = spritejs.Paper2D('#paper')
-paper.setResolution(1800, 1000) 
+const paper = new spritejs.Scene('#paper', {
+  resolution: [1800, 1000],
+  stickMode: 'width',
+})
 
 const worldLayer = paper.layer('world-layer', {
   //resolution: [3600, 2000], 
