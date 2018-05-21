@@ -1,9 +1,11 @@
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Label = spritejs.Label  
-
-paper.setResolution(1600, 1200) 
+const paper = new spritejs.Scene('#paper', {
+    resolution: [1600, 1200],
+    viewport: ['auto', 'auto'],
+    stickMode: 'width',
+  }),
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Label = spritejs.Label
 
 class Button extends Label {
   connect(parent, zOrder) {
@@ -97,10 +99,6 @@ paper.preload([birdsRes, birdsJsonUrl])
 
   bird.on('update', evt => {
     const [x, y] = bird.renderBox
-    label.text = `Render Box {x: ${x} | y: ${y}}`
+    label.text = `Render Box {x: ${x} | y: ${Math.round(y)}}`
   })
-})
-
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
 })

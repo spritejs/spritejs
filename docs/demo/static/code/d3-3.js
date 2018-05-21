@@ -13,7 +13,10 @@ function loadScript(url) {
   }) 
 }
 
-const paper = spritejs.Paper2D('#paper').setResolution(800, 600)
+const paper = new spritejs.Scene('#paper', {
+  resolution: [800, 600],
+  stickMode: 'width',
+})
 
 loadScript(d3Url).then(function(){
 

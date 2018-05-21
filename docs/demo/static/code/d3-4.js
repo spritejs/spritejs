@@ -13,7 +13,10 @@ function loadScript(url) {
   }) 
 }
 
-const paper = spritejs.Paper2D('#paper').setResolution(1200, 900)
+const paper = new spritejs.Scene('#paper', {
+  resolution: [1200, 900],
+  stickMode: 'width',
+})
 
 loadScript(d3Url).then(function(){
 
@@ -82,7 +85,7 @@ loadScript(d3Url).then(function(){
     }
   
     function dragsubject() {
-      const [x, y] = paper.toLocalPos(d3.event.x, d3.event.y)
+      const [x, y] = layer.toLocalPos(d3.event.x, d3.event.y)
       return simulation.find(x, y - 100);
     }
   });
@@ -103,7 +106,7 @@ loadScript(d3Url).then(function(){
     const [x, y] = [d3.event.x, d3.event.y],
           {x0, y0} = d3.event.subject
 
-    const [dx, dy] = paper.toLocalPos((x - x0), (y - y0))
+    const [dx, dy] = layer.toLocalPos((x - x0), (y - y0))
 
     d3.event.subject.fx = x0 + dx;
     d3.event.subject.fy = y0 + dy;

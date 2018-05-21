@@ -1,9 +1,10 @@
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Group = spritejs.Group
-
-paper.setResolution(800, 600) 
+const paper = new spritejs.Scene('#paper', {
+    resolution: [800, 600],
+    stickMode: 'width',
+  }),
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Group = spritejs.Group
 
 const s1 = new Sprite()
 s1.attr({
