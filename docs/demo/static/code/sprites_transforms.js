@@ -33,6 +33,8 @@
   }
 
   const fglayer = scene.layer('fglayer')
+  fglayer.canvas.style.backgroundColor = '#fee139'
+
   const [translateBtn, rotateBtn, scaleBtn, skewBtn, stopBtn]
     = ['translate', 'rotate', 'scale', 'skew', 'stop'].map((type, i) => {
       const button = new Button(type)
@@ -40,7 +42,7 @@
       button.attr({
         pos: [900, 200 + i * 80],
         font: '48px Arial',
-        color: '#fff',
+        color: '#32ab61',
       })
       fglayer.appendChild(button)
 

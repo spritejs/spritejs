@@ -8,6 +8,7 @@
   ])
 
   const layer = scene.layer('fglayer')
+  layer.canvas.style.backgroundColor = '#F0F0F0'
 
   const ground = new Sprite()
   ground.attr({
@@ -107,7 +108,7 @@
     }).finished
 
     head.animate([
-      {y: 700},
+      {y: 695},
     ], {
       duration: 200,
       fill: 'forwards',

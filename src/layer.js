@@ -1,16 +1,20 @@
 import {Layer, createNode} from 'sprite-core'
+import {createCanvas} from './platform'
 
 const _resolution = Symbol('resolution')
 
 class ExLayer extends Layer {
-  constructor({
-    context,
-    handleEvent,
-    evaluateFPS,
-    renderMode,
-    resolution,
-    shadowContext,
-  } = {}) {
+  constructor(id, opts = {}) {
+    if(typeof id === 'object') {
+      opts = id
+      id = opts.id || Symbol('id')
+    }
+    let {context, handleEvent, evaluateFPS, renderMode, resolution, shadowContext} = opts
+    context = context || createCanvas().getContext('2d')
+    const canvas = context.canvas
+    canvas.dataset.layerId = id
+    canvas.style.position = 'absolute'
+
     super({context, handleEvent, evaluateFPS, renderMode, shadowContext})
 
     if(resolution) {

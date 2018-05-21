@@ -1,104 +1,159 @@
-const paper = new spritejs.Scene('#paper', {
-    resolution: [1600, 1200],
-    viewport: ['auto', 'auto'],
-    stickMode: 'width',
-  }),
-  fglayer = paper.layer('fglayer'),
-  Sprite = spritejs.Sprite,
-  Label = spritejs.Label
+(async function () {
+  const {Scene, Sprite, Group, Path, Label} = spritejs
 
-class Button extends Label {
-  connect(parent, zOrder) {
-    super.connect(parent, zOrder)
+  const scene = new Scene('#paper', {
+      resolution: [1200, 1200],
+      viewport: ['auto', 'auto'],
+    }),
+    fglayer = scene.layer('fglayer')
 
-    this.on('mouseenter', evt => {
-      this.attr({
-        scale: 1.1
+  fglayer.canvas.style.backgroundColor = '#c9b892'
+
+  await scene.preload([
+    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+  ])
+
+  const huanhuan = new Group()
+  huanhuan.attr({
+    anchor: [0.5, 0],
+    pos: [600, 600],
+    rotate: 30,
+  })
+  fglayer.append(huanhuan)
+
+  const robot = new Sprite('huanhuan.png')
+  robot.attr({
+    size: [78, 96],
+  })
+  huanhuan.append(robot)
+
+  const outerFireD = 'M19.8173,24.1766 L5.3273,32.9936 C4.6293,33.4186 3.7183,33.1976 3.2943,32.4996 C3.1953,32.3376 3.1313,32.1596 3.1003,31.9836 L0.1953,15.2736 C-1.0387,8.1796 3.7123,1.4286 10.8073,0.1946 C17.9013,-1.0394 24.6523,3.7116 25.8853,10.8056 C26.8283,16.2296 24.2443,21.4666 19.8173,24.1766'
+
+  const outerFire = new Path()
+  outerFire.attr({
+    path: {d: outerFireD},
+    pos: [22, 90],
+    fillColor: 'rgb(253,88,45)',
+    zIndex: -1,
+  })
+  huanhuan.append(outerFire)
+
+  const innerFireD = 'M15.9906,13.766 L8.4096,26.718 C8.0486,27.335 7.2706,27.521 6.6726,27.133 C6.4296,26.976 6.2536,26.748 6.1536,26.491 L0.6356,12.223 C-1.1554,7.594 0.9666,2.393 5.3746,0.605 C9.7826,-1.182 14.8076,1.122 16.5976,5.752 C17.6546,8.483 17.3236,11.455 15.9906,13.766'
+
+  const innerFire = new Path()
+  innerFire.attr({
+    path: {d: innerFireD},
+    pos: [30, 90],
+    rotate: 15,
+    fillColor: 'rgb(254,222,9)',
+    zIndex: -1,
+  })
+  huanhuan.append(innerFire)
+
+  class KeyButton extends Label {
+    pointCollision(evt) {
+      if(evt.originalEvent.key === this.text.toLowerCase()) {
+        return true
+      }
+      return super.pointCollision(evt)
+    }
+  }
+  KeyButton.defineAttributes({
+    init(attr) {
+      attr.setDefault({
+        font: '48px "宋体"',
+        fillColor: '#000',
+        width: 80,
+        height: 80,
+        textAlign: 'center',
+        lineHeight: 80,
+        border: [2, '#000'],
+      })
+    },
+  })
+
+  function setKey(key, x, y) {
+    const button = new KeyButton(key)
+    button.attr({
+      pos: [x, y],
+    })
+    button.on(['keydown', 'mousedown', 'touchstart'], (evt) => {
+      button.attr({
+        bgcolor: 'grey',
+        fillColor: 'white',
       })
     })
-
-    this.on('mousedown', evt => {
-      this.attr({
-        scale: 0.95
+    button.on(['keyup', 'mouseup', 'touchend'], (evt) => {
+      button.attr({
+        bgcolor: 'transparent',
+        fillColor: 'black',
       })
     })
+    fglayer.append(button)
+    return button
+  }
 
-    this.on('mouseup', evt => {
-      this.attr({
-        scale: 1.1
-      })
-    })
+  const flapping = huanhuan.animate([
+    {translate: [8.5, 10]},
+    {translate: [-8.5, -10]},
+  ], {
+    duration: 1000,
+    iterations: Infinity,
+    direction: 'alternate',
+  })
 
-    this.on('mouseleave', evt => {
-      this.attr({
-        scale: 1.0
-      })
+  let moving = null
+  function moveY(destY) {
+    flapping.pause()
+    const y = huanhuan.attr('y')
+    if(moving) moving.cancel(true)
+    moving = huanhuan.animate([
+      {y},
+      {y: destY},
+    ], {
+      duration: Math.abs(10 * (y - destY)),
+      fill: 'forwards',
     })
   }
-}
-
-
-const button = new Button('Click Me')
-
-button.attr({
-  pos: [1350, 200],
-  font: '36px Arial',
-  color: '#fff',
-  border: [1, '#fff'],
-  borderRadius: 20,
-  padding: 25,
-})
-fglayer.appendChild(button) 
-
-
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
-paper.preload([birdsRes, birdsJsonUrl])
-.then(() => {
-  const bird = new Sprite()
-  bird.attr({
-    textures: [
-      'bird1.png'
-    ],
-    anchor: [0.5, 0.5],
-    pos: [600, 600],
-  })
-
-  let i = 0
-  setInterval(() => {
-    bird.textures = `bird${++i % 2 + 1}.png`
-  }, 100)
-
-  fglayer.appendChild(bird)
-
-  let animation = null
-
-  button.on('click', evt => {
-    if(animation) animation.cancel()
-    animation = bird.animate([
-      {transform:{translate: [0, 0]}},
-      {transform:{translate: [0, -100]}},
+  function moveX(destX) {
+    flapping.pause()
+    const x = huanhuan.attr('x')
+    if(moving) moving.cancel(true)
+    moving = huanhuan.animate([
+      {x},
+      {x: destX},
     ], {
-      duration: 1000,
-      iterations: Infinity,
-      direction: 'alternate',
-      easing: 'ease-in-out',
+      duration: Math.abs(10 * (x - destX)),
+      fill: 'forwards',
     })
-  })
+  }
 
-  const label = new Label(`Render Box {x: ${bird.attr('x')} | y: ${bird.attr('y')}}`)
-  label.attr({
-    anchor: [0.5, 0.5],
-    pos: [600, 300],
-    font: '48px Arial',
-    color: '#fff',
-  })
+  function stopMove() {
+    if(moving) {
+      moving.cancel(true)
+      moving = null
+    }
+    flapping.play()
+  }
 
-  fglayer.appendChild(label)
+  setKey('W', 900, 900)
+    .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, -1000))
+    .on(['keyup', 'mouseup', 'touchend'], stopMove)
+  setKey('A', 800, 1000)
+    .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, -1000))
+    .on(['keyup', 'mouseup', 'touchend'], stopMove)
+  setKey('S', 900, 1000)
+    .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, 3000))
+    .on(['keyup', 'mouseup', 'touchend'], stopMove)
+  setKey('D', 1000, 1000)
+    .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, 3000))
+    .on(['keyup', 'mouseup', 'touchend'], stopMove)
 
-  bird.on('update', evt => {
-    const [x, y] = bird.renderBox
-    label.text = `Render Box {x: ${x} | y: ${Math.round(y)}}`
-  })
-})
+  scene.delegateEvent('keydown', document)
+  scene.delegateEvent('keyup', document)
+
+  /* eslint-disable no-console */
+  console.log('press key to move robot')
+  /* eslint-enable no-console */
+}())

@@ -72,12 +72,25 @@ export default class extends BaseNode {
   get height() {
     return this.viewport[1]
   }
-
-  // d3-friendly
-  insertBefore(node, next) {
-    if(this.container) {
-      return this.container.insertBefore(node, next)
+  insertBefore(newchild, refchild) {
+    if(!this.hasLayer(refchild)) {
+      throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.')
     }
+    this.appendLayer(newchild)
+    this.container.insertBefore(newchild.canvas, refchild.canvas)
+    const els = this.container.querySelectorAll('canvas')
+    els.forEach((el, i) => {
+      const id = el.dataset.layerId
+      if(id) {
+        const layer = this.layer(id)
+        delete layer.zOrder
+        Object.defineProperty(layer, 'zOrder', {
+          value: i,
+          writable: false,
+          configurable: true,
+        })
+      }
+    })
   }
   appendChild(layer) {
     return this.appendLayer(layer)
@@ -378,18 +391,13 @@ export default class extends BaseNode {
         delete opts.zIndex
       }
 
-      const context = opts.context || createCanvas().getContext('2d')
-      const canvas = context.canvas
-      canvas.dataset.layerId = id
-      canvas.style.position = 'absolute'
       const pos = window.getComputedStyle && window.getComputedStyle(this.container).position
 
       if(this.container.style && (pos !== 'absolute' && pos !== 'fixed')) {
         this.container.style.position = 'relative'
       }
 
-      opts.context = context
-      this.appendLayer(new Layer(opts), zIndex)
+      this.appendLayer(new Layer(id, opts), zIndex)
     }
 
     return this[_layerMap][id]
