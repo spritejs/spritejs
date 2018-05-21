@@ -8,6 +8,7 @@
   ])
 
   const fglayer = scene.layer('fglayer')
+  fglayer.canvas.style.backgroundColor = '#a1d36d'
 
   const button = new Label('Press & Hold')
 

@@ -121,3 +121,11 @@
 
 - 修复Layer和Group的insertBefore
 - 修改和完善 Demo
+
+## [2.0.0-alpha.12][2018-05-21]
+
+### 改进
+
+- 元素的.on方法允许同时监听多个事件
+- 动画的cancel增加参数boolean类型，允许中途取消动画并保持元素动画状态
+- Scene增加insertBefore

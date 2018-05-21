@@ -1,6 +1,8 @@
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
+// '#60b4f9'
+
 const paper = new spritejs.Scene('#paper', {
     resolution: [800, 600],
     stickMode: 'width',
