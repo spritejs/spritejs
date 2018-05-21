@@ -1,8 +1,9 @@
-const paper = spritejs.Paper2D('#paper')
+const paper = new spritejs.Scene('#paper', {
+  resolution: [800, 600],
+  stickMode: 'width',
+})
 const Sprite = spritejs.Sprite,
       Path = spritejs.Path
-
-paper.setResolution(800, 600)
 
 ;(async function(){
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json',

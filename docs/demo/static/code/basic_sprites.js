@@ -1,72 +1,168 @@
-const paper = spritejs.Paper2D('#paper'),
-      bglayer = paper.layer('bglayer'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite  
+(async function () {
+  const {Scene, Sprite} = spritejs
+  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]})
 
-paper.setResolution(1600, 1200)
+  await scene.preload([
+    'https://p3.ssl.qhimg.com/t010ded517024020e10.png',
+    'https://s1.ssl.qhres.com/static/6ead70a354da7aa4.json',
+  ])
 
-const s1 = new Sprite()
-s1.attr({
-  anchor: [0.5, 0.5],
-  pos: [400, 400],
-  size: [200, 200],
-  border: [6, '#77cc33'],
-  borderRadius: 5,
-  bgcolor: '#fff',
-})
+  const layer = scene.layer('fglayer')
 
-const s2 = new Sprite()
-s2.attr({
-  anchor: [0.5, 0.5],
-  pos: [400, 400],
-  size: [200, 200],
-  border: [6, '#77cc33'],
-  borderRadius: 5,
-  rotate: 45,
-  bgcolor: 'rgba(255, 133, 77, 0.5)',
-  rotate: 45,
-})
+  const ground = new Sprite()
+  ground.attr({
+    anchor: [0.5, 0],
+    size: [700, 30],
+    pos: [600, 830],
+    bgcolor: '#c93',
+    borderRadius: 15,
+  })
+  layer.append(ground)
 
-s1.on('click', evt => {
-  console.log('click s1')
-  evt.stopDispatch()
-})
+  const head = new Sprite('head.png')
+  head.attr({
+    pos: [606, 0],
+  })
 
-s2.on('click', evt => {
-  console.log('click s2')
-})
+  const neck = new Sprite('neck.png')
+  neck.attr({
+    pos: [626, 68],
+    zIndex: -1,
+  })
 
-fglayer.append(s1, s2)
+  const body = new Sprite('body.png')
+  body.attr({
+    pos: [606, 73],
+  })
 
-const s3 = new Sprite()
-s3.attr({
-  anchor: [0, 0.5],
-  pos: [100, 400],
-  size: [800, 100],
-  border: [6, '#73c'],
-  bgcolor: '#007',
-  zIndex: 10,
-})
+  const leftArm = new Sprite('arm-1.png')
+  leftArm.attr({
+    pos: [600, 73],
+  })
 
-s3.on('click', evt => {
-  console.log('click s3')
-})
+  const rightArm = new Sprite('arm-2.png')
+  rightArm.attr({
+    pos: [675, 73],
+  })
 
-const s4 = new Sprite()
-s4.attr({
-  anchor: [0, 0.5],
-  pos: [600, 700],
-  size: [200, 100],
-  border: [6, '#c37'],
-  bgcolor: '#007',
-  transform: {
-    skew: [30, 0],
-    rotate: 90,
+  layer.append(head, neck, body, leftArm, rightArm)
+
+  body.animate([
+    {y: 773},
+  ], {
+    duration: 1000,
+    easing: 'ease-in',
+    fill: 'forwards',
+  })
+
+  leftArm.animate([
+    {y: 773},
+  ], {
+    delay: 300,
+    duration: 1000,
+    easing: 'ease-in',
+    fill: 'forwards',
+  })
+
+  rightArm.animate([
+    {y: 773},
+  ], {
+    delay: 600,
+    duration: 1000,
+    easing: 'ease-in',
+    fill: 'forwards',
+  })
+
+  neck.animate([
+    {y: 758},
+  ], {
+    delay: 900,
+    duration: 1000,
+    easing: 'ease-in',
+    fill: 'forwards',
+  })
+
+  await head.animate([
+    {y: 685},
+  ], {
+    delay: 1200,
+    duration: 1000,
+    easing: 'ease-in',
+    fill: 'forwards',
+  }).finished
+
+  async function combine() {
+    await leftArm.animate([
+      {y: 753},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    }).finished
+
+    await rightArm.animate([
+      {y: 753},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    }).finished
+
+    head.animate([
+      {y: 700},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    })
+
+    await neck.animate([
+      {y: 768},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    }).finished
+
+    leftArm.animate([
+      {y: 773},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    })
+
+    rightArm.animate([
+      {y: 773},
+    ], {
+      duration: 200,
+      fill: 'forwards',
+    })
   }
-})
 
-bglayer.append(s3, s4)
+  async function stretch() {
+    neck.animate([
+      {y: 758},
+    ], {
+      delay: 100,
+      duration: 200,
+      easing: 'ease-in',
+      fill: 'forwards',
+    })
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
+    await head.animate([
+      {y: 685},
+    ], {
+      delay: 200,
+      duration: 200,
+      easing: 'ease-in',
+      fill: 'forwards',
+    }).finished
+  }
+
+  await combine()
+
+  ;[body, head].forEach((sprite) => {
+    sprite.on('mouseenter', (evt) => {
+      stretch()
+    })
+    sprite.on('mouseleave', (evt) => {
+      combine()
+    })
+  })
+}())

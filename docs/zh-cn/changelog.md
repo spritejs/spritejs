@@ -109,3 +109,15 @@
 ### 改进
 
 - 优化Group对象的渲染性能
+
+## [2.0.0-alpha.11][2018-05-21]
+
+### bug修复
+
+- 修复transform多次赋值的bug
+- 修复group缓存引起的bug
+
+### 改进
+
+- 修复Layer和Group的insertBefore
+- 修改和完善 Demo

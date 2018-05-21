@@ -1,10 +1,11 @@
-const paper = spritejs.Paper2D('#paper'),
-      bglayer = paper.layer('bglayer'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Path = spritejs.Path
-
-paper.setResolution(1600, 1200) 
+const paper = new spritejs.Scene('#paper', {
+    resolution: [1600, 1200],
+    stickMode: 'width',
+  }),
+  bglayer = paper.layer('bglayer'),
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Path = spritejs.Path
 
 function randomBlock(){
   const s = new Sprite()

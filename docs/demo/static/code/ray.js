@@ -22,10 +22,11 @@ function sleep(ms) {
 ;(async function(){
   await loadScript(animatorjs)
 
-  const paper = spritejs.Paper2D('#paper'),
-        Path = spritejs.Path
-
-  paper.setResolution(1600, 1200) 
+  const paper = new spritejs.Scene('#paper', {
+      resolution: [1600, 1200],
+      stickMode: 'width',
+    }),
+    Path = spritejs.Path
 
   async function ray() {
     const s = new Path()

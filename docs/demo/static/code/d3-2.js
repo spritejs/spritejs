@@ -1,4 +1,7 @@
-const paper = spritejs.Paper2D('#paper').setResolution(1600, 1200)
+const paper = new spritejs.Scene('#paper', {
+  resolution: [1600, 1200],
+  stickMode: 'width',
+})
 
 const d3Url = 'http://lib.baomitu.com/d3/4.10.2/d3.min.js'
 

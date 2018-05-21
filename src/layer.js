@@ -9,8 +9,9 @@ class ExLayer extends Layer {
     evaluateFPS,
     renderMode,
     resolution,
+    shadowContext,
   } = {}) {
-    super({context, handleEvent, evaluateFPS, renderMode})
+    super({context, handleEvent, evaluateFPS, renderMode, shadowContext})
 
     if(resolution) {
       this.resolution = resolution

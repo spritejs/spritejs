@@ -136,7 +136,7 @@
     <li>
       <a href="/demo">
         <img src="/res/demos/textures.png">
-        <span>sprite &amp; textures</span>
+        <span>path &amp; groups</span>
       </a>
     </li>
     <li>

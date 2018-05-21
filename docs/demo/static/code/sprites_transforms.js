@@ -1,83 +1,103 @@
-const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Label = spritejs.Label  
+(async function () {
+  const {Scene, Label, Sprite, Path, Group} = spritejs
+  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]})
 
-paper.setResolution(1600, 1200) 
+  class Button extends Label {
+    connect(parent, zOrder) {
+      super.connect(parent, zOrder)
 
-class Button extends Label {
-  connect(parent, zOrder) {
-    super.connect(parent, zOrder)
-
-    this.on('mouseenter', evt => {
-      this.attr({
-        scale: 1.1
+      this.on('mouseenter', (evt) => {
+        this.attr({
+          scale: 1.1,
+        })
       })
-    })
 
-    this.on('mousedown', evt => {
-      this.attr({
-        scale: 0.95
+      this.on('mousedown', (evt) => {
+        this.attr({
+          scale: 0.95,
+        })
       })
-    })
 
-    this.on('mouseup', evt => {
-      this.attr({
-        scale: 1.1
+      this.on('mouseup', (evt) => {
+        this.attr({
+          scale: 1.1,
+        })
       })
-    })
 
-    this.on('mouseleave', evt => {
-      this.attr({
-        scale: 1.0
+      this.on('mouseleave', (evt) => {
+        this.attr({
+          scale: 1.0,
+        })
       })
-    })
+    }
   }
-}
 
-const [translateBtn, rotateBtn, scaleBtn, skewBtn, stopBtn] 
-  = ['translate','rotate','scale','skew', 'stop'].map((type, i) => {
+  const fglayer = scene.layer('fglayer')
+  const [translateBtn, rotateBtn, scaleBtn, skewBtn, stopBtn]
+    = ['translate', 'rotate', 'scale', 'skew', 'stop'].map((type, i) => {
+      const button = new Button(type)
 
-  const button = new Button(type)
+      button.attr({
+        pos: [900, 200 + i * 80],
+        font: '48px Arial',
+        color: '#fff',
+      })
+      fglayer.appendChild(button)
 
-  button.attr({
-    pos: [1350, 200 + i * 80],
-    font: '48px Arial',
-    color: '#fff',
-  })
-  fglayer.appendChild(button) 
+      return button
+    })
 
-  return button 
-})
+  await scene.preload([
+    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+  ])
 
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
-paper.preload([birdsRes, birdsJsonUrl])
-.then(() => {
-  const bird = new Sprite()
-  bird.attr({
-    textures: [
-      'bird1.png'
-    ],
-    anchor: [0.5, 0.5],
+  const huanhuan = new Group()
+  huanhuan.attr({
+    anchor: 0.5,
     pos: [600, 600],
   })
+  fglayer.append(huanhuan)
 
-  let i = 0
-  setInterval(() => {
-    bird.textures = `bird${++i % 2 + 1}.png`
-  }, 100)
+  const robot = new Sprite()
+  robot.attr({
+    textures: [
+      'huanhuan.png',
+    ],
+    size: [78, 96],
+  })
+  huanhuan.appendChild(robot)
 
-  fglayer.appendChild(bird)
+  const outerFireD = 'M19.8173,24.1766 L5.3273,32.9936 C4.6293,33.4186 3.7183,33.1976 3.2943,32.4996 C3.1953,32.3376 3.1313,32.1596 3.1003,31.9836 L0.1953,15.2736 C-1.0387,8.1796 3.7123,1.4286 10.8073,0.1946 C17.9013,-1.0394 24.6523,3.7116 25.8853,10.8056 C26.8283,16.2296 24.2443,21.4666 19.8173,24.1766'
+
+  const outerFire = new Path()
+  outerFire.attr({
+    path: {d: outerFireD},
+    pos: [22, 90],
+    fillColor: 'rgb(253,88,45)',
+    zIndex: -1,
+  })
+  huanhuan.append(outerFire)
+
+  const innerFireD = 'M15.9906,13.766 L8.4096,26.718 C8.0486,27.335 7.2706,27.521 6.6726,27.133 C6.4296,26.976 6.2536,26.748 6.1536,26.491 L0.6356,12.223 C-1.1554,7.594 0.9666,2.393 5.3746,0.605 C9.7826,-1.182 14.8076,1.122 16.5976,5.752 C17.6546,8.483 17.3236,11.455 15.9906,13.766'
+
+  const innerFire = new Path()
+  innerFire.attr({
+    path: {d: innerFireD},
+    pos: [30, 90],
+    rotate: 15,
+    fillColor: 'rgb(254,222,9)',
+    zIndex: -1,
+  })
+  huanhuan.append(innerFire)
 
   let animation = null
 
-  translateBtn.on('click', evt => {
+  translateBtn.on('click', (evt) => {
     if(animation) animation.cancel()
-    animation = bird.animate([
-      {transform:{translate: [0, 0]}},
-      {transform:{translate: [0, -100]}},
+    animation = huanhuan.animate([
+      {transform: {translate: [0, 0]}},
+      {transform: {translate: [0, -100]}},
     ], {
       duration: 1000,
       iterations: Infinity,
@@ -86,9 +106,9 @@ paper.preload([birdsRes, birdsJsonUrl])
     })
   })
 
-  rotateBtn.on('click', evt => {
+  rotateBtn.on('click', (evt) => {
     if(animation) animation.cancel()
-    animation = bird.animate([
+    animation = huanhuan.animate([
       {transform: {rotate: 0, translate: [0, 150]}},
       {transform: {rotate: 360, translate: [0, 150]}},
     ], {
@@ -98,9 +118,9 @@ paper.preload([birdsRes, birdsJsonUrl])
     })
   })
 
-  scaleBtn.on('click', evt => {
+  scaleBtn.on('click', (evt) => {
     if(animation) animation.cancel()
-    animation = bird.animate([
+    animation = huanhuan.animate([
       {transform: {scale: [1, 1]}},
       {transform: {scale: [1, 0.5]}},
       {transform: {scale: [1, 1]}},
@@ -113,9 +133,9 @@ paper.preload([birdsRes, birdsJsonUrl])
     })
   })
 
-  skewBtn.on('click', evt => {
+  skewBtn.on('click', (evt) => {
     if(animation) animation.cancel()
-    animation = bird.animate([
+    animation = huanhuan.animate([
       {transform: {skew: [0, 0]}},
       {transform: {skew: [0, 180]}},
       {transform: {skew: [0, 0]}},
@@ -127,11 +147,7 @@ paper.preload([birdsRes, birdsJsonUrl])
     })
   })
 
-  stopBtn.on('click', evt => {
+  stopBtn.on('click', (evt) => {
     if(animation) animation.cancel()
   })
-})
-
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
+}())

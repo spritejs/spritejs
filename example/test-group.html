@@ -75,7 +75,9 @@ group.attr({
   anchor: 0.5,
   pos: [200, 200],
   rotate: 0, 
-  border: [1, 'red'],
+  border: [20, 'red'],
+  bgcolor: 'grey',
+  // size: [200, 200],
 })
 
 s1.on('click', evt => {
@@ -85,7 +87,7 @@ s1.on('click', evt => {
 group.animate([
   {rotate: 360}
 ], {
-  duration: 2000,
+  duration: 20000,
   iterations: Infinity,
   direction: 'reverse',
 })
@@ -93,21 +95,21 @@ group.animate([
 s1.animate([
   {rotate: 450}
 ], {
-  duration: 1000,
+  duration: 10000,
   iterations: Infinity,
 })
 
 s2.animate([
   {rotate: 540}
 ], {
-  duration: 1000,
+  duration: 10000,
   iterations: Infinity,
 })
 
 s3.animate([
   {rotate: 360}
 ], {
-  duration: 1000,
+  duration: 10000,
   iterations: Infinity,
 })
 

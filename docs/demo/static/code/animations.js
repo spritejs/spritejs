@@ -32,10 +32,11 @@ class Button extends spritejs.Label {
 }
 
 ;(async function(){
-  const paper = spritejs.Paper2D('#paper'),
-        Sprite = spritejs.Sprite
-
-  paper.setResolution(1600, 1200) 
+  const paper = new spritejs.Scene('#paper', {
+      resolution: [1600, 1200],
+      stickMode: 'width',
+    }),
+    Sprite = spritejs.Sprite
   
   await paper.preload(
     [birdsRes, birdsJsonUrl]   

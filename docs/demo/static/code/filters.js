@@ -1,10 +1,11 @@
 const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-const paper = spritejs.Paper2D('#paper'),
-      Sprite = spritejs.Sprite
-
-paper.setResolution(800, 600) 
+const paper = new spritejs.Scene('#paper', {
+    resolution: [800, 600],
+    stickMode: 'width',
+  }),
+  Sprite = spritejs.Sprite
 
 const box1 = new Sprite()
 box1.attr({
@@ -38,7 +39,3 @@ box1.textures = [{
 }]
 
 paper.layer().appendChild(box1)
-
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})

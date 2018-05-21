@@ -17,7 +17,10 @@ function loadScript(url) {
 let width = 1000,
     height = 750
 
-const paper = spritejs.Paper2D('#paper').setResolution(width, height)
+const paper = new spritejs.Scene('#paper', {
+  resolution: [width, height],
+  stickMode: 'width',
+})
 
 Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
 

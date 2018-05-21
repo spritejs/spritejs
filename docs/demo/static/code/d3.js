@@ -14,7 +14,10 @@ function loadScript(url) {
 }
 
 loadScript(d3Url).then(function(){
-  const paper = spritejs.Paper2D('#paper').setResolution(1600, 1200)
+  const paper = new spritejs.Scene('#paper', {
+    resolution: [1600, 1200],
+    stickMode: 'width',
+  })
 
   const dataset = [ 125 , 121 , 127 , 193 , 309 ];  //数据（表示矩形的宽度）
 

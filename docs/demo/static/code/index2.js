@@ -1,6 +1,6 @@
 (async function () {
   const {Scene, Sprite, Group} = spritejs
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]})
+  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [3000, 3000]})
 
   await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
@@ -15,24 +15,23 @@
       renderMode: 'repaintDirty',
     })
 
-  const center = [600, 640]
+  const center = [1500, 1600]
   const region = new Group()
 
   region.attr({
     anchor: 0.5,
-    size: [920, 920],
+    size: [2300, 2300],
     pos: center,
     bgcolor: 'rgba(17, 51, 153, 0.5)',
-    borderRadius: 120,
+    borderRadius: 300,
   })
   bglayer.append(region)
 
   const robot = new Sprite('guanguan1.png')
   robot.attr({
     anchor: [0.5, 1],
-    pos: [280, 600],
+    pos: [700, 1100],
     transformOrigin: [0, -300],
-    scale: 0.4,
   })
   fglayer.append(robot)
 
@@ -43,8 +42,8 @@
       {textures: 'guanguan3.png'},
       {textures: 'guanguan1.png'},
       {textures: 'guanguan2.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
-      {textures: 'guanguan1.png', scale: [0.4, 0.4]},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
+      {textures: 'guanguan1.png', scale: [1, 1]},
     ], {
       duration: 3000,
       easing: 'step-end',
@@ -52,8 +51,8 @@
     }).finished
 
     await robot.animate([
-      {y: 600},
-      {y: 1280},
+      {y: 1100},
+      {y: 2750},
     ], {
       duration: 500,
       easing: 'ease-in',
@@ -62,10 +61,10 @@
 
     await robot.animate([
       {textures: 'guanguan1.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
       {textures: 'guanguan1.png'},
       {textures: 'guanguan2.png'},
-      {textures: 'guanguan3.png', scale: [0.4, 0.4]},
+      {textures: 'guanguan3.png', scale: [1, 1]},
     ], {
       duration: 2000,
       easing: 'step-end',
@@ -73,8 +72,8 @@
     }).finished
 
     await robot.animate([
-      {x: 280},
-      {x: 940},
+      {x: 700},
+      {x: 2350},
     ], {
       duration: 2000,
       easing: 'ease-in-out',
@@ -120,7 +119,7 @@
       {textures: 'guanguan1.png'},
       {textures: 'guanguan2.png'},
       {textures: 'guanguan1.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
+      {textures: 'guanguan3.png', scale: [-1, 1]},
     ], {
       duration: 2500,
       easing: 'step-end',
@@ -128,9 +127,9 @@
     }).finished
 
     await robot.animate([
-      {x: 940},
-      {x: 280, offset: 0.99, scale: [-0.4, 0.4]},
-      {x: 280, scale: [0.4, 0.4]},
+      {x: 2350},
+      {x: 700, offset: 0.99, scale: [-1, 1]},
+      {x: 700, scale: [1, 1]},
     ], {
       duration: 1000,
       easing: 'ease-in-out',
@@ -138,12 +137,12 @@
     }).finished
 
     await robot.animate([
-      {x: 280, y: 1280, rotate: 0},
-      {x: 940, y: 1280, rotate: 0, offset: 0.3},
-      {x: 940, y: 1280, rotate: -90, offset: 0.35},
-      {x: 940, y: 600, rotate: -90, offset: 0.65},
-      {x: 940, y: 600, rotate: -180, offset: 0.7},
-      {x: 280, y: 600, rotate: -180},
+      {x: 700, y: 2750, rotate: 0},
+      {x: 2350, y: 2750, rotate: 0, offset: 0.3},
+      {x: 2350, y: 2750, rotate: -90, offset: 0.35},
+      {x: 2350, y: 1050, rotate: -90, offset: 0.65},
+      {x: 2350, y: 1050, rotate: -180, offset: 0.7},
+      {x: 700, y: 1050, rotate: -180},
     ], {
       delay: 500,
       duration: 3500,
@@ -156,8 +155,8 @@
     })
 
     await robot.animate([
-      {y: 600, rotate: -180},
-      {y: 600, rotate: 0},
+      {y: 1050, rotate: -180},
+      {y: 1050, rotate: 0},
     ], {
       delay: 1000,
       duration: 1000,
@@ -165,7 +164,6 @@
     }).finished
   }
 
-  // noprotect
   while(1) {
     /* eslint-disable no-await-in-loop */
     await robotMotion()

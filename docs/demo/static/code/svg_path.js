@@ -1,7 +1,9 @@
 //Shape cases come from: https://github.com/alloyteam/pasition
 
-const paper = spritejs.Paper2D('#paper')
-paper.setResolution(800, 600)
+const paper = new spritejs.Paper2D('#paper', {
+  resolution: [800, 600],
+  stickMode: 'width',
+})
 
 ;(async function(){
 
