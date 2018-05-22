@@ -39,7 +39,7 @@ html,body{
 #menu .wrap {
   overflow: hidden;
   opacity: 0.8;
-  background-color: rgba(0, 0, 0);
+  background-color: #000;
 }
 
 #menu .wrap::after {
