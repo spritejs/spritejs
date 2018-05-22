@@ -257,4 +257,7 @@ a.selected {
     transform-origin: 0 0;
     background-color: transparent;
   }
+  #menu ul {
+    display: none;
+  }
 }

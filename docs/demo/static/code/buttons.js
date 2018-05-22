@@ -40,7 +40,12 @@
 
   let hoverAnim = null
 
+  let touched = false
+  // prevent mouseenter on mobile device
+  // mobile point events: touchstart > (touchmove)+ > touchend > (mouseenter) > mouseover > mousemove > mousedown > mouseup > click
+  // https://patrickhlauke.github.io/touch/tests/results/
   button.on('mouseenter', async (evt) => {
+    if(touched) return
     fglayer.canvas.style.cursor = 'pointer'
     buttonNormal.attr({
       fillColor: '#fff',
@@ -59,6 +64,7 @@
     await hoverAnim.finished
     hoverAnim = null
   }).on('mouseleave', async (evt) => {
+    if(touched) return
     fglayer.canvas.style.cursor = 'default'
     buttonNormal.attr({
       fillColor: '#04773B',
@@ -79,6 +85,7 @@
   })
 
   button.on('touchstart', (evt) => {
+    touched = true
     if(hoverAnim) {
       hoverAnim.cancel()
       hoverAnim = null
