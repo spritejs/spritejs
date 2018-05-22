@@ -1,5 +1,4 @@
-const d3Url = '//lib.baomitu.com/d3/4.10.2/d3.min.js',
-      topojsonUrl = '//d3js.org/topojson.v1.min.js'
+const topojsonUrl = '//d3js.org/topojson.v1.min.js'
 
 function loadScript(url) {
   let script = document.createElement('script')
@@ -18,11 +17,12 @@ let width = 1000,
     height = 750
 
 const paper = new spritejs.Scene('#paper', {
+  viewport: ['auto', 'auto'],
   resolution: [width, height],
   stickMode: 'width',
 })
 
-Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
+loadScript(topojsonUrl).then(function(){
 
   let centered;
   let projection = d3.geoAlbersUsa()
@@ -75,9 +75,3 @@ Promise.all([loadScript(d3Url), loadScript(topojsonUrl)]).then(function(){
         translate[1] - centroid[1]])
   }
 })
-
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
-
-

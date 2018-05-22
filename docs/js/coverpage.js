@@ -545,6 +545,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             }
           };
 
+          document.querySelector('main').style.display = 'none';
+
           _onScroll = Symbol('onScroll');
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
@@ -565,34 +567,34 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
           // 预加载资源
 
-          _context6.next = 17;
+          _context6.next = 18;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 17:
+        case 18:
           requestId = null;
-          _context6.next = 20;
+          _context6.next = 21;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 20:
-          _context6.next = 22;
+        case 21:
+          _context6.next = 23;
           return showIntroText('跨平台绘图对象模型');
 
-        case 22:
+        case 23:
           text = _context6.sent;
-          _context6.next = 25;
+          _context6.next = 26;
           return showHuanHuan();
 
-        case 25:
+        case 26:
           huanhuan = _context6.sent;
-          _context6.next = 28;
+          _context6.next = 29;
           return showGuanGuan();
 
-        case 28:
+        case 29:
           guanguan = _context6.sent;
-          _context6.next = 31;
+          _context6.next = 32;
           return showButtons();
 
-        case 31:
+        case 32:
           buttons = _context6.sent;
           more = showMore();
 
@@ -700,7 +702,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 47:
+        case 48:
         case 'end':
           return _context6.stop();
       }

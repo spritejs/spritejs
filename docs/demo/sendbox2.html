@@ -26,30 +26,16 @@
       height: 0px;
       background-color: #7FB5FC;
     }
-    #moveToText {
-      width: 260px;
-    }
-    #paper canvas {
-      border: solid 2px #bbb;
-    }
     #paper form {
       position: absolute;
       top: 22%;
       left: 0;
       z-index: 999;
     }
-    /* form {
-      padding-top: 20px;
-    } */
   </style>
 </head>
 <body>
-  <div id="paper">
-      <form id="moveToForm">
-          <input id="moveToText" placeholder="输入要进入的地区名或ID"/>
-          <button type="submit" id="moveToBtn">确认</button>
-      </form>
-  </div>
+  <div id="paper"></div>
   <script src="//lib.baomitu.com/babel-polyfill/7.0.0-beta.44/polyfill.min.js"></script>
   <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
   <script src="http://lib.baomitu.com/d3/4.10.2/d3.min.js"></script>
