@@ -1,4 +1,4 @@
-# class: Label + extends BaseNode
+# class: Layer + extends BaseNode
 
 + get id:String
 
