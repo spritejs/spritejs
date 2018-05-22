@@ -1,5 +1,5 @@
 (async function () {
-  document.querySelector('main').style.display = 'none'
+  document.querySelector('main').style.display = ''
 
   const _onScroll = Symbol('onScroll')
   const {Scene, Sprite, Group, Label, Path} = spritejs

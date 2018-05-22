@@ -545,7 +545,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             }
           };
 
-          document.querySelector('main').style.display = 'none';
+          document.querySelector('main').style.display = '';
 
           _onScroll = Symbol('onScroll');
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
