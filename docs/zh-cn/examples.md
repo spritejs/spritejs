@@ -146,7 +146,7 @@
 <ul class="demos">
   <li>
     <a data-nosearch href="/demo/#matterjs_mixed_shapes">
-      <img src="/res/demos/matterjs.png">
+      <img src="/res/demos/matterjs_mixed_shapes.png">
       <span>mixed shapes</span>
     </a>
   </li>
