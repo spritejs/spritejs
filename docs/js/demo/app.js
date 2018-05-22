@@ -29,8 +29,10 @@ var output = document.getElementById('output');
 editor.on('change', debounce(function (evt) {
   output.innerHTML = '';
   var hash = Date.now();
-  if (window.location.hash === '#d3-6') {
+  if (window.location.hash.startsWith('#d3_')) {
     window.frames[0].location.href = '/demo/sendbox2.html?t=' + hash;
+  } else if (window.location.hash.startsWith('#matterjs_')) {
+    window.frames[0].location.href = '/demo/sendbox3.html?t=' + hash;
   } else {
     window.frames[0].location.href = '/demo/sendbox.html?t=' + hash;
   }
@@ -48,6 +50,9 @@ window.codeChange = function () {
   //   libVersion.href = scriptPath
   // }
   loadingState.className = 'loading hide';
+  setTimeout(function () {
+    loadingState.style.display = 'none';
+  }, 500);
   menuFade();
 };
 
@@ -83,6 +88,7 @@ function updateMenuState() {
       if (link.hash === window.location.hash) {
         link.className = 'selected';
         var codefile = link.hash ? link.hash.slice(1) : 'index';
+        loadingState.style.display = 'block';
         loadingState.className = 'loading';
 
         fetch('/demo/static/code/' + codefile + '.js').then(function (res) {

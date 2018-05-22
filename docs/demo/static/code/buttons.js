@@ -1,143 +1,121 @@
-(async function () {
-  const {Scene, Label, Sprite, Path, Group} = spritejs
+(function () {
+  const {Scene, Sprite, Label, Group} = spritejs
   const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]})
 
-  await scene.preload([
-    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
-    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
-  ])
-
   const fglayer = scene.layer('fglayer')
-  fglayer.canvas.style.backgroundColor = '#a1d36d'
+  fglayer.canvas.style.backgroundColor = '#1EAC61'
 
-  const button = new Label('Press & Hold')
-
+  const button = new Group()
   button.attr({
-    anchor: [0.5, 0.5],
-    pos: [900, 1000],
-    font: 'bold 48px Arial',
-    color: '#fff',
-    padding: 15,
-    border: [1, '#fff'],
-    borderRadius: 15,
+    anchor: 0.5,
+    pos: [600, 600],
+  })
+  fglayer.append(button)
+
+  const buttonNormal = new Label('Get Started')
+  buttonNormal.attr({
+    font: '40px "宋体"',
+    fillColor: '#04773B',
+    lineHeight: 96,
+    textAlign: 'center',
+    size: [320, 96],
+    border: [2, '#178C4E'],
+    borderRadius: 48,
+  })
+  button.append(buttonNormal)
+
+  const buttonHover = new Sprite()
+  buttonHover.attr({
+    bgcolor: '#208B50',
+    height: 100,
+    width: 0,
+    borderRadius: 48,
+    zIndex: -1,
+  })
+  button.append(buttonHover)
+
+  /* eslint-disable no-console */
+  console.log('Place mouse hover the button...')
+  /* eslint-enable no-console */
+
+  let hoverAnim = null
+
+  button.on('mouseenter', async (evt) => {
+    fglayer.canvas.style.cursor = 'pointer'
+    buttonNormal.attr({
+      fillColor: '#fff',
+    })
+    if(hoverAnim) {
+      hoverAnim.cancel()
+      hoverAnim = null
+    }
+    hoverAnim = buttonHover.animate([
+      {width: 324},
+    ], {
+      duration: 300,
+      fill: 'forwards',
+      easing: 'ease-in-out',
+    })
+    await hoverAnim.finished
+    hoverAnim = null
+  }).on('mouseleave', async (evt) => {
+    fglayer.canvas.style.cursor = 'default'
+    buttonNormal.attr({
+      fillColor: '#04773B',
+    })
+    if(hoverAnim) {
+      hoverAnim.cancel()
+      hoverAnim = null
+    }
+    hoverAnim = buttonHover.animate([
+      {width: 0},
+    ], {
+      duration: 500,
+      fill: 'forwards',
+      easing: 'ease-in-out',
+    })
+    await hoverAnim.finished
+    hoverAnim = null
   })
 
-  fglayer.appendChild(button)
-
-  button.on('mouseenter', (evt) => {
-    button.attr({
-      bgcolor: 'rgba(233,233,233,0.3)',
-      color: '#f70',
+  button.on('touchstart', (evt) => {
+    if(hoverAnim) {
+      hoverAnim.cancel()
+      hoverAnim = null
+    }
+    buttonNormal.attr({
+      fillColor: '#fff',
+    })
+    buttonHover.attr({
+      width: 324,
+    })
+  })
+  document.addEventListener('touchend', (evt) => {
+    if(hoverAnim) {
+      hoverAnim.cancel()
+      hoverAnim = null
+    }
+    buttonNormal.attr({
+      fillColor: '#04773B',
+    })
+    buttonHover.attr({
+      width: 0,
     })
   })
 
   button.on('mousedown', (evt) => {
     button.attr({
-      bgcolor: 'transparent',
+      scale: 0.9,
     })
-    burnFire()
-  })
-
-  button.on('mouseup', (evt) => {
+  }).on('mouseup', (evt) => {
     button.attr({
-      bgcolor: 'rgba(233,233,233,0.3)',
-    })
-    unburnFire()
-  })
-
-  button.on('mouseleave', (evt) => {
-    button.attr({
-      bgcolor: 'transparent',
-      color: '#fff',
+      scale: 1.0,
     })
   })
 
-  const group = new Group()
-  group.attr({
-    anchor: 0.5,
-    pos: [500, 800],
+  button.on('click', (evt) => {
+    /* eslint-disable no-console */
+    console.log('button clicked')
+    /* eslint-enable no-console */
   })
-  fglayer.append(group)
-
-  const huanhuan = new Sprite()
-  huanhuan.attr({
-    textures: ['huanhuan.png'],
-    scale: 0.4,
-  })
-  group.append(huanhuan)
-
-  const floatAnim = group.animate([
-    {translate: [0, 10]},
-    {translate: [0, -10]},
-  ], {
-    duration: 500,
-    iterations: Infinity,
-    direction: 'alternate',
-  })
-
-  let flying
-
-  async function burnFire() {
-    const outerFireD = 'M19.8173,24.1766 L5.3273,32.9936 C4.6293,33.4186 3.7183,33.1976 3.2943,32.4996 C3.1953,32.3376 3.1313,32.1596 3.1003,31.9836 L0.1953,15.2736 C-1.0387,8.1796 3.7123,1.4286 10.8073,0.1946 C17.9013,-1.0394 24.6523,3.7116 25.8853,10.8056 C26.8283,16.2296 24.2443,21.4666 19.8173,24.1766'
-
-    const outerFire = new Path()
-    outerFire.attr({
-      path: {d: outerFireD},
-      pos: [22, 90],
-      fillColor: 'rgb(253,88,45)',
-      zIndex: -1,
-    })
-    group.append(outerFire)
-
-    const innerFireD = 'M15.9906,13.766 L8.4096,26.718 C8.0486,27.335 7.2706,27.521 6.6726,27.133 C6.4296,26.976 6.2536,26.748 6.1536,26.491 L0.6356,12.223 C-1.1554,7.594 0.9666,2.393 5.3746,0.605 C9.7826,-1.182 14.8076,1.122 16.5976,5.752 C17.6546,8.483 17.3236,11.455 15.9906,13.766'
-
-    const innerFire = new Path()
-    innerFire.attr({
-      path: {d: innerFireD},
-      pos: [30, 90],
-      rotate: 15,
-      fillColor: 'rgb(254,222,9)',
-      zIndex: -1,
-    })
-    group.append(innerFire)
-
-    floatAnim.pause()
-
-    const y0 = group.attr('y'),
-      y = 350
-
-    if(flying) flying.pause()
-    flying = group.animate([
-      {y},
-    ], {
-      duration: 10 * (y0 - y),
-      fill: 'forwards',
-    })
-
-    await flying.finished
-    floatAnim.play()
-  }
-
-  async function unburnFire() {
-    const outerFire = group.children[1],
-      innerFire = group.children[2]
-
-    if(outerFire) group.remove(outerFire)
-    if(innerFire) group.remove(innerFire)
-
-    floatAnim.pause()
-
-    const y0 = group.attr('y'),
-      y = 800
-    if(flying) flying.pause()
-    flying = group.animate([
-      {y},
-    ], {
-      duration: 10 * (y - y0),
-      fill: 'forwards',
-    })
-
-    await flying.finished
-    floatAnim.play()
-  }
 }())

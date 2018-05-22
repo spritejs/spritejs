@@ -1,3 +1,18 @@
+const formEl = document.createElement('form')
+formEl.id = 'moveToForm'
+const inputEl = document.createElement('input')
+inputEl.id = 'moveToText'
+inputEl.style.width = '260px'
+inputEl.placeholder = '输入要进入的地区名或ID'
+formEl.appendChild(inputEl)
+const submitBtn = document.createElement('button')
+submitBtn.type = 'submit'
+submitBtn.id = 'moveToBtn'
+submitBtn.innerHTML = '确认'
+formEl.appendChild(submitBtn)
+const paperEl = document.getElementById('paper')
+paperEl.appendChild(formEl)
+
 const paper = new spritejs.Scene('#paper', {
   resolution: [1800, 1000],
   stickMode: 'width',

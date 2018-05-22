@@ -4,6 +4,7 @@
   * [安装和使用](/zh-cn/index#安装和使用)
   * [架构](/zh-cn/index#架构)
   * [基本用法](/zh-cn/index#基本用法)
+  * [例子](/zh-cn/examples)
 
 * 基础用法
   * 坐标

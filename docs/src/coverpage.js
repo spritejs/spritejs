@@ -1,4 +1,6 @@
 (async function () {
+  document.querySelector('main').style.display = 'none'
+
   const _onScroll = Symbol('onScroll')
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {

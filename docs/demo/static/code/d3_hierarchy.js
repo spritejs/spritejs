@@ -1,24 +1,9 @@
-const paper = new spritejs.Scene('#paper', {
-  resolution: [1600, 1200],
-  stickMode: 'width',
-})
-
-const d3Url = 'http://lib.baomitu.com/d3/4.10.2/d3.min.js'
-
-function loadScript(url) {
-  let script = document.createElement('script')
-  script.type = "text/javascript"
-  script.src = url
-  document.body.appendChild(script)
-
-  return new Promise(resolve => {
-    script.onload = () => {
-      resolve()
-    }
-  }) 
-}
-
-loadScript(d3Url).then(function(){
+(function(){
+  const paper = new spritejs.Scene('#paper', {
+    viewport: ['auto', 'auto'],
+    resolution: [1600, 1200],
+    stickMode: 'width',
+  })
   
   const layer = d3.select(paper).append('fglayer')
   
@@ -95,8 +80,5 @@ loadScript(d3Url).then(function(){
             d3.event.target.attr('border', [0, 'transparent'])
          })
   })
-})
+}())
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})

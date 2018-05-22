@@ -31,32 +31,6 @@
     font-size: 1.0rem;
     margin: 20px auto 80px;
   }
-  .demos {
-    text-align: center;
-    display: flex;
-    flex-flow: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 0;
-    width: 90%;
-    margin: auto;
-  }
-  .demos li {
-    width: 30%;
-    list-style-type:none;
-    margin: 12px auto;
-    background: #fff;
-    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.20);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .demos li span {
-    display: inline-block;
-    padding: 10px 0;
-  }
-  .demos li a {
-    color: #34495e;
-  }
   .footer {
     background-color: #01040b;
     color: #89a;
@@ -122,44 +96,44 @@
 
   <ul class="demos">
     <li>
-      <a href="/demo">
+      <a href="/demo/#">
         <img src="/res/demos/quick_start.png">
         <span>quick start</span>
       </a>
     </li>
     <li>
-      <a href="/demo">
+      <a data-nosearch href="/demo/#basic_sprites">
         <img src="/res/demos/basic_sprites.png">
         <span>basic sprites</span>
       </a>
     </li>
     <li>
-      <a href="/demo">
+      <a data-nosearch href="/demo/#path_groups">
         <img src="/res/demos/textures.png">
         <span>path &amp; groups</span>
       </a>
     </li>
     <li>
-      <a href="/demo">
+      <a data-nosearch href="/demo/#labels">
         <img src="/res/demos/labels.png">
         <span>labels</span>
       </a>
     </li>
     <li>
-      <a href="/demo/">
+      <a data-nosearch href="/demo/#buttons">
         <img src="/res/demos/buttons.png">
         <span>buttons</span>
       </index>
     </li>
     <li>
-      <a href="/demo">
+      <a data-nosearch href="/demo/#transforms">
         <img src="/res/demos/transforms.png">
         <span>transforms</span>
       </a>
     </li>
   </ul>
 
-  <div id="more-demos"><a href="/demo">更多范例</a></div>
+  <div id="more-demos"><a href="/#/zh-cn/examples" target="_blank">更多范例</a></div>
 
   <div class="footer">
     <div class="ft-info">
