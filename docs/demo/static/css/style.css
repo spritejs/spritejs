@@ -252,4 +252,9 @@ a.selected {
   #output div {
     max-width: 100%;
   } 
+  #menu .wrap {
+    transform: scale(.5);
+    transform-origin: 0 0;
+    background-color: transparent;
+  }
 }
