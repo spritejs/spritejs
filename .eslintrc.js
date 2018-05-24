@@ -7,6 +7,9 @@ module.exports = {
     Docsify: true,
     _: true,
     CodeMirror: true,
+    topojson: true,
+    mapRelation: true,
+    Animator: true,
   },
   "extends":  "eslint-config-75team",
   rules: {
