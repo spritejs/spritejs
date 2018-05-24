@@ -1,43 +1,53 @@
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+(async function () {
+  const paper = new spritejs.Scene('#paper', {
+      resolution: [1600, 1200],
+      stickMode: 'width',
+      stickExtend: true,
+    }),
+    Sprite = spritejs.Sprite
 
-// '#60b4f9'
+  const layer = paper.layer()
+  layer.canvas.style.backgroundColor = '#60b4f9'
 
-const paper = new spritejs.Scene('#paper', {
-    resolution: [800, 600],
-    stickMode: 'width',
-  }),
-  Sprite = spritejs.Sprite
+  await paper.preload([
+    'https://p3.ssl.qhimg.com/t010ded517024020e10.png',
+    'https://s1.ssl.qhres.com/static/6ead70a354da7aa4.json',
+  ])
 
-const box1 = new Sprite()
-box1.attr({
-  anchor: [0.5, 0.5],
-  pos: [400, 300],
-  size: [212, 188],
-  border: [10, 'red'],
-  borderRadius: 25,
-  bgcolor: '#7fc',
-  padding: 10
-})
+  const guanguan = new Sprite()
+  guanguan.attr({
+    textures: [{
+      src: 'guanguan1s.png',
+      filter: {
+        dropShadow: [2, 2, 10, 'black'],
+      },
+    }],
+    anchor: 0.5,
+    pos: [800, 600],
+  })
+  layer.append(guanguan)
 
-box1.textures = [{
-  src: birdsRes,
-  srcRect: [2, 64, 86, 60],
-  rect: [64, 64, 86, 60],
-  filter: {
-    dropShadow: [2, 2, 10, 'black'],
-  }    
-},{
-  src: birdsRes,
-  srcRect: [2, 2, 86, 60],
-  rect: [2, 2, 86, 60],
-  filter: {
-    opacity: 0.5,
-  }    
-},{
-  src: birdsRes,
-  srcRect: [2, 126, 86, 60],
-  rect: [126, 126, 86, 60] ,
-}]
+  const guanguan2 = guanguan.cloneNode()
+  guanguan2.attr({
+    textures: [{
+      src: 'guanguan2s.png',
+      filter: {
+        opacity: 0.5,
+      },
+    }],
+    pos: [400, 600],
+  })
+  layer.append(guanguan2)
 
-paper.layer().appendChild(box1)
+  const guanguan3 = guanguan.cloneNode()
+  guanguan3.attr({
+    textures: [{
+      src: 'guanguan2s.png',
+      filter: {
+        blur: '4px',
+      },
+    }],
+    pos: [1200, 600],
+  })
+  layer.append(guanguan3)
+}())
