@@ -44,7 +44,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.21.1"
+    "sprite-core": "^1.21.2"
   },
   "devDependencies": {
     "ava": "^0.21.0",
@@ -62,6 +62,7 @@
     "d3": "^4.13.0",
     "eslint": "^4.17.0",
     "eslint-config-75team": "^1.0.2",
+    "eslint-plugin-html": "^4.0.3",
     "gifencoder": "^1.1.0",
     "hamming-distance": "^1.0.0",
     "http-server": "^0.11.1",
