@@ -85,7 +85,7 @@ html,body{
 #menu ul {
   padding: 0;
   margin: 0;
-  background-color: rgba(0, 0, 0);
+  background-color: #000;
   opacity: 0.8;
   min-height: 4000px;
 }
