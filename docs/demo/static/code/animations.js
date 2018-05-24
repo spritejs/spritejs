@@ -1,167 +1,160 @@
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
 class Button extends spritejs.Label {
   connect(parent, zOrder) {
     super.connect(parent, zOrder)
 
-    this.on('mouseenter', evt => {
+    this.on('mouseenter', (evt) => {
       this.attr({
-        scale: 1.1
+        scale: 1.1,
       })
     })
 
-    this.on('mousedown', evt => {
+    this.on('mousedown', (evt) => {
       this.attr({
-        scale: 0.95
+        scale: 0.95,
       })
     })
 
-    this.on('mouseup', evt => {
+    this.on('mouseup', (evt) => {
       this.attr({
-        scale: 1.1
+        scale: 1.1,
       })
     })
 
-    this.on('mouseleave', evt => {
+    this.on('mouseleave', (evt) => {
       this.attr({
-        scale: 1.0
+        scale: 1.0,
       })
     })
   }
 }
 
-;(async function(){
+(async function () {
   const paper = new spritejs.Scene('#paper', {
+      viewport: ['auto', 'auto'],
       resolution: [1600, 1200],
       stickMode: 'width',
+      stickExtend: true,
     }),
-    Sprite = spritejs.Sprite
-  
-  await paper.preload(
-    [birdsRes, birdsJsonUrl]   
-  )  
-  
-  const bglayer = paper.layer('bg'), 
-        fglayer = paper.layer('fg', {
-              handleEvent: false,
-              evaluateFPS: true,
-              renderMode: 'repaintAll',
-        })   
+    {Sprite, Group, Path} = spritejs
 
-  function randomBirds(i){
-    const s = new Sprite('bird1.png')
-    const pos = [300, 350 + 60 * i]
+  await paper.preload([
+    'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+  ])
+
+  const bglayer = paper.layer('bg'),
+    fglayer = paper.layer('fg', {
+      handleEvent: false,
+      evaluateFPS: true,
+      renderMode: 'repaintAll',
+    })
+
+  bglayer.canvas.style.backgroundColor = '#A1D36D'
+
+  function randomBirds(i) {
+    const pos = [100, 350 + 60 * i]
     const duration = Math.round(200 + 300 * Math.random())
 
-    s.attr({
+    const g = new Group()
+    g.attr({
       anchor: [0.5, 0.5],
       pos,
       zIndex: 200,
-    })  
-
-    fglayer.appendChild(s)
-
-    s.animate([
-      {textures: 'bird1.png'},
-      {textures: 'bird2.png'},
-      {textures: 'bird3.png'},
-    ], {
-      duration,
-      direction: 'alternate',
-      iterations: Infinity,
     })
 
-    s.animate([
+    const s = new Sprite('huanhuan.png')
+    s.attr({scale: 0.4})
+
+    g.appendChild(s)
+
+    g.animate([
       {x: 100},
       {x: 900},
       {x: 100},
     ], {
       duration: duration * 20,
       iterations: Infinity,
-      easing: 'ease-in-out',        
+      easing: 'ease-in-out',
+      fill: 'both',
     })
 
-    s.animate([
-      {scale: [1, 1]},
-      {scale: [-1, 1]},
-      {scale: [1, 1]},
+    g.animate([
+      {transform: {rotate: 30, scale: [1, 1]}},
+      {transform: {rotate: -30, scale: [-1, 1]}},
+      {transform: {rotate: 30, scale: [1, 1]}},
     ], {
       duration: duration * 20,
       iterations: Infinity,
-      easing: 'step-end',        
+      easing: 'step-end',
+      fill: 'both',
     })
 
-    return s    
+    const outerFireD = 'M19.8173,24.1766 L5.3273,32.9936 C4.6293,33.4186 3.7183,33.1976 3.2943,32.4996 C3.1953,32.3376 3.1313,32.1596 3.1003,31.9836 L0.1953,15.2736 C-1.0387,8.1796 3.7123,1.4286 10.8073,0.1946 C17.9013,-1.0394 24.6523,3.7116 25.8853,10.8056 C26.8283,16.2296 24.2443,21.4666 19.8173,24.1766'
+
+    const outerFire = new Path()
+    outerFire.attr({
+      path: {d: outerFireD},
+      pos: [22, 90],
+      fillColor: 'rgb(253,88,45)',
+      zIndex: -1,
+    })
+    g.append(outerFire)
+
+    const innerFireD = 'M15.9906,13.766 L8.4096,26.718 C8.0486,27.335 7.2706,27.521 6.6726,27.133 C6.4296,26.976 6.2536,26.748 6.1536,26.491 L0.6356,12.223 C-1.1554,7.594 0.9666,2.393 5.3746,0.605 C9.7826,-1.182 14.8076,1.122 16.5976,5.752 C17.6546,8.483 17.3236,11.455 15.9906,13.766'
+
+    const innerFire = new Path()
+    innerFire.attr({
+      path: {d: innerFireD},
+      pos: [30, 90],
+      rotate: 15,
+      fillColor: 'rgb(254,222,9)',
+      zIndex: -1,
+    })
+    g.append(innerFire)
+
+    fglayer.append(g)
+
+    return g
   }
 
-  let block1 = new Sprite({
-    attr: {
-      anchor: [0.5, 0.5],
-      pos: [400, 600],
-      size: [100, 100],
-      bgcolor: 'red',
-    }
-  })
-
-  fglayer.appendChild(block1)
-
-  block1.animate([{
-    rotate: 0,
-    borderRadius: 0,
-    bgcolor: 'red',
-  },{
-    rotate: 180,
-    borderRadius: 50,
-    bgcolor: 'green',
-  },{
-    rotate: 360,
-    borderRadius: 0,
-    bgcolor: 'blue',
-  }], {
-    duration: 5000,
-    direction: 'alternate',
-    iterations: Infinity,
-  })
-
-  for(let i = 0; i < 10; i++){
+  for(let i = 0; i < 10; i++) {
     randomBirds(i)
   }
-  
-  const [speedupBtn, slowdownBtn, pauseBtn, playBtn] = 
-  ['Speed up', 'Slow down', 'Pause', 'Play'].map((type, i) => {
-    const button = new Button(type)
 
-    button.attr({
-      anchor: [0.5, 0.5],
-      pos: [1300, 200 + 180 * i],
-      size: [240, 50],
-      font: '36px Arial',
-      lineHeight: 50,
-      textAlign: 'center',
-      color: '#fff',
-      border: [1, '#fff'],
-      borderRadius: 20,
-      padding: 25,
+  const [speedupBtn, slowdownBtn, pauseBtn, playBtn]
+    = ['Speed up', 'Slow down', 'Pause', 'Play'].map((type, i) => {
+      const button = new Button(type)
+
+      button.attr({
+        anchor: [0.5, 0.5],
+        pos: [1300, 200 + 180 * i],
+        size: [240, 50],
+        font: '36px Arial',
+        lineHeight: 50,
+        textAlign: 'center',
+        color: '#719846',
+        border: [2, '#719846'],
+        borderRadius: 20,
+        padding: 25,
+      })
+      bglayer.appendChild(button)
+
+      return button
     })
-    bglayer.appendChild(button)
 
-    return button   
-  })
-
-  speedupBtn.on('click', evt => {
+  speedupBtn.on('click', (evt) => {
     fglayer.timeline.playbackRate += 0.2
   })
 
-  slowdownBtn.on('click', evt => {
+  slowdownBtn.on('click', (evt) => {
     fglayer.timeline.playbackRate -= 0.2
   })
 
-  pauseBtn.on('click', evt => {
+  pauseBtn.on('click', (evt) => {
     fglayer.timeline.playbackRate = 0
   })
 
-  playBtn.on('click', evt => {
+  playBtn.on('click', (evt) => {
     fglayer.timeline.playbackRate = 1
   })
 
@@ -172,14 +165,10 @@ class Button extends spritejs.Label {
     color: 'white',
   })
 
-  bglayer.appendChild(birdCountLabel) 
+  bglayer.appendChild(birdCountLabel)
 
   setInterval(() => {
-    birdCountLabel.text = `fps: ${fglayer.fps}` 
+    birdCountLabel.text = `fps: ${fglayer.fps}`
       + ` | rate: ${fglayer.timeline.playbackRate.toFixed(2)}`
   }, 100)
-
-  window.addEventListener('resize', evt => {
-    paper.setViewport('auto', 'auto')
-  })
-})()
+}())

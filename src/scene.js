@@ -265,7 +265,8 @@ export default class extends BaseNode {
         return matrix.transformPoint(x, y)
       }
     }
-
+    x += this.stickOffset[0]
+    y += this.stickOffset[1]
     return [x, y]
   }
   toLocalPos(canvas, x, y) {
@@ -283,7 +284,8 @@ export default class extends BaseNode {
         return matrix.transformPoint(x, y)
       }
     }
-
+    x -= this.stickOffset[0]
+    y -= this.stickOffset[1]
     return [x, y]
   }
   delegateEvent(event, receiver = this.container) {
@@ -315,8 +317,6 @@ export default class extends BaseNode {
           x = evtArgs.x
           y = evtArgs.y
           ;[originalX, originalY] = this.toGlobalPos(e.target, x, y)
-          x -= this.stickOffset[0]
-          y -= this.stickOffset[1]
         }
       } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
         const {left, top} = e.target.getBoundingClientRect()
@@ -326,9 +326,6 @@ export default class extends BaseNode {
         originalY = Math.round((clientY | 0) - top)
 
         ;[x, y] = this.toLocalPos(e.target, originalX, originalY)
-
-        x -= this.stickOffset[0]
-        y -= this.stickOffset[1]
       }
 
       Object.assign(evtArgs, {
