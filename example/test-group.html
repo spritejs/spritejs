@@ -113,6 +113,13 @@ s3.animate([
   iterations: Infinity,
 })
 
+group.on('mouseenter', (evt) => {
+  console.log('enter')
+})
+
+group.on('mouseleave', (evt) => {
+  console.log('leave')
+})
 // s1.on('click', evt => {
 //   console.log('clicked')
 // })

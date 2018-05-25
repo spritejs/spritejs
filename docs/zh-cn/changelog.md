@@ -129,3 +129,16 @@
 - 元素的.on方法允许同时监听多个事件
 - 动画的cancel增加参数boolean类型，允许中途取消动画并保持元素动画状态
 - Scene增加insertBefore
+
+## [2.0.0-alpha.14][2018-05-25]
+
+### bug 修复
+
+- 重构了sprite-timeline修复了动画多个bug
+- 修复了未更新元素属性update事件也会被触发的bug
+
+### 改进
+
+- event.stopDispatch()只对同级（同一个layer下的元素或者同一个group中的元素）生效，不会阻止父容器
+- 增加了一些属性的自动parseFloat
+- 增加了属性表达式，现在可以`sprite.attr({x: x => x+1})

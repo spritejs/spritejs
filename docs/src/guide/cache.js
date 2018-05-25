@@ -53,11 +53,7 @@ const {Scene, Sprite} = spritejs
 
   const colors = ['red', 'blue', 'green']
 
-  const cacheMap = {
-    red: null,
-    blue: null,
-    green: null,
-  }
+  const cacheMap = {}
 
   class Block extends Sprite {
     get cache() {

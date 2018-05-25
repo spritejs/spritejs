@@ -60,11 +60,7 @@ var _spritejs = spritejs,
 
   var colors = ['red', 'blue', 'green'];
 
-  var cacheMap = {
-    red: null,
-    blue: null,
-    green: null
-  };
+  var cacheMap = {};
 
   var Block = function (_Sprite) {
     _inherits(Block, _Sprite);
