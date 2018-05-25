@@ -109,9 +109,9 @@ export default class extends BaseNode {
 
     if(!stickExtend) {
       if(stickMode === 'width' || stickMode === 'top' || stickMode === 'bottom') {
-        height = Math.min(rh, vw * rh / rw)
+        height = vw * rh / rw
       } else if(stickMode === 'height' || stickMode === 'left' || stickMode === 'right') {
-        width = Math.min(rw, vh * rw / rh)
+        width = vh * rw / rh
       }
     }
 
