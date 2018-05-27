@@ -518,6 +518,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 if (scene[_onScroll]) {
                   window.removeEventListener('scroll', scene[_onScroll]);
                 }
+                document.documentElement.style.cursor = 'default';
                 window.location.href = link;
               });
             } else if (typeof link === 'function') {

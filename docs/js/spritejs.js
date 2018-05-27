@@ -1640,6 +1640,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     key: 'clearCache',
     value: function clearCache() {
       this.cache = null;
+      if (this.parent && this.parent.cache) {
+        this.parent.cahce = null;
+      }
     }
   }, {
     key: 'remove',
@@ -1660,14 +1663,15 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
       var parent = this.parent;
       if (parent) {
+        if (clearCache) {
+          this.clearCache();
+        }
         if (parent.forceUpdate) {
           // is group
-          parent.forceUpdate(clearCache, this);
+          parent.cache = null;
+          parent.forceUpdate();
         } else if (parent.update) {
           // is layer
-          if (clearCache) {
-            this.clearCache();
-          }
           this.parent.update(this);
         }
       }
@@ -6087,16 +6091,6 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     value: function clearCache() {
       (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'clearCache', this).call(this);
       this.baseCache = null;
-    }
-  }, {
-    key: 'forceUpdate',
-    value: function forceUpdate(clearCache, updater) {
-      if (updater) {
-        // child update on group
-        this.cache = null;
-        return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'forceUpdate', this).call(this);
-      }
-      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'forceUpdate', this).call(this, clearCache);
     }
   }, {
     key: 'render',
@@ -13085,7 +13079,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
       }
       if (this[_attr][key] !== val) {
         this[_attr][key] = val;
-        this.subject.forceUpdate();
+        this.subject.forceUpdate(this.__clearCacheTag);
       }
     }
   }, {
@@ -13100,7 +13094,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
   }, {
     key: 'clearCache',
     value: function clearCache() {
-      this.subject.clearCache();
+      this.__clearCacheTag = true;
       return this;
     }
   }, {
@@ -15811,7 +15805,9 @@ function attr(target, prop, descriptor) {
   descriptor.set = function (val) {
     var oldVal = this.get(prop);
     if (!(0, _utils.isPropEqual)(oldVal, val)) {
+      this.__clearCacheTag = false;
       _setter.call(this, val);
+      delete this.__clearCacheTag;
     }
   };
   return descriptor;
