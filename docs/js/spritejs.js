@@ -1661,11 +1661,11 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     value: function forceUpdate() {
       var clearCache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+      if (clearCache) {
+        this.clearCache();
+      }
       var parent = this.parent;
       if (parent) {
-        if (clearCache) {
-          this.clearCache();
-        }
         if (parent.forceUpdate) {
           // is group
           parent.cache = null;
@@ -2124,7 +2124,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
             set: function set(val) {
               var oldVal = this.get(prop);
               if (!(0, _spriteUtils.isPropEqual)(oldVal, val)) {
+                this.__clearCacheTag = false;
                 handler(this, val);
+                delete this.__clearCacheTag;
               }
             },
             get: function get() {
