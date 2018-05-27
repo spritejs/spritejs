@@ -1,6 +1,10 @@
 (function () {
   const {Scene, Matter} = spritejs
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [800, 600]})
+  const scene = new Scene('#paper', {
+    viewport: ['auto', 'auto'], 
+    resolution: [800, 600],
+    stickMode: 'width',
+  })
   const fglayer = scene.layer('fglayer')
 
   const {Engine, World, Render, Runner, Common, Composites, Mouse, MouseConstraint, Bodies} = Matter
