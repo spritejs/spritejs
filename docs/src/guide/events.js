@@ -98,29 +98,21 @@ const {Scene, Sprite, Label} = spritejs
         r: [100, 0],
         color: 'black',
       }, {
-        borderRadius: {
-          get() {
-            const [r1, r2] = this.r
-            return (r1 + r2) / 2
-          },
+        borderRadius() {
+          const [r1, r2] = this.r
+          return (r1 + r2) / 2
         },
-        width: {
-          get() {
-            const r2 = this.r[1]
-            return 2 * r2
-          },
+        width() {
+          const r2 = this.r[1]
+          return 2 * r2
         },
-        height: {
-          get() {
-            const r2 = this.r[1]
-            return 2 * r2
-          },
+        height() {
+          const r2 = this.r[1]
+          return 2 * r2
         },
-        border: {
-          get() {
-            const [r1, r2] = this.r
-            return [r1 - r2, this.color]
-          },
+        border() {
+          const [r1, r2] = this.r
+          return [r1 - r2, this.color]
         },
       })
     },

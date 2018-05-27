@@ -57,16 +57,16 @@
         return [width, height]
       }
       render(t, drawingContext) {
-        const context = super.render(t, drawingContext)
+        super.render(t, drawingContext)
         const r = this.attr('radius')
 
         if(r) {
-          let path = new Path2D()
+          const path = new Path2D()
           const [borderWidth] = this.attr('border')
           const {strokeColor, fillColor, renderMode, lineWidth, direction} = this.attr()
 
-          context.save()
-          context.translate(borderWidth + lineWidth, borderWidth + lineWidth)
+          drawingContext.save()
+          drawingContext.translate(borderWidth + lineWidth, borderWidth + lineWidth)
 
           let angle = this.attr('angle')
 
@@ -77,25 +77,23 @@
           }
 
           path.arc(r, r, r, ...angle, direction)
-          if(angle[1] - angle[0] < 2 * Math.PI) {            
+          if(angle[1] - angle[0] < 2 * Math.PI) {
             path.lineTo(r, r)
             path.closePath()
           }
 
-          if(lineWidth){
-            context.lineWidth = lineWidth
-            context.strokeStyle = strokeColor
-            context.stroke(path)
+          if(lineWidth) {
+            drawingContext.lineWidth = lineWidth
+            drawingContext.strokeStyle = strokeColor
+            drawingContext.stroke(path)
           }
 
           if(renderMode === 'fill') {
-            context.fillStyle = fillColor || strokeColor
-            context.fill(path)
+            drawingContext.fillStyle = fillColor || strokeColor
+            drawingContext.fill(path)
           }
-          context.restore()
+          drawingContext.restore()
         }
-
-        return context
       }
     }
 

@@ -246,7 +246,7 @@ const {Scene} = spritejs
     }
 
     function dragsubject() {
-      const [x, y] = scene.toLocalPos(d3.event.x, d3.event.y)
+      const [x, y] = layer.toLocalPos(d3.event.x, d3.event.y)
       return simulation.find(x, y - 100)
     }
   })
@@ -267,7 +267,7 @@ const {Scene} = spritejs
     const [x, y] = [d3.event.x, d3.event.y],
       {x0, y0} = d3.event.subject
 
-    const [dx, dy] = scene.toLocalPos((x - x0), (y - y0))
+    const [dx, dy] = layer.toLocalPos((x - x0), (y - y0))
 
     d3.event.subject.fx = x0 + dx
     d3.event.subject.fy = y0 + dy

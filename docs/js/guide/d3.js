@@ -194,10 +194,10 @@ var _spritejs = spritejs,
     }
 
     function dragsubject() {
-      var _scene$toLocalPos = scene.toLocalPos(d3.event.x, d3.event.y),
-          _scene$toLocalPos2 = _slicedToArray(_scene$toLocalPos, 2),
-          x = _scene$toLocalPos2[0],
-          y = _scene$toLocalPos2[1];
+      var _layer$toLocalPos = layer.toLocalPos(d3.event.x, d3.event.y),
+          _layer$toLocalPos2 = _slicedToArray(_layer$toLocalPos, 2),
+          x = _layer$toLocalPos2[0],
+          y = _layer$toLocalPos2[1];
 
       return simulation.find(x, y - 100);
     }
@@ -226,10 +226,10 @@ var _spritejs = spritejs,
         x0 = _d3$event$subject.x0,
         y0 = _d3$event$subject.y0;
 
-    var _scene$toLocalPos3 = scene.toLocalPos(x - x0, y - y0),
-        _scene$toLocalPos4 = _slicedToArray(_scene$toLocalPos3, 2),
-        dx = _scene$toLocalPos4[0],
-        dy = _scene$toLocalPos4[1];
+    var _layer$toLocalPos3 = layer.toLocalPos(x - x0, y - y0),
+        _layer$toLocalPos4 = _slicedToArray(_layer$toLocalPos3, 2),
+        dx = _layer$toLocalPos4[0],
+        dy = _layer$toLocalPos4[1];
 
     d3.event.subject.fx = x0 + dx;
     d3.event.subject.fy = y0 + dy;

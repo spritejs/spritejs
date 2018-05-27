@@ -140,35 +140,27 @@ var _spritejs = spritejs,
         r: [100, 0],
         color: 'black'
       }, {
-        borderRadius: {
-          get: function get() {
-            var _r = _slicedToArray(this.r, 2),
-                r1 = _r[0],
-                r2 = _r[1];
+        borderRadius: function borderRadius() {
+          var _r = _slicedToArray(this.r, 2),
+              r1 = _r[0],
+              r2 = _r[1];
 
-            return (r1 + r2) / 2;
-          }
+          return (r1 + r2) / 2;
         },
-        width: {
-          get: function get() {
-            var r2 = this.r[1];
-            return 2 * r2;
-          }
+        width: function width() {
+          var r2 = this.r[1];
+          return 2 * r2;
         },
-        height: {
-          get: function get() {
-            var r2 = this.r[1];
-            return 2 * r2;
-          }
+        height: function height() {
+          var r2 = this.r[1];
+          return 2 * r2;
         },
-        border: {
-          get: function get() {
-            var _r2 = _slicedToArray(this.r, 2),
-                r1 = _r2[0],
-                r2 = _r2[1];
+        border: function border() {
+          var _r2 = _slicedToArray(this.r, 2),
+              r1 = _r2[0],
+              r2 = _r2[1];
 
-            return [r1 - r2, this.color];
-          }
+          return [r1 - r2, this.color];
         }
       });
     },
