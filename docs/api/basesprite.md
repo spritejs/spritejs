@@ -36,7 +36,7 @@ Typically, the value of the anchor point is from [0, 0] to [1, 1]. If necessary,
 
 ---
 
-+ attribute x:Integer
++ attribute x:Float
 
 * default: 0
 
@@ -44,7 +44,7 @@ The x coordinate of the element.
 
 ---
 
-+ attribute y:Integer
++ attribute y:Float
 
 * default: 0
 
@@ -58,12 +58,12 @@ The y coordinate of the element.
 
 ---
 
-+ attribute width:Integer
++ attribute width:Float
 
 
 ---
 
-+ attribute heigth:Integer
++ attribute heigth:Float
 
 
 ---
@@ -103,13 +103,43 @@ The y coordinate of the element.
 
 ---
 
-+ attribute border:Array
++ attribute border:Object|Array
 
-* default: [0, 'rgba(0,0,0,0)']
+* default: 0, 'rgba(0,0,0,0)'
+
+default:
+
+<code>
+{
+  width: 0, 
+  color: 'rgba(0,0,0,0)', 
+  style: 'solid'
+}
+</code>
+
+style can be 'solid' or 'dashed' or array type like: [10, 5]
+
+if border.style is 'dashed'
+
+<code>
+context.setLineDash([border.width \* 3, border.width \* 3])
+</code>
+
+if border.style is array type
+
+<code>
+context.setLineDash(border.style)
+</code>
 
 ---
 
-+ attribute borderRadius:Integer
++ attribute borderRadius:Float
+
+* default: 0
+
+---
+
++ attribute dashOffset:Float
 
 * default: 0
 

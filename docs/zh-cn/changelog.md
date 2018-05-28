@@ -142,3 +142,10 @@
 - event.stopDispatch()只对同级（同一个layer下的元素或者同一个group中的元素）生效，不会阻止父容器
 - 增加了一些属性的自动parseFloat
 - 增加了属性表达式，现在可以`sprite.attr({x: x => x+1})
+
+## [2.0.0-alpha.14][2018-05-28]
+
+### 改进
+
+- 支持了[虚线 border](http://localhost:9090/#/api/sprite)、虚线 Path
+- 实现属性获取的 immutable，避免副作用
