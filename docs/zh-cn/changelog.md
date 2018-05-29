@@ -150,7 +150,7 @@
 - 支持了[虚线 border](http://localhost:9090/#/api/sprite)、虚线 Path
 - 实现属性获取的 immutable，避免副作用
 
-## [2.0.0-alpha.15][2018-05-29]
+## [2.0.0-alpha.16][2018-05-29]
 
 ### bug修复
 
