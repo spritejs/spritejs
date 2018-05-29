@@ -149,3 +149,13 @@
 
 - 支持了[虚线 border](http://localhost:9090/#/api/sprite)、虚线 Path
 - 实现属性获取的 immutable，避免副作用
+
+## [2.0.0-alpha.15][2018-05-29]
+
+### bug修复
+
+- 修复了在小程序版本下isFinite错误的问题
+
+### 改进
+
+- 支持了sprite的transition
