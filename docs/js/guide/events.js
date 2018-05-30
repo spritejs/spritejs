@@ -58,8 +58,7 @@ var _spritejs = spritejs,
 
   function isPointCollision(sprite, x, y) {
     var _sprite$attr = sprite.attr('border'),
-        _sprite$attr2 = _slicedToArray(_sprite$attr, 1),
-        borderWidth = _sprite$attr2[0],
+        borderWidth = _sprite$attr.width,
         width = sprite.contentSize[0];
 
     var bounds = sprite.boundingRect,
@@ -160,7 +159,7 @@ var _spritejs = spritejs,
               r1 = _r2[0],
               r2 = _r2[1];
 
-          return [r1 - r2, this.color];
+          return { width: r1 - r2, color: this.color, style: 'solid' };
         }
       });
     },
@@ -439,29 +438,33 @@ var _spritejs = spritejs,
             anchor: [0.5, 0.5],
             pos: [770, 300],
             scale: [-0.8, 0.8]
+            // bgcolor: 'red',
           });
           layer.append(image);
 
           image.on('afterdraw', function (_ref6) {
-            var context = _ref6.context;
+            var target = _ref6.target,
+                context = _ref6.context;
 
-            var _image$contentSize = _slicedToArray(image.contentSize, 2),
-                width = _image$contentSize[0],
-                height = _image$contentSize[1];
+            var _target$renderRect = _slicedToArray(target.renderRect, 4),
+                x = _target$renderRect[0],
+                y = _target$renderRect[1],
+                width = _target$renderRect[2],
+                height = _target$renderRect[3];
 
-            var imageData = context.getImageData(0, 0, width, height);
+            var imageData = context.getImageData(x, y, width, height);
             var cx = width / 2,
                 cy = height / 2;
 
 
             for (var i = 0; i < imageData.data.length; i += 4) {
-              var x = i / 4 % width,
-                  y = Math.floor(i / 4 / width);
+              var _x4 = i / 4 % width,
+                  _y = Math.floor(i / 4 / width);
 
-              var dist = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2));
+              var dist = Math.sqrt(Math.pow(cx - _x4, 2) + Math.pow(cy - _y, 2));
               imageData.data[i + 3] = 255 - Math.round(255 * dist / 600);
             }
-            context.putImageData(imageData, 0, 0);
+            context.putImageData(imageData, x, y);
           });
 
         case 8:
@@ -497,7 +500,7 @@ var _spritejs = spritejs,
     init: function init(attr) {
       attr.setDefault({
         font: '42px Arial',
-        border: [4, 'black'],
+        border: { width: 4, color: 'black', style: 'solid' },
         width: 50,
         height: 50,
         anchor: [0.5, 0.5],

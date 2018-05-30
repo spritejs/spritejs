@@ -5,7 +5,7 @@ const {Scene, Sprite} = spritejs
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
   const scene = new Scene('#obbcollision', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const layer = scene.layer('fglayer')
 
   await scene.preload([birdsRes, birdsJsonUrl])
 

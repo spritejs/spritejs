@@ -37,7 +37,7 @@ npm install canvas@next
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
-<script src="https://s4.ssl.qhres.com/!ce414b25/spritejs.min.js"></script>
+<script src="https://s0.ssl.qhres.com/!5ec1e79d/spritejs.min.js"></script>
 ```
 
 如果你要在node服务端使用spritejs渲染，你需要安装[node-canvas](https://github.com/Automattic/node-canvas)
