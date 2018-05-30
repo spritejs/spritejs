@@ -62,7 +62,7 @@
 
         if(r) {
           const path = new Path2D()
-          const [borderWidth] = this.attr('border')
+          const {width: borderWidth} = this.attr('border')
           const {strokeColor, fillColor, renderMode, lineWidth, direction} = this.attr()
 
           drawingContext.save()
