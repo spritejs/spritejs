@@ -38,7 +38,7 @@ const {Scene, Sprite, Label} = spritejs
   layer.append(c3)
 
   function isPointCollision(sprite, x, y) {
-    const [borderWidth] = sprite.attr('border'),
+    const {width: borderWidth} = sprite.attr('border'),
       width = sprite.contentSize[0]
 
     const bounds = sprite.boundingRect,
@@ -112,7 +112,7 @@ const {Scene, Sprite, Label} = spritejs
         },
         border() {
           const [r1, r2] = this.r
-          return [r1 - r2, this.color]
+          return {width: r1 - r2, color: this.color, style: 'solid'}
         },
       })
     },
@@ -296,12 +296,13 @@ const {Scene, Sprite, Label} = spritejs
     anchor: [0.5, 0.5],
     pos: [770, 300],
     scale: [-0.8, 0.8],
+    // bgcolor: 'red',
   })
   layer.append(image)
 
-  image.on('afterdraw', ({context}) => {
-    const [width, height] = image.contentSize
-    const imageData = context.getImageData(0, 0, width, height)
+  image.on('afterdraw', ({target, context}) => {
+    const [x, y, width, height] = target.renderRect
+    const imageData = context.getImageData(x, y, width, height)
     const [cx, cy] = [width / 2, height / 2]
 
     for(let i = 0; i < imageData.data.length; i += 4) {
@@ -311,7 +312,7 @@ const {Scene, Sprite, Label} = spritejs
       const dist = Math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
       imageData.data[i + 3] = 255 - Math.round(255 * dist / 600)
     }
-    context.putImageData(imageData, 0, 0)
+    context.putImageData(imageData, x, y)
   })
 }())
 
@@ -329,7 +330,7 @@ const {Scene, Sprite, Label} = spritejs
     init(attr) {
       attr.setDefault({
         font: '42px Arial',
-        border: [4, 'black'],
+        border: {width: 4, color: 'black', style: 'solid'},
         width: 50,
         height: 50,
         anchor: [0.5, 0.5],
