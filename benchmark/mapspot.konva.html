@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Birds Flying</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #F0F0F0;
+    }
+    #container{
+      transform: scale(0.625)
+    }
+  </style>
+</head>
+<body>
+  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">0</span></div>
+  <div id="container"></div>
+  <script src="//lib.baomitu.com/konva/2.0.2/konva.js"></script>
+  <div id="container"></div>
+  <script>
+    /* eslint-disable */
+    (async function(){
+      var stage = new Konva.Stage({
+          container: 'container',
+          width: 800,
+          height: 800
+      });
+  
+      // add canvas element
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      function randomColor() {
+        const r = 0 | Math.random() * 192,
+          g = 0 | Math.random() * 255,
+          b = 0 | Math.random() * 128
+
+        return `rgb(${r},${g},${b})`
+      }
+      function wait(ms) {
+        return new Promise((resolve) => {
+          setTimeout(resolve, ms)
+        })
+      }
+      async function randomBox() {
+        const x = 100 + Math.random() * 600,
+        y = 100 + Math.random() * 600
+        // create shape
+        var box = new Konva.Arc({
+            x,
+            y,
+            angle: 360,
+            scaleX: 1.1,
+            scaleY: 1.1,
+            innerRadius: 0,
+            outerRadius: 25,
+            fill: randomColor(),
+        });
+        layer.add(box);
+
+        let startTime = Date.now(), T = 2000
+        let anim = new Konva.Animation(function f(frame) {
+            let p = (Date.now() - startTime) / T
+            p = Math.min(1.0, p)
+            
+            if(p < 0.5) {
+              box.scaleX(0.8 + 0.6 * p)
+              box.scaleY(0.8 + 0.6 * p)
+            } else {
+              box.scaleX(1.1 - 0.6 * (p - 0.5))
+              box.scaleY(1.1 - 0.6 * (p - 0.5))            
+            }
+            if(p === 1) {
+              anim.stop()
+              setTimeout(() => {
+                startTime = Date.now(), T = 2000
+                anim = new Konva.Animation(f, layer)
+                anim.start()
+              }, 0)
+            }
+          }, layer)
+
+        anim.start()
+    
+        layer.draw()
+        await wait(100)
+      }
+
+      for(let i = 0; i < 300; i++) {
+        spriteCount.innerHTML = i + 1
+        await randomBox()
+      }
+    }())
+  </script>
+</body>
+</html>

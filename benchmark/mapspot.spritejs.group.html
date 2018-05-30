@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Birds Flying</title>
+  <style>
+    *{      
+      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
+      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */      
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */       
+      -webkit-user-select:none;
+    }  
+    html,body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      max-width: 500px;
+    }
+    #paper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 100%;
+      height: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
+  <div id="paper"></div>
+
+  <script src="https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js"></script>
+  <!-- <script src="js/animator-dev.js"></script> -->
+  <script src="/js/spritejs.js"></script>
+  
+  <script>
+  (async function () {
+    const paper = new spritejs.Scene('#paper')
+    paper.setResolution(800, 800) // 设置 Paper 的实际分辨率
+    const layer = paper.layer('fglayer', {
+      evaluateFPS: true,
+      handleEvent: false,
+    })
+
+    function wait(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms)
+      })
+    }
+
+    function randomColor() {
+      const r = 0 | Math.random() * 192,
+        g = 0 | Math.random() * 255,
+        b = 0 | Math.random() * 128
+
+      return `rgb(${r},${g},${b})`
+    }
+
+    async function randomCircle(r = 25) {
+      const x = 100 + Math.random() * 600,
+        y = 100 + Math.random() * 600
+
+      const group = new spritejs.Group()
+      group.attr({
+        anchor: 0.5,
+        pos: [x, y],
+        size: [100, 100],
+        // bgcolor: 'grey',
+      })
+
+      const sprite = new spritejs.Sprite()
+      sprite.attr({
+        size: [2 * r, 2 * r],
+        borderRadius: r,
+        bgcolor: randomColor(),
+      })
+      group.append(sprite)
+  
+      const anim = new Animator(2000, (p) => {
+        if(p < 0.5) {
+          sprite.attr({scale: 0.8 + 0.6 * p})
+        } else {
+          sprite.attr({scale: 1.1 - 0.6 * (p - 0.5)})
+        }
+      })
+
+      anim.animate().then(function f() {
+        anim.animate().then(f)
+      })
+      // sprite.animate([
+      //   {scale: 1.0},
+      //   {scale: 0.8},
+      //   {scale: 1.0},
+      //   {scale: 1.1},
+      //   {scale: 1.0},
+      // ], {
+      //   duration: 3000,
+      //   iterations: Infinity,
+      // })
+      group.useCache = false
+      layer.append(group)
+      await wait(100)
+    }
+
+    // 显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
+    // 所以所有精灵不运动的时候 fps 也会降下来
+    setInterval(() => {
+      fps.innerHTML = layer.fps
+    }, 1000)
+    window.fglayer = layer
+    window.paper = paper
+
+    for(let i = 0; i < 200; i++) {
+      spriteCount.innerHTML = i + 1
+      await randomCircle()
+    }
+  }())
+  </script>
+</body>
+</html>
