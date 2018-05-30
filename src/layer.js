@@ -7,7 +7,7 @@ class ExLayer extends Layer {
   constructor(id, opts = {}) {
     if(typeof id === 'object') {
       opts = id
-      id = opts.id || Symbol('id')
+      id = opts.id || `id_${Math.random().toString().slice(2, 10)}`
     }
     let {context, handleEvent, evaluateFPS, renderMode, resolution, shadowContext} = opts
     context = context || createCanvas().getContext('2d')

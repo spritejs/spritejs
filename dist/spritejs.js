@@ -4255,7 +4255,7 @@ var ExLayer = function (_Layer) {
 
     if ((typeof id === 'undefined' ? 'undefined' : (0, _typeof3.default)(id)) === 'object') {
       opts = id;
-      id = opts.id || (0, _symbol2.default)('id');
+      id = opts.id || 'id_' + Math.random().toString().slice(2, 10);
     }
     var _opts = opts,
         context = _opts.context,
@@ -8622,7 +8622,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.17';
+var version = '2.0.0-alpha.18';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
