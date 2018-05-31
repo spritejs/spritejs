@@ -2038,11 +2038,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       drawingContext.save();
       drawingContext.translate.apply(drawingContext, (0, _toConsumableArray3.default)(this.attr('pos')));
       drawingContext.transform.apply(drawingContext, (0, _toConsumableArray3.default)(this.transform.m));
-      drawingContext.globalAlpha = this.attr('opacity');
 
       if (!cachableContext) {
+        drawingContext.globalAlpha *= this.attr('opacity');
         drawingContext.translate(bound[0], bound[1]);
       } else {
+        drawingContext.globalAlpha = this.attr('opacity');
         // solve 1px problem
         cachableContext.translate(1, 1);
       }

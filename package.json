@@ -44,7 +44,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^1.28.1"
+    "sprite-core": "^1.28.2"
   },
   "devDependencies": {
     "ava": "^0.21.0",
