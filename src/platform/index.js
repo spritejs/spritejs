@@ -83,6 +83,7 @@ class Container extends EventEmitter {
     }
   }
   dispatchEvent(evt) {
+    evt.target = this
     return this.emit(evt.type, evt)
   }
   addEventListener(type, handler) {
