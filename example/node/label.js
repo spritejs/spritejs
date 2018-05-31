@@ -10,7 +10,7 @@ const text = new Label('Clicked: 0')
 text.attr({
   anchor: [0.5, 0.5],
   pos: [400, 300],
-  font: '46px Arial',
+  font: '40px Arial',
   color: 'blue',
   bgcolor: 'white',
   textAlign: 'center',

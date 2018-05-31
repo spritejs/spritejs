@@ -1,6 +1,6 @@
 import Layer from './layer'
 import Resource from './resource'
-import {BaseNode, utils, math} from 'sprite-core'
+import {BaseNode, utils} from 'sprite-core'
 import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform'
 
 const {setDeprecation, sortOrderedSprites} = utils
@@ -254,38 +254,18 @@ export default class extends BaseNode {
     const resolution = this.layerResolution,
       viewport = [canvas.clientWidth, canvas.clientHeight]
 
-    x = x * viewport[0] / resolution[0]
-    y = y * viewport[1] / resolution[1]
+    x = x * viewport[0] / resolution[0] + this.stickOffset[0]
+    y = y * viewport[1] / resolution[1] + this.stickOffset[1]
 
-    const {transform} = window.getComputedStyle(this.container)
-    if(transform !== 'none') {
-      const matched = transform.match(/matrix\((.*)\)/)
-      if(matched && matched[1]) {
-        const matrix = new math.Matrix(matched[1].split(/\s*,\s*/g).map(n => Number(n)))
-        return matrix.transformPoint(x, y)
-      }
-    }
-    x += this.stickOffset[0]
-    y += this.stickOffset[1]
     return [x, y]
   }
   toLocalPos(canvas, x, y) {
     const resolution = this.layerResolution,
       viewport = [canvas.clientWidth, canvas.clientHeight]
 
-    x = x * resolution[0] / viewport[0]
-    y = y * resolution[1] / viewport[1]
+    x = x * resolution[0] / viewport[0] - this.stickOffset[0]
+    y = y * resolution[1] / viewport[1] - this.stickOffset[1]
 
-    const {transform} = window.getComputedStyle(this.container)
-    if(transform !== 'none') {
-      const matched = transform.match(/matrix\((.*)\)/)
-      if(matched && matched[1]) {
-        const matrix = new math.Matrix(matched[1].split(/\s*,\s*/g).map(n => Number(n))).inverse()
-        return matrix.transformPoint(x, y)
-      }
-    }
-    x -= this.stickOffset[0]
-    y -= this.stickOffset[1]
     return [x, y]
   }
   delegateEvent(event, receiver = this.container) {
@@ -388,10 +368,12 @@ export default class extends BaseNode {
         delete opts.zIndex
       }
 
-      const pos = window.getComputedStyle && window.getComputedStyle(this.container).position
+      if(typeof window !== 'undefined' && window.getComputedStyle) {
+        const pos = window.getComputedStyle && window.getComputedStyle(this.container).position
 
-      if(this.container.style && (pos !== 'absolute' && pos !== 'fixed')) {
-        this.container.style.position = 'relative'
+        if(this.container.style && (pos !== 'absolute' && pos !== 'fixed')) {
+          this.container.style.position = 'relative'
+        }
       }
 
       this.appendLayer(new Layer(id, opts), zIndex)

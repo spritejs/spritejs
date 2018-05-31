@@ -159,3 +159,16 @@
 ### 改进
 
 - 支持了sprite的transition
+
+## [2.0.0-alpha.19][2018-05-31]
+
+### bug修复
+
+- 修复了scale设置为0不能恢复的bug
+- 修复了fontSize设置rem不跟着文档的字体大小改变的bug
+- 修复了node-canvs版本的bug
+
+### 改进
+
+- 改进了缓存策略
+- 增加了对font的vw、vh单位支持
