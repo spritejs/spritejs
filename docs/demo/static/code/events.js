@@ -68,7 +68,7 @@
         height: 80,
         textAlign: 'center',
         lineHeight: 80,
-        border: [2, '#000'],
+        border: {width: 2, color: '#000', style: 'solid'},
       })
     },
   })

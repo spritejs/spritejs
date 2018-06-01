@@ -10,7 +10,10 @@
   })
   const coverpage = document.querySelector('#coverpage')
 
-  const fglayer = scene.layer('fglayer')
+  const fglayer = scene.layer('fglayer', {
+    renderMode: 'repaintDirty',
+    shadowContext: false,
+  })
 
   // 适配移动端
   function fixMobile() {
@@ -463,7 +466,7 @@
   const guanguan = await showGuanGuan()
   const buttons = await showButtons()
   const more = showMore()
-  window.more = more
+
   more.c1 = function () {
     this.attr('bgcolor', 'green')
   }

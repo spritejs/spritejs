@@ -71,27 +71,27 @@
         bgcolor: randomColor(),
       })
   
-      const anim = new Animator(2000, (p) => {
-        if(p < 0.5) {
-          sprite.attr({scale: 0.8 + 0.6 * p})
-        } else {
-          sprite.attr({scale: 1.1 - 0.6 * (p - 0.5)})
-        }
-      })
-
-      anim.animate().then(function f() {
-        anim.animate().then(f)
-      })
-      // sprite.animate([
-      //   {scale: 1.0},
-      //   {scale: 0.8},
-      //   {scale: 1.0},
-      //   {scale: 1.1},
-      //   {scale: 1.0},
-      // ], {
-      //   duration: 3000,
-      //   iterations: Infinity,
+      // const anim = new Animator(2000, (p) => {
+      //   if(p < 0.5) {
+      //     sprite.attr({scale: 0.8 + 0.6 * p})
+      //   } else {
+      //     sprite.attr({scale: 1.1 - 0.6 * (p - 0.5)})
+      //   }
       // })
+
+      // anim.animate().then(function f() {
+      //   anim.animate().then(f)
+      // })
+      sprite.animate([
+        {scale: 1.0},
+        {scale: 0.8},
+        {scale: 1.0},
+        {scale: 1.1},
+        {scale: 1.0},
+      ], {
+        duration: 3000,
+        iterations: Infinity,
+      })
       layer.append(sprite)
       await wait(100)
     }
