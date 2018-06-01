@@ -556,7 +556,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             stickMode: 'width'
           });
           coverpage = document.querySelector('#coverpage');
-          fglayer = scene.layer('fglayer');
+          fglayer = scene.layer('fglayer', {
+            renderMode: 'repaintDirty',
+            shadowContext: false
+          });
 
           // 适配移动端
 
@@ -599,7 +602,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           buttons = _context6.sent;
           more = showMore();
 
-          window.more = more;
+
           more.c1 = function () {
             this.attr('bgcolor', 'green');
           };
@@ -703,7 +706,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 48:
+        case 47:
         case 'end':
           return _context6.stop();
       }

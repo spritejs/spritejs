@@ -59,7 +59,11 @@ class ExLayer extends Layer {
   }
   renderRepaintAll(t) {
     const [width, height, offsetLeft, offsetTop] = this.resolution
-    this.shadowContext.clearRect(-offsetLeft, -offsetTop, width, height)
+    if(this.shadowContext) {
+      this.shadowContext.clearRect(-offsetLeft, -offsetTop, width, height)
+    } else {
+      this.outputContext.clearRect(-offsetLeft, -offsetTop, width, height)
+    }
     super.renderRepaintAll(t)
   }
 
