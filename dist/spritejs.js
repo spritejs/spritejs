@@ -2125,7 +2125,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       // draw bgcolor
       var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
 
-      if (borderWidth || borderRadius || bgcolor) {
+      if (this.cache == null || borderWidth || borderRadius || bgcolor) {
         var _ref5 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
             _x4 = _ref5[0],
             _y = _ref5[1],
@@ -2141,9 +2141,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           drawingContext.fill();
         }
         // we should always clip to prevent the subclass rendering not to overflow the box
-        // but in some platform (eg. wxapp), clip regions has very high cost
-        // for performance we allow the region clip only when sprite has borderRadius
-        if (borderWidth || borderRadius) {
+        // but clip is very slow in wxapp simulator...
+        if (typeof wx === 'undefined' || typeof requestAnimationFrame === 'undefined') {
           drawingContext.clip();
         }
       }
