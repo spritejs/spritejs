@@ -2028,7 +2028,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       var bound = this.originalRect;
       var cachableContext = null;
       // solve 1px problem
-      if (this[_cachePriority] > 6) {
+      if (this.cachePriority > 6) {
         if (this.cache) {
           cachableContext = this.cache;
         } else {
@@ -2142,7 +2142,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         }
         // we should always clip to prevent the subclass rendering not to overflow the box
         // but clip is very slow in wxapp simulator...
-        if (typeof wx === 'undefined' || typeof requestAnimationFrame === 'undefined') {
+        if (!(typeof wx !== 'undefined' && wx.navigateToMiniProgram && typeof requestAnimationFrame !== 'undefined')) {
           drawingContext.clip();
         }
       }
@@ -6070,6 +6070,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
 
     _this2[_children] = [];
     _this2[_zOrder] = 0;
+    _this2[_baseCachePriority] = 0;
     return _this2;
   }
 
@@ -6171,7 +6172,11 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     key: 'render',
     value: function render(t, drawingContext) {
       this[_baseCachePriority] = Math.min(this[_baseCachePriority] + 1, 10);
-      if (this.baseCache && drawingContext.canvas.width === this.baseCache.canvas.width && drawingContext.canvas.height === this.baseCache.canvas.height) {
+      var bound = this.originalRect,
+          bw = Math.ceil(bound[2]) + 2,
+          bh = Math.ceil(bound[3]) + 2;
+
+      if (this.baseCache && bw === this.baseCache.canvas.width && bh === this.baseCache.canvas.height) {
         var _attr = this.attr('border'),
             borderWidth = _attr.width,
             padding = this.attr('padding');
@@ -6180,17 +6185,26 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
         drawingContext.translate(borderWidth + padding[3], borderWidth + padding[0]);
       } else {
         if (this.baseCache) {
+          this[_baseCachePriority] = 0;
           _render.cacheContextPool.put(this.baseCache);
         }
-        (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
-        if (this.cache && this[_baseCachePriority] > 6) {
+        if (this[_baseCachePriority] > 6) {
           var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
           if (bgcolor) {
             this.baseCache = _render.cacheContextPool.get(drawingContext);
-            this.baseCache.canvas.width = drawingContext.canvas.width;
-            this.baseCache.canvas.height = drawingContext.canvas.height;
-            this.baseCache.drawImage(drawingContext.canvas, 0, 0);
+            this.baseCache.canvas.width = bw;
+            this.baseCache.canvas.height = bh;
+            (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, this.baseCache);
+            drawingContext.drawImage(this.baseCache.canvas, -1, -1);
+
+            var _attr2 = this.attr('border'),
+                _borderWidth = _attr2.width,
+                _padding = this.attr('padding');
+
+            drawingContext.translate(_borderWidth + _padding[3], _borderWidth + _padding[0]);
           }
+        } else {
+          (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
         }
       }
 
@@ -6220,10 +6234,10 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'contentSize',
     get: function get() {
-      var _attr2 = this.attr('size'),
-          _attr3 = (0, _slicedToArray3.default)(_attr2, 2),
-          width = _attr3[0],
-          height = _attr3[1];
+      var _attr3 = this.attr('size'),
+          _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
+          width = _attr4[0],
+          height = _attr4[1];
 
       if (width === '' || height === '') {
         if (this.attr('clip')) {
@@ -8900,7 +8914,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.20';
+var version = '2.0.0-alpha.21';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
