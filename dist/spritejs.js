@@ -1897,20 +1897,17 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     value: function forceUpdate() {
       var clearCache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+      this.isDirty = true;
       if (clearCache) {
         this.clearCache();
       }
       var parent = this.parent;
       if (parent) {
-        if (parent.forceUpdate) {
+        if (parent[_cachePriority] != null) {
           // is group
           parent[_cachePriority] = 0;
-          parent.cache = null;
-          parent.forceUpdate();
-        } else if (parent.update) {
-          // is layer
-          this.parent.update(this);
         }
+        this.parent.update(this);
       }
     }
 
@@ -6088,6 +6085,12 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       return node;
     }
   }, {
+    key: 'update',
+    value: function update(child) {
+      this.cache = null;
+      this.forceUpdate();
+    }
+  }, {
     key: 'pointCollision',
     value: function pointCollision(evt) {
       if ((0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'pointCollision', this).call(this, evt)) {
@@ -6220,9 +6223,14 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       var sprites = this[_children];
 
       for (var i = 0; i < sprites.length; i++) {
-        var child = sprites[i];
-        if (this.isNodeVisible(child)) {
+        var child = sprites[i],
+            isVisible = this.isNodeVisible(child);
+        if (isVisible) {
           child.draw(t);
+        }
+        if (child.isDirty) {
+          child.isDirty = false;
+          child.dispatchEvent('update', { target: child, renderTime: t, isVisible: isVisible }, true, true);
         }
       }
     }
@@ -14550,7 +14558,8 @@ var Layer = function (_BaseNode) {
             // invisible, only need to remove lastRenderBox
             delete child.lastRenderBox;
           }
-          if (this[_updateSet].has(child)) {
+          if (child.isDirty) {
+            child.isDirty = false;
             child.dispatchEvent('update', { target: child, renderTime: t, isVisible: isVisible }, true, true);
           }
         }
