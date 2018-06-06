@@ -36,11 +36,11 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Group = spritejs.Group
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Group = spritejs.Group
 
-paper.setResolution(800, 600) 
+paper.setResolution(800, 600)
 
 const s1 = new Sprite()
 s1.attr({
@@ -74,13 +74,13 @@ fglayer.append(group)
 group.attr({
   anchor: 0.5,
   pos: [200, 200],
-  rotate: 0, 
+  rotate: 0,
   border: [20, 'red'],
   bgcolor: 'grey',
   // size: [200, 200],
 })
 
-s1.on('click', evt => {
+s1.on('click', (evt) => {
   console.log(evt)
 })
 
@@ -93,21 +93,21 @@ group.animate([
 })
 
 s1.animate([
-  {rotate: 450}
+  {rotate: 450},
 ], {
   duration: 10000,
   iterations: Infinity,
 })
 
 s2.animate([
-  {rotate: 540}
+  {rotate: 540},
 ], {
   duration: 10000,
   iterations: Infinity,
 })
 
 s3.animate([
-  {rotate: 360}
+  {rotate: 360},
 ], {
   duration: 10000,
   iterations: Infinity,
@@ -119,14 +119,6 @@ group.on('mouseenter', (evt) => {
 
 group.on('mouseleave', (evt) => {
   console.log('leave')
-})
-// s1.on('click', evt => {
-//   console.log('clicked')
-// })
-
-
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
 })
   </script>
 </body>
