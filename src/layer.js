@@ -45,9 +45,7 @@ class ExLayer extends Layer {
 
     if(offsetLeft || offsetTop) {
       const context = this.shadowContext || this.outputContext
-      context.restore()
       context.translate(offsetLeft, offsetTop)
-      context.save()
     }
 
     this.children.forEach((child) => {

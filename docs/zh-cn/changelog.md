@@ -192,3 +192,16 @@
 ### 改进
 
 - sprite-core 升级到 2.0.1-beta，修复一些小bug，单元测试覆盖度99%
+
+## [2.0.0-alpha.24][2018-06-07]
+
+### bug修复
+
+- 修复了group元素的缓存策略在没有bgcolor的条件下导致render失效的bug
+- 修复了Path元素位置不正确的bug
+
+## lastest
+
+### bug修复
+
+- 修复了Path元素的anchor不正确的bug

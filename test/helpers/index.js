@@ -1,5 +1,4 @@
-import {loadImage} from '../../src/platform'
-const {createCanvas} = require('canvas')
+const {createCanvas, loadImage} = require('canvas')
 
 const imghash = require('imghash')
 const hamming = require('hamming-distance')
@@ -7,14 +6,14 @@ const colors = require('colors')
 const pixelmatch = require('pixelmatch')
 const fs = require('fs')
 
-export async function createCanvasFromFile(src) {
+async function createCanvasFromFile(src) {
   const img = await loadImage(src)
   const canvas = createCanvas(img.width, img.height)
   canvas.getContext('2d').drawImage(img, 0, 0)
   return canvas
 }
 
-export async function compare(canvas, caseId) {
+export async function compare(canvas, caseId, pixelCompare = false) {
   const srcData = canvas.toBuffer()
   const desCanvas = await createCanvasFromFile(`./test/img/${caseId}.png`)
 
@@ -66,25 +65,36 @@ export async function compare(canvas, caseId) {
         break
       }
     }
+  } else if(pixelCompare) {
+    const data1 = img1.data,
+      data2 = img2.data
+    isEqual = data1.length === data2.length
+    for(let i = 0; isEqual && i < data1.length; i += 4) {
+      const r = data1[i],
+        g = data1[i + 1],
+        b = data1[i + 2],
+        a = data1[i + 3]
+
+      if(r !== data2[i] || g !== data2[i + 1] || b !== data2[i + 2] || a !== data2[i + 3]) {
+        isEqual = false
+      }
+    }
   }
 
   if(!isEqual) {
     fs.writeFileSync(diffFile, diffCanvas.toBuffer())
     fs.writeFileSync(srcFile, canvas.toBuffer())
-  } else if(fs.existsSync(diffFile)) {
-    fs.unlinkSync(diffFile)
+  } else {
+    if(fs.existsSync(diffFile)) {
+      fs.unlinkSync(diffFile)
+    }
+    if(fs.existsSync(srcFile)) {
+      fs.unlinkSync(srcFile)
+    }
   }
 
   return isEqual
 }
 
-export function drawSprites(canvas, sprites) {
-  const {width, height} = canvas,
-    context = canvas.getContext('2d')
-
-  context.clearRect(0, 0, width, height)
-  for(let i = 0; i < sprites.length; i++) {
-    sprites[i].connect(context).draw()
-  }
-  return canvas
-}
+const drawSprites = require('./drawsprites')
+export {drawSprites}
