@@ -46,6 +46,7 @@
   .footer dt {
     font-weight: bold;
     font-size: 1.0rem;
+    margin-bottom:0.3rem;
   }
   .footer dl {
     display: table-cell;
@@ -57,6 +58,8 @@
     overflow: hidden;
   }
   .footer a {
+    line-height: 1.5rem;
+    text-decoration: none;
     color: #567;
     font-size: 0.9rem;
     display: block;
@@ -78,9 +81,10 @@
     margin: 60px auto;
   }
   #more-demos a {
+    display: block;
     text-decoration: none;
   }
-  
+
   article {
     z-index: 99999;
     background: #fff;
