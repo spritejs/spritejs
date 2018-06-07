@@ -34,12 +34,13 @@ const Sprite = spritejs.Sprite,
       Path = spritejs.Path
 
 
-const path = new Path('M10,80 q100,120 120,20 q140,-50 160,0')
+const path = new Path('M0,0 q100,120 120,20 q140,-50 160,0')
 
 path.attr({
-  pos: [10, 50],
+  pos: [20, 50],
   strokeColor: 'red',
   bgcolor: 'blue',
+  lineWidth: 10,
   // d: 'M10,80 q100,120 120,20 q140,-50 160,0',
 })
 paper.layer().append(path)

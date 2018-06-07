@@ -4470,9 +4470,7 @@ var ExLayer = function (_Layer) {
 
       if (offsetLeft || offsetTop) {
         var context = this.shadowContext || this.outputContext;
-        context.restore();
         context.translate(offsetLeft, offsetTop);
-        context.save();
       }
 
       this.children.forEach(function (child) {
@@ -6252,45 +6250,49 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
           bw = Math.ceil(bound[2]) + 2,
           bh = Math.ceil(bound[3]) + 2;
 
-      if (this.baseCache && bw === this.baseCache.canvas.width && bh === this.baseCache.canvas.height) {
+      if (this.lastBoxSize && (this.lastBoxSize[0] !== bw || this.lastBoxSize[1] !== bh)) {
+        this[_baseCachePriority] = 0;
+        if (this.baseCache) {
+          _render.cacheContextPool.put(this.baseCache);
+          this.baseCache = null;
+        }
+      }
+      this.lastBoxSize = [bw, bh];
+
+      if (this.baseCache) {
         var _attr = this.attr('border'),
             borderWidth = _attr.width,
             padding = this.attr('padding');
 
         drawingContext.drawImage(this.baseCache.canvas, -1, -1);
         drawingContext.translate(borderWidth + padding[3], borderWidth + padding[0]);
-      } else {
-        if (this.baseCache) {
-          this[_baseCachePriority] = 0;
-          _render.cacheContextPool.put(this.baseCache);
-          this.baseCache = null;
-        }
-        if (this[_baseCachePriority] > this.__cachePolicyThreshold) {
-          var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
-          if (bgcolor) {
-            this.baseCache = _render.cacheContextPool.get(drawingContext);
-            if (this.baseCache) {
-              this.baseCache.canvas.width = bw;
-              this.baseCache.canvas.height = bh;
-              this.baseCache.save();
-              this.baseCache.translate(1, 1);
-              (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, this.baseCache);
-              this.baseCache.restore();
-              drawingContext.drawImage(this.baseCache.canvas, -1, -1);
+      } else if (this[_baseCachePriority] > this.__cachePolicyThreshold) {
+        var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
+        if (bgcolor) {
+          this.baseCache = _render.cacheContextPool.get(drawingContext);
+          if (this.baseCache) {
+            this.baseCache.canvas.width = bw;
+            this.baseCache.canvas.height = bh;
+            this.baseCache.save();
+            this.baseCache.translate(1, 1);
+            (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, this.baseCache);
+            this.baseCache.restore();
+            drawingContext.drawImage(this.baseCache.canvas, -1, -1);
 
-              var _attr2 = this.attr('border'),
-                  _borderWidth = _attr2.width,
-                  _padding = this.attr('padding');
+            var _attr2 = this.attr('border'),
+                _borderWidth = _attr2.width,
+                _padding = this.attr('padding');
 
-              drawingContext.translate(_borderWidth + _padding[3], _borderWidth + _padding[0]);
-            } else {
-              this.__cachePolicyThreshold = Infinity;
-              (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
-            }
+            drawingContext.translate(_borderWidth + _padding[3], _borderWidth + _padding[0]);
+          } else {
+            this.__cachePolicyThreshold = Infinity;
+            (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
           }
         } else {
           (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
         }
+      } else {
+        (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
       }
 
       var sprites = this[_children];
@@ -7623,10 +7625,10 @@ var _default = function (_BaseNode) {
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
         (0, _assign2.default)(canvas.style, {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
+          top: '',
+          right: '',
+          bottom: '',
+          left: '',
           transform: ''
         });
         if (!stickExtend && (stickMode === 'width' || stickMode === 'height')) {
@@ -7858,6 +7860,7 @@ var _default = function (_BaseNode) {
           delete opts.zIndex;
         }
 
+        /* istanbul ignore if  */
         if (typeof window !== 'undefined' && window.getComputedStyle) {
           var pos = window.getComputedStyle && window.getComputedStyle(this.container).position;
 
@@ -7887,9 +7890,12 @@ var _default = function (_BaseNode) {
       this[_layerMap][id] = layer;
       layer.connect(this, this[_zOrder]++, zIndex);
       this.updateViewport(layer);
-      layer.resolution = this.layerResolution;
+      if (!this.stickExtend) {
+        layer.resolution = this.layerResolution;
+      }
 
       this[_layers] = sortOrderedSprites((0, _values2.default)(this[_layerMap]), true);
+      /* istanbul ignore if  */
       if (_platform.setDebugToolsObserver && layer.id !== '__debuglayer__') {
         (0, _platform.setDebugToolsObserver)(this, layer);
       }
@@ -7905,6 +7911,7 @@ var _default = function (_BaseNode) {
         layer.disconnect(this);
         delete this[_layerMap][layer.id];
         this[_layers] = sortOrderedSprites((0, _values2.default)(this[_layerMap]), true);
+        /* istanbul ignore if  */
         if (_platform.removeDebugToolsObserver) {
           (0, _platform.removeDebugToolsObserver)(layer);
         }
@@ -7929,35 +7936,48 @@ var _default = function (_BaseNode) {
     key: 'snapshot',
     value: function () {
       var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-        var width = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.viewport[0];
-        var height = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.viewport[1];
-        var canvas, layers, ctx, renderTasks;
+        var _viewport2, width, height, canvas, _layerViewport2, sw, sh, layers, ctx, renderTasks, rect;
+
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                _viewport2 = (0, _slicedToArray3.default)(this.viewport, 2), width = _viewport2[0], height = _viewport2[1];
                 canvas = this[_snapshot];
 
                 canvas.width = width;
                 canvas.height = height;
 
+                _layerViewport2 = (0, _slicedToArray3.default)(this.layerViewport, 2), sw = _layerViewport2[0], sh = _layerViewport2[1];
                 layers = this[_layers].slice(0).reverse();
                 ctx = canvas.getContext('2d');
                 renderTasks = layers.map(function (layer) {
                   return layer.prepareRender();
                 });
-                _context2.next = 8;
+                _context2.next = 10;
                 return _promise2.default.all(renderTasks);
 
-              case 8:
+              case 10:
+                rect = [0, 0, sw, sh];
+
+
+                if (!this.stickExtend) {
+                  if (this.stickMode === 'width' || this.stickMode === 'height') {
+                    rect[0] = (width - sw) / 2;
+                    rect[1] = (height - sh) / 2;
+                  } else if (this.stickMode === 'bottom' || this.stickMode === 'right') {
+                    rect[0] = width - sw;
+                    rect[1] = height - sh;
+                  }
+                }
 
                 layers.forEach(function (layer) {
-                  return ctx.drawImage(layer.canvas, 0, 0, width, height);
+                  ctx.drawImage.apply(ctx, [layer.canvas].concat(rect));
                 });
 
                 return _context2.abrupt('return', canvas);
 
-              case 10:
+              case 14:
               case 'end':
                 return _context2.stop();
             }
@@ -7987,9 +8007,9 @@ var _default = function (_BaseNode) {
       var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 2),
           rw = _resolution2[0],
           rh = _resolution2[1],
-          _viewport2 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport2[0],
-          vh = _viewport2[1],
+          _viewport3 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport3[0],
+          vh = _viewport3[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
@@ -8040,9 +8060,9 @@ var _default = function (_BaseNode) {
       }
     },
     get: function get() {
-      var _viewport3 = (0, _slicedToArray3.default)(this[_viewport], 2),
-          width = _viewport3[0],
-          height = _viewport3[1];
+      var _viewport4 = (0, _slicedToArray3.default)(this[_viewport], 2),
+          width = _viewport4[0],
+          height = _viewport4[1];
 
       if (width === '' || (0, _isNan2.default)(Number(width))) {
         width = this.container.clientWidth;
@@ -8058,9 +8078,9 @@ var _default = function (_BaseNode) {
       var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
           rw = _resolution3[0],
           rh = _resolution3[1],
-          _viewport4 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport4[0],
-          vh = _viewport4[1],
+          _viewport5 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport5[0],
+          vh = _viewport5[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
@@ -9018,7 +9038,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.22';
+var version = '2.0.0-alpha.24';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -15333,9 +15353,10 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
       var rect = (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this),
           svg = this.svg;
       if (svg) {
-        var bounds = svg.bounds;
-        rect[0] += Math.min(0, bounds[0]);
-        rect[1] += Math.min(0, bounds[1]);
+        var bounds = svg.bounds,
+            offset = this.pathOffset;
+        rect[0] += Math.min(0, bounds[0]) - offset[0];
+        rect[1] += Math.min(0, bounds[1]) - offset[1];
       }
       return rect;
     }

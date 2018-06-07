@@ -78,7 +78,13 @@ export default class extends BaseNode {
     }
     this.appendLayer(newchild)
     this.container.insertBefore(newchild.canvas, refchild.canvas)
-    const els = this.container.querySelectorAll('canvas')
+    let els
+    /* istanbul ignore if */
+    if(this.container.querySelectorAll) {
+      els = this.container.querySelectorAll('canvas')
+    } else {
+      els = this.container.children
+    }
     els.forEach((el, i) => {
       const id = el.dataset.layerId
       if(id) {
@@ -91,6 +97,7 @@ export default class extends BaseNode {
         })
       }
     })
+    this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
   }
   appendChild(layer) {
     return this.appendLayer(layer)
@@ -128,10 +135,10 @@ export default class extends BaseNode {
       canvas.style.width = `${width}px`
       canvas.style.height = `${height}px`
       Object.assign(canvas.style, {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        top: '',
+        right: '',
+        bottom: '',
+        left: '',
         transform: '',
       })
       if(!stickExtend && (stickMode === 'width' || stickMode === 'height')) {
@@ -153,7 +160,7 @@ export default class extends BaseNode {
     this.dispatchEvent('viewportChange', {target: this, layers})
     return this
   }
-  get distortion() {
+  get distortion() /* istanbul ignore next */ {
     if(this.stickMode !== 'scale') {
       return 1.0
     }
@@ -162,6 +169,7 @@ export default class extends BaseNode {
 
   set viewport([width, height]) {
     this[_viewport] = [width, height]
+    /* istanbul ignore next */
     if(width === 'auto' || height === 'auto') {
       if(!this[_resizeHandler]) {
         this[_resizeHandler] = () => this.updateViewport()
@@ -261,7 +269,7 @@ export default class extends BaseNode {
   }
   toLocalPos(canvas, x, y) {
     const resolution = this.layerResolution,
-      viewport = [canvas.clientWidth, canvas.clientHeight]
+      viewport = this.layerViewport
 
     x = x * resolution[0] / viewport[0] - this.stickOffset[0]
     y = y * resolution[1] / viewport[1] - this.stickOffset[1]
@@ -291,12 +299,17 @@ export default class extends BaseNode {
         originalX = 0,
         originalY = 0
 
+      /* istanbul ignore else */
       if(e instanceof CustomEvent) {
         Object.assign(evtArgs, e.detail)
         if(evtArgs.x != null && evtArgs.y != null) {
           x = evtArgs.x
           y = evtArgs.y
           ;[originalX, originalY] = this.toGlobalPos(e.target, x, y)
+        } else if(evtArgs.originalX != null && evtArgs.originalY != null) {
+          originalX = evtArgs.originalX
+          originalY = evtArgs.originalY
+          ;[x, y] = this.toLocalPos(e.target, originalX, originalY)
         }
       } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
         const {left, top} = e.target.getBoundingClientRect()
@@ -342,6 +355,7 @@ export default class extends BaseNode {
         const {id, src} = res
         task = Resource.loadTexture({id, src})
       }
+      /* istanbul ignore if  */
       if(!(task instanceof Promise)) {
         task = Promise.resolve(task)
       }
@@ -368,6 +382,7 @@ export default class extends BaseNode {
         delete opts.zIndex
       }
 
+      /* istanbul ignore if  */
       if(typeof window !== 'undefined' && window.getComputedStyle) {
         const pos = window.getComputedStyle && window.getComputedStyle(this.container).position
 
@@ -396,9 +411,12 @@ export default class extends BaseNode {
     this[_layerMap][id] = layer
     layer.connect(this, this[_zOrder]++, zIndex)
     this.updateViewport(layer)
-    layer.resolution = this.layerResolution
+    if(!this.stickExtend) {
+      layer.resolution = this.layerResolution
+    }
 
     this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
+    /* istanbul ignore if  */
     if(setDebugToolsObserver && layer.id !== '__debuglayer__') {
       setDebugToolsObserver(this, layer)
     }
@@ -412,6 +430,7 @@ export default class extends BaseNode {
       layer.disconnect(this)
       delete this[_layerMap][layer.id]
       this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true)
+      /* istanbul ignore if  */
       if(removeDebugToolsObserver) {
         removeDebugToolsObserver(layer)
       }
@@ -430,10 +449,13 @@ export default class extends BaseNode {
     }
     return layer && this[_layerMap][layerID] === layer
   }
-  async snapshot(width = this.viewport[0], height = this.viewport[1]) {
+  async snapshot() {
+    const [width, height] = this.viewport
     const canvas = this[_snapshot]
     canvas.width = width
     canvas.height = height
+
+    const [sw, sh] = this.layerViewport
 
     const layers = this[_layers].slice(0).reverse()
     const ctx = canvas.getContext('2d')
@@ -441,7 +463,21 @@ export default class extends BaseNode {
     const renderTasks = layers.map(layer => layer.prepareRender())
     await Promise.all(renderTasks)
 
-    layers.forEach(layer => ctx.drawImage(layer.canvas, 0, 0, width, height))
+    const rect = [0, 0, sw, sh]
+
+    if(!this.stickExtend) {
+      if(this.stickMode === 'width' || this.stickMode === 'height') {
+        rect[0] = (width - sw) / 2
+        rect[1] = (height - sh) / 2
+      } else if(this.stickMode === 'bottom' || this.stickMode === 'right') {
+        rect[0] = width - sw
+        rect[1] = height - sh
+      }
+    }
+
+    layers.forEach((layer) => {
+      ctx.drawImage(layer.canvas, ...rect)
+    })
 
     return canvas
   }
