@@ -2036,6 +2036,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
                   r = _ref5[4];
 
               (0, _render.drawRadiusBox)(this.context, { x: _x4, y: _y, w: _w, h: _h, r: r });
+              if (this.layer && this.layer.offset) {
+                nx += this.layer.offset[0];
+                ny += this.layer.offset[1];
+              }
               return this.context.isPointInPath(nx - ox, ny - oy);
             }
           }
@@ -4477,6 +4481,11 @@ var ExLayer = function (_Layer) {
       });
 
       this[_resolution] = resolution;
+    }
+  }, {
+    key: 'offset',
+    get: function get() {
+      return [this.resolution[2], this.resolution[3]];
     }
   }, {
     key: 'zIndex',
@@ -9002,7 +9011,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.27';
+var version = '2.0.0-alpha.28';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14909,6 +14918,11 @@ var Layer = function (_BaseNode) {
     key: 'canvas',
     get: function get() {
       return this.outputContext.canvas;
+    }
+  }, {
+    key: 'offset',
+    get: function get() {
+      return [0, 0];
     }
   }, {
     key: 'fps',
