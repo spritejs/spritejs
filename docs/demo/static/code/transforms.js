@@ -8,7 +8,8 @@
 
       this.on('mouseenter', (evt) => {
         this.attr({
-          scale: 1.1,
+          color: '#fee139',
+          bgcolor: '#32ab61'
         })
       })
 
@@ -20,13 +21,14 @@
 
       this.on('mouseup', (evt) => {
         this.attr({
-          scale: 1.1,
+          scale: 1,
         })
       })
 
       this.on('mouseleave', (evt) => {
         this.attr({
-          scale: 1.0,
+          color: '#32ab61',
+          bgcolor: ''
         })
       })
     }
@@ -40,9 +42,16 @@
       const button = new Button(type)
 
       button.attr({
-        pos: [900, 200 + i * 80],
-        font: '48px Arial',
+        pos: [950, 350 + i * 100],
+        font: '28px Arial',
         color: '#32ab61',
+        size: [130, 40],
+        lineHeight: 40,
+        padding: 16,
+        border: [3, '#32ab61'],
+        textAlign: 'center',
+        borderRadius: 20,
+        anchor: 0.5,
       })
       fglayer.appendChild(button)
 
@@ -57,7 +66,7 @@
   const huanhuan = new Group()
   huanhuan.attr({
     anchor: 0.5,
-    pos: [600, 600],
+    pos: [450, 600],
   })
   fglayer.append(huanhuan)
 
@@ -66,7 +75,7 @@
     textures: [
       'huanhuan.png',
     ],
-    size: [78, 96],
+    size: [156, 192],
   })
   huanhuan.appendChild(robot)
 
@@ -75,7 +84,8 @@
   const outerFire = new Path()
   outerFire.attr({
     path: {d: outerFireD},
-    pos: [22, 90],
+    pos: [44, 180],
+    scale: 2,
     fillColor: 'rgb(253,88,45)',
     zIndex: -1,
   })
@@ -86,8 +96,9 @@
   const innerFire = new Path()
   innerFire.attr({
     path: {d: innerFireD},
-    pos: [30, 90],
+    pos: [60, 184],
     rotate: 15,
+    scale: 1.6,
     fillColor: 'rgb(254,222,9)',
     zIndex: -1,
   })
@@ -139,9 +150,9 @@
     if(animation) animation.cancel()
     animation = huanhuan.animate([
       {transform: {skew: [0, 0]}},
-      {transform: {skew: [0, 180]}},
+      {transform: {skew: [0, 30]}},
       {transform: {skew: [0, 0]}},
-      {transform: {skew: [180, 0]}},
+      {transform: {skew: [30, 0]}},
       {transform: {skew: [0, 0]}},
     ], {
       duration: 5000,

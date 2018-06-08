@@ -29,13 +29,13 @@
   }
   .markdown-section h1 {
     text-align: center;
-    margin-top: 40px;
-    font-size: 3.5rem;
+    margin-top: 60px;
+    font-size: 3rem;
   }
   .markdown-section .info {
     text-align: center;
-    font-size: 1.0rem;
-    margin: 20px auto 80px;
+    font-size: 1.3rem;
+    margin: 20px auto 60px;
   }
   .footer {
     background-color: #01040b;
