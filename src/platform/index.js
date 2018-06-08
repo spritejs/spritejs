@@ -5,6 +5,7 @@ let nodeCanvas = null
 try {
   nodeCanvas = require('canvas')
 } catch (ex) {
+  /* istanbul ignore next  */
   throw new Error('Node runtime require node-canvas. please follow https://github.com/Automattic/node-canvas to install node-canvas@2.x')
 }
 
@@ -28,6 +29,11 @@ export function loadImage(src) {
 
   const promise = new Promise((resolve) => {
     img.onload = function () {
+      Object.defineProperty(img, 'src', {
+        get() {
+          return src
+        },
+      })
       resolve(img)
     }
   })
@@ -42,6 +48,7 @@ export function loadImage(src) {
       })
     } else {
       fs.readFile(src, (err, squid) => {
+        /* istanbul ignore if  */
         if(err) {
           throw err
         } else {
@@ -66,9 +73,12 @@ class Container extends EventEmitter {
     this.clientHeight = 600
   }
   appendChild(node) {
+    if(node.remove) {
+      node.remove()
+    }
     this.children.push(node)
     node.remove = () => {
-      const idx = this.children.indexOf(this)
+      const idx = this.children.indexOf(node)
       if(idx !== -1) {
         this.children.splice(idx, 1)
       }
@@ -94,7 +104,10 @@ class Container extends EventEmitter {
     return this.addListener(type, handler)
   }
   removeEventListener(type, handler) {
-    return this.removeListener(type, handler)
+    if(handler) {
+      return this.removeListener(type, handler)
+    }
+    return this.removeAllListeners(type)
   }
 }
 
@@ -112,11 +125,14 @@ export function shim() {
   global.IS_NODE_ENV = true
 
   global.requestAnimationFrame = (fn) => {
-    setTimeout(() => {
+    return setTimeout(() => {
       const [s, ns] = process.hrtime()
       const t = s * 1e3 + ns * 1e-6
       fn(t)
     }, 16)
+  }
+  global.cancelAnimationFrame = (id) => {
+    return clearTimeout(id)
   }
 
   class CustomEvent {

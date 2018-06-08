@@ -21,6 +21,7 @@ export default class extends BaseNode {
 
     this.container = container
 
+    /* istanbul ignore if */
     if(arguments.length === 3) {
       setDeprecation('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).')
       /* eslint-disable prefer-rest-params */
@@ -58,6 +59,7 @@ export default class extends BaseNode {
 
     events.forEach(event => this.delegateEvent(event))
 
+    /* istanbul ignore next */
     container.addEventListener('DOMNodeRemovedFromDocument', () => {
       if(this[_resizeHandler]) {
         window.removeEventListener('resize', this[_resizeHandler])
@@ -258,16 +260,16 @@ export default class extends BaseNode {
     return this
   }
 
-  toGlobalPos(canvas, x, y) {
+  toGlobalPos(x, y) {
     const resolution = this.layerResolution,
-      viewport = [canvas.clientWidth, canvas.clientHeight]
+      viewport = this.layerViewport
 
     x = x * viewport[0] / resolution[0] + this.stickOffset[0]
     y = y * viewport[1] / resolution[1] + this.stickOffset[1]
 
     return [x, y]
   }
-  toLocalPos(canvas, x, y) {
+  toLocalPos(x, y) {
     const resolution = this.layerResolution,
       viewport = this.layerViewport
 
@@ -305,11 +307,11 @@ export default class extends BaseNode {
         if(evtArgs.x != null && evtArgs.y != null) {
           x = evtArgs.x
           y = evtArgs.y
-          ;[originalX, originalY] = this.toGlobalPos(e.target, x, y)
+          ;[originalX, originalY] = this.toGlobalPos(x, y)
         } else if(evtArgs.originalX != null && evtArgs.originalY != null) {
           originalX = evtArgs.originalX
           originalY = evtArgs.originalY
-          ;[x, y] = this.toLocalPos(e.target, originalX, originalY)
+          ;[x, y] = this.toLocalPos(originalX, originalY)
         }
       } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
         const {left, top} = e.target.getBoundingClientRect()
@@ -318,7 +320,7 @@ export default class extends BaseNode {
         originalX = Math.round((clientX | 0) - left)
         originalY = Math.round((clientY | 0) - top)
 
-        ;[x, y] = this.toLocalPos(e.target, originalX, originalY)
+        ;[x, y] = this.toLocalPos(originalX, originalY)
       }
 
       Object.assign(evtArgs, {
