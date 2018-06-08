@@ -2,7 +2,7 @@
   const {Scene, Label} = spritejs
   const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]})
   const fglayer = scene.layer('fglayer')
-  fglayer.canvas.style.backgroundColor = '#3a2a64'
+  fglayer.canvas.style.backgroundColor = '#3f097a'
 
   const text1 = new Label('Hello World !\nSpriteJS.org')
 
@@ -10,7 +10,7 @@
     anchor: [0.5, 0.5],
     pos: [600, 600],
     font: 'bold 48px Arial',
-    color: '#29ab64',
+    color: '#ffdc45',
   })
 
   text1.animate([
