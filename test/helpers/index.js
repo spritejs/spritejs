@@ -13,7 +13,7 @@ async function createCanvasFromFile(src) {
   return canvas
 }
 
-export async function compare(canvas, caseId, pixelCompare = false) {
+async function compare(canvas, caseId, pixelCompare = false) {
   const srcData = canvas.toBuffer()
   const desCanvas = await createCanvasFromFile(`./test/img/${caseId}.png`)
 
@@ -96,5 +96,13 @@ export async function compare(canvas, caseId, pixelCompare = false) {
   return isEqual
 }
 
-const drawSprites = require('./drawsprites')
-export {drawSprites}
+function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+module.exports = {
+  compare,
+  wait,
+}

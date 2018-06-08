@@ -20,8 +20,15 @@ test('red-block-150', async (t) => {
   const isEqual = await compare(canvas, 'red-block-150')
   t.truthy(isEqual)
 
-  const pos = scene.toLocalPos(scene.layer().canvas, 100, 100)
+  const pos = scene.toLocalPos(100, 100)
   t.deepEqual(pos, [200, 200])
+
+  t.is(scene.width, 150)
+  t.is(scene.height, 150)
+
+  // d3 friendly
+  const layer = scene.ownerDocument.createElementNS('', 'mylayer')
+  t.is(layer.id, 'mylayer')
 })
 
 test('scene-scale-150-300', async (t) => {
@@ -597,6 +604,27 @@ test('scene-loadframes', async (t) => {
   t.truthy(isEqual)
 })
 
+test('scene-loadframes-2', async (t) => {
+  const scene = new Scene('#preload-many', {viewport: [600, 600], resolution: [1200, 1200]})
+  await scene.preload([
+    'https://p3.ssl.qhimg.com/t017baa4debc87f4320.png',
+    'https://s1.ssl.qhres.com/static/337f0a0d2d7e9f34.json',
+  ])
+
+  const lambda = new Sprite('ramda.png')
+  lambda.attr({
+    anchor: [0.5, 0],
+    pos: [600, 600],
+  })
+  scene.layer().append(lambda)
+
+  const canvas = await scene.snapshot()
+
+  const isEqual = await compare(canvas, 'scene-loadframes-2')
+  t.truthy(isEqual)
+})
+
+
 test('scene-preload', async (t) => {
   const scene = new Scene('#preload-many')
 
@@ -648,6 +676,9 @@ test('scene-preload', async (t) => {
         sprite.on('click', (evt) => {
           console.log('sprite clicked!') // eslint-disable-line no-console
           t.is(evt.target, sprite)
+          if(evt.originalY === 110) {
+            sprite.off('click')
+          }
         })
       }
     })
@@ -661,4 +692,5 @@ test('scene-preload', async (t) => {
 
   scene.dispatchEvent('click', {x: 130, y: 110})
   scene.dispatchEvent('click', {originalX: 130, originalY: 110})
+  scene.dispatchEvent('click', {originalX: 130, originalY: 110}) // no trigger
 })
