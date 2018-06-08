@@ -41,7 +41,6 @@
       setTimeout(resolve, ms)
     })
   }
-
   async function showLogoText(text, pos, posList, delay = 0) {
     const els = []
     for(let i = 0; i < text.length; i++) {
@@ -49,7 +48,11 @@
         x = posList[i]
 
       const letterEl = new Sprite(`letter-${letter}.png`)
-      letterEl.attr({pos: [pos[0] + x, pos[1]]})
+      letterEl.attr({
+        pos: [pos[0] + x, pos[1]],
+        translate: [250, 0],
+        opacity: 0,
+      })
       if(letter === 'j') {
         letterEl.attr({zIndex: 20})
       }
@@ -58,6 +61,13 @@
       await wait(delay)
       /* eslint-enable no-await-in-loop */
       fglayer.append(letterEl)
+      letterEl.animate([{
+        opacity: 1,
+        translate: [0, 0]
+      }], {
+        duration: 500,
+        fill: 'forwards',
+      })
     }
     return els
   }
@@ -66,7 +76,7 @@
     const introText = new Group()
     introText.attr({
       anchor: 0.5,
-      pos: [2160, 910],
+      pos: [2160, 918],
       size: [720, 80],
       opacity: 0,
       // bgcolor: 'rgba(0, 0, 0, 0.3)',
@@ -77,7 +87,7 @@
       const label = new Label(char)
       label.attr({
         pos: [i * 80, 0],
-        font: '54px "宋体"',
+        font: '36px "宋体"',
         fillColor: '#fff',
       })
       introText.append(label)
@@ -87,7 +97,7 @@
       {x: 2160, opacity: 0},
       {x: 2000, opacity: 0.8},
     ], {
-      duration: 500,
+      duration: 800,
       fill: 'forwards',
       easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
     })
@@ -133,16 +143,16 @@
       fy = 6
 
     fglayer.timeline.setInterval(() => {
-      const deltaX = Math.floor(Math.random() * 3) - 1, // -1 0 1,
-        deltaY = Math.floor(Math.random() * 3) - 1
+      const deltaX = Math.floor(Math.random() * 5) - 2, // -1 0 1,
+        deltaY = Math.floor(Math.random() * 5) - 2
 
       fx += deltaX
       if(fx < 0) fx = 0
-      if(fx > 15) fx = 15
+      if(fx > 20) fx = 20
 
       fx += deltaY
       if(fy < 0) fy = 0
-      if(fy > 20) fy = 20
+      if(fy > 25) fy = 25
 
       const q1 = [-1, 12, -5 + fx, 30 + fy]
       const q2 = [30, 22, 30, 0]
@@ -191,34 +201,51 @@
     guanguan.attr({
       anchor: 0.5,
       scale: [-1, 1],
-      pos: [3200, 1150],
+      pos: [3000, 1140],
     })
     fglayer.append(guanguan)
 
     const anim3 = guanguan.animate([
-      {x: 3200},
       {x: 3000},
+      {x: 2700},
     ], {
-      duration: 500,
+      duration: 400,
       fill: 'forwards',
     })
-
     await anim3.finished
     guanguan.textures = 'guanguan1.png'
 
-    await wait(800)
+
+    const anim31 = guanguan.animate([
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+    ], {
+      duration: 300,
+      iterations: 2,
+      fill: 'backwards',
+    })
+    await anim31.finished
+    await wait(300)
     guanguan.textures = 'guanguan3.png'
 
     const anim4 = guanguan.animate([
-      {x: 3000},
+      {x: 2700},
       {x: 2380},
     ], {
-      duration: 500,
+      duration: 400,
       fill: 'forwards',
     })
 
     await anim4.finished
     guanguan.textures = 'guanguan1.png'
+    await wait(300)
+    const anim41 = guanguan.animate([
+      {textures: 'guanguan1.png'},
+      {textures: 'guanguan2.png'},
+    ], {
+      duration: 200,
+      fill: 'backwards',
+    })
     guanguan.attr({
       zIndex: 100,
       // rotate: 20,
@@ -227,13 +254,13 @@
     guanguan.on('mouseenter', (evt) => {
       if(guanguan.textures[0].id !== 'guanguan3.png') {
         guanguan.textures = ['guanguan2.png']
-        guanguan.attr({rotate: 30})
+        guanguan.transition(0.2).attr({rotate: 30})
       }
     })
     guanguan.on('mouseleave', (evt) => {
       if(guanguan.textures[0].id !== 'guanguan3.png') {
         guanguan.textures = ['guanguan1.png']
-        guanguan.attr({rotate: 0})
+        guanguan.transition(0.2).attr({rotate: 0})
       }
     })
 
@@ -248,7 +275,7 @@
       document.documentElement.style.cursor = 'default'
     })
     const btnPressDown = (evt) => {
-      button.attr({
+      button.transition(0.5).attr({
         bgcolor: '#1e9d5a',
         fillColor: '#fff',
       })
@@ -257,7 +284,7 @@
     button.on('touchstart', btnPressDown)
 
     const btnPressUp = (evt) => {
-      button.attr({
+      button.transition(0.5).attr({
         bgcolor: '',
         fillColor: '#11773d',
       })
@@ -281,18 +308,18 @@
     }
   }
 
-  async function showButtons() {
+  function showButtons() {
     const githubBtn = new Label('GitHub')
     githubBtn.attr({
       anchor: [0.5, 0],
-      size: [520, 120],
-      border: [2, '#208b50'],
-      pos: [1320, 1456],
+      size: [380, 100],
+      border: [4, '#208b50'],
+      pos: [1320, 1500],
       zIndex: 99999,
-      borderRadius: 30,
+      borderRadius: 50,
       textAlign: 'center',
-      font: '72px "宋体"',
-      lineHeight: 120,
+      font: '44px "宋体"',
+      lineHeight: 100,
       fillColor: '#11773d',
       opacity: 0,
     })
@@ -306,12 +333,11 @@
       duration: 500,
       fill: 'forwards',
     })
-    await anim5.finished
 
     const getStartBtn = githubBtn.cloneNode()
     getStartBtn.attr({
       text: 'Get Started',
-      pos: [1920, 1456],
+      pos: [1920, 1500],
     })
     fglayer.append(getStartBtn)
     registerButton(getStartBtn, `${window.location}zh-cn/index`)
@@ -322,13 +348,13 @@
     ], {
       duration: 500,
       fill: 'forwards',
+      delay: 500,
     })
-    await anim6.finished
 
     const demoBtn = githubBtn.cloneNode()
     demoBtn.attr({
       text: 'Demo',
-      pos: [2520, 1456],
+      pos: [2520, 1500],
     })
     fglayer.append(demoBtn)
 
@@ -339,36 +365,79 @@
     ], {
       duration: 500,
       fill: 'forwards',
+      delay: 1000,
     })
-    await anim7.finished
     return [githubBtn, getStartBtn, demoBtn]
   }
 
   function showMore() {
+    //  小鼠标
     const more = new Sprite()
     more.attr({
       textures: 'more.png',
       anchor: 0.5,
       pos: [1920, 1800],
-      // bgcolor: 'red',
+      opacity: 0
     })
     fglayer.append(more)
 
-    const anim = more.animate([
-      {scale: 1},
-      {scale: 1.2},
-    ], {
-      duration: 1000,
-      iterations: Infinity,
-      direction: 'alternate',
-    })
-
-    animations.push(anim)
+    more.transition(0.5).attr({opacity: 1})
 
     registerButton(more, () => {})
 
     document.querySelector('main').style.display = 'block'
-    return more
+
+    const blinkSpots = new Group()
+    const blinkSpot1 = new Sprite()
+    const blinkSpotGap = 30
+    const blinkAnimKeyframes = [{
+      opacity: 1, offset: 0.25
+    }, {
+      opacity: 0.2, offset: 0.5,
+    }]
+
+    blinkSpot1.attr({
+      bgcolor: 'white',
+      size: [10, 10],
+      anchor: 0.5,
+      pos: [1918, 1870],
+      borderRadius: 5,
+      opacity: 0.2
+    })
+    blinkSpot1.animate(blinkAnimKeyframes, {
+      duration: 2000,
+      iterations: Infinity,
+      easing: 'ease-in-out'
+    })
+    blinkSpots.append(blinkSpot1)
+
+    const blinkSpot2 = blinkSpot1.cloneNode();
+    blinkSpot2.attr({
+      y: y => y + blinkSpotGap
+    })
+    blinkSpot2.animate(blinkAnimKeyframes, {
+      duration: 2000,
+      iterations: Infinity,
+      delay: 330,
+      easing: 'ease-in-out'
+    })
+    blinkSpots.append(blinkSpot2)
+
+    const blinkSpot3 = blinkSpot2.cloneNode();
+    blinkSpot3.attr({
+      y: y => y + blinkSpotGap
+    })
+    blinkSpot3.animate(blinkAnimKeyframes, {
+      duration: 2000,
+      iterations: Infinity,
+      delay: 660,
+      easing: 'ease-in-out'
+    })
+    blinkSpots.append(blinkSpot3)
+
+    fglayer.append(blinkSpots)
+
+    return [more, blinkSpots]
   }
 
   function hideSprites(sprites) {
@@ -462,10 +531,11 @@
 
   await showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200)
   const text = await showIntroText('跨平台绘图对象模型')
+  const buttons = showButtons()
   const huanhuan = await showHuanHuan()
   const guanguan = await showGuanGuan()
-  const buttons = await showButtons()
   const more = showMore()
+  
 
   more.c1 = function () {
     this.attr('bgcolor', 'green')
@@ -473,7 +543,6 @@
   more.c2 = function () {
     this.attr('bgcolor', 'red')
   }
-
   const featureGroup = showFeatures()
 
   let scrolled = false
@@ -485,7 +554,7 @@
   const c = features.clientHeight / 2
   const maxScroll = features.getBoundingClientRect().y - a - b + c
 
-  more.on('mouseenter', () => {
+  more[0].on('mouseenter', () => {
     autoScroll(maxScroll, 1000)
   })
 
@@ -495,13 +564,13 @@
 
     if(!scrolled && yOffset) {
       scrolled = true
-      hideSprites([text, ...buttons, more])
+      hideSprites([text, ...buttons, ...more])
       guanguan.attr({
         textures: ['guanguan3.png'],
       })
     } else if(scrolled && yOffset === 0) {
       scrolled = false
-      showSprites([text, ...buttons, more])
+      showSprites([text, ...buttons, ...more])
       guanguan.attr({
         textures: ['guanguan1.png'],
       })
