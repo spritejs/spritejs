@@ -544,7 +544,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               document.documentElement.style.cursor = 'default';
             });
             var btnPressDown = function btnPressDown(evt) {
-              button.transition(0.5).attr({
+              button.attr({
                 bgcolor: '#1e9d5a',
                 fillColor: '#fff'
               });
@@ -553,7 +553,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             button.on('touchstart', btnPressDown);
 
             var btnPressUp = function btnPressUp(evt) {
-              button.transition(0.5).attr({
+              button.attr({
                 bgcolor: '',
                 fillColor: '#11773d'
               });
@@ -608,7 +608,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           });
           coverpage = document.querySelector('#coverpage');
           fglayer = scene.layer('fglayer', {
-            renderMode: 'repaintDirty',
+            renderMode: 'repaintAll',
             shadowContext: false
           });
 

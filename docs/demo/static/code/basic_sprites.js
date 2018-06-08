@@ -8,7 +8,7 @@
   ])
 
   const layer = scene.layer('fglayer')
-  layer.canvas.style.backgroundColor = '#F0F0F0'
+  layer.canvas.style.backgroundColor = '#FFFDCC'
 
   const ground = new Sprite()
   ground.attr({

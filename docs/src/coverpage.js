@@ -11,7 +11,7 @@
   const coverpage = document.querySelector('#coverpage')
 
   const fglayer = scene.layer('fglayer', {
-    renderMode: 'repaintDirty',
+    renderMode: 'repaintAll',
     shadowContext: false,
   })
 
@@ -275,7 +275,7 @@
       document.documentElement.style.cursor = 'default'
     })
     const btnPressDown = (evt) => {
-      button.transition(0.5).attr({
+      button.attr({
         bgcolor: '#1e9d5a',
         fillColor: '#fff',
       })
@@ -284,7 +284,7 @@
     button.on('touchstart', btnPressDown)
 
     const btnPressUp = (evt) => {
-      button.transition(0.5).attr({
+      button.attr({
         bgcolor: '',
         fillColor: '#11773d',
       })

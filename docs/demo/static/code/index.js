@@ -22,7 +22,7 @@
     anchor: 0.5,
     size: [920, 920],
     pos: center,
-    bgcolor: 'rgba(17, 51, 153, 0.5)',
+    bgcolor: '#f4f2e6',
     borderRadius: 120,
   })
   bglayer.append(region)
