@@ -6358,6 +6358,14 @@ exports.default = {
     sprite.disconnect(this);
     return sprite;
   },
+  clear: function clear() {
+    var _this2 = this;
+
+    var children = this.children.slice(0);
+    return children.map(function (child) {
+      return _this2.removeChild(child);
+    });
+  },
   insertBefore: function insertBefore(newchild, refchild) {
     var idx = this.children.indexOf(refchild);
     if (idx >= 0) {
@@ -8994,7 +9002,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.26';
+var version = '2.0.0-alpha.27';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14601,19 +14609,9 @@ var Layer = function (_BaseNode) {
   }
 
   (0, _createClass3.default)(Layer, [{
-    key: 'clear',
-    value: function clear() {
-      var _this2 = this;
-
-      var children = this.children.slice(0);
-      return children.map(function (child) {
-        return _this2.removeChild(child);
-      });
-    }
-  }, {
     key: 'remove',
     value: function remove() {
-      var _this3 = this;
+      var _this2 = this;
 
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -14624,19 +14622,19 @@ var Layer = function (_BaseNode) {
         return this.clear();
       }
       return args.map(function (child) {
-        return _this3.removeChild(child);
+        return _this2.removeChild(child);
       });
     }
   }, {
     key: 'prepareRender',
     value: function prepareRender() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (!this[_renderDeferer]) {
         this[_renderDeferer] = {};
         this[_renderDeferer].promise = new _promise2.default(function (resolve, reject) {
-          (0, _assign2.default)(_this4[_renderDeferer], { resolve: resolve, reject: reject });
-          (0, _fastAnimationFrame.requestAnimationFrame)(_this4.draw.bind(_this4));
+          (0, _assign2.default)(_this3[_renderDeferer], { resolve: resolve, reject: reject });
+          (0, _fastAnimationFrame.requestAnimationFrame)(_this3.draw.bind(_this3));
         });
         // .catch(ex => console.error(ex.message))
       }
@@ -14848,15 +14846,15 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'batch',
     value: function batch() {
-      var _this5 = this;
+      var _this4 = this;
 
       for (var _len2 = arguments.length, sprites = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         sprites[_key2] = arguments[_key2];
       }
 
       sprites.forEach(function (sprite) {
-        if (sprite.layer !== _this5) {
-          _this5.appendChild(sprite);
+        if (sprite.layer !== _this4) {
+          _this4.appendChild(sprite);
         }
       });
       var batch = new _batch2.default(this);
