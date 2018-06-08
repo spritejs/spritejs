@@ -29,6 +29,9 @@ class ExLayer extends Layer {
   get resolution() {
     return this[_resolution]
   }
+  get offset() {
+    return [this.resolution[2], this.resolution[3]]
+  }
   set resolution(resolution) {
     const [width, height, offsetLeft, offsetTop] = resolution
     const outputCanvas = this.outputContext.canvas

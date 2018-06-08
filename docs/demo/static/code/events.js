@@ -53,10 +53,10 @@
 
   const keyboardBg = new Sprite()
   keyboardBg.attr({
-  	size: [380, 400],
+    size: [380, 400],
     pos: [750, 900],
     bgcolor: '#E0CDA3',
-    borderRadius: 20
+    borderRadius: 20,
   })
   fglayer.append(keyboardBg)
 

@@ -142,6 +142,7 @@ class Button extends spritejs.Label {
       return button
     })
 
+  speedupBtn.id = 'speedUp'
   speedupBtn.on('click', (evt) => {
     fglayer.timeline.playbackRate += 0.2
   })
