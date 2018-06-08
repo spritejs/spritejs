@@ -92,7 +92,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
                 var label = new Label(char);
                 label.attr({
                   pos: [i * 80, 0],
-                  font: '36px "宋体"',
+                  font: '36px "pfang"',
                   fillColor: '#fff'
                 });
                 introText.append(label);
@@ -371,7 +371,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               anchor: [1, 0],
               pos: [800, 150],
               color: '#fff',
-              font: 'bold 128px "宋体"'
+              font: '128px "pfang"'
             });
             group.append(label);
 
@@ -380,15 +380,15 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               anchor: [1, 0],
               pos: [800, 320],
               color: '#fff',
-              font: '80px Arial'
+              font: '80px "pfang"'
             });
             group.append(label2);
 
-            var label3 = new Label('- \u4F7F\u7528ES6+\uFF0C\u9762\u5411\u5BF9\u8C61\u8BBE\u8BA1\u548C\u5F00\u53D1\n- \u652F\u6301\u5143\u7D20\u5D4C\u5957\u548C\u4E8B\u4EF6\u5206\u53D1\n- \u4F7F\u7528\u7F13\u5B58\u63D0\u5347\u6027\u80FD\n- \u652F\u6301 Web Animation API\n- \u8DE8\u5E73\u53F0\u6E32\u67D3\uFF0C\u652F\u6301\u670D\u52A1\u7AEF\u548C\u5C0F\u7A0B\u5E8F\n    ');
+            var label3 = new Label('    \u4F7F\u7528ES6+\uFF0C\u9762\u5411\u5BF9\u8C61\u8BBE\u8BA1\u548C\u5F00\u53D1\n    \u652F\u6301\u5143\u7D20\u5D4C\u5957\u548C\u4E8B\u4EF6\u5206\u53D1\n    \u4F7F\u7528\u7F13\u5B58\u63D0\u5347\u6027\u80FD\n    \u652F\u6301 Web Animation API\n    \u8DE8\u5E73\u53F0\u6E32\u67D3\uFF0C\u652F\u6301\u670D\u52A1\u7AEF\u548C\u5C0F\u7A0B\u5E8F\n    ');
             label3.attr({
               pos: [1000, 150],
               color: '#000',
-              font: '64px "宋体"',
+              font: '50px "pfang"',
               lineHeight: 120
             });
             group.append(label3);
@@ -425,6 +425,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
             document.querySelector('main').style.display = 'block';
 
+            // 呼吸的小圆点
             var blinkSpots = new Group();
             var blinkSpot1 = new Sprite();
             var blinkSpotGap = 30;
@@ -492,7 +493,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               zIndex: 99999,
               borderRadius: 50,
               textAlign: 'center',
-              font: '44px "宋体"',
+              font: '44px Arail',
               lineHeight: 100,
               fillColor: '#11773d',
               opacity: 0
@@ -543,7 +544,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               document.documentElement.style.cursor = 'default';
             });
             var btnPressDown = function btnPressDown(evt) {
-              button.transition(0.5).attr({
+              button.attr({
                 bgcolor: '#1e9d5a',
                 fillColor: '#fff'
               });
@@ -552,7 +553,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             button.on('touchstart', btnPressDown);
 
             var btnPressUp = function btnPressUp(evt) {
-              button.transition(0.5).attr({
+              button.attr({
                 bgcolor: '',
                 fillColor: '#11773d'
               });
@@ -607,7 +608,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           });
           coverpage = document.querySelector('#coverpage');
           fglayer = scene.layer('fglayer', {
-            renderMode: 'repaintDirty',
+            renderMode: 'repaintAll',
             shadowContext: false
           });
 

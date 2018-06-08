@@ -11,7 +11,7 @@
   const coverpage = document.querySelector('#coverpage')
 
   const fglayer = scene.layer('fglayer', {
-    renderMode: 'repaintDirty',
+    renderMode: 'repaintAll',
     shadowContext: false,
   })
 
@@ -87,7 +87,7 @@
       const label = new Label(char)
       label.attr({
         pos: [i * 80, 0],
-        font: '36px "宋体"',
+        font: '36px "pfang"',
         fillColor: '#fff',
       })
       introText.append(label)
@@ -275,7 +275,7 @@
       document.documentElement.style.cursor = 'default'
     })
     const btnPressDown = (evt) => {
-      button.transition(0.5).attr({
+      button.attr({
         bgcolor: '#1e9d5a',
         fillColor: '#fff',
       })
@@ -284,7 +284,7 @@
     button.on('touchstart', btnPressDown)
 
     const btnPressUp = (evt) => {
-      button.transition(0.5).attr({
+      button.attr({
         bgcolor: '',
         fillColor: '#11773d',
       })
@@ -318,7 +318,7 @@
       zIndex: 99999,
       borderRadius: 50,
       textAlign: 'center',
-      font: '44px "宋体"',
+      font: '44px Arail',
       lineHeight: 100,
       fillColor: '#11773d',
       opacity: 0,
@@ -387,6 +387,7 @@
 
     document.querySelector('main').style.display = 'block'
 
+    // 呼吸的小圆点
     const blinkSpots = new Group()
     const blinkSpot1 = new Sprite()
     const blinkSpotGap = 30
@@ -483,7 +484,7 @@
       anchor: [1, 0],
       pos: [800, 150],
       color: '#fff',
-      font: 'bold 128px "宋体"',
+      font: '128px "pfang"',
     })
     group.append(label)
 
@@ -492,20 +493,20 @@
       anchor: [1, 0],
       pos: [800, 320],
       color: '#fff',
-      font: '80px Arial',
+      font: '80px "pfang"',
     })
     group.append(label2)
 
-    const label3 = new Label(`- 使用ES6+，面向对象设计和开发
-- 支持元素嵌套和事件分发
-- 使用缓存提升性能
-- 支持 Web Animation API
-- 跨平台渲染，支持服务端和小程序
+    const label3 = new Label(`    使用ES6+，面向对象设计和开发
+    支持元素嵌套和事件分发
+    使用缓存提升性能
+    支持 Web Animation API
+    跨平台渲染，支持服务端和小程序
     `)
     label3.attr({
       pos: [1000, 150],
       color: '#000',
-      font: '64px "宋体"',
+      font: '50px "pfang"',
       lineHeight: 120,
     })
     group.append(label3)

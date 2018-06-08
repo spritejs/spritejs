@@ -1,6 +1,12 @@
 <style>
+  @font-face {
+    font-family: 'pfang';
+    src: url('http://s6.qhres.com/static/dc42fa0ad4e7e042.ttf');
+  }
   main {
     display: none;
+    font-family: 'pfang';
+    font-smoothing: antialiased;
   }
   .app-nav,
   button.sidebar-toggle,
@@ -23,13 +29,13 @@
   }
   .markdown-section h1 {
     text-align: center;
-    margin-top: 40px;
-    font-size: 3.5rem;
+    margin-top: 60px;
+    font-size: 3rem;
   }
   .markdown-section .info {
     text-align: center;
-    font-size: 1.0rem;
-    margin: 20px auto 80px;
+    font-size: 1.3rem;
+    margin: 20px auto 60px;
   }
   .footer {
     background-color: #01040b;
@@ -79,7 +85,15 @@
     text-align: center;
     line-height: 48px;
     margin: 60px auto;
+    transition: .3s all ease-in-out;
   }
+  #more-demos:hover{
+    background: #178C4E;
+  }
+  #more-demos:hover a {
+    color: white;
+  }
+
   #more-demos a {
     display: block;
     text-decoration: none;

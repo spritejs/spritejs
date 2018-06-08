@@ -7,7 +7,7 @@
     }),
     fglayer = scene.layer('fglayer')
 
-  fglayer.canvas.style.backgroundColor = '#c9b892'
+  fglayer.canvas.style.backgroundColor = '#F0DBAE'
 
   await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
@@ -51,6 +51,15 @@
   })
   huanhuan.append(innerFire)
 
+  const keyboardBg = new Sprite()
+  keyboardBg.attr({
+  	size: [380, 400],
+    pos: [750, 900],
+    bgcolor: '#E0CDA3',
+    borderRadius: 20
+  })
+  fglayer.append(keyboardBg)
+
   class KeyButton extends Label {
     pointCollision(evt) {
       if(evt.originalEvent.key === this.text.toLowerCase()) {
@@ -62,13 +71,14 @@
   KeyButton.defineAttributes({
     init(attr) {
       attr.setDefault({
-        font: '48px "宋体"',
-        fillColor: '#000',
+        font: '40px "宋体"',
+        fillColor: '#333',
+        bgcolor: '#FFFDE6',
+        borderRadius: 15,
         width: 80,
         height: 80,
         textAlign: 'center',
         lineHeight: 80,
-        border: {width: 2, color: '#000', style: 'solid'},
       })
     },
   })
@@ -80,14 +90,14 @@
     })
     button.on(['keydown', 'mousedown', 'touchstart'], (evt) => {
       button.attr({
-        bgcolor: 'grey',
-        fillColor: 'white',
+        bgcolor: '#E8E6D1',
+        fillColor: '#333',
       })
     })
     button.on(['keyup', 'mouseup', 'touchend'], (evt) => {
       button.attr({
-        bgcolor: 'transparent',
-        fillColor: 'black',
+        bgcolor: '#FFFDE6',
+        fillColor: '#333',
       })
     })
     fglayer.append(button)
@@ -137,16 +147,16 @@
     flapping.play()
   }
 
-  setKey('W', 900, 900)
+  setKey('W', 900, 950)
     .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, -1000))
     .on(['keyup', 'mouseup', 'touchend'], stopMove)
-  setKey('A', 800, 1000)
+  setKey('A', 800, 1050)
     .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, -1000))
     .on(['keyup', 'mouseup', 'touchend'], stopMove)
-  setKey('S', 900, 1000)
+  setKey('S', 900, 1050)
     .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, 3000))
     .on(['keyup', 'mouseup', 'touchend'], stopMove)
-  setKey('D', 1000, 1000)
+  setKey('D', 1000, 1050)
     .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, 3000))
     .on(['keyup', 'mouseup', 'touchend'], stopMove)
 

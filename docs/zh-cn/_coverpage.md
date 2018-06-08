@@ -1,5 +1,6 @@
 <!-- _coverpage.md -->
 <style>
+
   html, body, 
   section.cover.show .cover-main {
     width: 100%;
@@ -27,6 +28,9 @@
   }
   .github-corner {
     z-index: 999999;
+  }
+  .github-corner svg {
+    fill: #009256;
   }
 </style>
 
