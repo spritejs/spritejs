@@ -4,7 +4,8 @@ class Button extends spritejs.Label {
 
     this.on('mouseenter', (evt) => {
       this.attr({
-        scale: 1.1,
+        color: '#635d47',
+        bgcolor: '#00e15e',
       })
     })
 
@@ -16,13 +17,14 @@ class Button extends spritejs.Label {
 
     this.on('mouseup', (evt) => {
       this.attr({
-        scale: 1.1,
+        scale: 1,
       })
     })
 
     this.on('mouseleave', (evt) => {
       this.attr({
-        scale: 1.0,
+        color: '#00e15e',
+        bgcolor: ''
       })
     })
   }
@@ -49,7 +51,15 @@ class Button extends spritejs.Label {
       renderMode: 'repaintAll',
     })
 
-  bglayer.canvas.style.backgroundColor = '#A1D36D'
+  bglayer.canvas.style.backgroundColor = '#635D47'
+
+  const wall = new Sprite()
+  wall.attr({
+    size: [10, 740],
+    pos: [940, 250],
+    bgcolor: '#CFC441',
+  })
+  fglayer.append(wall)
 
   function randomBirds(i) {
     const pos = [100, 350 + 60 * i]
@@ -127,15 +137,15 @@ class Button extends spritejs.Label {
 
       button.attr({
         anchor: [0.5, 0.5],
-        pos: [1300, 200 + 180 * i],
-        size: [240, 50],
+        pos: [1300, 400 + 150 * i],
+        size: [170, 50],
         font: '36px Arial',
         lineHeight: 50,
         textAlign: 'center',
-        color: '#719846',
-        border: [2, '#719846'],
-        borderRadius: 20,
-        padding: 25,
+        color: '#00e15e',
+        border: [3, '#00e15e'],
+        borderRadius: 25,
+        padding: 30,
       })
       bglayer.appendChild(button)
 
@@ -160,8 +170,8 @@ class Button extends spritejs.Label {
 
   const birdCountLabel = new spritejs.Label()
   birdCountLabel.attr({
-    pos: [30, 60],
-    font: '32px Arial',
+    pos: [60, 80],
+    font: '36px Arial',
     color: 'white',
   })
 
