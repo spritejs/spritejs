@@ -1,3 +1,5 @@
+const {wait} = require('./index')
+
 const {Scene, Sprite} = require('../../lib')
 const drawCase = require('./drawcase')
 
@@ -335,6 +337,24 @@ drawCase('scene-loadframes', async () => {
   return scene
 })
 
+drawCase('scene-loadframes-2', async () => {
+  const scene = new Scene('#preload-many', {viewport: [600, 600], resolution: [1200, 1200]})
+  await scene.preload([
+    'https://p3.ssl.qhimg.com/t017baa4debc87f4320.png',
+    'https://s1.ssl.qhres.com/static/337f0a0d2d7e9f34.json',
+  ])
+
+  const lambda = new Sprite('ramda.png')
+  lambda.attr({
+    anchor: [0.5, 0],
+    pos: [600, 600],
+  })
+  scene.layer().append(lambda)
+
+  return scene
+})
+
+
 drawCase('scene-preload', async () => {
   const scene = new Scene('#preload-many', {viewport: [770, 300], resolution: [1540, 600]})
   const layer = scene.layer()
@@ -376,6 +396,57 @@ drawCase('scene-preload', async () => {
     })
   }
   await loadRes()
+
+  return scene
+})
+
+drawCase('scene-robot', async () => {
+  const scene = new Scene('#test', {
+    viewport: [300, 300],
+    resolution: [300, 300],
+  })
+  const robot = new Sprite('https://p0.ssl.qhimg.com/t01a72262146b87165f.png')
+  robot.attr({
+    anchor: 0.5,
+    pos: [150, 150],
+  })
+  scene.layer().append(robot)
+
+  while(robot.contentSize[0] === 0) {
+    await wait(100) // eslint-disable-line no-await-in-loop
+  }
+  return scene
+})
+
+drawCase('scene-snapshot', async () => {
+  const scene = new Scene('#test', {
+    viewport: [300, 300],
+    resolution: [600, 600],
+  })
+  const robot = new Sprite('https://p0.ssl.qhimg.com/t01a72262146b87165f.png')
+  robot.attr({
+    id: 'robot',
+    anchor: 0.5,
+    pos: [150, 150],
+  })
+  const layer = scene.layer('layer1')
+  layer.append(robot)
+
+  // await for load image
+  let i = 0
+  while(i++ < 100 && robot.contentSize[0] === 0) {
+    await wait(100) // eslint-disable-line no-await-in-loop
+  }
+
+  const snapshot = await layer.takeSnapshot()
+  const layer2 = scene.layer('layer2')
+  layer2.putSnapshot(snapshot)
+  scene.removeChild(layer)
+
+  const robot2 = layer2.querySelector('#robot')
+  robot2.attr({
+    rotate: 45,
+  })
 
   return scene
 })

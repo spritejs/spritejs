@@ -293,12 +293,6 @@ exports.default = function (arr) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(166), __esModule: true };
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var store = __webpack_require__(75)('wks');
 var uid = __webpack_require__(55);
 var Symbol = __webpack_require__(9).Symbol;
@@ -311,6 +305,12 @@ var $exports = module.exports = function (name) {
 
 $exports.store = store;
 
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(166), __esModule: true };
 
 /***/ }),
 /* 9 */
@@ -1173,7 +1173,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -1464,7 +1464,7 @@ __webpack_require__(199);
 var global = __webpack_require__(9);
 var hide = __webpack_require__(23);
 var Iterators = __webpack_require__(34);
-var TO_STRING_TAG = __webpack_require__(8)('toStringTag');
+var TO_STRING_TAG = __webpack_require__(7)('toStringTag');
 
 var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
   'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
@@ -1560,7 +1560,7 @@ module.exports = function (bitmap, value) {
 
 var def = __webpack_require__(13).f;
 var has = __webpack_require__(28);
-var TAG = __webpack_require__(8)('toStringTag');
+var TAG = __webpack_require__(7)('toStringTag');
 
 module.exports = function (it, tag, stat) {
   if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
@@ -1624,7 +1624,7 @@ var _defineProperty4 = __webpack_require__(156);
 
 var _defineProperty5 = _interopRequireDefault(_defineProperty4);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -2106,8 +2106,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         } else {
           cachableContext = _render.cacheContextPool.get(drawingContext);
           if (cachableContext) {
-            cachableContext.canvas.width = Math.ceil(bound[2]) + 2;
-            cachableContext.canvas.height = Math.ceil(bound[3]) + 2;
+            cachableContext.canvas.width = bound[2] + 2;
+            cachableContext.canvas.height = bound[3] + 2;
           } else {
             this.__cachePolicyThreshold = Infinity;
           }
@@ -2374,7 +2374,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           anchorX = _attr10[0],
           anchorY = _attr10[1];
 
-      return [-anchorX * width, -anchorY * height, width, height];
+      return [Math.floor(-anchorX * width), Math.floor(-anchorY * height), Math.ceil(width), Math.ceil(height)];
     }
   }, {
     key: 'originalRenderRect',
@@ -2699,7 +2699,7 @@ module.exports = { "default": __webpack_require__(177), __esModule: true };
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = __webpack_require__(39);
-var TAG = __webpack_require__(8)('toStringTag');
+var TAG = __webpack_require__(7)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
 
@@ -3402,7 +3402,7 @@ var Iterators = __webpack_require__(34);
 var $iterCreate = __webpack_require__(189);
 var setToStringTag = __webpack_require__(43);
 var getPrototypeOf = __webpack_require__(109);
-var ITERATOR = __webpack_require__(8)('iterator');
+var ITERATOR = __webpack_require__(7)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -3689,7 +3689,7 @@ module.exports = function (name) {
 /* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports.f = __webpack_require__(8);
+exports.f = __webpack_require__(7);
 
 
 /***/ }),
@@ -3697,7 +3697,7 @@ exports.f = __webpack_require__(8);
 /***/ (function(module, exports, __webpack_require__) {
 
 var classof = __webpack_require__(51);
-var ITERATOR = __webpack_require__(8)('iterator');
+var ITERATOR = __webpack_require__(7)('iterator');
 var Iterators = __webpack_require__(34);
 module.exports = __webpack_require__(0).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
@@ -3718,7 +3718,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -3938,7 +3938,7 @@ var _toArray2 = __webpack_require__(96);
 
 var _toArray3 = _interopRequireDefault(_toArray2);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -4237,10 +4237,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _assign = __webpack_require__(7);
-
-var _assign2 = _interopRequireDefault(_assign);
-
 var _regenerator = __webpack_require__(61);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -4363,12 +4359,18 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'toLocalPos',
     value: function toLocalPos(x, y) {
-      return this.parent.toLocalPos(this.canvas, x, y);
+      if (this.parent) return this.parent.toLocalPos(x, y);
+
+      var resolution = this.resolution;
+      return [x - resolution[2], y - resolution[3]];
     }
   }, {
     key: 'toGlobalPos',
     value: function toGlobalPos(x, y) {
-      return this.parent.toGlobalPos(this.canvas, x, y);
+      if (this.parent) return this.parent.toGlobalPos(x, y);
+
+      var resolution = this.resolution;
+      return [x + resolution[2], y + resolution[3]];
     }
   }, {
     key: 'takeSnapshot',
@@ -4424,7 +4426,10 @@ var ExLayer = function (_Layer) {
 
       snapshot.children.forEach(function (child) {
         var node = (0, _spriteCore.createNode)(child.nodeType);
-        (0, _assign2.default)(node.attrs(), JSON.parse(child.attrs));
+        if (child.id) {
+          node.id = child.id;
+        }
+        node.attr(JSON.parse(child.attrs));
         _this2.appendChild(node, false);
       });
 
@@ -4513,7 +4518,7 @@ var _promise = __webpack_require__(22);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -5217,7 +5222,7 @@ module.exports = !__webpack_require__(12) && !__webpack_require__(27)(function (
 
 // check on default Array iterator
 var Iterators = __webpack_require__(34);
-var ITERATOR = __webpack_require__(8)('iterator');
+var ITERATOR = __webpack_require__(7)('iterator');
 var ArrayProto = Array.prototype;
 
 module.exports = function (it) {
@@ -5258,7 +5263,7 @@ module.exports = function (iterator, fn, value, entries) {
 /* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ITERATOR = __webpack_require__(8)('iterator');
+var ITERATOR = __webpack_require__(7)('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -5489,7 +5494,7 @@ var global = __webpack_require__(9);
 var core = __webpack_require__(0);
 var dP = __webpack_require__(13);
 var DESCRIPTORS = __webpack_require__(12);
-var SPECIES = __webpack_require__(8)('species');
+var SPECIES = __webpack_require__(7)('species');
 
 module.exports = function (KEY) {
   var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
@@ -5507,7 +5512,7 @@ module.exports = function (KEY) {
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject = __webpack_require__(18);
 var aFunction = __webpack_require__(38);
-var SPECIES = __webpack_require__(8)('species');
+var SPECIES = __webpack_require__(7)('species');
 module.exports = function (O, D) {
   var C = anObject(O).constructor;
   var S;
@@ -6028,7 +6033,7 @@ var _slicedToArray2 = __webpack_require__(1);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -6247,8 +6252,8 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
 
       this[_baseCachePriority] = Math.min(this[_baseCachePriority] + 1, 10);
       var bound = this.originalRect,
-          bw = Math.ceil(bound[2]) + 2,
-          bh = Math.ceil(bound[3]) + 2;
+          bw = bound[2] + 2,
+          bh = bound[3] + 2;
 
       if (this.lastBoxSize && (this.lastBoxSize[0] !== bw || this.lastBoxSize[1] !== bh)) {
         this[_baseCachePriority] = 0;
@@ -6720,7 +6725,7 @@ var _map = __webpack_require__(25);
 
 var _map2 = _interopRequireDefault(_map);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -7428,10 +7433,6 @@ var _isNan = __webpack_require__(94);
 
 var _isNan2 = _interopRequireDefault(_isNan);
 
-var _values = __webpack_require__(154);
-
-var _values2 = _interopRequireDefault(_values);
-
 var _regenerator = __webpack_require__(61);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -7444,9 +7445,13 @@ var _asyncToGenerator2 = __webpack_require__(60);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
+
+var _values = __webpack_require__(154);
+
+var _values2 = _interopRequireDefault(_values);
 
 var _toConsumableArray2 = __webpack_require__(6);
 
@@ -7523,6 +7528,7 @@ var _default = function (_BaseNode) {
 
     _this.container = container;
 
+    /* istanbul ignore if */
     if (arguments.length === 3) {
       setDeprecation('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).');
       /* eslint-disable prefer-rest-params */
@@ -7565,6 +7571,7 @@ var _default = function (_BaseNode) {
       return _this.delegateEvent(event);
     });
 
+    /* istanbul ignore next */
     container.addEventListener('DOMNodeRemovedFromDocument', function () {
       if (_this[_resizeHandler]) {
         window.removeEventListener('resize', _this[_resizeHandler]);
@@ -7584,7 +7591,13 @@ var _default = function (_BaseNode) {
       }
       this.appendLayer(newchild);
       this.container.insertBefore(newchild.canvas, refchild.canvas);
-      var els = this.container.querySelectorAll('canvas');
+      var els = void 0;
+      /* istanbul ignore if */
+      if (this.container.querySelectorAll) {
+        els = this.container.querySelectorAll('canvas');
+      } else {
+        els = this.container.children;
+      }
       els.forEach(function (el, i) {
         var id = el.dataset.layerId;
         if (id) {
@@ -7597,6 +7610,7 @@ var _default = function (_BaseNode) {
           });
         }
       });
+      this[_layers] = sortOrderedSprites((0, _values2.default)(this[_layerMap]), true);
     }
   }, {
     key: 'appendChild',
@@ -7677,9 +7691,9 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'toGlobalPos',
-    value: function toGlobalPos(canvas, x, y) {
+    value: function toGlobalPos(x, y) {
       var resolution = this.layerResolution,
-          viewport = [canvas.clientWidth, canvas.clientHeight];
+          viewport = this.layerViewport;
 
       x = x * viewport[0] / resolution[0] + this.stickOffset[0];
       y = y * viewport[1] / resolution[1] + this.stickOffset[1];
@@ -7688,9 +7702,9 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'toLocalPos',
-    value: function toLocalPos(canvas, x, y) {
+    value: function toLocalPos(x, y) {
       var resolution = this.layerResolution,
-          viewport = [canvas.clientWidth, canvas.clientHeight];
+          viewport = this.layerViewport;
 
       x = x * resolution[0] / viewport[0] - this.stickOffset[0];
       y = y * resolution[1] / viewport[1] - this.stickOffset[1];
@@ -7729,17 +7743,27 @@ var _default = function (_BaseNode) {
             originalX = 0,
             originalY = 0;
 
+        /* istanbul ignore else */
         if (e instanceof CustomEvent) {
           (0, _assign2.default)(evtArgs, e.detail);
           if (evtArgs.x != null && evtArgs.y != null) {
             x = evtArgs.x;
             y = evtArgs.y;
-            var _toGlobalPos = _this5.toGlobalPos(e.target, x, y);
+            var _toGlobalPos = _this5.toGlobalPos(x, y);
 
             var _toGlobalPos2 = (0, _slicedToArray3.default)(_toGlobalPos, 2);
 
             originalX = _toGlobalPos2[0];
             originalY = _toGlobalPos2[1];
+          } else if (evtArgs.originalX != null && evtArgs.originalY != null) {
+            originalX = evtArgs.originalX;
+            originalY = evtArgs.originalY;
+            var _toLocalPos = _this5.toLocalPos(originalX, originalY);
+
+            var _toLocalPos2 = (0, _slicedToArray3.default)(_toLocalPos, 2);
+
+            x = _toLocalPos2[0];
+            y = _toLocalPos2[1];
           }
         } else if (e.target.dataset.layerId && _this5[_layerMap][e.target.dataset.layerId]) {
           var _e$target$getBounding = e.target.getBoundingClientRect(),
@@ -7752,12 +7776,12 @@ var _default = function (_BaseNode) {
 
           originalX = Math.round((clientX | 0) - left);
           originalY = Math.round((clientY | 0) - top);
-          var _toLocalPos = _this5.toLocalPos(e.target, originalX, originalY);
+          var _toLocalPos3 = _this5.toLocalPos(originalX, originalY);
 
-          var _toLocalPos2 = (0, _slicedToArray3.default)(_toLocalPos, 2);
+          var _toLocalPos4 = (0, _slicedToArray3.default)(_toLocalPos3, 2);
 
-          x = _toLocalPos2[0];
-          y = _toLocalPos2[1];
+          x = _toLocalPos4[0];
+          y = _toLocalPos4[1];
         }
 
         (0, _assign2.default)(evtArgs, {
@@ -7812,6 +7836,7 @@ var _default = function (_BaseNode) {
 
                     task = _resource2.default.loadTexture({ id: id, src: src });
                   }
+                  /* istanbul ignore if  */
                   if (!(task instanceof _promise2.default)) {
                     task = _promise2.default.resolve(task);
                   }
@@ -8028,7 +8053,7 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'distortion',
-    get: function get() {
+    get: function get() /* istanbul ignore next */{
       if (this.stickMode !== 'scale') {
         return 1.0;
       }
@@ -8044,6 +8069,7 @@ var _default = function (_BaseNode) {
           height = _ref7[1];
 
       this[_viewport] = [width, height];
+      /* istanbul ignore next */
       if (width === 'auto' || height === 'auto') {
         if (!this[_resizeHandler]) {
           this[_resizeHandler] = function () {
@@ -9038,7 +9064,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.24';
+var version = '2.0.0-alpha.25';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10139,7 +10165,7 @@ module.exports = function (TYPE, $create) {
 
 var isObject = __webpack_require__(19);
 var isArray = __webpack_require__(103);
-var SPECIES = __webpack_require__(8)('species');
+var SPECIES = __webpack_require__(7)('species');
 
 module.exports = function (original) {
   var C;
@@ -10237,7 +10263,7 @@ var setToStringTag = __webpack_require__(43);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(23)(IteratorPrototype, __webpack_require__(8)('iterator'), function () { return this; });
+__webpack_require__(23)(IteratorPrototype, __webpack_require__(7)('iterator'), function () { return this; });
 
 module.exports = function (Constructor, NAME, next) {
   Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
@@ -10470,7 +10496,7 @@ module.exports = __webpack_require__(0).getIterator = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var classof = __webpack_require__(51);
-var ITERATOR = __webpack_require__(8)('iterator');
+var ITERATOR = __webpack_require__(7)('iterator');
 var Iterators = __webpack_require__(34);
 module.exports = __webpack_require__(0).isIterable = function (it) {
   var O = Object(it);
@@ -10732,7 +10758,7 @@ var USE_NATIVE = !!function () {
   try {
     // correct subclassing with @@species support
     var promise = $Promise.resolve(1);
-    var FakePromise = (promise.constructor = {})[__webpack_require__(8)('species')] = function (exec) {
+    var FakePromise = (promise.constructor = {})[__webpack_require__(7)('species')] = function (exec) {
       exec(empty, empty);
     };
     // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
@@ -11023,7 +11049,7 @@ var $fails = __webpack_require__(27);
 var shared = __webpack_require__(75);
 var setToStringTag = __webpack_require__(43);
 var uid = __webpack_require__(55);
-var wks = __webpack_require__(8);
+var wks = __webpack_require__(7);
 var wksExt = __webpack_require__(80);
 var wksDefine = __webpack_require__(79);
 var enumKeys = __webpack_require__(187);
@@ -12263,7 +12289,7 @@ var _keys = __webpack_require__(95);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -12661,7 +12687,7 @@ var _slicedToArray2 = __webpack_require__(1);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -12886,7 +12912,7 @@ var _entries = __webpack_require__(21);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -13145,7 +13171,7 @@ var _entries = __webpack_require__(21);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -14509,7 +14535,7 @@ var _toConsumableArray2 = __webpack_require__(6);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -15010,7 +15036,7 @@ var _getOwnPropertyDescriptor = __webpack_require__(26);
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
-var _assign = __webpack_require__(7);
+var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -15316,8 +15342,8 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'pathOffset',
     get: function get() {
-      var lineWidth = this.lineWidth;
-      return [lineWidth * 1.414, lineWidth * 1.414];
+      var lw = Math.round(this.lineWidth);
+      return [lw, lw];
     }
   }, {
     key: 'pathSize',
@@ -15336,13 +15362,13 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
           width = _attr2[0],
           height = _attr2[1];
 
-      var lineWidth = this.lineWidth;
+      var pathOffset = this.pathOffset;
 
       if (width === '') {
-        width = bounds[2] - Math.min(0, bounds[0]) + 2 * 1.414 * lineWidth | 0;
+        width = bounds[2] - Math.min(0, bounds[0]) + 2 * pathOffset[0];
       }
       if (height === '') {
-        height = bounds[3] - Math.min(0, bounds[1]) + 2 * 1.414 * lineWidth | 0;
+        height = bounds[3] - Math.min(0, bounds[1]) + 2 * pathOffset[1];
       }
 
       return [width, height];
@@ -15350,15 +15376,26 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'originalRect',
     get: function get() {
-      var rect = (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this),
-          svg = this.svg;
+      var svg = this.svg;
       if (svg) {
         var bounds = svg.bounds,
             offset = this.pathOffset;
-        rect[0] += Math.min(0, bounds[0]) - offset[0];
-        rect[1] += Math.min(0, bounds[1]) - offset[1];
+
+        var _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
+            width = _offsetSize[0],
+            height = _offsetSize[1],
+            _attr3 = this.attr('anchor'),
+            _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
+            anchorX = _attr4[0],
+            anchorY = _attr4[1];
+
+        var rect = [0, 0, width, height];
+        rect[0] = Math.min(0, bounds[0]) - offset[0] - anchorX * (width - 2 * offset[0]);
+        rect[1] = Math.min(0, bounds[1]) - offset[1] - anchorY * (height - 2 * offset[1]);
+        return rect;
       }
-      return rect;
+
+      return (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this);
     }
   }]);
   return Path;

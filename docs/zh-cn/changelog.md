@@ -200,8 +200,13 @@
 - 修复了group元素的缓存策略在没有bgcolor的条件下导致render失效的bug
 - 修复了Path元素位置不正确的bug
 
-## lastest
+## [2.0.0-alpha.25][2018-06-08]
 
 ### bug修复
 
 - 修复了Path元素的anchor不正确的bug
+- 修复了originRect的浮点数精度导致缓存绘制的位置偏差的bug
+
+### 改进
+
+- 增加了单元测试，测试覆盖度约 99%
