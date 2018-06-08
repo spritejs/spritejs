@@ -79,6 +79,10 @@ class Container extends EventEmitter {
     if(idx === -1) {
       throw new Error('ERR: no such element')
     } else {
+      const _idx = this.children.indexOf(node)
+      if(_idx >= 0) {
+        this.children.splice(_idx, 1)
+      }
       this.children.splice(idx, 0, node)
     }
   }

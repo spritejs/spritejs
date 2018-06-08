@@ -28,7 +28,8 @@
   buttonHover.attr({
     bgcolor: '#208B50',
     height: 100,
-    width: 0,
+    width: 96,
+    opacity: 0,
     borderRadius: 48,
     zIndex: -1,
   })
@@ -55,11 +56,12 @@
       hoverAnim = null
     }
     hoverAnim = buttonHover.animate([
-      {width: 324},
+      {width: 96, opacity: 0},
+      {width: 324, opacity: 1},
     ], {
       duration: 300,
       fill: 'forwards',
-      easing: 'ease-in-out',
+      easing: 'ease-in',
     })
     await hoverAnim.finished
     hoverAnim = null
@@ -74,11 +76,12 @@
       hoverAnim = null
     }
     hoverAnim = buttonHover.animate([
-      {width: 0},
+      {width: 324, opacity: 1},
+      {width: 96, opacity: 0},
     ], {
       duration: 500,
       fill: 'forwards',
-      easing: 'ease-in-out',
+      easing: 'ease-out',
     })
     await hoverAnim.finished
     hoverAnim = null
