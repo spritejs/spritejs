@@ -78,10 +78,16 @@ class ExLayer extends Layer {
   }
 
   toLocalPos(x, y) {
-    return this.parent.toLocalPos(this.canvas, x, y)
+    if(this.parent) return this.parent.toLocalPos(x, y)
+
+    const resolution = this.resolution
+    return [x - resolution[2], y - resolution[3]]
   }
   toGlobalPos(x, y) {
-    return this.parent.toGlobalPos(this.canvas, x, y)
+    if(this.parent) return this.parent.toGlobalPos(x, y)
+
+    const resolution = this.resolution
+    return [x + resolution[2], y + resolution[3]]
   }
 
   async takeSnapshot() {
@@ -105,7 +111,10 @@ class ExLayer extends Layer {
 
     snapshot.children.forEach((child) => {
       const node = createNode(child.nodeType)
-      Object.assign(node.attrs(), JSON.parse(child.attrs))
+      if(child.id) {
+        node.id = child.id
+      }
+      node.attr(JSON.parse(child.attrs))
       this.appendChild(node, false)
     })
 

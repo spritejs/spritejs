@@ -1,10 +1,19 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=3124e56e84cb1a3d832895ef8cffc021003b23644a514feebb957f755921f691
 language: node_js
 node_js:
   - '9'
 sudo: false
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev librsvg2-dev build-essential g++ && npm i install canvas@2.0.0-alpha.11
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - 'npm test'
 after_success:
-  - 'npm install coveralls && ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
+  - 'cat ./coverage/lcov.info | coveralls'
+  - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+
   
