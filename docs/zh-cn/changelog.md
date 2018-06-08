@@ -217,3 +217,10 @@
 
 - 浮点数问题不能取整解决，换了一种方式计算cache位置来解决
 - 去掉了整个group的baseCache，如果group中的元素有动画，group不建议设置bgcolor（耗性能）
+
+## [2.0.0-alpha.27][2018-06-08]
+
+### bug修复
+
+- 原来的group.remove()有歧义， 将layer.remove()、group.remove()改成clear()方法
+- 修复因此产生的d3-axis的bug
