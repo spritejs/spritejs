@@ -30,7 +30,7 @@ spritejs动画功能非常丰富，关于动画的其他内容，可参考[高�
 
 ### 滤镜 filter
 
-spritejs支持[canvas滤镜](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter)，能够方便地给元素中的各个texture添加各种滤镜。
+spritejs支持[canvas滤镜](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter)，能够方便地给元素添加各种滤镜。
 
 <div id="filters" class="sprite-container"></div>
 
