@@ -15,18 +15,17 @@
     'https://s1.ssl.qhres.com/static/6ead70a354da7aa4.json',
   ])
 
-  const generateSpriteWithFilter = (filterMethod, filterParam, labelText, pos, bgcolor) => {
+  const generateSpriteWithFilter = (filterMethod, filterParam, labelText, pos) => {
     const guanguan = new Sprite()
     guanguan.attr({
-      bgcolor,
       size: [300, 340],
       textures: [{
         src: 'guanguan1s.png',
         rect: [50, 40,200, 220],
-        filter: {
-          [filterMethod]: filterParam,
-        },
       }],
+      filter: {
+        [filterMethod]: filterParam,
+      },
       anchor: 0.5,
       pos,
     })
@@ -43,14 +42,14 @@
   }
 
   //same filter as in css3
-  generateSpriteWithFilter('dropShadow', [2, 2, 10, '#FF6040'], 'dropShadow', [200, 500], '#F4ECB0')
-  generateSpriteWithFilter('blur', '4px', 'blur', [500, 500], '#E2F1B0')
-  generateSpriteWithFilter('brightness', 0.5, 'brightness', [800, 500], '#F4ECB0')
-  generateSpriteWithFilter('contrast', '200%', 'contrast', [1100, 500], '#E2F1B0')
-  generateSpriteWithFilter('grayscale', '100%', 'grayscale', [1400, 500], '#F4ECB0')
-  generateSpriteWithFilter('hueRotate', '90deg', 'hueRotate', [200, 840], '#E2F1B0')
-  generateSpriteWithFilter('invert', '75%', 'brightness', [500, 840], '#F4ECB0')
-  generateSpriteWithFilter('opacity', '0.25', 'opacity', [800, 840], '#E2F1B0')
-  generateSpriteWithFilter('saturate', '30%', 'saturate', [1100, 840], '#F4ECB0')
-  generateSpriteWithFilter('sepia', '100%', 'sepia', [1400, 840], '#E2F1B0')
+  generateSpriteWithFilter('dropShadow', [2, 2, 10, '#FF6040'], 'dropShadow', [200, 500])
+  generateSpriteWithFilter('blur', '4px', 'blur', [500, 500])
+  generateSpriteWithFilter('brightness', 0.5, 'brightness', [800, 500])
+  generateSpriteWithFilter('contrast', '200%', 'contrast', [1100, 500])
+  generateSpriteWithFilter('grayscale', '100%', 'grayscale', [1400, 500])
+  generateSpriteWithFilter('hueRotate', '90deg', 'hueRotate', [200, 840])
+  generateSpriteWithFilter('invert', '75%', 'brightness', [500, 840])
+  generateSpriteWithFilter('opacity', '0.25', 'opacity', [800, 840])
+  generateSpriteWithFilter('saturate', '30%', 'saturate', [1100, 840])
+  generateSpriteWithFilter('sepia', '100%', 'sepia', [1400, 840])
 }())
