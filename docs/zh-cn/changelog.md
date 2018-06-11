@@ -224,3 +224,9 @@
 
 - 原来的group.remove()有歧义， 将layer.remove()、group.remove()改成clear()方法
 - 修复因此产生的d3-axis的bug
+
+## [2.0.0-alpha.28][2018-06-08]
+
+### 改进
+
+- 调整了filter策略，现在所有的sprite支持filter了，同时取消textures上的filter

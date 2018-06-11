@@ -196,16 +196,19 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
           applyFilters = function applyFilters(id, filters, y) {
             var scale = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 
-            filters.forEach(function (filter, i) {
+            filters.forEach(function (f, i) {
               var s = new Sprite();
-              var textures = { id: id, filter: {} };
-              if (filter.length === 2) {
-                textures.filter[filter[0]] = filter[1];
+              var textures = { id: id },
+                  filter = {};
+
+              if (f.length === 2) {
+                filter[f[0]] = f[1];
               }
               s.attr({
                 textures: textures,
                 pos: [50 + i * 250, y],
-                scale: scale
+                scale: scale,
+                filter: filter
               });
               layer.append(s);
             });

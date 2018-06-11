@@ -187,16 +187,19 @@ const {Scene, Sprite, Label, Path} = spritejs
     y2 = 320
 
   function applyFilters(id, filters, y, scale = 1) {
-    filters.forEach((filter, i) => {
+    filters.forEach((f, i) => {
       const s = new Sprite()
-      const textures = {id, filter: {}}
-      if(filter.length === 2) {
-        textures.filter[filter[0]] = filter[1]
+      const textures = {id},
+        filter = {}
+
+      if(f.length === 2) {
+        filter[f[0]] = f[1]
       }
       s.attr({
         textures,
         pos: [50 + i * 250, y],
         scale,
+        filter,
       })
       layer.append(s)
     })
