@@ -1,81 +1,65 @@
-const paper = new spritejs.Scene('#paper', {
-    resolution: [800, 600],
-    stickMode: 'width',
-  }),
-  fglayer = paper.layer('fglayer'),
-  Sprite = spritejs.Sprite,
-  Group = spritejs.Group
+(async function () {
+  const {Scene, Sprite, Group} = spritejs
+  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200], stickMode: 'width'})
 
-const s1 = new Sprite()
-s1.attr({
-  pos: [100, 100],
-  size: [50, 50],
-  bgcolor: 'red',
-  rotate: 90,
-})
+  await scene.preload([
+    'http://p7.qhimg.com/t01293283c63b01af00.png',
+    'http://s6.qhres.com/static/ee4e193568c3ffcb.json',
+  ]);
 
-const s2 = new Sprite()
-s2.attr({
-  pos: [100, 100],
-  size: [50, 50],
-  bgcolor: 'green',
-  rotate: 180,
-})
-
-const s3 = new Sprite()
-s3.attr({
-  pos: [100, 100],
-  size: [50, 50],
-  bgcolor: 'blue',
-})
-
-const group = new Group()
-
-group.append(s1, s2, s3)
-
-fglayer.append(group)
-
-group.attr({
-  anchor: 0.5,
-  pos: [200, 200],
-  rotate: 0, 
-  border: [1, 'red'],
-})
-
-s1.on('click', evt => {
-  console.log(evt)
-})
-
-group.animate([
-  {rotate: 360}
-], {
-  duration: 2000,
-  iterations: Infinity,
-  direction: 'reverse',
-})
-
-s1.animate([
-  {rotate: 450}
-], {
-  duration: 1000,
-  iterations: Infinity,
-})
-
-s2.animate([
-  {rotate: 540}
-], {
-  duration: 1000,
-  iterations: Infinity,
-})
-
-s3.animate([
-  {rotate: 360}
-], {
-  duration: 1000,
-  iterations: Infinity,
-})
+  const layer = scene.layer('fglayer');
+  layer.canvas.style.backgroundColor = '#FFFDCC';
 
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
+  window.addEventListener('resize', evt => {
+    paper.setViewport('auto', 'auto');
+  });
+
+  const group = new Group();
+  group.name = 'group';
+  group.attr({
+    pos: [380, 460],
+  });
+  layer.append(group);
+
+  const guanguan = new Sprite('guanguan.png');
+  guanguan.name = 'guanguan';
+  guanguan.attr({
+    pos: [200, 10],
+  });
+  group.append(guanguan);
+
+  const lemon = new Sprite('lemon.png');
+  lemon.name = 'lemon';
+  lemon.attr({
+    pos:[10, 80],
+    scale: 0.5,
+  })
+  group.append(lemon);
+
+  const initGui = () => {
+    const gui = new dat.GUI();
+    const config = {
+      choosen: 'lemon',
+      initObject: lemon
+    }
+    gui.add(config, 'choosen', ['lemon', 'guanguan', 'group']).onChange(val => {
+      config.initObject = layer.getElementsByName(val)[0] || group.getElementsByName(val)[0]
+      x.setValue(config.initObject.attr().x)
+      y.setValue(config.initObject.attr().y)
+    })
+    const x = gui.add(config.initObject.attr(), 'x', 0, 800).onChange(val => {
+      config.initObject.attr({
+        x: val
+      })
+    })
+    const y = gui.add(config.initObject.attr(), 'y', 0, 800).onChange(val => {
+      config.initObject.attr({
+        y: val
+      })
+    })
+  }
+
+  initGui();
+
+}())
