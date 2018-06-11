@@ -19,7 +19,7 @@
     lineHeight: 96,
     textAlign: 'center',
     size: [320, 96],
-    border: [2, '#178C4E'],
+    border: [4, '#178C4E'],
     borderRadius: 48,
   })
   button.append(buttonNormal)
