@@ -11,8 +11,10 @@
   shadow.attr({
     path: shadowD,
     fillColor: '#000000',
-    opacity: 0.15,
-    pos: [417, 674],
+    opacity: 0.05,
+    pos: [500, 734],
+    anchor: 0.5,
+    scale: [1.3, 1.2]
   })
   layer.append(shadow)
 
@@ -22,6 +24,7 @@
     anchor: 0.5,
     pos: [500, 600],
     fillColor: '#fed330',
+    scale: 1.4
   })
   layer.append(lemon)
 
@@ -33,6 +36,7 @@
     bgcolor: '#faee35',
     border: [6, '#fdbd2c'],
     borderRadius: 90,
+    scale: 1.5
   })
   layer.append(lemonGroup)
 
