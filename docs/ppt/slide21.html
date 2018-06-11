@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <link rel="stylesheet" href="css/base.css">
+  <script src="https://s4.ssl.qhres.com/!928fb688/spritejs.min.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #scene-container {
+      width: 100%;
+      height: 100%;
+    }
+    #box-rect-demo {
+      position: absolute;
+      padding: 20px 0 0 20px;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene-container"></div>
+  <script>
+(function () {
+  const {Scene, Sprite} = spritejs
+  const scene = new Scene('#scene-container', {
+    resolution: [1200, 1200],
+    viewport: ['auto', 'auto'],
+    stickMode: 'width',
+  })
+  const layer = scene.layer()
+  const block = new Sprite()
+  block.attr({
+    pos: [200, 200],
+    size: [50, 50],
+    bgcolor: 'red',
+  })
+  layer.append(block)
+
+  window.addEventListener('message', (e) => {
+    const data = e.data
+    if(data && data.namespace === 'reveal') {
+      const eventName = data.eventName
+      if(eventName === 'fragmentshown') {
+        const index = data.state.indexf
+        if(index === 0) {
+          block.animate([
+            {pos: [200, 200]},
+            {pos: [200, 800]},
+            {pos: [800, 800]},
+            {pos: [800, 200]},
+            {pos: [200, 200]},
+          ], {
+            duration: 5000,
+            direction: 'alternate',
+            easing: 'ease-in-out',
+            iterations: Infinity,
+          })
+        }
+      }
+    }
+  })
+}())
+  </script>
+</body>
+</html>

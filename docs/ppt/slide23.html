@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+</head>
+<body>
+  <div>globalTime: <span id="globalTime" class="clock">0s</span></div>
+  <div>localTime: <span id="localTime" class="clock">0s</span></div>
+  <script src="https://s4.ssl.qhres.com/!35687106/sprite-timeline-1.8.2.js"></script>
+  <script>
+    const timeline = new Timeline()
+    const startTime = Date.now()
+    const globalTime = document.getElementById('globalTime'),
+      localTime = document.getElementById('localTime')
+
+    setInterval(() => {
+      globalTime.innerHTML = `${Math.round((Date.now() - startTime) / 1000)}s`
+      localTime.innerHTML = `${Math.round(timeline.currentTime / 1000)}s`
+    }, 1000)
+  </script>
+</body>
+</html>
