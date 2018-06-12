@@ -18,10 +18,10 @@
   const generateSpriteWithFilter = (filterMethod, filterParam, labelText, pos) => {
     const guanguan = new Sprite()
     guanguan.attr({
-      size: [300, 340],
+      size: [270, 340],
       textures: [{
         src: 'guanguan1s.png',
-        rect: [50, 40,200, 220],
+        rect: [50, 40,180, 220],
       }],
       filter: {
         [filterMethod]: filterParam,

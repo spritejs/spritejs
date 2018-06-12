@@ -7,7 +7,7 @@
   })
 
   const layer = d3.select(paper).append('fglayer')
-  document.querySelector('#paper canvas').style.backgroundColor = '#64B5F6'
+  document.querySelector('#paper canvas').style.backgroundColor = '#222830'
 
   const width = 1330
   const height = 520
@@ -29,11 +29,11 @@
       .data(data.features)
       .enter()
       .append('path')
-      .attr('strokeColor', '#EBF1FA')
+      .attr('strokeColor', 'rgba(0,0,0,0.4)')
       .attr('lineWidth', 1)
       .attr('d', path)
       .attr('renderMode', 'fill')
-      .attr('fillColor', '#C7D9F0')
+      .attr('fillColor', '#2f3644')
       .on('click', (d) => {
         const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
 
@@ -50,10 +50,10 @@
 
           if(paths.length) {
             if(selectedTarget) {
-              selectedTarget.attr('fillColor', '#C7D9F0')
+              selectedTarget.attr('fillColor', '#2f3644')
             }
             selectedTarget = event.target
-            event.target.attr('fillColor', '#c73')
+            event.target.attr('fillColor', '#00c2ff')
           }
         }
       })
