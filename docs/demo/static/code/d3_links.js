@@ -79,7 +79,7 @@
 
     function dragsubject() {
       const [x, y] = layer.toLocalPos(d3.event.x, d3.event.y)
-      return simulation.find(x, y - 100)
+      return simulation.find(x, y)
     }
   })
 
