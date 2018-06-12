@@ -96,6 +96,7 @@
 
   #more-demos a {
     display: block;
+    color: #178C4E;
     text-decoration: none;
   }
 
