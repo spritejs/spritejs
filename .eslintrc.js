@@ -11,6 +11,7 @@ module.exports = {
     mapRelation: true,
     Animator: true,
     Timeline: true,
+    Proton: true,
   },
   extends:  "eslint-config-75team",
   plugins: ['html'],

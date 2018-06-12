@@ -9,13 +9,20 @@ class ExLayer extends Layer {
       opts = id
       id = opts.id || `id_${Math.random().toString().slice(2, 10)}`
     }
-    let {context, handleEvent, evaluateFPS, renderMode, resolution, shadowContext} = opts
+    let {context,
+      resolution,
+      handleEvent = true,
+      evaluateFPS = false,
+      renderMode = 'repaintAll',
+      shadowContext = true,
+      autoRender = true} = opts
+
     context = context || createCanvas().getContext('2d')
     const canvas = context.canvas
     canvas.dataset.layerId = id
     canvas.style.position = 'absolute'
 
-    super({context, handleEvent, evaluateFPS, renderMode, shadowContext})
+    super({context, handleEvent, evaluateFPS, renderMode, shadowContext, autoRender})
 
     if(resolution) {
       this.resolution = resolution
@@ -58,16 +65,12 @@ class ExLayer extends Layer {
 
     this[_resolution] = resolution
   }
-  renderRepaintAll(t) {
+  clearContext(context) {
     const [width, height, offsetLeft, offsetTop] = this.resolution
-    if(this.shadowContext) {
-      this.shadowContext.clearRect(-offsetLeft, -offsetTop, width, height)
-    } else {
-      this.outputContext.clearRect(-offsetLeft, -offsetTop, width, height)
+    if(context.canvas) {
+      context.clearRect(-offsetLeft, -offsetTop, width, height)
     }
-    super.renderRepaintAll(t)
   }
-
   isVisible(sprite) {
     if(!super.isVisible(sprite)) return false
     const [width, height, offsetLeft, offsetTop] = this.resolution

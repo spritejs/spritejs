@@ -1,7 +1,7 @@
 (function () {
   const {Scene, Matter} = spritejs
   const scene = new Scene('#paper', {
-    viewport: ['auto', 'auto'], 
+    viewport: ['auto', 'auto'],
     resolution: [800, 600],
     stickMode: 'width',
   })
