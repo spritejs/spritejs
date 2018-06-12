@@ -27,14 +27,6 @@
     simulation.force('link')
       .links(graph.links)
 
-    const path = new spritejs.Path()
-    path.attr({
-      size: [1200, 800],
-      pos: [0, 100],
-      // bgcolor: '#aaa',
-    })
-    layer.appendChild(path)
-
     d3.select(layer.canvas)
       .call(d3.drag()
         .container(layer.canvas)
@@ -43,33 +35,46 @@
         .on('drag', dragged)
         .on('end', dragended))
 
-
-    path.on('afterdraw', ({context}) => {
-      context.beginPath()
-      graph.links.forEach((d) => {
-        const [sx, sy] = [d.source.x, d.source.y],
-          [tx, ty] = [d.target.x, d.target.y]
-
-        context.moveTo(sx, sy)
-        context.lineTo(tx, ty)
-      })
-      context.strokeStyle = '#aaa'
-      context.stroke()
-
-      context.beginPath()
-      graph.nodes.forEach((d) => {
-        const [x, y] = [d.x, d.y]
-
-        context.moveTo(x + 3, y)
-        context.arc(x, y, 3, 0, 2 * Math.PI)
-      })
-      context.fill()
-      context.strokeStyle = '#fff'
-      context.stroke()
-    })
-
+    // draw lines
+    d3.select(layer).selectAll('path')
+        .data(graph.links)
+        .enter()
+        .append('path')
+        .attr('path', d => {
+          const [sx, sy] = [d.source.x, d.source.y];
+          const [tx, ty] = [d.target.x, d.target.y];
+          return {d: `M${sx} ${sy} L ${tx} ${ty}`}
+        })
+        .attr('name', (d, index) => {
+          return `path${index}`
+        })
+        .attr('strokeColor', 'white')
+    
+    // draw spots
+    // ! due to d3 rules, you have to set attributes seperatly
+    d3.select(layer).selectAll('sprite')
+        .data(graph.nodes)
+        .enter()
+        .append('sprite')
+        .attr('pos', d => {
+          return [d.x, d.y]
+        })
+        .attr('size', [10, 10])
+        .attr('border', [1, 'white'])
+        .attr('borderRadius', 5)
+        .attr('anchor', 0.5)
+  
     function ticked() {
-      path.forceUpdate(true)
+      d3.select(layer).selectAll('path')
+      .attr('path', d => {
+        const [sx, sy] = [d.source.x, d.source.y];
+        const [tx, ty] = [d.target.x, d.target.y];
+        return {d: `M${sx} ${sy} L ${tx} ${ty}`}
+      })
+      d3.select(layer).selectAll('sprite')
+      .attr('pos', d => {
+        return [d.x, d.y]
+      })
     }
 
     function dragsubject() {
