@@ -16,7 +16,7 @@ paperEl.appendChild(formEl)
 ;(async function () {
   const paper = new spritejs.Scene('#paper', {
     viewport: ['auto', 'auto'],
-    resolution: [1800, 1000],
+    resolution: [900, 500],
     stickMode: 'width',
   })
 
@@ -26,7 +26,7 @@ paperEl.appendChild(formEl)
     handleEvent: false,
   })
 
-  worldLayer.parent.container.style.backgroundColor = '#313131'
+  worldLayer.parent.container.style.backgroundColor = '#222830'
 
   function mapTransform(layer, matrix, update = true) {
     layer.adjust((context) => {
@@ -153,14 +153,14 @@ paperEl.appendChild(formEl)
       const mapId = this.mapId
 
       mapTransform(layer, [1, 0, 0, 1, 0, 0], false)
-      layer.remove()
+      layer.clear()
 
       d3.select(layer).selectAll('path')
         .data(filted)
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('strokeColor', 'black')
+        .attr('strokeColor', '#00c2ff')
         .select(function (data) {
           const parentMeta = mapRelation[data.properties.id]
 
@@ -169,8 +169,8 @@ paperEl.appendChild(formEl)
             this.attr('zIndex', 10)
             this.attr('fillColor', 'transparent')
           } else {
-            this.attr('strokeColor', 'rgba(0,0,0,0.3)')
-            this.attr('fillColor', '#D0D0D0')
+            this.attr('strokeColor', 'rgba(0,0,0,0.2)')
+            this.attr('fillColor', '#2f3644')
           }
           this.id = data.properties.id
           this.name = data.properties.name
@@ -232,7 +232,7 @@ paperEl.appendChild(formEl)
       const layer = this.layer
 
       d3.select(layer).selectAll('path')
-        .attr('fillColor', '#d0d0d0')
+        .attr('fillColor', '#2f3644')
         .attr('lineWidth', 1)
         .attr('strokeColor', 'rgba(0, 0, 0, 0.3)')
         .attr('zIndex', 0)
@@ -240,7 +240,7 @@ paperEl.appendChild(formEl)
       d3.select(layer)
         .select(`#${subId}`)
         // .attr('fillColor', 'white')
-        .attr('strokeColor', 'black')
+        .attr('strokeColor', 'rgba(0, 0, 0, 0.3)')
         .attr('lineWidth', 1)
         .attr('zIndex', 100)
 
@@ -290,7 +290,7 @@ paperEl.appendChild(formEl)
       const layer = this.layer
 
       d3.select(layer).selectAll('path')
-        .attr('fillColor', '#d0d0d0')
+        .attr('fillColor', '#2f3644')
         .attr('lineWidth', 1)
         .attr('zIndex', 0)
 
@@ -317,13 +317,15 @@ paperEl.appendChild(formEl)
   }
 
   function findId(idOrName) {
-    if(mapRelation[idOrName]) {
-      return idOrName
-    }
-
-    Object.entries(mapRelation).forEach(([id, value]) => {
-      if(value.name.startsWith(idOrName)) {
-        return id
+    return new Promise(res => {
+      if(mapRelation[idOrName]) {
+        res(idOrName)
+      } else {
+        Object.entries(mapRelation).forEach(([id, value]) => {
+          if(value.name.startsWith(idOrName)) {
+            res(id)
+          }
+        })
       }
     })
   }
@@ -333,13 +335,13 @@ paperEl.appendChild(formEl)
 
   const world = new World(worldLayer)
   await world.load(1)
-  // world.enter(2205)
   window.world = world
 
   moveToForm.onsubmit = function (evt) {
     const value = moveToText.value || 1
-
-    world.moveTo(findId(value))
+    findId(value).then(id => {
+      world.moveTo(id)
+    })
     evt.preventDefault()
   }
 }())
