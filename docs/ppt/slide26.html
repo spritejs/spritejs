@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://lib.baomitu.com/d3/4.10.2/d3.min.js"></script>
+  <script src="https://s4.ssl.qhres.com/!928fb688/spritejs.min.js"></script>
+  <script src="https://s0.ssl.qhres.com/!e6cf89ec/sprite-extend-d3axis.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #scene-container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene-container"></div>
+  <script>
+(function () {
+  const paper = new spritejs.Scene('#scene-container', {
+    viewport: ['auto', 'auto'],
+    resolution: [1600, 1200],
+    stickMode: 'width',
+  })
+
+  const dataset = [125, 121, 127, 193, 309]
+
+  const linear = d3.scaleLinear()
+    .domain([100, d3.max(dataset)])
+    .range([0, 500])
+
+  const colors = ['#f00', '#0a0', '#00a', '#3ca', '#7ac']
+
+  const s = d3.select(paper).append('fglayer')
+
+  const chart = s.selectAll('sprite')
+    .data(dataset)
+    .enter()
+    .append('sprite')
+    .attr('x', 300)
+    .attr('y', (d, i) => {
+      return 200 + i * 55
+    })
+    .attr('width', 0)
+    .attr('height', 50)
+    .attr('bgcolor', 'white')
+
+  chart.transition()
+    .duration(2000)
+    .attr('width', (d, i) => {
+      return linear(d)
+    })
+    .attr('bgcolor', (d, i) => {
+      return colors[i]
+    })
+
+  s.append('axis')
+    .attr('ticks', [100, 200, 300, 400])
+    .attr('axisScales', [linear])
+    .attr('direction', 'bottom')
+    .attr('pos', [270, 500])
+    .attr('color', 'blue')
+
+  chart.on('click', (data) => {
+    /* eslint-disable no-console */
+    console.log(data, d3.event)
+    /* eslint-enable no-console */
+  })
+}())
+  </script>
+</body>
+</html>
