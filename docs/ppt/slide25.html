@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+    div {
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 24px;
+    }
+    .clock {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      background: red;
+      color: white;
+      line-height: 80px;
+      border-radius: 40px;
+      text-align: center;
+    }
+    #localTime {
+      background: blue;
+    }
+    #forkedTime1,
+    #forkedTime2 {
+      background: green;
+    }
+  </style>
+</head>
+<body>
+  <div>globalTime: <span id="globalTime" class="clock">0s</span></div>
+  <div>localeTime: <span id="localTime" class="clock">0s</span></div>
+  <div>forkedTime1: <span id="forkedTime1" class="clock">0s</span></div>
+  <div>forkedTime2: <span id="forkedTime2" class="clock">0s</span></div>
+  <script src="https://s4.ssl.qhres.com/!35687106/sprite-timeline-1.8.2.js"></script>
+  <script>
+    const timeline = new Timeline(),
+      forkedTimeline1 = timeline.fork(),
+      forkedTimeline2 = timeline.fork()
+
+    const startTime = Date.now()
+    const globalTime = document.getElementById('globalTime'),
+      localTime = document.getElementById('localTime'),
+      forkedTime1 = document.getElementById('forkedTime1'),
+      forkedTime2 = document.getElementById('forkedTime2')
+    
+    forkedTimeline1.playbackRate = 2.0
+    forkedTimeline2.playbackRate = -2.0
+
+    setInterval(() => {
+      globalTime.innerHTML = `${Math.round((Date.now() - startTime) / 1000)}s`
+      localTime.innerHTML = `${Math.round(timeline.currentTime / 1000)}s`
+      forkedTime1.innerHTML = `${Math.round(forkedTimeline1.currentTime / 1000)}s`
+      forkedTime2.innerHTML = `${Math.round(forkedTimeline2.currentTime / 1000)}s`
+    }, 100)
+
+    window.addEventListener('message', (e) => {
+      const data = e.data
+      if(data && data.namespace === 'reveal') {
+        const eventName = data.eventName
+        if(eventName === 'fragmentshown') {
+          const index = data.state.indexf
+          if(index === 0) {
+            timeline.playbackRate = 5.0
+          } else if(index === 1) {
+            timeline.playbackRate = 0
+          } else if(index === 2) {
+            timeline.playbackRate = -1.0
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
