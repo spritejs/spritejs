@@ -127,13 +127,13 @@
   margin: 20px auto;
   background: #fff;
   box-shadow: 0 3px 6px 0 rgba(0,0,0,0.20);
-  border-radius: 4%;
+  border-radius: 2%;
   overflow: hidden;
   transition: .5s ease-in-out;
 }
 .demos li:hover {
   transform: translateY(-8px);
-  box-shadow: 0 3px 15px 0 rgba(0,0,0,0.30);
+  box-shadow: 0 3px 15px 0 rgba(0,0,0,0.20);
 }
 .demos li span {
   display: inline-block;
