@@ -74,6 +74,7 @@ html,body{
 }
 
 #menu .header {
+  display: block;
   width: 117px;
   height: 60px;
   background-image: url(https://p3.ssl.qhimg.com/t013bc02448b18354e8.png);
