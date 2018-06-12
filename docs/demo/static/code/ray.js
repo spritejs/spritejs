@@ -10,7 +10,7 @@ function loadScript(url) {
     script.onload = () => {
       resolve()
     }
-  }) 
+  })
 }
 
 function sleep(ms) {
@@ -33,6 +33,7 @@ function sleep(ms) {
 
     const pos = [200 + 1200 * Math.random(), 200 + 800 * Math.random()]
     const rotate = 360 * Math.random()
+    const controller = Math.random() * 340 + 10
 
     const color = [127 + 128 * Math.random(), 255 * Math.random(), 128 * Math.random()].map(Math.round)
 
@@ -42,7 +43,7 @@ function sleep(ms) {
       rotate,
       lineWidth: 6,
       lineCap: 'round',
-      d: 'M10,80 q140,-50 160,0',
+      d: `M10,80 q${controller},-80 350,0`,
       linearGradients: {
         strokeColor: {
           vector: [10, 30, 180, 90],
@@ -54,10 +55,10 @@ function sleep(ms) {
             color: `rgba(${color[0]},${color[1]},${color[2]},0)`,
           }]
         },
-      }  
+      }
     })
-    
-    paper.layer().append(s) 
+
+    paper.layer().append(s)
 
 
     const a1 = new Animator(3000,  p => {
@@ -75,7 +76,7 @@ function sleep(ms) {
         {offset: p, color: `rgba(${color[0]},${color[1]},${color[2]},1)`},
         {offset: Math.min(p + 0.06, 1), color: `rgba(${color[0]},${color[1]},${color[2]},0)`},
       ]
-      
+
       const linearGradients = s.attr('linearGradients')
       linearGradients.strokeColor.colors = colors
 
@@ -85,7 +86,7 @@ function sleep(ms) {
       linearGradients.strokeColor.vector = [10, 30, x + 5, y]
 
       s.attr({linearGradients})
-    })   
+    })
 
     await a1.animate()
     paper.layer().remove(s)
@@ -95,5 +96,5 @@ function sleep(ms) {
     ray()
     let delay = Math.random() * 500 + 200
     await sleep(delay)
-  }while(1)  
+  }while(1)
 })()
