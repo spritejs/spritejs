@@ -29,45 +29,43 @@
 <body>
   <div id="scene-container"></div>
   <script>
+(function () {
   const {Scene, Sprite} = spritejs
   const scene = new Scene('#scene-container', {
+    resolution: [600, 600],
     viewport: ['auto', 'auto'],
-    resolution: [1200, 1600],
-    stickMode: 'height',
+    stickMode: 'width',
   })
-  const cacheMap = {}
-  class Block extends Sprite {
-    get cache() {
-      return cacheMap[this.attr('bgcolor')]
-    }
-    set cache(cacheContext) {
-      if(cacheContext) {
-        cacheMap[this.attr('bgcolor')] = cacheContext
+  const layer = scene.layer()
+  const block = new Sprite()
+  block.attr({
+    anchor: [0, 0.5],
+    pos: [100, 300],
+    size: [50, 50],
+    bgcolor: 'red',
+  })
+  layer.append(block)
+
+  window.addEventListener('message', (e) => {
+    const data = e.data
+    if(data && data.namespace === 'reveal') {
+      const eventName = data.eventName
+      if(eventName === 'fragmentshown') {
+        const index = data.state.indexf
+        if(index === 0) {
+          requestAnimationFrame(function update() {
+            block.attr({
+              x: x => x + 1,
+            })
+            if(block.attr('x') < 500) {
+              requestAnimationFrame(update)
+            }
+          })
+        }
       }
     }
-  }
-
-  function randomColor() {
-    return ['red', 'blue', 'green', 'cyan', 'black'][Math.floor(Math.random() * 5)]
-  }
-
-  const layer = scene.layer()
-  for(let i = 0; i <= 1000; i++) {
-    const b = new Block()
-    b.attr({
-      pos: [100 + Math.random() * 1000, 100 + Math.random() * 1400],
-      size: [25, 25],
-      rotate: 360 * Math.random(),
-      bgcolor: randomColor(),
-    })
-    setInterval(() => {
-      b.attr({
-        bgcolor: randomColor(),
-      })
-    }, 100)
-    layer.append(b)
-  }
-
+  })
+}())
   </script>
 </body>
 </html>

@@ -10,6 +10,7 @@ module.exports = {
     topojson: true,
     mapRelation: true,
     Animator: true,
+    Timeline: true,
   },
   extends:  "eslint-config-75team",
   plugins: ['html'],
