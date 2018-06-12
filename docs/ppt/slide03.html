@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>JS Bin</title>
-  <script src="/js/spritejs.js"></script>
+  <script src="https://s4.ssl.qhres.com/!928fb688/spritejs.min.js"></script>
   <style>
     html, body {
       width: 100%;
@@ -301,54 +301,67 @@
 
     const featureGroup = showFeatures()
 
-    huanhuan.animate([
-      {x: 1080},
-      {x: 2980},
-    ], {
-      duration: 2000,
-      fill: 'forwards',
-      easing: 'ease-in',
-    })
+    window.addEventListener('message', (e) => {
+      const data = e.data
+      if(data && data.namespace === 'reveal') {
+        const eventName = data.eventName
+        if(eventName === 'fragmentshown') {
+          const index = data.state.indexf
+          if(index === 0) {
+            (async function () {
+              huanhuan.animate([
+                {x: 1080},
+                {x: 2980},
+              ], {
+                duration: 1000,
+                fill: 'forwards',
+                easing: 'ease-in',
+              })
 
-    guanguan.attr({
-      textures: 'guanguan3.png',
-    })
-    const anim = guanguan.animate([
-      {x: 2380},
-      {x: 980},
-    ], {
-      duration: 2000,
-      fill: 'forwards',
-      easing: 'ease-in',
-    })
+              guanguan.attr({
+                textures: 'guanguan3.png',
+              })
+              const anim = guanguan.animate([
+                {x: 2380},
+                {x: 980},
+              ], {
+                duration: 1000,
+                fill: 'forwards',
+                easing: 'ease-in',
+              })
 
-    title.children.forEach((t) => {
-      t.animate([
-        {fillColor: '#333'},
-      ], {
-        duration: 2000,
-        fill: 'forwards',
-      })
-    })
+              title.children.forEach((t) => {
+                t.animate([
+                  {fillColor: '#333'},
+                ], {
+                  duration: 1000,
+                  fill: 'forwards',
+                })
+              })
 
-    scene.container.className = 'extend'
-    guanguan.on('update', ({renderTime}) => {
-      const x1 = guanguan.attr('x'),
-        x2 = huanhuan.attr('x')
-      if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
-        featureGroup._clipDX = x2 - x1
-        const l = 916 - (1896 - x1),
-          r = 916 + x2 - 1736
-        const d = `M${l},0L${r},0L${r},${930}L${l},930z`
-        featureGroup.attr({
-          clip: {d},
-        })
+              scene.container.className = 'extend'
+              guanguan.on('update', ({renderTime}) => {
+                const x1 = guanguan.attr('x'),
+                  x2 = huanhuan.attr('x')
+                if(x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
+                  featureGroup._clipDX = x2 - x1
+                  const l = 916 - (1896 - x1),
+                    r = 916 + x2 - 1736
+                  const d = `M${l},0L${r},0L${r},${930}L${l},930z`
+                  featureGroup.attr({
+                    clip: {d},
+                  })
+                }
+              })
+
+              await anim.finished
+              guanguan.attr({
+                textures: 'guanguan1.png',
+              })
+            }())
+          }
+        }
       }
-    })
-
-    await anim.finished
-    guanguan.attr({
-      textures: 'guanguan1.png',
     })
   }())
   </script>
