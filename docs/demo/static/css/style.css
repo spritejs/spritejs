@@ -34,6 +34,7 @@ html,body{
   z-index: 999;
   width: 240px;
   user-select: none;
+  height: 100%;
 }
 
 #menu .wrap {
@@ -83,12 +84,21 @@ html,body{
   margin: 10px 30px;
 }
 
+#menu .wrap-menu {
+  height: 100%;
+  overflow-y: auto;
+}
+
+#menu .wrap-menu::-webkit-scrollbar {
+  width: 0;
+}
+
 #menu ul {
   padding: 0;
   margin: 0;
   background-color: #000;
   opacity: 0.8;
-  min-height: 4000px;
+  margin-bottom: 80px;
 }
 
 #menu li{
