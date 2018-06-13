@@ -17,9 +17,6 @@ function createRender() {
     context.fillRect(offsetLeft, offsetTop, width, height)
   }
   const renderer = new ProtonRenderer(fglayer)
-  renderer.onProtonUpdate = function () {
-    fglayer.draw()
-  }
   return renderer
 }
 
