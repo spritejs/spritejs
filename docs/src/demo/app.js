@@ -58,7 +58,7 @@ function menuFade() {
   menu.className = 'fade'
   menu.timer = setTimeout(() => {
     menu.className = 'hide'
-  }, 1000)
+  }, 500)
 }
 
 const menuWrap = menu.querySelector('.wrap')

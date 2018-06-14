@@ -89,6 +89,10 @@ html,body{
   overflow-y: auto;
 }
 
+#menu.hide {
+  height: 80px;
+}
+
 #menu .wrap-menu::-webkit-scrollbar {
   width: 0;
 }
@@ -107,7 +111,7 @@ html,body{
   list-style:none;
   color: #fff;
   opacity: 0.8;
-  transition: opacity 1s;
+  transition: opacity .5s ease-in;
   font-size: 16px;
   letter-spacing: 0;
   line-height: 32px;
@@ -118,7 +122,7 @@ html,body{
 }
 
 #menu.fade ul {
-  transition: opacity 1s;
+  transition: opacity .5s ease-in;
   opacity: 0;
 }
 

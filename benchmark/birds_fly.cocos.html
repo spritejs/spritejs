@@ -95,9 +95,9 @@
                     })
                     birdCount = 1
                     let timer = setInterval(() => {
-                      if(birdCount++ < 500) addBird.call(this)
+                      if(birdCount++ < 1000) addBird.call(this)
                       else clearInterval(timer)
-                    }, 100)
+                    }, 16)
                   }
               });
               const BgLayer = cc.Layer.extend({

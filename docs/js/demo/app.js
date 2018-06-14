@@ -68,7 +68,7 @@ function menuFade() {
   menu.className = 'fade';
   menu.timer = setTimeout(function () {
     menu.className = 'hide';
-  }, 1000);
+  }, 500);
 }
 
 var menuWrap = menu.querySelector('.wrap');
