@@ -13,7 +13,7 @@ scene.container.style.backgroundColor = '#000'
 function createRender() {
   fglayer.clearContext = function (context) {
     const [width, height, offsetLeft, offsetTop] = this.resolution
-    context.fillStyle = 'rgba(0, 0, 0, 0.03)'
+    context.fillStyle = 'rgba(0, 0, 0, 0.09)'
     context.fillRect(offsetLeft, offsetTop, width, height)
   }
   const renderer = new ProtonRenderer(fglayer)

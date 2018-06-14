@@ -38,6 +38,7 @@
     margin: 20px auto 60px;
   }
   .footer {
+    font-family:  Source Sans Pro,Helvetica Neue,Arial,sans-serif;
     background-color: #01040b;
     color: #89a;
     overflow: hidden;
