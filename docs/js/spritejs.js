@@ -4569,6 +4569,15 @@ var ExLayer = function (_Layer) {
       return [this.resolution[2], this.resolution[3]];
     }
   }, {
+    key: 'center',
+    get: function get() {
+      var _resolution7 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution7[0],
+          height = _resolution7[1];
+
+      return [width / 2, height / 2];
+    }
+  }, {
     key: 'zIndex',
     get: function get() {
       return this.canvas.style.zIndex;
@@ -8147,7 +8156,18 @@ var _default = function (_BaseNode) {
       if (this.stickMode !== 'scale') {
         return 1.0;
       }
-      return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1]);
+
+      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
+          rw = _resolution3[0],
+          rh = _resolution3[1],
+          _viewport4 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport4[0],
+          vh = _viewport4[1];
+
+      var dw = rw === 'flex' ? 2 : rw / vw,
+          dh = rh === 'flex' ? 2 : rh / vh;
+
+      return dw / dh;
     }
   }, {
     key: 'viewport',
@@ -8156,10 +8176,10 @@ var _default = function (_BaseNode) {
 
       if (!Array.isArray(viewport)) viewport = [viewport, viewport];
 
-      var _viewport4 = viewport,
-          _viewport5 = (0, _slicedToArray3.default)(_viewport4, 2),
-          width = _viewport5[0],
-          height = _viewport5[1];
+      var _viewport5 = viewport,
+          _viewport6 = (0, _slicedToArray3.default)(_viewport5, 2),
+          width = _viewport6[0],
+          height = _viewport6[1];
 
       this[_viewport] = [width, height];
       /* istanbul ignore next */
@@ -8182,9 +8202,9 @@ var _default = function (_BaseNode) {
       }
     },
     get: function get() {
-      var _viewport6 = (0, _slicedToArray3.default)(this[_viewport], 2),
-          width = _viewport6[0],
-          height = _viewport6[1];
+      var _viewport7 = (0, _slicedToArray3.default)(this[_viewport], 2),
+          width = _viewport7[0],
+          height = _viewport7[1];
 
       if (width === '' || (0, _isNan2.default)(Number(width))) {
         width = this.container.clientWidth;
@@ -8197,13 +8217,13 @@ var _default = function (_BaseNode) {
   }, {
     key: 'layerResolution',
     get: function get() {
-      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
-          rw = _resolution3[0],
-          rh = _resolution3[1];
+      var _resolution4 = (0, _slicedToArray3.default)(this.resolution, 2),
+          rw = _resolution4[0],
+          rh = _resolution4[1];
 
-      var _viewport7 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport7[0],
-          vh = _viewport7[1],
+      var _viewport8 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport8[0],
+          vh = _viewport8[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
@@ -8250,10 +8270,10 @@ var _default = function (_BaseNode) {
         resolution = [resolution, resolution];
       }
 
-      var _resolution4 = resolution,
-          _resolution5 = (0, _slicedToArray3.default)(_resolution4, 2),
-          width = _resolution5[0],
-          height = _resolution5[1];
+      var _resolution5 = resolution,
+          _resolution6 = (0, _slicedToArray3.default)(_resolution5, 2),
+          width = _resolution6[0],
+          height = _resolution6[1];
 
       this[_resolution] = [width, height];
       this.updateResolution();

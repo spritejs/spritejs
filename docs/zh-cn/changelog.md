@@ -234,3 +234,12 @@
 ### 改进
 
 - 调整了filter策略，现在所有的sprite支持filter了，同时取消textures上的filter
+
+## [2.0.0-alpha.30][2018-06-14]
+
+### 改进
+
+- 支持resolution设置为flex，此时layerResolution自动设置为viewport的两倍
+- 改变了draw和isVisible策略，减少了复杂的renderBox计算，大大优化了性能
+- 支持Sprite.setAttributeEffects避免了扩展Sprite对象可能造成Effect冲突
+- 支持了Proton粒子系统
