@@ -20,7 +20,7 @@ test('red-block-150', async (t) => {
   const isEqual = await compare(canvas, 'red-block-150')
   t.truthy(isEqual)
 
-  const pos = scene.toLocalPos(100, 100)
+  const pos = scene.layer().toLocalPos(100, 100)
   t.deepEqual(pos, [200, 200])
 
   t.is(scene.width, 150)

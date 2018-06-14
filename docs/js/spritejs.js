@@ -1710,7 +1710,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         node.timeline = new _spriteAnimator.Timeline();
         node.update = function () {
           var currentTime = this.timeline.currentTime;
-          node.dispatchEvent('update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
+          node.dispatchEvent('update', { target: this, timeline: this.timeline, renderTime: currentTime }, true, true);
         };
         parent = node;
       }
@@ -3759,6 +3759,11 @@ var BaseNode = function () {
   }
 
   (0, _createClass3.default)(BaseNode, [{
+    key: 'getEventHandlers',
+    value: function getEventHandlers(type) {
+      return type != null ? this[_eventHandlers][type] || [] : this[_eventHandlers];
+    }
+  }, {
     key: 'on',
     value: function on(type, handler) {
       var _this = this;
@@ -3816,7 +3821,11 @@ var BaseNode = function () {
       var _this3 = this;
 
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
+      if (swallow && this.getEventHandlers(type).length === 0) {
+        return;
+      }
       if (!evt.stopDispatch) {
         evt.stopDispatch = function () {
           evt.terminated = true;
@@ -4375,18 +4384,24 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'toLocalPos',
     value: function toLocalPos(x, y) {
-      if (this.parent) return this.parent.toLocalPos(x, y);
+      var resolution = this.resolution,
+          viewport = this.viewport;
 
-      var resolution = this.resolution;
-      return [x - resolution[2], y - resolution[3]];
+      x = x * resolution[0] / viewport[0] - resolution[2];
+      y = y * resolution[1] / viewport[1] - resolution[3];
+
+      return [x, y];
     }
   }, {
     key: 'toGlobalPos',
     value: function toGlobalPos(x, y) {
-      if (this.parent) return this.parent.toGlobalPos(x, y);
+      var resolution = this.resolution,
+          viewport = this.viewport;
 
-      var resolution = this.resolution;
-      return [x + resolution[2], y + resolution[3]];
+      x = x * viewport[0] / resolution[0] + resolution[2];
+      y = y * viewport[1] / resolution[1] + resolution[3];
+
+      return [x, y];
     }
   }, {
     key: 'takeSnapshot',
@@ -4500,6 +4515,23 @@ var ExLayer = function (_Layer) {
       });
 
       this[_resolution] = resolution;
+    }
+  }, {
+    key: 'viewport',
+    get: function get() {
+      var canvas = this.canvas;
+      if (canvas && canvas.clientWidth) {
+        return [canvas.clientWidth, canvas.clientHeight];
+      }
+      if (this.parent) {
+        return this.parent.layerViewport;
+      }
+
+      var _resolution6 = (0, _slicedToArray3.default)(this[_resolution], 2),
+          width = _resolution6[0],
+          height = _resolution6[1];
+
+      return [width, height];
     }
   }, {
     key: 'offset',
@@ -6291,21 +6323,24 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      var isCollision = collisionState || this.pointCollision(evt);
-      if (!evt.terminated && isCollision) {
-        var parentX = evt.offsetX - this.originalRect[0];
-        var parentY = evt.offsetY - this.originalRect[1];
-        // console.log(evt.parentX, evt.parentY)
+      if (swallow && this.getEventHandlers(type).length === 0) {
+        return;
+      }
+      if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
+        var isCollision = collisionState || this.pointCollision(evt);
+        if (isCollision) {
+          var parentX = evt.offsetX - this.originalRect[0];
+          var parentY = evt.offsetY - this.originalRect[1];
+          // console.log(evt.parentX, evt.parentY)
 
-        var _evt = (0, _assign2.default)({}, evt);
-        _evt.parentX = parentX;
-        _evt.parentY = parentY;
+          var _evt = (0, _assign2.default)({}, evt);
+          _evt.parentX = parentX;
+          _evt.parentY = parentY;
 
-        var sprites = this[_children].slice(0).reverse();
+          var sprites = this[_children].slice(0).reverse();
 
-        var targetSprites = [];
+          var targetSprites = [];
 
-        if (!swallow && type !== 'mouseenter' && type !== 'mouseleave') {
           for (var i = 0; i < sprites.length && evt.isInClip !== false; i++) {
             var sprite = sprites[i];
             var hit = sprite.dispatchEvent(type, _evt, collisionState, swallow);
@@ -6316,14 +6351,15 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
               break;
             }
           }
-        }
 
-        evt.targetSprites = targetSprites;
+          evt.targetSprites = targetSprites;
+          // stopDispatch can only terminate event in the same level
+          evt.terminated = false;
+          return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, isCollision, swallow);
+        }
       }
 
-      // stopDispatch can only terminate event in the same level
-      evt.terminated = false;
-      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState);
+      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
     key: 'isNodeVisible',
@@ -7764,28 +7800,6 @@ var _default = function (_BaseNode) {
       return this;
     }
   }, {
-    key: 'toGlobalPos',
-    value: function toGlobalPos(x, y) {
-      var resolution = this.layerResolution,
-          viewport = this.layerViewport;
-
-      x = x * viewport[0] / resolution[0] + this.stickOffset[0];
-      y = y * viewport[1] / resolution[1] + this.stickOffset[1];
-
-      return [x, y];
-    }
-  }, {
-    key: 'toLocalPos',
-    value: function toLocalPos(x, y) {
-      var resolution = this.layerResolution,
-          viewport = this.layerViewport;
-
-      x = x * resolution[0] / viewport[0] - this.stickOffset[0];
-      y = y * resolution[1] / viewport[1] - this.stickOffset[1];
-
-      return [x, y];
-    }
-  }, {
     key: 'delegateEvent',
     value: function delegateEvent(event) {
       var _this5 = this;
@@ -7812,10 +7826,10 @@ var _default = function (_BaseNode) {
         };
 
         // mouse event layerX, layerY value change while browser scaled.
-        var x = 0,
-            y = 0,
-            originalX = 0,
-            originalY = 0;
+        var originalX = void 0,
+            originalY = void 0,
+            x = void 0,
+            y = void 0;
 
         /* istanbul ignore else */
         if (e instanceof CustomEvent) {
@@ -7823,21 +7837,9 @@ var _default = function (_BaseNode) {
           if (evtArgs.x != null && evtArgs.y != null) {
             x = evtArgs.x;
             y = evtArgs.y;
-            var _toGlobalPos = _this5.toGlobalPos(x, y);
-
-            var _toGlobalPos2 = (0, _slicedToArray3.default)(_toGlobalPos, 2);
-
-            originalX = _toGlobalPos2[0];
-            originalY = _toGlobalPos2[1];
           } else if (evtArgs.originalX != null && evtArgs.originalY != null) {
             originalX = evtArgs.originalX;
             originalY = evtArgs.originalY;
-            var _toLocalPos = _this5.toLocalPos(originalX, originalY);
-
-            var _toLocalPos2 = (0, _slicedToArray3.default)(_toLocalPos, 2);
-
-            x = _toLocalPos2[0];
-            y = _toLocalPos2[1];
           }
         } else if (e.target.dataset.layerId && _this5[_layerMap][e.target.dataset.layerId]) {
           var _e$target$getBounding = e.target.getBoundingClientRect(),
@@ -7850,20 +7852,28 @@ var _default = function (_BaseNode) {
 
           originalX = Math.round((clientX | 0) - left);
           originalY = Math.round((clientY | 0) - top);
-          var _toLocalPos3 = _this5.toLocalPos(originalX, originalY);
-
-          var _toLocalPos4 = (0, _slicedToArray3.default)(_toLocalPos3, 2);
-
-          x = _toLocalPos4[0];
-          y = _toLocalPos4[1];
         }
-
-        (0, _assign2.default)(evtArgs, {
-          layerX: x, layerY: y, originalX: originalX, originalY: originalY, x: x, y: y
-        });
 
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
+          if (originalX != null && originalY != null) {
+            var _layer$toLocalPos = layer.toLocalPos(originalX, originalY);
+
+            var _layer$toLocalPos2 = (0, _slicedToArray3.default)(_layer$toLocalPos, 2);
+
+            x = _layer$toLocalPos2[0];
+            y = _layer$toLocalPos2[1];
+          } else if (x != null && y != null) {
+            var _layer$toGlobalPos = layer.toGlobalPos(x, y);
+
+            var _layer$toGlobalPos2 = (0, _slicedToArray3.default)(_layer$toGlobalPos, 2);
+
+            originalX = _layer$toGlobalPos2[0];
+            originalY = _layer$toGlobalPos2[1];
+          }
+          (0, _assign2.default)(evtArgs, {
+            layerX: x, layerY: y, originalX: originalX, originalY: originalY, x: x, y: y
+          });
 
           if (layer.handleEvent) {
             layer.dispatchEvent(type, evtArgs);
@@ -14867,15 +14877,15 @@ var Layer = function (_BaseNode) {
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      var isCollision = collisionState || this.pointCollision(evt);
-      if (!evt.terminated && isCollision) {
-        evt.layer = this;
+      if (swallow && this.getEventHandlers(type).length === 0) {
+        return;
+      }
 
-        var sprites = this[_children].slice(0).reverse();
-
-        var targetSprites = [];
-
-        if (!swallow && type !== 'mouseenter' && type !== 'mouseleave') {
+      if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
+        var isCollision = collisionState || this.pointCollision(evt);
+        if (isCollision) {
+          var sprites = this[_children].slice(0).reverse(),
+              targetSprites = [];
           for (var i = 0; i < sprites.length; i++) {
             var sprite = sprites[i];
             var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
@@ -14887,14 +14897,14 @@ var Layer = function (_BaseNode) {
               break;
             }
           }
+          evt.targetSprites = targetSprites;
+          // stopDispatch can only terminate event in the same level
+          evt.terminated = false;
+          return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, isCollision, swallow);
         }
-
-        evt.targetSprites = targetSprites;
       }
 
-      // stopDispatch can only terminate event in the same level
-      evt.terminated = false;
-      return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState);
+      return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
     key: 'connect',

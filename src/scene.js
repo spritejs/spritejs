@@ -260,24 +260,6 @@ export default class extends BaseNode {
     return this
   }
 
-  toGlobalPos(x, y) {
-    const resolution = this.layerResolution,
-      viewport = this.layerViewport
-
-    x = x * viewport[0] / resolution[0] + this.stickOffset[0]
-    y = y * viewport[1] / resolution[1] + this.stickOffset[1]
-
-    return [x, y]
-  }
-  toLocalPos(x, y) {
-    const resolution = this.layerResolution,
-      viewport = this.layerViewport
-
-    x = x * resolution[0] / viewport[0] - this.stickOffset[0]
-    y = y * resolution[1] / viewport[1] - this.stickOffset[1]
-
-    return [x, y]
-  }
   delegateEvent(event, receiver = this.container) {
     if(typeof event === 'string') {
       event = {type: event, passive: true}
@@ -296,10 +278,10 @@ export default class extends BaseNode {
       }
 
       // mouse event layerX, layerY value change while browser scaled.
-      let x = 0,
-        y = 0,
-        originalX = 0,
-        originalY = 0
+      let originalX,
+        originalY,
+        x,
+        y
 
       /* istanbul ignore else */
       if(e instanceof CustomEvent) {
@@ -307,11 +289,9 @@ export default class extends BaseNode {
         if(evtArgs.x != null && evtArgs.y != null) {
           x = evtArgs.x
           y = evtArgs.y
-          ;[originalX, originalY] = this.toGlobalPos(x, y)
         } else if(evtArgs.originalX != null && evtArgs.originalY != null) {
           originalX = evtArgs.originalX
           originalY = evtArgs.originalY
-          ;[x, y] = this.toLocalPos(originalX, originalY)
         }
       } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
         const {left, top} = e.target.getBoundingClientRect()
@@ -319,16 +299,18 @@ export default class extends BaseNode {
 
         originalX = Math.round((clientX | 0) - left)
         originalY = Math.round((clientY | 0) - top)
-
-        ;[x, y] = this.toLocalPos(originalX, originalY)
       }
-
-      Object.assign(evtArgs, {
-        layerX: x, layerY: y, originalX, originalY, x, y,
-      })
 
       for(let i = 0; i < layers.length; i++) {
         const layer = layers[i]
+        if(originalX != null && originalY != null) {
+          [x, y] = layer.toLocalPos(originalX, originalY)
+        } else if(x != null && y != null) {
+          [originalX, originalY] = layer.toGlobalPos(x, y)
+        }
+        Object.assign(evtArgs, {
+          layerX: x, layerY: y, originalX, originalY, x, y,
+        })
 
         if(layer.handleEvent) {
           layer.dispatchEvent(type, evtArgs)

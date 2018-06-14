@@ -36,6 +36,17 @@ class ExLayer extends Layer {
   get resolution() {
     return this[_resolution]
   }
+  get viewport() {
+    const canvas = this.canvas
+    if(canvas && canvas.clientWidth) {
+      return [canvas.clientWidth, canvas.clientHeight]
+    }
+    if(this.parent) {
+      return this.parent.layerViewport
+    }
+    const [width, height] = this[_resolution]
+    return [width, height]
+  }
   get offset() {
     return [this.resolution[2], this.resolution[3]]
   }
@@ -84,16 +95,22 @@ class ExLayer extends Layer {
   }
 
   toLocalPos(x, y) {
-    if(this.parent) return this.parent.toLocalPos(x, y)
+    const resolution = this.resolution,
+      viewport = this.viewport
 
-    const resolution = this.resolution
-    return [x - resolution[2], y - resolution[3]]
+    x = x * resolution[0] / viewport[0] - resolution[2]
+    y = y * resolution[1] / viewport[1] - resolution[3]
+
+    return [x, y]
   }
   toGlobalPos(x, y) {
-    if(this.parent) return this.parent.toGlobalPos(x, y)
+    const resolution = this.resolution,
+      viewport = this.viewport
 
-    const resolution = this.resolution
-    return [x + resolution[2], y + resolution[3]]
+    x = x * viewport[0] / resolution[0] + resolution[2]
+    y = y * viewport[1] / resolution[1] + resolution[3]
+
+    return [x, y]
   }
 
   async takeSnapshot() {
