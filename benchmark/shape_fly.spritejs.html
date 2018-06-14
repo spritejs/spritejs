@@ -35,6 +35,7 @@
   <script src="/js/spritejs.js"></script>
   
   <script>
+  /* eslint-disable */
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
@@ -64,7 +65,21 @@
     })
     
     bglayer.appendChild(circle)
-    
+
+    let groupCache = null
+
+    class MyGroup extends spritejs.Group {
+      // 共用缓存，提高性能
+      get cache() {
+        return groupCache
+      }
+      set cache(context) {
+        if(!groupCache) {
+          groupCache = context
+        }
+      }
+    }
+
     function pointAdd(p1, p2 = [0, 0]){
       return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
     }
@@ -100,10 +115,12 @@
       await anim.animate()
       await sleep(500)
     }
-
+    
+    let _spriteCount = 0
     async function addSprite(){
-      spriteCount.innerHTML = Number(spriteCount.innerHTML) + 1
-      const group = new spritejs.Group()
+      _spriteCount++
+      spriteCount.innerHTML = _spriteCount
+      const group = new MyGroup()
       group.attr({
         anchor: [0.5, 0.5],
         pos: axisZero,
@@ -119,22 +136,22 @@
         bgcolor: 'black',
       })
 
-      const top = center.cloneNode(true)
+      const top = center.cloneNode()
       top.attr({
         pos: [30, 10],
       })
       
-      const right = center.cloneNode(true)
+      const right = center.cloneNode()
       right.attr({
         pos: [50, 30],
       })
 
-      const bottom = center.cloneNode(true)
+      const bottom = center.cloneNode()
       bottom.attr({
         pos: [30, 50]
       })
 
-      const left = center.cloneNode(true)
+      const left = center.cloneNode()
       left.attr({
         pos: [10, 30]
       })
@@ -149,11 +166,14 @@
       }while(1) 
     }
 
-    addSprite()
-
-    circle.on('click', evt => {
-      addSprite()
+    requestAnimationFrame(function f() {
+      if(_spriteCount < 500) {
+        addSprite()
+        requestAnimationFrame(f)
+      }
     })
+
+    window.fglayer = fglayer
 
     //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
     //所以所有精灵不运动的时候 fps 也会降下来

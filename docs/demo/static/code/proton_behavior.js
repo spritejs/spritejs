@@ -4,7 +4,10 @@ const scene = new Scene('#paper', {
   resolution: [800, 600],
   stickMode: 'width',
 })
-const fglayer = scene.layer('fglayer')
+const fglayer = scene.layer('fglayer', {
+  shadowContext: false,
+  autoRender: false,
+})
 scene.container.style.backgroundColor = '#000'
 
 function createRender() {
@@ -14,9 +17,6 @@ function createRender() {
     context.fillRect(offsetLeft, offsetTop, width, height)
   }
   const renderer = new ProtonRenderer(fglayer)
-  renderer.onProtonUpdate = function () {
-    fglayer.draw()
-  }
   return renderer
 }
 

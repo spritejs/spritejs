@@ -50,25 +50,25 @@
       constructor() {
         super('bird1.png')
       }
-      // 共用缓存，提高性能
-      get cache() {
-        const key = JSON.stringify(this.textures) + this.attr('scale')
-        if(cacheMap.has(key)) {
-          return cacheMap.get(key)
-        }
-        return null
-      }
-      set cache(context) {
-        if(context == null) {
-          // cacheMap.clear()
-          return
-        }
-        const key = JSON.stringify(this.textures) + this.attr('scale')
+      // // 共用缓存，提高性能
+      // get cache() {
+      //   const key = JSON.stringify(this.textures) + this.attr('scale')
+      //   if(cacheMap.has(key)) {
+      //     return cacheMap.get(key)
+      //   }
+      //   return null
+      // }
+      // set cache(context) {
+      //   if(context == null) {
+      //     // cacheMap.clear()
+      //     return
+      //   }
+      //   const key = JSON.stringify(this.textures) + this.attr('scale')
 
-        if(!cacheMap.has(key)) {
-          cacheMap.set(key, context)
-        }
-      }
+      //   if(!cacheMap.has(key)) {
+      //     cacheMap.set(key, context)
+      //   }
+      // }
     }
 
     await paper.preload([birdsRes, birdsJsonUrl])
@@ -170,10 +170,12 @@
       addBird()
     })
   
-    const timer = setInterval(() => {
-      if(birdCount < 500) addBird()
-      else clearInterval(timer)
-    }, 100)
+    requestAnimationFrame(function f() {
+      if(birdCount < 500) {
+        addBird()
+        requestAnimationFrame(f)
+      }
+    })
 
     // 显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
     // 所以所有精灵不运动的时候 fps 也会降下来

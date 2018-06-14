@@ -1911,21 +1911,19 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'draw',
     value: function draw(t) {
-      var drawingContext = this.context;
+      var drawingContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.context;
+
       var bound = this.originalRect;
-      var cachableContext = null;
+      var cachableContext = this.cache;
+
       // solve 1px problem
-      if (this.cachePriority > this.__cachePolicyThreshold) {
-        if (this.cache) {
-          cachableContext = this.cache;
+      if (!cachableContext && this.cachePriority > this.__cachePolicyThreshold) {
+        cachableContext = _render.cacheContextPool.get(drawingContext);
+        if (cachableContext) {
+          cachableContext.canvas.width = Math.ceil(bound[2]) + 2;
+          cachableContext.canvas.height = Math.ceil(bound[3]) + 2;
         } else {
-          cachableContext = _render.cacheContextPool.get(drawingContext);
-          if (cachableContext) {
-            cachableContext.canvas.width = Math.ceil(bound[2]) + 2;
-            cachableContext.canvas.height = Math.ceil(bound[3]) + 2;
-          } else {
-            this.__cachePolicyThreshold = Infinity;
-          }
+          this.__cachePolicyThreshold = Infinity;
         }
       }
 
@@ -1969,7 +1967,6 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       this.dispatchEvent('afterdraw', evtArgs, true, true);
 
       drawingContext.restore();
-      this.lastRenderBox = this.renderBox;
 
       return drawingContext;
     }
@@ -1987,8 +1984,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           clientHeight = _clientSize[1];
 
       /* istanbul ignore if */
-      if (offsetWidth === 0 || offsetHeight === 0) {
-        return; // don't need to render
+      if (offsetWidth === 0 || offsetHeight === 0) return;
+      if (border.width <= 0 && borderRadius <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor) {
+        drawingContext.translate(padding[3], padding[0]);
+        return false; // don't need to render
       }
 
       var borderWidth = border.width;
@@ -2024,14 +2023,14 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor) {
         var _ref6 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x4 = _ref6[0],
+            _x5 = _ref6[0],
             _y = _ref6[1],
             _w = _ref6[2],
             _h = _ref6[3],
             _r = _ref6[4];
 
 
-        (0, _render.drawRadiusBox)(drawingContext, { x: _x4, y: _y, w: _w, h: _h, r: _r });
+        (0, _render.drawRadiusBox)(drawingContext, { x: _x5, y: _y, w: _w, h: _h, r: _r });
 
         if (bgcolor) {
           drawingContext.fillStyle = bgcolor;
@@ -2048,6 +2047,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       }
 
       drawingContext.translate(borderWidth + padding[3], borderWidth + padding[0]);
+
+      return true;
     }
   }, {
     key: 'cachePriority',
@@ -2265,7 +2266,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
           var _this5 = (0, _possibleConstructorReturn3.default)(this, (_class2.__proto__ || (0, _getPrototypeOf2.default)(_class2)).call(this, subject));
 
-          attrs.init(_this5, subject);
+          if (attrs.init) attrs.init(_this5, subject);
           return _this5;
         }
 
@@ -6362,7 +6363,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
         var child = sprites[i],
             isVisible = this.isNodeVisible(child);
         if (isVisible) {
-          child.draw(t);
+          child.draw(t, drawingContext);
         }
         if (child.isDirty) {
           child.isDirty = false;
@@ -14595,7 +14596,8 @@ var _children = (0, _symbol2.default)('children'),
     _zOrder = (0, _symbol2.default)('zOrder'),
     _tRecord = (0, _symbol2.default)('tRecord'),
     _timeline = (0, _symbol2.default)('timeline'),
-    _renderDeferer = (0, _symbol2.default)('renderDeferrer');
+    _renderDeferer = (0, _symbol2.default)('renderDeferrer'),
+    _drawTask = (0, _symbol2.default)('drawTask');
 
 var Layer = function (_BaseNode) {
   (0, _inherits3.default)(Layer, _BaseNode);
@@ -14691,7 +14693,12 @@ var Layer = function (_BaseNode) {
         this[_renderDeferer] = {};
         this[_renderDeferer].promise = new _promise2.default(function (resolve, reject) {
           (0, _assign2.default)(_this3[_renderDeferer], { resolve: resolve, reject: reject });
-          if (_this3.autoRender) (0, _fastAnimationFrame.requestAnimationFrame)(_this3.draw.bind(_this3));
+          if (_this3.autoRender) {
+            _this3[_drawTask] = (0, _fastAnimationFrame.requestAnimationFrame)(function (t) {
+              delete _this3[_drawTask];
+              _this3.draw(t);
+            });
+          }
         });
         // .catch(ex => console.error(ex.message))
       }
@@ -14723,6 +14730,10 @@ var Layer = function (_BaseNode) {
         (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
       }
       if (this[_renderDeferer]) {
+        if (this[_drawTask]) {
+          (0, _fastAnimationFrame.cancelAnimationFrame)(this[_drawTask]);
+          delete this[_drawTask];
+        }
         this[_renderDeferer].resolve();
         this[_renderDeferer] = null;
       }
@@ -14754,6 +14765,11 @@ var Layer = function (_BaseNode) {
           var isVisible = this.isVisible(child);
           if (isVisible) {
             child.draw(t);
+            if (this.renderMode === 'repaintDirty') {
+              child.lastRenderBox = child.renderBox;
+            } else {
+              child.lastRenderBox = 'no-calc';
+            }
           } else {
             // invisible, only need to remove lastRenderBox
             delete child.lastRenderBox;
@@ -14790,7 +14806,7 @@ var Layer = function (_BaseNode) {
     value: function renderRepaintDirty(t) {
       var updateEls = [].concat((0, _toConsumableArray3.default)(this[_updateSet]));
       if (updateEls.some(function (el) {
-        return !!el.attr('filter') || el.isVirtual;
+        return !!el.attr('filter') || el.isVirtual || el.lastRenderBox === 'no-calc';
       })) {
         return this.renderRepaintAll(t);
       }
@@ -15661,9 +15677,13 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
     value: function render(t, drawingContext) {
       var _this5 = this;
 
-      (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t, drawingContext);
+      var hasBg = (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t, drawingContext);
+      if (!hasBg && this.textures.length <= 1) {
+        this.__cachePolicyThreshold = Infinity;
+      } else {
+        this.__cachePolicyThreshold = 6;
+      }
       var textures = this.textures;
-
       if (this.images) {
         textures.forEach(function (texture, i) {
           var img = _this5.images[i];
