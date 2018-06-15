@@ -50,11 +50,11 @@ test('robot-snapshot', async (t) => {
   robot2.attr({
     pos: [-100, -100],
   })
-  t.is(layer2.isVisible(robot2), true)
+  t.is(layer2.isNodeVisible(robot2), true)
   robot2.attr({
     pos: [-100, -300],
   })
-  t.is(layer2.isVisible(robot2), false)
+  t.is(layer2.isNodeVisible(robot2), false)
 
   layer.resolution = [300, 300, 150, 150]
   t.deepEqual(layer.toLocalPos(200, 200), [50, 50])

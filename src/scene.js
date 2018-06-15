@@ -34,15 +34,15 @@ export default class extends BaseNode {
     this[_layers] = []
     this[_snapshot] = createCanvas()
 
-    const [width, height] = options.viewport || ['', '']
-    this.viewport = [width, height]
+    const viewport = options.viewport || ['', '']
+    this.viewport = viewport
 
     // scale, width, height, top, bottom, left, right
     // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
     this.stickMode = options.stickMode || 'scale'
     this.stickExtend = !!options.stickExtend
     this.stickOffset = [0, 0]
-    this[_resolution] = options.resolution || [...this.viewport]
+    this.resolution = options.resolution || [...this.viewport]
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene'
@@ -166,15 +166,28 @@ export default class extends BaseNode {
     if(this.stickMode !== 'scale') {
       return 1.0
     }
-    return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1])
+    const [rw, rh] = this.resolution,
+      [vw, vh] = this.viewport
+
+    const dw = rw === 'flex' ? 2 : rw / vw,
+      dh = rh === 'flex' ? 2 : rh / vh
+
+    return dw / dh
   }
 
-  set viewport([width, height]) {
+  set viewport(viewport) {
+    if(!Array.isArray(viewport)) viewport = [viewport, viewport]
+    const [width, height] = viewport
     this[_viewport] = [width, height]
     /* istanbul ignore next */
     if(width === 'auto' || height === 'auto') {
       if(!this[_resizeHandler]) {
-        this[_resizeHandler] = () => this.updateViewport()
+        this[_resizeHandler] = () => {
+          this.updateViewport()
+          if(this.resolution[0] === 'flex' || this.resolution[1] === 'flex') {
+            this.updateResolution()
+          }
+        }
         window.addEventListener('resize', this[_resizeHandler])
       }
     } else if(this[_resizeHandler]) {
@@ -197,10 +210,17 @@ export default class extends BaseNode {
   }
 
   get layerResolution() {
-    const [rw, rh] = this.resolution,
-      [vw, vh] = this.viewport,
+    let [rw, rh] = this.resolution
+    const [vw, vh] = this.viewport,
       stickMode = this.stickMode,
       stickExtend = this.stickExtend
+
+    if(rw === 'flex') {
+      rw = 2 * vw
+    }
+    if(rh === 'flex') {
+      rh = 2 * vh
+    }
 
     let width = rw,
       height = rh,
@@ -242,7 +262,11 @@ export default class extends BaseNode {
     return this
   }
 
-  set resolution([width, height]) {
+  set resolution(resolution) {
+    if(!Array.isArray(resolution)) {
+      resolution = [resolution, resolution]
+    }
+    const [width, height] = resolution
     this[_resolution] = [width, height]
     this.updateResolution()
   }

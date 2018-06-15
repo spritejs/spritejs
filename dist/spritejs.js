@@ -1618,6 +1618,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         return false;
       }
 
+      if (this.parent && this.parent.isVisible) {
+        return this.parent.isVisible();
+      }
       return true;
     }
   }, {
@@ -1929,7 +1932,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         this.render(t, drawingContext);
       }
 
-      if (cachableContext) {
+      if (cachableContext && cachableContext.canvas.width > 0 && cachableContext.canvas.height > 0) {
         drawingContext.drawImage(cachableContext.canvas, Math.floor(bound[0]) - 1, Math.floor(bound[1]) - 1);
       }
 
@@ -4379,9 +4382,9 @@ var ExLayer = function (_Layer) {
       }
     }
   }, {
-    key: 'isVisible',
-    value: function isVisible(sprite) {
-      if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isVisible', this).call(this, sprite)) return false;
+    key: 'isNodeVisible',
+    value: function isNodeVisible(sprite) {
+      if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isNodeVisible', this).call(this, sprite)) return false;
 
       var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 4),
           width = _resolution3[0],
@@ -4389,7 +4392,20 @@ var ExLayer = function (_Layer) {
           offsetLeft = _resolution3[2],
           offsetTop = _resolution3[3];
 
-      var box = sprite.renderBox;
+      // calculating renderBox is super slow...
+      // const box = sprite.renderBox
+
+
+      var _sprite$attr = sprite.attr('pos'),
+          _sprite$attr2 = (0, _slicedToArray3.default)(_sprite$attr, 2),
+          x = _sprite$attr2[0],
+          y = _sprite$attr2[1],
+          _sprite$offsetSize = (0, _slicedToArray3.default)(sprite.offsetSize, 2),
+          w = _sprite$offsetSize[0],
+          h = _sprite$offsetSize[1];
+
+      var r = Math.max(w, h);
+      var box = [x - r, y - r, x + r, y + r];
       if (box[0] > width - offsetLeft || box[1] > height - offsetTop || box[2] < 0 || box[3] < 0) {
         return false;
       }
@@ -4551,6 +4567,15 @@ var ExLayer = function (_Layer) {
     key: 'offset',
     get: function get() {
       return [this.resolution[2], this.resolution[3]];
+    }
+  }, {
+    key: 'center',
+    get: function get() {
+      var _resolution7 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution7[0],
+          height = _resolution7[1];
+
+      return [width / 2, height / 2];
     }
   }, {
     key: 'zIndex',
@@ -6376,23 +6401,6 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
-    key: 'isNodeVisible',
-    value: function isNodeVisible(sprite) {
-      if (!sprite.isVisible()) return false;
-      if (this.isVirtual) return true;
-
-      var _outerSize = (0, _slicedToArray3.default)(this.outerSize, 2),
-          w = _outerSize[0],
-          h = _outerSize[1];
-
-      var box1 = sprite.renderBox,
-          box2 = [0, 0, w, h];
-      if ((0, _spriteUtils.boxIntersect)(box1, box2)) {
-        return true;
-      }
-      return false;
-    }
-  }, {
     key: 'render',
     value: function render(t, drawingContext) {
       var clipPath = this.attr('clip');
@@ -6410,14 +6418,11 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       var sprites = this[_children];
 
       for (var i = 0; i < sprites.length; i++) {
-        var child = sprites[i],
-            isVisible = this.isNodeVisible(child);
-        if (isVisible) {
-          child.draw(t, drawingContext);
-        }
+        var child = sprites[i];
+        child.draw(t, drawingContext);
         if (child.isDirty) {
           child.isDirty = false;
-          child.dispatchEvent('update', { target: child, renderTime: t, isVisible: isVisible }, true, true);
+          child.dispatchEvent('update', { target: child, renderTime: t }, true, true);
         }
       }
     }
@@ -7573,6 +7578,10 @@ var _assign = __webpack_require__(8);
 
 var _assign2 = _interopRequireDefault(_assign);
 
+var _slicedToArray2 = __webpack_require__(1);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
 var _values = __webpack_require__(155);
 
 var _values2 = _interopRequireDefault(_values);
@@ -7580,10 +7589,6 @@ var _values2 = _interopRequireDefault(_values);
 var _toConsumableArray2 = __webpack_require__(6);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _slicedToArray2 = __webpack_require__(1);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
 var _getPrototypeOf = __webpack_require__(11);
 
@@ -7666,19 +7671,15 @@ var _default = function (_BaseNode) {
     _this[_layers] = [];
     _this[_snapshot] = (0, _platform.createCanvas)();
 
-    var _ref = options.viewport || ['', ''],
-        _ref2 = (0, _slicedToArray3.default)(_ref, 2),
-        width = _ref2[0],
-        height = _ref2[1];
-
-    _this.viewport = [width, height];
+    var viewport = options.viewport || ['', ''];
+    _this.viewport = viewport;
 
     // scale, width, height, top, bottom, left, right
     // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
     _this.stickMode = options.stickMode || 'scale';
     _this.stickExtend = !!options.stickExtend;
     _this.stickOffset = [0, 0];
-    _this[_resolution] = options.resolution || [].concat((0, _toConsumableArray3.default)(_this.viewport));
+    _this.resolution = options.resolution || [].concat((0, _toConsumableArray3.default)(_this.viewport));
 
     // d3-friendly
     _this.namespaceURI = 'http://spritejs.org/scene';
@@ -7860,9 +7861,9 @@ var _default = function (_BaseNode) {
               left = _e$target$getBounding.left,
               top = _e$target$getBounding.top;
 
-          var _ref3 = e.changedTouches ? e.changedTouches[0] : e,
-              clientX = _ref3.clientX,
-              clientY = _ref3.clientY;
+          var _ref = e.changedTouches ? e.changedTouches[0] : e,
+              clientX = _ref.clientX,
+              clientY = _ref.clientY;
 
           originalX = Math.round((clientX | 0) - left);
           originalY = Math.round((clientY | 0) - top);
@@ -7905,7 +7906,7 @@ var _default = function (_BaseNode) {
   }, {
     key: 'preload',
     value: function () {
-      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var _this6 = this;
 
         for (var _len = arguments.length, resources = Array(_len), _key = 0; _key < _len; _key++) {
@@ -7962,7 +7963,7 @@ var _default = function (_BaseNode) {
       }));
 
       function preload() {
-        return _ref4.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       }
 
       return preload;
@@ -8058,7 +8059,7 @@ var _default = function (_BaseNode) {
   }, {
     key: 'snapshot',
     value: function () {
-      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
         var _viewport2, width, height, canvas, _layerViewport2, sw, sh, layers, ctx, renderTasks, rect;
 
         return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -8109,7 +8110,7 @@ var _default = function (_BaseNode) {
       }));
 
       function snapshot() {
-        return _ref5.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       }
 
       return snapshot;
@@ -8155,23 +8156,40 @@ var _default = function (_BaseNode) {
       if (this.stickMode !== 'scale') {
         return 1.0;
       }
-      return this.viewport[1] * this.resolution[0] / (this.viewport[0] * this.resolution[1]);
+
+      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
+          rw = _resolution3[0],
+          rh = _resolution3[1],
+          _viewport4 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport4[0],
+          vh = _viewport4[1];
+
+      var dw = rw === 'flex' ? 2 : rw / vw,
+          dh = rh === 'flex' ? 2 : rh / vh;
+
+      return dw / dh;
     }
   }, {
     key: 'viewport',
-    set: function set(_ref6) {
+    set: function set(viewport) {
       var _this7 = this;
 
-      var _ref7 = (0, _slicedToArray3.default)(_ref6, 2),
-          width = _ref7[0],
-          height = _ref7[1];
+      if (!Array.isArray(viewport)) viewport = [viewport, viewport];
+
+      var _viewport5 = viewport,
+          _viewport6 = (0, _slicedToArray3.default)(_viewport5, 2),
+          width = _viewport6[0],
+          height = _viewport6[1];
 
       this[_viewport] = [width, height];
       /* istanbul ignore next */
       if (width === 'auto' || height === 'auto') {
         if (!this[_resizeHandler]) {
           this[_resizeHandler] = function () {
-            return _this7.updateViewport();
+            _this7.updateViewport();
+            if (_this7.resolution[0] === 'flex' || _this7.resolution[1] === 'flex') {
+              _this7.updateResolution();
+            }
           };
           window.addEventListener('resize', this[_resizeHandler]);
         }
@@ -8184,9 +8202,9 @@ var _default = function (_BaseNode) {
       }
     },
     get: function get() {
-      var _viewport4 = (0, _slicedToArray3.default)(this[_viewport], 2),
-          width = _viewport4[0],
-          height = _viewport4[1];
+      var _viewport7 = (0, _slicedToArray3.default)(this[_viewport], 2),
+          width = _viewport7[0],
+          height = _viewport7[1];
 
       if (width === '' || (0, _isNan2.default)(Number(width))) {
         width = this.container.clientWidth;
@@ -8199,14 +8217,22 @@ var _default = function (_BaseNode) {
   }, {
     key: 'layerResolution',
     get: function get() {
-      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 2),
-          rw = _resolution3[0],
-          rh = _resolution3[1],
-          _viewport5 = (0, _slicedToArray3.default)(this.viewport, 2),
-          vw = _viewport5[0],
-          vh = _viewport5[1],
+      var _resolution4 = (0, _slicedToArray3.default)(this.resolution, 2),
+          rw = _resolution4[0],
+          rh = _resolution4[1];
+
+      var _viewport8 = (0, _slicedToArray3.default)(this.viewport, 2),
+          vw = _viewport8[0],
+          vh = _viewport8[1],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
+
+      if (rw === 'flex') {
+        rw = 2 * vw;
+      }
+      if (rh === 'flex') {
+        rh = 2 * vh;
+      }
 
       var width = rw,
           height = rh,
@@ -8239,10 +8265,15 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'resolution',
-    set: function set(_ref8) {
-      var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
-          width = _ref9[0],
-          height = _ref9[1];
+    set: function set(resolution) {
+      if (!Array.isArray(resolution)) {
+        resolution = [resolution, resolution];
+      }
+
+      var _resolution5 = resolution,
+          _resolution6 = (0, _slicedToArray3.default)(_resolution5, 2),
+          width = _resolution6[0],
+          height = _resolution6[1];
 
       this[_resolution] = [width, height];
       this.updateResolution();
@@ -14774,7 +14805,15 @@ var Layer = function (_BaseNode) {
     }
   }, {
     key: 'isVisible',
-    value: function isVisible(sprite) {
+    value: function isVisible() {
+      if (this.canvas) {
+        return this.canvas.width > 0 && this.canvas.height > 0;
+      }
+      return true;
+    }
+  }, {
+    key: 'isNodeVisible',
+    value: function isNodeVisible(sprite) {
       if (!sprite.isVisible()) {
         return false;
       }
@@ -14789,7 +14828,7 @@ var Layer = function (_BaseNode) {
       for (var i = 0; i < renderEls.length; i++) {
         var child = renderEls[i];
         if (child.parent === this) {
-          var isVisible = this.isVisible(child);
+          var isVisible = this.isNodeVisible(child);
           if (isVisible) {
             child.draw(t);
             if (this.renderMode === 'repaintDirty') {
@@ -14821,7 +14860,9 @@ var Layer = function (_BaseNode) {
       if (shadowContext) {
         this.clearContext(shadowContext);
         this.drawSprites(renderEls, t);
-        outputContext.drawImage(shadowContext.canvas, 0, 0);
+        if (shadowContext.canvas.width > 0 && shadowContext.canvas.height > 0) {
+          outputContext.drawImage(shadowContext.canvas, 0, 0);
+        }
       } else {
         this.drawSprites(renderEls, t);
       }
@@ -14862,7 +14903,9 @@ var Layer = function (_BaseNode) {
 
       this.drawSprites(renderEls, t);
       if (shadowContext) {
-        outputContext.drawImage(shadowContext.canvas, 0, 0);
+        if (shadowContext.canvas.width > 0 && shadowContext.canvas.height > 0) {
+          outputContext.drawImage(shadowContext.canvas, 0, 0);
+        }
         shadowContext.restore();
       }
 
@@ -14981,7 +15024,7 @@ var Layer = function (_BaseNode) {
 
       handler.call(this, outputContext);
 
-      if (update) {
+      if (update && shadowContext.canvas.width > 0 && shadowContext.canvas.height > 0) {
         outputContext.drawImage(shadowContext.canvas, 0, 0);
       }
     }

@@ -50,6 +50,10 @@ class ExLayer extends Layer {
   get offset() {
     return [this.resolution[2], this.resolution[3]]
   }
+  get center() {
+    const [width, height] = this.resolution
+    return [width / 2, height / 2]
+  }
   set resolution(resolution) {
     const [width, height, offsetLeft, offsetTop] = resolution
     const outputCanvas = this.outputContext.canvas
@@ -82,11 +86,17 @@ class ExLayer extends Layer {
       context.clearRect(-offsetLeft, -offsetTop, width, height)
     }
   }
-  isVisible(sprite) {
-    if(!super.isVisible(sprite)) return false
+
+  isNodeVisible(sprite) {
+    if(!super.isNodeVisible(sprite)) return false
     const [width, height, offsetLeft, offsetTop] = this.resolution
 
-    const box = sprite.renderBox
+    // calculating renderBox is super slow...
+    // const box = sprite.renderBox
+    const [x, y] = sprite.attr('pos'),
+      [w, h] = sprite.offsetSize
+    const r = Math.max(w, h)
+    const box = [x - r, y - r, x + r, y + r]
     if(box[0] > width - offsetLeft || box[1] > height - offsetTop
       || box[2] < 0 || box[3] < 0) {
       return false

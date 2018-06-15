@@ -2,7 +2,7 @@
   <a href="http://spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
 </p>
 
-<h1 align="center">SpriteJS</h1>
+<a href="http://spritejs.org"><h1 align="center">spritejs.org</h1></a>
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
@@ -30,7 +30,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Look
 
 ```html
-<script src="https://s5.ssl.qhres.com/!adbc45ff/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!8fbaed22/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -49,7 +49,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/">spritejs.org</a></strong> </div>
+<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/"><font size="36">spritejs.org</font></a></strong> </div>
 
 ---
 
@@ -58,7 +58,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 In browser:
 
 ```html
-<script src="https://s5.ssl.qhres.com/!adbc45ff/spritejs.min.js"></script>
+<script src="https://s5.ssl.qhres.com/!8fbaed22/spritejs.min.js"></script>
 ```
 
 ## Quick Start

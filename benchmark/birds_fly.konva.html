@@ -142,9 +142,9 @@
       }
       let birdCount = 0
       let timer = setInterval(() => {
-        if(birdCount < 500) addBird()
+        if(birdCount < 1000) addBird()
         else clearInterval(timer)
-      }, 100)
+      }, 16)
       document.addEventListener('click', evt => {
         addBird()
       })
