@@ -63,7 +63,7 @@
       fglayer.append(letterEl)
       letterEl.animate([{
         opacity: 1,
-        translate: [0, 0]
+        translate: [0, 0],
       }], {
         duration: 500,
         fill: 'forwards',
@@ -239,7 +239,8 @@
     await anim4.finished
     guanguan.textures = 'guanguan1.png'
     await wait(300)
-    const anim41 = guanguan.animate([
+
+    guanguan.animate([
       {textures: 'guanguan1.png'},
       {textures: 'guanguan2.png'},
     ], {
@@ -326,7 +327,7 @@
     fglayer.append(githubBtn)
     registerButton(githubBtn, 'https://github.com/spritejs/spritejs')
 
-    const anim5 = githubBtn.animate([
+    githubBtn.animate([
       {opacity: 0},
       {opacity: 1},
     ], {
@@ -342,7 +343,7 @@
     fglayer.append(getStartBtn)
     registerButton(getStartBtn, `${window.location}zh-cn/index`)
 
-    const anim6 = getStartBtn.animate([
+    getStartBtn.animate([
       {opacity: 0},
       {opacity: 1},
     ], {
@@ -359,7 +360,8 @@
     fglayer.append(demoBtn)
 
     registerButton(demoBtn, '/demo')
-    const anim7 = demoBtn.animate([
+
+    demoBtn.animate([
       {opacity: 0},
       {opacity: 1},
     ], {
@@ -377,7 +379,7 @@
       textures: 'more.png',
       anchor: 0.5,
       pos: [1920, 1800],
-      opacity: 0
+      opacity: 0,
     })
     fglayer.append(more)
 
@@ -392,7 +394,7 @@
     const blinkSpot1 = new Sprite()
     const blinkSpotGap = 30
     const blinkAnimKeyframes = [{
-      opacity: 1, offset: 0.25
+      opacity: 1, offset: 0.25,
     }, {
       opacity: 0.2, offset: 0.5,
     }]
@@ -403,36 +405,36 @@
       anchor: 0.5,
       pos: [1918, 1870],
       borderRadius: 5,
-      opacity: 0.2
+      opacity: 0.2,
     })
     blinkSpot1.animate(blinkAnimKeyframes, {
       duration: 2000,
       iterations: Infinity,
-      easing: 'ease-in-out'
+      easing: 'ease-in-out',
     })
     blinkSpots.append(blinkSpot1)
 
-    const blinkSpot2 = blinkSpot1.cloneNode();
+    const blinkSpot2 = blinkSpot1.cloneNode()
     blinkSpot2.attr({
-      y: y => y + blinkSpotGap
+      y: y => y + blinkSpotGap,
     })
     blinkSpot2.animate(blinkAnimKeyframes, {
       duration: 2000,
       iterations: Infinity,
       delay: 330,
-      easing: 'ease-in-out'
+      easing: 'ease-in-out',
     })
     blinkSpots.append(blinkSpot2)
 
-    const blinkSpot3 = blinkSpot2.cloneNode();
+    const blinkSpot3 = blinkSpot2.cloneNode()
     blinkSpot3.attr({
-      y: y => y + blinkSpotGap
+      y: y => y + blinkSpotGap,
     })
     blinkSpot3.animate(blinkAnimKeyframes, {
       duration: 2000,
       iterations: Infinity,
       delay: 660,
-      easing: 'ease-in-out'
+      easing: 'ease-in-out',
     })
     blinkSpots.append(blinkSpot3)
 
@@ -536,7 +538,6 @@
   const huanhuan = await showHuanHuan()
   const guanguan = await showGuanGuan()
   const more = showMore()
-  
 
   more.c1 = function () {
     this.attr('bgcolor', 'green')

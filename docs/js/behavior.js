@@ -152,6 +152,16 @@ var _spritejs = spritejs,
       evt.stopDispatch();
     }
 
+    sprite.on('mouseenter', function (evt) {
+      sprite.attr('border', { width: 6, color: 'blue' });
+    });
+    sprite.on('mouseleave', function (evt) {
+      sprite.attr('border', { width: 0 });
+    });
+    sprite.on('mousemove', function (evt) {
+      evt.stopDispatch();
+    });
+
     sprite.on('mousedown', function (evt) {
       x0 = evt.x;
       y0 = evt.y;
@@ -161,9 +171,14 @@ var _spritejs = spritejs,
       evt.stopDispatch();
     });
 
-    document.documentElement.addEventListener('mouseup', function () {
+    var mouseupHandler = function mouseupHandler() {
       layer.off('mousemove', onMouseMove);
+    };
+
+    sprite.on('remove', function (evt) {
+      document.documentElement.removeEventListener('mouseup', mouseupHandler);
     });
+    document.documentElement.addEventListener('mouseup', mouseupHandler);
 
     return sprite;
   }
