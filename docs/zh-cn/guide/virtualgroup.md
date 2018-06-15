@@ -2,7 +2,7 @@
 
 在spritjs中，用Group给精灵元素分组，对分组的元素进行统一的transform操作是一个很棒的方法。Group还可以嵌套，以形成多层树状的结构，这样就使得我们可以有能力用精灵来构造复杂的UI组件。
 
-对于普通的Group元素，它本身的contentSize为[0, 0]，并且不具有普通元素的[盒模型](/zh-cn/guide/boxmodel)。这样的Group是**虚拟元素**，被称为**Virtual Group**，我们可以通过`group.isVistual`判断一个Group元素是否是Virtual的。
+对于普通的Group元素，它本身的contentSize为[0, 0]，并且不具有普通元素的[盒模型](/zh-cn/guide/boxmodel)。这样的Group是**虚拟元素**，被称为**Virtual Group**，我们可以通过`group.isVirtual`判断一个Group元素是否是Virtual的。
 
 当一个Group具有`anchor（非[0,0]）、size（非[0,0]）、borderWidth（非0）、borderRadius（非0）、bgcolor（非''）`属性之一时，它就成为一个有盒模型的真正的元素，不再是Virtual的了，这也就意味着给Group设置这些属性之后，Group就成为有边界的元素了。
 

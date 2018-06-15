@@ -79,6 +79,7 @@ class ExLayer extends Layer {
     })
 
     this[_resolution] = resolution
+    this.dispatchEvent('resolutionChange', {target: this}, true, true)
   }
   clearContext(context) {
     if(context.canvas) {

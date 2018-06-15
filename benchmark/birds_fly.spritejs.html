@@ -78,7 +78,7 @@
       // 不代理事件，提升性能
       fglayer = paper.layer('fg', {
         handleEvent: false,
-        evaluateFPS: false,
+        evaluateFPS: true,
         shadowContext: false,
         renderMode: 'repaintAll',
       })
@@ -172,7 +172,7 @@
     })
   
     requestAnimationFrame(function f() {
-      if(birdCount < 1000) {
+      if(birdCount < 500) {
         addBird()
         requestAnimationFrame(f)
       }

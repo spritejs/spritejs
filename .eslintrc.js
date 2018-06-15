@@ -12,6 +12,7 @@ module.exports = {
     Animator: true,
     Timeline: true,
     Proton: true,
+    curvejs: true,
   },
   extends:  "eslint-config-75team",
   plugins: ['html'],

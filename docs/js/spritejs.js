@@ -4542,6 +4542,7 @@ var ExLayer = function (_Layer) {
       });
 
       this[_resolution] = resolution;
+      this.dispatchEvent('resolutionChange', { target: this }, true, true);
     }
   }, {
     key: 'viewport',
@@ -9196,7 +9197,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.30';
+var version = '2.0.0-alpha.32';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14755,9 +14756,9 @@ var Layer = function (_BaseNode) {
         this[_renderDeferer].promise = new _promise2.default(function (resolve, reject) {
           (0, _assign2.default)(_this3[_renderDeferer], { resolve: resolve, reject: reject });
           if (_this3.autoRender) {
-            _this3[_drawTask] = (0, _fastAnimationFrame.requestAnimationFrame)(function (t) {
+            _this3[_drawTask] = (0, _fastAnimationFrame.requestAnimationFrame)(function () {
               delete _this3[_drawTask];
-              _this3.draw(t);
+              _this3.draw();
             });
           }
         });
@@ -14767,29 +14768,29 @@ var Layer = function (_BaseNode) {
     }
   }, {
     key: 'draw',
-    value: function draw(t) {
+    value: function draw() {
+      var clearContext = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
       /* istanbul ignore if  */
-      if (t && this.evaluateFPS) {
-        this[_tRecord].push(t);
+      if (this.evaluateFPS) {
+        this[_tRecord].push(Date.now());
         this[_tRecord] = this[_tRecord].slice(-10);
       }
 
-      var updateSet = this[_updateSet];
-      if (updateSet.size) {
-        var renderer = void 0;
-        if (this.renderMode === 'repaintDirty') {
-          renderer = this.renderRepaintDirty.bind(this);
-        } else if (this.renderMode === 'repaintAll') {
-          renderer = this.renderRepaintAll.bind(this);
-        } else {
-          /* istanbul ignore next  */
-          throw new Error('unknown render mode!');
-        }
-        var currentTime = this.timeline.currentTime;
-        renderer(currentTime);
-
-        (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
+      var renderer = void 0;
+      if (this.renderMode === 'repaintDirty') {
+        renderer = this.renderRepaintDirty.bind(this);
+      } else if (this.renderMode === 'repaintAll') {
+        renderer = this.renderRepaintAll.bind(this);
+      } else {
+        /* istanbul ignore next  */
+        throw new Error('unknown render mode!');
       }
+      var currentTime = this.timeline.currentTime;
+      renderer(currentTime, clearContext);
+
+      (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
+
       if (this[_renderDeferer]) {
         if (this[_drawTask]) {
           (0, _fastAnimationFrame.cancelAnimationFrame)(this[_drawTask]);
@@ -14853,10 +14854,12 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'renderRepaintAll',
     value: function renderRepaintAll(t) {
+      var clearContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       var renderEls = this[_children];
 
       var outputContext = this.outputContext;
-      this.clearContext(outputContext);
+      if (clearContext) this.clearContext(outputContext);
 
       var shadowContext = this.shadowContext;
 
@@ -14875,11 +14878,13 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'renderRepaintDirty',
     value: function renderRepaintDirty(t) {
+      var clearContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       var updateEls = [].concat((0, _toConsumableArray3.default)(this[_updateSet]));
       if (updateEls.some(function (el) {
         return !!el.attr('filter') || el.isVirtual || el.lastRenderBox === 'no-calc';
       })) {
-        return this.renderRepaintAll(t);
+        return this.renderRepaintAll(t, clearContext);
       }
 
       var shadowContext = this.shadowContext;
@@ -14902,7 +14907,7 @@ var Layer = function (_BaseNode) {
         this.clearContext(shadowContext);
       }
       outputContext.clip();
-      this.clearContext(outputContext);
+      if (clearContext) this.clearContext(outputContext);
 
       this.drawSprites(renderEls, t);
       if (shadowContext) {

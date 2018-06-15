@@ -90,7 +90,7 @@ html,body{
 }
 
 #menu.hide {
-  height: 80px;
+  height: 0;
 }
 
 #menu .wrap-menu::-webkit-scrollbar {
