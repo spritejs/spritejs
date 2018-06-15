@@ -4371,14 +4371,15 @@ var ExLayer = function (_Layer) {
   (0, _createClass3.default)(ExLayer, [{
     key: 'clearContext',
     value: function clearContext(context) {
-      var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 4),
-          width = _resolution2[0],
-          height = _resolution2[1],
-          offsetLeft = _resolution2[2],
-          offsetTop = _resolution2[3];
-
       if (context.canvas) {
-        context.clearRect(-offsetLeft, -offsetTop, width, height);
+        var resolution = this.resolution,
+            offsetTop = resolution[3],
+            offsetLeft = resolution[2];
+        if (!this.shadowContext || context === this.shadowContext) {
+          context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
+        } else {
+          context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        }
       }
     }
   }, {
@@ -4386,11 +4387,11 @@ var ExLayer = function (_Layer) {
     value: function isNodeVisible(sprite) {
       if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isNodeVisible', this).call(this, sprite)) return false;
 
-      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 4),
-          width = _resolution3[0],
-          height = _resolution3[1],
-          offsetLeft = _resolution3[2],
-          offsetTop = _resolution3[3];
+      var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 4),
+          width = _resolution2[0],
+          height = _resolution2[1],
+          offsetLeft = _resolution2[2],
+          offsetTop = _resolution2[3];
 
       // calculating renderBox is super slow...
       // const box = sprite.renderBox
@@ -4476,11 +4477,7 @@ var ExLayer = function (_Layer) {
 
       var outputContext = this.outputContext;
 
-      var _resolution4 = (0, _slicedToArray3.default)(this.resolution, 2),
-          width = _resolution4[0],
-          height = _resolution4[1];
-
-      outputContext.clearRect(0, 0, width, height);
+      this.clearContext(outputContext);
       outputContext.drawImage(snapshot.context.canvas, 0, 0);
 
       this.clearUpdate();
@@ -4516,11 +4513,11 @@ var ExLayer = function (_Layer) {
       return this[_resolution];
     },
     set: function set(resolution) {
-      var _resolution5 = (0, _slicedToArray3.default)(resolution, 4),
-          width = _resolution5[0],
-          height = _resolution5[1],
-          offsetLeft = _resolution5[2],
-          offsetTop = _resolution5[3];
+      var _resolution3 = (0, _slicedToArray3.default)(resolution, 4),
+          width = _resolution3[0],
+          height = _resolution3[1],
+          offsetLeft = _resolution3[2],
+          offsetTop = _resolution3[3];
 
       var outputCanvas = this.outputContext.canvas;
       outputCanvas.width = width;
@@ -4557,9 +4554,9 @@ var ExLayer = function (_Layer) {
         return this.parent.layerViewport;
       }
 
-      var _resolution6 = (0, _slicedToArray3.default)(this[_resolution], 2),
-          width = _resolution6[0],
-          height = _resolution6[1];
+      var _resolution4 = (0, _slicedToArray3.default)(this[_resolution], 2),
+          width = _resolution4[0],
+          height = _resolution4[1];
 
       return [width, height];
     }
@@ -4571,9 +4568,9 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'center',
     get: function get() {
-      var _resolution7 = (0, _slicedToArray3.default)(this.resolution, 2),
-          width = _resolution7[0],
-          height = _resolution7[1];
+      var _resolution5 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution5[0],
+          height = _resolution5[1];
 
       return [width / 2, height / 2];
     }
@@ -6267,8 +6264,7 @@ var GroupAttr = (_class = function (_BaseSprite$Attr) {
     var _this = (0, _possibleConstructorReturn3.default)(this, (GroupAttr.__proto__ || (0, _getPrototypeOf2.default)(GroupAttr)).call(this, subject));
 
     _this.setDefault({
-      clip: null,
-      virtual: null
+      clip: null
     });
     return _this;
   }
@@ -6286,19 +6282,9 @@ var GroupAttr = (_class = function (_BaseSprite$Attr) {
         this.set('clip', null);
       }
     }
-  }, {
-    key: 'virtual',
-    set: function set(val) {
-      if (this.get('virtual') != null) return;
-      this.clearCache();
-      this.set('virtual', !!val);
-      if (val) {
-        this.subject.__cachePolicyThreshold = Infinity;
-      }
-    }
   }]);
   return GroupAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'virtual', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'virtual'), _class.prototype)), _class);
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype)), _class);
 var Group = (_temp = _class2 = function (_BaseSprite) {
   (0, _inherits3.default)(Group, _BaseSprite);
 
@@ -6306,15 +6292,10 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     var attr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck3.default)(this, Group);
 
-    attr.virtual = !!attr.virtual;
-
     var _this2 = (0, _possibleConstructorReturn3.default)(this, (Group.__proto__ || (0, _getPrototypeOf2.default)(Group)).call(this, attr));
 
     _this2[_children] = [];
     _this2[_zOrder] = 0;
-    // if(isVirtual) {
-    //   this.__cachePolicyThreshold = Infinity
-    // }
     return _this2;
   }
 
@@ -6427,9 +6408,31 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       }
     }
   }, {
+    key: 'cachePriority',
+    get: function get() {
+      // virtual group disable cache
+      if (this.isVirtual) return 0;
+      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'cachePriority', this);
+    }
+  }, {
     key: 'isVirtual',
     get: function get() {
-      return this.attr('virtual');
+      var _attr = this.attr('border'),
+          borderWidth = _attr.width,
+          borderRadius = this.attr('borderRadius'),
+          bgcolor = this.attr('bgcolor'),
+          _attr2 = this.attr('gradients'),
+          bgGradient = _attr2.bgcolor,
+          _attr3 = this.attr('size'),
+          _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
+          width = _attr4[0],
+          height = _attr4[1],
+          _attr5 = this.attr('anchor'),
+          _attr6 = (0, _slicedToArray3.default)(_attr5, 2),
+          anchorX = _attr6[0],
+          anchorY = _attr6[1];
+
+      return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient;
     }
   }, {
     key: 'children',
@@ -6443,10 +6446,10 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
         return [0, 0];
       }
 
-      var _attr = this.attr('size'),
-          _attr2 = (0, _slicedToArray3.default)(_attr, 2),
-          width = _attr2[0],
-          height = _attr2[1];
+      var _attr7 = this.attr('size'),
+          _attr8 = (0, _slicedToArray3.default)(_attr7, 2),
+          width = _attr8[0],
+          height = _attr8[1];
 
       if (width === '' || height === '') {
         if (this.attr('clip')) {
