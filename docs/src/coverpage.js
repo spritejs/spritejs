@@ -14,7 +14,7 @@
   const _onScroll = Symbol('onScroll')
   const {Scene, Sprite, Group, Label, Path} = spritejs
   const scene = new Scene('#coverpage', {
-    viewport: ['auto', 'auto'],
+    // viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
   })
@@ -25,13 +25,19 @@
     shadowContext: false,
   })
 
+  let maxScroll = null
   // 适配移动端
   function fixMobile() {
+    window.scrollTo(0, 0)
+    scene.updateViewport()
     const [width] = scene.viewport
     if(width <= 480) {
       const {width: w, height: h} = fglayer.canvas.style
       fglayer.canvas.style.width = `${parseInt(w, 10) * 2}px`
       fglayer.canvas.style.height = `${parseInt(h, 10) * 2}px`
+    }
+    if(maxScroll != null) {
+      maxScroll = calculateScroll()
     }
   }
   fixMobile()
@@ -563,13 +569,16 @@
   const featureGroup = showFeatures()
 
   let scrolled = false
-  const features = document.getElementById('features')
 
-  const r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0]
-  const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
-  const b = (440 + 465) * r
-  const c = features.clientHeight / 2
-  const maxScroll = features.getBoundingClientRect().y - a - b + c
+  function calculateScroll() {
+    const features = document.getElementById('features')
+    const r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0]
+    const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
+    const b = (440 + 465) * r
+    const c = features.clientHeight / 2
+    return features.getBoundingClientRect().y - a - b + c
+  }
+  maxScroll = calculateScroll()
 
   more[0].on('mouseenter', () => {
     autoScroll(maxScroll, 1000)

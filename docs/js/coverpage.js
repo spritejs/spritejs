@@ -321,12 +321,21 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     };
   }();
 
-  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
+  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, calculateScroll;
 
   return regeneratorRuntime.wrap(function _callee5$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
+          calculateScroll = function calculateScroll() {
+            var features = document.getElementById('features');
+            var r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
+            var a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
+            var b = (440 + 465) * r;
+            var c = features.clientHeight / 2;
+            return features.getBoundingClientRect().y - a - b + c;
+          };
+
           autoScroll = function autoScroll(scrollBy) {
             var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
 
@@ -586,6 +595,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
 
           fixMobile = function fixMobile() {
+            window.scrollTo(0, 0);
+            scene.updateViewport();
+
             var _scene$viewport = _slicedToArray(scene.viewport, 1),
                 width = _scene$viewport[0];
 
@@ -596,6 +608,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
               fglayer.canvas.style.width = parseInt(w, 10) * 2 + 'px';
               fglayer.canvas.style.height = parseInt(h, 10) * 2 + 'px';
+            }
+            if (maxScroll != null) {
+              maxScroll = calculateScroll();
             }
           };
 
@@ -615,7 +630,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           _onScroll = Symbol('onScroll');
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
           scene = new Scene('#coverpage', {
-            viewport: ['auto', 'auto'],
+            // viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
             stickMode: 'width'
           });
@@ -624,7 +639,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             renderMode: 'repaintAll',
             shadowContext: false
           });
-
+          maxScroll = null;
           // 适配移动端
 
           fixMobile();
@@ -638,33 +653,33 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
           // 预加载资源
 
-          _context5.next = 31;
+          _context5.next = 33;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 31:
+        case 33:
 
           document.body.removeChild(loadingHint);
 
           requestId = null;
-          _context5.next = 35;
+          _context5.next = 37;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 35:
-          _context5.next = 37;
+        case 37:
+          _context5.next = 39;
           return showIntroText('跨平台绘图对象模型');
 
-        case 37:
+        case 39:
           text = _context5.sent;
           buttons = showButtons();
-          _context5.next = 41;
+          _context5.next = 43;
           return showHuanHuan();
 
-        case 41:
+        case 43:
           huanhuan = _context5.sent;
-          _context5.next = 44;
+          _context5.next = 46;
           return showGuanGuan();
 
-        case 44:
+        case 46:
           guanguan = _context5.sent;
           more = showMore();
 
@@ -677,13 +692,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
           featureGroup = showFeatures();
           scrolled = false;
-          features = document.getElementById('features');
-          r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
-          a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
-          b = (440 + 465) * r;
-          c = features.clientHeight / 2;
-          maxScroll = features.getBoundingClientRect().y - a - b + c;
 
+          maxScroll = calculateScroll();
 
           more[0].on('mouseenter', function () {
             autoScroll(maxScroll, 1000);
@@ -752,8 +762,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             if (x2 - x1 > 0 && x2 - x1 !== featureGroup._clipDX) {
               featureGroup._clipDX = x2 - x1;
               var l = 916 - (1896 - x1),
-                  _r = 916 + x2 - 1736;
-              var d = 'M' + l + ',0L' + _r + ',0L' + _r + ',' + 930 + 'L' + l + ',930z';
+                  r = 916 + x2 - 1736;
+              var d = 'M' + l + ',0L' + r + ',0L' + r + ',' + 930 + 'L' + l + ',930z';
               featureGroup.attr({
                 clip: { d: d }
               });
@@ -771,7 +781,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 59:
+        case 56:
         case 'end':
           return _context5.stop();
       }
