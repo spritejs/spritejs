@@ -1,5 +1,5 @@
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
-[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs) 
+[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
@@ -7,7 +7,7 @@ Sprite is a cross-platform Render Object Model System that let users manipulate 
 
 It is can not only support web apps but also support node (use node-canvas) apps or other platforms like weixin apps.
 
-## Fetures
+## Features
 
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.

@@ -135,7 +135,7 @@ paperEl.appendChild(formEl)
       }
 
       let superMaps = await Promise.all([...parents].reverse().map(parentId => MapLoader.load(parentId)))
-      superMaps = superMaps.reduce((fetures, map) => fetures.concat(map.features), [])
+      superMaps = superMaps.reduce((features, map) => features.concat(map.features), [])
 
       const features = [...superMaps, ...this.map.features]
 
