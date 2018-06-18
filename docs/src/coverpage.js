@@ -1,5 +1,15 @@
 (async function () {
   document.querySelector('main').style.display = ''
+  const loadingHint = document.createElement('div')
+  loadingHint.id = 'loadingHint'
+  loadingHint.style.color = 'white'
+  loadingHint.style.zIndex = '999999'
+  loadingHint.innerHTML = 'loading'
+  loadingHint.style.position = 'fixed'
+  loadingHint.style.top = '50%'
+  loadingHint.style.left = '50%'
+  loadingHint.style.transform = 'translate(-50%, -50%)'
+  document.body.appendChild(loadingHint)
 
   const _onScroll = Symbol('onScroll')
   const {Scene, Sprite, Group, Label, Path} = spritejs
@@ -37,6 +47,8 @@
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
   ])
+
+  document.body.removeChild(loadingHint)
 
   function wait(ms) {
     return new Promise((resolve) => {

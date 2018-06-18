@@ -321,7 +321,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     };
   }();
 
-  var _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
+  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, r, a, b, c, maxScroll;
 
   return regeneratorRuntime.wrap(function _callee5$(_context5) {
     while (1) {
@@ -600,6 +600,17 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
 
           document.querySelector('main').style.display = '';
+          loadingHint = document.createElement('div');
+
+          loadingHint.id = 'loadingHint';
+          loadingHint.style.color = 'white';
+          loadingHint.style.zIndex = '999999';
+          loadingHint.innerHTML = 'loading';
+          loadingHint.style.position = 'fixed';
+          loadingHint.style.top = '50%';
+          loadingHint.style.left = '50%';
+          loadingHint.style.transform = 'translate(-50%, -50%)';
+          document.body.appendChild(loadingHint);
 
           _onScroll = Symbol('onScroll');
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Group = _spritejs.Group, Label = _spritejs.Label, Path = _spritejs.Path;
@@ -627,30 +638,33 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
           // 预加载资源
 
-          _context5.next = 21;
+          _context5.next = 31;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 21:
+        case 31:
+
+          document.body.removeChild(loadingHint);
+
           requestId = null;
-          _context5.next = 24;
+          _context5.next = 35;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 24:
-          _context5.next = 26;
+        case 35:
+          _context5.next = 37;
           return showIntroText('跨平台绘图对象模型');
 
-        case 26:
+        case 37:
           text = _context5.sent;
           buttons = showButtons();
-          _context5.next = 30;
+          _context5.next = 41;
           return showHuanHuan();
 
-        case 30:
+        case 41:
           huanhuan = _context5.sent;
-          _context5.next = 33;
+          _context5.next = 44;
           return showGuanGuan();
 
-        case 33:
+        case 44:
           guanguan = _context5.sent;
           more = showMore();
 
@@ -757,7 +771,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 48:
+        case 59:
         case 'end':
           return _context5.stop();
       }
