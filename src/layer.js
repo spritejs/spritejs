@@ -54,6 +54,23 @@ class ExLayer extends Layer {
     const [width, height] = this.resolution
     return [width / 2, height / 2]
   }
+  pointCollision(evt) {
+    if(this.outputContext.canvas) {
+      let layerX = evt.layerX | 0,
+        layerY = evt.layerY | 0
+      const [width, height, offsetLeft, offsetTop] = this.resolution
+
+      layerX += offsetLeft
+      layerY += offsetTop
+
+      if(layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
+        return true
+      }
+      return false
+    }
+    /* istanbul ignore next  */
+    return true
+  }
   set resolution(resolution) {
     const [width, height, offsetLeft, offsetTop] = resolution
     const outputCanvas = this.outputContext.canvas

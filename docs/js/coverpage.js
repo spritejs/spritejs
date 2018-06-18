@@ -231,7 +231,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
   var showGuanGuan = function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-      var guanguan, anim3, anim31, anim4, anim41;
+      var guanguan, anim3, anim31, anim4;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -283,11 +283,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               return wait(300);
 
             case 19:
-              anim41 = guanguan.animate([{ textures: 'guanguan1.png' }, { textures: 'guanguan2.png' }], {
+
+              guanguan.animate([{ textures: 'guanguan1.png' }, { textures: 'guanguan2.png' }], {
                 duration: 200,
                 fill: 'backwards'
               });
-
               guanguan.attr({
                 zIndex: 100
                 // rotate: 20,
@@ -501,7 +501,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             fglayer.append(githubBtn);
             registerButton(githubBtn, 'https://github.com/spritejs/spritejs');
 
-            var anim5 = githubBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+            githubBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
               fill: 'forwards'
             });
@@ -514,7 +514,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             fglayer.append(getStartBtn);
             registerButton(getStartBtn, window.location + 'zh-cn/index');
 
-            var anim6 = getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+            getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
               fill: 'forwards',
               delay: 500
@@ -528,7 +528,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             fglayer.append(demoBtn);
 
             registerButton(demoBtn, '/demo');
-            var anim7 = demoBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
+
+            demoBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
               fill: 'forwards',
               delay: 1000

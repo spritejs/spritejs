@@ -4369,6 +4369,30 @@ var ExLayer = function (_Layer) {
   }
 
   (0, _createClass3.default)(ExLayer, [{
+    key: 'pointCollision',
+    value: function pointCollision(evt) {
+      if (this.outputContext.canvas) {
+        var layerX = evt.layerX | 0,
+            layerY = evt.layerY | 0;
+
+        var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 4),
+            width = _resolution2[0],
+            height = _resolution2[1],
+            offsetLeft = _resolution2[2],
+            offsetTop = _resolution2[3];
+
+        layerX += offsetLeft;
+        layerY += offsetTop;
+
+        if (layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
+          return true;
+        }
+        return false;
+      }
+      /* istanbul ignore next  */
+      return true;
+    }
+  }, {
     key: 'clearContext',
     value: function clearContext(context) {
       if (context.canvas) {
@@ -4387,11 +4411,11 @@ var ExLayer = function (_Layer) {
     value: function isNodeVisible(sprite) {
       if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isNodeVisible', this).call(this, sprite)) return false;
 
-      var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 4),
-          width = _resolution2[0],
-          height = _resolution2[1],
-          offsetLeft = _resolution2[2],
-          offsetTop = _resolution2[3];
+      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 4),
+          width = _resolution3[0],
+          height = _resolution3[1],
+          offsetLeft = _resolution3[2],
+          offsetTop = _resolution3[3];
 
       // calculating renderBox is super slow...
       // const box = sprite.renderBox
@@ -4513,11 +4537,11 @@ var ExLayer = function (_Layer) {
       return this[_resolution];
     },
     set: function set(resolution) {
-      var _resolution3 = (0, _slicedToArray3.default)(resolution, 4),
-          width = _resolution3[0],
-          height = _resolution3[1],
-          offsetLeft = _resolution3[2],
-          offsetTop = _resolution3[3];
+      var _resolution4 = (0, _slicedToArray3.default)(resolution, 4),
+          width = _resolution4[0],
+          height = _resolution4[1],
+          offsetLeft = _resolution4[2],
+          offsetTop = _resolution4[3];
 
       var outputCanvas = this.outputContext.canvas;
       outputCanvas.width = width;
@@ -4555,9 +4579,9 @@ var ExLayer = function (_Layer) {
         return this.parent.layerViewport;
       }
 
-      var _resolution4 = (0, _slicedToArray3.default)(this[_resolution], 2),
-          width = _resolution4[0],
-          height = _resolution4[1];
+      var _resolution5 = (0, _slicedToArray3.default)(this[_resolution], 2),
+          width = _resolution5[0],
+          height = _resolution5[1];
 
       return [width, height];
     }
@@ -4569,9 +4593,9 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'center',
     get: function get() {
-      var _resolution5 = (0, _slicedToArray3.default)(this.resolution, 2),
-          width = _resolution5[0],
-          height = _resolution5[1];
+      var _resolution6 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution6[0],
+          height = _resolution6[1];
 
       return [width / 2, height / 2];
     }
@@ -9197,7 +9221,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-alpha.32';
+var version = '2.0.0-beta.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14931,7 +14955,7 @@ var Layer = function (_BaseNode) {
             height = _outputContext$canvas.height;
 
 
-        if (layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
+        if (layerX == null && layerY == null || layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
           return true;
         }
         return false;
@@ -15700,10 +15724,12 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
       var _this3 = this;
 
       var node = (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'cloneNode', this).call(this);
-      node.textures = this.textures.map(function (texture, i) {
-        texture.image = _this3.images[i];
-        return texture;
-      });
+      if (this.images) {
+        node.textures = this.textures.map(function (texture, i) {
+          texture.image = _this3.images[i];
+          return texture;
+        });
+      }
       return node;
     }
   }, {

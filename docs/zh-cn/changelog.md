@@ -255,3 +255,10 @@
 - group的自动“虚拟化”
 - 新增了集成proton的文档和例子
 - 改进layer.draw()方法已对第三方库更友好，增加相应的例子文档
+
+## [2.0.0-beta.1][2018-06-18]
+
+### bug修复
+
+- 修复keyboard事件不能派发到sprite的bug
+- 修复stickExtend下事件超过canvas原始区域后检测不到的bug
