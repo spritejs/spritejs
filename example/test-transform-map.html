@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>Demo</title>
   <style>
-    *{      
-      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */      
-      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */      
-      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */       
+    *{
+      -webkit-touch-callout: auto; /* prevent callout to copy image, etc when tap to hold */
+      -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
       -webkit-user-select:none;
-    }  
+    }
     html,body {
       width: 100%;
       height: 100%;
@@ -37,17 +37,17 @@
     <button type="submit" id="moveToBtn">确认</button>
   </form>
   <div id="paper"></div>
-  
+
   <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
   <script src="/js/mapRelation.js"></script>
   <script src="/js/d3.js"></script>
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper')
-paper.setResolution(1800, 1000) 
+paper.setResolution(1800, 1000)
 
 const worldLayer = paper.layer('world-layer', {
-  //resolution: [3600, 2000], 
+  //resolution: [3600, 2000],
   handleEvent: false
 })
 const mapLayer = paper.layer('map-layer')
@@ -85,7 +85,7 @@ const MapLoader = {
         this.cache[mapId] = data
         resolve(data)
       })
-    }) 
+    })
   }
 }
 
@@ -123,7 +123,7 @@ class World {
     this.baseScale = baseScale
 
     this.map = map
-    
+
     // 这里直接用boxCP因为发现一些Map数据的同一个地区不同地图数据里CP不一致
     //if(!map.cp) {
       map.cp = mapRelation[mapId].boxCP
@@ -146,13 +146,13 @@ class World {
   }
   async draw() {
     const layer = this.layer
-    
+
     const [width, height] = layer.resolution
-    
+
     const projection = d3.geoMercator()
       .center(this.metaData[this.mapId].cp)
       .translate([width / 2, height / 2])
-      .scale(this.baseScale * width / 2)    
+      .scale(this.baseScale * width / 2)
 
     this.projection = projection
 
@@ -167,7 +167,7 @@ class World {
     }
 
     let superMaps = await Promise.all([...parents].reverse().map(parentId => MapLoader.load(parentId)))
-    superMaps = superMaps.reduce((fetures, map) => fetures.concat(map.features), [])
+    superMaps = superMaps.reduce((features, map) => features.concat(map.features), [])
 
     let features = [...superMaps, ...this.map.features]
 
@@ -232,7 +232,7 @@ class World {
       enter.shift()
       leave.pop()
     }
-    
+
     return {leave, enter}
   }
   async moveTo(id) {
@@ -279,17 +279,17 @@ class World {
       let subMeta = this.metaData[subId]
 
       const pos = this.projection(subMeta.cp)
-      
+
       const desSize = mapRelation[ChinaMapID].size
-      const scale = Math.min(desSize[0] / subMeta.size[0], 
+      const scale = Math.min(desSize[0] / subMeta.size[0],
             desSize[1] / subMeta.size[1]) / this.baseScale
 
       const translate = this.projection.translate()
-      
+
       const srcMatrix = [1, 0, 0, 1, 0, 0]
 
-      desMatrix = [scale, 0, 0, scale, 
-        translate[0] - pos[0] * scale, 
+      desMatrix = [scale, 0, 0, scale,
+        translate[0] - pos[0] * scale,
         translate[1] - pos[1] * scale]
 
       this.transitionMap[subId] = desMatrix
@@ -298,7 +298,7 @@ class World {
     const animator = new Animator(duration,  function(p){
       const matrix = [
         1 + (desMatrix[0] - 1) * p, 0, 0,
-        1 + (desMatrix[3] - 1) * p, 
+        1 + (desMatrix[3] - 1) * p,
         desMatrix[4] * p,
         desMatrix[5] * p
       ]
@@ -331,7 +331,7 @@ class World {
       const animator = new Animator(duration,  function(p){
         const m = [
           matrix[0] + (1 - matrix[0]) * p, 0, 0,
-          matrix[3] + (1 - matrix[3]) * p, 
+          matrix[3] + (1 - matrix[3]) * p,
           matrix[4] * (1 - p),
           matrix[5] * (1 - p)
         ]
@@ -341,7 +341,7 @@ class World {
 
       await animator.animate()
     }
-    
+
     await sleep(10)
     await this.load(parentId)
   }
@@ -352,12 +352,12 @@ function findId(idOrName) {
     return idOrName
   }
   for(let [id, value] of Object.entries(mapRelation)) {
-    if(value.name === idOrName) { 
+    if(value.name === idOrName) {
       return id
     }
   }
   for(let [id, value] of Object.entries(mapRelation)) {
-    if(value.name.startsWith(idOrName)) { 
+    if(value.name.startsWith(idOrName)) {
       return id
     }
   }

@@ -22,7 +22,6 @@
   d3.json('/res/data/china.json', (err, data) => {
     if(err) throw new Error(err)
 
-    // console.log(data, path)
     let selectedTarget = null
 
     layer.selectAll('path')
