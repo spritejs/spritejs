@@ -4372,8 +4372,8 @@ var ExLayer = function (_Layer) {
     key: 'pointCollision',
     value: function pointCollision(evt) {
       if (this.outputContext.canvas) {
-        var layerX = evt.layerX,
-            layerY = evt.layerY;
+        var layerX = evt.layerX | 0,
+            layerY = evt.layerY | 0;
 
         var _resolution2 = (0, _slicedToArray3.default)(this.resolution, 4),
             width = _resolution2[0],
@@ -4384,7 +4384,7 @@ var ExLayer = function (_Layer) {
         layerX += offsetLeft;
         layerY += offsetTop;
 
-        if (layerX == null && layerY == null || layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
+        if (layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
           return true;
         }
         return false;
@@ -9221,7 +9221,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-beta';
+var version = '2.0.0-beta.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;

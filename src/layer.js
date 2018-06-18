@@ -56,14 +56,14 @@ class ExLayer extends Layer {
   }
   pointCollision(evt) {
     if(this.outputContext.canvas) {
-      let {layerX, layerY} = evt
+      let layerX = evt.layerX | 0,
+        layerY = evt.layerY | 0
       const [width, height, offsetLeft, offsetTop] = this.resolution
 
       layerX += offsetLeft
       layerY += offsetTop
 
-      if(layerX == null && layerY == null
-        || layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
+      if(layerX >= 0 && layerY >= 0 && layerX < width && layerY < height) {
         return true
       }
       return false
