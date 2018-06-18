@@ -332,7 +332,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             var a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
             var b = (440 + 465) * r;
             var c = features.clientHeight / 2;
-            return features.getBoundingClientRect().y - a - b + c + window.scrollY;
+            return features.getBoundingClientRect().y - a - b + c + window.pageYOffset;
           };
 
           autoScroll = function autoScroll(scrollBy) {

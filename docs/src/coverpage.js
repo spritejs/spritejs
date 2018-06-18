@@ -575,7 +575,7 @@
     const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
     const b = (440 + 465) * r
     const c = features.clientHeight / 2
-    return features.getBoundingClientRect().y - a - b + c + window.scrollY
+    return features.getBoundingClientRect().y - a - b + c + window.pageYOffset
   }
   maxScroll = calculateScroll()
 
