@@ -25,6 +25,8 @@ editor.on('change', debounce((evt) => {
     window.frames[0].location.href = `/demo/sendbox3.html?t=${hash}`
   } else if(window.location.hash.startsWith('#proton')) {
     window.frames[0].location.href = `/demo/sendbox4.html?t=${hash}`
+  } else if(window.location.hash.startsWith('#curvejs')) {
+    window.frames[0].location.href = `/demo/sendboxCurvejs.html?t=${hash}`
   } else {
     window.frames[0].location.href = `/demo/sendbox.html?t=${hash}`
   }

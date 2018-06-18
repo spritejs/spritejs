@@ -243,3 +243,15 @@
 - 改变了draw和isVisible策略，减少了复杂的renderBox计算，大大优化了性能
 - 支持Sprite.setAttributeEffects避免了扩展Sprite对象可能造成Effect冲突
 - 支持了Proton粒子系统
+
+## [2.0.0-alpha.32][2018-06-15]
+
+### bug修复
+
+- 修复stickExtend模式下clearRect的bug
+
+### 改进
+
+- group的自动“虚拟化”
+- 新增了集成proton的文档和例子
+- 改进layer.draw()方法已对第三方库更友好，增加相应的例子文档

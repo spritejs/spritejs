@@ -79,11 +79,18 @@ class ExLayer extends Layer {
     })
 
     this[_resolution] = resolution
+    this.dispatchEvent('resolutionChange', {target: this}, true, true)
   }
   clearContext(context) {
-    const [width, height, offsetLeft, offsetTop] = this.resolution
     if(context.canvas) {
-      context.clearRect(-offsetLeft, -offsetTop, width, height)
+      const resolution = this.resolution,
+        offsetTop = resolution[3],
+        offsetLeft = resolution[2]
+      if(!this.shadowContext || context === this.shadowContext) {
+        context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height)
+      } else {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+      }
     }
   }
 
@@ -135,9 +142,7 @@ class ExLayer extends Layer {
   putSnapshot(snapshot) {
     const outputContext = this.outputContext
 
-    const [width, height] = this.resolution
-
-    outputContext.clearRect(0, 0, width, height)
+    this.clearContext(outputContext)
     outputContext.drawImage(snapshot.context.canvas, 0, 0)
 
     this.clearUpdate()

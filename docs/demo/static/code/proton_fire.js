@@ -8,6 +8,10 @@ const scene = new Scene('#paper', {
 const layer = scene.layer('fglayer')
 scene.container.style.backgroundColor = '#000'
 
+layer.on('resolutionChange', (evt) => {
+  layer.context.globalCompositeOperation = 'screen'
+})
+
 function loadImage() {
   const image = new Image()
   image.onload = function (e) {
