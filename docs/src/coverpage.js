@@ -26,9 +26,11 @@
   }
   fixMobile()
 
-  const animations = []
+  const _fixMobile = _.debounce(fixMobile, 300)
 
-  // window.addEventListener('resize', fixMobile)
+  window.addEventListener('resize', _fixMobile)
+
+  const animations = []
 
   // 预加载资源
   await scene.preload([
@@ -298,6 +300,7 @@
       button.on('click', (evt) => {
         scene.removeLayer(fglayer)
         coverpage.remove()
+        window.removeEventListener('resize', _fixMobile)
         if(scene[_onScroll]) {
           window.removeEventListener('scroll', scene[_onScroll])
         }

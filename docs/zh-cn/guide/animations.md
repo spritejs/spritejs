@@ -70,4 +70,5 @@ sprite所属的layer上有一个timeline属性，这是一个[Timeline](https://
 <!-- demo: animate-tweenjs -->
 
 
+<script src="//lib.baomitu.com/tween.js/17.2.0/Tween.min.js"></script>
 <script src="/js/guide/animation.js"></script>
