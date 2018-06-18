@@ -332,7 +332,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             var a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
             var b = (440 + 465) * r;
             var c = features.clientHeight / 2;
-            return features.getBoundingClientRect().y - a - b + c;
+            return features.getBoundingClientRect().y - a - b + c + window.scrollY;
           };
 
           autoScroll = function autoScroll(scrollBy) {
@@ -594,7 +594,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
 
           fixMobile = function fixMobile() {
-            window.scrollTo(0, 1);
             scene.updateViewport();
 
             var _scene$viewport = _slicedToArray(scene.viewport, 1),

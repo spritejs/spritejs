@@ -28,7 +28,6 @@
   let maxScroll = null
   // 适配移动端
   function fixMobile() {
-    window.scrollTo(0, 1)
     scene.updateViewport()
     const [width] = scene.viewport
     if(width <= 480) {
@@ -576,7 +575,7 @@
     const a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2
     const b = (440 + 465) * r
     const c = features.clientHeight / 2
-    return features.getBoundingClientRect().y - a - b + c
+    return features.getBoundingClientRect().y - a - b + c + window.scrollY
   }
   maxScroll = calculateScroll()
 
