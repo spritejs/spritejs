@@ -220,6 +220,7 @@ test('scene-stick-750-bottom', async (t) => {
 })
 
 test('scene-stick-750-width-extend', async (t) => {
+  t.plan(6)
   const scene = new Scene('#container', {
     resolution: [1200, 1200],
     viewport: [750, 1334],
@@ -241,6 +242,17 @@ test('scene-stick-750-width-extend', async (t) => {
     bgcolor: 'red',
   })
   scene.layer().append(frame, block)
+
+  scene.layer().on('click', (evt) => {
+    console.log('clicked', evt.x, evt.y) // eslint-disable-line no-console
+    t.truthy(evt.x === 100)
+    t.truthy(evt.y === 100 || evt.y === -100)
+  })
+
+  scene.dispatchEvent('click', {x: 100, y: 100})
+  scene.dispatchEvent('click', {x: 100, y: -100})
+  scene.dispatchEvent('click', {x: -100, y: -100})
+  scene.dispatchEvent('click', {x: 100, y: -1000})
 
   const canvas = await scene.snapshot()
 
