@@ -321,14 +321,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     };
   }();
 
-  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, calculateScroll;
+  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, calculateScroll;
 
   return regeneratorRuntime.wrap(function _callee5$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           calculateScroll = function calculateScroll() {
-            var features = document.getElementById('features');
             var r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
             var a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
             var b = (440 + 465) * r;
@@ -595,7 +594,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
 
           fixMobile = function fixMobile() {
-            window.scrollTo(0, 0);
+            window.scrollTo(0, 1);
             scene.updateViewport();
 
             var _scene$viewport = _slicedToArray(scene.viewport, 1),
@@ -692,6 +691,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           };
           featureGroup = showFeatures();
           scrolled = false;
+          features = document.getElementById('features');
 
           maxScroll = calculateScroll();
 
@@ -781,7 +781,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 56:
+        case 57:
         case 'end':
           return _context5.stop();
       }
