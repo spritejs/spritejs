@@ -75,16 +75,31 @@
     iterations: Infinity,
   })
 
-  lemonGroup.on('mouseenter', (evt) => {
+  let enterAction,
+    leaveAction
+
+  lemonGroup.on('mouseenter', async (evt) => {
     layer.timeline.playbackRate = 3.0
-    robot.attr({
-      pos: [730, 90],
-    })
+    if(!enterAction) {
+      await leaveAction
+      leaveAction = null
+      enterAction = robot.transition(0.3).attr({
+        pos: [730, 90],
+      })
+      await enterAction
+      enterAction = null
+    }
   })
-  lemonGroup.on('mouseleave', (evt) => {
+  lemonGroup.on('mouseleave', async (evt) => {
     layer.timeline.playbackRate = 1.0
-    robot.attr({
-      pos: [710, 110],
-    })
+    if(!leaveAction) {
+      await enterAction
+      enterAction = null
+      leaveAction = robot.transition(0.3).attr({
+        pos: [710, 110],
+      })
+      await leaveAction
+      leaveAction = null
+    }
   })
 }())
