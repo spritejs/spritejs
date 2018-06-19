@@ -2,18 +2,16 @@
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-  var _this = this;
+_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  var _spritejs, Scene, Sprite, Path, Group, scene, layer, robot, d, shadowD, shadow, lemon, lemonGroup, d2, i, t, transition;
 
-  var _spritejs, Scene, Sprite, Path, Group, scene, layer, robot, d, shadowD, shadow, lemon, lemonGroup, d2, i, t, enterAction, leaveAction;
-
-  return regeneratorRuntime.wrap(function _callee3$(_context3) {
+  return regeneratorRuntime.wrap(function _callee$(_context) {
     while (1) {
-      switch (_context3.prev = _context3.next) {
+      switch (_context.prev = _context.next) {
         case 0:
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Path = _spritejs.Path, Group = _spritejs.Group;
           scene = new Scene('#enlogo', { viewport: ['auto', 'auto'], resolution: [1200, 400] });
-          _context3.next = 4;
+          _context.next = 4;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
         case 4:
@@ -90,92 +88,26 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
             iterations: Infinity
           });
 
-          enterAction = void 0, leaveAction = void 0;
+          transition = robot.transition(0.3);
 
 
-          lemonGroup.on('mouseenter', function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(evt) {
-              return regeneratorRuntime.wrap(function _callee$(_context) {
-                while (1) {
-                  switch (_context.prev = _context.next) {
-                    case 0:
-                      layer.timeline.playbackRate = 3.0;
-
-                      if (enterAction) {
-                        _context.next = 9;
-                        break;
-                      }
-
-                      _context.next = 4;
-                      return leaveAction;
-
-                    case 4:
-                      leaveAction = null;
-                      enterAction = robot.transition(0.3).attr({
-                        pos: [730, 90]
-                      });
-                      _context.next = 8;
-                      return enterAction;
-
-                    case 8:
-                      enterAction = null;
-
-                    case 9:
-                    case 'end':
-                      return _context.stop();
-                  }
-                }
-              }, _callee, _this);
-            }));
-
-            return function (_x) {
-              return _ref2.apply(this, arguments);
-            };
-          }());
-          lemonGroup.on('mouseleave', function () {
-            var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(evt) {
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                while (1) {
-                  switch (_context2.prev = _context2.next) {
-                    case 0:
-                      layer.timeline.playbackRate = 1.0;
-
-                      if (leaveAction) {
-                        _context2.next = 9;
-                        break;
-                      }
-
-                      _context2.next = 4;
-                      return enterAction;
-
-                    case 4:
-                      enterAction = null;
-                      leaveAction = robot.transition(0.3).attr({
-                        pos: [710, 110]
-                      });
-                      _context2.next = 8;
-                      return leaveAction;
-
-                    case 8:
-                      leaveAction = null;
-
-                    case 9:
-                    case 'end':
-                      return _context2.stop();
-                  }
-                }
-              }, _callee2, _this);
-            }));
-
-            return function (_x2) {
-              return _ref3.apply(this, arguments);
-            };
-          }());
+          lemonGroup.on('mouseenter', function (evt) {
+            layer.timeline.playbackRate = 3.0;
+            transition.attr({
+              pos: [730, 90]
+            });
+          });
+          lemonGroup.on('mouseleave', function (evt) {
+            layer.timeline.playbackRate = 1.0;
+            transition.attr({
+              pos: [710, 110]
+            });
+          });
 
         case 25:
         case 'end':
-          return _context3.stop();
+          return _context.stop();
       }
     }
-  }, _callee3, this);
+  }, _callee, this);
 }))();

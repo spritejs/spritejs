@@ -26,7 +26,7 @@
   * [屏幕适配](/zh-cn/guide/resolution)
   * [盒模型](/zh-cn/guide/boxmodel)
   * [预加载与雪碧图](/zh-cn/guide/resource)
-  * [动画：Web Animation API](/zh-cn/guide/animations)
+  * [高级动画](/zh-cn/guide/animations)
   * [外部时钟](/zh-cn/guide/ticker)
   * [碰撞检测](/zh-cn/guide/collision)
   * [事件与自定义事件](/zh-cn/guide/events)

@@ -32,7 +32,7 @@
         '/zh-cn/.*/_navbar.md': '/zh-cn/_navbar.md',
         '/en/.*/_sidebar.md': '/en/_sidebar.md',
         '/api/_navbar.md': language === 'zh-CN' ? '/zh-cn/_navbar.md' : '/en/_navbar.md',
-        '/_navbar.md': language === 'zh-CN' ? false : '/en/_navbar.md',
+        '/_navbar.md': language === 'zh-CN' ? '/_navbar.md' : '/en/_navbar.md',
       },
       plugins: [
         generateApiPlugin,

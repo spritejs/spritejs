@@ -262,3 +262,15 @@
 
 - 修复keyboard事件不能派发到sprite的bug
 - 修复stickExtend下事件超过canvas原始区域后检测不到的bug
+
+## [2.0.0][2018-06-19]
+
+### 改进
+
+- transition对象调用attr自动将之前的transition动画结束
+- 调整构建脚本
+- 完善中、英文文档
+
+### bug修复
+
+- 修复animation.finished在某些情况下调用两次的bug
