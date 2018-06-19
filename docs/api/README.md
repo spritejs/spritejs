@@ -1,23 +1,28 @@
-[![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
-[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
-[![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
-[![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
+<style>
+#enlogo {
+  width: 100%;
+  padding-bottom: 33%;
+}
+</style>
 
-Sprite is a cross-platform Render Object Model System that let users manipulate drawing elements on canvas like HTML element on webpage.
+<div id="enlogo" style="position:relative"></div>
 
-It is can not only support web apps but also support node (use node-canvas) apps or other platforms like weixin apps.
+SpriteJS is a cross-platform lightweight 2D render object model.
+
+Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 ## Features
 
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
 - [Server-side render](#server-side-render). Work with node-canvas.
-- [Weixin app](https://github.com/spritejs/sprite-wxapp)
+- [Weixin Apps](https://github.com/spritejs/sprite-wxapp)
 
-## Quick Look
+## Quick Start
 
 ```html
 <script src="https://s4.ssl.qhres.com/!0237b0b0/spritejs.min.js"></script>
@@ -38,8 +43,9 @@ It is can not only support web apps but also support node (use node-canvas) apps
     paper.layer().appendChild(sprite)
 </script>
 ```
+---
 
-## Loading and installing
+## Usage
 
 In browser:
 
@@ -47,31 +53,107 @@ In browser:
 <script src="https://s4.ssl.qhres.com/!0237b0b0/spritejs.min.js"></script>
 ```
 
-With Node:
+With NPM:
 
 ```bash
 npm install spritejs --save
 ```
 
-```js
-import {Scene, Sprite, Label, Path, Group} from 'spritejs'
+## Examples
+
+### Basic
+
+- [Overview](http://spritejs.org/demo/)
+- [Sprites](http://spritejs.org/demo/#basic_sprites)
+- [Path & Group](http://spritejs.org/demo/#path_groups)
+- [Labels](http://spritejs.org/demo/#labels)
+- [Buttons](http://spritejs.org/demo/#buttons)
+- [Transforms](http://spritejs.org/demo/#transforms)
+- [Events](http://spritejs.org/demo/#events)
+- [Filters](http://spritejs.org/demo/#filters)
+- [Animations](http://spritejs.org/demo/#animations)
+- [SVG Paths](http://spritejs.org/demo/#svg_path)
+- [Offset API](http://spritejs.org/demo/#offset_api)
+- [OBB Hit](http://spritejs.org/demo/#obb)
+
+### With D3
+
+Compatible with [d3.js](https://github.com/d3/d3).
+
+- [Bar Graph](http://spritejs.org/demo/#d3_bar)
+- [Hierarchy](http://spritejs.org/demo/#d3-2)
+- [Map](http://spritejs.org/demo/#d3_map)
+- [Force Links](http://spritejs.org/demo/#d3_links)
+
+### With Proton
+
+[Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
+
+- [Big Fire](http://spritejs.org/demo/#proton_fire)
+- [Background Particles](http://spritejs.org/demo/#proton_position)
+- [Custom Behavior](http://spritejs.org/demo/#proton_behavior)
+
+### With Matter-js
+
+[Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
+
+- [Mixed shapes](http://spritejs.org/demo/#matterjs_mixed_shapes)
+
+### API Doc
+
+- [Sprite](http://spritejs.org/#/api/sprite)
+- [Label](http://spritejs.org/#/api/label)
+- [Path](http://spritejs.org/#/api/path)
+- [Group](http://spritejs.org/#/api/group)
+- [Layer](http://spritejs.org/#/api/layer)
+- [Scene](http://spritejs.org/#/api/scene)
+
+### Build
+
+Build with NPM
+
+```bash
+npm run build
 ```
+
+Build Doc
+
+```bash
+npm run build-doc
+```
+
+### Tests
+
+```bash
+npm test
+```
+
+  31 passed
+
+File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------|----------|----------|----------|----------|----------------|
+All files     |     97.7 |    86.73 |    95.24 |     97.8 |                |
+ src          |    97.28 |    86.13 |    92.31 |    97.39 |                |
+  index.js    |      100 |       50 |      100 |      100 |             24 |
+  layer.js    |    96.04 |    83.33 |      100 |    95.92 |    28,42,53,55 |
+  resource.js |    97.73 |       80 |    85.71 |    97.56 |             28 |
+  scene.js    |    97.98 |     89.7 |    90.91 |    98.31 |219,222,267,300 |
+  sprite.js   |    94.12 |    76.19 |      100 |    93.75 |          28,55 |
+ src/platform |      100 |    91.43 |      100 |      100 |                |
+  index.js    |      100 |    91.43 |      100 |      100 |      68,82,139 |
+
 
 ### Server-side Render
 
-Install dependencies
+Spritejs (>= 1.15.0) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
 
 ```bash
 sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev librsvg2-dev libgif-dev build-essential g++
 ```
 
-Install node-canvas
-
 ```bash
-npm install canvas@next --save
+npm install canvas@next
 ```
-
-Just use spritejs in normal way, spritejs will use node-canvas to create render context automatically.
 
 ```js
 const fs = require('fs')
@@ -99,3 +181,9 @@ bglayer.append(text)
   fs.writeFileSync('snap.png', canvas.toBuffer())
 }())
 ```
+
+## License
+
+[MIT](LICENSE)
+
+<script src="/js/en.js"></script>
