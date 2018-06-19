@@ -27,7 +27,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - [Server-side render](#server-side-render). Work with node-canvas.
 - [微信小程序](https://github.com/spritejs/sprite-wxapp)
 
-## Quick Look
+## Quick Start
 
 ```html
 <script src="https://s4.ssl.qhres.com/!0237b0b0/spritejs.min.js"></script>
@@ -61,38 +61,51 @@ In browser:
 <script src="https://s4.ssl.qhres.com/!0237b0b0/spritejs.min.js"></script>
 ```
 
-## Quick Start
+With NPM:
 
-### Examples
+```bash
+npm install spritejs --save
+```
 
-- [Overview](http://spritejs.org/)
+## Examples
+
+### Basic
+
+- [Overview](http://spritejs.org/demo/)
 - [Sprites](http://spritejs.org/demo/#basic_sprites)
-- [Textures](http://spritejs.org/demo/#sprites_textures)
+- [Path & Group](http://spritejs.org/demo/#path_groups)
 - [Labels](http://spritejs.org/demo/#labels)
 - [Buttons](http://spritejs.org/demo/#buttons)
-- [Transforms](http://spritejs.org/demo/#sprites_transforms)
-- [Events](http://spritejs.org/demo/#sprite_events)
+- [Transforms](http://spritejs.org/demo/#transforms)
+- [Events](http://spritejs.org/demo/#events)
 - [Filters](http://spritejs.org/demo/#filters)
 - [Animations](http://spritejs.org/demo/#animations)
 - [SVG Paths](http://spritejs.org/demo/#svg_path)
 - [Offset API](http://spritejs.org/demo/#offset_api)
 - [OBB Hit](http://spritejs.org/demo/#obb)
 
-#### D3 Examples
+### With D3
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [D3.js Example 1](http://spritejs.org/demo/#d3)
-- [D3.js Example 2](http://spritejs.org/demo/#d3-2)
-- [D3.js Example 3](http://spritejs.org/demo/#d3-3)
+- [Bar Graph](http://spritejs.org/demo/#d3_bar)
+- [Hierarchy](http://spritejs.org/demo/#d3-2)
+- [Map](http://spritejs.org/demo/#d3_map)
+- [Force Links](http://spritejs.org/demo/#d3_links)
 
-### Guide (中文）
+### With Proton
 
-- [Introduction](http://spritejs.org/#/zh-cn/index)
-- [Scene & layers](http://spritejs.org/#/zh-cn/layer)
-- [Elements](http://spritejs.org/#/zh-cn/elements)
-- [Animations & Effects](http://spritejs.org/#/zh-cn/elements)
-- [Behaviors](http://spritejs.org/#/zh-cn/behavior)
+[Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
+
+- [Big Fire](http://spritejs.org/demo/#proton_fire)
+- [Background Particles](http://spritejs.org/demo/#proton_position)
+- [Custom Behavior](http://spritejs.org/demo/#proton_behavior)
+
+### With Matter-js
+
+[Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
+
+- [Mixed shapes](http://spritejs.org/demo/#matterjs_mixed_shapes)
 
 ### API Doc
 
@@ -102,6 +115,41 @@ Compatible with [d3.js](https://github.com/d3/d3).
 - [Group](http://spritejs.org/#/api/group)
 - [Layer](http://spritejs.org/#/api/layer)
 - [Scene](http://spritejs.org/#/api/scene)
+
+### Build
+
+Build with NPM
+
+```bash
+npm run build
+```
+
+Build Doc
+
+```bash
+npm run build-doc
+```
+
+### Tests
+
+```bash
+npm test
+```
+
+  31 passed
+
+File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------|----------|----------|----------|----------|----------------|
+All files     |     97.7 |    86.73 |    95.24 |     97.8 |                |
+ src          |    97.28 |    86.13 |    92.31 |    97.39 |                |
+  index.js    |      100 |       50 |      100 |      100 |             24 |
+  layer.js    |    96.04 |    83.33 |      100 |    95.92 |    28,42,53,55 |
+  resource.js |    97.73 |       80 |    85.71 |    97.56 |             28 |
+  scene.js    |    97.98 |     89.7 |    90.91 |    98.31 |219,222,267,300 |
+  sprite.js   |    94.12 |    76.19 |      100 |    93.75 |          28,55 |
+ src/platform |      100 |    91.43 |      100 |      100 |                |
+  index.js    |      100 |    91.43 |      100 |      100 |      68,82,139 |
+
 
 ### Server-side Render
 

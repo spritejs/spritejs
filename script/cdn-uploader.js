@@ -10,5 +10,5 @@ module.exports = {
     } catch (ex) {
       return Promise.reject(new Error('no cdn uploader specified!'))
     }
-  }
+  },
 }

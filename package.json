@@ -15,11 +15,12 @@
     "lint": "eslint 'src/**/*.js' --fix",
     "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
     "benchmark": "webpack-dev-server -d --quiet --port 9090 & http-server benchmark -c-1 -p 9091",
-    "build": "rm -rf dist/* && ./script/build.js",
+    "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",
+    "deploy": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build-deploy.js",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
     "doc": "webpack-dev-server -d --quiet --port 9090 & babel docs/src -d docs/js --watch & http-server docs -c-1 -p 9091",
-    "precommit": "./script/precommit.js",
-    "prepublishOnly": "npm run precommit && rm -rf lib/* && babel src -d lib && npm run build"
+    "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
+    "prepublishOnly": "npm run build-doc && npm run deploy"
   },
   "repository": {
     "type": "git",
