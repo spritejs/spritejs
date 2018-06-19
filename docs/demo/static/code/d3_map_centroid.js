@@ -33,7 +33,7 @@ window.helpers.loadScript(topojsonUrl).then(() => {
       .enter()
       .append('path')
       .attr('d', path)
-      .attr('strokeColor', '#EDF8DA')
+      .attr('strokeColor', '#618F4A')
       .attr('fillColor', '#70A556')
       .on('click', (d) => {
         const paths = d3.event.targetPaths
