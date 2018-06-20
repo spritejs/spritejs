@@ -557,7 +557,7 @@
   const buttons = showButtons()
   const huanhuan = await showHuanHuan()
   const guanguan = await showGuanGuan()
-  const more = showMore()
+  const more = await showMore()
 
   more.c1 = function () {
     this.attr('bgcolor', 'green')

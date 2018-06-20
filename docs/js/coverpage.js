@@ -704,7 +704,11 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
         case 45:
           guanguan = _context6.sent;
-          more = showMore();
+          _context6.next = 48;
+          return showMore();
+
+        case 48:
+          more = _context6.sent;
 
 
           more.c1 = function () {
@@ -805,7 +809,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 56:
+        case 58:
         case 'end':
           return _context6.stop();
       }
