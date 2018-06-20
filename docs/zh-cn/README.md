@@ -162,6 +162,7 @@
         <dd>
           <a href="https://75team.com/">奇舞团</a>
           <a href="http://study.qiyun.360.cn/">奇舞学院</a>
+          <a href="https://gitee.com/qihoo360/spriteJS">码云</a>
         </dd>
       </dl>
       <dl>
