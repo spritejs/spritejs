@@ -392,7 +392,7 @@
     return [githubBtn, getStartBtn, demoBtn]
   }
 
-  function showMore() {
+  async function showMore() {
     //  小鼠标
     const more = new Sprite()
     more.attr({
@@ -403,7 +403,7 @@
     })
     fglayer.append(more)
 
-    more.transition(0.5).attr({opacity: 1})
+    await more.transition(0.5).attr({opacity: 1})
 
     registerButton(more, () => {})
 
