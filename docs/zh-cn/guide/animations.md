@@ -1,3 +1,26 @@
+## Transition 过渡动画
+
+spritejs最简单的动画方式是transition动画：
+
+```js
+// 让精灵在1s内向右移动50个像素
+sprite.transition(1.0).attr({
+  x: x => x + 50
+})
+```
+
+`sprite.transition(sec).attr(...)`总是返回一个promise，因此我们可以很容易实现连续的动画：
+
+<div id="transition-sequence" class="sprite-container"></div>
+
+<!-- demo: transition-sequence -->
+
+`sprite.transition(sec)` 本身返回一个Transition对象，它也可以多次设置`attr()`，每次设置的时候会自动将上一次的transition结束，这样实现类似下面这样的hover效果会很方便：
+
+<div id="transition-hover" class="sprite-container"></div>
+
+<!-- demo: transition-hover -->
+
 ## Web Animations API
 
 spritejs动画支持的是几乎标准的[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)。

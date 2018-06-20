@@ -17,7 +17,7 @@ function uploadToCDN(stats) {
     console.log('file uploaded, CDN URL: %s', res[file])
     let readmeFile = path.resolve(__dirname, '..', 'README.md')
     let content = fs.readFileSync(readmeFile, 'utf-8')
-    content = content.replace(/script src="(.*)"/igm, `script src="${res[file]}"`)
+    content = content.replace(/script src="(https:\/\/.*)"/igm, `script src="${res[file]}"`)
     fs.writeFileSync(readmeFile, content)
 
     readmeFile = path.resolve(__dirname, '../docs/zh-cn', 'index.md')
@@ -27,7 +27,7 @@ function uploadToCDN(stats) {
 
     readmeFile = path.resolve(__dirname, '../docs/api', 'README.md')
     content = fs.readFileSync(readmeFile, 'utf-8')
-    content = content.replace(/script src="(.*)"/igm, `script src="${res[file]}"`)
+    content = content.replace(/script src="(https:\/\/.*)"/igm, `script src="${res[file]}"`)
     fs.writeFileSync(readmeFile, content)
   })
 }

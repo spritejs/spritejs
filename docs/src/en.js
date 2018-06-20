@@ -75,15 +75,17 @@
     iterations: Infinity,
   })
 
+  const transition = robot.transition(0.3)
+
   lemonGroup.on('mouseenter', (evt) => {
     layer.timeline.playbackRate = 3.0
-    robot.attr({
+    transition.attr({
       pos: [730, 90],
     })
   })
   lemonGroup.on('mouseleave', (evt) => {
     layer.timeline.playbackRate = 1.0
-    robot.attr({
+    transition.attr({
       pos: [710, 110],
     })
   })

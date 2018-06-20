@@ -1470,9 +1470,9 @@ var _basenode2 = _interopRequireDefault(_basenode);
 
 var _spriteMath = __webpack_require__(45);
 
-var _animation = __webpack_require__(233);
+var _animation2 = __webpack_require__(233);
 
-var _animation2 = _interopRequireDefault(_animation);
+var _animation3 = _interopRequireDefault(_animation2);
 
 var _spriteUtils = __webpack_require__(14);
 
@@ -1626,38 +1626,42 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'transition',
     value: function transition(sec) {
+      var _ref5;
+
       var easing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'linear';
 
-      var that = this;
-      return {
-        attr: function attr(prop, val) {
-          if (typeof prop === 'string') {
-            prop = (0, _defineProperty5.default)({}, prop, val);
-          }
-          (0, _entries2.default)(prop).forEach(function (_ref3) {
-            var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
-                key = _ref4[0],
-                value = _ref4[1];
-
-            if (typeof value === 'function') {
-              prop[key] = value(that.attr(key));
-            }
-          });
-          var anim = that.animate([prop], {
-            duration: sec * 1000,
-            fill: 'forwards',
-            easing: easing
-          });
-          return anim.finished;
+      var that = this,
+          _animation = (0, _symbol2.default)('animation');
+      return _ref5 = {}, (0, _defineProperty5.default)(_ref5, _animation, null), (0, _defineProperty5.default)(_ref5, 'attr', function attr(prop, val) {
+        if (this[_animation]) {
+          this[_animation].finish();
         }
-      };
+        if (typeof prop === 'string') {
+          prop = (0, _defineProperty5.default)({}, prop, val);
+        }
+        (0, _entries2.default)(prop).forEach(function (_ref3) {
+          var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
+              key = _ref4[0],
+              value = _ref4[1];
+
+          if (typeof value === 'function') {
+            prop[key] = value(that.attr(key));
+          }
+        });
+        this[_animation] = that.animate([prop], {
+          duration: sec * 1000,
+          fill: 'forwards',
+          easing: easing
+        });
+        return this[_animation].finished;
+      }), _ref5;
     }
   }, {
     key: 'animate',
     value: function animate(frames, timing) {
       var _this3 = this;
 
-      var animation = new _animation2.default(this, frames, timing);
+      var animation = new _animation3.default(this, frames, timing);
       if (this[_effects]) animation.applyEffects(this[_effects]);
       if (this.layer) {
         animation.baseTimeline = this.layer.timeline;
@@ -1816,12 +1820,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
                 width = _outerSize[0],
                 height = _outerSize[1];
 
-            var _ref5 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
-                x = _ref5[0],
-                y = _ref5[1],
-                w = _ref5[2],
-                h = _ref5[3],
-                r = _ref5[4];
+            var _ref6 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
+                x = _ref6[0],
+                y = _ref6[1],
+                w = _ref6[2],
+                h = _ref6[3],
+                r = _ref6[4];
 
             (0, _render.drawRadiusBox)(this.context, { x: x, y: y, w: w, h: h, r: r });
             if (this.layer && this.layer.offset) {
@@ -1994,12 +1998,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       var bgcolor = (0, _render.findColor)(drawingContext, this, 'bgcolor');
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor) {
-        var _ref6 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x5 = _ref6[0],
-            _y = _ref6[1],
-            _w = _ref6[2],
-            _h = _ref6[3],
-            _r = _ref6[4];
+        var _ref7 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
+            _x5 = _ref7[0],
+            _y = _ref7[1],
+            _w = _ref7[2],
+            _h = _ref7[3],
+            _r = _ref7[4];
 
 
         (0, _render.drawRadiusBox)(drawingContext, { x: _x5, y: _y, w: _w, h: _h, r: _r });
@@ -2254,10 +2258,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
         return _class2;
       }(this.Attr);
-      (0, _entries2.default)(attrs).forEach(function (_ref7) {
-        var _ref8 = (0, _slicedToArray3.default)(_ref7, 2),
-            prop = _ref8[0],
-            handler = _ref8[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref8) {
+        var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
+            prop = _ref9[0],
+            handler = _ref9[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -7202,6 +7206,8 @@ var Timeline = function () {
       return localTime + (this.globalTime - globalTime) * this.playbackRate;
     },
     set: function set(time) {
+      var _this4 = this;
+
       var from = this.currentTime,
           to = time,
           timers = this[_timers];
@@ -7223,11 +7229,11 @@ var Timeline = function () {
           var endTime = startTime + delay;
           if (delay === 0 || heading !== false && (to - from) * delay < 0 || from < endTime && endTime < to || from > endTime && endTime > to) {
             handler();
-            timers.delete(id);
+            _this4.clearTimeout(id);
           }
         } else if (delay === 0) {
           handler();
-          timers.delete(id);
+          _this4.clearTimeout(id);
         }
       });
       this.updateTimers();
@@ -9221,7 +9227,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.0.0-beta.1';
+var version = '2.0.0';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -12630,16 +12636,12 @@ var _class = function () {
   }, {
     key: _removeDefer,
     value: function value(deferID) {
-      var complete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var defered = this[deferID],
           timeline = this.timeline;
 
 
       if (defered && timeline) {
         timeline.clearTimeout(defered.timerID);
-        if (complete) {
-          defered.resolve();
-        }
       }
       delete this[deferID];
     }
@@ -12655,7 +12657,7 @@ var _class = function () {
     value: function finish() {
       this.timeline.currentTime = Infinity;
       this[_removeDefer](_readyDefer);
-      this[_removeDefer](_finishedDefer, true);
+      this[_removeDefer](_finishedDefer);
     }
   }, {
     key: 'applyEffects',
@@ -13207,6 +13209,14 @@ var _default = function (_Animator) {
   }
 
   (0, _createClass3.default)(_default, [{
+    key: 'finish',
+    value: function finish() {
+      (0, _get3.default)(_default.prototype.__proto__ || (0, _getPrototypeOf2.default)(_default.prototype), 'finish', this).call(this);
+      (0, _fastAnimationFrame.cancelAnimationFrame)(this.requestId);
+      var sprite = this.target;
+      sprite.attr(this.frame);
+    }
+  }, {
     key: 'play',
     value: function play() {
       if (!this.target.parent || this.playState === 'running') {
