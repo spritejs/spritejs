@@ -6,7 +6,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
   var showLogoText = function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(text, pos, posList) {
       var delay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
@@ -321,11 +321,111 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     };
   }();
 
-  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, calculateScroll;
+  var showMore = function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+      var more, blinkSpots, blinkSpot1, blinkSpotGap, blinkAnimKeyframes, blinkSpot2, blinkSpot3;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              //  小鼠标
+              more = new Sprite();
 
-  return regeneratorRuntime.wrap(function _callee5$(_context5) {
+              more.attr({
+                textures: 'more.png',
+                anchor: 0.5,
+                pos: [1920, 1800],
+                opacity: 0
+              });
+              fglayer.append(more);
+
+              _context5.next = 5;
+              return more.transition(0.5).attr({ opacity: 1 });
+
+            case 5:
+
+              registerButton(more, function () {});
+
+              document.querySelector('main').style.display = 'block';
+
+              // 呼吸的小圆点
+              blinkSpots = new Group();
+              blinkSpot1 = new Sprite();
+              blinkSpotGap = 30;
+              blinkAnimKeyframes = [{
+                opacity: 1, offset: 0.25
+              }, {
+                opacity: 0.2, offset: 0.5
+              }];
+
+
+              blinkSpot1.attr({
+                bgcolor: 'white',
+                size: [10, 10],
+                anchor: 0.5,
+                pos: [1918, 1870],
+                borderRadius: 5,
+                opacity: 0.2
+              });
+              blinkSpot1.animate(blinkAnimKeyframes, {
+                duration: 2000,
+                iterations: Infinity,
+                easing: 'ease-in-out'
+              });
+              blinkSpots.append(blinkSpot1);
+
+              blinkSpot2 = blinkSpot1.cloneNode();
+
+              blinkSpot2.attr({
+                y: function y(_y) {
+                  return _y + blinkSpotGap;
+                }
+              });
+              blinkSpot2.animate(blinkAnimKeyframes, {
+                duration: 2000,
+                iterations: Infinity,
+                delay: 330,
+                easing: 'ease-in-out'
+              });
+              blinkSpots.append(blinkSpot2);
+
+              blinkSpot3 = blinkSpot2.cloneNode();
+
+              blinkSpot3.attr({
+                y: function y(_y2) {
+                  return _y2 + blinkSpotGap;
+                }
+              });
+              blinkSpot3.animate(blinkAnimKeyframes, {
+                duration: 2000,
+                iterations: Infinity,
+                delay: 660,
+                easing: 'ease-in-out'
+              });
+              blinkSpots.append(blinkSpot3);
+
+              fglayer.append(blinkSpots);
+
+              return _context5.abrupt('return', [more, blinkSpots]);
+
+            case 24:
+            case 'end':
+              return _context5.stop();
+          }
+        }
+      }, _callee5, this);
+    }));
+
+    return function showMore() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+
+  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, registerButton, showButtons, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, calculateScroll;
+
+  return regeneratorRuntime.wrap(function _callee6$(_context6) {
     while (1) {
-      switch (_context5.prev = _context5.next) {
+      switch (_context6.prev = _context6.next) {
         case 0:
           calculateScroll = function calculateScroll() {
             var r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
@@ -414,81 +514,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             sprites.forEach(function (sprite) {
               sprite.attr({ opacity: 0 });
             });
-          };
-
-          showMore = function showMore() {
-            //  小鼠标
-            var more = new Sprite();
-            more.attr({
-              textures: 'more.png',
-              anchor: 0.5,
-              pos: [1920, 1800],
-              opacity: 0
-            });
-            fglayer.append(more);
-
-            more.transition(0.5).attr({ opacity: 1 });
-
-            registerButton(more, function () {});
-
-            document.querySelector('main').style.display = 'block';
-
-            // 呼吸的小圆点
-            var blinkSpots = new Group();
-            var blinkSpot1 = new Sprite();
-            var blinkSpotGap = 30;
-            var blinkAnimKeyframes = [{
-              opacity: 1, offset: 0.25
-            }, {
-              opacity: 0.2, offset: 0.5
-            }];
-
-            blinkSpot1.attr({
-              bgcolor: 'white',
-              size: [10, 10],
-              anchor: 0.5,
-              pos: [1918, 1870],
-              borderRadius: 5,
-              opacity: 0.2
-            });
-            blinkSpot1.animate(blinkAnimKeyframes, {
-              duration: 2000,
-              iterations: Infinity,
-              easing: 'ease-in-out'
-            });
-            blinkSpots.append(blinkSpot1);
-
-            var blinkSpot2 = blinkSpot1.cloneNode();
-            blinkSpot2.attr({
-              y: function y(_y) {
-                return _y + blinkSpotGap;
-              }
-            });
-            blinkSpot2.animate(blinkAnimKeyframes, {
-              duration: 2000,
-              iterations: Infinity,
-              delay: 330,
-              easing: 'ease-in-out'
-            });
-            blinkSpots.append(blinkSpot2);
-
-            var blinkSpot3 = blinkSpot2.cloneNode();
-            blinkSpot3.attr({
-              y: function y(_y2) {
-                return _y2 + blinkSpotGap;
-              }
-            });
-            blinkSpot3.animate(blinkAnimKeyframes, {
-              duration: 2000,
-              iterations: Infinity,
-              delay: 660,
-              easing: 'ease-in-out'
-            });
-            blinkSpots.append(blinkSpot3);
-
-            fglayer.append(blinkSpots);
-
-            return [more, blinkSpots];
           };
 
           showButtons = function showButtons() {
@@ -651,35 +676,39 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
 
           // 预加载资源
 
-          _context5.next = 33;
+          _context6.next = 32;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 33:
+        case 32:
 
           document.body.removeChild(loadingHint);
 
           requestId = null;
-          _context5.next = 37;
+          _context6.next = 36;
           return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
 
-        case 37:
-          _context5.next = 39;
+        case 36:
+          _context6.next = 38;
           return showIntroText('跨平台绘图对象模型');
 
-        case 39:
-          text = _context5.sent;
+        case 38:
+          text = _context6.sent;
           buttons = showButtons();
-          _context5.next = 43;
+          _context6.next = 42;
           return showHuanHuan();
 
-        case 43:
-          huanhuan = _context5.sent;
-          _context5.next = 46;
+        case 42:
+          huanhuan = _context6.sent;
+          _context6.next = 45;
           return showGuanGuan();
 
-        case 46:
-          guanguan = _context5.sent;
-          more = showMore();
+        case 45:
+          guanguan = _context6.sent;
+          _context6.next = 48;
+          return showMore();
+
+        case 48:
+          more = _context6.sent;
 
 
           more.c1 = function () {
@@ -780,10 +809,10 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 57:
+        case 58:
         case 'end':
-          return _context5.stop();
+          return _context6.stop();
       }
     }
-  }, _callee5, this);
+  }, _callee6, this);
 }))();
