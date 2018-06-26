@@ -160,16 +160,16 @@
       <dl>
         <dt>友情链接</dt>
         <dd>
-          <a href="https://75team.com/">奇舞团</a>
-          <a href="http://study.qiyun.360.cn/">奇舞学院</a>
-          <a href="https://gitee.com/qihoo360/spriteJS">码云</a>
+          <a href="https://75team.com/" target="_blank">奇舞团</a>
+          <a href="http://study.qiyun.360.cn/" target="_blank">奇舞学院</a>
+          <a href="https://gitee.com/qihoo360/spriteJS" target="_blank">码云</a>
         </dd>
       </dl>
       <dl>
         <dt>其他项目</dt>
         <dd>
-          <a href="https://thinkjs.org/">ThinkJS</a>
-          <a href="https://github.com/75team/firekylin">FireKylin</a>
+          <a href="https://thinkjs.org/" target="_blank">ThinkJS</a>
+          <a href="https://github.com/75team/firekylin" target="_blank">FireKylin</a>
         </dd>
       </dl>
       <dl>
@@ -182,15 +182,15 @@
       <dl>
         <dt>参与项目</dt>
         <dd>
-          <a href="https://github.com/spritejs/spritejs">Github 源码</a>
-          <a href="https://github.com/spritejs/spritejs/issues">问题反馈</a>
+          <a href="https://github.com/spritejs/spritejs" target="_blank">Github 源码</a>
+          <a href="https://github.com/spritejs/spritejs/issues" target="_blank">问题反馈</a>
         </dd>
       </dl>
       <dl>
         <dt>合作伙伴</dt>
         <dd>
-          <a href="https://weekly.75team.com/">奇舞周刊</a>
-          <a href="http://zcfy.cc">众成翻译</a>
+          <a href="https://weekly.75team.com/" target="_blank">奇舞周刊</a>
+          <a href="http://zcfy.cc" target="_blank">众成翻译</a>
         </dd>
       </dl>
     </div>
