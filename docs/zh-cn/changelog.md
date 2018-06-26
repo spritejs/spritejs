@@ -274,3 +274,12 @@
 ### bug修复
 
 - 修复animation.finished在某些情况下调用两次的bug
+
+## [lastest][2018-06-26]
+
+### 改进
+
+- 支持了shadow属性（shadow: {color, blue, offset}）
+- 支持了sprite.data()和sprite.dataset
+- 支持sprite.attr()和sprite.data()设置异步属性
+- sprite.attrs()变更为sprite.attrs
