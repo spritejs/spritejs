@@ -333,9 +333,9 @@
     const githubBtn = new Label('GitHub')
     githubBtn.attr({
       anchor: [0.5, 0],
-      size: [380, 100],
+      size: [350, 100],
       border: [4, '#208b50'],
-      pos: [1320, 1500],
+      pos: [1270, 1500],
       zIndex: 99999,
       borderRadius: 50,
       textAlign: 'center',
@@ -355,10 +355,27 @@
       fill: 'forwards',
     })
 
+    const giteeBtn = githubBtn.cloneNode()
+    giteeBtn.attr({
+      text: 'Gitee',
+      pos: [1720, 1500]
+    })
+    fglayer.append(giteeBtn)
+    registerButton(giteeBtn, 'https://gitee.com/qihoo360/spriteJS')
+
+    giteeBtn.animate([
+      {opacity: 0},
+      {opacity: 1},
+    ], {
+      duration: 500,
+      fill: 'forwards',
+      delay: 500,
+    })
+
     const getStartBtn = githubBtn.cloneNode()
     getStartBtn.attr({
       text: 'Get Started',
-      pos: [1920, 1500],
+      pos: [2170, 1500],
     })
     fglayer.append(getStartBtn)
     registerButton(getStartBtn, `${window.location}zh-cn/index`)
@@ -369,13 +386,13 @@
     ], {
       duration: 500,
       fill: 'forwards',
-      delay: 500,
+      delay: 1000,
     })
 
     const demoBtn = githubBtn.cloneNode()
     demoBtn.attr({
       text: 'Demo',
-      pos: [2520, 1500],
+      pos: [2620, 1500],
     })
     fglayer.append(demoBtn)
 
@@ -387,7 +404,7 @@
     ], {
       duration: 500,
       fill: 'forwards',
-      delay: 1000,
+      delay: 1500,
     })
     return [githubBtn, getStartBtn, demoBtn]
   }
