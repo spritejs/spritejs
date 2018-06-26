@@ -581,7 +581,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               fill: 'forwards',
               delay: 1500
             });
-            return [githubBtn, getStartBtn, demoBtn];
+            return [githubBtn, giteeBtn, getStartBtn, demoBtn];
           };
 
           registerButton = function registerButton(button, link) {

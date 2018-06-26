@@ -406,7 +406,7 @@
       fill: 'forwards',
       delay: 1500,
     })
-    return [githubBtn, getStartBtn, demoBtn]
+    return [githubBtn, giteeBtn, getStartBtn, demoBtn]
   }
 
   async function showMore() {
