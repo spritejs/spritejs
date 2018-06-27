@@ -16,11 +16,13 @@
     * [路径 Path](/zh-cn/elements#路径-Path)
     * [分组 Group](/zh-cn/elements#分组-Group)
   * 效果
+    * [过渡 transition](/zh-cn/effect#动画-transition)
     * [动画 animate](/zh-cn/effect#动画-animate)
+    * [阴影 shadow](/zh-cn/effect#阴影-shadow)
     * [滤镜 filter](/zh-cn/effect#滤镜-filter)
     * [渐变 gradient](/zh-cn/effect#渐变-gradient)
   * 行为
-    * [事件 event](/zh-cn/behavior#事件-event)
+    * [事件 event](/zh-cn/behavior#响应-dom-事件)
 
 * 高级用法
   * [屏幕适配](/zh-cn/guide/resolution)

@@ -283,3 +283,8 @@
 - 支持了sprite.data()和sprite.dataset
 - 支持sprite.attr()和sprite.data()设置异步属性
 - sprite.attrs()变更为sprite.attrs
+- 增加了transition的end和reverse方法
+- 增加了shadow和transition的相关文档
+
+### bug修复
+- 修复animation的playbackRate反向后，动画回复到初试状态时不能触发finished的bug（标准的web animation api要触发finished）

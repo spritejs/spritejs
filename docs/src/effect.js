@@ -1,5 +1,89 @@
 const {Scene, Sprite, Label, Path} = spritejs
 
+/* demo: transition */
+;(function () {
+  const scene = new Scene('#transition', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+
+  async function createBubble() {
+    const x = 100 + Math.random() * 1340,
+      y = 100 + Math.random() * 400
+    const r = Math.round(255 * Math.random()),
+      g = Math.round(255 * Math.random()),
+      b = Math.round(255 * Math.random())
+
+    const bgcolor = `rgb(${r},${g},${b})`
+    const bubble = new Sprite()
+    bubble.attr({
+      anchor: 0.5,
+      bgcolor,
+      size: [50, 50],
+      x,
+      y,
+      borderRadius: 25,
+    })
+    layer.append(bubble)
+    await bubble.transition(2.0).attr({
+      scale: [2.0, 2.0],
+      opacity: 0,
+    })
+    bubble.remove()
+  }
+
+  setInterval(() => {
+    createBubble()
+  }, 50)
+}())
+
+/* demo: transition-toggle */
+;(function () {
+  const scene = new Scene('#transition-toggle', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+
+  const left = new Sprite()
+  left.attr({
+    anchor: 0.5,
+    pos: [400, 300],
+    size: [200, 200],
+    bgcolor: 'red',
+  })
+  layer.append(left)
+
+  const right = left.cloneNode()
+  right.attr({
+    pos: [900, 300],
+    bgcolor: 'green',
+  })
+  layer.append(right)
+
+  let leftTrans = null
+  left.on('mouseenter', (evt) => {
+    leftTrans = left.transition(1.0)
+    leftTrans.attr({
+      rotate: 180,
+      bgcolor: 'green',
+    })
+  })
+  left.on('mouseleave', (evt) => {
+    leftTrans.attr({
+      rotate: 0,
+      bgcolor: 'red',
+    })
+  })
+
+  let rightTrans = null
+  right.on('mouseenter', (evt) => {
+    rightTrans = right.transition(3.0)
+    rightTrans.attr({
+      rotate: 720,
+      bgcolor: 'red',
+    })
+  })
+  right.on('mouseleave', (evt) => {
+    rightTrans.reverse()
+  })
+}())
+
 /* demo: animations */
 ;(async function () {
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
@@ -173,6 +257,25 @@ const {Scene, Sprite, Label, Path} = spritejs
       })
     }
   }
+}())
+
+/* demo: shadow */
+;(function () {
+  const scene = new Scene('#shadow', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const layer = scene.layer('fglayer')
+
+  const p = new Path('M0,0H200V200z')
+  p.attr({
+    fillColor: 'red',
+    pos: [700, 150],
+    rotate: 60,
+    shadow: {
+      offset: [15, 15],
+      blur: 10,
+      color: '#999',
+    },
+  })
+  layer.append(p)
 }())
 
 /* demo: filters */
