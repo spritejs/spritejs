@@ -1,0 +1,1 @@
+SpriteJS通过Label对象来显示单行或多行文本。

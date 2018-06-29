@@ -46,7 +46,7 @@ timeing对象有以下属性：
 | endDelay | Number | 0 | 动画执行完毕后多长时间之后结束，单位是毫秒 |
 | fill | 枚举: 'none', 'forwards', 'backwards', 'both' | 'none' | 如果这个属性为'none'，那么元素的动画效果只有在'running'和'paused'状态时有效，在其他状态下元素回到动画前状态。如果这个属性为 'forwards'，那么动画结束后，元素保持在动画结束时的状态。如果这个属性为'backwards'，那么动画处于开始前pending状态时，元素保持在动画第一帧的状态。如果这个属性为'both'，那么元素在动画开始前保持第一帧状态，并在动画结束后保持最后一帧状态。 |
 | iterations | Number | 1 | 动画播放的次数，可以是整数，也可以是小数 |
-| directions | 枚举: 'default', 'reverse', 'alternate' | 'default' | 动画播放的方向，默认是正向播放，如果该属性设置为'reverse'，则动画反向播放，如果设置为alternate，则在iterations > 1的时候正反交替播放 |
+| directions | 枚举: 'default', 'reverse', 'alternate', 'alternate-reverse' | 'default' | 动画播放的方向，默认是正向播放，如果该属性设置为'reverse'，则动画反向播放，如果设置为alternate，则在iterations > 1的时候正反交替播放 |
 | duration | Number | 0 | 动画播放一次的时长 |
 | easing | String | 'linear' | 动画的easing函数，可以是`linear, ease, ease-in, ease-out, ease-in-out, step-start, step-end`或者cubic-bezier函数比如`cubic-bezier(0.42, 0, 0.58, 1)` |
 

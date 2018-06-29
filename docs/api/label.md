@@ -6,12 +6,6 @@ The text to draw on canvas.
 
 ---
 
-- attribute textboxSize:Array
-
-**private** Set or get textboxSize of the element. When `attr.width` and `attr.height` is default, `label.contentSize` is equal to textboxSize. 
-
----
-
 + attribute font:String
 
 Apply css-font to the label element. 

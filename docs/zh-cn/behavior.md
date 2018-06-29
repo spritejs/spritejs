@@ -14,7 +14,7 @@ spritejs的事件触发规则是基于坐标位置（主要是mouse和touch坐�
 
 ## 阻止事件继续传播
 
-我们可以同时在layer和s1上注册mousemove事件，以修改label的提示文字。但是，如果鼠标停留在s1上时，我们不能让layer的mousemove事件仍被触发，否则的话文字就会被覆盖。在sprite提供的事件参数中，`stopDispatch()`方法正是用来阻止事件从当前的元素向下一个元素传播的。利用它就可以实现元素之间的遮挡。
+我们可以同时在layer和s1上注册mousemove事件，以修改label的提示文字。但是，如果鼠标停留在s1上时，我们不能让layer的mousemove事件仍被触发，否则的话文字就会被覆盖。在sprite提供的事件参数中，`stopDispatch()`方法正是用来阻止事件从当前的元素向下一个**同级**元素传播的。利用它就可以实现元素之间的遮挡。
 
 <div id="dom-events-stop-dispatch" class="sprite-container"></div>
 
@@ -23,6 +23,8 @@ spritejs的事件触发规则是基于坐标位置（主要是mouse和touch坐�
 ## 利用 zIndex 和 stopDispatch 遮挡
 
 比如我们可以利用改变元素的zIndex和stopDispatch来实现元素间的拖拽。
+
+注意下面的例子中`stopDispatch()`并不会阻止不同级的元素，因此阻止掉sprite元素的mousemove事件，并不会同时阻止掉它所在layer的mousemove事件。
 
 <div id="dragdrop" class="sprite-container"></div>
 

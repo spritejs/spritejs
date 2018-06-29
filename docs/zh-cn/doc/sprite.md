@@ -1,0 +1,1 @@
+SpriteJS里，精灵Sprite是一个拥有盒模型的可渲染对象。SpriteJS默认支持的精灵类型有四种，分别是Sprite、Label、Path和Group。Sprite是最基础的精灵。

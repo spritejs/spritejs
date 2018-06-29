@@ -16,12 +16,6 @@ sprite.attr({
 see [proprety textures](#public-textures-stringorobjectorarray-).
 
 ---
-
-- attribute texturesSize:Array
-
-**readonly** Get the bounding box size of the elements' textures. When `attr.width` and `attr.height` is default, `sprite.contentSize` is equal to texturesSize.
-
----
 <!--properties-->
 
 . property Attr:TextureAttr

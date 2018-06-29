@@ -1,0 +1,1 @@
+SpriteJS支持将元素分组，方法是创建一个group对象，然后将元素添加到group里。group可以嵌套。

@@ -1,0 +1,1 @@
+SpriteJS创建场景Scene，利用它来管理Layer，派发事件，实现屏幕适配。

@@ -36,6 +36,22 @@ Typically, the value of the anchor point is from [0, 0] to [1, 1]. If necessary,
 
 ---
 
++ attribute fliter:Object
+
+* default: ''
+
+The filter of the element.
+
+---
+
++ attribute shadow:Object
+
+* default: ''
+
+The shadow of the element.
+
+---
+
 + attribute x:Float
 
 * default: 0
@@ -52,6 +68,14 @@ The y coordinate of the element.
 
 ---
 
++ attribute pos:Array
+
+* default: [0, 0]
+
+The [x, y] coordinate of the element
+
+---
+
 + attribute opacity:Float
 
 * default: 1
@@ -65,6 +89,12 @@ The y coordinate of the element.
 
 + attribute heigth:Float
 
+
+---
+
++ attribute size:Array
+
+The [width, height] of the element
 
 ---
 
@@ -100,6 +130,12 @@ The y coordinate of the element.
 + attribute transform:String|Object
 
 * default: 'matrix(1, 0, 0, 1, 0, 0)'
+
+---
+
++ attribute transformOrigin:Array
+
+* default: [0, 0]
 
 ---
 
@@ -154,6 +190,12 @@ context.setLineDash(border.style)
 + attribute zIndex:Integer
 
 * default: 0
+
+---
+
++ attribute offsetPath:String
+
+
 
 ---
 

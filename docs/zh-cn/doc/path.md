@@ -1,0 +1,1 @@
+SpriteJS使用Path对象绘制矢量图形。Path对象支持svg-path，因此能够很灵活地绘制各种图形。

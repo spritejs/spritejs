@@ -1,0 +1,1 @@
+SpriteJS里，一个Layer对象对应一个Canvas实例。

@@ -4,6 +4,20 @@
   * [安装和使用](/zh-cn/index#安装和使用)
   * [架构](/zh-cn/index#架构)
   * [基本用法](/zh-cn/index#基本用法)
+  * 速查表
+    * [Attribute](/zh-cn/doc/attribute)
+    * [Animation](/zh-cn/doc/animation)
+    * [BaseNode](/zh-cn/doc/basenode)
+    * [BaseSprite](/zh-cn/doc/basesprite)
+    * [Dataset](/zh-cn/doc/dataset)
+    * [Event](/zh-cn/doc/event)
+    * [Group](/zh-cn/doc/group)
+    * [Label](/zh-cn/doc/label)
+    * [Layer](/zh-cn/doc/layer)
+    * [Path](/zh-cn/doc/path)
+    * [Scene](/zh-cn/doc/scene)
+    * [Sprite](/zh-cn/doc/sprite)
+    * [Transition](/zh-cn/doc/transition)
   * [例子](/zh-cn/examples)
 
 * 基础用法

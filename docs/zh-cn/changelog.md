@@ -288,3 +288,15 @@
 
 ### bug修复
 - 修复animation的playbackRate反向后，动画回复到初试状态时不能触发finished的bug（标准的web animation api要触发finished）
+
+## [2.2.0][2018-06-29]
+
+### 改进
+
+- 取消sprite.attrs，改为sprite.attributes，与DOM的API保持一致
+- 将utils.findColor和utils.cacheContextPool两个方法导出
+
+### bug 修复
+
+- 修复了cloneNode不能复制dataset的bug
+- 修复transition.reverse()在动画结束时属性可能不正确的bug
