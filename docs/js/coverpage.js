@@ -522,7 +522,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               anchor: [0.5, 0],
               size: [350, 100],
               border: [4, '#208b50'],
-              pos: [1270, 1500],
+              pos: [2620, 1500],
               zIndex: 99999,
               borderRadius: 50,
               textAlign: 'center',
@@ -536,13 +536,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             githubBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
-              fill: 'forwards'
+              fill: 'forwards',
+              delay: 1500
             });
 
             var giteeBtn = githubBtn.cloneNode();
             giteeBtn.attr({
               text: 'Gitee',
-              pos: [1720, 1500]
+              pos: [2170, 1500]
             });
             fglayer.append(giteeBtn);
             registerButton(giteeBtn, 'https://gitee.com/qihoo360/spriteJS');
@@ -550,13 +551,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             giteeBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
               fill: 'forwards',
-              delay: 500
+              delay: 1000
             });
 
             var getStartBtn = githubBtn.cloneNode();
             getStartBtn.attr({
               text: 'Get Started',
-              pos: [2170, 1500]
+              pos: [1720, 1500]
             });
             fglayer.append(getStartBtn);
             registerButton(getStartBtn, window.location + 'zh-cn/index');
@@ -564,13 +565,13 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             getStartBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
               fill: 'forwards',
-              delay: 1000
+              delay: 500
             });
 
             var demoBtn = githubBtn.cloneNode();
             demoBtn.attr({
               text: 'Demo',
-              pos: [2620, 1500]
+              pos: [1270, 1500]
             });
             fglayer.append(demoBtn);
 
@@ -578,8 +579,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
 
             demoBtn.animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: 500,
-              fill: 'forwards',
-              delay: 1500
+              fill: 'forwards'
             });
             return [githubBtn, giteeBtn, getStartBtn, demoBtn];
           };
