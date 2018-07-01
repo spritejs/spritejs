@@ -300,3 +300,9 @@
 
 - 修复了cloneNode不能复制dataset的bug
 - 修复transition.reverse()在动画结束时属性可能不正确的bug
+
+## [2.2.1][开发中]
+
+### bug 修复
+
+- 修复sprite-extend-bmfont加载远程URL图片的bug

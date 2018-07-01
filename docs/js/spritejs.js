@@ -4791,7 +4791,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _applyDecoratedDescriptor = __webpack_require__(32);
 
 var attr = _spriteCore.utils.attr;
-var _mapTextures = (0, _symbol2.default)('mapTextures');
+var _mapTextures = (0, _symbol2.default)('mapTextures'),
+    _loadTexturePassport = (0, _symbol2.default)('loadTexturePassport');
 
 var ResAttr = (_class = function (_Sprite$Attr) {
   (0, _inherits3.default)(ResAttr, _Sprite$Attr);
@@ -4821,7 +4822,11 @@ var ResAttr = (_class = function (_Sprite$Attr) {
   }, {
     key: 'loadTextures',
     value: function loadTextures(textures) {
+      var _this2 = this;
+
       // adaptive textures
+      var passport = (0, _symbol2.default)('passport');
+      this[_loadTexturePassport] = passport;
       var hasPromise = false;
       var tasks = textures.map(function (texture) {
         if (texture.image) {
@@ -4836,7 +4841,12 @@ var ResAttr = (_class = function (_Sprite$Attr) {
       });
 
       if (hasPromise) {
-        _promise2.default.all(tasks).then(this[_mapTextures].bind(this));
+        _promise2.default.all(tasks).then(function (res) {
+          if (_this2[_loadTexturePassport] === passport) {
+            // prevent multicall loadTextures
+            _this2[_mapTextures](res);
+          }
+        });
       } else {
         // if preload image, calculate the size of sprite synchronously
         this[_mapTextures](tasks);
@@ -15915,7 +15925,7 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
         this.__cachePolicyThreshold = 6;
       }
       var textures = this.textures;
-      if (this.images) {
+      if (this.images && this.images.length) {
         textures.forEach(function (texture, i) {
           var img = _this5.images[i];
           var rect = texture.rect || [0, 0].concat((0, _toConsumableArray3.default)(_this5.innerSize));

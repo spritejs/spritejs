@@ -2,7 +2,8 @@ import {Sprite, utils} from 'sprite-core'
 import Resource from './resource'
 
 const attr = utils.attr
-const _mapTextures = Symbol('mapTextures')
+const _mapTextures = Symbol('mapTextures'),
+  _loadTexturePassport = Symbol('loadTexturePassport')
 
 class ResAttr extends Sprite.Attr {
   /*
@@ -49,6 +50,8 @@ class ResAttr extends Sprite.Attr {
 
   loadTextures(textures) {
     // adaptive textures
+    const passport = Symbol('passport')
+    this[_loadTexturePassport] = passport
     let hasPromise = false
     const tasks = textures.map((texture) => {
       if(texture.image) {
@@ -63,7 +66,12 @@ class ResAttr extends Sprite.Attr {
     })
 
     if(hasPromise) {
-      Promise.all(tasks).then(this[_mapTextures].bind(this))
+      Promise.all(tasks).then((res) => {
+        if(this[_loadTexturePassport] === passport) {
+          // prevent multicall loadTextures
+          this[_mapTextures](res)
+        }
+      })
     } else {
       // if preload image, calculate the size of sprite synchronously
       this[_mapTextures](tasks)
