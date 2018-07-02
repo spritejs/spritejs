@@ -1,5 +1,7 @@
 SpriteJS通过Label对象来显示单行或多行文本。
 
+## 创建Label
+
 Label的构造函数可以接受text作为参数，等价于构造后再设置text属性。
 
 ```js

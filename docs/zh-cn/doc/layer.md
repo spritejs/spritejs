@@ -8,6 +8,10 @@ SpriteJS里，一个Layer对象对应一个Canvas实例。
 
 Layer有一些options选项，如下：
 
+### autoRender = true
+
+将这个参数设置为false，那么Layer将不再元素属性更新后自动渲染。有时候我们把SpriteJS结合其他第三方库使用，由于第三方库可能有自己的ticker，这时候我们可以关闭SpriteJS的自动渲染，使用第三方的ticker。具体参考[外部时钟](/zh-cn/guide/ticker)
+
 ### context
 
 传给Layer的CanvasRenderingContext2D对象。这个参数如果传给Layer，Layer将使用这个contxt作为实际绘图的context，如果不传，Layer将在container元素内创建一个新的Canvas对象，获取它的CanvasRenderingContext2D对象作为context。
@@ -28,8 +32,69 @@ SpriteJS提供两种渲染模式：repaintAll和repaintDirty，前者当元素�
 
 是否启用shadowContext，如果这个参数为true，Layer会尝试创建一个不在文档流中的canvas来绘制，等绘制完成之后，再把整个内容绘制到文档流中的Canvas对象中，这样在一些情况下能有更好的性能。
 
-### autoRender = true
+## center
 
-将这个参数设置为false，那么Layer将不再元素属性更新后自动渲染。有时候我们把SpriteJS结合其他第三方库使用，由于第三方库可能有自己的ticker，这时候我们可以关闭SpriteJS的自动渲染，使用第三方的ticker。具体参考[外部时钟](/zh-cn/guide/ticker)
+只读属性，获得当前layer的中心点。
 
+## canvas
+
+只读属性，获得当前对象的canvas，在与第三方库联合使用的时候，可以将这个canvas传给第三方库，具体参考[外部时钟](/zh-cn/guide/ticker)
+
+## clearContext()
+
+`clearContext(context)` 这个方法定义了清除canvas画布的默认方式，开发者可以改写这个方法来自定义画布的刷新：
+
+```js
+layer.clearContext = function(context) {
+  if(context === layer.shadowContext) {
+    ...
+  } else {
+    ...
+  }
+}
+```
+
+## children
+
+只读属性，获得所有子元素
+
+## context
+
+只读属性，获得当前Layer的canvas对象用以渲染的context
+
+**注意**这里的context不一定是`layer.canvas.getContext('2d')`，如果shadowContext是true的话，这里的context将是shadowContext，只有shadowContext为false的时候context才是`layer.canvas.getContext('2d')`
+
+## id
+
+只读属性，获得当前Layer的id
+
+## isNodeVisible()
+
+`isNodeVisible(node)` 判断元素在layer中是否可见，可见性影响渲染过程。
+
+## resolution
+
+获得当前Layer的resolution（分辨率），关于resolution，详见[屏幕适配](/zh-cn/guide/resolution)
+
+## timeline
+
+只读属性，获得当前timeline，timeline被所有该layer上的animation动画继承，改变timeline可以改变整个layer的动画行为。
+
+具体参考[动画](/zh-cn/effect#动画-animate)
+
+## toGolbalPos()
+
+`toGlobalPos(x, y)` 将相对于layer的坐标换算成相对于layer所在canvas的相对坐标
+
+## toLocalPos()
+
+`toLocalPos(x, y)` 将相对于layer所在canvas的相对坐标还算成相对于layer的坐标
+
+## viewport
+
+只读属性，获得当前Layer的viewport（实际占位大小），具体参考[屏幕适配](/zh-cn/guide/resolution)
+
+## zIndex
+
+获取或设置Layer的zIndex
 
