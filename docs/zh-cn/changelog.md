@@ -1,5 +1,45 @@
 # Change Log
 
+## [2.2.0][2018-06-29]
+
+### 改进
+
+- 取消sprite.attrs，改为sprite.attributes，与DOM的API保持一致
+- 将utils.findColor和utils.cacheContextPool两个方法导出
+- 添加了文档，增加速查表，增加对BMFont的支持
+
+### bug 修复
+
+- 修复了cloneNode不能复制dataset的bug
+- 修复transition.reverse()在动画结束时属性可能不正确的bug
+- 修复sprite-extend-bmfont加载远程URL图片的bug
+
+## [2.1.0][2018-06-27]
+
+### 改进
+
+- 支持了shadow属性（shadow: {color, blue, offset}）
+- 支持了sprite.data()和sprite.dataset
+- 支持sprite.attr()和sprite.data()设置异步属性
+- sprite.attrs()变更为sprite.attrs
+- 增加了transition的end和reverse方法
+- 增加了shadow和transition的相关文档
+
+### bug修复
+- 修复animation的playbackRate反向后，动画回复到初试状态时不能触发finished的bug（标准的web animation api要触发finished）
+
+## [2.0.0][2018-06-19]
+
+### 改进
+
+- transition对象调用attr自动将之前的transition动画结束
+- 调整构建脚本
+- 完善中、英文文档
+
+### bug修复
+
+- 修复animation.finished在某些情况下调用两次的bug
+
 ## [2.0.0-alpha.1][2018-04-23]
 
 ### 新特性
@@ -262,43 +302,3 @@
 
 - 修复keyboard事件不能派发到sprite的bug
 - 修复stickExtend下事件超过canvas原始区域后检测不到的bug
-
-## [2.0.0][2018-06-19]
-
-### 改进
-
-- transition对象调用attr自动将之前的transition动画结束
-- 调整构建脚本
-- 完善中、英文文档
-
-### bug修复
-
-- 修复animation.finished在某些情况下调用两次的bug
-
-## [2.1.0][2018-06-27]
-
-### 改进
-
-- 支持了shadow属性（shadow: {color, blue, offset}）
-- 支持了sprite.data()和sprite.dataset
-- 支持sprite.attr()和sprite.data()设置异步属性
-- sprite.attrs()变更为sprite.attrs
-- 增加了transition的end和reverse方法
-- 增加了shadow和transition的相关文档
-
-### bug修复
-- 修复animation的playbackRate反向后，动画回复到初试状态时不能触发finished的bug（标准的web animation api要触发finished）
-
-## [2.2.0][2018-06-29]
-
-### 改进
-
-- 取消sprite.attrs，改为sprite.attributes，与DOM的API保持一致
-- 将utils.findColor和utils.cacheContextPool两个方法导出
-- 添加了文档，增加速查表，增加对BMFont的支持
-
-### bug 修复
-
-- 修复了cloneNode不能复制dataset的bug
-- 修复transition.reverse()在动画结束时属性可能不正确的bug
-- 修复sprite-extend-bmfont加载远程URL图片的bug
