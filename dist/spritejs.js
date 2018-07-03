@@ -2193,9 +2193,14 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           clientWidth = _clientSize[0],
           clientHeight = _clientSize[1];
 
+
+      var isWeixinSimulator = typeof wx !== 'undefined' && wx.navigateToMiniProgram && typeof requestAnimationFrame !== 'undefined';
+
       /* istanbul ignore if */
       if (offsetWidth === 0 || offsetHeight === 0) return;
       if (border.width <= 0 && borderRadius <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor) {
+        drawingContext.rect(0, 0, offsetWidth, offsetHeight);
+        if (!isWeixinSimulator) drawingContext.clip();
         drawingContext.translate(padding[3], padding[0]);
         return false; // don't need to render
       }
@@ -2248,11 +2253,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
         }
         // we should always clip to prevent the subclass rendering not to overflow the box
         // but clip is very slow in wxapp simulator...
-        if (!(typeof wx !== 'undefined' && wx.navigateToMiniProgram && typeof requestAnimationFrame !== 'undefined')) {
-          var filter = this.attr('filter');
-          if (!filter) {
-            drawingContext.clip();
-          }
+        if (!isWeixinSimulator) {
+          drawingContext.clip();
         }
       }
 
