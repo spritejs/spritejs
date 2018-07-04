@@ -14755,7 +14755,7 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
           height = _attr2[1];
 
       if (width === '' || height === '') {
-        return this.textboxSize;
+        return this.textboxSize || [0, 0];
       }
 
       return [width, height];
