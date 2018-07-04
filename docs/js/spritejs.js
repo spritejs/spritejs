@@ -9354,7 +9354,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.3.0';
+var version = '2.3.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -12727,9 +12727,13 @@ var _class = function () {
       if (this[_finishedDefer] && !this[_finishedDefer].timerID) {
         this[_finishedDefer].timerID = this.timeline.setTimeout(function () {
           _this3[_finishedDefer].resolve();
+          _this3[_removeDefer](_readyDefer);
+          _this3[_removeDefer](_finishedDefer);
         }, { delay: delay, heading: false });
         this[_finishedDefer].reverseTimerID = this.timeline.setTimeout(function () {
           _this3[_finishedDefer].resolve();
+          _this3[_removeDefer](_readyDefer);
+          _this3[_removeDefer](_finishedDefer);
           _this3.timeline = null;
         }, { delay: -this[_timing].delay - 1, heading: false });
       }
