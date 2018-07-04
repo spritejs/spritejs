@@ -50,7 +50,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 In browser:
 
 ```html
-<script src="https://s1.ssl.qhres.com/!64e118e6/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
 ```
 
 With NPM:

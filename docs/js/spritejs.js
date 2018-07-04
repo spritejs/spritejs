@@ -2202,9 +2202,6 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           clientWidth = _clientSize[0],
           clientHeight = _clientSize[1];
 
-
-      var isWeixinSimulator = typeof wx !== 'undefined' && wx.navigateToMiniProgram && typeof requestAnimationFrame !== 'undefined';
-
       /* istanbul ignore if */
       if (offsetWidth === 0 || offsetHeight === 0) return;
       if (border.width <= 0 && borderRadius <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor) {
@@ -2258,9 +2255,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           drawingContext.fillStyle = bgcolor;
           drawingContext.fill();
         }
-        // we should always clip to prevent the subclass rendering not to overflow the box
-        // but clip is very slow in wxapp simulator...
-        if (!isWeixinSimulator) {
+        // clip is expensive, we should only perform clip when it has to.
+        if (borderRadius && (this.nodeType !== 'sprite' || this.textures && this.textures.length)) {
           drawingContext.clip();
         }
       }
@@ -2274,6 +2270,9 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     get: function get() {
       if (this.isVirtual) return -1;
       return this[_cachePriority];
+    },
+    set: function set(priority) {
+      this[_cachePriority] = priority;
     }
   }, {
     key: 'layer',
@@ -6541,13 +6540,24 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     value: function render(t, drawingContext) {
       var clipPath = this.attr('clip');
       if (clipPath) {
-        drawingContext.save();
         this.svg.beginPath().to(drawingContext);
-        drawingContext.restore();
         drawingContext.clip();
       }
 
-      (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
+      if (!this.isVirtual) {
+        (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
+
+        var _attr = this.attr('size'),
+            _attr2 = (0, _slicedToArray3.default)(_attr, 2),
+            w = _attr2[0],
+            h = _attr2[1];
+
+        if (w !== '' || h !== '') {
+          drawingContext.beginPath();
+          drawingContext.rect(0, 0, this.contentSize[0], this.contentSize[1]);
+          drawingContext.clip();
+        }
+      }
 
       var sprites = this[_children];
 
@@ -6565,20 +6575,20 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'isVirtual',
     get: function get() {
-      var _attr = this.attr('border'),
-          borderWidth = _attr.width,
+      var _attr3 = this.attr('border'),
+          borderWidth = _attr3.width,
           borderRadius = this.attr('borderRadius'),
           bgcolor = this.attr('bgcolor'),
-          _attr2 = this.attr('gradients'),
-          bgGradient = _attr2.bgcolor,
-          _attr3 = this.attr('size'),
-          _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
-          width = _attr4[0],
-          height = _attr4[1],
-          _attr5 = this.attr('anchor'),
+          _attr4 = this.attr('gradients'),
+          bgGradient = _attr4.bgcolor,
+          _attr5 = this.attr('size'),
           _attr6 = (0, _slicedToArray3.default)(_attr5, 2),
-          anchorX = _attr6[0],
-          anchorY = _attr6[1];
+          width = _attr6[0],
+          height = _attr6[1],
+          _attr7 = this.attr('anchor'),
+          _attr8 = (0, _slicedToArray3.default)(_attr7, 2),
+          anchorX = _attr8[0],
+          anchorY = _attr8[1];
 
       return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient;
     }
@@ -6592,10 +6602,10 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     get: function get() {
       if (this.isVirtual) return [0, 0];
 
-      var _attr7 = this.attr('size'),
-          _attr8 = (0, _slicedToArray3.default)(_attr7, 2),
-          width = _attr8[0],
-          height = _attr8[1];
+      var _attr9 = this.attr('size'),
+          _attr10 = (0, _slicedToArray3.default)(_attr9, 2),
+          width = _attr10[0],
+          height = _attr10[1];
 
       if (width === '' || height === '') {
         if (this.attr('clip')) {
@@ -14122,7 +14132,9 @@ function clearDirtyRect(_ref, box, width, height) {
   if (dirtyBox) {
     var dirtyRect = (0, _spriteUtils.boxToRect)(dirtyBox);
 
-    if (shadowContext) shadowContext.rect.apply(shadowContext, (0, _toConsumableArray3.default)(dirtyRect));
+    if (shadowContext) {
+      shadowContext.rect.apply(shadowContext, (0, _toConsumableArray3.default)(dirtyRect));
+    }
     outputContext.rect.apply(outputContext, (0, _toConsumableArray3.default)(dirtyRect));
   }
 }
@@ -14136,6 +14148,8 @@ function clearDirtyRects(_ref2, dirtyEls) {
       height = _outputContext$canvas.height;
 
 
+  if (shadowContext) shadowContext.beginPath();
+  outputContext.beginPath();
   for (var i = 0; i < dirtyEls.length; i++) {
     var dirtyEl = dirtyEls[i];
     var box = dirtyEl.renderBox;
@@ -14149,6 +14163,8 @@ function clearDirtyRects(_ref2, dirtyEls) {
       }
     }
   }
+  if (shadowContext) shadowContext.clip();
+  outputContext.clip();
 }
 
 /***/ }),
@@ -14532,7 +14548,12 @@ var measureText = function measureText(node, text, font) {
   return [width, height].map(Math.round);
 };
 
-function calculTextboxSize(node, text, font, lineHeight) {
+function calculTextboxSize(node) {
+  if (!node.context) return '';
+  var text = node.text,
+      font = node.attr('font'),
+      lineHeight = node.attr('lineHeight');
+
   var lines = text.split(/\n/);
   var width = 0,
       height = 0;
@@ -14546,10 +14567,7 @@ function calculTextboxSize(node, text, font, lineHeight) {
     width = Math.max(width, w);
     height += h;
   });
-  if (width === 0 && height === 0) {
-    return '';
-  }
-  return [width, height];
+  node[_boxSize] = [width, height];
 }
 
 var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = (0, _spriteUtils.parseValue)(_spriteUtils.parseColorString), _dec3 = (0, _spriteUtils.parseValue)(_spriteUtils.parseColorString), (_class = function (_BaseSprite$Attr) {
@@ -14582,6 +14600,7 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
       val = String(val);
       delete this.subject[_boxSize];
       this.set('text', val);
+      calculTextboxSize(this.subject);
     }
   }, {
     key: 'font',
@@ -14589,6 +14608,7 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
       this.clearCache();
       delete this.subject[_boxSize];
       this.set('font', val);
+      calculTextboxSize(this.subject);
     }
   }, {
     key: 'lineHeight',
@@ -14596,12 +14616,14 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
       this.clearCache();
       delete this.subject[_boxSize];
       this.set('lineHeight', val);
+      calculTextboxSize(this.subject);
     }
   }, {
     key: 'textAlign',
     set: function set(val) {
       this.clearCache();
       this.set('textAlign', val);
+      calculTextboxSize(this.subject);
     }
   }, {
     key: 'color',
@@ -14648,6 +14670,15 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
           text = this.text;
 
       if (text) {
+        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
+            w = _contentSize[0],
+            h = _contentSize[1];
+
+        if (this.textboxSize[0] > w || this.textboxSize[1] > h) {
+          drawingContext.beginPath();
+          drawingContext.rect(0, 0, w, h);
+          drawingContext.clip();
+        }
         drawingContext.font = font;
         var lines = this.text.split(/\n/);
 
@@ -14706,6 +14737,12 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
     get: function get() {
       return this.attr('text');
     }
+  }, {
+    key: 'textboxSize',
+    get: function get() {
+      if (!this[_boxSize]) calculTextboxSize(this);
+      return this[_boxSize];
+    }
 
     // override to adapt content size
 
@@ -14717,13 +14754,8 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
           width = _attr2[0],
           height = _attr2[1];
 
-      if (this[_boxSize]) {
-        return this[_boxSize];
-      }
       if (width === '' || height === '') {
-        var size = calculTextboxSize(this, this.text, this.attr('font'), this.attr('lineHeight'));
-        this[_boxSize] = size;
-        return size || [0, 0];
+        return this.textboxSize;
       }
 
       return [width, height];
@@ -15073,11 +15105,8 @@ var Layer = function (_BaseNode) {
       (0, _dirtyCheck.clearDirtyRects)({ shadowContext: shadowContext, outputContext: outputContext }, updateEls, true);
 
       if (shadowContext) {
-        shadowContext.clip();
-        outputContext.clip();
         this.clearContext(shadowContext);
       }
-      outputContext.clip();
       if (clearContext) this.clearContext(outputContext);
 
       this.drawSprites(renderEls, t);
@@ -15526,10 +15555,21 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
       if (d) {
         var svg = this.svg;
 
-        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 2),
+        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 4),
             ox = _svg$bounds[0],
-            oy = _svg$bounds[1];
+            oy = _svg$bounds[1],
+            ow = _svg$bounds[2],
+            oh = _svg$bounds[3];
 
+        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
+            w = _contentSize[0],
+            h = _contentSize[1];
+
+        if (w < ow || h < oh) {
+          drawingContext.beginPath();
+          drawingContext.rect(0, 0, w, h);
+          drawingContext.clip();
+        }
         if (ox < 0 || oy < 0) {
           drawingContext.translate(-Math.min(0, ox), -Math.min(0, oy));
         }
@@ -15927,18 +15967,30 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
     value: function render(t, drawingContext) {
       var _this5 = this;
 
-      var hasBg = (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t, drawingContext);
-      if (!hasBg && this.textures.length <= 1) {
-        this.__cachePolicyThreshold = Infinity;
-      } else {
-        this.__cachePolicyThreshold = 6;
+      (0, _get3.default)(Sprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(Sprite.prototype), 'render', this).call(this, t, drawingContext);
+      var bg = this.attr('bgcolor') || this.attr('gradients').bgcolor;
+      if (!bg && this.textures.length <= 1) {
+        this.cachePriority = 0;
       }
       var textures = this.textures;
+      var cliped = false;
       if (this.images && this.images.length) {
         textures.forEach(function (texture, i) {
           var img = _this5.images[i];
-          var rect = texture.rect || [0, 0].concat((0, _toConsumableArray3.default)(_this5.innerSize));
+
+          var _contentSize2 = (0, _slicedToArray3.default)(_this5.contentSize, 2),
+              w = _contentSize2[0],
+              h = _contentSize2[1];
+
+          var rect = texture.rect || [0, 0, w, h];
           var srcRect = texture.srcRect;
+
+          if (!cliped && texture.rect && (rect[2] - rect[0] > w || rect[3] - rect[1] > h)) {
+            cliped = true;
+            drawingContext.beginPath();
+            drawingContext.rect(0, 0, w, h);
+            drawingContext.clip();
+          }
 
           drawingContext.save();
 
