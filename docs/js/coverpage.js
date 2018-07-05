@@ -155,7 +155,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
                 path: { d: 'M0,0Q-1,12,5,36Q30,22,30,0z', transform: { scale: 2 } },
                 anchor: [0, 0],
                 fillColor: '#FEE139',
-                pos: [46, 220],
+                pos: [60, 230],
                 lineWidth: 6,
                 strokeColor: '#FB6F4A',
                 zIndex: -1,
@@ -673,8 +673,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           });
           coverpage = document.querySelector('#coverpage');
           fglayer = scene.layer('fglayer', {
-            renderMode: 'repaintAll',
-            shadowContext: false
+            renderMode: 'repaintAll'
           });
           maxScroll = null;
           // 适配移动端

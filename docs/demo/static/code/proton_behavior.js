@@ -5,7 +5,6 @@ const scene = new Scene('#paper', {
   stickMode: 'width',
 })
 const fglayer = scene.layer('fglayer', {
-  shadowContext: false,
   autoRender: false,
 })
 scene.container.style.backgroundColor = '#000'

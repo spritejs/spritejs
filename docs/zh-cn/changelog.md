@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.4.0][Lastest]
+
+### 改进
+
+- 废弃shadowContext配置，以提升性能
+
 ## [2.3.1][2018-07-04]
 
 ### bug 修复

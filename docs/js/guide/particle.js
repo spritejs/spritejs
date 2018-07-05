@@ -15,8 +15,7 @@ var _spritejs = spritejs,
 
   var layer = scene.layer('bglayer', {
     handleEvent: true,
-    autoRender: false,
-    shadowContext: false
+    autoRender: false
   });
 
   var fglayer = scene.layer('fglayer', {

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+#container {
+  width: 800px;
+  height: 800px;
+  background: #29AB63;
+}  
+  </style>
+</head>
+<body>
+  <!-- <script src="https://unpkg.com/spritejs@2.0.0/dist/spritejs.min.js"></script> -->
+  <script src="//lib.baomitu.com/konva/2.0.2/konva.js"></script>
+  <div id="container"></div>
+  <script>
+    const width = 1200
+    const height = 1200
+    const stage = new Konva.Stage({
+      container: 'container',
+      width,
+      height,
+    })
+    const fglayer = new Konva.Layer()
+    stage.add(fglayer)
+
+    function loadImage(src) {
+      const imageObj = new Image()
+      imageObj.crossOrigin = 'anonymous'
+      const promise = new Promise((resolve) => {
+        imageObj.onload = function () {
+          resolve(imageObj)
+        }
+      })
+      imageObj.src = src
+      return promise
+    }
+    (async function () {
+      const image = await loadImage('https://s0.ssl.qhres.com/static/3f2adfd6acc2e390.svg')
+      const robot = new Konva.Image({
+        x: stage.getWidth() / 2,
+        y: stage.getHeight() / 2,
+        image,
+        // width: 106,
+        // height: 118
+      })
+      fglayer.add(robot)
+      fglayer.draw()
+
+      let startTime = Date.now(),
+        T = 5000
+      let anim = new Konva.Animation(function f(frame) {
+        let p = (Date.now() - startTime) / T
+        p = Math.min(1.0, p)
+        robot.x(200 + p * 200)
+        if(p === 1) {
+          anim.stop()
+          setTimeout(() => {
+            startTime = Date.now()
+            anim = new Konva.Animation(f, fglayer)
+            anim.start()
+          }, 500)
+        }
+      }, fglayer)
+
+      anim.start()
+    }())
+// (async function () {
+//   const {Scene, Sprite} = spritejs
+//   const scene = new Scene('#container', {
+//     resolution: [1600, 1600],
+//   })
+
+//   const fglayer = scene.layer('fglayer', {
+//     renderMode: 'repaintAll',
+//   })
+
+//   // 预加载资源
+//   await scene.preload([
+//     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+//     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+//   ])
+
+//   const s = new Sprite('huanhuan.png')
+//   s.attr({
+//     pos: [400, 400],
+//   })
+//   fglayer.append(s)
+//   s.animate([
+//     {x: 400},
+//     {x: 500},
+//   ], {
+//     duration: 5000,
+//     iterations: Infinity,
+//   })
+// }())
+  </script>
+</body>
+</html>

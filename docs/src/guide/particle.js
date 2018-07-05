@@ -11,7 +11,6 @@ const {Scene, Sprite, ProtonRenderer} = spritejs
   const layer = scene.layer('bglayer', {
     handleEvent: true,
     autoRender: false,
-    shadowContext: false,
   })
 
   const fglayer = scene.layer('fglayer', {

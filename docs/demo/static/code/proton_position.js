@@ -8,7 +8,6 @@ scene.container.style.background = '#16a085'
 const layer = scene.layer('bglayer', {
   handleEvent: true,
   autoRender: false,
-  shadowContext: false,
 })
 
 const fglayer = scene.layer('fglayer', {

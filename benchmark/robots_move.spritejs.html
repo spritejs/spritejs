@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+#container {
+  width: 1200px;
+  height: 1200px;
+  background: #29AB63;
+}  
+  </style>
+</head>
+<body>
+  <script src="/js/spritejs.js"></script>
+  <script src="https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js"></script>
+  <div id="container"></div>
+  <script>
+(async function () {
+  const {Scene, Sprite} = spritejs
+  const scene = new Scene('#container', {
+    resolution: [2400, 2400],
+  })
+
+  const fglayer = scene.layer('fglayer', {
+    renderMode: 'repaintDirty',
+    handleEvent: false,
+  })
+
+  // 预加载资源
+  // await scene.preload([
+  //   'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+  //   'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+  // ])
+
+  const s = new Sprite('https://s0.ssl.qhres.com/static/3f2adfd6acc2e390.svg')
+  s.attr({
+    pos: [800, 800],
+    scale: 2,
+  })
+  fglayer.append(s)
+  s.animate([
+    {x: 400},
+    {x: 800},
+  ], {
+    duration: 5000,
+    iterations: Infinity,
+  })
+
+  // const anim = new Animator(5000, (p) => {
+  //   s.attr({
+  //     x: 400 + p * 400,
+  //   })
+  // })
+  // await anim.animate()
+}())
+  </script>
+</body>
+</html>

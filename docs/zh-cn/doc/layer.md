@@ -28,10 +28,6 @@ Layer有一些options选项，如下：
 
 SpriteJS提供两种渲染模式：repaintAll和repaintDirty，前者当元素更新时，SpriteJS更新整个画布，后者SpriteJS会动态计算画布需要更新的区域，然后只更新相应区域。一般情况下元素比较多时采用renderAll模式性能较好，如果元素不多，而且画布上更新的区域不大的时候，可以采用repaintDirty节省资源。
 
-### shadowContext = true
-
-是否启用shadowContext，如果这个参数为true，Layer会尝试创建一个不在文档流中的canvas来绘制，等绘制完成之后，再把整个内容绘制到文档流中的Canvas对象中，这样在一些情况下能有更好的性能。
-
 ## center
 
 只读属性，获得当前layer的中心点。
@@ -46,11 +42,8 @@ SpriteJS提供两种渲染模式：repaintAll和repaintDirty，前者当元素�
 
 ```js
 layer.clearContext = function(context) {
-  if(context === layer.shadowContext) {
-    ...
-  } else {
-    ...
-  }
+  context.fillStyle = 'black'
+  context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
 ```
 
@@ -61,8 +54,6 @@ layer.clearContext = function(context) {
 ## context
 
 只读属性，获得当前Layer的canvas对象用以渲染的context
-
-**注意**这里的context不一定是`layer.canvas.getContext('2d')`，如果shadowContext是true的话，这里的context将是shadowContext，只有shadowContext为false的时候context才是`layer.canvas.getContext('2d')`
 
 ## id
 

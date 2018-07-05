@@ -14,7 +14,6 @@ class ExLayer extends Layer {
       handleEvent = true,
       evaluateFPS = false,
       renderMode = 'repaintAll',
-      shadowContext = true,
       autoRender = true} = opts
 
     context = context || createCanvas().getContext('2d')
@@ -22,7 +21,7 @@ class ExLayer extends Layer {
     canvas.dataset.layerId = id
     canvas.style.position = 'absolute'
 
-    super({context, handleEvent, evaluateFPS, renderMode, shadowContext, autoRender})
+    super({context, handleEvent, evaluateFPS, renderMode, autoRender})
 
     if(resolution) {
       this.resolution = resolution
@@ -78,16 +77,8 @@ class ExLayer extends Layer {
     outputCanvas.height = height
     this.outputContext.clearRect(0, 0, width, height)
 
-    if(this.shadowContext) {
-      const shadowCanvas = this.shadowContext.canvas
-      shadowCanvas.width = width
-      shadowCanvas.height = height
-      this.shadowContext.clearRect(0, 0, width, height)
-    }
-
     if(offsetLeft || offsetTop) {
-      const context = this.shadowContext || this.outputContext
-      context.translate(offsetLeft, offsetTop)
+      this.outputContext.translate(offsetLeft, offsetTop)
     }
 
     this.children.forEach((child) => {
@@ -98,16 +89,13 @@ class ExLayer extends Layer {
     this[_resolution] = resolution
     this.dispatchEvent('resolutionChange', {target: this}, true, true)
   }
-  clearContext(context) {
+  clearContext(context = this.outputContext) {
     if(context.canvas) {
       const resolution = this.resolution,
         offsetTop = resolution[3],
         offsetLeft = resolution[2]
-      if(!this.shadowContext || context === this.shadowContext) {
-        context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height)
-      } else {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-      }
+
+      context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height)
     }
   }
 

@@ -152,7 +152,6 @@ paperEl.appendChild(formEl)
 
       const mapId = this.mapId
 
-      mapTransform(layer, [1, 0, 0, 1, 0, 0], false)
       layer.clear()
 
       d3.select(layer).selectAll('path')
@@ -290,7 +289,7 @@ paperEl.appendChild(formEl)
       const layer = this.layer
 
       d3.select(layer).selectAll('path')
-        .attr('fillColor', '#2f3644')
+        .attr('strokeColor', 'rgba(0, 0, 0, 0.3)')
         .attr('lineWidth', 1)
         .attr('zIndex', 0)
 
@@ -317,13 +316,13 @@ paperEl.appendChild(formEl)
   }
 
   function findId(idOrName) {
-    return new Promise(res => {
+    return new Promise((resolve) => {
       if(mapRelation[idOrName]) {
-        res(idOrName)
+        resolve(idOrName)
       } else {
         Object.entries(mapRelation).forEach(([id, value]) => {
           if(value.name.startsWith(idOrName)) {
-            res(id)
+            resolve(id)
           }
         })
       }
@@ -339,7 +338,7 @@ paperEl.appendChild(formEl)
 
   moveToForm.onsubmit = function (evt) {
     const value = moveToText.value || 1
-    findId(value).then(id => {
+    findId(value).then((id) => {
       world.moveTo(id)
     })
     evt.preventDefault()

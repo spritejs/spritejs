@@ -22,7 +22,6 @@
 
   const fglayer = scene.layer('fglayer', {
     renderMode: 'repaintAll',
-    shadowContext: false,
   })
 
   let maxScroll = null
@@ -149,7 +148,7 @@
       path: {d: 'M0,0Q-1,12,5,36Q30,22,30,0z', transform: {scale: 2}},
       anchor: [0, 0],
       fillColor: '#FEE139',
-      pos: [46, 220],
+      pos: [60, 230],
       lineWidth: 6,
       strokeColor: '#FB6F4A',
       zIndex: -1,
@@ -359,7 +358,7 @@
     const giteeBtn = githubBtn.cloneNode()
     giteeBtn.attr({
       text: 'Gitee',
-      pos: [2170, 1500]
+      pos: [2170, 1500],
     })
     fglayer.append(giteeBtn)
     registerButton(giteeBtn, 'https://gitee.com/qihoo360/spriteJS')
