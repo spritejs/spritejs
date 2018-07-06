@@ -14,7 +14,7 @@ Sprite的构造函数可以传一个图片URL，这样将使用该图片创建Sp
 <p data-height="371" data-theme-id="light" data-slug-hash="LrqorR" data-default-tab="js,result" data-user="akira-cn" data-embed-version="2" data-pen-title="spritejs-demo-1" class="codepen">See the Pen <a href="https://codepen.io/akira-cn/pen/LrqorR/">spritejs-demo-1</a> by 月影 (<a href="https://codepen.io/akira-cn">@akira-cn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
-除了图片，我们可以给元素添加其他的属性，详细参考[Attribute](http://localhost:9090/#/zh-cn/doc/attribute)
+除了图片，我们可以给元素添加其他的属性，详细参考[Attribute](/zh-cn/doc/attribute)
 
 我们可以预加载图片，并给图片一个id：
 
