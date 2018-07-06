@@ -1,5 +1,19 @@
-* Demo
+* Demos
   * [Examples](/en/examples)
+* Totorials
+  * [Attribute](/en/doc/attribute)
+  * [Animation](/en/doc/animation)
+  * [BaseNode](/en/doc/basenode)
+  * [BaseSprite]
+  * [Dataset]
+  * [Event]
+  * [Group]
+  * [Label]
+  * [Layer]
+  * [Path]
+  * [Scene]
+  * [Sprite]
+  * [Transition]
 * API
   * [Sprite](/api/sprite)
   * [Label](/api/label)
