@@ -4,10 +4,10 @@
   * [Attribute](/en/doc/attribute)
   * [Animation](/en/doc/animation)
   * [BaseNode](/en/doc/basenode)
-  * [BaseSprite]
-  * [Dataset]
-  * [Event]
-  * [Group]
+  * [BaseSprite](/en/doc/basesprite)
+  * [Dataset](/en/doc/dataset)
+  * [Event](/en/doc/event)
+  * [Group](/en/doc/group)
   * [Label]
   * [Layer]
   * [Path]
