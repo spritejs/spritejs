@@ -47,7 +47,7 @@ resolution设置为flex的效果可以看[这个例子](http://spritejs.org/demo
 
 ### stickMode
 
-SpritJS支持适配不同的设备，可以设置9种不同的粘连模式。
+SpritJS支持适配不同的设备，可以设置12种不同的粘连模式。
 
 | 属性名称 | 属性类型 | 属性值 | 属性说明 |
 | --- | --- | --- | --- |

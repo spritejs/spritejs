@@ -8,12 +8,12 @@
   * [Dataset](/en/doc/dataset)
   * [Event](/en/doc/event)
   * [Group](/en/doc/group)
-  * [Label]
-  * [Layer]
-  * [Path]
-  * [Scene]
-  * [Sprite]
-  * [Transition]
+  * [Label](/en/doc/label)
+  * [Layer](/en/doc/layer)
+  * [Path](/en/doc/path)
+  * [Scene](/en/doc/scene)
+  * [Sprite](/en/doc/sprite)
+  * [Transition](/en/doc/transition)
 * API
   * [Sprite](/api/sprite)
   * [Label](/api/label)
