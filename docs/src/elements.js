@@ -121,7 +121,7 @@ const {Scene, Sprite, Label, Path, Group} = spritejs
   text2.attr({
     pos: [500, 40],
     fillColor: '#077',
-    font: '64px 宋体',
+    font: '64px "宋体"',
     lineHeight: 112,
     textAlign: 'center',
     padding: [0, 30],
