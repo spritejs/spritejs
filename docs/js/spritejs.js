@@ -2330,7 +2330,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     key: 'hasLayout',
     get: function get() {
       if (this.attr('position') === 'absolute') return false;
-      if (this.parent && this.parent.relayout) return true;
+      if (this.parent && this.parent.relayout && this.parent.attr('display') === 'flex') return true;
       return false;
     }
   }, {
@@ -6497,13 +6497,6 @@ var GroupAttr = (_class = function (_BaseSprite$Attr) {
       this.set('flexWrap', value);
     }
   }, {
-    key: 'flexFlow',
-    set: function set(value) {
-      this.clearCache();
-      this.subject.clearLayout();
-      this.set('flexFlow', value);
-    }
-  }, {
     key: 'justifyContent',
     set: function set(value) {
       this.clearCache();
@@ -6546,11 +6539,11 @@ var GroupAttr = (_class = function (_BaseSprite$Attr) {
     key: 'layoutHeight',
     set: function set(value) {
       this.subject.clearLayout();
-      (0, _set3.default)(GroupAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(GroupAttr.prototype), 'layoutWidth', value, this);
+      (0, _set3.default)(GroupAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(GroupAttr.prototype), 'layoutHeight', value, this);
     }
   }]);
   return GroupAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexFlow', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexFlow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype)), _class);
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype)), _class);
 var Group = (_temp = _class2 = function (_BaseSprite) {
   (0, _inherits3.default)(Group, _BaseSprite);
 
@@ -9838,7 +9831,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.4.0';
+var version = '2.4.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14345,7 +14338,8 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     },
     get: function get() {
       if (this.subject.hasLayout) {
-        return this.get('layoutX');
+        var layoutX = this.get('layoutX');
+        return layoutX !== '' ? layoutX : this.get('x');
       }
       return this.get('x');
     }
@@ -14360,7 +14354,8 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     },
     get: function get() {
       if (this.subject.hasLayout) {
-        return this.get('layoutY');
+        var layoutY = this.get('layoutY');
+        return layoutY !== '' ? layoutY : this.get('y');
       }
       return this.get('y');
     }
@@ -15589,6 +15584,12 @@ var Layer = function (_BaseNode) {
     value: function draw() {
       var clearContext = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
+      var renderDeferrer = this[_renderDeferer];
+      this[_renderDeferer] = null;
+      if (this[_drawTask]) {
+        (0, _fastAnimationFrame.cancelAnimationFrame)(this[_drawTask]);
+        delete this[_drawTask];
+      }
       /* istanbul ignore if  */
       if (this.evaluateFPS) {
         this[_tRecord].push(Date.now());
@@ -15609,13 +15610,8 @@ var Layer = function (_BaseNode) {
 
       (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, 'update', { target: this, timeline: this.timeline, renderTime: currentTime }, true);
 
-      if (this[_renderDeferer]) {
-        if (this[_drawTask]) {
-          (0, _fastAnimationFrame.cancelAnimationFrame)(this[_drawTask]);
-          delete this[_drawTask];
-        }
-        this[_renderDeferer].resolve();
-        this[_renderDeferer] = null;
+      if (renderDeferrer) {
+        renderDeferrer.resolve();
       }
     }
   }, {
@@ -15647,6 +15643,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'drawSprites',
     value: function drawSprites(renderEls, t) {
+      this[_updateSet].clear();
       for (var i = 0; i < renderEls.length; i++) {
         var child = renderEls[i];
         if (child.parent === this) {
@@ -15678,7 +15675,6 @@ var Layer = function (_BaseNode) {
       var outputContext = this.outputContext;
       if (clearContext) this.clearContext(outputContext);
       this.drawSprites(renderEls, t);
-      this[_updateSet].clear();
     }
   }, {
     key: 'renderRepaintDirty',
@@ -15706,7 +15702,6 @@ var Layer = function (_BaseNode) {
       this.drawSprites(renderEls, t);
 
       outputContext.restore();
-      this[_updateSet].clear();
     }
   }, {
     key: 'pointCollision',

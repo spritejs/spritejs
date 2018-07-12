@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.4.1][2018-07-12]
+
+### bug修复
+
+- 修复group位置动画不能正常获取初始值的bug
+- 修复layout的layoutHeight设置成layoutWidth的bug
+- 修改了layer更新机制，允许在draw的过程中更新其他已绘制元素的属性
+
 ## [2.4.0][2018-07-12]
 
 ### 新特性
