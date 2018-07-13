@@ -4,6 +4,12 @@
 
 ### bug修复
 
+- 补上忘记导出的createElement。。。
+
+## [2.4.2][2018-07-13]
+
+### bug修复
+
 - 修复CI脚本
 - 修复size属性在layout容器下不能动画的bug
 - 修复改变display属性不能清除layout的bug

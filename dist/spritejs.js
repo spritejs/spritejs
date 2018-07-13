@@ -9807,7 +9807,7 @@ module.exports = function spread(callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Effects = exports.Resource = exports.Color = exports.createNode = exports.registerNodeType = exports.Paper2D = exports.Scene = exports.Layer = exports.Group = exports.Path = exports.Label = exports.Sprite = exports.BaseSprite = exports.BaseNode = exports.utils = exports.math = exports.version = exports._debugger = undefined;
+exports.Effects = exports.Resource = exports.Color = exports.createElement = exports.createNode = exports.registerNodeType = exports.Paper2D = exports.Scene = exports.Layer = exports.Group = exports.Path = exports.Label = exports.Sprite = exports.BaseSprite = exports.BaseNode = exports.utils = exports.math = exports.version = exports._debugger = undefined;
 
 var _spriteCore = __webpack_require__(47);
 
@@ -9851,7 +9851,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.4.2';
+var version = '2.4.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -9868,6 +9868,7 @@ exports.Scene = _scene2.default;
 exports.Paper2D = Paper2D;
 exports.registerNodeType = _spriteCore.registerNodeType;
 exports.createNode = _spriteCore.createNode;
+exports.createElement = _spriteCore.createElement;
 exports.Color = _spriteCore.Color;
 exports.Resource = _resource2.default;
 exports.Effects = _spriteCore.Effects;

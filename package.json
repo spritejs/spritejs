@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
