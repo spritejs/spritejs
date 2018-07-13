@@ -1972,9 +1972,6 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       delete this.context;
       return ret;
     }
-
-    // content width / height
-
   }, {
     key: 'clearCache',
     value: function clearCache() {
@@ -2002,7 +1999,6 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     value: function forceUpdate() {
       var clearCache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-      this.isDirty = true;
       if (clearCache) {
         this.clearCache();
       }
@@ -2368,14 +2364,32 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       return transform;
     }
   }, {
-    key: 'contentSize',
+    key: 'attrSize',
     get: function get() {
-      if (this.isVirtual) return [0, 0];
-
       var _attr4 = this.attr('size'),
           _attr5 = (0, _slicedToArray3.default)(_attr4, 2),
           width = _attr5[0],
           height = _attr5[1];
+
+      if (!this.hasLayout) {
+        return [width, height];
+      }
+      var layoutWidth = this.attr('layoutWidth'),
+          layoutHeight = this.attr('layoutHeight');
+
+      return [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+    }
+
+    // content width / height
+
+  }, {
+    key: 'contentSize',
+    get: function get() {
+      if (this.isVirtual) return [0, 0];
+
+      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1];
 
       return [width | 0, height | 0];
     }
@@ -6541,9 +6555,15 @@ var GroupAttr = (_class = function (_BaseSprite$Attr) {
       this.subject.clearLayout();
       (0, _set3.default)(GroupAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(GroupAttr.prototype), 'layoutHeight', value, this);
     }
+  }, {
+    key: 'display',
+    set: function set(value) {
+      this.subject.clearLayout();
+      (0, _set3.default)(GroupAttr.prototype.__proto__ || (0, _getPrototypeOf2.default)(GroupAttr.prototype), 'display', value, this);
+    }
   }]);
   return GroupAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype)), _class);
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'clip', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'display'), _class.prototype)), _class);
 var Group = (_temp = _class2 = function (_BaseSprite) {
   (0, _inherits3.default)(Group, _BaseSprite);
 
@@ -6575,6 +6595,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'update',
     value: function update(child) {
+      child.isDirty = true;
       this.forceUpdate(true);
     }
   }, {
@@ -7019,10 +7040,9 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       if (!this.isVirtual) {
         (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
 
-        var _attr = this.attr('size'),
-            _attr2 = (0, _slicedToArray3.default)(_attr, 2),
-            w = _attr2[0],
-            h = _attr2[1];
+        var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+            w = _attrSize[0],
+            h = _attrSize[1];
 
         if (w !== '' || h !== '') {
           drawingContext.beginPath();
@@ -7034,12 +7054,14 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
       var sprites = this[_children];
 
       for (var i = 0; i < sprites.length; i++) {
-        var child = sprites[i];
+        var child = sprites[i],
+            isDirty = child.isDirty;
+        child.isDirty = false;
+
         if (child.isVisible()) {
           child.draw(t, drawingContext);
         }
-        if (child.isDirty) {
-          child.isDirty = false;
+        if (isDirty) {
           child.dispatchEvent('update', { target: child, renderTime: t }, true, true);
         }
       }
@@ -7052,20 +7074,19 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     get: function get() {
       if (this.attr('display') === 'flex') return false;
 
-      var _attr3 = this.attr('border'),
-          borderWidth = _attr3.width,
+      var _attr = this.attr('border'),
+          borderWidth = _attr.width,
           borderRadius = this.attr('borderRadius'),
           bgcolor = this.attr('bgcolor'),
-          _attr4 = this.attr('gradients'),
-          bgGradient = _attr4.bgcolor,
-          _attr5 = this.attr('size'),
-          _attr6 = (0, _slicedToArray3.default)(_attr5, 2),
-          width = _attr6[0],
-          height = _attr6[1],
-          _attr7 = this.attr('anchor'),
-          _attr8 = (0, _slicedToArray3.default)(_attr7, 2),
-          anchorX = _attr8[0],
-          anchorY = _attr8[1];
+          _attr2 = this.attr('gradients'),
+          bgGradient = _attr2.bgcolor,
+          _attrSize2 = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize2[0],
+          height = _attrSize2[1],
+          _attr3 = this.attr('anchor'),
+          _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
+          anchorX = _attr4[0],
+          anchorY = _attr4[1];
 
       return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient;
     }
@@ -7079,10 +7100,9 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
     get: function get() {
       if (this.isVirtual) return [0, 0];
 
-      var _attr9 = this.attr('size'),
-          _attr10 = (0, _slicedToArray3.default)(_attr9, 2),
-          width = _attr10[0],
-          height = _attr10[1];
+      var _attrSize3 = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize3[0],
+          height = _attrSize3[1];
 
       if (width === '' || height === '') {
         if (this.attr('clip')) {
@@ -9831,7 +9851,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.4.1';
+var version = '2.4.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14098,11 +14118,11 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
         return [this.x, this.y];
       },
       size: function size() {
-        if (this.subject.hasLayout) {
-          var width = this.layoutWidth !== '' ? this.layoutWidth : this.width,
-              height = this.layoutHeight !== '' ? this.layoutHeight : this.height;
-          return [width, height];
-        }
+        // if(this.subject.hasLayout) {
+        //   const width = this.layoutWidth !== '' ? this.layoutWidth : this.width,
+        //     height = this.layoutHeight !== '' ? this.layoutHeight : this.height
+        //   return [width, height]
+        // }
         return [this.width, this.height];
       },
       linearGradients: function linearGradients() {
@@ -15365,10 +15385,9 @@ var Label = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'contentSize',
     get: function get() {
-      var _attr = this.attr('size'),
-          _attr2 = (0, _slicedToArray3.default)(_attr, 2),
-          width = _attr2[0],
-          height = _attr2[1];
+      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1];
 
       if (width === '' || height === '') {
         var textboxSize = this.textboxSize;
@@ -15617,8 +15636,11 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'update',
     value: function update(target) {
-      if (target && this[_updateSet].has(target)) return;
-      if (target) this[_updateSet].add(target);
+      if (target && target.isDirty) return;
+      if (target) {
+        this[_updateSet].add(target);
+        target.isDirty = true;
+      }
       this.prepareRender();
     }
   }, {
@@ -15645,7 +15667,10 @@ var Layer = function (_BaseNode) {
     value: function drawSprites(renderEls, t) {
       this[_updateSet].clear();
       for (var i = 0; i < renderEls.length; i++) {
-        var child = renderEls[i];
+        var child = renderEls[i],
+            isDirty = child.isDirty;
+        child.isDirty = false;
+
         if (child.parent === this) {
           var isVisible = this.isNodeVisible(child);
           if (isVisible) {
@@ -15659,8 +15684,7 @@ var Layer = function (_BaseNode) {
             // invisible, only need to remove lastRenderBox
             delete child.lastRenderBox;
           }
-          if (child.isDirty) {
-            child.isDirty = false;
+          if (isDirty) {
             child.dispatchEvent('update', { target: child, renderTime: t, isVisible: isVisible }, true, true);
           }
         }
@@ -16284,10 +16308,9 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
 
       var bounds = this.svg.bounds;
 
-      var _attr = this.attr('size'),
-          _attr2 = (0, _slicedToArray3.default)(_attr, 2),
-          width = _attr2[0],
-          height = _attr2[1];
+      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1];
 
       var pathOffset = this.pathOffset;
 
@@ -16315,10 +16338,10 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
         var _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
             width = _offsetSize[0],
             height = _offsetSize[1],
-            _attr3 = this.attr('anchor'),
-            _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
-            anchorX = _attr4[0],
-            anchorY = _attr4[1];
+            _attr = this.attr('anchor'),
+            _attr2 = (0, _slicedToArray3.default)(_attr, 2),
+            anchorX = _attr2[0],
+            anchorY = _attr2[1];
 
         var rect = [0, 0, width, height],
             offsetX = Math.min(0, bounds[0]),
@@ -16676,10 +16699,9 @@ var Sprite = (_temp = _class2 = function (_BaseSprite) {
   }, {
     key: 'contentSize',
     get: function get() {
-      var _attr3 = this.attr('size'),
-          _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
-          width = _attr4[0],
-          height = _attr4[1];
+      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1];
 
       var boxSize = this.texturesSize || [0, 0];
 
