@@ -8,5 +8,5 @@
 
 
 <script src="https://s4.ssl.qhres.com/!f7da5437/proton.js"></script>
-<script src="https://s1.ssl.qhres.com/!07aa16c1/sprite-extend-proton.js"></script>
+<script src="https://unpkg.com/sprite-extend-proton/dist/sprite-extend-proton.js"></script>
 <script src="/js/guide/particle.js"></script>

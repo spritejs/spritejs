@@ -4,17 +4,17 @@
   * [Attribute](/en/doc/attribute)
   * [Animation](/en/doc/animation)
   * [BaseNode](/en/doc/basenode)
+  * [BaseSprite](/en/doc/basesprite)
+  * [Dataset](/en/doc/dataset)
+  * [Event](/en/doc/event)
+  * [Group](/en/doc/group)
+  * [Label](/en/doc/label)
+  * [Layer](/en/doc/layer)
+  * [Path](/en/doc/path)
+  * [Scene](/en/doc/scene)
+  * [Sprite](/en/doc/sprite)
+  * [Transition](/en/doc/transition)
   * [JSX](/en/doc/jsx)
-  * [BaseSprite]
-  * [Dataset]
-  * [Event]
-  * [Group]
-  * [Label]
-  * [Layer]
-  * [Path]
-  * [Scene]
-  * [Sprite]
-  * [Transition]
 * API
   * [Sprite](/api/sprite)
   * [Label](/api/label)

@@ -1,5 +1,43 @@
 # Change Log
 
+## [2.4.2][2018-07-13]
+
+### bug修复
+
+- 补上忘记导出的createElement。。。
+
+## [2.4.2][2018-07-13]
+
+### bug修复
+
+- 修复CI脚本
+- 修复size属性在layout容器下不能动画的bug
+- 修复改变display属性不能清除layout的bug
+- 改变部分扩展（sprite-extend-*）的实现方式以支持layout
+
+### 文档
+
+- 改变部分demo和文档的js引入方式，以便在扩展升级时自动更新文档依赖的版本
+
+## [2.4.1][2018-07-12]
+
+### bug修复
+
+- 修复group位置动画不能正常获取初始值的bug
+- 修复layout的layoutHeight设置成layoutWidth的bug
+- 修改了layer更新机制，允许在draw的过程中更新其他已绘制元素的属性
+
+## [2.4.0][2018-07-12]
+
+### 新特性
+
+- 支持了Flex布局
+- 添加了createElement方法
+
+### 改进
+
+- 单独设置Sprite元素的宽或高，textures将保持比例（与html的img行为保持一致）
+
 ## [2.3.2][2018-07-05]
 
 ### 改进

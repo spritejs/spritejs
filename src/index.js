@@ -7,6 +7,7 @@ import {
   Path,
   registerNodeType,
   createNode,
+  createElement,
   Color,
 
   utils,
@@ -53,6 +54,7 @@ export {
 
   registerNodeType,
   createNode,
+  createElement,
   Color,
 
   Resource,
