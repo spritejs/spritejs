@@ -4,6 +4,7 @@
   * [Attribute](/en/doc/attribute)
   * [Animation](/en/doc/animation)
   * [BaseNode](/en/doc/basenode)
+  * [JSX](/en/doc/jsx)
   * [BaseSprite]
   * [Dataset]
   * [Event]
