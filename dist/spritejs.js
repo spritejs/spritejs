@@ -9713,7 +9713,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.4.3';
+var version = '2.4.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
