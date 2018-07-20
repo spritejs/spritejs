@@ -14,6 +14,7 @@
   * [Scene](/en/doc/scene)
   * [Sprite](/en/doc/sprite)
   * [Transition](/en/doc/transition)
+  * [JSX](/en/doc/jsx)
 * API
   * [Sprite](/api/sprite)
   * [Label](/api/label)

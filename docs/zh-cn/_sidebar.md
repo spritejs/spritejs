@@ -58,6 +58,7 @@
   * [快照](/zh-cn/guide/snapshot)
   * [开发者工具](/zh-cn/guide/devtools)
   * [跨平台](/zh-cn/guide/platforms)
+  * [JSX语法](/zh-cn/guide/jsx)
 
 * 其他
   * [相关资源](/zh-cn/resource)
