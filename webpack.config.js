@@ -11,9 +11,17 @@ module.exports = function (env = {}) {
     plugins = [],
     jsLoaders = []
 
+  
+  let babelConf = {};
+  let babelFile = env.es6 ? './.es6.babelrc' : './.babelrc';
+  if(fs.existsSync(babelFile)) {
+    // use babel
+    babelConf = JSON.parse(fs.readFileSync(babelFile))
+    babelConf.babelrc = false;
+  }
+
   if(env.production) {
     // compress js in production environment
-
     plugins.push(new webpack.optimize.UglifyJsPlugin({
       output: {
         comments: false, // remove all comments
@@ -24,20 +32,16 @@ module.exports = function (env = {}) {
       },
     }))
   }
-
-  if(fs.existsSync('./.babelrc')) {
-    // use babel
-    const babelConf = JSON.parse(fs.readFileSync('.babelrc'))
-    jsLoaders.push({
-      loader: 'babel-loader',
-      options: babelConf,
-    })
-  }
-
+  jsLoaders.push({
+    loader: 'babel-loader',
+    options: babelConf,
+  })
+  const filename = `spritejs.${env.es6 ? 'es6.': ''}${env.production ? 'min.' : ''}js`
+  const exclude =  env.es6 ? /node_modules\/(?!(sprite\-\w+|svg-path-to-canvas)\/).*/ : /(node_modules)/;
   return {
     entry: './src/index.js',
     output: {
-      filename: env.production ? 'spritejs.min.js' : 'spritejs.js',
+      filename,
       path: outputPath,
       publicPath: '/js/',
       library: 'spritejs',
@@ -49,7 +53,7 @@ module.exports = function (env = {}) {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude,
         use: jsLoaders,
       }],
     },
