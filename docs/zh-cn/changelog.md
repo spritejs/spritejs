@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.4.3][2018-07-13]
+
+### bug修复
+
+- 修复layout group嵌套非layout group时被嵌套的元素强制布局的bug
+
+### 改进
+
+- 增加layout下元素的margin属性
+- 增加Label元素的排版，支持line-break和work-break
+
 ## [2.4.2][2018-07-13]
 
 ### bug修复
