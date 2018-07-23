@@ -63,7 +63,7 @@ spritejs提供四类基础精灵元素、图层管理和负责协调多个图层
 ![架构图](/res/spritejs-design1.svg)
 
 ## 基本用法 
-[JSBin](https://code.h5jun.com/qeter/edit?js,output)
+[JSBin](https://code.h5jun.com/vomuc/edit?js,output)
 
 <!-- demo: quickStart -->
 
