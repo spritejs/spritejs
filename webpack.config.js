@@ -1,69 +1,74 @@
-// const conf = require('./package.json')
+const path = require('path')
+const fs = require('fs')
 
 module.exports = function (env = {}) {
-  const webpack = require('webpack'),
-    path = require('path'),
-    fs = require('fs')
+  let babelConf
 
+  const babelRC = env.esnext ? './.es6.babelrc' : './.babelrc'
+  if(fs.existsSync(babelRC)) {
+    babelConf = JSON.parse(fs.readFileSync(babelRC))
+    babelConf.babelrc = false
+  }
+
+  const externals = {}
+  const aliasFields = ['browser', 'esnext']
   const outputPath = path.resolve(__dirname, env.outputPath || 'dist')
 
-  const proxyPort = 9091,
-    plugins = [],
-    jsLoaders = []
-
-  
-  let babelConf = {};
-  let babelFile = env.es6 ? './.es6.babelrc' : './.babelrc';
-  if(fs.existsSync(babelFile)) {
-    // use babel
-    babelConf = JSON.parse(fs.readFileSync(babelFile))
-    babelConf.babelrc = false;
+  const output = {
+    path: outputPath,
+    filename: env.esnext ? 'spritejs.es6' : 'spritejs',
+    publicPath: '/js/',
+    library: 'spritejs',
+    libraryTarget: 'umd',
   }
 
   if(env.production) {
-    // compress js in production environment
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-      output: {
-        comments: false, // remove all comments
-      },
-      compress: {
-        warnings: false,
-        drop_console: false,
-      },
-    }))
+    output.filename += '.min.js'
+  } else {
+    output.filename += '.js'
   }
-  jsLoaders.push({
-    loader: 'babel-loader',
-    options: babelConf,
-  })
-  const filename = `spritejs.${env.es6 ? 'es6.': ''}${env.production ? 'min.' : ''}js`
-  const exclude =  env.es6 ? /node_modules\/(?!(sprite\-\w+|svg-path-to-canvas)\/).*/ : /(node_modules)/;
-  return {
-    entry: './src/index.js',
-    output: {
-      filename,
-      path: outputPath,
-      publicPath: '/js/',
-      library: 'spritejs',
-      libraryTarget: 'umd',
-    },
 
-    plugins,
+  return {
+    mode: env.production ? 'production' : 'none',
+    entry: './src/index',
+    output,
 
     module: {
-      rules: [{
-        test: /\.js$/,
-        exclude,
-        use: jsLoaders,
-      }],
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules\/(?!(sprite-\w+)\/|svg-path-to-canvas|fast-animation-frame).*/,
+          use: {
+            loader: 'babel-loader',
+            options: babelConf,
+          },
+        },
+      ],
+
+      /* Advanced module configuration (click to show) */
     },
+    resolve: {
+      aliasFields,
+    },
+    externals,
+    // Don't follow/bundle these modules, but request them at runtime from the environment
+
+    stats: 'errors-only',
+    // lets you precisely control what bundle information gets displayed
 
     devServer: {
-      open: true,
-      proxy: {
-        '*': `http://127.0.0.1:${proxyPort}`,
-      },
+      contentBase: path.join(__dirname, env.server || 'example'),
+      compress: true,
+      port: 9090,
+      // ...
     },
-    // devtool: 'inline-source-map',
+
+    plugins: [
+      // ...
+    ],
+    // list of additional plugins
+
+
+    /* Advanced configuration (click to show) */
   }
 }

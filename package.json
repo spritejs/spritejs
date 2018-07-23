@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
@@ -13,12 +13,12 @@
   "scripts": {
     "test": "nyc ava --serial && rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "lint": "eslint 'src/**/*.js' --fix",
-    "start": "webpack-dev-server -d --quiet --port 9090 & http-server example -c-1 -p 9091",
-    "benchmark": "webpack-dev-server -d --quiet --port 9090 & http-server benchmark -c-1 -p 9091",
+    "start": "webpack-dev-server --watch-poll",
+    "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",
     "deploy": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build-deploy.js",
     "compile": "rm -rf lib/* && babel src -d lib --watch",
-    "doc": "webpack-dev-server -d --quiet --port 9090 & babel docs/src -d docs/js --watch & http-server docs -c-1 -p 9091",
+    "doc": "babel docs/src -d docs/js --watch & webpack-dev-server --watch-poll --env.server=docs",
     "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
     "prepublishOnly": "npm run build-doc && npm run deploy"
   },
@@ -45,14 +45,14 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^2.6.0"
+    "sprite-core": "^2.6.1"
   },
   "devDependencies": {
-    "ava": "^0.21.0",
+    "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.24.0",
     "babel-eslint": "^8.1.1",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^7.1.5",
     "babel-plugin-inline-package-json": "^2.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-runtime": "^0.4.0",
@@ -67,12 +67,12 @@
     "eslint-plugin-html": "^4.0.3",
     "gifencoder": "^1.1.0",
     "hamming-distance": "^1.0.0",
-    "http-server": "^0.11.1",
     "imghash": "0.0.3",
     "nyc": "^11.1.0",
     "pixelmatch": "^4.0.2",
-    "webpack": "^2.3.3",
-    "webpack-dev-server": "^2.4.2"
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   },
   "ava": {
     "require": [

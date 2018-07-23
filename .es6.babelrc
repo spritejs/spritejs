@@ -1,6 +1,6 @@
 {
   "presets": [],
-  "plugins": ["transform-runtime",
+  "plugins": [
               "transform-decorators-runtime",
               "transform-class-properties",
               "inline-package-json"]
