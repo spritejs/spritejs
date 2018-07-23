@@ -8,7 +8,7 @@
 
 
   var scene = new Scene('#demo-quickStart', {
-    viewport: ['770', '200'],
+    viewport: ['auto', 'auto'],
     resolution: [3080, 800]
   });
 
