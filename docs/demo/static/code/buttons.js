@@ -100,7 +100,7 @@
       width: 324,
     })
   })
-  document.addEventListener('touchend', (evt) => {
+  button.on('touchend', (evt) => {
     if(hoverAnim) {
       hoverAnim.cancel()
       hoverAnim = null

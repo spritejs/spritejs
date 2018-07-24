@@ -148,7 +148,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.4.5';
+var version = '2.5.0';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6915,6 +6915,10 @@ var _assign = __webpack_require__(21);
 
 var _assign2 = _interopRequireDefault(_assign);
 
+var _from = __webpack_require__(44);
+
+var _from2 = _interopRequireDefault(_from);
+
 var _slicedToArray2 = __webpack_require__(67);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
@@ -6943,7 +6947,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _eventHandlers = (0, _symbol2.default)('eventHandlers'),
     _collisionState = (0, _symbol2.default)('collisionState'),
-    _data = (0, _symbol2.default)('data');
+    _data = (0, _symbol2.default)('data'),
+    _mouseCapture = (0, _symbol2.default)('mouseCapture');
 
 var BaseNode = function () {
   function BaseNode() {
@@ -7042,6 +7047,16 @@ var BaseNode = function () {
       throw Error('you mast override this method');
     }
   }, {
+    key: 'setMouseCapture',
+    value: function setMouseCapture() {
+      this[_mouseCapture] = true;
+    }
+  }, {
+    key: 'releaseMouseCapture',
+    value: function releaseMouseCapture() {
+      this[_mouseCapture] = false;
+    }
+  }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(type, evt) {
       var _this4 = this;
@@ -7065,9 +7080,34 @@ var BaseNode = function () {
       }
 
       var isCollision = collisionState || this.pointCollision(evt);
+      var captured = (evt.type === 'mousemove' || evt.type === 'mousedown' || evt.type === 'mouseup') && this[_mouseCapture];
 
-      if (!evt.terminated && isCollision) {
+      if (!evt.terminated && (isCollision || captured)) {
         evt.target = this;
+
+        var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+        if (changedTouches && type === 'touchstart') {
+          var touch = changedTouches[0],
+              layer = this.layer;
+          if (touch && touch.identifier != null) {
+            layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
+            layer.touchedTargets[touch.identifier].push(this);
+          }
+        }
+        if (changedTouches && type.startsWith('touch')) {
+          var touches = evt.originalEvent && evt.originalEvent.touches,
+              _layer = this.layer;
+          evt.targetTouches = [];
+
+          (0, _from2.default)(touches).forEach(function (touch) {
+            var identifier = touch.identifier;
+            if (_layer.touchedTargets[identifier] && _layer.touchedTargets[identifier].indexOf(_this4) >= 0) {
+              evt.targetTouches.push(touch);
+            }
+          });
+          evt.touches = (0, _from2.default)(touches);
+          evt.changedTouches = (0, _from2.default)(changedTouches);
+        }
 
         var handlers = this[_eventHandlers][type];
         if (handlers) {
@@ -7076,7 +7116,7 @@ var BaseNode = function () {
           });
         }
 
-        if (type === 'mousemove') {
+        if (isCollision && type === 'mousemove') {
           if (!this[_collisionState]) {
             var _evt = (0, _assign2.default)({}, evt);
             _evt.type = 'mouseenter';
@@ -7086,7 +7126,9 @@ var BaseNode = function () {
           }
           this[_collisionState] = true;
         }
-      } else if (type === 'mousemove') {
+      }
+
+      if (!evt.terminated && !isCollision && type === 'mousemove') {
         if (this[_collisionState]) {
           var _evt2 = (0, _assign2.default)({}, evt);
           _evt2.type = 'mouseleave';
@@ -12394,6 +12436,8 @@ var Layer = function (_BaseNode) {
     _this[_tRecord] = []; // calculate FPS
     _this[_timeline] = new _spriteAnimator.Timeline();
     _this[_renderDeferer] = null;
+
+    _this.touchedTargets = {};
     return _this;
   }
 
@@ -12596,27 +12640,48 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(type, evt) {
+      var _this4 = this;
+
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       if (swallow && this.getEventHandlers(type).length === 0) {
         return;
       }
-
       if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
         var isCollision = collisionState || this.pointCollision(evt);
+        var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+        if (changedTouches && type === 'touchend') {
+          isCollision = true;
+        }
         if (isCollision) {
           var sprites = this[_children].slice(0).reverse(),
               targetSprites = [];
-          for (var i = 0; i < sprites.length; i++) {
-            var sprite = sprites[i];
-            var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
-            if (hit) {
-              // detect mouseenter/mouseleave
-              targetSprites.push(sprite);
+
+          if (changedTouches && type === 'touchend') {
+            var touch = changedTouches[0];
+            if (touch && touch.identifier != null) {
+              var targets = this.layer.touchedTargets[touch.identifier];
+              if (targets) {
+                targets.forEach(function (target) {
+                  if (target !== _this4 && target.layer === _this4) {
+                    target.dispatchEvent(type, evt, true);
+                  }
+                });
+                delete this.layer.touchedTargets[touch.identifier];
+              }
             }
-            if (evt.terminated && !evt.type.startsWith('mouse')) {
-              break;
+          } else {
+            for (var i = 0; i < sprites.length; i++) {
+              var sprite = sprites[i];
+              var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
+              if (hit) {
+                // detect mouseenter/mouseleave
+                targetSprites.push(sprite);
+              }
+              if (evt.terminated && !type.startsWith('mouse')) {
+                break;
+              }
             }
           }
           evt.targetSprites = targetSprites;
@@ -12625,7 +12690,7 @@ var Layer = function (_BaseNode) {
           return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, isCollision, swallow);
         }
       }
-
+      evt.targetSprites = evt.targetSprites || [];
       return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
@@ -12657,15 +12722,15 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'batch',
     value: function batch() {
-      var _this4 = this;
+      var _this5 = this;
 
       for (var _len2 = arguments.length, sprites = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         sprites[_key2] = arguments[_key2];
       }
 
       sprites.forEach(function (sprite) {
-        if (sprite.layer !== _this4) {
-          _this4.appendChild(sprite);
+        if (sprite.layer !== _this5) {
+          _this5.appendChild(sprite);
         }
       });
       var batch = new _batch2.default(this);
@@ -12675,7 +12740,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'adjust',
     value: function adjust(handler) /* istanbul ignore next  */{
-      var _this5 = this;
+      var _this6 = this;
 
       var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -12693,8 +12758,8 @@ var Layer = function (_BaseNode) {
         clearTimeout(this[_adjustTimer]);
       }
       this[_adjustTimer] = setTimeout(function () {
-        _this5.autoRender = true;
-        delete _this5[_adjustTimer];
+        _this6.autoRender = true;
+        delete _this6[_adjustTimer];
       }, 100);
 
       if (shadowContext.canvas.width > 0 && shadowContext.canvas.height > 0) {
@@ -13186,7 +13251,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
             if (hit) {
               targetSprites.push(sprite);
             }
-            if (evt.terminated && !evt.type.startsWith('mouse')) {
+            if (evt.terminated && !type.startsWith('mouse')) {
               break;
             }
           }
@@ -13197,7 +13262,7 @@ var Group = (_temp = _class2 = function (_BaseSprite) {
           return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, isCollision, swallow);
         }
       }
-
+      evt.targetSprites = evt.targetSprites || [];
       return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
@@ -14400,7 +14465,8 @@ var PathSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = (
       lineCap: 'butt',
       lineJoin: 'miter',
       strokeColor: '',
-      fillColor: ''
+      fillColor: '',
+      bounding: 'box'
     }, {
       color: function color() {
         return this.strokeColor;
@@ -14498,13 +14564,19 @@ var PathSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = (
       this.set('flexible', val);
     }
   }, {
+    key: 'bounding',
+    set: function set(val) {
+      // box | path
+      this.set('bounding', val);
+    }
+  }, {
     key: 'color',
     set: function set(val) {
       this.strokeColor = val;
     }
   }]);
   return PathSpriteAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'path', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'path'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDash', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDash'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDashOffset', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineCap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineCap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineJoin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineJoin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype)), _class));
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'path', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'path'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDash', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDash'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDashOffset', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineCap', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineCap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineJoin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineJoin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bounding', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bounding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype)), _class));
 var Path = (_temp = _class2 = function (_BaseSprite) {
   (0, _inherits3.default)(Path, _BaseSprite);
 
@@ -14557,6 +14629,9 @@ var Path = (_temp = _class2 = function (_BaseSprite) {
           offsetY += Math.min(0, bounds[1]);
         }
         evt.targetPaths = this.findPath(offsetX, offsetY);
+        if (this.attr('bounding') === 'path') {
+          return evt.targetPaths.length > 0;
+        }
         return true;
       }
       return false;

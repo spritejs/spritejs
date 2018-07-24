@@ -158,27 +158,20 @@ var _spritejs = spritejs,
     sprite.on('mouseleave', function (evt) {
       sprite.attr('border', { width: 0 });
     });
-    sprite.on('mousemove', function (evt) {
-      evt.stopDispatch();
-    });
 
     sprite.on('mousedown', function (evt) {
       x0 = evt.x;
       y0 = evt.y;
       startPos = sprite.attr('pos');
       sprite.attr('zIndex', zIndex++);
-      layer.on('mousemove', onMouseMove);
+      sprite.off('mousemove', onMouseMove);
+      sprite.setMouseCapture();
+      sprite.on('mousemove', onMouseMove);
       evt.stopDispatch();
+    }).on('mouseup', function (evt) {
+      sprite.off('mousemove', onMouseMove);
+      sprite.releaseMouseCapture();
     });
-
-    var mouseupHandler = function mouseupHandler() {
-      layer.off('mousemove', onMouseMove);
-    };
-
-    sprite.on('remove', function (evt) {
-      document.documentElement.removeEventListener('mouseup', mouseupHandler);
-    });
-    document.documentElement.addEventListener('mouseup', mouseupHandler);
 
     return sprite;
   }

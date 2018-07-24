@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.5.0][2018-07-24]
+
+### 改进
+
+- 更好地支持多点触摸，touch事件按照浏览器标准实现，添加了event的touches、targetTouches和changedTouches属性
+- 增加了sprite.setMouseCapture()方法
+- Path支持bounding属性，默认值'box'，可以设置为'path'，这样的话事件判断区域将默认为'path'
+
 ## [2.4.5][2018-07-23]
 
 ### 改进

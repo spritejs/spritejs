@@ -143,27 +143,20 @@ const {Scene, Sprite, Label, Path} = spritejs
     sprite.on('mouseleave', (evt) => {
       sprite.attr('border', {width: 0})
     })
-    sprite.on('mousemove', (evt) => {
-      evt.stopDispatch()
-    })
 
     sprite.on('mousedown', (evt) => {
       x0 = evt.x
       y0 = evt.y
       startPos = sprite.attr('pos')
       sprite.attr('zIndex', zIndex++)
-      layer.on('mousemove', onMouseMove)
+      sprite.off('mousemove', onMouseMove)
+      sprite.setMouseCapture()
+      sprite.on('mousemove', onMouseMove)
       evt.stopDispatch()
+    }).on('mouseup', (evt) => {
+      sprite.off('mousemove', onMouseMove)
+      sprite.releaseMouseCapture()
     })
-
-    const mouseupHandler = () => {
-      layer.off('mousemove', onMouseMove)
-    }
-
-    sprite.on('remove', (evt) => {
-      document.documentElement.removeEventListener('mouseup', mouseupHandler)
-    })
-    document.documentElement.addEventListener('mouseup', mouseupHandler)
 
     return sprite
   }

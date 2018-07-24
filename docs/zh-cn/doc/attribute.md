@@ -64,6 +64,12 @@ _Sprite, Group, Label, Path_
 
 定义圆角大小
 
+## bounding
+
+_Path_
+
+读取或设置Path的区域检测，默认为'box'，可选值为`box | path`。如果值为'box'，事件碰撞区域为Path元素的boundingBox，否则事件碰撞区域为Path元素的path区域。
+
 ## clip
 
 _Group_
@@ -123,6 +129,12 @@ _Sprite, Group, Label, Path_
 _Sprite, Group, Label, Path_
 
 非渲染属性，设置元素的ID
+
+## lineBreak
+
+_Label_
+
+读取或设置Label的换行机制，默认为'none'。可选值为：`normal | strict | none`。当Label元素宽度固定时，超过宽度的文字将按照lineBreak的设置换行。
 
 ## lineCap
 
@@ -283,6 +295,12 @@ _Sprite, Group, Label, Path_
 _Sprite, Group, Label, Path_
 
 设置元素的宽度，如果不设置，元素默认高度为图片（textures）的高度，如果没有图片，默认高度为0
+
+## wordBreak
+
+_Label_
+
+设置Label元素的换行策略。当lineBreak属性不为'none'且设置了width时，文字按照wordBreak的方式执行换行。可选值为`normal | break-all | break-word | keep-all`，默认值为'normal'。
 
 ## x
 

@@ -22,8 +22,6 @@
   d3.json('/res/data/china.json', (err, data) => {
     if(err) throw new Error(err)
 
-    let selectedTarget = null
-
     layer.selectAll('path')
       .data(data.features)
       .enter()
@@ -33,6 +31,7 @@
       .attr('d', path)
       .attr('renderMode', 'fill')
       .attr('fillColor', '#2f3644')
+      .attr('bounding', 'path')
       .on('click', (d) => {
         const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
 
@@ -42,19 +41,11 @@
           /* eslint-enable no-console */
         }
       })
-      .on('mousemove', (d) => {
-        const event = d3.event
-        if(event.target !== selectedTarget) {
-          const paths = event.targetPaths
-
-          if(paths.length) {
-            if(selectedTarget) {
-              selectedTarget.attr('fillColor', '#2f3644')
-            }
-            selectedTarget = event.target
-            event.target.attr('fillColor', '#00c2ff')
-          }
-        }
+      .on('mouseenter', (d) => {
+        d3.event.target.attr('fillColor', '#00c2ff')
+      })
+      .on('mouseleave', (d) => {
+        d3.event.target.attr('fillColor', '#2f3644')
       })
   })
 }())

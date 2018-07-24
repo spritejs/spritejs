@@ -72,6 +72,12 @@ _Sprite, Group, Label, Path_
 
 Get or set border-radius.
 
+## bounding
+
+_Path_
+
+Get or set the collision area of Path. The value is 'box' (default) or 'path. If the value is 'box', the event collision area is the boundingBox of the Path element, otherwise the event collision area is the path area of the Path element.
+
 ## clip
 
 _Group_
@@ -130,6 +136,12 @@ Get or set the height of the element. The default value is the height of the tex
 
 _Sprite, Group, Label, Path_
 
+
+## lineBreak
+
+_Label_
+
+Get or set the label's linefeed mechanism. The default value is 'none'. The optional values are: `normal | strict | none`. When the width of the Label element is fixed, the text that exceeds the width will be wrapped according to the lineBreak setting.
 
 ## lineCap
 
@@ -300,6 +312,12 @@ _Sprite, Group, Label, Path_
 _Sprite, Group, Label, Path_
 
 Get or set the width of the element. The default value is the height of the texture image. If there is no textures, the default value is 0.
+
+## wordBreak
+
+_Label_
+
+Get or set the linefeed policy of the Label element. When the lineBreak attribute is not 'none' and the 'width' attribute is set, the text performs a line break. The optional values are `normal | break-all | break-word | keep-all`.
 
 ## x
 
