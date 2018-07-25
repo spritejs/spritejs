@@ -10,6 +10,7 @@
   * [Group](/en/doc/group)
   * [Label](/en/doc/label)
   * [Layer](/en/doc/layer)
+  * [Layout](/en/doc/layout)
   * [Path](/en/doc/path)
   * [Scene](/en/doc/scene)
   * [Sprite](/en/doc/sprite)

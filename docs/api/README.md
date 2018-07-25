@@ -16,6 +16,8 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- **Flex Layout**.
+- **Text typesetting**.
 - [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
@@ -25,7 +27,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Start
 
 ```html
-<script src="https://s1.ssl.qhres.com/!64e118e6/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'

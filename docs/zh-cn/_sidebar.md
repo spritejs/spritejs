@@ -14,6 +14,7 @@
     * [Group](/zh-cn/doc/group)
     * [Label](/zh-cn/doc/label)
     * [Layer](/zh-cn/doc/layer)
+    * [Layout](/zh-cn/doc/layout)
     * [Path](/zh-cn/doc/path)
     * [Scene](/zh-cn/doc/scene)
     * [Sprite](/zh-cn/doc/sprite)

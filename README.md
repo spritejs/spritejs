@@ -21,6 +21,8 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- **Flex Layout**.
+- **Text typesetting**.
 - [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
