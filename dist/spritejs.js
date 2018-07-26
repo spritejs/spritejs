@@ -148,7 +148,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.5.0';
+var version = '2.5.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -337,9 +337,9 @@ var _symbol2 = _interopRequireDefault(_symbol);
 
 var _class, _temp;
 
-var _attr15 = __webpack_require__(140);
+var _attr17 = __webpack_require__(140);
 
-var _attr16 = _interopRequireDefault(_attr15);
+var _attr18 = _interopRequireDefault(_attr17);
 
 var _basenode = __webpack_require__(172);
 
@@ -1031,13 +1031,29 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
           width = _attr5[0],
           height = _attr5[1];
 
-      if (!this.hasLayout) {
-        return [width, height];
-      }
-      var layoutWidth = this.attr('layoutWidth'),
-          layoutHeight = this.attr('layoutHeight');
+      var isBorderBox = this.attr('boxSizing') === 'border-box';
 
-      return [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+      if (this.hasLayout) {
+        var layoutWidth = this.attr('layoutWidth'),
+            layoutHeight = this.attr('layoutHeight');var _ref8 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+        width = _ref8[0];
+        height = _ref8[1];
+      }
+      if (isBorderBox) {
+        var borderWidth = this.attr('border').width,
+            _attr6 = this.attr('padding'),
+            _attr7 = (0, _slicedToArray3.default)(_attr6, 4),
+            paddingTop = _attr7[0],
+            paddingRight = _attr7[1],
+            paddingBottom = _attr7[2],
+            paddingLeft = _attr7[3];
+
+
+        width = Math.max(0, width - 2 * borderWidth - paddingLeft - paddingRight);
+        height = Math.max(0, height - 2 * borderWidth - paddingTop - paddingBottom);
+      }
+
+      return [width, height];
     }
 
     // content width / height
@@ -1059,12 +1075,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'clientSize',
     get: function get() {
-      var _attr6 = this.attr('padding'),
-          _attr7 = (0, _slicedToArray3.default)(_attr6, 4),
-          top = _attr7[0],
-          right = _attr7[1],
-          bottom = _attr7[2],
-          left = _attr7[3],
+      var _attr8 = this.attr('padding'),
+          _attr9 = (0, _slicedToArray3.default)(_attr8, 4),
+          top = _attr9[0],
+          right = _attr9[1],
+          bottom = _attr9[2],
+          left = _attr9[3],
           _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
           width = _contentSize[0],
           height = _contentSize[1];
@@ -1077,8 +1093,8 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
   }, {
     key: 'offsetSize',
     get: function get() {
-      var _attr8 = this.attr('border'),
-          borderWidth = _attr8.width,
+      var _attr10 = this.attr('border'),
+          borderWidth = _attr10.width,
           _clientSize2 = (0, _slicedToArray3.default)(this.clientSize, 2),
           width = _clientSize2[0],
           height = _clientSize2[1];
@@ -1090,12 +1106,12 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     get: function get() {
       var size = this.offsetSize;
 
-      var _attr9 = this.attr('margin'),
-          _attr10 = (0, _slicedToArray3.default)(_attr9, 4),
-          top = _attr10[0],
-          right = _attr10[1],
-          bottom = _attr10[2],
-          left = _attr10[3];
+      var _attr11 = this.attr('margin'),
+          _attr12 = (0, _slicedToArray3.default)(_attr11, 4),
+          top = _attr12[0],
+          right = _attr12[1],
+          bottom = _attr12[2],
+          left = _attr12[3];
 
       return [left + size[0] + right, top + size[1] + bottom];
     }
@@ -1155,10 +1171,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
       var _offsetSize3 = (0, _slicedToArray3.default)(this.offsetSize, 2),
           width = _offsetSize3[0],
           height = _offsetSize3[1],
-          _attr11 = this.attr('anchor'),
-          _attr12 = (0, _slicedToArray3.default)(_attr11, 2),
-          anchorX = _attr12[0],
-          anchorY = _attr12[1];
+          _attr13 = this.attr('anchor'),
+          _attr14 = (0, _slicedToArray3.default)(_attr13, 2),
+          anchorX = _attr14[0],
+          anchorY = _attr14[1];
 
       var rect = [-anchorX * width, -anchorY * height, width, height];
 
@@ -1195,10 +1211,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     get: function get() {
       var vertices = (0, _spriteUtils.rectVertices)(this.originalRect),
           transform = this.transform,
-          _attr13 = this.attr('pos'),
-          _attr14 = (0, _slicedToArray3.default)(_attr13, 2),
-          x0 = _attr14[0],
-          y0 = _attr14[1];
+          _attr15 = this.attr('pos'),
+          _attr16 = (0, _slicedToArray3.default)(_attr15, 2),
+          x0 = _attr16[0],
+          y0 = _attr16[1];
 
 
       return vertices.map(function (v) {
@@ -1250,10 +1266,10 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
 
         return _class2;
       }(this.Attr);
-      (0, _entries2.default)(attrs).forEach(function (_ref8) {
-        var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
-            prop = _ref9[0],
-            handler = _ref9[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref9) {
+        var _ref10 = (0, _slicedToArray3.default)(_ref9, 2),
+            prop = _ref10[0],
+            handler = _ref10[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -1285,7 +1301,7 @@ var BaseSprite = (_temp = _class = function (_BaseNode) {
     }
   }]);
   return BaseSprite;
-}(_basenode2.default), _class.Attr = _attr16.default, _temp);
+}(_basenode2.default), _class.Attr = _attr18.default, _temp);
 exports.default = BaseSprite;
 
 
@@ -4122,6 +4138,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
       },
       // border: [0, 'rgba(0,0,0,0)'],
       borderRadius: 0,
+      boxSizing: 'content-box',
       dashOffset: 0,
       display: '',
       padding: [0, 0, 0, 0],
@@ -4495,6 +4512,12 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
       this.set('borderRadius', val);
     }
   }, {
+    key: 'boxSizing',
+    set: function set(val) {
+      this.clearCache();
+      this.set('boxSizing', val);
+    }
+  }, {
     key: 'dashOffset',
     set: function set(val) {
       this.clearCache();
@@ -4718,7 +4741,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     }
   }]);
   return SpriteAttr;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'id', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec4, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec5, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_dec6, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_dec7, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_dec8, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_dec9, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec10, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec11, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec12, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec13, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec14, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec15, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec16, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_dec17, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec18, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_dec19, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'margin'), _class.prototype)), _class));
+}(), (_applyDecoratedDescriptor(_class.prototype, 'id', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec4, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec5, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_dec6, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_dec7, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_dec8, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_dec9, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec10, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec11, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec12, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSizing', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxSizing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec13, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec14, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec15, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec16, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_dec17, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec18, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_dec19, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'margin'), _class.prototype)), _class));
 exports.default = SpriteAttr;
 
 /***/ }),
@@ -13950,27 +13973,40 @@ exports.default = function (container, items) {
       crossSpace = 0;
 
   function setBoxLayoutSize(item, axis, size) {
-    var borderWidth = item.attr('border').width,
-        _item$attr = item.attr('padding'),
+    var isBorderBox = item.attr('boxSizing') === 'border-box';
+
+    var _item$attr = item.attr('margin'),
         _item$attr2 = (0, _slicedToArray3.default)(_item$attr, 4),
-        paddingTop = _item$attr2[0],
-        paddingRight = _item$attr2[1],
-        paddingBottom = _item$attr2[2],
-        paddingLeft = _item$attr2[3],
-        _item$attr3 = item.attr('margin'),
-        _item$attr4 = (0, _slicedToArray3.default)(_item$attr3, 4),
-        marginTop = _item$attr4[0],
-        marginRight = _item$attr4[1],
-        marginBottom = _item$attr4[2],
-        marginLeft = _item$attr4[3];
+        marginTop = _item$attr2[0],
+        marginRight = _item$attr2[1],
+        marginBottom = _item$attr2[2],
+        marginLeft = _item$attr2[3];
+
+    if (isBorderBox) {
+      if (axis === 'width') {
+        size = Math.max(0, size - marginRight - marginLeft);
+        item.attr({ layoutWidth: size });
+      } else if (axis === 'height') {
+        size = Math.max(0, size - marginTop - marginBottom);
+        item.attr({ layoutHeight: size });
+      }
+    } else {
+      var borderWidth = item.attr('border').width,
+          _item$attr3 = item.attr('padding'),
+          _item$attr4 = (0, _slicedToArray3.default)(_item$attr3, 4),
+          paddingTop = _item$attr4[0],
+          paddingRight = _item$attr4[1],
+          paddingBottom = _item$attr4[2],
+          paddingLeft = _item$attr4[3];
 
 
-    if (axis === 'width') {
-      size = Math.max(0, size - 2 * borderWidth - paddingRight - paddingLeft - marginRight - marginLeft);
-      item.attr({ layoutWidth: size });
-    } else if (axis === 'height') {
-      size = Math.max(0, size - 2 * borderWidth - paddingTop - paddingBottom - marginTop - marginBottom);
-      item.attr({ layoutHeight: size });
+      if (axis === 'width') {
+        size = Math.max(0, size - 2 * borderWidth - paddingRight - paddingLeft - marginRight - marginLeft);
+        item.attr({ layoutWidth: size });
+      } else if (axis === 'height') {
+        size = Math.max(0, size - 2 * borderWidth - paddingTop - paddingBottom - marginTop - marginBottom);
+        item.attr({ layoutHeight: size });
+      }
     }
   }
   // collect items into lines
