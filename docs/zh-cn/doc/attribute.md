@@ -70,7 +70,13 @@ _Path_
 
 读取或设置Path的区域检测，默认为'box'，可选值为`box | path`。如果值为'box'，事件碰撞区域为Path元素的boundingBox，否则事件碰撞区域为Path元素的path区域。
 
+## boxSizing
+
 ## clip
+
+_Sprite, Group, Label, Path_
+
+改变元素的盒模型，默认值为`content-box`，可选值为`content-box | border-box`。
 
 _Group_
 

@@ -23,3 +23,6 @@
   * [Group](/api/group)
   * [Layer](/api/layer)
   * [Scene](/api/scene)
+* Others
+  * [ChangeLog](/en/changelog)
+  

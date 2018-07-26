@@ -78,6 +78,18 @@ _Path_
 
 Get or set the collision area of Path. The value is 'box' (default) or 'path. If the value is 'box', the event collision area is the boundingBox of the Path element, otherwise the event collision area is the path area of the Path element.
 
+## boxSizing
+
+_Sprite, Group, Label, Path_
+
+Defines how to calculate the total width and height of an element.
+
+- content-box
+  - This is the initial and default value as specified by the CSS standard. The width and height properties include the content, but does not include the padding, border, or margin. For example, `{width: 350, border: {width: 10}}` renders a box that is 370px wide.
+Here, the dimensions of the element are calculated as: width = width of the content, and height = height of the content. (Borders and padding are not included in the calculation.)
+- border-box
+  - The width and height properties include the content, padding, and border, but do not include the margin. Note that padding and border will be inside of the box. For example, `{width: 350, border: {width: 10}}` renders a box that is 350px wide. The content box can't be negative and is floored to 0, making it impossible to use border-box to make the element disappear.
+
 ## clip
 
 _Group_
