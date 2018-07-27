@@ -33,3 +33,11 @@ Group对象有虚拟模式和非虚拟模式，这是SpriteJS自动设置的，�
 ## removeChild()
 
 `removeChild(sprite)` 将一个子元素从Group中移除
+
+## scrollBy()
+
+`scrollBy(top, left)` 设置Group向左向上增量滚动
+
+## scrollTo()
+
+`scrollTo(top, left)` 设置Group向左向上滚动

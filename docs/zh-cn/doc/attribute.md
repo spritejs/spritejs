@@ -72,6 +72,10 @@ _Path_
 
 ## boxSizing
 
+_Sprite, Group, Label, Path_
+
+读取或设置盒模型。默认为'content-box'，可选值`content-box | border-box`。如果设置为`border-box`，那么元素的contentSize为“border+padding+内容宽高”，否则元素的contentSize是内容宽高。
+
 ## clip
 
 _Sprite, Group, Label, Path_
@@ -135,6 +139,12 @@ _Sprite, Group, Label, Path_
 _Sprite, Group, Label, Path_
 
 非渲染属性，设置元素的ID
+
+## letterSpacing
+
+_Label_
+
+指定拉丁字母或者CJK文字之间的空间。
 
 ## lineBreak
 
@@ -226,6 +236,18 @@ _Sprite, Group, Label, Path_
 
 `[x, y]` 设置元素的缩放程度，如果设置为负值，元素会被翻转
 
+## scrollLeft
+
+_Group_
+
+设置Group的内容（子元素）往左滚动的距离。
+
+## scrollTop
+
+_Group_
+
+设置Group的内容（子元素）往上滚动的距离。
+
 ## shadow
 
 _Sprite, Group, Label, Path_
@@ -267,6 +289,12 @@ _Label_
 _Label_
 
 `left|center|right` 设置文字水平对齐方式
+
+## textIndent
+
+_Lebel_
+
+指定行首的缩进。只会作用于Label的第一行，如果有多段文字都需要textIndent，建议分成多个Label。
 
 ## textures
 

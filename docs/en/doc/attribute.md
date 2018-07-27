@@ -148,6 +148,11 @@ Get or set the height of the element. The default value is the height of the tex
 
 _Sprite, Group, Label, Path_
 
+## letterSpacing
+
+_Label_
+
+Specifies the spacing behavior between text characters.
 
 ## lineBreak
 
@@ -237,6 +242,18 @@ _Sprite, Group, Label, Path_
 
 `[x, y]` Get or set the scaling of the element, if set to negative values, the element will be flipped.
 
+## scrollLeft
+
+_Group_
+
+Gets or sets the number of pixels that a group's children is scrolled to the left.
+
+## scrollTop
+
+_Group_
+
+Gets or sets the number of pixels that a group's children is scrolled to the top.
+
 ## shadow
 
 _Sprite, Group, Label, Path_
@@ -276,6 +293,12 @@ Get or set the text content of the Label.
 _Label_
 
 `left|center|right` Get or set text alignment.
+
+## textIndent
+
+_Lebel_
+
+Specifies the amount of indentation (empty space) that is put before lines of text in a block. 
 
 ## textures
 

@@ -29,3 +29,11 @@ Group objects have virtual mode and non-virtual mode, which is automatically set
 ## removeChild()
 
 `removeChild(sprite)` Remove a child element from the Group.
+
+## scrollBy()
+
+`scrollBy(left, top)` Set the number of pixels that a group's children is scrolled by the left and top.
+
+## scrollTo()
+
+`scrollTo(left, top)` Set the number of pixels that a group's children is scrolled to the left and top.
