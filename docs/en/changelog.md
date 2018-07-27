@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.5.2][2018-07-27]
+
+### 改进
+
+- Add `letterSpacing` and `textIndent` attributes for Label.
+- Add `scrollLeft` and `scrollTop` attributes for Group.
+- Add `scrollTo(x, y)` and `scrollBy(x, y)` methods for Group.
+
 ## [2.5.1][2018-07-25]
 
 ### feature

@@ -164,7 +164,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_3__["default"](...args);
 }
 
-const version = '2.5.1';
+const version = '2.5.2';
 
 
 
@@ -1188,6 +1188,7 @@ let SpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parse
   }
 
   set display(val) {
+    this.clearCache();
     this.set('display', val);
   }
 
@@ -5751,7 +5752,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_render__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(36);
 /* harmony import */ var css_line_break__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(40);
 /* harmony import */ var css_line_break__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_line_break__WEBPACK_IMPORTED_MODULE_4__);
-var _dec, _dec2, _dec3, _desc, _value, _class, _class2, _temp;
+var _dec, _dec2, _dec3, _dec4, _dec5, _desc, _value, _class, _class2, _temp;
 
 const _applyDecoratedDescriptor = __webpack_require__(4);
 
@@ -5773,8 +5774,13 @@ const measureText = (node, text, font, lineHeight = '') => {
   }
   ctx.save();
   ctx.font = font;
-  const { width } = ctx.measureText(text);
+  let { width } = ctx.measureText(text);
   ctx.restore();
+
+  const letterSpacing = node.attr('letterSpacing');
+  if (letterSpacing) {
+    width += letterSpacing * (text.length - 1);
+  }
 
   const { size } = parseFont(font);
   const height = lineHeight || size * 1.2;
@@ -5786,7 +5792,8 @@ function calculTextboxSize(node) {
   if (!node.context) return '';
   const text = node.text,
         font = node.attr('font'),
-        lineHeight = node.attr('lineHeight');
+        lineHeight = node.attr('lineHeight'),
+        textIndent = node.attr('textIndent');
 
   let lines = [];
   let width = 0,
@@ -5814,7 +5821,7 @@ function calculTextboxSize(node) {
         } else {
           const ll = `${l}${word}`;
           const [w] = measureText(node, ll, font);
-          if (w > textboxWidth) {
+          if (w > (lines.length === 0 ? textboxWidth - textIndent : textboxWidth)) {
             lines.push(l);
             l = word;
           } else {
@@ -5830,15 +5837,16 @@ function calculTextboxSize(node) {
     lines = text.split(/\n/);
   }
 
-  lines.forEach(line => {
-    const [w, h] = measureText(node, line, font, lineHeight);
+  lines.forEach((line, idx) => {
+    let [w, h] = measureText(node, line, font, lineHeight);
+    if (idx === 0) w += textIndent;
     width = Math.max(width, w);
     height += h;
   });
   node[_boxSize] = [width, height];
 }
 
-let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), _dec2 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec3 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), (_class = class LabelSpriteAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr {
+let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), _dec2 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec3 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec4 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), _dec5 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), (_class = class LabelSpriteAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr {
   constructor(subject) {
     super(subject);
     this.setDefault({
@@ -5850,7 +5858,9 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["
       text: '',
       flexible: false,
       lineBreak: '',
-      wordBreak: 'normal'
+      wordBreak: 'normal',
+      letterSpacing: 0,
+      textIndent: 0
     }, {
       color() {
         return this.fillColor;
@@ -5916,6 +5926,18 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["
     calculTextboxSize(this.subject);
   }
 
+  set letterSpacing(value) {
+    this.clearCache();
+    this.set('letterSpacing', value);
+    calculTextboxSize(this.subject);
+  }
+
+  set textIndent(value) {
+    this.clearCache();
+    this.set('textIndent', value);
+    calculTextboxSize(this.subject);
+  }
+
   set width(val) {
     if (this.lineBreak !== '') calculTextboxSize(this.subject);
     super.width = val;
@@ -5925,7 +5947,7 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["
     if (this.lineBreak !== '') calculTextboxSize(this.subject);
     super.layoutWidth = val;
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'text', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
+}, (_applyDecoratedDescriptor(_class.prototype, 'text', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_dec4, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_dec5, sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
 let Label = (_temp = _class2 = class Label extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   constructor(attr) {
@@ -6020,8 +6042,10 @@ let Label = (_temp = _class2 = class Label extends _basesprite__WEBPACK_IMPORTED
       let top = 0,
           left = 0;
       const width = this.contentSize[0];
+      const letterSpacing = this.attr('letterSpacing'),
+            textIndent = this.attr('textIndent');
 
-      lines.forEach(line => {
+      lines.forEach((line, idx) => {
         const [w, h] = measureText(this, line, font, lineHeight);
 
         if (align === 'center') {
@@ -6030,11 +6054,31 @@ let Label = (_temp = _class2 = class Label extends _basesprite__WEBPACK_IMPORTED
           left += width - w;
         }
 
-        if (fillColor) {
-          drawingContext.fillText(line, left, top + h / 2);
+        let indent = 0;
+        if (textIndent && idx === 0 && align !== 'right') {
+          indent = textIndent;
         }
-        if (strokeColor) {
-          drawingContext.strokeText(line, left, top + h / 2);
+
+        if (letterSpacing) {
+          let l = left;[...line].forEach((letter, i) => {
+            if (idx === 0 && i === 0) {
+              l += indent;
+            }
+            if (fillColor) {
+              drawingContext.fillText(letter, l, top + h / 2);
+            }
+            if (strokeColor) {
+              drawingContext.strokeText(letter, l, top + h / 2);
+            }
+            l += measureText(this, letter, font)[0] + letterSpacing;
+          });
+        } else {
+          if (fillColor) {
+            drawingContext.fillText(line, left + indent, top + h / 2);
+          }
+          if (strokeColor) {
+            drawingContext.strokeText(line, left + indent, top + h / 2);
+          }
         }
 
         top += h;
@@ -7612,7 +7656,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(49);
 /* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(51);
 /* harmony import */ var _helpers_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(53);
-var _desc, _value, _class, _class2, _temp;
+var _dec, _dec2, _desc, _value, _class, _class2, _temp;
 
 const _applyDecoratedDescriptor = __webpack_require__(4);
 
@@ -7626,7 +7670,7 @@ const _children = Symbol('children'),
       _zOrder = Symbol('zOrder'),
       _layoutTag = Symbol('layoutTag');
 
-let GroupAttr = (_class = class GroupAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr {
+let GroupAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec2 = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), (_class = class GroupAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr {
   constructor(subject) {
     super(subject);
     this.setDefault({
@@ -7635,7 +7679,9 @@ let GroupAttr = (_class = class GroupAttr extends _basesprite__WEBPACK_IMPORTED_
       alignItems: 'stretch',
       justifyContent: 'flex-start',
       flexWrap: 'nowrap',
-      alignContent: 'stretch'
+      alignContent: 'stretch',
+      scrollTop: 0,
+      scrollLeft: 0
     });
   }
 
@@ -7707,7 +7753,17 @@ let GroupAttr = (_class = class GroupAttr extends _basesprite__WEBPACK_IMPORTED_
     this.subject.clearLayout();
     super.display = value;
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'clip', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'display'), _class.prototype)), _class);
+
+  set scrollLeft(value) {
+    this.clearCache();
+    this.set('scrollLeft', value);
+  }
+
+  set scrollTop(value) {
+    this.clearCache();
+    this.set('scrollTop', value);
+  }
+}, (_applyDecoratedDescriptor(_class.prototype, 'clip', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'clip'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexDirection', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexDirection'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexWrap', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexWrap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'justifyContent', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'justifyContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignItems', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignContent', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignContent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scrollLeft', [_dec, sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'scrollLeft'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scrollTop', [_dec2, sprite_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'scrollTop'), _class.prototype)), _class));
 let Group = (_temp = _class2 = class Group extends _basesprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   constructor(attr = {}) {
@@ -7726,6 +7782,16 @@ let Group = (_temp = _class2 = class Group extends _basesprite__WEBPACK_IMPORTED
           [anchorX, anchorY] = this.attr('anchor');
 
     return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient;
+  }
+  scrollTo(x, y) {
+    this.attr('scrollLeft', x);
+    this.attr('scrollTop', y);
+  }
+  scrollBy(dx, dy) {
+    const x = this.attr('scrollLeft'),
+          y = this.attr('scrollTop');
+
+    this.scrollTo(x + dx, y + dy);
   }
   cloneNode(deepCopy) {
     const node = super.cloneNode();
@@ -7789,8 +7855,11 @@ let Group = (_temp = _class2 = class Group extends _basesprite__WEBPACK_IMPORTED
     if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
       const isCollision = collisionState || this.pointCollision(evt);
       if (isCollision) {
-        const parentX = evt.offsetX - this.originalRect[0];
-        const parentY = evt.offsetY - this.originalRect[1];
+        const scrollLeft = this.attr('scrollLeft'),
+              scrollTop = this.attr('scrollTop');
+
+        const parentX = evt.offsetX - this.originalRect[0] + scrollLeft;
+        const parentY = evt.offsetY - this.originalRect[1] + scrollTop;
         // console.log(evt.parentX, evt.parentY)
 
         const _evt = Object.assign({}, evt);
@@ -7871,6 +7940,11 @@ let Group = (_temp = _class2 = class Group extends _basesprite__WEBPACK_IMPORTED
       }
     }
 
+    drawingContext.save();
+    const scrollLeft = this.attr('scrollLeft'),
+          scrollTop = this.attr('scrollTop');
+
+    drawingContext.translate(-scrollLeft, -scrollTop);
     const sprites = this[_children];
 
     for (let i = 0; i < sprites.length; i++) {
@@ -7885,6 +7959,8 @@ let Group = (_temp = _class2 = class Group extends _basesprite__WEBPACK_IMPORTED
         child.dispatchEvent('update', { target: child, renderTime: t }, true, true);
       }
     }
+    drawingContext.restore();
+
     if (this.attr('display') === 'flex') {
       this[_layoutTag] = true;
     }

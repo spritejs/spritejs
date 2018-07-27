@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.5.2][2018-07-27]
+
+### 改进
+
+- 增加了Label的letterSpacing、textIndent属性
+- 增加了Group的scrollLeft、scrollTop属性
+- 增加了Group的scrollTo、scrollBy方法
+
 ## [2.5.1][2018-07-25]
 
 ### 改进
