@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.6.0';
+const version = '2.6.1';
 
 
 
@@ -8500,6 +8500,13 @@ __webpack_require__.r(__webpack_exports__);
     return (a.attributes.order || 0) - (b.attributes.order || 0);
   });
 
+  function getSize(style, key) {
+    if (container.hasLayout) {
+      const layoutKey = `layout${key.slice(0, 1).toUpperCase()}${key.slice(1)}`;
+      return style[layoutKey] !== '' ? style[layoutKey] : style[key];
+    }
+    return style[key];
+  }
   const style = container.attributes;
 
   let mainSize = 'width',
@@ -8520,7 +8527,7 @@ __webpack_require__.r(__webpack_exports__);
     mainStart = 'layoutRight';
     mainEnd = 'x';
     mainSign = -1;
-    mainBase = style.width;
+    mainBase = getSize(style, 'width');
 
     crossSize = 'height';
     crossStart = 'y';
@@ -8540,7 +8547,7 @@ __webpack_require__.r(__webpack_exports__);
     mainStart = 'layoutBottom';
     mainEnd = 'y';
     mainSign = -1;
-    mainBase = style.height;
+    mainBase = getSize(style, 'height');
 
     crossSize = 'width';
     crossStart = 'x';
@@ -8559,7 +8566,7 @@ __webpack_require__.r(__webpack_exports__);
     return size == null || size === '';
   }
 
-  const isAutoMainSize = isAutoSize(style[mainSize]);
+  const isAutoMainSize = isAutoSize(getSize(style, mainSize));
 
   let groupMainSize;
 
@@ -8649,7 +8656,8 @@ __webpack_require__.r(__webpack_exports__);
   flexLine.mainSpace = mainSpace;
 
   if (style.flexWrap === 'nowrap' || isAutoMainSize) {
-    flexLine.crossSpace = !isAutoSize(style[crossSize]) ? style[crossSize] : crossSpace;
+    const size = getSize(style, crossSize);
+    flexLine.crossSpace = !isAutoSize(size) ? size : crossSpace;
   } else {
     flexLine.crossSpace = crossSpace;
   }
@@ -8747,7 +8755,8 @@ __webpack_require__.r(__webpack_exports__);
   // compute the cross axis sizes
   // align-items, align-self
   let crossSizeValue;
-  if (isAutoSize(style[crossSize])) {
+  const size = getSize(style, crossSize);
+  if (isAutoSize(size)) {
     // auto sizing
     crossSpace = 0;
     crossSizeValue = 0;
@@ -8756,14 +8765,14 @@ __webpack_require__.r(__webpack_exports__);
     }
     // setBoxSize(container, crossSize, crossSizeValue)
   } else {
-    crossSpace = style[crossSize];
+    crossSpace = size;
     for (let i = 0; i < flexLines.length; i++) {
       crossSpace -= flexLines[i].crossSpace;
     }
   }
 
   if (style.flexWrap === 'wrap-reverse') {
-    crossBase = isAutoSize(style[crossSize]) ? crossSizeValue : style[crossSize];
+    crossBase = isAutoSize(size) ? crossSizeValue : size;
   } else {
     crossBase = 0;
   }
@@ -8790,28 +8799,26 @@ __webpack_require__.r(__webpack_exports__);
 
       const align = item.attributes.alignSelf || style.alignItems;
 
-      // if(isAutoSize(item.attr(crossSize))) {
-      //   item.attr(crossSize, ((align === 'stretch')) ? lineCrossSize : 0)
-      // }
+      const size = crossSize === 'width' ? item.offsetSize[0] : item.offsetSize[1];
 
       if (align === 'flex-start') {
         item.attr(crossStart, crossBase);
-        item.attr(crossEnd, item.attr(crossStart) + crossSign * item.attr(crossSize));
+        item.attr(crossEnd, item.attr(crossStart) + crossSign * size);
       }
 
       if (align === 'flex-end') {
         item.attr(crossEnd, crossBase + crossSign * lineCrossSize);
-        item.attr(crossStart, item.attr(crossEnd) - crossSign * item.attr(crossSize));
+        item.attr(crossStart, item.attr(crossEnd) - crossSign * size);
       }
 
       if (align === 'center') {
-        item.attr(crossStart, crossBase + crossSign * (lineCrossSize - item.attr(crossSize)) / 2);
-        item.attr(crossEnd, item.attr(crossStart) + crossSign * item.attr(crossSize));
+        item.attr(crossStart, crossBase + crossSign * (lineCrossSize - size) / 2);
+        item.attr(crossEnd, item.attr(crossStart) + crossSign * size);
       }
 
       if (align === 'stretch') {
         item.attr(crossStart, crossBase);
-        item.attr(crossEnd, crossBase + crossSign * (!isAutoSize(item.attr(crossSize)) ? item.attr(crossSize) : lineCrossSize));
+        item.attr(crossEnd, crossBase + crossSign * (!isAutoSize(getSize(item.attributes, crossSize)) ? size : lineCrossSize));
         // setBoxLayoutSize(item, crossSize, crossSign * (item.attr(crossEnd) - item.attr(crossStart)))
         const crossAttr = crossSize === 'width' ? 'layoutWidth' : 'layoutHeight';
         item.attr(crossAttr, crossSign * (item.attr(crossEnd) - item.attr(crossStart)));

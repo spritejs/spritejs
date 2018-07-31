@@ -1,12 +1,18 @@
 # Change Log
 
+## [2.6.1][2018-07-31]
+
+### bug fix
+
+- fix nested layout bug
+
 ## [2.6.0][2018-07-31]
 
 ### feature
 
 - Add `bgimage` attribute for all elements
 
-### bug fixed
+### bug fix
 
 - Fixed label with both height and width fixed display lineBreak error.
 - Fixed textAlign center or right in multi-line text display error.

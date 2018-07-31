@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.6.0';
+var version = '2.6.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14121,6 +14121,13 @@ exports.default = function (container, items) {
     return (a.attributes.order || 0) - (b.attributes.order || 0);
   });
 
+  function getSize(style, key) {
+    if (container.hasLayout) {
+      var layoutKey = 'layout' + key.slice(0, 1).toUpperCase() + key.slice(1);
+      return style[layoutKey] !== '' ? style[layoutKey] : style[key];
+    }
+    return style[key];
+  }
   var style = container.attributes;
 
   var mainSize = 'width',
@@ -14141,7 +14148,7 @@ exports.default = function (container, items) {
     mainStart = 'layoutRight';
     mainEnd = 'x';
     mainSign = -1;
-    mainBase = style.width;
+    mainBase = getSize(style, 'width');
 
     crossSize = 'height';
     crossStart = 'y';
@@ -14161,7 +14168,7 @@ exports.default = function (container, items) {
     mainStart = 'layoutBottom';
     mainEnd = 'y';
     mainSign = -1;
-    mainBase = style.height;
+    mainBase = getSize(style, 'height');
 
     crossSize = 'width';
     crossStart = 'x';
@@ -14183,7 +14190,7 @@ exports.default = function (container, items) {
     return size == null || size === '';
   }
 
-  var isAutoMainSize = isAutoSize(style[mainSize]);
+  var isAutoMainSize = isAutoSize(getSize(style, mainSize));
 
   var groupMainSize = void 0;
 
@@ -14196,8 +14203,8 @@ exports.default = function (container, items) {
           width = _item$layoutSize[0],
           height = _item$layoutSize[1];
 
-      var size = mainSize === 'width' ? width : height;
-      maxSize += size;
+      var _size = mainSize === 'width' ? width : height;
+      maxSize += _size;
     }
     if (flexDirection === 'row-reverse' || flexDirection === 'column-reverse') {
       mainBase = maxSize;
@@ -14295,7 +14302,8 @@ exports.default = function (container, items) {
   flexLine.mainSpace = mainSpace;
 
   if (style.flexWrap === 'nowrap' || isAutoMainSize) {
-    flexLine.crossSpace = !isAutoSize(style[crossSize]) ? style[crossSize] : crossSpace;
+    var _size2 = getSize(style, crossSize);
+    flexLine.crossSpace = !isAutoSize(_size2) ? _size2 : crossSpace;
   } else {
     flexLine.crossSpace = crossSpace;
   }
@@ -14401,7 +14409,8 @@ exports.default = function (container, items) {
   // compute the cross axis sizes
   // align-items, align-self
   var crossSizeValue = void 0;
-  if (isAutoSize(style[crossSize])) {
+  var size = getSize(style, crossSize);
+  if (isAutoSize(size)) {
     // auto sizing
     crossSpace = 0;
     crossSizeValue = 0;
@@ -14410,14 +14419,14 @@ exports.default = function (container, items) {
     }
     // setBoxSize(container, crossSize, crossSizeValue)
   } else {
-    crossSpace = style[crossSize];
+    crossSpace = size;
     for (var _i7 = 0; _i7 < flexLines.length; _i7++) {
       crossSpace -= flexLines[_i7].crossSpace;
     }
   }
 
   if (style.flexWrap === 'wrap-reverse') {
-    crossBase = isAutoSize(style[crossSize]) ? crossSizeValue : style[crossSize];
+    crossBase = isAutoSize(size) ? crossSizeValue : size;
   } else {
     crossBase = 0;
   }
@@ -14444,28 +14453,26 @@ exports.default = function (container, items) {
 
       var align = _item6.attributes.alignSelf || style.alignItems;
 
-      // if(isAutoSize(item.attr(crossSize))) {
-      //   item.attr(crossSize, ((align === 'stretch')) ? lineCrossSize : 0)
-      // }
+      var _size3 = crossSize === 'width' ? _item6.offsetSize[0] : _item6.offsetSize[1];
 
       if (align === 'flex-start') {
         _item6.attr(crossStart, crossBase);
-        _item6.attr(crossEnd, _item6.attr(crossStart) + crossSign * _item6.attr(crossSize));
+        _item6.attr(crossEnd, _item6.attr(crossStart) + crossSign * _size3);
       }
 
       if (align === 'flex-end') {
         _item6.attr(crossEnd, crossBase + crossSign * lineCrossSize);
-        _item6.attr(crossStart, _item6.attr(crossEnd) - crossSign * _item6.attr(crossSize));
+        _item6.attr(crossStart, _item6.attr(crossEnd) - crossSign * _size3);
       }
 
       if (align === 'center') {
-        _item6.attr(crossStart, crossBase + crossSign * (lineCrossSize - _item6.attr(crossSize)) / 2);
-        _item6.attr(crossEnd, _item6.attr(crossStart) + crossSign * _item6.attr(crossSize));
+        _item6.attr(crossStart, crossBase + crossSign * (lineCrossSize - _size3) / 2);
+        _item6.attr(crossEnd, _item6.attr(crossStart) + crossSign * _size3);
       }
 
       if (align === 'stretch') {
         _item6.attr(crossStart, crossBase);
-        _item6.attr(crossEnd, crossBase + crossSign * (!isAutoSize(_item6.attr(crossSize)) ? _item6.attr(crossSize) : lineCrossSize));
+        _item6.attr(crossEnd, crossBase + crossSign * (!isAutoSize(getSize(_item6.attributes, crossSize)) ? _size3 : lineCrossSize));
         // setBoxLayoutSize(item, crossSize, crossSign * (item.attr(crossEnd) - item.attr(crossStart)))
         var crossAttr = crossSize === 'width' ? 'layoutWidth' : 'layoutHeight';
         _item6.attr(crossAttr, crossSign * (_item6.attr(crossEnd) - _item6.attr(crossStart)));
