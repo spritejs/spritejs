@@ -7,7 +7,10 @@ export function createCanvas(width = 300, height = 150) {
 
 export function loadImage(src) {
   const img = document.createElement('img')
-  img.crossOrigin = 'anonymous'
+  if(typeof src === 'string' && !/^data:image\/(.*);base64/.test(src)) {
+    // base64 dont need crossOrigin - fix early webkit cross domain bug
+    img.crossOrigin = 'anonymous'
+  }
 
   const promise = new Promise((resolve) => {
     img.addEventListener('load', () => {

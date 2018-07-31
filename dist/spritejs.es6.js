@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.6.1';
+const version = '2.6.2';
 
 
 
@@ -9496,7 +9496,10 @@ function createCanvas(width = 300, height = 150) {
 
 function loadImage(src) {
   const img = document.createElement('img');
-  img.crossOrigin = 'anonymous';
+  if (typeof src === 'string' && !/^data:image\/(.*);base64/.test(src)) {
+    // base64 dont need crossOrigin - fix early webkit cross domain bug
+    img.crossOrigin = 'anonymous';
+  }
 
   const promise = new Promise(resolve => {
     img.addEventListener('load', () => {

@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.6.2][2018-07-31]
+
+### bug fix
+
+- fix base64 image's cross-origin bug in early webkit
+
 ## [2.6.1][2018-07-31]
 
 ### bug fix

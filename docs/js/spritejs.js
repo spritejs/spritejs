@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.6.1';
+var version = '2.6.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -16229,7 +16229,10 @@ function createCanvas() {
 
 function loadImage(src) {
   var img = document.createElement('img');
-  img.crossOrigin = 'anonymous';
+  if (typeof src === 'string' && !/^data:image\/(.*);base64/.test(src)) {
+    // base64 dont need crossOrigin - fix early webkit cross domain bug
+    img.crossOrigin = 'anonymous';
+  }
 
   var promise = new _promise2.default(function (resolve) {
     img.addEventListener('load', function () {
