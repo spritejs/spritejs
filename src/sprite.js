@@ -79,8 +79,6 @@ class ResAttr extends Sprite.Attr {
   }
 }
 
-class ResSprite extends Sprite {
-  static Attr = ResAttr
-}
+Sprite.Attr = ResAttr
 
-export default ResSprite
+export default Sprite

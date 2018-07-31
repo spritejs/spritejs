@@ -1,8 +1,19 @@
 # Change Log
 
+## [2.6.0][2018-07-31]
+
+### feature
+
+- Add `bgimage` attribute for all elements
+
+### bug fixed
+
+- Fixed label with both height and width fixed display lineBreak error.
+- Fixed textAlign center or right in multi-line text display error.
+
 ## [2.5.2][2018-07-27]
 
-### 改进
+### feature
 
 - Add `letterSpacing` and `textIndent` attributes for Label.
 - Add `scrollLeft` and `scrollTop` attributes for Group.

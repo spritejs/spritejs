@@ -450,3 +450,28 @@ drawCase('scene-snapshot', async () => {
 
   return scene
 })
+
+drawCase('background-image', async () => {
+  const scene = new Scene('#test', {
+    viewport: [300, 300],
+    resolution: [600, 600],
+  })
+  await scene.preload('https://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg')
+  const s = new Sprite()
+  s.attr({
+    anchor: 0.5,
+    border: [6, 'black'],
+    pos: [300, 300],
+    size: [300, 300],
+    bgcolor: 'blue',
+    bgimage: {
+      src: 'https://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg',
+      display: '.9',
+      clip9: 64,
+      // offset: [0, 50],
+    },
+  })
+  const layer = scene.layer('layer1')
+  layer.append(s)
+  return scene
+})

@@ -1,6 +1,5 @@
 import {
   BaseNode,
-  BaseSprite,
   Label,
   Group,
   Effects,
@@ -16,6 +15,7 @@ import {
 
 const {setDeprecation} = utils
 
+import BaseSprite from './basesprite'
 import Sprite from './sprite'
 import Layer from './layer'
 import Scene from './scene'
@@ -27,7 +27,6 @@ if(shim) {
 }
 
 registerNodeType('layer', Layer, true)
-registerNodeType('sprite', Sprite)
 
 function Paper2D(...args) {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.')

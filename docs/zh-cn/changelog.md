@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.6.0][2018-07-31]
+
+### 新特性
+
+- 支持了所有元素的bgimage属性
+
+### bug 修复
+
+- 修复了label在设置固定宽高和lineBreak后显示不正确的bug
+- 修复了多行文本textAlign设置为center和right后显示不正确的bug
+
 ## [2.5.2][2018-07-27]
 
 ### 改进

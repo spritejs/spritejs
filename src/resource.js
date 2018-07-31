@@ -23,7 +23,7 @@ const Resource = {
     const mapKey = texture.id
 
     if(!loadedResources.has(mapKey)) {
-      return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           reject(new Error('load img timeout'))
         }, timeout)
@@ -35,9 +35,15 @@ const Resource = {
           clearTimeout(timer)
         })
       })
+      loadedResources.set(mapKey, promise)
+      return promise
+    }
+    const img = loadedResources.get(mapKey)
+    if(img instanceof Promise) {
+      return img
     }
     return {
-      img: loadedResources.get(mapKey),
+      img,
       texture,
       fromCache: true,
     }

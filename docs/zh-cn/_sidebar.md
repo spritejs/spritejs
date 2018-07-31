@@ -36,6 +36,7 @@
     * [阴影 shadow](/zh-cn/effect#阴影-shadow)
     * [滤镜 filter](/zh-cn/effect#滤镜-filter)
     * [渐变 gradient](/zh-cn/effect#渐变-gradient)
+    * [背景 bgimage](/zh-cn/bgimage)
   * 行为
     * [事件 event](/zh-cn/behavior#响应-dom-事件)
   * 布局

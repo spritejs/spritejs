@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Base Sprite</title>
+</head>
+<body>
+  <div id="mycanvas"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    const {Scene, Label, Resource} = spritejs
+    const scene = new Scene('#mycanvas', 600, 600),
+      layer = scene.layer()
+
+    ;(async function () {
+      await Resource.loadTexture({id: '9scale', src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg'})
+      // console.log('load')
+      const s = new Label('测试')
+      s.attr({
+        // textures: [img],
+        textAlign: 'center',
+        font: '34px "宋体"',
+        lineHeight: 300,
+        anchor: 0.5,
+        border: [6, 'black'],
+        pos: [300, 300],
+        size: [300, 300],
+        bgcolor: 'blue',
+        bgimage: {
+          id: '9scale',
+          display: '.9',
+          clip9: 64,
+          // offset: [0, 50],
+        },
+      })
+      layer.append(s)
+    }())
+  </script>
+</body>
+</html>
