@@ -8,8 +8,7 @@ const {Scene, Label, Resource} = spritejs
 
   const s = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试')
   s.attr({
-    // textures: [img],
-    // textAlign: 'center',
+    textAlign: 'center',
     font: '34px "宋体"',
     anchor: 0.5,
     border: [6, 'black'],

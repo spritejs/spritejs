@@ -27,6 +27,8 @@ clip9 剪裁： [top, right, bottom, left]
 
 <div id="bgimage" class="sprite-container"></div>
 
+<!-- demo: bgimage -->
+
 
 <!-- javascript -->
 <script src="/js/bgimage.js"></script>
