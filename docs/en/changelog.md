@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.6.3][2018-08-01]
+
+### bug fix
+
+- fix mouseleave event not trigger when event has been terminated.
+- fix border attribute set to null cause error.
+
 ## [2.6.2][2018-07-31]
 
 ### bug fix

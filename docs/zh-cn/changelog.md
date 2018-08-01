@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.6.3][2018-08-01]
+
+### bug 修复
+
+- mouseleave事件在event被terminate之后没有触发
+- 把border属性设置为null会报错
+
 ## [2.6.2][2018-07-31]
 
 ### bug 修复

@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.6.2';
+const version = '2.6.3';
 
 
 
@@ -1392,6 +1392,10 @@ let SpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parse
 
   set border(val) {
     this.clearCache();
+    if (val == null) {
+      this.set('border', null);
+      return;
+    }
     if (typeof val === 'number' || typeof val === 'string') {
       val = {
         width: parseFloat(val)
@@ -3596,7 +3600,7 @@ let BaseNode = class BaseNode {
       }
     }
 
-    if (!evt.terminated && !isCollision && type === 'mousemove') {
+    if (!isCollision && type === 'mousemove') {
       if (this[_collisionState]) {
         const _evt = Object.assign({}, evt);
         _evt.type = 'mouseleave';

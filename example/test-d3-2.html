@@ -22,6 +22,7 @@ const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200)
 
 const layer = d3.select(paper).append('fglayer')
 
+/* eslint-disable */
 d3.json('/data/city.json', (err, data) => {
 
   const root = d3.hierarchy(data)
@@ -77,14 +78,19 @@ d3.json('/data/city.json', (err, data) => {
             //console.log(d.data.name)
             layer.selectAll({label: s => s.name === 'region'})
                 .attr('text', d.data.name)
+            layer.selectAll({label: s => s.name !== 'region'})
+                .attr('border', null)
+            d3.event.target.attr('border', [3, 'red'])
           }
        })
-       .on('mouseenter', d => {
-          d3.event.target.attr('border', [3, 'red'])
-       })
-       .on('mouseleave', d => {
-          d3.event.target.attr('border', [0, 'transparent'])
-       })
+      //  .on('mouseenter', d => {
+      //     console.log('enter')
+      //     d3.event.target.attr('border', [3, 'red'])
+      //  })
+      //  .on('mouseleave', d => {
+      //     console.log('leave')
+      //     d3.event.target.attr('border', [0, 'transparent'])
+      //  })
 })
 
 

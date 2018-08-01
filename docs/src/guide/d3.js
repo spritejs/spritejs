@@ -109,13 +109,13 @@ const {Scene} = spritejs
         if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
           layer.selectAll({label: s => s.name === 'region'})
             .attr('text', d.data.name)
+          layer.selectAll({label: s => s.name !== 'region'})
+            .attr('border', null)
+          d3.event.target.attr('border', [3, 'red'])
         }
       })
-      .on('mouseenter', (d) => {
-        d3.event.target.attr('border', [3, 'red'])
-      })
       .on('mouseleave', (d) => {
-        d3.event.target.attr('border', [0, 'transparent'])
+        d3.event.target.attr('border', null)
       })
   })
 }())

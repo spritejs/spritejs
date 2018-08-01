@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.6.2';
+var version = '2.6.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -4611,6 +4611,10 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     key: 'border',
     set: function set(val) {
       this.clearCache();
+      if (val == null) {
+        this.set('border', null);
+        return;
+      }
       if (typeof val === 'number' || typeof val === 'string') {
         val = {
           width: parseFloat(val)
@@ -7303,7 +7307,7 @@ var BaseNode = function () {
         }
       }
 
-      if (!evt.terminated && !isCollision && type === 'mousemove') {
+      if (!isCollision && type === 'mousemove') {
         if (this[_collisionState]) {
           var _evt2 = (0, _assign2.default)({}, evt);
           _evt2.type = 'mouseleave';
