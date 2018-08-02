@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.6.4][2018-08-02]
+
+### bug 修复
+
+- fix flexlayout bug
+- remove hard code of layout
+
 ## [2.6.3][2018-08-01]
 
 ### bug fix
