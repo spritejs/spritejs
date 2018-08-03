@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.7.1][2018-08-03]
+
+### bug fix
+
+- fix animation keyframe easing be copied to other keyframes
+
 ## [2.7.0][2018-08-03]
 
 ### bug fix

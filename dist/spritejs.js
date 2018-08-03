@@ -8956,7 +8956,9 @@ var _default = function () {
 
     (0, _keys2.default)(lastFrame).forEach(function (key) {
       if (Object.prototype.hasOwnProperty.call(initState, key)) {
-        _this[_initState][key] = initState[key];
+        if (key !== 'easing' && key !== 'offset') {
+          _this[_initState][key] = initState[key];
+        }
       }
     });
 
@@ -9954,8 +9956,13 @@ function calculateFramesOffset(keyframes) {
       frame.easing = (0, _easing2.parseEasing)(frame.easing);
     }
     if (i > 0) {
+      var hasEasing = keyframes[i].easing != null;
       // 如果中间某个属性没有了，需要从前一帧复制过来
       keyframes[i] = (0, _assign2.default)({}, keyframes[i - 1], keyframes[i]);
+      if (!hasEasing) {
+        // easing 不能复制
+        delete keyframes[i].easing;
+      }
     }
   }
 
