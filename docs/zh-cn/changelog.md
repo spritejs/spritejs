@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.7.0][2018-08-03]
+
+### bug 修复
+
+- 修复了带border和padding的group下的元素事件坐标不对的bug
+
+### 改进
+
+- 使用reflow机制提升了渲染性能
+- 实现了Group的自定义layout
+- 增加了精灵的getLayerXY()方法获取精灵相对于所在layer的坐标
+
 ## [2.6.4][2018-08-02]
 
 ### bug 修复

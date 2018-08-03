@@ -1,8 +1,20 @@
 # Change Log
 
+## [2.7.0][2018-08-03]
+
+### bug fix
+
+- fix group with border or padding pointCollision calculate error
+
+### feature
+
+- Add reflow policy for better rendering performance
+- Group.applyLayout(name, customLayout)
+- element.getLayerXY(dx, dy)
+
 ## [2.6.4][2018-08-02]
 
-### bug 修复
+### bug fix
 
 - fix flexlayout bug
 - remove hard code of layout
