@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.7.2][2018-08-06]
+
+### enhancement
+
+- Update eslint config, use eslint-config-sprite.
+
 ## [2.7.1][2018-08-03]
 
 ### bug fix
