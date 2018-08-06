@@ -19,22 +19,22 @@
   <script type="text/javascript" src="js/cocos2d-js-v3.13.js" charset="UTF-8"></script>
   <script type="text/javascript">
     function addBird() {
-      let size = cc.director.getWinSize();
-      let sprite = cc.Sprite.createWithSpriteFrame(cc.spriteFrameCache.getSpriteFrame("bird1.png"));
+      const size = cc.director.getWinSize();
+      const sprite = cc.Sprite.createWithSpriteFrame(cc.spriteFrameCache.getSpriteFrame('bird1.png'));
       sprite.setPosition(size.width / 2, size.height / 2);
-      sprite.anchor = [0.5, 0.5]
-      let allFrames = [];
-      for(let i = 1; i <= 3; i++){
-          let str = `bird${i}.png`;
-          let frame = cc.spriteFrameCache.getSpriteFrame(str);//new cc.SpriteFrame()
+      sprite.anchor = [0.5, 0.5];
+      const allFrames = [];
+      for(let i = 1; i <= 3; i++) {
+        const str = `bird${i}.png`;
+        const frame = cc.spriteFrameCache.getSpriteFrame(str);// new cc.SpriteFrame()
 
-          allFrames.push(frame);
+        allFrames.push(frame);
       }
       this.addChild(sprite, 0);
 
-      var animation = new cc.Animation(allFrames,0.1);
-      var animate = new cc.Animate(animation);
-      var action = animate.repeatForever();//new cc.RepeatForever(animate)
+      const animation = new cc.Animation(allFrames, 0.1);
+      const animate = new cc.Animate(animation);
+      const action = animate.repeatForever();// new cc.RepeatForever(animate)
       sprite.runAction(action);
       randomMove(sprite);
       return sprite;
@@ -43,79 +43,79 @@
     function randomMove(bird) {
       const ang = Math.random() * 2 * Math.PI;
       const {x: x0, y: y0} = bird;
-      let {width, height} = cc.director.getWinSize();
-      const x1 =  width / 2 + 350 * Math.cos(ang);
-      const y1 =  height / 2 + 350 * Math.sin(ang);
+      const {width, height} = cc.director.getWinSize();
+      const x1 = width / 2 + 350 * Math.cos(ang);
+      const y1 = height / 2 + 350 * Math.sin(ang);
       const distance = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
 
       const startTime = Date.now(),
-      T = 5 * distance + 100;
-  
+        T = 5 * distance + 100;
+
       requestAnimationFrame(function f() {
         let p = (Date.now() - startTime) / T;
         p = Math.min(1.0, p);
         bird.x = x0 + p * (x1 - x0);
         bird.y = y0 + p * (y1 - y0);
-        if(p < 1){
+        if(p < 1) {
           requestAnimationFrame(f);
         } else {
           setTimeout(() => {
             randomMove(bird);
-          }, 500)
-        } 
-      }) 
+          }, 500);
+        }
+      });
     }
 
-    window.onload = function(){
-        cc.game.onStart = function(){
-            //load resources
-            cc.LoaderScene.preload(["/res/birds.png", "/res/birds.json"], function () {
-              const MyScene = cc.Scene.extend({
-                  onEnter:function () {
-                    this._super();
-                    const fglayer = new FgLayer();
-                    this.addChild(fglayer, 1);
-                    const bglayer = new BgLayer();
-                    this.addChild(bglayer);
-                  }
-              });
-              const FgLayer = cc.Layer.extend({
-                  ctor:function () {
-                    this._super();
-                    return true;
-                  },
-                  onEnter: function() {
-                    this._super();
-                    cc.spriteFrameCache.addSpriteFrames("/res/birds.json", "/res/birds.png")
-                    
-                    addBird.call(this);
+    window.onload = function () {
+      cc.game.onStart = function () {
+        // load resources
+        cc.LoaderScene.preload(['/res/birds.png', '/res/birds.json'], () => {
+          const FgLayer = cc.Layer.extend({
+            ctor() {
+              this._super();
+              return true;
+            },
+            onEnter() {
+              this._super();
+              cc.spriteFrameCache.addSpriteFrames('/res/birds.json', '/res/birds.png');
 
-                    gameCanvas.addEventListener('click', evt => {
-                      addBird.call(this);
-                    })
-                    birdCount = 1
-                    let timer = setInterval(() => {
-                      if(birdCount++ < 1000) addBird.call(this)
-                      else clearInterval(timer)
-                    }, 16)
-                  }
+              addBird.call(this);
+
+              gameCanvas.addEventListener('click', (evt) => {
+                addBird.call(this);
               });
-              const BgLayer = cc.Layer.extend({
-                ctor:function () {
-                    this._super();
-                    return true;
-                  },
-                  onEnter: function() {
-                    let drawNode = new cc.DrawNode();
-                    drawNode.clear();
-                    drawNode.drawDot(cc.p(400, 400), 400, cc.color(17, 51, 153, 128));
-                    this.addChild(drawNode, 0);
-                  }
-              });
-              cc.director.runScene(new MyScene());
-            }, this);
-        };
-        cc.game.run("gameCanvas");
+              let birdCount = 1;
+              const timer = setInterval(() => {
+                if(birdCount++ < 1000) addBird.call(this);
+                else clearInterval(timer);
+              }, 16);
+            },
+          });
+          const BgLayer = cc.Layer.extend({
+            ctor() {
+              this._super();
+              return true;
+            },
+            onEnter() {
+              const drawNode = new cc.DrawNode();
+              drawNode.clear();
+              drawNode.drawDot(cc.p(400, 400), 400, cc.color(17, 51, 153, 128));
+              this.addChild(drawNode, 0);
+            },
+          });
+          const MyScene = cc.Scene.extend({
+            onEnter() {
+              this._super();
+              const fglayer = new FgLayer();
+              this.addChild(fglayer, 1);
+              const bglayer = new BgLayer();
+              this.addChild(bglayer);
+            },
+          });
+          cc.director.runScene(new MyScene());
+        }, this);
+      };
+      cc.game.run('gameCanvas');
     };
   </script>
 </body>

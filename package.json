@@ -14,6 +14,7 @@
     "test": "nyc ava --serial && rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "lint": "eslint 'src/**/*.js' --fix",
     "lint-example": "eslint 'example/*.html' --fix",
+    "lint-benchmark": "eslint 'benchmark/*.html' --fix",
     "start": "webpack-dev-server --watch-poll",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",
