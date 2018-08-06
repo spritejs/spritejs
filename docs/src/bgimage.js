@@ -2,11 +2,11 @@ const {Scene, Label, Resource} = spritejs
 
 /* demo: bgimage */
 ;(async function () {
-  const scene = new Scene('#bgimage', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
-  await Resource.loadTexture({id: '9scale', src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg'})
+  const scene = new Scene('#bgimage', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
+  await Resource.loadTexture({id: '9scale', src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg'});
 
-  const s = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试')
+  const s = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试');
   s.attr({
     textAlign: 'center',
     font: '34px "宋体"',
@@ -23,8 +23,8 @@ const {Scene, Label, Resource} = spritejs
       // offset: [0, 50],
     },
     padding: 60,
-  })
-  layer.append(s)
+  });
+  layer.append(s);
 
   s.animate([
     {width: 250},
@@ -33,5 +33,5 @@ const {Scene, Label, Resource} = spritejs
     duration: 5000,
     iterations: Infinity,
     direction: 'alternate',
-  })
-}())
+  });
+}());

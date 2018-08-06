@@ -4,23 +4,23 @@
     resolution: [800, 600],
     stickMode: 'width',
     stickExtend: true,
-  })
+  });
 
-  const layer = d3.select(paper).append('fglayer')
-  document.querySelector('#paper canvas').style.backgroundColor = '#222830'
+  const layer = d3.select(paper).append('fglayer');
+  document.querySelector('#paper canvas').style.backgroundColor = '#222830';
 
-  const width = 1330
-  const height = 520
+  const width = 1330;
+  const height = 520;
 
   const projection = d3.geoMercator()
     .center([107, 38])
     .scale(width / 2 - 40)
-    .translate([width / 4 + 80, height / 2])
+    .translate([width / 4 + 80, height / 2]);
 
-  const path = d3.geoPath().projection(projection)
+  const path = d3.geoPath().projection(projection);
 
   d3.json('/res/data/china.json', (err, data) => {
-    if(err) throw new Error(err)
+    if(err) throw new Error(err);
 
     layer.selectAll('path')
       .data(data.features)
@@ -33,19 +33,19 @@
       .attr('fillColor', '#2f3644')
       .attr('bounding', 'path')
       .on('click', (d) => {
-        const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY)
+        const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY);
 
         if(paths.length) {
           /* eslint-disable no-console */
-          console.log(d.properties.name)
+          console.log(d.properties.name);
           /* eslint-enable no-console */
         }
       })
       .on('mouseenter', (d) => {
-        d3.event.target.attr('fillColor', '#00c2ff')
+        d3.event.target.attr('fillColor', '#00c2ff');
       })
       .on('mouseleave', (d) => {
-        d3.event.target.attr('fillColor', '#2f3644')
-      })
-  })
-}())
+        d3.event.target.attr('fillColor', '#2f3644');
+      });
+  });
+}());

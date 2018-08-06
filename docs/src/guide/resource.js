@@ -2,86 +2,86 @@ const {Scene, Sprite, Label, Group} = spritejs
 
 /* demo: load-texture */
 ;(function () {
-  const scene = new Scene('#load-texture', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const scene = new Scene('#load-texture', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
 
-  const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png')
+  const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png');
   robot.attr({
     anchor: [0.5, 0.5],
     pos: [770, 300],
     scale: 0.5,
-  })
+  });
 
-  layer.append(robot)
+  layer.append(robot);
 
-  const label = new Label(`图片大小： ${robot.contentSize}`)
+  const label = new Label(`图片大小： ${robot.contentSize}`);
   label.attr({
     anchor: [0.5, 0.5],
     pos: [770, 100],
     font: '36px Arial',
-  })
+  });
 
-  layer.append(label)
+  layer.append(label);
 }())
 
 /* demo: preload-texture */
 ;(async function () {
-  const scene = new Scene('#preload-texture', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const scene = new Scene('#preload-texture', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
 
   await scene.preload({
     id: 'robot',
     src: 'https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png',
-  })
+  });
 
-  const layer = scene.layer()
+  const layer = scene.layer();
 
-  const robot = new Sprite('robot')
+  const robot = new Sprite('robot');
   robot.attr({
     anchor: [0.5, 0.5],
     pos: [770, 300],
     scale: 0.5,
-  })
+  });
 
-  layer.append(robot)
+  layer.append(robot);
 
-  const label = new Label(`图片大小： ${robot.contentSize}`)
+  const label = new Label(`图片大小： ${robot.contentSize}`);
   label.attr({
     anchor: [0.5, 0.5],
     pos: [770, 100],
     font: '36px Arial',
-  })
+  });
 
-  layer.append(label)
+  layer.append(label);
 }())
 
 /* demo: texturepacker */
 ;(async function () {
-  const scene = new Scene('#texturepacker', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
+  const scene = new Scene('#texturepacker', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
   const earthPNG = 'https://p3.ssl.qhimg.com/t01806718065fe97c65.png',
-    earthJSON = 'https://s3.ssl.qhres.com/static/d479c28f553c6cff.json'
+    earthJSON = 'https://s3.ssl.qhres.com/static/d479c28f553c6cff.json';
 
-  await scene.preload([earthPNG, earthJSON])
+  await scene.preload([earthPNG, earthJSON]);
 
-  const layer = scene.layer()
-  const group = new Group()
+  const layer = scene.layer();
+  const group = new Group();
   group.attr({
     pos: [655, 215],
-  })
+  });
 
-  const earth = new Sprite()
+  const earth = new Sprite();
   earth.attr({
     textures: 'earth_blue.png',
     pos: [115, 115],
     anchor: [0.5, 0.5],
-  })
-  const earthShadow = new Sprite()
+  });
+  const earthShadow = new Sprite();
   earthShadow.attr({
     textures: 'earth_shadow2.png',
     pos: [0, 0],
-  })
+  });
 
-  group.append(earth, earthShadow)
-  layer.append(group)
+  group.append(earth, earthShadow);
+  layer.append(group);
 
   earth.animate([
     {rotate: 0, textures: 'earth_blue.png'},
@@ -92,13 +92,13 @@ const {Scene, Sprite, Label, Group} = spritejs
   ], {
     duration: 20000,
     iterations: Infinity,
-  })
+  });
 }())
 
 /* demo: preload-many */
 ;(function () {
-  const scene = new Scene('#preload-many', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const scene = new Scene('#preload-many', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
 
   const images = [
     'https://p1.ssl.qhimg.com/t016dc86e4b2c9b83a4.jpg',
@@ -117,18 +117,18 @@ const {Scene, Sprite, Label, Group} = spritejs
     'https://p0.ssl.qhimg.com/t010da5e7311c8dd3a9.jpg',
     'https://p5.ssl.qhimg.com/t0189dd547c322b2357.jpg',
     'https://p4.ssl.qhimg.com/t01feb50457ebbada10.jpg',
-  ]
+  ];
 
-  const label = new Label('加载中... 0 / 16')
+  const label = new Label('加载中... 0 / 16');
   label.attr({
     anchor: [0.5, 0.5],
     font: '36px Arial',
     pos: [770, 200],
-  })
+  });
 
-  layer.append(label)
+  layer.append(label);
 
-  const button = new Label('点击加载')
+  const button = new Label('点击加载');
   button.attr({
     anchor: [0.5, 0.5],
     font: '44px Arial',
@@ -136,43 +136,43 @@ const {Scene, Sprite, Label, Group} = spritejs
     border: [2, 'black'],
     borderRadius: 12,
     padding: [10, 10],
-  })
-  layer.append(button)
+  });
+  layer.append(button);
 
   async function loadRes() {
-    button.remove()
+    button.remove();
 
     scene.on('preload', (evt) => {
-      label.text = `加载中... ${evt.loaded.length} / ${evt.resources.length}`
-    })
+      label.text = `加载中... ${evt.loaded.length} / ${evt.resources.length}`;
+    });
 
-    const imgs = await scene.preload(...images)
+    const imgs = await scene.preload(...images);
 
-    label.remove()
+    label.remove();
 
     imgs.forEach(({texture}, i) => {
-      const sprite = new Sprite()
+      const sprite = new Sprite();
       sprite.attr({
         textures: [texture],
         x: 125 + (i % 8) * 170,
         y: 100 + Math.floor(i / 8) * 200,
         size: [150, 150],
-      })
-      layer.append(sprite)
-    })
+      });
+      layer.append(sprite);
+    });
   }
 
   button.on('mouseenter', (evt) => {
-    scene.container.style.cursor = 'pointer'
-  })
+    scene.container.style.cursor = 'pointer';
+  });
   button.on('mouseleave', (evt) => {
-    scene.container.style.cursor = 'default'
-  })
+    scene.container.style.cursor = 'default';
+  });
   button.on('mousedown', (evt) => {
-    evt.target.attr('scale', 0.8)
-  })
+    evt.target.attr('scale', 0.8);
+  });
   button.on('mouseup', (evt) => {
-    evt.target.attr('scale', 1)
-    loadRes()
-  })
-}())
+    evt.target.attr('scale', 1);
+    loadRes();
+  });
+}());

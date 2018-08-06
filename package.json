@@ -15,6 +15,8 @@
     "lint": "eslint 'src/**/*.js' --fix",
     "lint-example": "eslint 'example/*.html' --fix",
     "lint-benchmark": "eslint 'benchmark/*.html' --fix",
+    "lint-doc": "eslint 'docs/src/**/*.js' --fix",
+    "lint-demo": "eslint 'docs/demo/static/code/**/*.js' --fix",
     "start": "webpack-dev-server --watch-poll",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",

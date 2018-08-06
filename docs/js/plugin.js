@@ -183,20 +183,20 @@ function format(region, list, content) {
   list.sort(function (a, b) {
     if (a.name === 'constructor' && b.name !== 'constructor') {
       return -1;
-    } else if (b.name === 'constructor' && a.name !== 'constructor') {
+    }if (b.name === 'constructor' && a.name !== 'constructor') {
       return 1;
     }
     if (a.access === 'private' && b.access === 'public') {
       return -1;
-    } else if (a.access === 'public' && b.access === 'private') {
+    }if (a.access === 'public' && b.access === 'private') {
       return 1;
-    } else if (a.name > b.name) {
+    }if (a.name > b.name) {
       return 1;
-    } else if (a.name < b.name) {
+    }if (a.name < b.name) {
       return -1;
-    } else if (a.level !== b.level) {
+    }if (a.level !== b.level) {
       return a.level - b.level < 0 ? -1 : 1;
-    } else if (a.params.join('') > b.params.join('')) {
+    }if (a.params.join('') > b.params.join('')) {
       return 1;
     }
     return -1;

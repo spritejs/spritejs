@@ -143,7 +143,7 @@ var _spritejs = spritejs,
       case 0:
         if (Common.random() < 0.6) {
           return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
-        } else if (Common.random() < 0.8) {
+        }if (Common.random() < 0.8) {
           return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
         }
 

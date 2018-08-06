@@ -13,6 +13,7 @@ module.exports = {
     Timeline: true,
     Proton: true,
     curvejs: true,
+    dat: true,
   },
   extends:  "eslint-config-sprite",
   plugins: ['html'],
