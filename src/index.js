@@ -3,6 +3,8 @@ import {
   Label,
   Group,
   Effects,
+  Easings,
+  Timeline,
   Path,
   registerNodeType,
   createNode,
@@ -58,4 +60,6 @@ export {
 
   Resource,
   Effects,
+  Easings,
+  Timeline,
 };
