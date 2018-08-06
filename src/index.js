@@ -11,29 +11,29 @@ import {
 
   utils,
   math,
-} from 'sprite-core'
+} from 'sprite-core';
 
-const {setDeprecation} = utils
+import BaseSprite from './basesprite';
+import Sprite from './sprite';
+import Layer from './layer';
+import Scene from './scene';
+import Resource from './resource';
+import {shim, _debugger} from './platform';
 
-import BaseSprite from './basesprite'
-import Sprite from './sprite'
-import Layer from './layer'
-import Scene from './scene'
-import Resource from './resource'
-import {shim, _debugger} from './platform'
+const {setDeprecation} = utils;
 
 if(shim) {
-  shim()
+  shim();
 }
 
-registerNodeType('layer', Layer, true)
+registerNodeType('layer', Layer, true);
 
 function Paper2D(...args) {
-  setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.')
-  return new Scene(...args)
+  setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');
+  return new Scene(...args);
 }
 
-const version = require('../package.json').version
+const version = require('../package.json').version;
 
 export {
   _debugger,
@@ -58,4 +58,4 @@ export {
 
   Resource,
   Effects,
-}
+};

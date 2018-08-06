@@ -14,88 +14,90 @@
   <div id="paper"></div>
   <script src="/js/spritejs.js"></script>
   <script>
-  (async function(){
-    const paper = spritejs.Paper2D('#paper', 600, 400)
+  (async function () {
+    const paper = spritejs.Paper2D('#paper', 600, 400);
     const Sprite = spritejs.Sprite,
-          Color = spritejs.Color
+      Color = spritejs.Color;
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
-        //console.log(args)
-      }
-    })
+        // console.log(args)
+      },
+    });
 
     s.attr({
       anchor: [0.5, 0.5],
       pos: [100, 100],
       size: [50, 50],
       bgcolor: 'green',
-      //opacity: 0.5,
+      // opacity: 0.5,
       transform: {
         translate: [30, 30],
         rotate: 45,
       },
-      zIndex: 500
-    })
+      zIndex: 500,
+    });
 
-    paper.layer().appendChild(s)
-    
+    paper.layer().appendChild(s);
+  
     s.animate(
       [{rotate: 0, bgcolor: 'red'},
-       {rotate: 360, bgcolor: 'blue'}], 
+        {rotate: 360, bgcolor: 'blue'}],
       {
-        duration:2000,
+        duration: 2000,
         effect: (from, to, p) => {
-          let rotate = (to.rotate - from.rotate) * p
+          const rotate = (to.rotate - from.rotate) * p;
           let fromColor = new Color(from.bgcolor),
-              toColor = new Color(to.bgcolor)
-          
-          let color = {
+            toColor = new Color(to.bgcolor);
+  
+          const color = {
             model: 'rgb',
             value: [fromColor.value[0] + p * (toColor.value[0] - fromColor.value[0]),
-                    fromColor.value[1] + p * (toColor.value[1] - fromColor.value[1]),
-                    fromColor.value[2] + p * (toColor.value[2] - fromColor.value[2]),
-                    1].map(c => Math.round(c))
-          }
+              fromColor.value[1] + p * (toColor.value[1] - fromColor.value[1]),
+              fromColor.value[2] + p * (toColor.value[2] - fromColor.value[2]),
+              1].map(c => Math.round(c)),
+          };
 
           // console.log(new Color(color).toString())
 
-          return {rotate, bgcolor: new Color(color).str}
-        }
-      })
+          return {rotate, bgcolor: new Color(color).str};
+        },
+      }
+  );
 
     const animation = s.animate(
-    [{
-      transform: {
-        rotate: 45,
+      [{
+        transform: {
+          rotate: 45,
+        },
+        bgcolor: 'red',
+        borderRadius: 0,
       },
-      bgcolor: 'red',
-      borderRadius: 0,
-    }, 
-    {
-      transform: {
-        rotate: 135,
+      {
+        transform: {
+          rotate: 135,
+        },
+        bgcolor: 'green',
+        borderRadius: 25,
       },
-      bgcolor: 'green',
-      borderRadius: 25,
-    },
-    {
-      transform: {
-        rotate: 135,
+      {
+        transform: {
+          rotate: 135,
+        },
+        bgcolor: 'green',
+        borderRadius: 25,
       },
-      bgcolor: 'green',
-      borderRadius: 25,
-    },
-    {
-      transform: {
-        rotate: 225,
-      },
-      bgcolor: 'blue',
-      borderRadius: 0,
-    }], 
-    {
-      duration: 2000,
-    })
+      {
+        transform: {
+          rotate: 225,
+        },
+        bgcolor: 'blue',
+        borderRadius: 0,
+      }],
+      {
+        duration: 2000,
+      }
+    );
 
     // window.animation = animation
     // await animation.ready
@@ -106,7 +108,7 @@
     //   console.log(evt)
     // })
 
-    const s2 = new Sprite()
+    const s2 = new Sprite();
 
     s2.attr({
       anchor: [0.5, 0.5],
@@ -117,18 +119,18 @@
       opacity: 1,
       zIndex: 101,
       transform: {
-        //skew: [30, 0]
+        // skew: [30, 0]
         translate: [30, 30],
-        rotate: 90
-      }
-    })
-    
-    paper.layer().appendChild(s2)
+        rotate: 90,
+      },
+    });
+  
+    paper.layer().appendChild(s2);
 
-    await animation.finished
+    await animation.finished;
     // console.log('finished')
 
-    const s3 = new Sprite()
+    const s3 = new Sprite();
 
     s3.attr({
       anchor: [0.5, 0.5],
@@ -137,22 +139,22 @@
       bgcolor: 'red',
       border: [15, 'blue'],
       opacity: 0.5,
-    })
+    });
 
 
-    paper.layer().appendChild(s3)
+    paper.layer().appendChild(s3);
 
     window.s = s;
 
-    s.on('touchstart', e => {
+    s.on('touchstart', (e) => {
       console.log('in origin box', e.offsetX, e.offsetY);
-      e.stopDispatch()
-    })
+      e.stopDispatch();
+    });
 
-    s2.on('touchstart', e => {
-      console.log(111)
-    })
-  })()
+    s2.on('touchstart', (e) => {
+      console.log(111);
+    });
+  }());
   </script>
 </body>
 </html>

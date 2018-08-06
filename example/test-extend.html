@@ -20,33 +20,33 @@
   <div id="container"></div>
   <script src="/js/spritejs.js"></script>
   <script>
-  const {Scene, Sprite} = spritejs
+  const {Scene, Sprite} = spritejs;
   const scene = new Scene('#container', {
     resolution: [1200, 1200],
     viewport: [750, 1334],
     stickMode: 'height',
     stickExtend: true,
-  })
-  const frame = new Sprite()
+  });
+  const frame = new Sprite();
   frame.attr({
     anchor: 0.5,
     size: [1180, 1180],
     pos: [600, 600],
     border: [10, 'grey'],
-  })
-  const block = new Sprite()
+  });
+  const block = new Sprite();
   block.attr({
     anchor: 0.5,
     pos: [600, 600],
     size: [150, 150],
     bgcolor: 'red',
-  })
-  scene.layer().append(frame, block)
+  });
+  scene.layer().append(frame, block);
   scene.snapshot().then((canvas) => {
-    const snapshot = new Image()
-    snapshot.src = canvas.toDataURL()
-    document.body.appendChild(snapshot)
-  })
+    const snapshot = new Image();
+    snapshot.src = canvas.toDataURL();
+    document.body.appendChild(snapshot);
+  });
   </script>
 </body>
 </html>

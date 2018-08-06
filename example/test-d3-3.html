@@ -18,23 +18,23 @@
   <script src="/js/spritejs.js"></script>
   <script>
 
-const paper = spritejs.Paper2D('#paper').setResolution(800, 600)
-const fglayer = paper.layer('fglayer', {handleEvent: true})
+const paper = spritejs.Paper2D('#paper').setResolution(800, 600);
+const fglayer = paper.layer('fglayer', {handleEvent: true});
 
-const layer = d3.select(fglayer).append('group')
+const layer = d3.select(fglayer).append('group');
 
-const width = 1330
-const height = 520
+const width = 1330;
+const height = 520;
 
 const projection = d3.geoMercator()
   .center([107, 38])
   .scale(width / 2 - 40)
-  .translate([width / 4 + 80, height / 2])
+  .translate([width / 4 + 80, height / 2]);
 
-const path = d3.geoPath().projection(projection)
+const path = d3.geoPath().projection(projection);
 
 d3.json('/data/mapdata/china.json', (err, data) => {
-  if(err) throw new Error(err)
+  if(err) throw new Error(err);
 
   // let selectedTarget = null
 
@@ -51,17 +51,17 @@ d3.json('/data/mapdata/china.json', (err, data) => {
     .attr('bounding', 'path')
     // .attr('bgcolor', 'red')
     .on('click', (d) => {
-      const paths = d3.event.targetPaths
+      const paths = d3.event.targetPaths;
 
       if(paths.length) {
-        console.log(d.properties.name)
+        console.log(d.properties.name);
       }
     })
     .on('mouseenter', (d) => {
-      d3.event.target.attr('fillColor', '#c73')
+      d3.event.target.attr('fillColor', '#c73');
     })
     .on('mouseleave', (d) => {
-      d3.event.target.attr('fillColor', '#d1eeee')
+      d3.event.target.attr('fillColor', '#d1eeee');
     })
     // .on('mousemove', (d) => {
     //   const event = d3.event
@@ -77,11 +77,10 @@ d3.json('/data/mapdata/china.json', (err, data) => {
     //   }
     // })
     .select(function () {
-      const [x, y] = this.outerSize
-      this.attr('translate', [x / 2, y / 2])
-    })
-})
-
+      const [x, y] = this.outerSize;
+      this.attr('translate', [x / 2, y / 2]);
+    });
+});
   </script>
 </body>
 </html>

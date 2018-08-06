@@ -19,29 +19,29 @@
   <div id="container"></div>
   <script src="/js/spritejs.js"></script>
   <script>
-    (async function(){
-      const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-      const paper = spritejs.Paper2D('#container')
-      //paper.setResolution(400, 400)
+    (function () {
+      const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg';
+      const paper = spritejs.Paper2D('#container');
+      // paper.setResolution(400, 400)
 
-      const render = {textures: {}}
+      const render = {textures: {}};
 
-      const sprite = new spritejs.Sprite()
+      const sprite = new spritejs.Sprite();
       sprite.attr({
         textures: [imgUrl],
         bgcolor: '#fff',
-        //anchor: [0.5, 0.5],
+        // anchor: [0.5, 0.5],
         pos: [0, 0],
         size: [400, 400],
-        borderRadius: '200'
-      })
+        borderRadius: '200',
+      });
 
-      window.s = sprite
-      
-      paper.layer().appendChild(sprite)
+      window.s = sprite;
+    
+      paper.layer().appendChild(sprite);
 
-      window.paper = paper
-    })()  
+      window.paper = paper;
+    }());
   </script>
 </body>
 </html>

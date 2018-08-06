@@ -35,58 +35,61 @@
   <!--<script src="https://s2.ssl.qhres.com/!39729fa5/sprite2-1.0.0.js"></script>-->
   <script src="/js/spritejs.js"></script>
   <script>
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-;(async function(){
-  if(typeof sprite2 !== 'undefined'){
-    spritejs = sprite2
+;(async function () {
+  if(typeof sprite2 !== 'undefined') {
+    spritejs = sprite2;
   }
-  const scene = new spritejs.Scene('#scene')
-  scene.setResolution(800, 800) // 设置 scene 的实际分辨率
-  
-  const cacheMap = new Map()
+  const scene = new spritejs.Scene('#scene');
+  scene.setResolution(800, 800); // 设置 scene 的实际分辨率
+
+  const cacheMap = new Map();
   class Bird extends spritejs.Sprite {
-    constructor(){
-      super('bird1.png')
+    constructor() {
+      super('bird1.png');
     }
-    //共用缓存，提高性能
+
+    // 共用缓存，提高性能
     get cache() {
-      const key = JSON.stringify(this.textures) + this.attr('scale')
+      const key = JSON.stringify(this.textures) + this.attr('scale');
       if(cacheMap.has(key)) {
-        return cacheMap.get(key)
+        return cacheMap.get(key);
+      }
+      return null;
+    }
+
+    set cache(context) {
+      if(context == null) {
+        cacheMap.clear();
+        return;
+      }
+      const key = JSON.stringify(this.textures) + this.attr('scale');
+      if(!cacheMap.has(key)) {
+        cacheMap.set(key, context);
       }
     }
-    set cache(context) {
-      if(context == null){
-        cacheMap.clear()
-        return
-      }
-      const key = JSON.stringify(this.textures) + this.attr('scale')
-      if(!cacheMap.has(key)) {
-        cacheMap.set(key, context)
-      }
-    }      
   }
 
-  scene.on('preload', e => {
-    console.log(e)
-  })
+  scene.on('preload', (e) => {
+    console.log(e);
+  });
   await scene.preload(
-    [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-  ) 
-  
-  const bglayer = scene.layer('bg'),  // 背景层
-        // 前景层
-        // 每次最多渲染 50 个 sprite，并且不代理事件，提升性能
-        fglayer = scene.layer('fg', {
-              handleEvent: false,
-              evaluateFPS: true,
-              renderMode: 'repaintAll',
-        })   
-  
-  const axisZero = [400, 400]
-  const circle = new spritejs.Sprite()
-  
+    [birdsRes, birdsJsonUrl] // 预加载资源，支持雪碧图
+  );
+
+  const bglayer = scene.layer('bg'), // 背景层
+    // 前景层
+    // 每次最多渲染 50 个 sprite，并且不代理事件，提升性能
+    fglayer = scene.layer('fg', {
+      handleEvent: false,
+      evaluateFPS: true,
+      renderMode: 'repaintAll',
+    });
+
+  const axisZero = [400, 400];
+  const circle = new spritejs.Sprite();
+
   circle.attr({
     anchor: [0.5, 0.5],
     size: [800, 800],
@@ -94,56 +97,56 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     bgcolor: '#139',
     opacity: 0.5,
     borderRadius: 400,
-  })
-  
-  bglayer.appendChild(circle)
-  
-  function pointAdd(p1, p2 = [0, 0]){
-    return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
+  });
+
+  bglayer.appendChild(circle);
+
+  function pointAdd(p1, p2 = [0, 0]) {
+    return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round);
   }
-  
-  function pointSub(p1, p2 = [0, 0]){
-    return [p1[0] - p2[0], p1[1] - p2[1]].map(Math.round)
+
+  function pointSub(p1, p2 = [0, 0]) {
+    return [p1[0] - p2[0], p1[1] - p2[1]].map(Math.round);
   }
-  
-  function sleep(time){
-    return new Promise(resolve => setTimeout(resolve, time))
+
+  function sleep(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
   }
-  
-  async function randomAnimate(bird){
-    const birdPoint = bird.attr('pos')
-    const randomArc = Math.random() * 2 * Math.PI
-    const randomPoint = pointAdd([350 * Math.cos(randomArc), 
-                                  350 * Math.sin(randomArc)], axisZero)
-    
-    const dist = pointSub(randomPoint, birdPoint)
-    const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]))
-    const flip = dist[0] < 0 ? -1 : 1
-    const duration = 5 * distance + 100
-    bird.attr('scale', [flip, 1]) //scale 放在外面，触发缓存
-    //console.log(birdPoint, randomPoint)
+
+  async function randomAnimate(bird) {
+    const birdPoint = bird.attr('pos');
+    const randomArc = Math.random() * 2 * Math.PI;
+    const randomPoint = pointAdd([350 * Math.cos(randomArc),
+      350 * Math.sin(randomArc)], axisZero);
+
+    const dist = pointSub(randomPoint, birdPoint);
+    const distance = Math.round(Math.sqrt(dist[0] * dist[0] + dist[1] * dist[1]));
+    const flip = dist[0] < 0 ? -1 : 1;
+    const duration = 5 * distance + 100;
+    bird.attr('scale', [flip, 1]); // scale 放在外面，触发缓存
+    // console.log(birdPoint, randomPoint)
     const anim = bird.animate([
       {pos: birdPoint},
-      {pos: randomPoint}
+      {pos: randomPoint},
     ], {
       duration,
       endDelay: 500,
-      fill: 'both'
-    })
-    await anim.finished
+      fill: 'both',
+    });
+    await anim.finished;
   }
-  let birdCount = 0
-  async function addBird(){
-    spriteCount.innerHTML = ++birdCount
-    const bird = new Bird()
+  let birdCount = 0;
+  async function addBird() {
+    spriteCount.innerHTML = ++birdCount;
+    const bird = new Bird();
     bird.attr({
       anchor: [0.5, 0.5],
       pos: axisZero,
       transform: {
         rotate: 0,
-      }
-    })
-    fglayer.appendChild(bird)
+      },
+    });
+    fglayer.appendChild(bird);
     // bird.animate([
     //   {textures: ['bird1.png']},
     //   {textures: ['bird2.png']},
@@ -155,27 +158,27 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
     //   iterations: Infinity,
     //   easing: 'step-end',
     // })
-    let idx = 0
+    let idx = 0;
     setInterval(() => {
-      bird.textures = [`bird${++idx % 3 + 1}.png`]
-    }, 100)
-    //noprotect
-    do{
-      await randomAnimate(bird)
-    }while(1) 
+      bird.textures = [`bird${++idx % 3 + 1}.png`];
+    }, 100);
+    // noprotect
+    do {
+      await randomAnimate(bird);
+    } while(1);
   }
-  addBird()
-  circle.on('click', evt => {
-    addBird()
-  })
-  //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
-  //所以所有精灵不运动的时候 fps 也会降下来
+  addBird();
+  circle.on('click', (evt) => {
+    addBird();
+  });
+  // 显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
+  // 所以所有精灵不运动的时候 fps 也会降下来
   setInterval(() => {
-    fps.innerHTML = fglayer.fps
-  }, 1000)
-  window.fglayer = fglayer
-  window.scene = scene
-})()
+    fps.innerHTML = fglayer.fps;
+  }, 1000);
+  window.fglayer = fglayer;
+  window.scene = scene;
+}());
   </script>
 </body>
 </html>

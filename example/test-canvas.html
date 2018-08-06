@@ -7,22 +7,22 @@
 <body>
   <canvas width="600", height="400" id="test"></canvas>
   <script>
-    let ctx = test.getContext('2d');
-    ctx.save()
-    //ctx.translate(200, 200)
-    //ctx.translate(200, 200)
-    //ctx.rotate(45 * Math.PI / 180)
-    //ctx.translate(-25, - 25)
-    ctx.translate(0, 100)
-    ctx.rotate(-90 * Math.PI / 180)
-    ctx.scale(0.5, 0.5)
-    ctx.fillRect(0,50,100,100);
+    const ctx = test.getContext('2d');
+    ctx.save();
+    // ctx.translate(200, 200)
+    // ctx.translate(200, 200)
+    // ctx.rotate(45 * Math.PI / 180)
+    // ctx.translate(-25, - 25)
+    ctx.translate(0, 100);
+    ctx.rotate(-90 * Math.PI / 180);
+    ctx.scale(0.5, 0.5);
+    ctx.fillRect(0, 50, 100, 100);
 
 
-    ctx.restore()
+    ctx.restore();
 
-    ctx.font = '16px/100px Arial'
-    ctx.fillText('hello world',0 ,26)
+    ctx.font = '16px/100px Arial';
+    ctx.fillText('hello world', 0, 26);
 
     // ctx.save()
     // ctx.rect(50, 50, 200, 200)
@@ -50,7 +50,6 @@
 // ctx.rotate(45)
 // ctx.rect(100,100,100,100);
 // ctx.fill();
-
   </script>
 </body>
 </html>

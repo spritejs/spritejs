@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
@@ -13,6 +13,7 @@
   "scripts": {
     "test": "nyc ava --serial && rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "lint": "eslint 'src/**/*.js' --fix",
+    "lint-example": "eslint 'example/*.html' --fix",
     "start": "webpack-dev-server --watch-poll",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",
@@ -45,7 +46,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^2.9.2"
+    "sprite-core": "^2.9.3"
   },
   "devDependencies": {
     "ava": "^0.25.0",
@@ -63,8 +64,8 @@
     "coveralls": "^3.0.1",
     "d3": "^4.13.0",
     "eslint": "^4.17.0",
-    "eslint-config-75team": "^1.0.2",
-    "eslint-plugin-html": "^4.0.3",
+    "eslint-config-sprite": "^1.0.4",
+    "eslint-plugin-html": "^4.0.5",
     "gifencoder": "^1.1.0",
     "hamming-distance": "^1.0.0",
     "imghash": "0.0.3",

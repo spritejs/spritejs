@@ -10,10 +10,10 @@
   <canvas id="mycanvas" width="600" height="600"></canvas>
   <script src="/js/spritejs.js"></script>
   <script>
-    const BaseSprite = spritejs.BaseSprite
-    const Layer = spritejs.Layer
+    const BaseSprite = spritejs.BaseSprite;
+    const Layer = spritejs.Layer;
 
-    const layer = new Layer({context: document.getElementById('mycanvas').getContext('2d')})
+    const layer = new Layer({context: document.getElementById('mycanvas').getContext('2d')});
 
     const s = new BaseSprite({
       anchor: 0.5,
@@ -21,35 +21,35 @@
       size: [100, 100],
       pos: [300, 300],
       zIndex: 200,
-    })
-    layer.append(s)
+    });
+    layer.append(s);
     
     const s2 = new BaseSprite({
       anchor: 0.5,
       bgcolor: 'green',
       size: [50, 50],
-      pos: [100, 100]
-    })
+      pos: [100, 100],
+    });
     const animation = s2.animate([
       {pos: [100, 100]},
       {pos: [100, 300]},
       {pos: [300, 300]},
       {pos: [300, 100]},
-      {pos: [100, 100]}
+      {pos: [100, 100]},
     ], {
       duration: 2000,
       iterations: Infinity,
-    })
-    layer.append(s2)
+    });
+    layer.append(s2);
 
-    s.on('click', evt => {
-      console.log(evt)
-    })
+    s.on('click', (evt) => {
+      console.log(evt);
+    });
 
-    mycanvas.addEventListener('click', evt => {
-      const {offsetX, offsetY} = evt
-      s.dispatchEvent('click', {layerX:offsetX, layerY:offsetY, originEvent: evt})
-    })
+    mycanvas.addEventListener('click', (evt) => {
+      const {offsetX, offsetY} = evt;
+      s.dispatchEvent('click', {layerX: offsetX, layerY: offsetY, originEvent: evt});
+    });
   </script>
 </body>
 </html>

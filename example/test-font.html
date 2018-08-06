@@ -17,12 +17,12 @@
   <div id="mycanvas"></div>
   <script src="/js/spritejs.js"></script>
   <script>
-const {Scene, Label} = spritejs
+const {Scene, Label} = spritejs;
 
 /* demo: bgimage */
-const scene = new Scene('#mycanvas', 800, 800)
-const layer = scene.layer()
-const s3 = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试.')
+const scene = new Scene('#mycanvas', 800, 800);
+const layer = scene.layer();
+const s3 = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试.');
 s3.attr({
   anchor: 0.5,
   fillColor: '#f37',
@@ -32,10 +32,9 @@ s3.attr({
   font: '22px "宋体"',
   // lineBreak: 'normal',
   border: [4, '#aaa'],
-})
+});
 
-layer.append(s3)
-
+layer.append(s3);
   </script>
 </body>
 </html>

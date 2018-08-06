@@ -19,61 +19,60 @@
   <script src="/js/topojson.v1.min.js"></script>
   <script>
 
-var width = 960,
-    height = 500,
-    centered;
+const width = 960,
+  height = 500;
 
-var projection = d3.geoAlbersUsa()
-    .scale(1070)
-    .translate([width / 2, height / 2]);
+let centered;
 
-var path = d3.geoPath()
-    .projection(projection);
+const projection = d3.geoAlbersUsa()
+  .scale(1070)
+  .translate([width / 2, height / 2]);
 
-const paper = spritejs.Paper2D('#paper').setResolution(width, height)
+const path = d3.geoPath()
+  .projection(projection);
+
+const paper = spritejs.Paper2D('#paper').setResolution(width, height);
 
 const layer = paper.layer('fglayer', {
-  handleEvent: true
-})
+  handleEvent: true,
+});
 
-d3.json("/data/us.json", function(error, us) {
-  if (error) throw error
+d3.json('/data/us.json', (error, us) => {
+  if(error) throw error;
 
   d3.select(layer).selectAll('path')
     .data(topojson.feature(us, us.objects.states).features)
-    .enter().append('path')
+    .enter()
+    .append('path')
     .attr('d', path)
     .attr('strokeColor', '#000')
     .attr('fillColor', '#666')
-    .on("click", d => {
-      const paths = d3.event.targetPaths
-      console.log(paths)
+    .on('click', (d) => {
+      const paths = d3.event.targetPaths;
+      console.log(paths);
       if(paths.length) {
-        clicked(d)
+        clicked(d);
       }
-    })
+    });
 });
 
 function clicked(d) {
-
   // If the click was on the centered state or the background, re-center.
   // Otherwise, center the clicked-on state.
   let translate = [0, 0],
-      centroid = [0, 0]
+    centroid = [0, 0];
 
-  if (d && centered !== d) {
-    centroid = path.centroid(d)
-    translate = projection.translate()
+  if(d && centered !== d) {
+    centroid = path.centroid(d);
+    translate = projection.translate();
   }
 
   d3.select(layer).selectAll('path')
     .transition()
     .duration(750)
-    .attr('pos', [translate[0] - centroid[0], 
-      translate[1] - centroid[1]])
+    .attr('pos', [translate[0] - centroid[0],
+      translate[1] - centroid[1]]);
 }
-
-
   </script>
 </body>
 </html>

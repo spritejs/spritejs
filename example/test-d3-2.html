@@ -18,9 +18,9 @@
   <script src="/js/spritejs.js"></script>
   <script>
 
-const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200)
+const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200);
 
-const layer = d3.select(paper).append('fglayer')
+const layer = d3.select(paper).append('fglayer');
 
 /* eslint-disable */
 d3.json('/data/city.json', (err, data) => {

@@ -36,72 +36,71 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite;
 
-paper.setResolution(1600, 1200) 
+paper.setResolution(1600, 1200);
 
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
-const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
+const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
 
 paper.preload([birdsRes, birdsJsonUrl])
-.then(() => {
-  const bird = new Sprite()
-  bird.attr({
-    textures: [
-      'bird1.png'
-    ],
-    anchor: [0.5, 0.5],
-    pos: [600, 600],
-  })
+  .then(() => {
+    const bird = new Sprite();
+    bird.attr({
+      textures: [
+        'bird1.png',
+      ],
+      anchor: [0.5, 0.5],
+      pos: [600, 600],
+    });
 
-  let i = 0
-  setInterval(() => {
-    bird.textures = `bird${++i % 2 + 1}.png`
-  }, 100)
+    let i = 0;
+    setInterval(() => {
+      bird.textures = `bird${++i % 2 + 1}.png`;
+    }, 100);
 
-  fglayer.appendChild(bird)
+    fglayer.appendChild(bird);
 
-  const bird2 = new Sprite()
-  bird2.attr({
-    textures: [
-      'bird1.png'
-    ],
-    anchor: [0.5, 0.5],
-    pos: [600, 600],
-  })
+    const bird2 = new Sprite();
+    bird2.attr({
+      textures: [
+        'bird1.png',
+      ],
+      anchor: [0.5, 0.5],
+      pos: [600, 600],
+    });
 
-  fglayer.appendChild(bird2)
+    fglayer.appendChild(bird2);
 
-  bird.animate([
-    {transform: {rotate: 0, translate: [0, 150]}},
-    {transform: {rotate: 360, translate: [0, 150]}},
-  ], {
-    duration: 1000,
-    iterations: Infinity,
-    direction: 'reverse',
-  })
+    bird.animate([
+      {transform: {rotate: 0, translate: [0, 150]}},
+      {transform: {rotate: 360, translate: [0, 150]}},
+    ], {
+      duration: 1000,
+      iterations: Infinity,
+      direction: 'reverse',
+    });
 
-  bird2.animate([
-    {transform: {scale: [1, 0.5]}},
-    {transform: {scale: [1, 1]}},
-  ], {
-    duration: 1000,
-    iterations: Infinity,
-    direction: 'alternate',
-  })
+    bird2.animate([
+      {transform: {scale: [1, 0.5]}},
+      {transform: {scale: [1, 1]}},
+    ], {
+      duration: 1000,
+      iterations: Infinity,
+      direction: 'alternate',
+    });
 
   // let startTime = Date.now(), T = 2000
   // requestAnimationFrame(function update() {
-  //   let p = (Date.now() - startTime) / T 
+  //   let p = (Date.now() - startTime) / T
   //   //bird.cache = null
   //   bird.attr({
   //     transform: {rotate: 360 * p, translate: [0, 50]}
-  //   }) 
-  //   requestAnimationFrame(update)   
+  //   })
+  //   requestAnimationFrame(update)
   // })
-
-})
+  });
   </script>
 </body>
 </html>
