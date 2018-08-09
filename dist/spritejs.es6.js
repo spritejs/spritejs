@@ -169,7 +169,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.7.3';
+const version = '2.7.4';
 
 
 
@@ -3599,6 +3599,8 @@ let BaseSprite = (_class = (_temp = _class2 = class BaseSprite extends _basenode
   }
 
   isVisible() {
+    if (!this.parent) return false;
+
     const display = this.attr('display');
     if (display === 'none') {
       return false;
@@ -3616,7 +3618,7 @@ let BaseSprite = (_class = (_temp = _class2 = class BaseSprite extends _basenode
       return false;
     }
 
-    if (this.parent && this.parent.isVisible) {
+    if (this.parent.isVisible) {
       return this.parent.isVisible();
     }
     return true;
@@ -7733,16 +7735,6 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_3__["default"
     return true;
   }
 
-  isNodeVisible(sprite) {
-    if (!sprite.isVisible()) {
-      return false;
-    }
-    if (sprite.parent !== this) {
-      return false;
-    }
-    return true;
-  }
-
   get fps() /* istanbul ignore next  */{
     if (!this.evaluateFPS) {
       return NaN;
@@ -7769,7 +7761,7 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_3__["default"
       child.isDirty = false;
 
       if (child.parent === this) {
-        const isVisible = this.isNodeVisible(child);
+        const isVisible = child.isVisible();
         if (isVisible) {
           child.draw(t);
           if (this.renderMode === 'repaintDirty') {
@@ -11782,22 +11774,6 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
 
       context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
     }
-  }
-
-  isNodeVisible(sprite) {
-    if (!super.isNodeVisible(sprite)) return false;
-    const [width, height, offsetLeft, offsetTop] = this.resolution;
-
-    // calculating renderBox is super slow...
-    // const box = sprite.renderBox
-    const [x, y] = sprite.attr('pos'),
-          [w, h] = sprite.offsetSize;
-    const r = Math.max(w, h);
-    const box = [x - r, y - r, x + r, y + r];
-    if (box[0] > width - offsetLeft || box[1] > height - offsetTop || box[2] < 0 || box[3] < 0) {
-      return false;
-    }
-    return true;
   }
 
   toLocalPos(x, y) {

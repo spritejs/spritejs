@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.7.3';
+var version = '2.7.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7278,6 +7278,8 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
   }, {
     key: 'isVisible',
     value: function isVisible() {
+      if (!this.parent) return false;
+
       var display = this.attr('display');
       if (display === 'none') {
         return false;
@@ -7298,7 +7300,7 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
         return false;
       }
 
-      if (this.parent && this.parent.isVisible) {
+      if (this.parent.isVisible) {
         return this.parent.isVisible();
       }
       return true;
@@ -12929,17 +12931,6 @@ var Layer = function (_BaseNode) {
       return true;
     }
   }, {
-    key: 'isNodeVisible',
-    value: function isNodeVisible(sprite) {
-      if (!sprite.isVisible()) {
-        return false;
-      }
-      if (sprite.parent !== this) {
-        return false;
-      }
-      return true;
-    }
-  }, {
     key: 'drawSprites',
     value: function drawSprites(renderEls, t) {
       this[_updateSet].clear();
@@ -12949,7 +12940,7 @@ var Layer = function (_BaseNode) {
         child.isDirty = false;
 
         if (child.parent === this) {
-          var isVisible = this.isNodeVisible(child);
+          var isVisible = child.isVisible();
           if (isVisible) {
             child.draw(t);
             if (this.renderMode === 'repaintDirty') {
@@ -18418,10 +18409,6 @@ var _possibleConstructorReturn2 = __webpack_require__(181);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _get2 = __webpack_require__(182);
-
-var _get3 = _interopRequireDefault(_get2);
-
 var _inherits2 = __webpack_require__(183);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
@@ -18513,36 +18500,6 @@ var ExLayer = function (_Layer) {
 
         context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
       }
-    }
-  }, {
-    key: 'isNodeVisible',
-    value: function isNodeVisible(sprite) {
-      if (!(0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'isNodeVisible', this).call(this, sprite)) return false;
-
-      var _resolution3 = (0, _slicedToArray3.default)(this.resolution, 4),
-          width = _resolution3[0],
-          height = _resolution3[1],
-          offsetLeft = _resolution3[2],
-          offsetTop = _resolution3[3];
-
-      // calculating renderBox is super slow...
-      // const box = sprite.renderBox
-
-
-      var _sprite$attr = sprite.attr('pos'),
-          _sprite$attr2 = (0, _slicedToArray3.default)(_sprite$attr, 2),
-          x = _sprite$attr2[0],
-          y = _sprite$attr2[1],
-          _sprite$offsetSize = (0, _slicedToArray3.default)(sprite.offsetSize, 2),
-          w = _sprite$offsetSize[0],
-          h = _sprite$offsetSize[1];
-
-      var r = Math.max(w, h);
-      var box = [x - r, y - r, x + r, y + r];
-      if (box[0] > width - offsetLeft || box[1] > height - offsetTop || box[2] < 0 || box[3] < 0) {
-        return false;
-      }
-      return true;
     }
   }, {
     key: 'toLocalPos',
@@ -18645,11 +18602,11 @@ var ExLayer = function (_Layer) {
       return this[_resolution];
     },
     set: function set(resolution) {
-      var _resolution4 = (0, _slicedToArray3.default)(resolution, 4),
-          width = _resolution4[0],
-          height = _resolution4[1],
-          offsetLeft = _resolution4[2],
-          offsetTop = _resolution4[3];
+      var _resolution3 = (0, _slicedToArray3.default)(resolution, 4),
+          width = _resolution3[0],
+          height = _resolution3[1],
+          offsetLeft = _resolution3[2],
+          offsetTop = _resolution3[3];
 
       var outputCanvas = this.outputContext.canvas;
       outputCanvas.width = width;
@@ -18679,9 +18636,9 @@ var ExLayer = function (_Layer) {
         return this.parent.layerViewport;
       }
 
-      var _resolution5 = (0, _slicedToArray3.default)(this[_resolution], 2),
-          width = _resolution5[0],
-          height = _resolution5[1];
+      var _resolution4 = (0, _slicedToArray3.default)(this[_resolution], 2),
+          width = _resolution4[0],
+          height = _resolution4[1];
 
       return [width, height];
     }
@@ -18693,9 +18650,9 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'center',
     get: function get() {
-      var _resolution6 = (0, _slicedToArray3.default)(this.resolution, 2),
-          width = _resolution6[0],
-          height = _resolution6[1];
+      var _resolution5 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution5[0],
+          height = _resolution5[1];
 
       return [width / 2, height / 2];
     }
