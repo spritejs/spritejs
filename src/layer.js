@@ -107,23 +107,6 @@ class ExLayer extends Layer {
     }
   }
 
-  isNodeVisible(sprite) {
-    if(!super.isNodeVisible(sprite)) return false;
-    const [width, height, offsetLeft, offsetTop] = this.resolution;
-
-    // calculating renderBox is super slow...
-    // const box = sprite.renderBox
-    const [x, y] = sprite.attr('pos'),
-      [w, h] = sprite.offsetSize;
-    const r = Math.max(w, h);
-    const box = [x - r, y - r, x + r, y + r];
-    if(box[0] > width - offsetLeft || box[1] > height - offsetTop
-      || box[2] < 0 || box[3] < 0) {
-      return false;
-    }
-    return true;
-  }
-
   toLocalPos(x, y) {
     const resolution = this.resolution,
       viewport = this.viewport;

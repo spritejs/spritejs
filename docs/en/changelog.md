@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.7.3][2018-08-09]
+
+### enhancement
+
+- Discard layer.isNodeVisible() for better performance.
+
 ## [2.7.2][2018-08-06]
 
 ### enhancement

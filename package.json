@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "lib/index.js",
   "directories": {
@@ -13,6 +13,7 @@
   "scripts": {
     "test": "nyc ava --serial && rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "lint": "eslint 'src/**/*.js' --fix",
+    "lint-test": "eslint 'test/**/*.js' --fix",
     "lint-example": "eslint 'example/*.html' --fix",
     "lint-benchmark": "eslint 'benchmark/*.html' --fix",
     "lint-doc": "eslint 'docs/src/**/*.js' --fix",
@@ -49,7 +50,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^2.9.5"
+    "sprite-core": "^2.9.6"
   },
   "devDependencies": {
     "ava": "^0.25.0",
