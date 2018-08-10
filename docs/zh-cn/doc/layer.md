@@ -69,7 +69,7 @@ layer.clearContext = function(context) {
 
 具体参考[动画](/zh-cn/effect#动画-animate)
 
-## toGolbalPos()
+## toGlobalPos()
 
 `toGlobalPos(x, y)` 将相对于layer的坐标换算成相对于layer所在canvas的相对坐标
 
