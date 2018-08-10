@@ -38,5 +38,7 @@ spritejs默认在第一次绘制之后，把之前绘制的context缓存起来�
 
 <div id="use-batch" class="sprite-container"></div>
 
+<!-- demo: use-batch -->
+
 
 <script src="/js/guide/cache.js"></script>
