@@ -1,10 +1,22 @@
 # Change Log
 
-## [2.7.3][2018-08-09]
+## [2.7.5][2018-08-09]
+
+### bug fix
+
+- Sprite element re-append to layer cannot trigger layer's update.
+
+## [2.7.4][2018-08-09]
 
 ### enhancement
 
 - Discard layer.isNodeVisible() for better performance.
+
+## [2.7.3][2018-08-06]
+
+### enhancement
+
+- Add d.ts file.
 
 ## [2.7.2][2018-08-06]
 

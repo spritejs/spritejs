@@ -169,7 +169,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.7.4';
+const version = '2.7.5';
 
 
 
@@ -5147,6 +5147,7 @@ let BaseNode = class BaseNode {
     }
 
     delete this.parent;
+    delete this.isDirty;
 
     return this;
   }

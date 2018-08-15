@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.7.4';
+var version = '2.7.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -9770,6 +9770,7 @@ var BaseNode = function () {
       }
 
       delete this.parent;
+      delete this.isDirty;
 
       return this;
     }
