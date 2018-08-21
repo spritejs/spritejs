@@ -37,6 +37,7 @@ module.exports = function (env = {}) {
       rules: [
         {
           test: /\.js$/,
+          type: env.esnext ? 'javascript/esm' : 'javascript/auto',
           exclude: /node_modules\/(?!(sprite-\w+)\/|svg-path-to-canvas|fast-animation-frame).*/,
           use: {
             loader: 'babel-loader',

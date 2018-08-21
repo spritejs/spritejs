@@ -63,7 +63,6 @@ window.codeChange = function () {
 var clearBtn = document.querySelector('#console-panel a');
 clearBtn.addEventListener('click', function (evt) {
   output.innerHTML = '';
-  evt.preventDefault();
 });
 
 var menu = document.getElementById('menu');
