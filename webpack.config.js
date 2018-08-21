@@ -19,7 +19,7 @@ module.exports = function (env = {}) {
     filename: env.esnext ? 'spritejs.es6' : 'spritejs',
     publicPath: '/js/',
     library: 'spritejs',
-    libraryTarget: 'umd',
+    libraryTarget: env.esnext ? 'esm' : 'umd',
   }
 
   if(env.production) {
