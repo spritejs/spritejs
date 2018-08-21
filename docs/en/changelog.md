@@ -1,6 +1,12 @@
 # Change Log
 
-## [2.7.5][2018-08-15]
+## [2.7.8][2018-08-21]
+
+### enhancement
+
+- Add spritejs.esm.js to support rollup.
+
+## [2.7.6][2018-08-15]
 
 ### enhancement
 
