@@ -1,6 +1,13 @@
 # Change Log
 
-## [2.7.5][2018-08-09]
+## [2.7.5][2018-08-15]
+
+### enhancement
+
+- Add eslint rule: complexity，refectoring part of codes.
+- Output commonjs2 target instead of umd target for es6 package.
+
+## [2.7.5][2018-08-15]
 
 ### bug fix
 

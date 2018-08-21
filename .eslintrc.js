@@ -18,6 +18,6 @@ module.exports = {
   extends:  "eslint-config-sprite",
   plugins: ['html'],
   rules: {
-
+    "complexity": ["warn", 25],
   },
 }

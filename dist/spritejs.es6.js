@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["spritejs"] = factory();
-	else
-		root["spritejs"] = factory();
-})(window, function() {
-return /******/ (function(modules) { // webpackBootstrap
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -169,7 +160,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.7.5';
+const version = '2.7.6';
 
 
 
@@ -4101,20 +4092,30 @@ let BaseSprite = (_class = (_temp = _class2 = class BaseSprite extends _basenode
     return drawingContext;
   }
 
-  render(t, drawingContext) {
+  get needRender() {
     if (this.isVirtual) return false;
 
+    const [offsetWidth, offsetHeight] = this.offsetSize;
+    if (offsetWidth <= 0 || offsetHeight <= 0) return false;
+
+    const border = this.attr('border');
+
+    if (border.width <= 0 && this.attr('borderRadius') <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor && !this.attr('bgimage')) {
+      return false; // don't need to render
+    }
+
+    return true;
+  }
+
+  render(t, drawingContext) {
     const border = this.attr('border'),
           borderRadius = this.attr('borderRadius'),
           padding = this.attr('padding'),
           [offsetWidth, offsetHeight] = this.offsetSize,
           [clientWidth, clientHeight] = this.clientSize;
 
-    /* istanbul ignore if */
-    if (offsetWidth === 0 || offsetHeight === 0) return;
-    if (border.width <= 0 && borderRadius <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor && !this.attr('bgimage')) {
-      drawingContext.translate(padding[3], padding[0]);
-      return false; // don't need to render
+    if (!this.needRender) {
+      return false;
     }
 
     const borderWidth = border.width;
@@ -4159,116 +4160,8 @@ let BaseSprite = (_class = (_temp = _class2 = class BaseSprite extends _basenode
         drawingContext.clip();
       }
 
-      if (bgimage && bgimage.display !== 'none') {
-        const { image, display } = bgimage;
-        if (image) {
-          let offset = bgimage.offset || [0, 0],
-              w = image.width,
-              h = image.height;
-
-          if (display === '.9') {
-            const [top, right, bottom, left] = bgimage.clip9 || [16, 16, 16, 16];
-            const leftTop = [0, 0, left, top],
-                  rightTop = [w - right, 0, right, top],
-                  rightBottom = [w - right, h - bottom, right, bottom],
-                  leftBottom = [0, h - bottom, left, bottom];
-
-            const boxRight = offsetWidth - right - borderWidth,
-                  boxBottom = offsetHeight - borderWidth - bottom;
-
-            drawingContext.drawImage(image, ...leftTop, borderWidth, borderWidth, left, top);
-            drawingContext.drawImage(image, ...rightTop, boxRight, borderWidth, right, top);
-            drawingContext.drawImage(image, ...rightBottom, boxRight, boxBottom, left, bottom);
-            drawingContext.drawImage(image, ...leftBottom, borderWidth, boxBottom, left, bottom);
-
-            const midWidth = w - left - right;
-            let midBoxWidth = clientWidth - left - right;
-            let leftOffset = borderWidth + left;
-            while (midBoxWidth > 0 && midWidth > 0) {
-              const ww = Math.min(midBoxWidth, midWidth);
-              const topPiece = [left, 0, ww, top],
-                    bottomPiece = [left, h - bottom, ww, bottom];
-
-              drawingContext.drawImage(image, ...topPiece, leftOffset, borderWidth, ww, top);
-              drawingContext.drawImage(image, ...bottomPiece, leftOffset, boxBottom, ww, bottom);
-              midBoxWidth -= midWidth;
-              if (midBoxWidth > 0) {
-                leftOffset += midWidth;
-              }
-            }
-
-            const midHeight = h - top - bottom;
-            let midBoxHeight = clientHeight - top - bottom;
-            let topOffset = borderWidth + top;
-            while (midBoxHeight > 0 && midHeight > 0) {
-              const hh = Math.min(midBoxHeight, midHeight);
-              const leftPiece = [0, top, left, hh],
-                    rightPiece = [w - right, top, right, hh];
-
-              drawingContext.drawImage(image, ...leftPiece, borderWidth, topOffset, left, hh);
-              drawingContext.drawImage(image, ...rightPiece, boxRight, topOffset, right, hh);
-              midBoxHeight -= midHeight;
-              if (midBoxHeight > 0) {
-                topOffset += midHeight;
-              }
-            }
-
-            if (midHeight && midWidth > 0) {
-              midBoxWidth = clientWidth - left - right;
-              leftOffset = borderWidth + left;
-
-              while (midBoxWidth > 0) {
-                midBoxHeight = clientHeight - top - bottom;
-                topOffset = borderWidth + top;
-                while (midBoxHeight > 0) {
-                  const ww = Math.min(midBoxWidth, midWidth),
-                        hh = Math.min(midBoxHeight, midHeight);
-                  const midPiece = [left, top, ww, hh];
-                  drawingContext.drawImage(image, ...midPiece, leftOffset, topOffset, ww, hh);
-                  midBoxHeight -= midWidth;
-                  if (midBoxHeight > 0) {
-                    topOffset += midHeight;
-                  }
-                }
-                midBoxWidth -= midWidth;
-                if (midBoxWidth > 0) {
-                  leftOffset += midWidth;
-                }
-              }
-            }
-          } else {
-            if (display === 'center') {
-              offset = [(clientWidth - w) * 0.5, (clientHeight - h) * 0.5];
-            } else if (display === 'stretch') {
-              w = clientWidth - offset[0];
-              h = clientHeight - offset[1];
-            }
-            drawingContext.drawImage(image, borderWidth + offset[0], borderWidth + offset[1], w, h);
-
-            if (w > 0 && (display === 'repeat' || display === 'repeatX')) {
-              let cw = clientWidth - borderWidth - offset[0] - w;
-              while (cw > borderWidth) {
-                drawingContext.drawImage(image, clientWidth - cw, borderWidth + offset[1], w, h);
-                if (h > 0 && display === 'repeat') {
-                  let ch = clientHeight - borderWidth - offset[1] - h;
-                  while (ch > borderWidth) {
-                    drawingContext.drawImage(image, clientWidth - cw, clientHeight - ch, w, h);
-                    ch -= h;
-                  }
-                }
-                cw -= w;
-              }
-            }
-
-            if (h > 0 && (display === 'repeat' || display === 'repeatY')) {
-              let ch = clientHeight - borderWidth - offset[1] - h;
-              while (ch > borderWidth) {
-                drawingContext.drawImage(image, borderWidth + offset[0], clientHeight - ch, w, h);
-                ch -= h;
-              }
-            }
-          }
-        }
+      if (bgimage && bgimage.image && bgimage.display !== 'none') {
+        drawBgImage(drawingContext, bgimage, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight);
       }
     }
 
@@ -4279,6 +4172,131 @@ let BaseSprite = (_class = (_temp = _class2 = class BaseSprite extends _basenode
 }, _class2.Attr = _attr__WEBPACK_IMPORTED_MODULE_3__["default"], _temp), (_applyDecoratedDescriptor(_class.prototype, 'attrSize', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["flow"]], Object.getOwnPropertyDescriptor(_class.prototype, 'attrSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'contentSize', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["flow"]], Object.getOwnPropertyDescriptor(_class.prototype, 'contentSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'clientSize', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["flow"]], Object.getOwnPropertyDescriptor(_class.prototype, 'clientSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetSize', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["flow"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'originalRect', [sprite_utils__WEBPACK_IMPORTED_MODULE_1__["flow"]], Object.getOwnPropertyDescriptor(_class.prototype, 'originalRect'), _class.prototype)), _class);
 
 
+
+function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight) {
+  const w = image.width,
+        h = image.height;
+
+  const [top, right, bottom, left] = clip9 || [16, 16, 16, 16];
+  const leftTop = [0, 0, left, top],
+        rightTop = [w - right, 0, right, top],
+        rightBottom = [w - right, h - bottom, right, bottom],
+        leftBottom = [0, h - bottom, left, bottom];
+
+  const boxRight = offsetWidth - right - borderWidth,
+        boxBottom = offsetHeight - borderWidth - bottom;
+
+  // draw four corners
+  drawingContext.drawImage(image, ...leftTop, borderWidth, borderWidth, left, top);
+  drawingContext.drawImage(image, ...rightTop, boxRight, borderWidth, right, top);
+  drawingContext.drawImage(image, ...rightBottom, boxRight, boxBottom, left, bottom);
+  drawingContext.drawImage(image, ...leftBottom, borderWidth, boxBottom, left, bottom);
+
+  // draw .9 cross
+  const midWidth = w - left - right,
+        midHeight = h - top - bottom;
+
+  if (midWidth > 0) {
+    let midBoxWidth = clientWidth - left - right;
+    let leftOffset = borderWidth + left;
+    while (midBoxWidth > 0) {
+      const ww = Math.min(midBoxWidth, midWidth);
+      const topPiece = [left, 0, ww, top],
+            bottomPiece = [left, h - bottom, ww, bottom];
+
+      drawingContext.drawImage(image, ...topPiece, leftOffset, borderWidth, ww, top);
+      drawingContext.drawImage(image, ...bottomPiece, leftOffset, boxBottom, ww, bottom);
+      midBoxWidth -= midWidth;
+      if (midBoxWidth > 0) {
+        leftOffset += midWidth;
+      }
+    }
+  }
+
+  if (midHeight > 0) {
+    let midBoxHeight = clientHeight - top - bottom;
+    let topOffset = borderWidth + top;
+    while (midBoxHeight > 0) {
+      const hh = Math.min(midBoxHeight, midHeight);
+      const leftPiece = [0, top, left, hh],
+            rightPiece = [w - right, top, right, hh];
+
+      drawingContext.drawImage(image, ...leftPiece, borderWidth, topOffset, left, hh);
+      drawingContext.drawImage(image, ...rightPiece, boxRight, topOffset, right, hh);
+      midBoxHeight -= midHeight;
+      if (midBoxHeight > 0) {
+        topOffset += midHeight;
+      }
+    }
+  }
+
+  if (midHeight && midWidth > 0) {
+    let midBoxWidth = clientWidth - left - right;
+    let leftOffset = borderWidth + left;
+
+    while (midBoxWidth > 0) {
+      let midBoxHeight = clientHeight - top - bottom;
+      let topOffset = borderWidth + top;
+      while (midBoxHeight > 0) {
+        const ww = Math.min(midBoxWidth, midWidth),
+              hh = Math.min(midBoxHeight, midHeight);
+        const midPiece = [left, top, ww, hh];
+        drawingContext.drawImage(image, ...midPiece, leftOffset, topOffset, ww, hh);
+        midBoxHeight -= midWidth;
+        if (midBoxHeight > 0) {
+          topOffset += midHeight;
+        }
+      }
+      midBoxWidth -= midWidth;
+      if (midBoxWidth > 0) {
+        leftOffset += midWidth;
+      }
+    }
+  }
+}
+
+function drawBgImage(drawingContext, bgimage, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight) {
+  const { image, display, clip9 } = bgimage;
+
+  if (display === '.9') {
+    drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight);
+  } else {
+    let offset = bgimage.offset || [0, 0],
+        w = image.width,
+        h = image.height;
+
+    if (display === 'center') {
+      offset = [(clientWidth - w) * 0.5, (clientHeight - h) * 0.5];
+    } else if (display === 'stretch') {
+      w = clientWidth - offset[0];
+      h = clientHeight - offset[1];
+    }
+    drawingContext.drawImage(image, borderWidth + offset[0], borderWidth + offset[1], w, h);
+
+    if (w > 0 && (display === 'repeat' || display === 'repeatX')) {
+      let cw = clientWidth - borderWidth - offset[0] - w;
+      while (cw > borderWidth) {
+        drawingContext.drawImage(image, clientWidth - cw, borderWidth + offset[1], w, h);
+        if (h > 0 && display === 'repeat') {
+          let ch = clientHeight - borderWidth - offset[1] - h;
+          while (ch > borderWidth) {
+            drawingContext.drawImage(image, clientWidth - cw, clientHeight - ch, w, h);
+            ch -= h;
+          }
+        }
+        cw -= w;
+      }
+    }
+
+    if (h > 0 && (display === 'repeat' || display === 'repeatY')) {
+      let ch = clientHeight - borderWidth - offset[1] - h;
+      while (ch > borderWidth) {
+        drawingContext.drawImage(image, borderWidth + offset[0], clientHeight - ch, w, h);
+        ch -= h;
+      }
+    }
+  }
+}
 
 Object(_nodetype__WEBPACK_IMPORTED_MODULE_6__["registerNodeType"])('basesprite', BaseSprite);
 
@@ -5022,8 +5040,13 @@ let BaseNode = class BaseNode {
     this[_mouseCapture] = false;
   }
 
+  isCaptured(evt) {
+    return (evt.type === 'mousemove' || evt.type === 'mousedown' || evt.type === 'mouseup') && this[_mouseCapture];
+  }
+
   dispatchEvent(type, evt, collisionState = false, swallow = false) {
-    if (swallow && this.getEventHandlers(type).length === 0) {
+    const handlers = this.getEventHandlers(type);
+    if (swallow && handlers.length === 0) {
       return;
     }
     if (!evt.stopDispatch) {
@@ -5039,61 +5062,54 @@ let BaseNode = class BaseNode {
     }
 
     const isCollision = collisionState || this.pointCollision(evt);
-    const captured = (evt.type === 'mousemove' || evt.type === 'mousedown' || evt.type === 'mouseup') && this[_mouseCapture];
+    const captured = this.isCaptured(evt);
 
     if (!evt.terminated && (isCollision || captured)) {
       evt.target = this;
 
       const changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
-      if (changedTouches && type === 'touchstart') {
-        const touch = changedTouches[0],
-              layer = this.layer;
-        if (touch && touch.identifier != null) {
-          layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
-          layer.touchedTargets[touch.identifier].push(this);
-        }
-      }
-      if (changedTouches && type.startsWith('touch')) {
-        const touches = evt.originalEvent && evt.originalEvent.touches,
-              layer = this.layer;
-        evt.targetTouches = [];
-
-        Array.from(touches).forEach(touch => {
-          const identifier = touch.identifier;
-          if (layer.touchedTargets[identifier] && layer.touchedTargets[identifier].indexOf(this) >= 0) {
-            evt.targetTouches.push(touch);
+      if (changedTouches) {
+        if (type === 'touchstart') {
+          const touch = changedTouches[0],
+                layer = this.layer;
+          if (touch && touch.identifier != null) {
+            layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
+            layer.touchedTargets[touch.identifier].push(this);
           }
-        });
-        evt.touches = Array.from(touches);
-        evt.changedTouches = Array.from(changedTouches);
-      }
-
-      const handlers = this[_eventHandlers][type];
-      if (handlers) {
-        handlers.forEach(handler => handler.call(this, evt));
-      }
-
-      if (isCollision && type === 'mousemove') {
-        if (!this[_collisionState]) {
-          const _evt = Object.assign({}, evt);
-          _evt.type = 'mouseenter';
-          _evt.terminated = false;
-
-          this.dispatchEvent('mouseenter', _evt, true);
         }
+        if (type.startsWith('touch')) {
+          const touches = Array.from(evt.originalEvent.touches),
+                layer = this.layer;
+          evt.targetTouches = [];
+
+          touches.forEach(touch => {
+            const identifier = touch.identifier;
+            if (layer.touchedTargets[identifier] && layer.touchedTargets[identifier].indexOf(this) >= 0) {
+              evt.targetTouches.push(touch);
+            }
+          });
+          evt.touches = touches;
+          evt.changedTouches = Array.from(changedTouches);
+        }
+      }
+
+      handlers.forEach(handler => handler.call(this, evt));
+
+      if (!this[_collisionState] && isCollision && type === 'mousemove') {
+        const _evt = Object.assign({}, evt);
+        _evt.type = 'mouseenter';
+        _evt.terminated = false;
+        this.dispatchEvent('mouseenter', _evt, true);
         this[_collisionState] = true;
       }
     }
 
-    if (!isCollision && type === 'mousemove') {
-      if (this[_collisionState]) {
-        const _evt = Object.assign({}, evt);
-        _evt.type = 'mouseleave';
-        _evt.target = this;
-        _evt.terminated = false;
-
-        this.dispatchEvent('mouseleave', _evt, true);
-      }
+    if (this[_collisionState] && !isCollision && type === 'mousemove') {
+      const _evt = Object.assign({}, evt);
+      _evt.type = 'mouseleave';
+      _evt.target = this;
+      _evt.terminated = false;
+      this.dispatchEvent('mouseleave', _evt, true);
       this[_collisionState] = false;
     }
 
@@ -12368,4 +12384,3 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
 /***/ })
 /******/ ]);
-});

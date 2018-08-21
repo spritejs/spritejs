@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.7.5';
+var version = '2.7.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7723,8 +7723,6 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
   }, {
     key: 'render',
     value: function render(t, drawingContext) {
-      if (this.isVirtual) return false;
-
       var border = this.attr('border'),
           borderRadius = this.attr('borderRadius'),
           padding = this.attr('padding'),
@@ -7735,11 +7733,9 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
           clientWidth = _clientSize[0],
           clientHeight = _clientSize[1];
 
-      /* istanbul ignore if */
-      if (offsetWidth === 0 || offsetHeight === 0) return;
-      if (border.width <= 0 && borderRadius <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor && !this.attr('bgimage')) {
-        drawingContext.translate(padding[3], padding[0]);
-        return false; // don't need to render
+
+      if (!this.needRender) {
+        return false;
       }
 
       var borderWidth = border.width;
@@ -7795,124 +7791,8 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
           drawingContext.clip();
         }
 
-        if (bgimage && bgimage.display !== 'none') {
-          var image = bgimage.image,
-              display = bgimage.display;
-
-          if (image) {
-            var offset = bgimage.offset || [0, 0],
-                _w2 = image.width,
-                _h2 = image.height;
-
-            if (display === '.9') {
-              var _ref8 = bgimage.clip9 || [16, 16, 16, 16],
-                  _ref9 = (0, _slicedToArray3.default)(_ref8, 4),
-                  top = _ref9[0],
-                  right = _ref9[1],
-                  bottom = _ref9[2],
-                  left = _ref9[3];
-
-              var leftTop = [0, 0, left, top],
-                  rightTop = [_w2 - right, 0, right, top],
-                  rightBottom = [_w2 - right, _h2 - bottom, right, bottom],
-                  leftBottom = [0, _h2 - bottom, left, bottom];
-
-              var boxRight = offsetWidth - right - borderWidth,
-                  boxBottom = offsetHeight - borderWidth - bottom;
-
-              drawingContext.drawImage.apply(drawingContext, [image].concat(leftTop, [borderWidth, borderWidth, left, top]));
-              drawingContext.drawImage.apply(drawingContext, [image].concat(rightTop, [boxRight, borderWidth, right, top]));
-              drawingContext.drawImage.apply(drawingContext, [image].concat(rightBottom, [boxRight, boxBottom, left, bottom]));
-              drawingContext.drawImage.apply(drawingContext, [image].concat(leftBottom, [borderWidth, boxBottom, left, bottom]));
-
-              var midWidth = _w2 - left - right;
-              var midBoxWidth = clientWidth - left - right;
-              var leftOffset = borderWidth + left;
-              while (midBoxWidth > 0 && midWidth > 0) {
-                var ww = Math.min(midBoxWidth, midWidth);
-                var topPiece = [left, 0, ww, top],
-                    bottomPiece = [left, _h2 - bottom, ww, bottom];
-
-                drawingContext.drawImage.apply(drawingContext, [image].concat(topPiece, [leftOffset, borderWidth, ww, top]));
-                drawingContext.drawImage.apply(drawingContext, [image].concat(bottomPiece, [leftOffset, boxBottom, ww, bottom]));
-                midBoxWidth -= midWidth;
-                if (midBoxWidth > 0) {
-                  leftOffset += midWidth;
-                }
-              }
-
-              var midHeight = _h2 - top - bottom;
-              var midBoxHeight = clientHeight - top - bottom;
-              var topOffset = borderWidth + top;
-              while (midBoxHeight > 0 && midHeight > 0) {
-                var hh = Math.min(midBoxHeight, midHeight);
-                var leftPiece = [0, top, left, hh],
-                    rightPiece = [_w2 - right, top, right, hh];
-
-                drawingContext.drawImage.apply(drawingContext, [image].concat(leftPiece, [borderWidth, topOffset, left, hh]));
-                drawingContext.drawImage.apply(drawingContext, [image].concat(rightPiece, [boxRight, topOffset, right, hh]));
-                midBoxHeight -= midHeight;
-                if (midBoxHeight > 0) {
-                  topOffset += midHeight;
-                }
-              }
-
-              if (midHeight && midWidth > 0) {
-                midBoxWidth = clientWidth - left - right;
-                leftOffset = borderWidth + left;
-
-                while (midBoxWidth > 0) {
-                  midBoxHeight = clientHeight - top - bottom;
-                  topOffset = borderWidth + top;
-                  while (midBoxHeight > 0) {
-                    var _ww = Math.min(midBoxWidth, midWidth),
-                        _hh = Math.min(midBoxHeight, midHeight);
-                    var midPiece = [left, top, _ww, _hh];
-                    drawingContext.drawImage.apply(drawingContext, [image].concat(midPiece, [leftOffset, topOffset, _ww, _hh]));
-                    midBoxHeight -= midWidth;
-                    if (midBoxHeight > 0) {
-                      topOffset += midHeight;
-                    }
-                  }
-                  midBoxWidth -= midWidth;
-                  if (midBoxWidth > 0) {
-                    leftOffset += midWidth;
-                  }
-                }
-              }
-            } else {
-              if (display === 'center') {
-                offset = [(clientWidth - _w2) * 0.5, (clientHeight - _h2) * 0.5];
-              } else if (display === 'stretch') {
-                _w2 = clientWidth - offset[0];
-                _h2 = clientHeight - offset[1];
-              }
-              drawingContext.drawImage(image, borderWidth + offset[0], borderWidth + offset[1], _w2, _h2);
-
-              if (_w2 > 0 && (display === 'repeat' || display === 'repeatX')) {
-                var cw = clientWidth - borderWidth - offset[0] - _w2;
-                while (cw > borderWidth) {
-                  drawingContext.drawImage(image, clientWidth - cw, borderWidth + offset[1], _w2, _h2);
-                  if (_h2 > 0 && display === 'repeat') {
-                    var ch = clientHeight - borderWidth - offset[1] - _h2;
-                    while (ch > borderWidth) {
-                      drawingContext.drawImage(image, clientWidth - cw, clientHeight - ch, _w2, _h2);
-                      ch -= _h2;
-                    }
-                  }
-                  cw -= _w2;
-                }
-              }
-
-              if (_h2 > 0 && (display === 'repeat' || display === 'repeatY')) {
-                var _ch = clientHeight - borderWidth - offset[1] - _h2;
-                while (_ch > borderWidth) {
-                  drawingContext.drawImage(image, borderWidth + offset[0], clientHeight - _ch, _w2, _h2);
-                  _ch -= _h2;
-                }
-              }
-            }
-          }
+        if (bgimage && bgimage.image && bgimage.display !== 'none') {
+          drawBgImage(drawingContext, bgimage, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight);
         }
       }
 
@@ -8006,9 +7886,9 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
 
       if (this.hasLayout) {
         var layoutWidth = this.attr('layoutWidth'),
-            layoutHeight = this.attr('layoutHeight');var _ref10 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
-        width = _ref10[0];
-        height = _ref10[1];
+            layoutHeight = this.attr('layoutHeight');var _ref8 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+        width = _ref8[0];
+        height = _ref8[1];
       }
       if (isBorderBox) {
         var borderWidth = this.attr('border').width,
@@ -8211,6 +8091,25 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
     get: function get() {
       return this.cacheContext;
     }
+  }, {
+    key: 'needRender',
+    get: function get() {
+      if (this.isVirtual) return false;
+
+      var _offsetSize4 = (0, _slicedToArray3.default)(this.offsetSize, 2),
+          offsetWidth = _offsetSize4[0],
+          offsetHeight = _offsetSize4[1];
+
+      if (offsetWidth <= 0 || offsetHeight <= 0) return false;
+
+      var border = this.attr('border');
+
+      if (border.width <= 0 && this.attr('borderRadius') <= 0 && !this.attr('bgcolor') && !this.attr('gradients').bgcolor && !this.attr('bgimage')) {
+        return false; // don't need to render
+      }
+
+      return true;
+    }
   }], [{
     key: 'setAttributeEffects',
     value: function setAttributeEffects() {
@@ -8228,10 +8127,10 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
 
       var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      (0, _entries2.default)(attrs).forEach(function (_ref11) {
-        var _ref12 = (0, _slicedToArray3.default)(_ref11, 2),
-            prop = _ref12[0],
-            handler = _ref12[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref9) {
+        var _ref10 = (0, _slicedToArray3.default)(_ref9, 2),
+            prop = _ref10[0],
+            handler = _ref10[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -8299,6 +8198,140 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
 }(_basenode2.default), _class2.Attr = _attr20.default, _temp), (_applyDecoratedDescriptor(_class.prototype, 'attrSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'attrSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'contentSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'contentSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'clientSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clientSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'originalRect', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'originalRect'), _class.prototype)), _class);
 exports.default = BaseSprite;
 
+
+function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight) {
+  var w = image.width,
+      h = image.height;
+
+  var _ref11 = clip9 || [16, 16, 16, 16],
+      _ref12 = (0, _slicedToArray3.default)(_ref11, 4),
+      top = _ref12[0],
+      right = _ref12[1],
+      bottom = _ref12[2],
+      left = _ref12[3];
+
+  var leftTop = [0, 0, left, top],
+      rightTop = [w - right, 0, right, top],
+      rightBottom = [w - right, h - bottom, right, bottom],
+      leftBottom = [0, h - bottom, left, bottom];
+
+  var boxRight = offsetWidth - right - borderWidth,
+      boxBottom = offsetHeight - borderWidth - bottom;
+
+  // draw four corners
+  drawingContext.drawImage.apply(drawingContext, [image].concat(leftTop, [borderWidth, borderWidth, left, top]));
+  drawingContext.drawImage.apply(drawingContext, [image].concat(rightTop, [boxRight, borderWidth, right, top]));
+  drawingContext.drawImage.apply(drawingContext, [image].concat(rightBottom, [boxRight, boxBottom, left, bottom]));
+  drawingContext.drawImage.apply(drawingContext, [image].concat(leftBottom, [borderWidth, boxBottom, left, bottom]));
+
+  // draw .9 cross
+  var midWidth = w - left - right,
+      midHeight = h - top - bottom;
+
+  if (midWidth > 0) {
+    var midBoxWidth = clientWidth - left - right;
+    var leftOffset = borderWidth + left;
+    while (midBoxWidth > 0) {
+      var ww = Math.min(midBoxWidth, midWidth);
+      var topPiece = [left, 0, ww, top],
+          bottomPiece = [left, h - bottom, ww, bottom];
+
+      drawingContext.drawImage.apply(drawingContext, [image].concat(topPiece, [leftOffset, borderWidth, ww, top]));
+      drawingContext.drawImage.apply(drawingContext, [image].concat(bottomPiece, [leftOffset, boxBottom, ww, bottom]));
+      midBoxWidth -= midWidth;
+      if (midBoxWidth > 0) {
+        leftOffset += midWidth;
+      }
+    }
+  }
+
+  if (midHeight > 0) {
+    var midBoxHeight = clientHeight - top - bottom;
+    var topOffset = borderWidth + top;
+    while (midBoxHeight > 0) {
+      var hh = Math.min(midBoxHeight, midHeight);
+      var leftPiece = [0, top, left, hh],
+          rightPiece = [w - right, top, right, hh];
+
+      drawingContext.drawImage.apply(drawingContext, [image].concat(leftPiece, [borderWidth, topOffset, left, hh]));
+      drawingContext.drawImage.apply(drawingContext, [image].concat(rightPiece, [boxRight, topOffset, right, hh]));
+      midBoxHeight -= midHeight;
+      if (midBoxHeight > 0) {
+        topOffset += midHeight;
+      }
+    }
+  }
+
+  if (midHeight && midWidth > 0) {
+    var _midBoxWidth = clientWidth - left - right;
+    var _leftOffset = borderWidth + left;
+
+    while (_midBoxWidth > 0) {
+      var _midBoxHeight = clientHeight - top - bottom;
+      var _topOffset = borderWidth + top;
+      while (_midBoxHeight > 0) {
+        var _ww = Math.min(_midBoxWidth, midWidth),
+            _hh = Math.min(_midBoxHeight, midHeight);
+        var midPiece = [left, top, _ww, _hh];
+        drawingContext.drawImage.apply(drawingContext, [image].concat(midPiece, [_leftOffset, _topOffset, _ww, _hh]));
+        _midBoxHeight -= midWidth;
+        if (_midBoxHeight > 0) {
+          _topOffset += midHeight;
+        }
+      }
+      _midBoxWidth -= midWidth;
+      if (_midBoxWidth > 0) {
+        _leftOffset += midWidth;
+      }
+    }
+  }
+}
+
+function drawBgImage(drawingContext, bgimage, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight) {
+  var image = bgimage.image,
+      display = bgimage.display,
+      clip9 = bgimage.clip9;
+
+
+  if (display === '.9') {
+    drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight);
+  } else {
+    var offset = bgimage.offset || [0, 0],
+        w = image.width,
+        h = image.height;
+
+    if (display === 'center') {
+      offset = [(clientWidth - w) * 0.5, (clientHeight - h) * 0.5];
+    } else if (display === 'stretch') {
+      w = clientWidth - offset[0];
+      h = clientHeight - offset[1];
+    }
+    drawingContext.drawImage(image, borderWidth + offset[0], borderWidth + offset[1], w, h);
+
+    if (w > 0 && (display === 'repeat' || display === 'repeatX')) {
+      var cw = clientWidth - borderWidth - offset[0] - w;
+      while (cw > borderWidth) {
+        drawingContext.drawImage(image, clientWidth - cw, borderWidth + offset[1], w, h);
+        if (h > 0 && display === 'repeat') {
+          var ch = clientHeight - borderWidth - offset[1] - h;
+          while (ch > borderWidth) {
+            drawingContext.drawImage(image, clientWidth - cw, clientHeight - ch, w, h);
+            ch -= h;
+          }
+        }
+        cw -= w;
+      }
+    }
+
+    if (h > 0 && (display === 'repeat' || display === 'repeatY')) {
+      var _ch = clientHeight - borderWidth - offset[1] - h;
+      while (_ch > borderWidth) {
+        drawingContext.drawImage(image, borderWidth + offset[0], clientHeight - _ch, w, h);
+        _ch -= h;
+      }
+    }
+  }
+}
 
 (0, _nodetype.registerNodeType)('basesprite', BaseSprite);
 
@@ -9627,6 +9660,11 @@ var BaseNode = function () {
       this[_mouseCapture] = false;
     }
   }, {
+    key: 'isCaptured',
+    value: function isCaptured(evt) {
+      return (evt.type === 'mousemove' || evt.type === 'mousedown' || evt.type === 'mouseup') && this[_mouseCapture];
+    }
+  }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(type, evt) {
       var _this4 = this;
@@ -9634,7 +9672,8 @@ var BaseNode = function () {
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      if (swallow && this.getEventHandlers(type).length === 0) {
+      var handlers = this.getEventHandlers(type);
+      if (swallow && handlers.length === 0) {
         return;
       }
       if (!evt.stopDispatch) {
@@ -9650,63 +9689,56 @@ var BaseNode = function () {
       }
 
       var isCollision = collisionState || this.pointCollision(evt);
-      var captured = (evt.type === 'mousemove' || evt.type === 'mousedown' || evt.type === 'mouseup') && this[_mouseCapture];
+      var captured = this.isCaptured(evt);
 
       if (!evt.terminated && (isCollision || captured)) {
         evt.target = this;
 
         var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
-        if (changedTouches && type === 'touchstart') {
-          var touch = changedTouches[0],
-              layer = this.layer;
-          if (touch && touch.identifier != null) {
-            layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
-            layer.touchedTargets[touch.identifier].push(this);
-          }
-        }
-        if (changedTouches && type.startsWith('touch')) {
-          var touches = evt.originalEvent && evt.originalEvent.touches,
-              _layer = this.layer;
-          evt.targetTouches = [];
-
-          (0, _from2.default)(touches).forEach(function (touch) {
-            var identifier = touch.identifier;
-            if (_layer.touchedTargets[identifier] && _layer.touchedTargets[identifier].indexOf(_this4) >= 0) {
-              evt.targetTouches.push(touch);
+        if (changedTouches) {
+          if (type === 'touchstart') {
+            var touch = changedTouches[0],
+                layer = this.layer;
+            if (touch && touch.identifier != null) {
+              layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
+              layer.touchedTargets[touch.identifier].push(this);
             }
-          });
-          evt.touches = (0, _from2.default)(touches);
-          evt.changedTouches = (0, _from2.default)(changedTouches);
-        }
-
-        var handlers = this[_eventHandlers][type];
-        if (handlers) {
-          handlers.forEach(function (handler) {
-            return handler.call(_this4, evt);
-          });
-        }
-
-        if (isCollision && type === 'mousemove') {
-          if (!this[_collisionState]) {
-            var _evt = (0, _assign2.default)({}, evt);
-            _evt.type = 'mouseenter';
-            _evt.terminated = false;
-
-            this.dispatchEvent('mouseenter', _evt, true);
           }
+          if (type.startsWith('touch')) {
+            var touches = (0, _from2.default)(evt.originalEvent.touches),
+                _layer = this.layer;
+            evt.targetTouches = [];
+
+            touches.forEach(function (touch) {
+              var identifier = touch.identifier;
+              if (_layer.touchedTargets[identifier] && _layer.touchedTargets[identifier].indexOf(_this4) >= 0) {
+                evt.targetTouches.push(touch);
+              }
+            });
+            evt.touches = touches;
+            evt.changedTouches = (0, _from2.default)(changedTouches);
+          }
+        }
+
+        handlers.forEach(function (handler) {
+          return handler.call(_this4, evt);
+        });
+
+        if (!this[_collisionState] && isCollision && type === 'mousemove') {
+          var _evt = (0, _assign2.default)({}, evt);
+          _evt.type = 'mouseenter';
+          _evt.terminated = false;
+          this.dispatchEvent('mouseenter', _evt, true);
           this[_collisionState] = true;
         }
       }
 
-      if (!isCollision && type === 'mousemove') {
-        if (this[_collisionState]) {
-          var _evt2 = (0, _assign2.default)({}, evt);
-          _evt2.type = 'mouseleave';
-          _evt2.target = this;
-          _evt2.terminated = false;
-
-          this.dispatchEvent('mouseleave', _evt2, true);
-        }
+      if (this[_collisionState] && !isCollision && type === 'mousemove') {
+        var _evt2 = (0, _assign2.default)({}, evt);
+        _evt2.type = 'mouseleave';
+        _evt2.target = this;
+        _evt2.terminated = false;
+        this.dispatchEvent('mouseleave', _evt2, true);
         this[_collisionState] = false;
       }
 

@@ -1,31 +1,31 @@
-const path = require('path')
-const fs = require('fs')
+const path = require('path');
+const fs = require('fs');
 
 module.exports = function (env = {}) {
-  let babelConf
+  let babelConf;
 
-  const babelRC = env.esnext ? './.es6.babelrc' : './.babelrc'
+  const babelRC = env.esnext ? './.es6.babelrc' : './.babelrc';
   if(fs.existsSync(babelRC)) {
-    babelConf = JSON.parse(fs.readFileSync(babelRC))
-    babelConf.babelrc = false
+    babelConf = JSON.parse(fs.readFileSync(babelRC));
+    babelConf.babelrc = false;
   }
 
-  const externals = {}
-  const aliasFields = ['browser', 'esnext']
-  const outputPath = path.resolve(__dirname, env.outputPath || 'dist')
+  const externals = {};
+  const aliasFields = ['browser', 'esnext'];
+  const outputPath = path.resolve(__dirname, env.outputPath || 'dist');
 
   const output = {
     path: outputPath,
     filename: env.esnext ? 'spritejs.es6' : 'spritejs',
     publicPath: '/js/',
     library: 'spritejs',
-    libraryTarget: env.esnext ? 'esm' : 'umd',
-  }
+    libraryTarget: env.esnext ? 'commonjs2' : 'umd',
+  };
 
   if(env.production) {
-    output.filename += '.min.js'
+    output.filename += '.min.js';
   } else {
-    output.filename += '.js'
+    output.filename += '.js';
   }
 
   return {
@@ -70,5 +70,5 @@ module.exports = function (env = {}) {
 
 
     /* Advanced configuration (click to show) */
-  }
-}
+  };
+};
