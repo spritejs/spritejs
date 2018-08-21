@@ -151,7 +151,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.7.7';
+var version = '2.7.8';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
