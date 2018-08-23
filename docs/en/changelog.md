@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.7.9][2018-08-23]
+
+### enhancement
+
+- Add more compatible API for VirtualDOM.
+
 ## [2.7.8][2018-08-21]
 
 ### enhancement
