@@ -154,13 +154,14 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 }
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
+Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
 
 function Paper2D(...args) {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.7.9';
+const version = '2.7.10';
 
 
 
@@ -7668,6 +7669,10 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_3__["default"
     return this[_children];
   }
 
+  get childNodes() {
+    return this[_children];
+  }
+
   get timeline() {
     return this[_timeline];
   }
@@ -11943,11 +11948,15 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
     const that = this;
-    this.ownerDocument = {
-      createElementNS(uri, name) {
-        return that.layer(name);
+    Object.defineProperty(this, 'ownerDocument', {
+      get() {
+        return {
+          createElementNS(uri, name) {
+            return that.layer(name);
+          }
+        };
       }
-    };
+    });
 
     const events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
 
@@ -11968,6 +11977,14 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
   get height() {
     return this.viewport[1];
+  }
+
+  get children() {
+    return this.layers;
+  }
+
+  get childNodes() {
+    return this.layers;
   }
 
   insertBefore(newchild, refchild) {

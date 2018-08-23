@@ -47,11 +47,15 @@ export default class extends BaseNode {
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
     const that = this;
-    this.ownerDocument = {
-      createElementNS(uri, name) {
-        return that.layer(name);
+    Object.defineProperty(this, 'ownerDocument', {
+      get() {
+        return {
+          createElementNS(uri, name) {
+            return that.layer(name);
+          },
+        };
       },
-    };
+    });
 
     const events = ['mousedown', 'mouseup', 'mousemove',
       'touchstart', 'touchend', 'touchmove',
@@ -74,6 +78,14 @@ export default class extends BaseNode {
 
   get height() {
     return this.viewport[1];
+  }
+
+  get children() {
+    return this.layers;
+  }
+
+  get childNodes() {
+    return this.layers;
   }
 
   insertBefore(newchild, refchild) {

@@ -29,6 +29,7 @@ if(shim) {
 }
 
 registerNodeType('layer', Layer, true);
+registerNodeType('scene', Scene, true);
 
 function Paper2D(...args) {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');

@@ -140,6 +140,7 @@ if (_platform.shim) {
 }
 
 (0, _spriteCore.registerNodeType)('layer', _layer2.default, true);
+(0, _spriteCore.registerNodeType)('scene', _scene2.default, true);
 
 function Paper2D() {
   setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');
@@ -151,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.7.9';
+var version = '2.7.10';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -13221,6 +13222,11 @@ var Layer = function (_BaseNode) {
       return this[_children];
     }
   }, {
+    key: 'childNodes',
+    get: function get() {
+      return this[_children];
+    }
+  }, {
     key: 'timeline',
     get: function get() {
       return this[_timeline];
@@ -18861,11 +18867,15 @@ var _default = function (_BaseNode) {
     // d3-friendly
     _this.namespaceURI = 'http://spritejs.org/scene';
     var that = _this;
-    _this.ownerDocument = {
-      createElementNS: function createElementNS(uri, name) {
-        return that.layer(name);
+    Object.defineProperty(_this, 'ownerDocument', {
+      get: function get() {
+        return {
+          createElementNS: function createElementNS(uri, name) {
+            return that.layer(name);
+          }
+        };
       }
-    };
+    });
 
     var events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
 
@@ -19301,6 +19311,16 @@ var _default = function (_BaseNode) {
     key: 'height',
     get: function get() {
       return this.viewport[1];
+    }
+  }, {
+    key: 'children',
+    get: function get() {
+      return this.layers;
+    }
+  }, {
+    key: 'childNodes',
+    get: function get() {
+      return this.layers;
     }
   }, {
     key: 'layerViewport',
