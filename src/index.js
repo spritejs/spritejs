@@ -1,5 +1,6 @@
 import {
   BaseNode,
+  DataNode,
   Label,
   Group,
   Effects,
@@ -46,6 +47,7 @@ export {
 
   BaseNode,
   BaseSprite,
+  DataNode,
   Sprite,
   Label,
   Path,

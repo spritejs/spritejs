@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.8.0][2018-08-24]
+
+### feature
+
+- Add DataNode Element.
+
 ## [2.7.9][2018-08-23]
 
 ### enhancement
