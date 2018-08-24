@@ -11,7 +11,10 @@ const _layerMap = Symbol('layerMap'),
   _snapshot = Symbol('snapshot'),
   _viewport = Symbol('viewport'),
   _resolution = Symbol('resolution'),
-  _resizeHandler = Symbol('resizeHandler');
+  _resizeHandler = Symbol('resizeHandler'),
+  _attrs = Symbol('attrs'),
+  _events = Symbol('events'),
+  _subscribe = Symbol('subscribe');
 
 export default class extends BaseNode {
   constructor(container, options = {}) {
@@ -57,6 +60,8 @@ export default class extends BaseNode {
       },
     });
 
+    this[_events] = new Set();
+
     const events = ['mousedown', 'mouseup', 'mousemove',
       'touchstart', 'touchend', 'touchmove',
       'click', 'dblclick'];
@@ -70,6 +75,18 @@ export default class extends BaseNode {
         delete this[_resizeHandler];
       }
     });
+
+    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    this[_subscribe] = null;
+  }
+
+  get subscribe() {
+    return this[_subscribe];
+  }
+
+  set subscribe(events) {
+    this[_subscribe] = events;
+    events.forEach(event => this.delegateEvent(event));
   }
 
   get width() {
@@ -96,20 +113,25 @@ export default class extends BaseNode {
   }
 
   setAttribute(name, value) {
-    if(this.container && this.container.setAttribute) {
-      return this.container.setAttribute(name, value);
+    if(this[_attrs].has(name)) {
+      this[name] = value;
+    } else {
+      this.container.setAttribute(name, value);
     }
   }
 
   getAttribute(name) {
-    if(this.container && this.container.getAttribute) {
-      return this.container.getAttribute(name);
+    if(this[_attrs].has(name)) {
+      return this[name];
     }
+    return this.container.getAttribute(name);
   }
 
   removeAttribute(name) {
-    if(this.container && this.container.removeAttribute) {
-      return this.container.removeAttribute(name);
+    if(this[_attrs].has(name)) {
+      this[name] = null;
+    } else {
+      this.container.removeAttribute(name);
     }
   }
 
@@ -335,6 +357,12 @@ export default class extends BaseNode {
       event = {type: event, passive: true};
     }
 
+    if(this[_events].has(event.type)) {
+      return false;
+    }
+
+    this[_events].add(event.type);
+
     const {type, passive} = event;
 
     receiver.addEventListener(type, (e) => {
@@ -387,6 +415,8 @@ export default class extends BaseNode {
         }
       }
     }, {passive});
+
+    return true;
   }
 
   dispatchEvent(type, evt) {

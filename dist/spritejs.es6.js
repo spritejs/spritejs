@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.8.4';
+const version = '2.8.5';
 
 
 
@@ -11780,6 +11780,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const _resolution = Symbol('resolution');
+const _attrs = Symbol('attrs');
 
 let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   constructor(id, opts = {}) {
@@ -11806,6 +11807,8 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     } else {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
     }
+
+    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
   }
 
   get id() {
@@ -11813,15 +11816,26 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
   }
 
   setAttribute(name, value) {
-    return this.canvas.setAttribute(name, value);
+    if (this[_attrs].has(name)) {
+      this[name] = value;
+    } else {
+      this.canvas.setAttribute(name, value);
+    }
   }
 
   getAttribute(name) {
+    if (this[_attrs].has(name)) {
+      return this[name];
+    }
     return this.canvas.getAttribute(name);
   }
 
   removeAttribute(name) {
-    return this.canvas.removeAttribute(name);
+    if (this[_attrs].has(name)) {
+      this[name] = null;
+    } else {
+      this.canvas.removeAttribute(name);
+    }
   }
 
   get resolution() {
@@ -11992,7 +12006,10 @@ const _layerMap = Symbol('layerMap'),
       _snapshot = Symbol('snapshot'),
       _viewport = Symbol('viewport'),
       _resolution = Symbol('resolution'),
-      _resizeHandler = Symbol('resizeHandler');
+      _resizeHandler = Symbol('resizeHandler'),
+      _attrs = Symbol('attrs'),
+      _events = Symbol('events'),
+      _subscribe = Symbol('subscribe');
 
 let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
   constructor(container, options = {}) {
@@ -12038,6 +12055,8 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
       }
     });
 
+    this[_events] = new Set();
+
     const events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
 
     events.forEach(event => this.delegateEvent(event));
@@ -12049,6 +12068,18 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
         delete this[_resizeHandler];
       }
     });
+
+    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    this[_subscribe] = null;
+  }
+
+  get subscribe() {
+    return this[_subscribe];
+  }
+
+  set subscribe(events) {
+    this[_subscribe] = events;
+    events.forEach(event => this.delegateEvent(event));
   }
 
   get width() {
@@ -12075,20 +12106,25 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   setAttribute(name, value) {
-    if (this.container && this.container.setAttribute) {
-      return this.container.setAttribute(name, value);
+    if (this[_attrs].has(name)) {
+      this[name] = value;
+    } else {
+      this.container.setAttribute(name, value);
     }
   }
 
   getAttribute(name) {
-    if (this.container && this.container.getAttribute) {
-      return this.container.getAttribute(name);
+    if (this[_attrs].has(name)) {
+      return this[name];
     }
+    return this.container.getAttribute(name);
   }
 
   removeAttribute(name) {
-    if (this.container && this.container.removeAttribute) {
-      return this.container.removeAttribute(name);
+    if (this[_attrs].has(name)) {
+      this[name] = null;
+    } else {
+      this.container.removeAttribute(name);
     }
   }
 
@@ -12314,6 +12350,12 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
       event = { type: event, passive: true };
     }
 
+    if (this[_events].has(event.type)) {
+      return false;
+    }
+
+    this[_events].add(event.type);
+
     const { type, passive } = event;
 
     receiver.addEventListener(type, e => {
@@ -12363,6 +12405,8 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
         }
       }
     }, { passive });
+
+    return true;
   }
 
   dispatchEvent(type, evt) {

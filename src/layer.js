@@ -2,6 +2,7 @@ import {Layer, createNode} from 'sprite-core';
 import {createCanvas} from './platform';
 
 const _resolution = Symbol('resolution');
+const _attrs = Symbol('attrs');
 
 class ExLayer extends Layer {
   constructor(id, opts = {}) {
@@ -28,6 +29,8 @@ class ExLayer extends Layer {
     } else {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
     }
+
+    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
   }
 
   get id() {
@@ -35,15 +38,26 @@ class ExLayer extends Layer {
   }
 
   setAttribute(name, value) {
-    return this.canvas.setAttribute(name, value);
+    if(this[_attrs].has(name)) {
+      this[name] = value;
+    } else {
+      this.canvas.setAttribute(name, value);
+    }
   }
 
   getAttribute(name) {
+    if(this[_attrs].has(name)) {
+      return this[name];
+    }
     return this.canvas.getAttribute(name);
   }
 
   removeAttribute(name) {
-    return this.canvas.removeAttribute(name);
+    if(this[_attrs].has(name)) {
+      this[name] = null;
+    } else {
+      this.canvas.removeAttribute(name);
+    }
   }
 
   get resolution() {

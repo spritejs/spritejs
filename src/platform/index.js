@@ -71,6 +71,7 @@ class Container extends EventEmitter {
     this.children = [];
     this.clientWidth = 800;
     this.clientHeight = 600;
+    this.attrs = {};
   }
 
   appendChild(node) {
@@ -113,6 +114,18 @@ class Container extends EventEmitter {
       return this.removeListener(type, handler);
     }
     return this.removeAllListeners(type);
+  }
+
+  setAttribute(name, value) {
+    this.attrs[name] = value;
+  }
+
+  getAttribute(name) {
+    return this.attrs[name] != null ? this.attrs[name] : null;
+  }
+
+  removeAttribute(name) {
+    this.attrs[name] = null;
   }
 }
 

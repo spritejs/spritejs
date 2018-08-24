@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.8.4';
+var version = '2.8.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -18571,6 +18571,10 @@ var _slicedToArray2 = __webpack_require__(4);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
+var _set = __webpack_require__(154);
+
+var _set2 = _interopRequireDefault(_set);
+
 var _getPrototypeOf = __webpack_require__(178);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -18606,6 +18610,7 @@ var _platform = __webpack_require__(229);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _resolution = (0, _symbol2.default)('resolution');
+var _attrs = (0, _symbol2.default)('attrs');
 
 var ExLayer = function (_Layer) {
   (0, _inherits3.default)(ExLayer, _Layer);
@@ -18643,23 +18648,36 @@ var ExLayer = function (_Layer) {
     } else {
       _this[_resolution] = [_this.canvas.width, _this.canvas.height, 0, 0];
     }
+
+    _this[_attrs] = new _set2.default(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
     return _this;
   }
 
   (0, _createClass3.default)(ExLayer, [{
     key: 'setAttribute',
     value: function setAttribute(name, value) {
-      return this.canvas.setAttribute(name, value);
+      if (this[_attrs].has(name)) {
+        this[name] = value;
+      } else {
+        this.canvas.setAttribute(name, value);
+      }
     }
   }, {
     key: 'getAttribute',
     value: function getAttribute(name) {
+      if (this[_attrs].has(name)) {
+        return this[name];
+      }
       return this.canvas.getAttribute(name);
     }
   }, {
     key: 'removeAttribute',
     value: function removeAttribute(name) {
-      return this.canvas.removeAttribute(name);
+      if (this[_attrs].has(name)) {
+        this[name] = null;
+      } else {
+        this.canvas.removeAttribute(name);
+      }
     }
   }, {
     key: 'pointCollision',
@@ -18907,6 +18925,10 @@ var _values = __webpack_require__(260);
 
 var _values2 = _interopRequireDefault(_values);
 
+var _set = __webpack_require__(154);
+
+var _set2 = _interopRequireDefault(_set);
+
 var _toConsumableArray2 = __webpack_require__(61);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
@@ -18963,7 +18985,10 @@ var _layerMap = (0, _symbol2.default)('layerMap'),
     _snapshot = (0, _symbol2.default)('snapshot'),
     _viewport = (0, _symbol2.default)('viewport'),
     _resolution = (0, _symbol2.default)('resolution'),
-    _resizeHandler = (0, _symbol2.default)('resizeHandler');
+    _resizeHandler = (0, _symbol2.default)('resizeHandler'),
+    _attrs = (0, _symbol2.default)('attrs'),
+    _events = (0, _symbol2.default)('events'),
+    _subscribe = (0, _symbol2.default)('subscribe');
 
 var _default = function (_BaseNode) {
   (0, _inherits3.default)(_default, _BaseNode);
@@ -19014,6 +19039,8 @@ var _default = function (_BaseNode) {
       }
     });
 
+    _this[_events] = new _set2.default();
+
     var events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
 
     events.forEach(function (event) {
@@ -19027,28 +19054,36 @@ var _default = function (_BaseNode) {
         delete _this[_resizeHandler];
       }
     });
+
+    _this[_attrs] = new _set2.default(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    _this[_subscribe] = null;
     return _this;
   }
 
   (0, _createClass3.default)(_default, [{
     key: 'setAttribute',
     value: function setAttribute(name, value) {
-      if (this.container && this.container.setAttribute) {
-        return this.container.setAttribute(name, value);
+      if (this[_attrs].has(name)) {
+        this[name] = value;
+      } else {
+        this.container.setAttribute(name, value);
       }
     }
   }, {
     key: 'getAttribute',
     value: function getAttribute(name) {
-      if (this.container && this.container.getAttribute) {
-        return this.container.getAttribute(name);
+      if (this[_attrs].has(name)) {
+        return this[name];
       }
+      return this.container.getAttribute(name);
     }
   }, {
     key: 'removeAttribute',
     value: function removeAttribute(name) {
-      if (this.container && this.container.removeAttribute) {
-        return this.container.removeAttribute(name);
+      if (this[_attrs].has(name)) {
+        this[name] = null;
+      } else {
+        this.container.removeAttribute(name);
       }
     }
   }, {
@@ -19170,6 +19205,12 @@ var _default = function (_BaseNode) {
         event = { type: event, passive: true };
       }
 
+      if (this[_events].has(event.type)) {
+        return false;
+      }
+
+      this[_events].add(event.type);
+
       var _event = event,
           type = _event.type,
           passive = _event.passive;
@@ -19240,6 +19281,8 @@ var _default = function (_BaseNode) {
           }
         }
       }, { passive: passive });
+
+      return true;
     }
   }, {
     key: 'dispatchEvent',
@@ -19461,6 +19504,19 @@ var _default = function (_BaseNode) {
       return snapshot;
     }()
   }, {
+    key: 'subscribe',
+    get: function get() {
+      return this[_subscribe];
+    },
+    set: function set(events) {
+      var _this7 = this;
+
+      this[_subscribe] = events;
+      events.forEach(function (event) {
+        return _this7.delegateEvent(event);
+      });
+    }
+  }, {
     key: 'width',
     get: function get() {
       return this.viewport[0];
@@ -19535,7 +19591,7 @@ var _default = function (_BaseNode) {
   }, {
     key: 'viewport',
     set: function set(viewport) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (!Array.isArray(viewport)) viewport = [viewport, viewport];
 
@@ -19549,9 +19605,9 @@ var _default = function (_BaseNode) {
       if (width === 'auto' || height === 'auto') {
         if (!this[_resizeHandler]) {
           this[_resizeHandler] = function () {
-            _this7.updateViewport();
-            if (_this7.resolution[0] === 'flex' || _this7.resolution[1] === 'flex') {
-              _this7.updateResolution();
+            _this8.updateViewport();
+            if (_this8.resolution[0] === 'flex' || _this8.resolution[1] === 'flex') {
+              _this8.updateResolution();
             }
           };
           window.addEventListener('resize', this[_resizeHandler]);
