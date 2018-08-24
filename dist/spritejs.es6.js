@@ -163,7 +163,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.8.0';
+const version = '2.8.1';
 
 
 

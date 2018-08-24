@@ -1,6 +1,6 @@
 // es modules for rollup
 
-import spritejs from '../dist/spritejs.es6';
+import * as spritejs from '../dist/spritejs.es6';
 
 export default spritejs;
 
