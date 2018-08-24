@@ -21,6 +21,7 @@ export const {
   Paper2D,
 
   registerNodeType,
+  isValidNodeType,
   createNode,
   createElement,
   Color,
