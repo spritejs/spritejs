@@ -88,6 +88,31 @@ export default class extends BaseNode {
     return this.layers;
   }
 
+  get id() {
+    if(this.container) {
+      return this.container.id;
+    }
+    return undefined;
+  }
+
+  setAttribute(name, value) {
+    if(this.container && this.container.setAttribute) {
+      return this.container.setAttribute(name, value);
+    }
+  }
+
+  getAttribute(name) {
+    if(this.container && this.container.getAttribute) {
+      return this.container.getAttribute(name);
+    }
+  }
+
+  removeAttribute(name) {
+    if(this.container && this.container.removeAttribute) {
+      return this.container.removeAttribute(name);
+    }
+  }
+
   insertBefore(newchild, refchild) {
     if(!this.hasLayer(refchild)) {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');

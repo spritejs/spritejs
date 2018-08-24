@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.8.3';
+var version = '2.8.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -18647,6 +18647,21 @@ var ExLayer = function (_Layer) {
   }
 
   (0, _createClass3.default)(ExLayer, [{
+    key: 'setAttribute',
+    value: function setAttribute(name, value) {
+      return this.canvas.setAttribute(name, value);
+    }
+  }, {
+    key: 'getAttribute',
+    value: function getAttribute(name) {
+      return this.canvas.getAttribute(name);
+    }
+  }, {
+    key: 'removeAttribute',
+    value: function removeAttribute(name) {
+      return this.canvas.removeAttribute(name);
+    }
+  }, {
     key: 'pointCollision',
     value: function pointCollision(evt) {
       if (this.outputContext.canvas) {
@@ -19016,6 +19031,27 @@ var _default = function (_BaseNode) {
   }
 
   (0, _createClass3.default)(_default, [{
+    key: 'setAttribute',
+    value: function setAttribute(name, value) {
+      if (this.container && this.container.setAttribute) {
+        return this.container.setAttribute(name, value);
+      }
+    }
+  }, {
+    key: 'getAttribute',
+    value: function getAttribute(name) {
+      if (this.container && this.container.getAttribute) {
+        return this.container.getAttribute(name);
+      }
+    }
+  }, {
+    key: 'removeAttribute',
+    value: function removeAttribute(name) {
+      if (this.container && this.container.removeAttribute) {
+        return this.container.removeAttribute(name);
+      }
+    }
+  }, {
     key: 'insertBefore',
     value: function insertBefore(newchild, refchild) {
       var _this2 = this;
@@ -19443,6 +19479,14 @@ var _default = function (_BaseNode) {
     key: 'childNodes',
     get: function get() {
       return this.layers;
+    }
+  }, {
+    key: 'id',
+    get: function get() {
+      if (this.container) {
+        return this.container.id;
+      }
+      return undefined;
     }
   }, {
     key: 'layerViewport',

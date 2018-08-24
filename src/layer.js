@@ -34,6 +34,18 @@ class ExLayer extends Layer {
     return this.canvas.dataset.layerId;
   }
 
+  setAttribute(name, value) {
+    return this.canvas.setAttribute(name, value);
+  }
+
+  getAttribute(name) {
+    return this.canvas.getAttribute(name);
+  }
+
+  removeAttribute(name) {
+    return this.canvas.removeAttribute(name);
+  }
+
   get resolution() {
     return this[_resolution];
   }

@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.8.3';
+const version = '2.8.4';
 
 
 
@@ -11812,6 +11812,18 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     return this.canvas.dataset.layerId;
   }
 
+  setAttribute(name, value) {
+    return this.canvas.setAttribute(name, value);
+  }
+
+  getAttribute(name) {
+    return this.canvas.getAttribute(name);
+  }
+
+  removeAttribute(name) {
+    return this.canvas.removeAttribute(name);
+  }
+
   get resolution() {
     return this[_resolution];
   }
@@ -12053,6 +12065,31 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
   get childNodes() {
     return this.layers;
+  }
+
+  get id() {
+    if (this.container) {
+      return this.container.id;
+    }
+    return undefined;
+  }
+
+  setAttribute(name, value) {
+    if (this.container && this.container.setAttribute) {
+      return this.container.setAttribute(name, value);
+    }
+  }
+
+  getAttribute(name) {
+    if (this.container && this.container.getAttribute) {
+      return this.container.getAttribute(name);
+    }
+  }
+
+  removeAttribute(name) {
+    if (this.container && this.container.removeAttribute) {
+      return this.container.removeAttribute(name);
+    }
   }
 
   insertBefore(newchild, refchild) {
