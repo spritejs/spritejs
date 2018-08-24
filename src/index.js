@@ -8,6 +8,7 @@ import {
   Timeline,
   Path,
   registerNodeType,
+  isValidNodeType,
   createNode,
   createElement,
   Color,
@@ -57,6 +58,7 @@ export {
   Paper2D,
 
   registerNodeType,
+  isValidNodeType,
   createNode,
   createElement,
   Color,
