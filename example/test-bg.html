@@ -36,6 +36,9 @@
         },
       });
       layer.append(s);
+      s.on('click', (evt) => {
+        console.log(evt.target);
+      });
     }());
   </script>
 </body>

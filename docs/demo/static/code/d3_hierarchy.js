@@ -64,7 +64,7 @@
         if(!d.children) return d.data.name;
         return '';
       })
-      .on('mousemove', (d) => {
+      .on('mousemove', function (d) {
         d3.event.stopDispatch();
 
         const {offsetX, offsetY} = d3.event,
@@ -76,11 +76,11 @@
             .attr('text', d.data.name);
           layer.selectAll({label: s => s.name !== 'region'})
             .attr('border', null);
-          d3.event.target.attr('border', [3, 'red']);
+          this.attr('border', [3, 'red']);
         }
       })
-      .on('mouseleave', (d) => {
-        d3.event.target.attr('border', null);
+      .on('mouseleave', function (d) {
+        this.attr('border', null);
       });
   });
 }());

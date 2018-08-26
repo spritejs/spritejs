@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.9.0][2018-08-26]
+
+### enhancement
+
+- Change event.target for delegate event.
+- Add event.stopPropagation method.
+
 ## [2.8.0][2018-08-24]
 
 ### feature

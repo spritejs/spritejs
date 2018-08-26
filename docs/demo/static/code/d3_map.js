@@ -32,8 +32,8 @@
       .attr('renderMode', 'fill')
       .attr('fillColor', '#2f3644')
       .attr('bounding', 'path')
-      .on('click', (d) => {
-        const paths = d3.event.target.findPath(d3.event.offsetX, d3.event.offsetY);
+      .on('click', function (d) {
+        const paths = this.findPath(d3.event.offsetX, d3.event.offsetY);
 
         if(paths.length) {
           /* eslint-disable no-console */
@@ -41,11 +41,11 @@
           /* eslint-enable no-console */
         }
       })
-      .on('mouseenter', (d) => {
-        d3.event.target.attr('fillColor', '#00c2ff');
+      .on('mouseenter', function (d) {
+        this.attr('fillColor', '#00c2ff');
       })
-      .on('mouseleave', (d) => {
-        d3.event.target.attr('fillColor', '#2f3644');
+      .on('mouseleave', function (d) {
+        this.attr('fillColor', '#2f3644');
       });
   });
 }());

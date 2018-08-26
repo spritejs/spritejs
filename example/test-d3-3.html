@@ -57,11 +57,11 @@ d3.json('/data/mapdata/china.json', (err, data) => {
         console.log(d.properties.name);
       }
     })
-    .on('mouseenter', (d) => {
-      d3.event.target.attr('fillColor', '#c73');
+    .on('mouseenter', function (d) {
+      this.attr('fillColor', '#c73');
     })
-    .on('mouseleave', (d) => {
-      d3.event.target.attr('fillColor', '#d1eeee');
+    .on('mouseleave', function (d) {
+      this.attr('fillColor', '#d1eeee');
     })
     // .on('mousemove', (d) => {
     //   const event = d3.event
