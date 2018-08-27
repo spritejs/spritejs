@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.9.0';
+var version = '2.9.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -13879,7 +13879,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
             child.relayout();
           }
         }
-        return child.hasLayout;
+        return child.hasLayout && child.attr('display') !== 'none';
       });
 
       var display = this.attr('display');

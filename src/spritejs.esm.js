@@ -11,6 +11,7 @@ export const {
   utils,
 
   BaseNode,
+  DataNode,
   BaseSprite,
   Sprite,
   Label,

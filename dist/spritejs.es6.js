@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.9.0';
+const version = '2.9.1';
 
 
 
@@ -8432,7 +8432,7 @@ let Group = (_class3 = (_temp2 = _class4 = class Group extends _basesprite__WEBP
           child.relayout();
         }
       }
-      return child.hasLayout;
+      return child.hasLayout && child.attr('display') !== 'none';
     });
 
     const display = this.attr('display');
