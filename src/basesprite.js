@@ -3,8 +3,6 @@ import Resource from './resource';
 
 const _loadBgImagePassport = Symbol('loadBgImagePassport');
 
-let passport;
-
 BaseSprite.prototype.loadBgImage = function (val) {
   let res;
   if(val.id) {
@@ -13,7 +11,7 @@ BaseSprite.prototype.loadBgImage = function (val) {
     res = Resource.loadTexture(val.src);
   }
   if(res instanceof Promise) {
-    passport = Symbol('passport');
+    const passport = Symbol('passport');
     this[_loadBgImagePassport] = passport;
     res.then(({img, texture}) => {
       if(passport === this[_loadBgImagePassport]) {

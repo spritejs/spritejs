@@ -25,13 +25,24 @@
         lineHeight: 300,
         anchor: 0.5,
         border: [6, 'black'],
-        pos: [300, 300],
+        pos: [180, 300],
         size: [300, 300],
         bgcolor: 'blue',
         bgimage: {
-          id: '9scale',
+          // id: '9scale',
+          src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg',
           display: '.9',
           clip9: 64,
+          // offset: [0, 50],
+        },
+      });
+      const s2 = s.cloneNode();
+      s2.attr({
+        x: 500,
+        bgimage: {
+          id: '9scale',
+          display: '.9',
+          clip9: 34,
           // offset: [0, 50],
         },
       });
