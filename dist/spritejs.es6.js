@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.9.1';
+const version = '2.9.2';
 
 
 
@@ -9756,8 +9756,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const _loadBgImagePassport = Symbol('loadBgImagePassport');
 
-let passport;
-
 sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = function (val) {
   let res;
   if (val.id) {
@@ -9766,7 +9764,7 @@ sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = f
     res = _resource__WEBPACK_IMPORTED_MODULE_1__["default"].loadTexture(val.src);
   }
   if (res instanceof Promise) {
-    passport = Symbol('passport');
+    const passport = Symbol('passport');
     this[_loadBgImagePassport] = passport;
     res.then(({ img, texture }) => {
       if (passport === this[_loadBgImagePassport]) {

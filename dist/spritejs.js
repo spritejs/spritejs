@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.9.1';
+var version = '2.9.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -15539,8 +15539,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _loadBgImagePassport = (0, _symbol2.default)('loadBgImagePassport');
 
-var passport = void 0;
-
 _spriteCore.BaseSprite.prototype.loadBgImage = function (val) {
   var _this = this;
 
@@ -15551,7 +15549,7 @@ _spriteCore.BaseSprite.prototype.loadBgImage = function (val) {
     res = _resource2.default.loadTexture(val.src);
   }
   if (res instanceof _promise2.default) {
-    passport = (0, _symbol2.default)('passport');
+    var passport = (0, _symbol2.default)('passport');
     this[_loadBgImagePassport] = passport;
     res.then(function (_ref) {
       var img = _ref.img,
