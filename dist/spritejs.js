@@ -6898,7 +6898,7 @@ function attr(target, prop, descriptor) {
     this.__reflowTag = false;
     _setter.call(this, val);
     if (this.subject && this.subject.hasLayout) {
-      var offsetSize = this.subject.offsetSize,
+      var offsetSize = this.subject.boxOffsetSize,
           layoutSize = this.subject.__lastLayout;
 
       if (!layoutSize || offsetSize[0] !== layoutSize[0] || offsetSize[1] !== layoutSize[1]) {
@@ -7115,9 +7115,9 @@ var _spriteUtils = __webpack_require__(152);
 
 var _spriteAnimator = __webpack_require__(2);
 
-var _attr13 = __webpack_require__(191);
+var _attr18 = __webpack_require__(191);
 
-var _attr14 = _interopRequireDefault(_attr13);
+var _attr19 = _interopRequireDefault(_attr18);
 
 var _basenode = __webpack_require__(196);
 
@@ -7919,6 +7919,29 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
 
       return [width, height];
     }
+  }, {
+    key: 'boxOffsetSize',
+    get: function get() {
+      if (this.isVirtual) return [0, 0];
+
+      var _attr6 = this.attr('size'),
+          _attr7 = (0, _slicedToArray3.default)(_attr6, 2),
+          width = _attr7[0],
+          height = _attr7[1];
+
+      var _attr8 = this.attr('padding'),
+          _attr9 = (0, _slicedToArray3.default)(_attr8, 4),
+          top = _attr9[0],
+          right = _attr9[1],
+          bottom = _attr9[2],
+          left = _attr9[3];
+
+      var _attr10 = this.attr('border'),
+          borderWidth = _attr10.width,
+          lw = borderWidth * 2;
+
+      return [left + (width | 0) + right + lw, top + (height | 0) + bottom + lw];
+    }
 
     // content width / height
 
@@ -7939,12 +7962,12 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
   }, {
     key: 'clientSize',
     get: function get() {
-      var _attr6 = this.attr('padding'),
-          _attr7 = (0, _slicedToArray3.default)(_attr6, 4),
-          top = _attr7[0],
-          right = _attr7[1],
-          bottom = _attr7[2],
-          left = _attr7[3],
+      var _attr11 = this.attr('padding'),
+          _attr12 = (0, _slicedToArray3.default)(_attr11, 4),
+          top = _attr12[0],
+          right = _attr12[1],
+          bottom = _attr12[2],
+          left = _attr12[3],
           _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
           width = _contentSize[0],
           height = _contentSize[1];
@@ -7957,8 +7980,8 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
   }, {
     key: 'offsetSize',
     get: function get() {
-      var _attr8 = this.attr('border'),
-          borderWidth = _attr8.width,
+      var _attr13 = this.attr('border'),
+          borderWidth = _attr13.width,
           _clientSize2 = (0, _slicedToArray3.default)(this.clientSize, 2),
           width = _clientSize2[0],
           height = _clientSize2[1];
@@ -7970,12 +7993,12 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
     get: function get() {
       var size = this.offsetSize;
 
-      var _attr9 = this.attr('margin'),
-          _attr10 = (0, _slicedToArray3.default)(_attr9, 4),
-          top = _attr10[0],
-          right = _attr10[1],
-          bottom = _attr10[2],
-          left = _attr10[3];
+      var _attr14 = this.attr('margin'),
+          _attr15 = (0, _slicedToArray3.default)(_attr14, 4),
+          top = _attr15[0],
+          right = _attr15[1],
+          bottom = _attr15[2],
+          left = _attr15[3];
 
       return [left + size[0] + right, top + size[1] + bottom];
     }
@@ -8035,10 +8058,10 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
       var _offsetSize3 = (0, _slicedToArray3.default)(this.offsetSize, 2),
           width = _offsetSize3[0],
           height = _offsetSize3[1],
-          _attr11 = this.attr('anchor'),
-          _attr12 = (0, _slicedToArray3.default)(_attr11, 2),
-          anchorX = _attr12[0],
-          anchorY = _attr12[1];
+          _attr16 = this.attr('anchor'),
+          _attr17 = (0, _slicedToArray3.default)(_attr16, 2),
+          anchorX = _attr17[0],
+          anchorY = _attr17[1];
 
       var rect = [-anchorX * width, -anchorY * height, width, height];
 
@@ -8204,7 +8227,7 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
     }
   }]);
   return BaseSprite;
-}(_basenode2.default), _class2.Attr = _attr14.default, _temp), (_applyDecoratedDescriptor(_class.prototype, 'attrSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'attrSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'contentSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'contentSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'clientSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clientSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'originalRect', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'originalRect'), _class.prototype)), _class);
+}(_basenode2.default), _class2.Attr = _attr19.default, _temp), (_applyDecoratedDescriptor(_class.prototype, 'attrSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'attrSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxOffsetSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxOffsetSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'contentSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'contentSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'clientSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clientSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetSize', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'originalRect', [_spriteUtils.flow], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'originalRect'), _class.prototype)), _class);
 exports.default = BaseSprite;
 
 
@@ -14729,11 +14752,11 @@ function relayout(container, items) {
     // console.log(margin[3])
 
 
-    item.attr({ x: function x(_x) {
-        return _x - left + margin[3];
+    item.attr({ layoutX: function layoutX(x) {
+        return x - left + margin[3];
       } });
-    item.attr({ y: function y(_y) {
-        return _y - top + margin[0];
+    item.attr({ layoutY: function layoutY(y) {
+        return y - top + margin[0];
       } });
   }
 
