@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.9.3';
+var version = '2.9.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7248,14 +7248,6 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
 
       var setVal = function setVal(key, value) {
         _this2[_attr][key] = value;
-        if (key === 'zIndex' && _this2.parent) {
-          _this2.parent.children.sort(function (a, b) {
-            if (a.zIndex === b.zIndex) {
-              return a.zOrder - b.zOrder;
-            }
-            return a.zIndex - b.zIndex;
-          });
-        }
       };
       if ((typeof props === 'undefined' ? 'undefined' : (0, _typeof3.default)(props)) === 'object') {
         (0, _entries2.default)(props).forEach(function (_ref) {
@@ -9030,6 +9022,18 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
         }
       });
       return ret;
+    },
+    set: function set(attrs) {
+      var _this4 = this;
+
+      (0, _entries2.default)(attrs).forEach(function (_ref5) {
+        var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+            prop = _ref6[0],
+            value = _ref6[1];
+
+        _this4[prop] = value;
+      });
+      return attrs;
     }
   }, {
     key: 'subject',
@@ -9215,7 +9219,7 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
   }, {
     key: 'transform',
     set: function set(val) {
-      var _this4 = this;
+      var _this5 = this;
 
       /*
         rotate: 0,
@@ -9238,15 +9242,15 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
         this.set('transformMatrix', [1, 0, 0, 1, 0, 0]);
         var transformStr = [];
 
-        (0, _entries2.default)(val).forEach(function (_ref5) {
-          var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
-              key = _ref6[0],
-              value = _ref6[1];
+        (0, _entries2.default)(val).forEach(function (_ref7) {
+          var _ref8 = (0, _slicedToArray3.default)(_ref7, 2),
+              key = _ref8[0],
+              value = _ref8[1];
 
           if (key === 'matrix' && Array.isArray(value)) {
-            _this4.set('transformMatrix', new _spriteMath.Matrix(value).m);
+            _this5.set('transformMatrix', new _spriteMath.Matrix(value).m);
           } else {
-            _this4[key] = value;
+            _this5[key] = value;
           }
           transformStr.push(key + '(' + value + ')');
         });
@@ -9306,10 +9310,10 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
   }, {
     key: 'skew',
     set: function set(val) {
-      var _ref7, _transform$multiply;
+      var _ref9, _transform$multiply;
 
       var oldVal = this.get('skew') || [0, 0];
-      var invm = (_ref7 = new _spriteMath.Matrix()).skew.apply(_ref7, (0, _toConsumableArray3.default)(oldVal)).inverse();
+      var invm = (_ref9 = new _spriteMath.Matrix()).skew.apply(_ref9, (0, _toConsumableArray3.default)(oldVal)).inverse();
       this.set('skew', val);
       var transform = new _spriteMath.Matrix(this.get('transformMatrix'));
       (_transform$multiply = transform.multiply(invm)).skew.apply(_transform$multiply, (0, _toConsumableArray3.default)(val));
@@ -9319,6 +9323,15 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     key: 'zIndex',
     set: function set(val) {
       this.set('zIndex', val);
+      var subject = this.subject;
+      if (subject.parent) {
+        subject.parent.children.sort(function (a, b) {
+          if (a.zIndex === b.zIndex) {
+            return a.zOrder - b.zOrder;
+          }
+          return a.zIndex - b.zIndex;
+        });
+      }
     }
 
     /**
