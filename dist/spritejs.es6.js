@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.9.2';
+const version = '2.9.3';
 
 
 
@@ -5056,6 +5056,7 @@ let BaseNode = class BaseNode {
   }
 
   dispatchEvent(type, evt, collisionState = false, swallow = false) {
+    // eslint-disable-line complexity
     const handlers = this.getEventHandlers(type);
     if (swallow && handlers.length === 0) {
       return;
@@ -5077,8 +5078,14 @@ let BaseNode = class BaseNode {
       evt.type = type;
     }
 
-    const isCollision = collisionState || this.pointCollision(evt);
+    let isCollision = collisionState || this.pointCollision(evt);
     const captured = this.isCaptured(evt);
+
+    if (this[_collisionState] && type === 'mouseleave') {
+      // dispatched from group
+      this[_collisionState] = false;
+      isCollision = true;
+    }
 
     if (!evt.terminated && (isCollision || captured)) {
       if (!evt.target) evt.target = this;
@@ -5115,7 +5122,7 @@ let BaseNode = class BaseNode {
         const _evt = Object.assign({}, evt);
         _evt.type = 'mouseenter';
         _evt.terminated = false;
-        this.dispatchEvent('mouseenter', _evt, true);
+        this.dispatchEvent('mouseenter', _evt, true, true);
         this[_collisionState] = true;
       }
     }
@@ -5123,10 +5130,10 @@ let BaseNode = class BaseNode {
     if (this[_collisionState] && !isCollision && type === 'mousemove') {
       const _evt = Object.assign({}, evt);
       _evt.type = 'mouseleave';
-      _evt.target = this;
+      delete _evt.target;
       _evt.terminated = false;
-      this.dispatchEvent('mouseleave', _evt, true);
-      this[_collisionState] = false;
+      this.dispatchEvent('mouseleave', _evt);
+      // this[_collisionState] = false;
     }
 
     return isCollision;
@@ -7934,13 +7941,13 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_3__["default"
     if (swallow && this.getEventHandlers(type).length === 0) {
       return;
     }
-    if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
+    if (!swallow && !evt.terminated && type !== 'mouseenter') {
       let isCollision = collisionState || this.pointCollision(evt);
       const changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
       if (changedTouches && type === 'touchend') {
         isCollision = true;
       }
-      if (isCollision) {
+      if (isCollision || type === 'mouseleave') {
         const sprites = this[_children].slice(0).reverse(),
               targetSprites = [];
 
@@ -8368,9 +8375,9 @@ let Group = (_class3 = (_temp2 = _class4 = class Group extends _basesprite__WEBP
     if (swallow && this.getEventHandlers(type).length === 0) {
       return;
     }
-    if (!swallow && !evt.terminated && type !== 'mouseenter' && type !== 'mouseleave') {
+    if (!swallow && !evt.terminated && type !== 'mouseenter') {
       const isCollision = collisionState || this.pointCollision(evt);
-      if (isCollision) {
+      if (isCollision || type === 'mouseleave') {
         const scrollLeft = this.attr('scrollLeft'),
               scrollTop = this.attr('scrollTop'),
               borderWidth = this.attr('border').width,
