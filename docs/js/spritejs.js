@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.11.2';
+var version = '2.11.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14901,7 +14901,12 @@ var attrs = exports.attrs = {
 function relayout(container, items) {
   // eslint-disable-line complexity
   items.sort(function (a, b) {
-    return (a.attributes.order || 0) - (b.attributes.order || 0);
+    var orderA = a.attributes.order | 0,
+        orderB = b.attributes.order | 0;
+    if (orderA !== orderB) {
+      return orderA - orderB;
+    }
+    return a.zOrder - b.zOrder;
   });
 
   function getSize(node, key) {
