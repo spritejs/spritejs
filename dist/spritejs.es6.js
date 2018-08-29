@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.11.1';
+const version = '2.11.2';
 
 
 
@@ -252,14 +252,26 @@ sprite_utils__WEBPACK_IMPORTED_MODULE_2__["cacheContextPool"] = _helpers_render_
 
 const Color = sprite_utils__WEBPACK_IMPORTED_MODULE_2__["Color"];
 
-const installed = new WeakSet();
+const installed = new WeakMap();
+const _merged = Symbol('merged');
 
-function use(plugin, ...args) {
-  if (installed.has(plugin)) return false;
+function use(plugin, options, merge = true) {
+  if (installed.has(plugin)) {
+    const ret = installed.get(plugin);
+    if (merge && !ret[_merged]) {
+      Object.assign(this, ret);
+      ret[_merged] = true;
+    }
+    return ret;
+  }
   const install = plugin.install || plugin;
-  Object.assign(this, install(this, ...args));
-  installed.add(plugin);
-  return true;
+  const ret = install(this, options);
+  installed.set(plugin, ret);
+  if (merge) {
+    Object.assign(this, ret);
+    ret[_merged] = true;
+  }
+  return ret;
 }
 
 
