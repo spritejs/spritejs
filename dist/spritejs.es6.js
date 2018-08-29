@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.11.0';
+const version = '2.11.1';
 
 
 
@@ -256,7 +256,8 @@ const installed = new WeakSet();
 
 function use(plugin, ...args) {
   if (installed.has(plugin)) return false;
-  Object.assign(this, plugin.install(this, ...args));
+  const install = plugin.install || plugin;
+  Object.assign(this, install(this, ...args));
   installed.add(plugin);
   return true;
 }

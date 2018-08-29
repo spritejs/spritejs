@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.11.0';
+var version = '2.11.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -266,12 +266,13 @@ var installed = new _weakSet2.default();
 
 function use(plugin) {
   if (installed.has(plugin)) return false;
+  var install = plugin.install || plugin;
 
   for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
   }
 
-  (0, _assign2.default)(this, plugin.install.apply(plugin, [this].concat(args)));
+  (0, _assign2.default)(this, install.apply(undefined, [this].concat(args)));
   installed.add(plugin);
   return true;
 }
