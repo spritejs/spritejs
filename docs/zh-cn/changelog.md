@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.10.0][2018-08-29]
+
+### 改进
+
+- 增加了fontStyle、fontFamily、fontWeight、fontVariant和fontSize
+- 属性里attrs的设置支持数组
+
 ## [2.9.0][2018-08-26]
 
 ### 改进

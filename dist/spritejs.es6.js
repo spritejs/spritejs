@@ -165,7 +165,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.9.5';
+const version = '2.10.0';
 
 
 
@@ -4515,6 +4515,9 @@ let SpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_1__["parse
   }
 
   set attrs(attrs) {
+    if (Array.isArray(attrs)) {
+      attrs = Object.assign({}, ...attrs);
+    }
     Object.entries(attrs).forEach(([prop, value]) => {
       this[prop] = value;
     });
@@ -6353,7 +6356,7 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_0__["
   constructor(subject) {
     super(subject);
     this.setDefault({
-      font: '16px Arial',
+      font: 'normal normal normal 16px Arial',
       textAlign: 'left',
       strokeColor: '',
       fillColor: '',
@@ -6382,6 +6385,78 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_0__["
     this.clearCache();
     this.set('font', val);
     calculTextboxSize(this.subject);
+  }
+
+  set fontSize(val) {
+    if (val == null) val = '16px';
+    let unit = 'px';
+    if (typeof val === 'string') {
+      const unitReg = /^(\d+)(\w+)/;
+      const matches = val.match(unitReg);
+      if (!matches) {
+        return null;
+      }
+      val = parseInt(matches[1], 10);
+      unit = matches[2];
+    }
+    const font = this.font;
+    const { style, variant, weight, family } = parseFont(font);
+    const fontValue = `${style} ${variant} ${weight} ${val}${unit} ${family}`;
+    this.font = fontValue;
+  }
+
+  get fontSize() {
+    const font = this.font;
+    const { size, unit } = parseFont(font);
+    return `${size}${unit}`;
+  }
+
+  set fontFamily(val) {
+    if (val == null) val = 'Arial';
+    const font = this.font;
+    const { style, variant, weight, size, unit } = parseFont(font);
+    const fontValue = `${style} ${variant} ${weight} ${size}${unit} ${val}`;
+    this.font = fontValue;
+  }
+
+  get fontFamily() {
+    return parseFont(this.font).family;
+  }
+
+  set fontStyle(val) {
+    if (val == null) val = 'normal';
+    const font = this.font;
+    const { variant, weight, size, unit, family } = parseFont(font);
+    const fontValue = `${val} ${variant} ${weight} ${size}${unit} ${family}`;
+    this.font = fontValue;
+  }
+
+  get fontStyle() {
+    return parseFont(this.font).style;
+  }
+
+  set fontVariant(val) {
+    if (val == null) val = 'normal';
+    const font = this.font;
+    const { style, weight, size, unit, family } = parseFont(font);
+    const fontValue = `${style} ${val} ${weight} ${size}${unit} ${family}`;
+    this.font = fontValue;
+  }
+
+  get fontVariant() {
+    return parseFont(this.font).variant;
+  }
+
+  set fontWeight(val) {
+    if (val == null) val = 'normal';
+    const font = this.font;
+    const { style, variant, size, unit, family } = parseFont(font);
+    const fontValue = `${style} ${variant} ${val} ${size}${unit} ${family}`;
+    this.font = fontValue;
+  }
+
+  get fontWeight() {
+    return parseFont(this.font).weight;
   }
 
   set lineHeight(val) {
@@ -6450,7 +6525,7 @@ let LabelSpriteAttr = (_dec = Object(sprite_utils__WEBPACK_IMPORTED_MODULE_0__["
     if (this.lineBreak !== '') calculTextboxSize(this.subject);
     super.layoutWidth = val;
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'text', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_dec4, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_dec5, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
+}, (_applyDecoratedDescriptor(_class.prototype, 'text', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontSize', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontFamily', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontFamily'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontStyle', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontStyle'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontVariant', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontVariant'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontWeight', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontWeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_dec4, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_dec5, sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [sprite_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
 let Label = (_class2 = (_temp = _class3 = class Label extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
   constructor(attr) {
@@ -7610,7 +7685,7 @@ module.exports = function f(str, defaultHeight) {
     variant: 'normal',
     size: parseFloat(sizeFamily[1]),
     unit: sizeFamily[2],
-    family: sizeFamily[3].replace(/["']/g, '').replace(/ *, */g, ',')
+    family: sizeFamily[3].replace(/ *, */g, ',')
 
     // Optional, unordered properties.
   };let weight, style, variant, stretch;

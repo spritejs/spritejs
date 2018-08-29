@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.9.5';
+var version = '2.10.0';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -9059,6 +9059,9 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
     set: function set(attrs) {
       var _this4 = this;
 
+      if (Array.isArray(attrs)) {
+        attrs = _assign2.default.apply(Object, [{}].concat((0, _toConsumableArray3.default)(attrs)));
+      }
       (0, _entries2.default)(attrs).forEach(function (_ref5) {
         var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
             prop = _ref6[0],
@@ -11493,7 +11496,7 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
     var _this = (0, _possibleConstructorReturn3.default)(this, (LabelSpriteAttr.__proto__ || (0, _getPrototypeOf2.default)(LabelSpriteAttr)).call(this, subject));
 
     _this.setDefault({
-      font: '16px Arial',
+      font: 'normal normal normal 16px Arial',
       textAlign: 'left',
       strokeColor: '',
       fillColor: '',
@@ -11526,6 +11529,116 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
       this.clearCache();
       this.set('font', val);
       calculTextboxSize(this.subject);
+    }
+  }, {
+    key: 'fontSize',
+    set: function set(val) {
+      if (val == null) val = '16px';
+      var unit = 'px';
+      if (typeof val === 'string') {
+        var unitReg = /^(\d+)(\w+)/;
+        var matches = val.match(unitReg);
+        if (!matches) {
+          return null;
+        }
+        val = parseInt(matches[1], 10);
+        unit = matches[2];
+      }
+      var font = this.font;
+
+      var _parseFont2 = parseFont(font),
+          style = _parseFont2.style,
+          variant = _parseFont2.variant,
+          weight = _parseFont2.weight,
+          family = _parseFont2.family;
+
+      var fontValue = style + ' ' + variant + ' ' + weight + ' ' + val + unit + ' ' + family;
+      this.font = fontValue;
+    },
+    get: function get() {
+      var font = this.font;
+
+      var _parseFont3 = parseFont(font),
+          size = _parseFont3.size,
+          unit = _parseFont3.unit;
+
+      return '' + size + unit;
+    }
+  }, {
+    key: 'fontFamily',
+    set: function set(val) {
+      if (val == null) val = 'Arial';
+      var font = this.font;
+
+      var _parseFont4 = parseFont(font),
+          style = _parseFont4.style,
+          variant = _parseFont4.variant,
+          weight = _parseFont4.weight,
+          size = _parseFont4.size,
+          unit = _parseFont4.unit;
+
+      var fontValue = style + ' ' + variant + ' ' + weight + ' ' + size + unit + ' ' + val;
+      this.font = fontValue;
+    },
+    get: function get() {
+      return parseFont(this.font).family;
+    }
+  }, {
+    key: 'fontStyle',
+    set: function set(val) {
+      if (val == null) val = 'normal';
+      var font = this.font;
+
+      var _parseFont5 = parseFont(font),
+          variant = _parseFont5.variant,
+          weight = _parseFont5.weight,
+          size = _parseFont5.size,
+          unit = _parseFont5.unit,
+          family = _parseFont5.family;
+
+      var fontValue = val + ' ' + variant + ' ' + weight + ' ' + size + unit + ' ' + family;
+      this.font = fontValue;
+    },
+    get: function get() {
+      return parseFont(this.font).style;
+    }
+  }, {
+    key: 'fontVariant',
+    set: function set(val) {
+      if (val == null) val = 'normal';
+      var font = this.font;
+
+      var _parseFont6 = parseFont(font),
+          style = _parseFont6.style,
+          weight = _parseFont6.weight,
+          size = _parseFont6.size,
+          unit = _parseFont6.unit,
+          family = _parseFont6.family;
+
+      var fontValue = style + ' ' + val + ' ' + weight + ' ' + size + unit + ' ' + family;
+      this.font = fontValue;
+    },
+    get: function get() {
+      return parseFont(this.font).variant;
+    }
+  }, {
+    key: 'fontWeight',
+    set: function set(val) {
+      if (val == null) val = 'normal';
+      var font = this.font;
+
+      var _parseFont7 = parseFont(font),
+          style = _parseFont7.style,
+          variant = _parseFont7.variant,
+          size = _parseFont7.size,
+          unit = _parseFont7.unit,
+          family = _parseFont7.family;
+
+      var fontValue = style + ' ' + variant + ' ' + val + ' ' + size + unit + ' ' + family;
+      this.font = fontValue;
+    },
+    get: function get() {
+      return parseFont(this.font).weight;
     }
   }, {
     key: 'lineHeight',
@@ -11608,7 +11721,7 @@ var LabelSpriteAttr = (_dec = (0, _spriteUtils.parseValue)(parseFloat), _dec2 = 
     }
   }]);
   return LabelSpriteAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'text', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_dec4, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_dec5, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'text', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontSize', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fontSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontFamily', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fontFamily'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontStyle', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fontStyle'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontVariant', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fontVariant'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontWeight', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fontWeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec2, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec3, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_dec4, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_dec5, _spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_spriteUtils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
 var Label = (_class2 = (_temp = _class3 = function (_BaseSprite) {
   (0, _inherits3.default)(Label, _BaseSprite);
 
@@ -11742,12 +11855,12 @@ var Label = (_class2 = (_temp = _class3 = function (_BaseSprite) {
       var textboxSize = this.textboxSize,
           contentSize = this.contentSize;
 
-      var _parseFont2 = parseFont(font),
-          style = _parseFont2.style,
-          variant = _parseFont2.variant,
-          weight = _parseFont2.weight,
-          size = _parseFont2.size,
-          family = _parseFont2.family;
+      var _parseFont8 = parseFont(font),
+          style = _parseFont8.style,
+          variant = _parseFont8.variant,
+          weight = _parseFont8.weight,
+          size = _parseFont8.size,
+          family = _parseFont8.family;
 
       size *= contentSize[0] / textboxSize[0];
       return style + ' ' + variant + ' ' + weight + ' ' + Math.floor(size) + 'px "' + family + '"';
@@ -12840,7 +12953,7 @@ module.exports = function f(str, defaultHeight) {
     variant: 'normal',
     size: parseFloat(sizeFamily[1]),
     unit: sizeFamily[2],
-    family: sizeFamily[3].replace(/["']/g, '').replace(/ *, */g, ',')
+    family: sizeFamily[3].replace(/ *, */g, ',')
 
     // Optional, unordered properties.
   };var weight = void 0,

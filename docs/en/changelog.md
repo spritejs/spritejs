@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.10.0][2018-08-29]
+
+### enhancement
+
+- Add fontStyle,fontFamily,fontWeight,fontVariant and fontSize
+- attr.attrs support array
+
 ## [2.9.0][2018-08-26]
 
 ### enhancement
