@@ -13,6 +13,7 @@ import {
   createElement,
   Color,
 
+  use,
   utils,
   math,
 } from 'sprite-core';
@@ -45,6 +46,7 @@ export {
   version,
   math,
   utils,
+  use,
 
   BaseNode,
   BaseSprite,

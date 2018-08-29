@@ -98,6 +98,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["utils"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "use", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["use"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseNode", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataNode", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["DataNode"]; });
@@ -165,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.10.0';
+const version = '2.11.0';
 
 
 
@@ -175,6 +177,7 @@ const version = '2.10.0';
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "use", function() { return use; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return Color; });
 /* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"]; });
@@ -248,6 +251,15 @@ sprite_utils__WEBPACK_IMPORTED_MODULE_2__["findColor"] = _helpers_render__WEBPAC
 sprite_utils__WEBPACK_IMPORTED_MODULE_2__["cacheContextPool"] = _helpers_render__WEBPACK_IMPORTED_MODULE_14__["cacheContextPool"];
 
 const Color = sprite_utils__WEBPACK_IMPORTED_MODULE_2__["Color"];
+
+const installed = new WeakSet();
+
+function use(plugin, ...args) {
+  if (installed.has(plugin)) return false;
+  Object.assign(this, plugin.install(this, ...args));
+  installed.add(plugin);
+  return true;
+}
 
 
 

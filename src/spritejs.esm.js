@@ -9,6 +9,7 @@ export const {
   version,
   math,
   utils,
+  use,
 
   BaseNode,
   DataNode,
