@@ -32,7 +32,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
-    const paper = new Scene('#container', 400, 400)
+    const paper = new Scene('#container', { viewport: [400, 400] })
 
     const sprite = new Sprite(imgUrl)
     sprite.attr({
@@ -161,7 +161,7 @@ npm install canvas@next
 const fs = require('fs')
 
 const {Scene, Label} = require('spritejs')
-const scene = new Scene('#test', 800, 600)
+const scene = new Scene('#test', { viewport: [800, 600] })
 
 const bglayer = scene.layer('bg', {handleEvent: false})
 
