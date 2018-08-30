@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.12.0';
+var version = '2.12.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7618,12 +7618,23 @@ var BaseSprite = (_class = (_temp = _class2 = function (_BaseNode) {
     value: function changeState(fromState, toState, action) {
       var _this4 = this;
 
-      if (this[_changeStateAction]) this[_changeStateAction].finish();
-      var animation = this.animate([(0, _assign2.default)({}, fromState), (0, _assign2.default)({}, toState)], (0, _assign2.default)({ fill: 'forwards' }, action));
-      animation.finished.then(function () {
-        if (_this4[_changeStateAction] === animation) delete _this4[_changeStateAction];
-      });
-      this[_changeStateAction] = animation;
+      var animation = void 0;
+      if (this[_changeStateAction]) {
+        var currentAnim = this[_changeStateAction].animation;
+        if (this[_changeStateAction].reversable && (currentAnim.playState === 'running' || currentAnim.playState === 'pending') && this[_changeStateAction].fromState === toState && this[_changeStateAction].toState === fromState) {
+          currentAnim.playbackRate = -currentAnim.playbackRate;
+          animation = currentAnim;
+        } else {
+          currentAnim.finish();
+        }
+      }
+      if (!animation) {
+        animation = this.animate([(0, _assign2.default)({}, fromState), (0, _assign2.default)({}, toState)], (0, _assign2.default)({ fill: 'forwards' }, action));
+        animation.finished.then(function () {
+          if (_this4[_changeStateAction] && _this4[_changeStateAction].animation === animation) delete _this4[_changeStateAction];
+        });
+      }
+      this[_changeStateAction] = { animation: animation, fromState: fromState, toState: toState, reversable: action.reversable !== false };
       return animation;
     }
   }, {
@@ -9790,27 +9801,27 @@ var SpriteAttr = (_dec = (0, _spriteUtils.parseValue)(_spriteUtils.parseStringFl
               action = actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':'];
               if (action) {
                 var evt = { from: [oldState, fromState], to: [val, toState], action: action };
-                subject.dispatchEvent('beforestart', evt, true, true);
+                subject.dispatchEvent('action.beforestart', evt, true, true);
                 if (evt.returnValue) {
                   var animation = subject.changeState(fromState, toState, action);
-                  subject.dispatchEvent('start', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
+                  subject.dispatchEvent('action.start', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
                   animation.ready.then(function () {
-                    subject.dispatchEvent('ready', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
+                    subject.dispatchEvent('action.ready', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
                   });
                   animation.finished.then(function () {
-                    subject.dispatchEvent('finished', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
+                    subject.dispatchEvent('action.finished', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
                   });
                 }
               }
             }
             if (!action) {
               var _evt = { from: [oldState, fromState], to: [val, toState] };
-              subject.dispatchEvent('beforestart', _evt, true, true);
+              subject.dispatchEvent('action.beforestart', _evt, true, true);
               if (_evt.returnValue) {
-                subject.dispatchEvent('start', { from: [oldState, fromState], to: [val, toState] }, true, true);
-                subject.dispatchEvent('ready', { from: [oldState, fromState], to: [val, toState] }, true, true);
+                subject.dispatchEvent('action.start', { from: [oldState, fromState], to: [val, toState] }, true, true);
+                subject.dispatchEvent('action.ready', { from: [oldState, fromState], to: [val, toState] }, true, true);
                 subject.attr(toState);
-                subject.dispatchEvent('finished', { from: [oldState, fromState], to: [val, toState] }, true, true);
+                subject.dispatchEvent('action.finished', { from: [oldState, fromState], to: [val, toState] }, true, true);
               }
             }
           }
