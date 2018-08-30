@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.11.4';
+var version = '2.11.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -269,12 +269,14 @@ var Color = utils.Color;
 var installed = new _weakMap2.default();
 var _merged = (0, _symbol2.default)('merged');
 
+var target = null;
 function use(plugin, options) {
   var merge = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-  var target = this;
-  if (target.use === use) {
-    target.use = use.bind(this);
+  if (!target) {
+    target = (0, _assign2.default)({}, this);
+    target.__spritejs = this;
+    target.use = use.bind(target);
   }
   if (typeof options === 'boolean') {
     merge = options;
@@ -292,7 +294,7 @@ function use(plugin, options) {
   var ret = install(target, options);
   installed.set(plugin, ret);
   if (merge) {
-    (0, _assign2.default)(target, ret);
+    (0, _assign2.default)(target.__spritejs, ret);
     ret[_merged] = true;
   }
   return ret;

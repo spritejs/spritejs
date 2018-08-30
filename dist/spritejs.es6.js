@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.11.4';
+const version = '2.11.5';
 
 
 
@@ -255,10 +255,12 @@ const Color = sprite_utils__WEBPACK_IMPORTED_MODULE_2__["Color"];
 const installed = new WeakMap();
 const _merged = Symbol('merged');
 
+let target = null;
 function use(plugin, options, merge = true) {
-  const target = this;
-  if (target.use === use) {
-    target.use = use.bind(this);
+  if (!target) {
+    target = Object.assign({}, this);
+    target.__spritejs = this;
+    target.use = use.bind(target);
   }
   if (typeof options === 'boolean') {
     merge = options;
@@ -276,7 +278,7 @@ function use(plugin, options, merge = true) {
   const ret = install(target, options);
   installed.set(plugin, ret);
   if (merge) {
-    Object.assign(target, ret);
+    Object.assign(target.__spritejs, ret);
     ret[_merged] = true;
   }
   return ret;
