@@ -47,6 +47,7 @@
   * [盒模型](/zh-cn/guide/boxmodel)
   * [预加载与雪碧图](/zh-cn/guide/resource)
   * [高级动画](/zh-cn/guide/animations)
+  * [状态切换](/zh-cn/guide/states)
   * [Bitmap Font](/zh-cn/guide/bmfont)
   * [外部时钟](/zh-cn/guide/ticker)
   * [碰撞检测](/zh-cn/guide/collision)

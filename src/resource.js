@@ -12,7 +12,8 @@ const loadedResources = new Map();
  */
 
 const Resource = {
-  loadTexture(texture, timeout = 30000) {
+  loadTimeout: 30000,
+  loadTexture(texture, timeout = Resource.loadTimeout) {
     if(typeof texture === 'string') {
       texture = {src: texture};
     }
