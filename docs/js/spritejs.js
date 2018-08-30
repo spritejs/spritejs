@@ -272,19 +272,27 @@ var _merged = (0, _symbol2.default)('merged');
 function use(plugin, options) {
   var merge = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
+  var target = this;
+  if (target.use === use) {
+    target.use = use.bind(this);
+  }
+  if (typeof options === 'boolean') {
+    merge = options;
+    options = undefined;
+  }
   if (installed.has(plugin)) {
     var _ret = installed.get(plugin);
     if (merge && !_ret[_merged]) {
-      (0, _assign2.default)(this, _ret);
+      (0, _assign2.default)(target, _ret);
       _ret[_merged] = true;
     }
     return _ret;
   }
   var install = plugin.install || plugin;
-  var ret = install(this, options);
+  var ret = install(target, options);
   installed.set(plugin, ret);
   if (merge) {
-    (0, _assign2.default)(this, ret);
+    (0, _assign2.default)(target, ret);
     ret[_merged] = true;
   }
   return ret;

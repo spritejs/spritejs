@@ -256,19 +256,27 @@ const installed = new WeakMap();
 const _merged = Symbol('merged');
 
 function use(plugin, options, merge = true) {
+  const target = this;
+  if (target.use === use) {
+    target.use = use.bind(this);
+  }
+  if (typeof options === 'boolean') {
+    merge = options;
+    options = undefined;
+  }
   if (installed.has(plugin)) {
     const ret = installed.get(plugin);
     if (merge && !ret[_merged]) {
-      Object.assign(this, ret);
+      Object.assign(target, ret);
       ret[_merged] = true;
     }
     return ret;
   }
   const install = plugin.install || plugin;
-  const ret = install(this, options);
+  const ret = install(target, options);
   installed.set(plugin, ret);
   if (merge) {
-    Object.assign(this, ret);
+    Object.assign(target, ret);
     ret[_merged] = true;
   }
   return ret;
