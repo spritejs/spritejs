@@ -75,6 +75,9 @@ Action的匹配规则如下：
 
 <!-- demo: state-actions -->
 
+### action-事件
+
+状态切换的时候，我们可以监听action事件，目前支持`action-beforestart`、`action-start`、`action-ready`和`action-finished`，分别在对应的状态开始切换前、开始切换时、Action动画ready时以及Action动画finished之后触发。
 
 ### action:reversable
 

@@ -50,30 +50,83 @@ class MyElement extends Sprite {
 
 除了initAttributes方法外，如果我们通过babel和webpack编译，我们还可以使用decorate来定义属性，我们可以继承Sprite.Attr类。
 
-## 另一种扩展方式
+## 定义属性特殊操作
 
-另一种自定义元素实现方式：
+我们定义元素属性的时候，需要理解和使用一些概念：
+
+- reflow: 当定义了一个新属性，该属性改变会引起元素的`contentSize`、`clientSize`、`offsetSize`等box大小变化的时候，由于spritejs默认缓存了这些属性计算值，因此需要显式调用`attr.clearFlow()`来通知引擎清除这些元素缓存的值。
+
+- cache: 当定义了一个新属性，该属性改变会引起元素的外观呈现发生变化（包括改变size、color、border、shape等）时，由于spritejs缓存策略可能会将元素缓存，因此需要显式调用`attr.clearCache()`来通知引擎清除缓存。在大部分情况下，元素的属性都引起外观改变（除了pos、transform、layout相关的这类只做位置变换的属性），因此通常情况下自定义的属性都要进行clearCache操作。
+
+- quietSet: 如果定义一个属性，既不影响元素外观，又不影响box大小（如Path的bounding属性只影响事件的hit判断），那么可以使用`attr.quietSet()`来代替`attr.set()`设置元素属性，这样元素的这个属性变化的时候，不会通知layer做update操作，能够减少消耗，提升性能。
+
+- relayout: 当继承一个Group，定义的新属性如果是layout相关的属性，那么需要显式调用`attr.subject.relayout()`来通知元素清除layout，这样在绘制的时候才能重新计算layout。
+
+## 插件封装
+
+我们可以自定义spritejs的插件库，spritejs提供了`use`操作，能够载入并初始化插件。
+
+`use(component, options, merge = true)`方法支持三个参数，返回插件对象。
+
+- component 要使用的组件，该组件暴露一个`function`或者`{install:function}`的接口。
+- options 传给接口的配置。
+- merge 默认值true，将该接口返回的内容merge到spritejs对象上。
 
 ```js
-class MyAttr extends Sprite.Attr {
-  constructor() {
-    this.setDefault({
-      // 设置默认属性
-    })
-  }
-  @attr
-  foo(val) {
-    this.set('foo', val)
-    this.clearCache()
-  }
-}
+import * as MyElement from 'my-element';
+spritejs.use(MyElement);
 
-class MyElement extends Sprite {
-  ...
+const el = new spritejs.MyElement();
+
+...
+```
+
+*MyElement插件的定义*
+
+```js
+export function install({Sprite, registerNodeType}, options) {
+  class MyAttr extends Sprite.Attr {
+    constructor() {
+      this.setDefault({
+        // 设置默认属性
+      })
+    }
+    @attr
+    foo(val) {
+      this.set('foo', val)
+      this.clearCache()
+    }
+  }
+
+  class MyElement extends Sprite {
+    ...
+  }
+
+
+  registerNodeType('myelement', MyElement); // 定义新的nodeType名为myelement
+  return {MyElement}
 }
 ```
 
-一个[例子](https://github.com/spritejs/sprite-extend-d3axis)，通过继承Group类实现D3可用的坐标轴元素。
+注意由于spritejs使用`babel-transform-decorators-runtime`和`babel-decorators-runtime`两个扩展来支持ES6的decorators特性，所以需要安装这两个依赖：
+
+```bash
+npm i -D babel-transform-decorators-runtime
+npm i -S babel-decorators-runtime
+```
+
+对应的.babelrc推荐配置为：
+
+```json
+{
+  "presets": ["env"],
+  "plugins": ["transform-runtime",
+              "transform-decorators-runtime",
+              "transform-class-properties"]
+}
+```
+
+一个[例子](https://github.com/spritejs/sprite-extend-shapes)，通过继承Group类实现矢量图形的绘制。
 
 
 <script src="/js/guide/nodes.js"></src>
