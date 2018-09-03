@@ -10506,19 +10506,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _defaultEffect = _spriteAnimator.Effects.default;
 
 var defaultEffect = function defaultEffect(from, to, p, start, end) {
-  var unit = null;
-  var isStr = typeof from === 'string' && typeof to === 'string';
-  if (isStr && from.endsWith('%') && to.endsWith('%')) {
-    unit = '%';
+  var unitFrom = 'px',
+      unitTo = 'px';
+  var matchFrom = null,
+      matchTo = null;
+
+  var exp = /^(\d+|\d*\.\d+)(%|rh|rw)$/i;
+  if (typeof from === 'string') {
+    matchFrom = exp.exec(from);
+    if (matchFrom) {
+      unitFrom = matchFrom[2];
+    }
   }
-  if (isStr && from.endsWith('rw') && to.endsWith('rw')) {
-    unit = 'rw';
+
+  if (typeof to === 'string') {
+    matchTo = exp.exec(to);
+    if (matchTo) {
+      unitTo = matchTo[2];
+    }
   }
-  if (isStr && from.endsWith('rh') && to.endsWith('rh')) {
-    unit = 'rh';
+
+  if (unitFrom === unitTo) {
+    if (matchFrom) from = parseFloat(matchFrom[1]);
+    if (matchTo) to = parseFloat(matchTo[1]);
   }
-  var v = _defaultEffect(parseFloat(from), parseFloat(to), p, start, end);
-  return unit ? '' + v + unit : v;
+
+  var v = _defaultEffect(from, to, p, start, end);
+  return unitFrom !== 'px' ? '' + v + unitFrom : v;
 };
 
 _spriteAnimator.Effects.default = defaultEffect;

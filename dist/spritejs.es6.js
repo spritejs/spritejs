@@ -5563,19 +5563,33 @@ __webpack_require__.r(__webpack_exports__);
 const _defaultEffect = sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default;
 
 const defaultEffect = (from, to, p, start, end) => {
-  let unit = null;
-  const isStr = typeof from === 'string' && typeof to === 'string';
-  if (isStr && from.endsWith('%') && to.endsWith('%')) {
-    unit = '%';
+  let unitFrom = 'px',
+      unitTo = 'px';
+  let matchFrom = null,
+      matchTo = null;
+
+  const exp = /^(\d+|\d*\.\d+)(%|rh|rw)$/i;
+  if (typeof from === 'string') {
+    matchFrom = exp.exec(from);
+    if (matchFrom) {
+      unitFrom = matchFrom[2];
+    }
   }
-  if (isStr && from.endsWith('rw') && to.endsWith('rw')) {
-    unit = 'rw';
+
+  if (typeof to === 'string') {
+    matchTo = exp.exec(to);
+    if (matchTo) {
+      unitTo = matchTo[2];
+    }
   }
-  if (isStr && from.endsWith('rh') && to.endsWith('rh')) {
-    unit = 'rh';
+
+  if (unitFrom === unitTo) {
+    if (matchFrom) from = parseFloat(matchFrom[1]);
+    if (matchTo) to = parseFloat(matchTo[1]);
   }
-  const v = _defaultEffect(parseFloat(from), parseFloat(to), p, start, end);
-  return unit ? `${v}${unit}` : v;
+
+  const v = _defaultEffect(from, to, p, start, end);
+  return unitFrom !== 'px' ? `${v}${unitFrom}` : v;
 };
 
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default = defaultEffect;
