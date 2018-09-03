@@ -42,8 +42,18 @@ path.attr({
   bgcolor: 'blue',
   lineWidth: 10,
   // d: 'M10,80 q100,120 120,20 q140,-50 160,0',
+  lineDash: 888,
+  lineDashOffset: 888,
 });
 paper.layer().append(path);
+
+path.animate([
+  {lineDashOffset: 888},
+  {lineDashOffset: 0},
+], {
+  duration: 2000,
+  fill: 'forwards',
+});
 
 renderMode.onchange = function (e) {
   path.attr('renderMode', e.target.value);
