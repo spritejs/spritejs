@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.13.0';
+var version = '2.13.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7336,13 +7336,12 @@ function relative() {
               v: parseFloat(val) / 100,
               rv: val
             };
+          } else {
+            val = parseFloat(val);
           }
-        } else {
-          val = val ? parseFloat(val) : val;
         }
         setter.call(this, val);
       };
-      descriptor.set.__relative = true;
       return descriptor;
     }
   };

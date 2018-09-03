@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.13.0';
+const version = '2.13.1';
 
 
 
@@ -3442,13 +3442,12 @@ function relative(type = 'width') {
               v: parseFloat(val) / 100,
               rv: val
             };
+          } else {
+            val = parseFloat(val);
           }
-        } else {
-          val = val ? parseFloat(val) : val;
         }
         setter.call(this, val);
       };
-      descriptor.set.__relative = true;
       return descriptor;
     }
   };
