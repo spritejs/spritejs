@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>spritejs 粒子动画</title>
+  <style>
+    body {
+      background: white;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+    }
+    #container {
+      width: 600px;
+      height: 400px;
+      padding: 0;
+      margin: 0;
+      margin-bottom: 50px;
+    }
+  </style>
+</head>
+<body>
+  <!-- <script src="https://s0.ssl.qhres.com/static/e1bab09a698ef971.js"></script> -->
+  <script src="/js/spritejs.js"></script>
+
+  <div id="container"></div> 
+  <h2 style="color: gray; position: absolute; top: 3px;" id="fps"></h2>
+
+  <script>
+(async function () {
+  /* eslint-disable */
+  var { Scene, Sprite, Group } = window.spritejs;
+  const imgUrl = 'http://p0.qhimg.com/t01968f6e92f9fbd43e.png';
+
+  const scene = new Scene('#container', {
+    resolution: [1200, 800],
+    viewport: ['auto', 'auto'], stickMode: 'width'
+  });
+  await scene.preload(imgUrl);
+
+  const centerX = 600;
+  const centerY = 400;
+  const radius = Math.sqrt(centerX * centerX + centerY * centerY);
+  var dotsLayer;
+  function createDots() {
+    var i = 1;
+    dotsLayer = scene.layer('dots', { evaluateFPS: true });
+    dotsLayer.canvas.style.backgroundColor = '#000'
+    const group = new Group();
+    group.attr({
+      pos: [0, 0],
+    });
+    var dots = []
+    while (i < 1000) {
+      i++;
+      let dot = new Sprite(imgUrl)
+      dot.attr({
+        anchor: [.5, .5],
+        pos: [centerX, centerY],
+        size: [32, 32],
+        scale: 0,
+      })
+      dots.push(dot)
+      group.append(dot)
+    }
+    dotsLayer.appendChild(group)
+    return dots;
+  }
+
+  function tween(dot) {
+    const duration = 750;
+    var delay = Math.random() * duration;
+    var angle = Math.random() * Math.PI * 2;
+    
+    dot.animate([
+      {
+        x: centerX,
+        y: centerY,
+        scale: 1/32,
+      },
+      {
+        x: (Math.cos(angle) * radius + centerX),
+        y: (Math.sin(angle) * radius + centerY),
+        scale: 1.0,
+      }], {
+        duration: duration,
+        delay: delay,
+        fill: "forwards",
+        easing: "cubic-bezier(0.550, 0.055, 0.675, 0.190)",
+        iterations: Infinity,
+      })
+  }
+
+
+
+
+  var fps = document.getElementById('fps');
+  const dots = createDots()
+  // dotsLayer.batch(...dots);
+  dots.forEach(tween);
+  setInterval(() => {
+    fps.innerHTML = '  fps: ' + dotsLayer.fps;
+  }, 1000); 
+}());
+  </script>
+</body>
+ 
+</html>
