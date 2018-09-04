@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.13.4';
+var version = '2.13.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14385,6 +14385,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           var parentY = evt.offsetY - this.originalRect[1] - borderWidth - padding[0] + scrollTop;
           // console.log(evt.parentX, evt.parentY)
 
+          var _parentX = evt.parentX,
+              _parentY = evt.parentY;
+
           evt.parentX = parentX;
           evt.parentY = parentY;
 
@@ -14410,6 +14413,8 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           evt.targetSprites = targetSprites;
           // stopDispatch can only terminate event in the same level
           evt.terminated = false;
+          evt.parentX = _parentX;
+          evt.parentY = _parentY;
           collisionState = isCollision;
         }
       }
