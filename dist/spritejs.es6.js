@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.13.5';
+const version = '2.13.6';
 
 
 
@@ -5649,11 +5649,15 @@ let currentTime = Date.now();
 const requestAnimationFrame = step => {
   const id = Symbol('requestId');
   steps.set(id, step);
-  currentTime = Date.now();
 
   if (timerId == null) {
+    if (steps.size === 1) {
+      currentTime = Date.now();
+    }
     timerId = _requestAnimationFrame(t => {
-      timerId = null;[...steps].forEach(([id, callback]) => {
+      timerId = null;
+      currentTime = Date.now();
+      [...steps].forEach(([id, callback]) => {
         callback(t);
         steps.delete(id);
       });

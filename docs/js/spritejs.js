@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.13.5';
+var version = '2.13.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10641,11 +10641,15 @@ var currentTime = Date.now();
 var requestAnimationFrame = function requestAnimationFrame(step) {
   var id = (0, _symbol2.default)('requestId');
   steps.set(id, step);
-  currentTime = Date.now();
 
   if (timerId == null) {
+    if (steps.size === 1) {
+      currentTime = Date.now();
+    }
     timerId = _requestAnimationFrame(function (t) {
-      timerId = null;[].concat((0, _toConsumableArray3.default)(steps)).forEach(function (_ref) {
+      timerId = null;
+      currentTime = Date.now();
+      [].concat((0, _toConsumableArray3.default)(steps)).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray3.default)(_ref, 2),
             id = _ref2[0],
             callback = _ref2[1];
