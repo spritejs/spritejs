@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.13.8';
+const version = '2.13.9';
 
 
 
@@ -12139,7 +12139,13 @@ const Resource = {
     }
     const img = loadedResources.get(mapKey);
     if (img instanceof Promise) {
-      return img;
+      return img.then(res => {
+        return {
+          img: res.img,
+          texture,
+          fromCache: false
+        };
+      });
     }
     return {
       img,

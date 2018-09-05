@@ -41,7 +41,13 @@ const Resource = {
     }
     const img = loadedResources.get(mapKey);
     if(img instanceof Promise) {
-      return img;
+      return img.then((res) => {
+        return {
+          img: res.img,
+          texture,
+          fromCache: false,
+        };
+      });
     }
     return {
       img,
