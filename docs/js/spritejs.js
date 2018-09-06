@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.14.2';
+var version = '2.14.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7504,13 +7504,13 @@ var _defineProperty2 = __webpack_require__(117);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-var _toConsumableArray2 = __webpack_require__(99);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 var _defineProperty4 = __webpack_require__(178);
 
 var _defineProperty5 = _interopRequireDefault(_defineProperty4);
+
+var _toConsumableArray2 = __webpack_require__(99);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _slicedToArray2 = __webpack_require__(90);
 
@@ -7721,6 +7721,19 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         return this;
       }if (typeof props === 'string') {
         if (val !== undefined) {
+          if (props === 'attrs') {
+            if (Array.isArray(val)) {
+              val = _assign2.default.apply(Object, [{}].concat((0, _toConsumableArray3.default)(val)));
+            }
+            (0, _entries2.default)(val).forEach(function (_ref3) {
+              var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
+                  prop = _ref4[0],
+                  value = _ref4[1];
+
+              _this2.attr(prop, value);
+            });
+            return this;
+          }
           if (typeof val === 'function') {
             val = val(this[_attr][props]);
           }
@@ -7770,19 +7783,19 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
   }, {
     key: 'transition',
     value: function transition(sec) {
-      var _ref5;
+      var _ref7;
 
       var easing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'linear';
 
       var that = this,
           _animation = (0, _symbol2.default)('animation');
 
-      return _ref5 = {}, (0, _defineProperty5.default)(_ref5, _animation, null), (0, _defineProperty5.default)(_ref5, 'end', function end() {
+      return _ref7 = {}, (0, _defineProperty5.default)(_ref7, _animation, null), (0, _defineProperty5.default)(_ref7, 'end', function end() {
         var animation = this[_animation];
         if (animation && (animation.playState === 'running' || animation.playState === 'pending')) {
           animation.finish();
         }
-      }), (0, _defineProperty5.default)(_ref5, 'reverse', function reverse() {
+      }), (0, _defineProperty5.default)(_ref7, 'reverse', function reverse() {
         var animation = this[_animation];
         if (animation) {
           if (animation.playState === 'running' || animation.playState === 'pending') {
@@ -7794,15 +7807,15 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           }
         }
         return animation.finished;
-      }), (0, _defineProperty5.default)(_ref5, 'attr', function attr(prop, val) {
+      }), (0, _defineProperty5.default)(_ref7, 'attr', function attr(prop, val) {
         this.end();
         if (typeof prop === 'string') {
           prop = (0, _defineProperty5.default)({}, prop, val);
         }
-        (0, _entries2.default)(prop).forEach(function (_ref3) {
-          var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
-              key = _ref4[0],
-              value = _ref4[1];
+        (0, _entries2.default)(prop).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+              key = _ref6[0],
+              value = _ref6[1];
 
           if (typeof value === 'function') {
             prop[key] = value(that.attr(key));
@@ -7814,7 +7827,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           easing: easing
         });
         return this[_animation].finished;
-      }), _ref5;
+      }), _ref7;
     }
   }, {
     key: 'animate',
@@ -8053,12 +8066,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
                 width = _outerSize[0],
                 height = _outerSize[1];
 
-            var _ref6 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
-                x = _ref6[0],
-                y = _ref6[1],
-                w = _ref6[2],
-                h = _ref6[3],
-                r = _ref6[4];
+            var _ref8 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
+                x = _ref8[0],
+                y = _ref8[1],
+                w = _ref8[2],
+                h = _ref8[3],
+                r = _ref8[4];
 
             (0, _render.drawRadiusBox)(this.context, { x: x, y: y, w: w, h: h, r: r });
             if (this.layer && this.layer.offset) {
@@ -8253,12 +8266,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var bgimage = this.attr('bgimage');
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
-        var _ref7 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x7 = _ref7[0],
-            _y = _ref7[1],
-            _w = _ref7[2],
-            _h = _ref7[3],
-            _r = _ref7[4];
+        var _ref9 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
+            _x7 = _ref9[0],
+            _y = _ref9[1],
+            _w = _ref9[2],
+            _h = _ref9[3],
+            _r = _ref9[4];
 
 
         (0, _render.drawRadiusBox)(drawingContext, { x: _x7, y: _y, w: _w, h: _h, r: _r });
@@ -8382,9 +8395,9 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.hasLayout) {
         var layoutWidth = this.attr('layoutWidth'),
-            layoutHeight = this.attr('layoutHeight');var _ref8 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
-        width = _ref8[0];
-        height = _ref8[1];
+            layoutHeight = this.attr('layoutHeight');var _ref10 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+        width = _ref10[0];
+        height = _ref10[1];
       }
       if (isBorderBox) {
         var borderWidth = this.attr('border').width,
@@ -8657,10 +8670,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      (0, _entries2.default)(attrs).forEach(function (_ref9) {
-        var _ref10 = (0, _slicedToArray3.default)(_ref9, 2),
-            prop = _ref10[0],
-            handler = _ref10[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref11) {
+        var _ref12 = (0, _slicedToArray3.default)(_ref11, 2),
+            prop = _ref12[0],
+            handler = _ref12[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -8731,12 +8744,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   var w = image.width,
       h = image.height;
 
-  var _ref11 = clip9 || [16, 16, 16, 16],
-      _ref12 = (0, _slicedToArray3.default)(_ref11, 4),
-      top = _ref12[0],
-      right = _ref12[1],
-      bottom = _ref12[2],
-      left = _ref12[3];
+  var _ref13 = clip9 || [16, 16, 16, 16],
+      _ref14 = (0, _slicedToArray3.default)(_ref13, 4),
+      top = _ref14[0],
+      right = _ref14[1],
+      bottom = _ref14[2],
+      left = _ref14[3];
 
   var leftTop = [0, 0, left, top],
       rightTop = [w - right, 0, right, top],
@@ -9543,21 +9556,6 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         ret[key] = _this3[key];
       });
       return ret;
-    },
-    set: function set(attrs) {
-      var _this4 = this;
-
-      if (Array.isArray(attrs)) {
-        attrs = _assign2.default.apply(Object, [{}].concat((0, _toConsumableArray3.default)(attrs)));
-      }
-      (0, _entries2.default)(attrs).forEach(function (_ref5) {
-        var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
-            prop = _ref6[0],
-            value = _ref6[1];
-
-        _this4[prop] = value;
-      });
-      return attrs;
     }
   }, {
     key: 'subject',
@@ -9727,7 +9725,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'transform',
     set: function set(val) {
-      var _this5 = this;
+      var _this4 = this;
 
       /*
         rotate: 0,
@@ -9750,15 +9748,15 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         this.set('transformMatrix', [1, 0, 0, 1, 0, 0]);
         var transformStr = [];
 
-        (0, _entries2.default)(val).forEach(function (_ref7) {
-          var _ref8 = (0, _slicedToArray3.default)(_ref7, 2),
-              key = _ref8[0],
-              value = _ref8[1];
+        (0, _entries2.default)(val).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+              key = _ref6[0],
+              value = _ref6[1];
 
           if (key === 'matrix' && Array.isArray(value)) {
-            _this5.set('transformMatrix', new _spriteMath.Matrix(value).m);
+            _this4.set('transformMatrix', new _spriteMath.Matrix(value).m);
           } else {
-            _this5[key] = value;
+            _this4[key] = value;
           }
           transformStr.push(key + '(' + value + ')');
         });
@@ -9818,10 +9816,10 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'skew',
     set: function set(val) {
-      var _ref9, _transform$multiply;
+      var _ref7, _transform$multiply;
 
       var oldVal = this.get('skew') || [0, 0];
-      var invm = (_ref9 = new _spriteMath.Matrix()).skew.apply(_ref9, (0, _toConsumableArray3.default)(oldVal)).inverse();
+      var invm = (_ref7 = new _spriteMath.Matrix()).skew.apply(_ref7, (0, _toConsumableArray3.default)(oldVal)).inverse();
       this.set('skew', val);
       var transform = new _spriteMath.Matrix(this.get('transformMatrix'));
       (_transform$multiply = transform.multiply(invm)).skew.apply(_transform$multiply, (0, _toConsumableArray3.default)(val));
