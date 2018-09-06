@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.14.0';
+var version = '2.14.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7448,26 +7448,20 @@ function findColor(context, sprite, prop) {
 }
 
 var contextPool = [],
-    maxPollSize = 20,
-    maxCreated = 50;
+    maxPollSize = 20;
 
 var cacheContextPool = exports.cacheContextPool = {
-  created: 0,
   get: function get(context) {
     if (contextPool.length > 0) {
       return contextPool.pop();
     }
 
-    var created = this.created;
-    if (created < maxCreated) {
-      var canvas = context.canvas;
-      if (!canvas || !canvas.cloneNode) {
-        return;
-      }
-      var copied = canvas.cloneNode();
-      this.created++;
-      return copied.getContext('2d');
+    var canvas = context.canvas;
+    if (!canvas || !canvas.cloneNode) {
+      return;
     }
+    var copied = canvas.cloneNode();
+    return copied.getContext('2d');
   },
   put: function put() {
     for (var _len = arguments.length, contexts = Array(_len), _key = 0; _key < _len; _key++) {
@@ -8134,7 +8128,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var filter = this.attr('filter'),
           shadow = this.attr('shadow');
 
-      if (cachableContext !== false && !cachableContext) {
+      if ((shadow || filter || cachableContext !== false) && !cachableContext) {
         cachableContext = _render.cacheContextPool.get(drawingContext);
         if (cachableContext) {
           // +2 to solve 1px problem
@@ -8200,6 +8194,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         cachableContext.restore();
       }
       drawingContext.restore();
+
+      this[_cachePriority]++;
 
       return drawingContext;
     }
@@ -8614,15 +8610,11 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       this.cacheContext = context;
     },
     get: function get() {
-      var filter = this.attr('filter'),
-          shadow = this.attr('shadow'),
-          _contentSize2 = (0, _slicedToArray3.default)(this.contentSize, 2),
-          w = _contentSize2[0],
-          h = _contentSize2[1];
-
-
-      if (filter || shadow || this[_cachePriority]++ >= 6 && w * h >= 2500) {
+      if (this[_cachePriority] >= 6) {
         return this.cacheContext;
+      }
+      if (this.cacheContext) {
+        this.cache = null;
       }
       return false;
     }
