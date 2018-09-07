@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.14.3';
+const version = '2.14.4';
 
 
 
@@ -7679,7 +7679,8 @@ let _default = class _default extends sprite_animator__WEBPACK_IMPORTED_MODULE_0
       return new Promise(resolve => {
         Object(_helpers_fast_animation_frame__WEBPACK_IMPORTED_MODULE_3__["requestAnimationFrame"])(function update() {
           sprite.attr(that.frame);
-          if (that.playState === 'finished') {
+          const playState = that.playState;
+          if (playState === 'finished' || playState === 'idle') {
             Object(_helpers_fast_animation_frame__WEBPACK_IMPORTED_MODULE_3__["cancelAnimationFrame"])(that.requestId);
             resolve();
           } else {

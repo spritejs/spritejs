@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.14.3';
+var version = '2.14.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10768,7 +10768,8 @@ var _default = function (_Animator) {
         return new _promise2.default(function (resolve) {
           (0, _fastAnimationFrame.requestAnimationFrame)(function update() {
             sprite.attr(that.frame);
-            if (that.playState === 'finished') {
+            var playState = that.playState;
+            if (playState === 'finished' || playState === 'idle') {
               (0, _fastAnimationFrame.cancelAnimationFrame)(that.requestId);
               resolve();
             } else {
