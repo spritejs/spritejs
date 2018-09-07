@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.14.5';
+const version = '2.14.6';
 
 
 
@@ -14552,7 +14552,8 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
         return {
           createElementNS(uri, name) {
             return that.layer(name);
-          }
+          },
+          documentElement: document
         };
       }
     });

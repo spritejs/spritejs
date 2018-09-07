@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.14.5';
+var version = '2.14.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -19826,7 +19826,9 @@ var _default = function (_BaseNode) {
         return {
           createElementNS: function createElementNS(uri, name) {
             return that.layer(name);
-          }
+          },
+
+          documentElement: document
         };
       }
     });
