@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.14.4';
+const version = '2.14.5';
 
 
 
@@ -7452,6 +7452,13 @@ let BaseNode = class BaseNode {
 
   get parentNode() {
     return this.parent;
+  }
+
+  contains(node) {
+    while (node && this !== node) {
+      node = node.parent;
+    }
+    return !!node;
   }
 
   // called when layer appendChild
