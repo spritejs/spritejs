@@ -2,7 +2,7 @@
 
 ## [2.15.0][2019-09-10]
 
-### 改进
+### enhancement
 
 - Add DOM API for sprite-vue
 - Add percent value for width/height and x/y
