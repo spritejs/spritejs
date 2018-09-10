@@ -113,6 +113,10 @@ export default class extends BaseNode {
     return undefined;
   }
 
+  get style() {
+    return this.container.style;
+  }
+
   setAttribute(name, value) {
     if(this[_attrs].has(name)) {
       this[name] = value;

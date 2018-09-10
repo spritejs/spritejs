@@ -37,6 +37,10 @@ class ExLayer extends Layer {
     return this.canvas.dataset.layerId;
   }
 
+  get style() {
+    return this.canvas.style;
+  }
+
   setAttribute(name, value) {
     if(this[_attrs].has(name)) {
       this[name] = value;
