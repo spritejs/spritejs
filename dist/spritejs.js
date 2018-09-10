@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.0';
+var version = '2.15.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -20296,7 +20296,7 @@ var _default = function (_BaseNode) {
             return that.layer(name);
           },
 
-          documentElement: document
+          documentElement: typeof document !== 'undefined' ? document : null
         };
       }
     });

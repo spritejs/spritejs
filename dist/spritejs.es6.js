@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.0';
+const version = '2.15.1';
 
 
 
@@ -14944,7 +14944,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
           createElementNS(uri, name) {
             return that.layer(name);
           },
-          documentElement: document
+          documentElement: typeof document !== 'undefined' ? document : null
         };
       }
     });

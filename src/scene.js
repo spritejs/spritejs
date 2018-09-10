@@ -56,7 +56,7 @@ export default class extends BaseNode {
           createElementNS(uri, name) {
             return that.layer(name);
           },
-          documentElement: document,
+          documentElement: typeof document !== 'undefined' ? document : null,
         };
       },
     });
