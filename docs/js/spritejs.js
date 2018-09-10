@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.14.6';
+var version = '2.15.0';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7504,6 +7504,14 @@ var _defineProperty2 = __webpack_require__(117);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
+var _keys = __webpack_require__(137);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _promise = __webpack_require__(125);
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _defineProperty4 = __webpack_require__(178);
 
 var _defineProperty5 = _interopRequireDefault(_defineProperty4);
@@ -7601,7 +7609,8 @@ var _attr = (0, _symbol2.default)('attr'),
     _cachePriority = (0, _symbol2.default)('cachePriority'),
     _effects = (0, _symbol2.default)('effects'),
     _flow = (0, _symbol2.default)('flow'),
-    _changeStateAction = (0, _symbol2.default)('changeStateAction');
+    _changeStateAction = (0, _symbol2.default)('changeStateAction'),
+    _resolveState = (0, _symbol2.default)('resolveState');
 
 var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'), (_class = (_temp = _class2 = function (_BaseNode) {
   (0, _inherits3.default)(BaseSprite, _BaseNode);
@@ -7863,7 +7872,13 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         }
       }
       if (!animation) {
-        animation = this.animate([(0, _assign2.default)({}, fromState), (0, _assign2.default)({}, toState)], (0, _assign2.default)({ fill: 'forwards' }, action));
+        var _ref8 = [(0, _assign2.default)({}, fromState), (0, _assign2.default)({}, toState)],
+            _fromState = _ref8[0],
+            _toState = _ref8[1];
+
+        delete _fromState.__default;
+        delete _toState.__default;
+        animation = this.animate([_fromState, _toState], (0, _assign2.default)({ fill: 'forwards' }, action));
         animation.finished.then(function () {
           if (_this4[_changeStateAction] && _this4[_changeStateAction].animation === animation) delete _this4[_changeStateAction];
         });
@@ -7967,13 +7982,6 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       this.cache = null;
     }
   }, {
-    key: 'remove',
-    value: function remove() {
-      if (!this.parent) return false;
-      this.parent.removeChild(this);
-      return true;
-    }
-  }, {
     key: 'appendTo',
     value: function appendTo(parent) {
       parent.appendChild(this);
@@ -8066,12 +8074,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
                 width = _outerSize[0],
                 height = _outerSize[1];
 
-            var _ref8 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
-                x = _ref8[0],
-                y = _ref8[1],
-                w = _ref8[2],
-                h = _ref8[3],
-                r = _ref8[4];
+            var _ref9 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
+                x = _ref9[0],
+                y = _ref9[1],
+                w = _ref9[2],
+                h = _ref9[3],
+                r = _ref9[4];
 
             (0, _render.drawRadiusBox)(this.context, { x: x, y: y, w: w, h: h, r: r });
             if (this.layer && this.layer.offset) {
@@ -8266,12 +8274,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var bgimage = this.attr('bgimage');
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
-        var _ref9 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x7 = _ref9[0],
-            _y = _ref9[1],
-            _w = _ref9[2],
-            _h = _ref9[3],
-            _r = _ref9[4];
+        var _ref10 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
+            _x7 = _ref10[0],
+            _y = _ref10[1],
+            _w = _ref10[2],
+            _h = _ref10[3],
+            _r = _ref10[4];
 
 
         (0, _render.drawRadiusBox)(drawingContext, { x: _x7, y: _y, w: _w, h: _h, r: _r });
@@ -8294,6 +8302,345 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       drawingContext.translate(borderWidth + padding[3], borderWidth + padding[0]);
 
       return true;
+    }
+  }, {
+    key: 'resolveStates',
+    value: function resolveStates() {
+      var _this6 = this;
+
+      for (var _len = arguments.length, states = Array(_len), _key = 0; _key < _len; _key++) {
+        states[_key] = arguments[_key];
+      }
+
+      var currentAnimation = null,
+          resolved = false;
+      var _resolveStates = function _resolveStates() {
+        _this6.__ignoreAction = false;
+        var fromState = _this6.attr('state');
+        if (fromState === states[0]) {
+          states.shift();
+        }
+
+        var len = states.length;
+        var resolveState = function resolveState(state, i) {
+          var promise = new _promise2.default(function (resolve) {
+            _this6.once('state-to-' + state, function () {
+              fromState = state;
+              if (i === len - 1) {
+                // lastState
+                delete _this6[_resolveState];
+              }
+              resolve(_this6);
+            });
+            _this6.once('state-from-' + fromState, function (_ref11) {
+              var animation = _ref11.animation;
+
+              if (animation && resolved) animation.finish();else currentAnimation = animation;
+            });
+            _this6.attr('state', state);
+          });
+          return promise;
+        };
+
+        var promise = _promise2.default.resolve();
+        states.forEach(function (state, i) {
+          promise = promise.then(function () {
+            return resolveState(state, i);
+          });
+        });
+
+        var ret = {
+          get animation() {
+            return currentAnimation;
+          },
+          states: states,
+          resolve: function resolve() {
+            resolved = true;
+            if (currentAnimation) currentAnimation.finish();
+            return promise;
+          },
+
+          promise: promise
+        };
+        _this6[_resolveState] = ret;
+        return ret;
+      };
+      var rs = this[_resolveState];
+      if (rs) {
+        rs.resolve();
+        this.__ignoreAction = true;
+        var promise = rs.promise.then(function () {
+          return _resolveStates();
+        });
+        return {
+          promise: promise,
+          resolve: function resolve() {
+            resolved = true;
+            if (currentAnimation) currentAnimation.finish();
+            return promise;
+          }
+        };
+      }
+      return _resolveStates();
+    }
+
+    // state: original -> show -> hide -> show -> original
+
+  }, {
+    key: 'show',
+    value: function show() {
+      var _this7 = this;
+
+      var originalDisplay = this.attr('_originalDisplay') || '';
+      var originalState = this.attr('_originalState') || 'default';
+
+      var states = this.attr('states');
+
+      if (states.show) {
+        this.once('state-from-hide', function () {
+          _this7.attr('display', originalDisplay);
+        });
+        return this.resolveStates('show', originalState);
+      }
+
+      this.attr('state', originalState);
+      this.attr('display', originalDisplay);
+      return this;
+    }
+  }, {
+    key: 'hide',
+    value: function hide() {
+      var _this8 = this;
+
+      var _originalDisplay = this.attr('display');
+      var _originalState = this.attr('state');
+      this.attr({
+        _originalDisplay: _originalDisplay,
+        _originalState: _originalState
+      });
+
+      var states = this.attr('states');
+
+      if (states.hide) {
+        if (!states.show || states.show.__default) {
+          var beforeHide = { __default: true };
+          (0, _keys2.default)(states.hide).forEach(function (key) {
+            beforeHide[key] = _this8.attr(key);
+          });
+          states.show = beforeHide;
+        }
+        return this.resolveStates('show', 'hide').promise.then(function () {
+          _this8.attr('display', 'none');
+          return _this8;
+        });
+      }
+
+      this.attr('state', 'hide');
+      this.attr('display', 'none');
+      return this;
+    }
+  }, {
+    key: 'enter',
+    value: function enter(toState) {
+      var _this9 = this;
+
+      var states = this.attr('states');
+      var ret = void 0;
+      if (states && (states.beforeEnter || states.afterEnter)) {
+        var state = this.attr('state');
+        if (state !== 'beforeEnter' && state !== 'afterEnter' && (!states.afterEnter || states.afterEnter.__default)) {
+          var afterEnter = { __default: true };
+          (0, _keys2.default)(states.beforeEnter).forEach(function (key) {
+            afterEnter[key] = _this9.attr(key);
+          });
+          states.afterEnter = afterEnter;
+        }
+        var deferred = this.resolveStates('beforeEnter', 'afterEnter', toState || state);
+        ret = deferred;
+      } else {
+        ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'enter', this).call(this);
+      }
+
+      if (this.children) {
+        var enterMode = this.attr('enterMode');
+        if (enterMode === 'onebyone' || enterMode === 'onebyone-reverse') {
+          var promise = null;
+          var resolved = false;
+          if (ret.promise) {
+            promise = ret.promise;
+          } else {
+            promise = _promise2.default.resolve(this);
+          }
+
+          var children = this.children;
+          if (enterMode === 'onebyone-reverse') {
+            children = [].concat((0, _toConsumableArray3.default)(children)).reverse();
+          }
+
+          children.forEach(function (c) {
+            var states = c.attr('states');
+            if (states && (states.beforeEnter || states.afterEnter)) {
+              if (!states.afterEnter || states.afterEnter.__default) {
+                var _afterEnter = { __default: true };
+                (0, _keys2.default)(states.beforeEnter).forEach(function (key) {
+                  _afterEnter[key] = c.attr(key);
+                });
+                states.afterEnter = _afterEnter;
+              }
+            }
+            var toState = c.attr('state');
+            c.attr('state', 'beforeEnter');
+            promise = promise.then(function () {
+              var d = c.enter(toState);
+              if (d.promise) {
+                if (resolved && d.resolve) d.resolve();
+                return d.promise;
+              }
+              return d;
+            });
+          });
+
+          return {
+            promise: promise,
+            resolve: function resolve() {
+              resolved = true;
+            }
+          };
+        }
+
+        var entries = this.children.map(function (c) {
+          return c.enter();
+        }).filter(function (d) {
+          return d.promise;
+        });
+        if (ret.promise) {
+          entries.unshift(ret);
+        }
+        if (entries.length) {
+          var _deferred = {
+            promise: _promise2.default.all(entries.map(function (d) {
+              return d.promise;
+            })),
+            resolve: function resolve() {
+              entries.forEach(function (d) {
+                return d.resolve();
+              });
+              return _this9.promise;
+            }
+          };
+          return _deferred;
+        }
+      }
+
+      return ret;
+    }
+  }, {
+    key: 'exit',
+    value: function exit(toState) {
+      var _this10 = this;
+
+      var onbyone = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      var states = this.attr('states');
+      var ret = void 0;
+      var afterEnter = states.afterEnter || {};
+      if (states && (states.beforeExit || states.afterExit)) {
+        var state = this.attr('state');
+        if (state !== 'beforeExit' && state !== 'afterExit' && (!states.beforeExit || states.beforeExit.__default)) {
+          states.beforeExit = (0, _assign2.default)({}, afterEnter);
+          states.beforeExit.__default = true;
+        }
+        var deferred = this.resolveStates('beforeExit', 'afterExit');
+        deferred.promise.then(function () {
+          if (!onbyone) {
+            _this10.attr(afterEnter);
+            _this10[_attr].quietSet('state', toState || state);
+          }
+          return _this10;
+        });
+        ret = deferred;
+      } else {
+        ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', this).call(this);
+        this.attr(afterEnter);
+      }
+
+      if (this.children) {
+        var exitMode = this.attr('exitMode');
+        if (exitMode === 'onebyone' || exitMode === 'onebyone-reverse') {
+          var promise = _promise2.default.resolve(this);
+          var resolved = false;
+
+          var children = this.children;
+          if (exitMode === 'onebyone-reverse') {
+            children = [].concat((0, _toConsumableArray3.default)(children)).reverse();
+          }
+
+          children.forEach(function (c) {
+            var states = c.attr('states');
+            if (states && (states.beforeExit || states.afterExit)) {
+              if (!states.beforeExit || states.beforeExit.__default) {
+                states.beforeExit = (0, _assign2.default)({}, afterEnter);
+                states.beforeExit.__default = true;
+              }
+            }
+            var toState = c.attr('state');
+            c.attr('state', 'beforeExit');
+            promise = promise.then(function () {
+              var d = c.exit(toState, true);
+              if (d.promise) {
+                if (resolved && d.resolve) d.resolve();
+                return d.promise;
+              }
+              return d;
+            });
+            c.__toState = toState;
+          });
+
+          promise = promise.then(function () {
+            var p = ret.promise || _promise2.default.resolve(_this10);
+            return p.then(function () {
+              _this10.children.forEach(function (c) {
+                var states = c.attr('states');
+                c.attr(states.afterEnter);
+                c[_attr].quietSet('state', c.__toState);
+                delete c.__toState;
+              });
+            });
+          });
+
+          return {
+            promise: promise,
+            resolve: function resolve() {
+              resolved = true;
+            }
+          };
+        }
+
+        var exites = this.children.map(function (c) {
+          return c.exit();
+        }).filter(function (d) {
+          return d.promise;
+        });
+        if (ret.promise) {
+          exites.unshift(ret);
+        }
+        if (exites.length) {
+          var _deferred2 = {
+            promise: _promise2.default.all(exites.map(function (d) {
+              return d.promise;
+            })),
+            resolve: function resolve() {
+              exites.forEach(function (d) {
+                return d.resolve();
+              });
+              return _this10.promise;
+            }
+          };
+          return _deferred2;
+        }
+      }
+
+      return ret;
     }
   }, {
     key: 'layer',
@@ -8395,9 +8742,9 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.hasLayout) {
         var layoutWidth = this.attr('layoutWidth'),
-            layoutHeight = this.attr('layoutHeight');var _ref10 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
-        width = _ref10[0];
-        height = _ref10[1];
+            layoutHeight = this.attr('layoutHeight');var _ref12 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+        width = _ref12[0];
+        height = _ref12[1];
       }
       if (isBorderBox) {
         var borderWidth = this.attr('border').width,
@@ -8666,14 +9013,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
   }, {
     key: 'addAttributes',
     value: function addAttributes() {
-      var _this6 = this;
+      var _this11 = this;
 
       var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      (0, _entries2.default)(attrs).forEach(function (_ref11) {
-        var _ref12 = (0, _slicedToArray3.default)(_ref11, 2),
-            prop = _ref12[0],
-            handler = _ref12[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref13) {
+        var _ref14 = (0, _slicedToArray3.default)(_ref13, 2),
+            prop = _ref14[0],
+            handler = _ref14[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -8683,8 +9030,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           handler = handler.set;
         }
         if (prop !== 'init') {
-          _this6.Attr.prototype.__attributeNames.add(prop);
-          (0, _defineProperty3.default)(_this6.Attr.prototype, prop, {
+          _this11.Attr.prototype.__attributeNames.add(prop);
+          (0, _defineProperty3.default)(_this11.Attr.prototype, prop, {
             set: function set(val) {
               this.__updateTag = false;
               this.__reflowTag = false;
@@ -8722,10 +9069,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         function _class3(subject) {
           (0, _classCallCheck3.default)(this, _class3);
 
-          var _this7 = (0, _possibleConstructorReturn3.default)(this, (_class3.__proto__ || (0, _getPrototypeOf2.default)(_class3)).call(this, subject));
+          var _this12 = (0, _possibleConstructorReturn3.default)(this, (_class3.__proto__ || (0, _getPrototypeOf2.default)(_class3)).call(this, subject));
 
-          if (attrs.init) attrs.init(_this7, subject);
-          return _this7;
+          if (attrs.init) attrs.init(_this12, subject);
+          return _this12;
         }
 
         return _class3;
@@ -8744,12 +9091,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   var w = image.width,
       h = image.height;
 
-  var _ref13 = clip9 || [16, 16, 16, 16],
-      _ref14 = (0, _slicedToArray3.default)(_ref13, 4),
-      top = _ref14[0],
-      right = _ref14[1],
-      bottom = _ref14[2],
-      left = _ref14[3];
+  var _ref15 = clip9 || [16, 16, 16, 16],
+      _ref16 = (0, _slicedToArray3.default)(_ref15, 4),
+      top = _ref16[0],
+      right = _ref16[1],
+      bottom = _ref16[2],
+      left = _ref16[3];
 
   var leftTop = [0, 0, left, top],
       rightTop = [w - right, 0, right, top],
@@ -9279,7 +9626,7 @@ var _symbol = __webpack_require__(39);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _dec17, _dec18, _dec19, _dec20, _dec21, _desc, _value, _class;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _dec17, _dec18, _dec19, _dec20, _dec21, _dec22, _desc, _value, _class;
 
 var _spriteMath = __webpack_require__(148);
 
@@ -9299,7 +9646,7 @@ var _attr = (0, _symbol2.default)('attr'),
     _default = (0, _symbol2.default)('default'),
     _props = (0, _symbol2.default)('props');
 
-var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _dec2 = (0, _utils.parseValue)(_utils.parseStringFloat, _utils.oneOrTwoValues), _dec3 = (0, _utils.relative)('width'), _dec4 = (0, _utils.relative)('height'), _dec5 = (0, _utils.relative)('width'), _dec6 = (0, _utils.relative)('height'), _dec7 = (0, _utils.parseValue)(_utils.parseStringInt), _dec8 = (0, _utils.parseValue)(_utils.parseColorString), _dec9 = (0, _utils.relative)('width'), _dec10 = (0, _utils.relative)('height'), _dec11 = (0, _utils.relative)('width'), _dec12 = (0, _utils.relative)('height'), _dec13 = (0, _utils.parseValue)(_utils.parseStringInt), _dec14 = (0, _utils.parseValue)(_utils.parseStringInt, _utils.fourValuesShortCut), _dec15 = (0, _utils.parseValue)(parseFloat), _dec16 = (0, _utils.parseValue)(parseFloat), _dec17 = (0, _utils.parseValue)(_utils.parseStringTransform), _dec18 = (0, _utils.parseValue)(parseFloat), _dec19 = (0, _utils.parseValue)(_utils.parseStringFloat, _utils.oneOrTwoValues), _dec20 = (0, _utils.parseValue)(parseFloat), _dec21 = (0, _utils.parseValue)(parseFloat), (_class = function () {
+var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _dec2 = (0, _utils.parseValue)(_utils.parseStringFloat, _utils.oneOrTwoValues), _dec3 = (0, _utils.relative)('width'), _dec4 = (0, _utils.relative)('height'), _dec5 = (0, _utils.relative)('width'), _dec6 = (0, _utils.relative)('height'), _dec7 = (0, _utils.parseValue)(_utils.parseStringInt), _dec8 = (0, _utils.parseValue)(_utils.parseColorString), _dec9 = (0, _utils.relative)('width'), _dec10 = (0, _utils.relative)('height'), _dec11 = (0, _utils.relative)('width'), _dec12 = (0, _utils.relative)('height'), _dec13 = (0, _utils.parseValue)(_utils.parseStringInt), _dec14 = (0, _utils.parseValue)(_utils.parseStringInt, _utils.fourValuesShortCut), _dec15 = (0, _utils.parseValue)(parseFloat), _dec16 = (0, _utils.parseValue)(parseFloat), _dec17 = (0, _utils.parseValue)(_utils.parseStringTransform), _dec18 = (0, _utils.parseValue)(parseFloat), _dec19 = (0, _utils.parseValue)(_utils.parseStringFloat, _utils.oneOrTwoValues), _dec20 = (0, _utils.parseValue)(parseFloat), _dec21 = (0, _utils.parseValue)(parseFloat), _dec22 = (0, _utils.parseValue)(_utils.parseStringInt, _utils.fourValuesShortCut), (_class = function () {
   function SpriteAttr(subject) {
     (0, _classCallCheck3.default)(this, SpriteAttr);
 
@@ -9309,9 +9656,28 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
     this[_props] = {};
 
     this.setDefault({
-      state: '',
-      states: null,
-      actions: null,
+      state: 'default',
+      states: {},
+      actions: {
+        'beforeEnter:': {
+          duration: 300,
+          easing: 'ease-in'
+        },
+        'beforeExit:': {
+          duration: 300,
+          easing: 'ease-out'
+        },
+        'hide:': {
+          duration: 300,
+          easing: 'ease-in'
+        },
+        ':hide': {
+          duration: 300,
+          easing: 'ease-out'
+        }
+      },
+      enterMode: 'normal',
+      exitMode: 'normal',
       anchor: [0, 0],
       x: 0,
       y: 0,
@@ -9977,85 +10343,95 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         var value = {};
         val.forEach(function (v) {
           var key = void 0;
+          var action = v.action;
+          if (!action) {
+            action = (0, _assign2.default)({}, v);
+            delete action.from;
+            delete action.to;
+            delete action.both;
+          }
           if (v.both) {
+            if (!Array.isArray(v.both)) {
+              v.both = [v.both];
+            }
             if (v.both.length > 1) {
               key = v.both.join(':');
-              value[key] = (0, _assign2.default)({}, v.action);
+              value[key] = (0, _assign2.default)({}, action);
               key = v.both.reverse().join(':');
-              value[key] = (0, _assign2.default)({}, v.action);
+              value[key] = (0, _assign2.default)({}, action);
             } else {
-              value[v.both[0] + ':'] = (0, _assign2.default)({}, v.action);
-              value[':' + v.both[0]] = (0, _assign2.default)({}, v.action);
+              value[v.both[0] + ':'] = (0, _assign2.default)({}, action);
+              value[':' + v.both[0]] = (0, _assign2.default)({}, action);
             }
           } else {
             key = (v.from || '') + ':' + (v.to || '');
-            value[key] = (0, _assign2.default)({}, v.action);
+            value[key] = (0, _assign2.default)({}, action);
           }
         });
-        this.quietSet('actions', value);
-      } else {
-        this.quietSet('actions', val);
+        val = value;
       }
+      var defaultVal = this[_default].actions;
+      val = (0, _assign2.default)({}, defaultVal, val);
+      this.quietSet('actions', val);
     }
   }, {
     key: 'state',
     set: function set(val) {
+      if (val == null) val = 'default';
       var oldState = this.state;
       if (oldState !== val) {
         this.quietSet('state', val);
         var states = this.states;
+
         var action = null;
-        if (states) {
-          var toState = states[val];
-          if (toState) {
-            var fromState = states[oldState],
-                actions = this.actions;
-            var subject = this.subject;
-            if (actions) {
-              action = actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':'];
-              if (action) {
-                var evt = { from: [oldState, fromState], to: [val, toState], action: action };
-                subject.dispatchEvent('action-beforestart', evt, true, true);
-                if (evt.returnValue) {
-                  var animation = subject.changeState(fromState, toState, action);
-                  var tag = (0, _symbol2.default)('tag');
-                  animation.tag = tag;
-                  if (animation.__reversed) {
-                    subject.dispatchEvent('action-finished', {
-                      from: [val, toState],
-                      to: [oldState, fromState],
-                      action: animation.__reversed,
-                      animation: animation }, true, true);
-                  }
-                  subject.dispatchEvent('action-start', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
-                  animation.ready.then(function () {
-                    subject.dispatchEvent('action-ready', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
-                  });
-                  animation.finished.then(function () {
-                    if (animation.tag === tag) {
-                      subject.dispatchEvent('action-finished', { from: [oldState, fromState], to: [val, toState], action: action, animation: animation }, true, true);
-                    }
-                  });
+        var toState = states[val];
+        var subject = this.subject;
+        if (subject.parent && toState) {
+          var fromState = states[oldState],
+              actions = this.actions;
+          if (actions) {
+            action = !subject.__ignoreAction && (actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':']);
+            if (action) {
+              var animation = subject.changeState(fromState, toState, action);
+              var tag = (0, _symbol2.default)('tag');
+              animation.tag = tag;
+              if (animation.__reversed) {
+                subject.dispatchEvent('state-to-' + oldState, {
+                  from: val,
+                  to: oldState,
+                  action: animation.__reversed,
+                  cancelled: true,
+                  animation: animation }, true, true);
+              }
+              subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val, action: action, animation: animation }, true, true);
+              animation.finished.then(function () {
+                if (animation.tag === tag) {
+                  subject.dispatchEvent('state-to-' + val, { from: oldState, to: val, action: action, animation: animation }, true, true);
                 }
-              }
-            }
-            if (!action) {
-              var _evt = { from: [oldState, fromState], to: [val, toState] };
-              subject.dispatchEvent('action-beforestart', _evt, true, true);
-              if (_evt.returnValue) {
-                subject.dispatchEvent('action-start', { from: [oldState, fromState], to: [val, toState] }, true, true);
-                subject.dispatchEvent('action-ready', { from: [oldState, fromState], to: [val, toState] }, true, true);
-                subject.attr(toState);
-                subject.dispatchEvent('action-finished', { from: [oldState, fromState], to: [val, toState] }, true, true);
-              }
+              });
             }
           }
         }
+        if (!action || subject.__ignoreAction) {
+          subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val }, true, true);
+          if (toState) subject.attr(toState);
+          subject.dispatchEvent('state-to-' + val, { from: oldState, to: val }, true, true);
+        }
       }
+    }
+  }, {
+    key: 'enterMode',
+    set: function set(val) {
+      this.set('enterMode', val);
+    }
+  }, {
+    key: 'exitMode',
+    set: function set(val) {
+      this.set('exitMode', val);
     }
   }]);
   return SpriteAttr;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'clearCache', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clearCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'id', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec2, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutX', [_utils.attr, _dec3, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutX'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutY', [_utils.attr, _dec4, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutY'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_utils.attr, _dec5, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_utils.attr, _dec6, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec7, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec8, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils.attr, _dec9], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_utils.attr, _dec10], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils.attr, _dec11], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_utils.attr, _dec12], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec13, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec14, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec15, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSizing', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxSizing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec16, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec17, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec18, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec19, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec20, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_dec21, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'margin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgimage', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgimage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'states', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'states'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'actions', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'actions'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'state', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'state'), _class.prototype)), _class));
+}(), (_applyDecoratedDescriptor(_class.prototype, 'clearCache', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'clearCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'id', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec2, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutX', [_utils.attr, _dec3, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutX'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutY', [_utils.attr, _dec4, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutY'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_utils.attr, _dec5, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_utils.attr, _dec6, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec7, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec8, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils.attr, _dec9], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_utils.attr, _dec10], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils.attr, _dec11], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_utils.attr, _dec12], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec13, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec14, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec15, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSizing', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'boxSizing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec16, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec17, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec18, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec19, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec20, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_dec21, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_dec22, _utils.attr, _utils.cachable], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'margin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgimage', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bgimage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'states', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'states'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'actions', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'actions'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'state', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'state'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'enterMode', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'enterMode'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'exitMode', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'exitMode'), _class.prototype)), _class));
 exports.default = SpriteAttr;
 
 /***/ }),
@@ -10133,6 +10509,10 @@ exports.default = undefined;
 var _assign = __webpack_require__(2);
 
 var _assign2 = _interopRequireDefault(_assign);
+
+var _toConsumableArray2 = __webpack_require__(99);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _from = __webpack_require__(100);
 
@@ -10229,13 +10609,35 @@ var BaseNode = function () {
       return this;
     }
   }, {
-    key: 'off',
-    value: function off(type, handler) {
+    key: 'once',
+    value: function once(type, handler) {
       var _this3 = this;
 
       if (Array.isArray(type)) {
         type.forEach(function (t) {
-          return _this3.off(t, handler);
+          return _this3.once(t, handler);
+        });
+      } else {
+        this.on(type, function f() {
+          this.off(type, f);
+
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          return handler.apply(this, args);
+        });
+      }
+      return this;
+    }
+  }, {
+    key: 'off',
+    value: function off(type, handler) {
+      var _this4 = this;
+
+      if (Array.isArray(type)) {
+        type.forEach(function (t) {
+          return _this4.off(t, handler);
         });
       } else if (handler && this[_eventHandlers][type]) {
         var idx = this[_eventHandlers][type].indexOf(handler);
@@ -10262,6 +10664,14 @@ var BaseNode = function () {
       return this.off(type, handler);
     }
   }, {
+    key: 'remove',
+    value: function remove() {
+      var exit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+      if (!this.parent) return null;
+      return this.parent.removeChild(this, exit);
+    }
+  }, {
     key: 'pointCollision',
     value: function pointCollision(evt) {
       throw Error('you mast override this method');
@@ -10284,7 +10694,7 @@ var BaseNode = function () {
   }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(type, evt) {
-      var _this4 = this;
+      var _this5 = this;
 
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -10346,7 +10756,7 @@ var BaseNode = function () {
 
             touches.forEach(function (touch) {
               var identifier = touch.identifier;
-              if (_layer.touchedTargets[identifier] && _layer.touchedTargets[identifier].indexOf(_this4) >= 0) {
+              if (_layer.touchedTargets[identifier] && _layer.touchedTargets[identifier].indexOf(_this5) >= 0) {
                 evt.targetTouches.push(touch);
               }
             });
@@ -10355,8 +10765,8 @@ var BaseNode = function () {
           }
         }
 
-        handlers.forEach(function (handler) {
-          return handler.call(_this4, evt);
+        [].concat((0, _toConsumableArray3.default)(handlers)).forEach(function (handler) {
+          return handler.call(_this5, evt);
         });
 
         if (!this[_collisionState] && isCollision && type === 'mousemove') {
@@ -10398,7 +10808,7 @@ var BaseNode = function () {
 
       if (this.parent) {
         // throw new Error('This node belongs to another parent node! Remove it first...')
-        this.disconnect(this.parent);
+        this.remove();
       }
 
       Object.defineProperty(this, 'zOrder', {
@@ -10414,13 +10824,10 @@ var BaseNode = function () {
         configurable: true
       });
 
-      var handlers = this[_eventHandlers].append;
-      if (handlers && handlers.length) {
-        this.dispatchEvent('append', {
-          parent: parent,
-          zOrder: zOrder
-        }, true, true);
-      }
+      this.dispatchEvent('append', {
+        parent: parent,
+        zOrder: zOrder
+      }, true, true);
 
       return this;
     }
@@ -10437,17 +10844,26 @@ var BaseNode = function () {
       var zOrder = this.zOrder;
       delete this.zOrder;
 
-      var handlers = this[_eventHandlers].remove;
-      if (handlers && handlers.length) {
-        this.dispatchEvent('remove', {
-          parent: parent,
-          zOrder: zOrder
-        }, true, true);
-      }
+      this.dispatchEvent('remove', {
+        parent: parent,
+        zOrder: zOrder
+      }, true, true);
 
       delete this.parent;
       delete this.isDirty;
 
+      return this;
+    }
+  }, {
+    key: 'enter',
+    value: function enter() {
+      // override to do atction after connection, can return a promise
+      return this;
+    }
+  }, {
+    key: 'exit',
+    value: function exit() {
+      // override to do atction before disconnection, can return a promise
       return this;
     }
   }, {
@@ -12002,10 +12418,10 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
       var font = this.font;
 
       var _parseFont3 = parseFont(font),
-          size = _parseFont3.size,
+          size0 = _parseFont3.size0,
           unit = _parseFont3.unit;
 
-      return '' + size + unit;
+      return '' + size0 + unit;
     }
   }, {
     key: 'fontFamily',
@@ -12017,10 +12433,10 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
           style = _parseFont4.style,
           variant = _parseFont4.variant,
           weight = _parseFont4.weight,
-          size = _parseFont4.size,
+          size0 = _parseFont4.size0,
           unit = _parseFont4.unit;
 
-      var fontValue = style + ' ' + variant + ' ' + weight + ' ' + size + unit + ' ' + val;
+      var fontValue = style + ' ' + variant + ' ' + weight + ' ' + size0 + unit + ' ' + val;
       this.font = fontValue;
     },
     get: function get() {
@@ -12035,11 +12451,11 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
       var _parseFont5 = parseFont(font),
           variant = _parseFont5.variant,
           weight = _parseFont5.weight,
-          size = _parseFont5.size,
+          size0 = _parseFont5.size0,
           unit = _parseFont5.unit,
           family = _parseFont5.family;
 
-      var fontValue = val + ' ' + variant + ' ' + weight + ' ' + size + unit + ' ' + family;
+      var fontValue = val + ' ' + variant + ' ' + weight + ' ' + size0 + unit + ' ' + family;
       this.font = fontValue;
     },
     get: function get() {
@@ -12054,11 +12470,11 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
       var _parseFont6 = parseFont(font),
           style = _parseFont6.style,
           weight = _parseFont6.weight,
-          size = _parseFont6.size,
+          size0 = _parseFont6.size0,
           unit = _parseFont6.unit,
           family = _parseFont6.family;
 
-      var fontValue = style + ' ' + val + ' ' + weight + ' ' + size + unit + ' ' + family;
+      var fontValue = style + ' ' + val + ' ' + weight + ' ' + size0 + unit + ' ' + family;
       this.font = fontValue;
     },
     get: function get() {
@@ -12073,11 +12489,11 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
       var _parseFont7 = parseFont(font),
           style = _parseFont7.style,
           variant = _parseFont7.variant,
-          size = _parseFont7.size,
+          size0 = _parseFont7.size0,
           unit = _parseFont7.unit,
           family = _parseFont7.family;
 
-      var fontValue = style + ' ' + variant + ' ' + val + ' ' + size + unit + ' ' + family;
+      var fontValue = style + ' ' + variant + ' ' + val + ' ' + size0 + unit + ' ' + family;
       this.font = fontValue;
     },
     get: function get() {
@@ -13365,6 +13781,8 @@ module.exports = function f(str, defaultHeight) {
   if (variant = variantRe.exec(substr)) font.variant = variant[1];
   if (stretch = stretchRe.exec(substr)) font.stretch = stretch[1];
 
+  font.size0 = font.size;
+
   // Convert to device units. (`font.unit` is the original unit)
   // TODO: ch, ex
   switch (font.unit) {
@@ -13473,8 +13891,6 @@ var _spriteAnimator = __webpack_require__(88);
 
 var _fastAnimationFrame = __webpack_require__(204);
 
-var _utils = __webpack_require__(157);
-
 var _basenode = __webpack_require__(202);
 
 var _basenode2 = _interopRequireDefault(_basenode);
@@ -13582,35 +13998,18 @@ var Layer = function (_BaseNode) {
       }
     }
   }, {
-    key: 'remove',
-    value: function remove() {
-      var _this2 = this;
-
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      if (args.length === 0) {
-        (0, _utils.setDeprecation)('layer.remove()', 'Instead use layer.clear().');
-        return this.clear();
-      }
-      return args.map(function (child) {
-        return _this2.removeChild(child);
-      });
-    }
-  }, {
     key: 'prepareRender',
     value: function prepareRender() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!this[_renderDeferer]) {
         this[_renderDeferer] = {};
         this[_renderDeferer].promise = new _promise2.default(function (resolve, reject) {
-          (0, _assign2.default)(_this3[_renderDeferer], { resolve: resolve, reject: reject });
-          if (_this3.autoRender) {
-            _this3[_drawTask] = (0, _fastAnimationFrame.requestAnimationFrame)(function () {
-              delete _this3[_drawTask];
-              _this3.draw();
+          (0, _assign2.default)(_this2[_renderDeferer], { resolve: resolve, reject: reject });
+          if (_this2.autoRender) {
+            _this2[_drawTask] = (0, _fastAnimationFrame.requestAnimationFrame)(function () {
+              delete _this2[_drawTask];
+              _this2.draw();
             });
           }
         });
@@ -13758,7 +14157,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(type, evt) {
-      var _this4 = this;
+      var _this3 = this;
 
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -13782,7 +14181,7 @@ var Layer = function (_BaseNode) {
               var targets = this.layer.touchedTargets[touch.identifier];
               if (targets) {
                 targets.forEach(function (target) {
-                  if (target !== _this4 && target.layer === _this4) {
+                  if (target !== _this3 && target.layer === _this3) {
                     target.dispatchEvent(type, evt, true, true);
                   }
                 });
@@ -13826,12 +14225,12 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'connect',
     value: function connect(parent, zOrder, zIndex) /* istanbul ignore next  */{
-      (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'connect', this).call(this, parent, zOrder);
+      var ret = (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'connect', this).call(this, parent, zOrder);
       this.zIndex = zIndex;
       if (parent && parent.container) {
         parent.container.appendChild(this.outputContext.canvas);
       }
-      return this;
+      return ret;
     }
   }, {
     key: 'disconnect',
@@ -13852,15 +14251,15 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'batch',
     value: function batch() {
-      var _this5 = this;
+      var _this4 = this;
 
-      for (var _len2 = arguments.length, sprites = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        sprites[_key2] = arguments[_key2];
+      for (var _len = arguments.length, sprites = Array(_len), _key = 0; _key < _len; _key++) {
+        sprites[_key] = arguments[_key];
       }
 
       sprites.forEach(function (sprite) {
-        if (sprite.layer !== _this5) {
-          _this5.appendChild(sprite);
+        if (sprite.layer !== _this4) {
+          _this4.appendChild(sprite);
         }
       });
       var batch = new _batch2.default(this);
@@ -13870,7 +14269,7 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'adjust',
     value: function adjust(handler) /* istanbul ignore next  */{
-      var _this6 = this;
+      var _this5 = this;
 
       var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -13888,8 +14287,8 @@ var Layer = function (_BaseNode) {
         clearTimeout(this[_adjustTimer]);
       }
       this[_adjustTimer] = setTimeout(function () {
-        _this6.autoRender = true;
-        delete _this6[_adjustTimer];
+        _this5.autoRender = true;
+        delete _this5[_adjustTimer];
       }, 100);
 
       if (shadowContext.canvas.width > 0 && shadowContext.canvas.height > 0) {
@@ -14521,7 +14920,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
     key: 'isVirtual',
     get: function get() {
       var display = this.attr('display');
-      if (display !== '') return false;
+      if (display !== '' && display !== 'none') return false;
 
       var _attr = this.attr('border'),
           borderWidth = _attr.width,
@@ -15465,98 +15864,162 @@ var _symbol2 = _interopRequireDefault(_symbol);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _zOrder = (0, _symbol2.default)('zOrder');
+var _removeTask = (0, _symbol2.default)('removeTask');
 
 exports.default = {
   appendChild: function appendChild(sprite) {
+    var _this = this;
+
     var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-    sprite.remove();
+    var _append = function _append() {
+      var children = _this.children;
+      children.push(sprite);
 
-    var children = this.children;
-    children.push(sprite);
+      _this[_zOrder] = _this[_zOrder] || 0;
+      sprite.connect(_this, _this[_zOrder]++);
 
-    this[_zOrder] = this[_zOrder] || 0;
-    sprite.connect(this, this[_zOrder]++);
+      for (var i = children.length - 1; i > 0; i--) {
+        var a = children[i],
+            b = children[i - 1];
 
-    for (var i = children.length - 1; i > 0; i--) {
-      var a = children[i],
-          b = children[i - 1];
-
-      if (a.zIndex < b.zIndex) {
-        children[i] = b;
-        children[i - 1] = a;
+        if (a.zIndex < b.zIndex) {
+          children[i] = b;
+          children[i - 1] = a;
+        }
       }
-    }
 
-    if (update) {
-      sprite.forceUpdate();
+      if (update) {
+        sprite.forceUpdate();
+      }
+
+      if (sprite.layer) {
+        return sprite.enter();
+      }
+      return sprite;
+    };
+
+    var _remove = sprite.remove();
+    if (_remove && _remove.promise) {
+      // deferred
+      if (_remove.resolve) _remove.resolve();
+      _remove.promise.then(function () {
+        return _append();
+      });
+      return _remove;
     }
-    return sprite;
+    return _append();
   },
   append: function append() {
-    var _this = this;
+    var _this2 = this;
 
     for (var _len = arguments.length, sprites = Array(_len), _key = 0; _key < _len; _key++) {
       sprites[_key] = arguments[_key];
     }
 
     sprites.forEach(function (sprite) {
-      return _this.appendChild(sprite);
+      _this2.appendChild(sprite);
     });
+    return this;
   },
-  removeChild: function removeChild(sprite) {
-    var idx = this.children.indexOf(sprite);
+  removeChild: function removeChild(child) {
+    if (child[_removeTask]) return child[_removeTask];
+
+    var idx = this.children.indexOf(child);
     if (idx === -1) {
       return null;
     }
-    this.children.splice(idx, 1);
-    if (sprite.isVisible() || sprite.lastRenderBox) {
-      sprite.forceUpdate();
+
+    var that = this;
+    function remove(sprite) {
+      delete child[_removeTask];
+      that.children.splice(idx, 1);
+      if (sprite.isVisible() || sprite.lastRenderBox) {
+        sprite.forceUpdate();
+      }
+      sprite.disconnect(that);
+      return sprite;
     }
-    sprite.disconnect(this);
-    return sprite;
+
+    var action = child.exit();
+    if (action.promise) {
+      child[_removeTask] = action;
+      action.promise.then(function () {
+        return remove(child);
+      });
+      return action;
+    }
+
+    return remove(child);
   },
   clear: function clear() {
-    var _this2 = this;
+    var _this3 = this;
 
     var children = this.children.slice(0);
-    return children.map(function (child) {
-      return _this2.removeChild(child);
+    children.forEach(function (child) {
+      return _this3.removeChild(child);
     });
+    return this;
+  },
+  remove: function remove() {
+    var _this4 = this;
+
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    if (args.length === 0) {
+      if (!this.parent) return null;
+      return this.parent.removeChild(this);
+    }
+    args.forEach(function (sprite) {
+      _this4.removeChild(sprite);
+    });
+    return this;
   },
   insertBefore: function insertBefore(newchild, refchild) {
+    var _this5 = this;
+
     if (refchild == null) {
       return this.appendChild(newchild);
     }
     var idx = this.children.indexOf(refchild);
     if (idx >= 0) {
-      this.removeChild(newchild);
-      this.children.splice(idx, 0, newchild);
-      var refZOrder = refchild.zOrder;
-      newchild.connect(this, refZOrder);
-      newchild.forceUpdate();
-
-      for (var i = 0; i < this.children.length; i++) {
-        if (i !== idx) {
-          var child = this.children[i],
+      var _insert = function _insert() {
+        var refZOrder = refchild.zOrder;
+        for (var i = idx; i < _this5.children.length; i++) {
+          var child = _this5.children[i],
               zOrder = child.zOrder;
-
-          if (zOrder >= refZOrder) {
-            delete child.zOrder;
-            Object.defineProperty(child, 'zOrder', {
-              value: zOrder + 1,
-              writable: false,
-              configurable: true
-            });
-          }
+          delete child.zOrder;
+          Object.defineProperty(child, 'zOrder', {
+            value: zOrder + 1,
+            writable: false,
+            configurable: true
+          });
         }
+        _this5.children.splice(idx, 0, newchild);
+        newchild.connect(_this5, refZOrder);
+        newchild.forceUpdate();
+
+        _this5[_zOrder] = _this5[_zOrder] || 0;
+        _this5[_zOrder]++;
+
+        if (_this5.layer) {
+          return newchild.enter();
+        }
+      };
+
+      var _remove = this.removeChild(newchild);
+      if (_remove && _remove.promise) {
+        if (_remove.resolve) _remove.resolve();
+        _remove.promise.then(function () {
+          return _insert();
+        });
+        return _remove;
       }
-
-      this[_zOrder] = this[_zOrder] || 0;
-      this[_zOrder]++;
+      return _insert();
     }
-
-    return newchild;
+    return null;
   }
 };
 
@@ -19604,6 +20067,11 @@ var ExLayer = function (_Layer) {
       return this.canvas.dataset.layerId;
     }
   }, {
+    key: 'style',
+    get: function get() {
+      return this.canvas.style;
+    }
+  }, {
     key: 'resolution',
     get: function get() {
       return this[_resolution];
@@ -20337,6 +20805,11 @@ var _default = function (_BaseNode) {
         return this.container.id;
       }
       return undefined;
+    }
+  }, {
+    key: 'style',
+    get: function get() {
+      return this.container.style;
     }
   }, {
     key: 'layerViewport',
