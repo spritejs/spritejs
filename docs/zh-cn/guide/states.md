@@ -81,10 +81,10 @@ Action的匹配规则如下：
 
 一个元素的状态从`a`变化为`b`，会触发两个事件，一个是`state-from-a`，一个是`state-to-b`。事件参数包括四个属性，分别是：
 
-- from: 元素的源状态名，即`a`
-- to: 元素的目的状态名，即`b`
-- action: 元素切换状态的action对象，该对象是一个动画timing对象，由前面的Action选择器规则匹配出来。
-- animation: 元素切换状态的Animation对象。
+- `from`: 元素的源状态名，即`a`
+- `to`: 元素的目的状态名，即`b`
+- `action`: 元素切换状态的action对象，该对象是一个动画timing对象，由前面的Action选择器规则匹配出来。
+- `animation`: 元素切换状态的Animation对象。
 
 ### action:reversable
 

@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.15.0][2019-09-10]
+
+### 改进
+
+- Add DOM API for sprite-vue
+- Add percent value for width/height and x/y
+- Add rw、rh unit for width/height and x/y
+- Support `inherit` value for font, color attributes
+- Optimized cache policy
+- Optimized animation performance
+
 ## [2.10.0][2018-08-29]
 
 ### enhancement
