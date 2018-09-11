@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.2';
+var version = '2.15.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7612,7 +7612,8 @@ var _attr = (0, _symbol2.default)('attr'),
     _changeStateAction = (0, _symbol2.default)('changeStateAction'),
     _resolveState = (0, _symbol2.default)('resolveState'),
     _show = (0, _symbol2.default)('show'),
-    _hide = (0, _symbol2.default)('hide');
+    _hide = (0, _symbol2.default)('hide'),
+    _enter = (0, _symbol2.default)('enter');
 
 var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'), (_class = (_temp = _class2 = function (_BaseNode) {
   (0, _inherits3.default)(BaseSprite, _BaseNode);
@@ -8307,15 +8308,23 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
     }
   }, {
     key: 'resolveStates',
-    value: function resolveStates() {
+    value: function resolveStates(states, before, after) {
       var _this6 = this;
-
-      for (var _len = arguments.length, states = Array(_len), _key = 0; _key < _len; _key++) {
-        states[_key] = arguments[_key];
-      }
 
       var currentAnimation = null,
           resolved = false;
+
+      var _states = [];
+      var prev = null;
+      for (var i = 0; i < states.length; i++) {
+        var s = states[i];
+        if (prev !== s) {
+          prev = s;
+          _states.push(s);
+        }
+      }
+      states = _states;
+
       var _resolveStates = function _resolveStates() {
         _this6.__ignoreAction = false;
         var fromState = _this6.attr('state');
@@ -8332,6 +8341,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
                 // lastState
                 delete _this6[_resolveState];
               }
+              if (after) after.call(_this6, states);
               resolve(_this6);
             });
             _this6.once('state-from-' + fromState, function (_ref11) {
@@ -8372,6 +8382,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         rs.resolve();
         this.__ignoreAction = true;
         var promise = rs.promise.then(function () {
+          if (before) before.call(_this6, states);
           return _resolveStates().promise;
         });
         return {
@@ -8383,6 +8394,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           }
         };
       }
+      if (before) before.call(this, states);
       return _resolveStates();
     }
 
@@ -8407,13 +8419,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             _this7.attr('display', originalDisplay);
           });
         }
-        var deferred = this.resolveStates('show', originalState);
+        var deferred = this.resolveStates(['show', originalState]);
         deferred.promise = deferred.promise.then(function () {
           if (!_this7[_hide]) {
             delete _this7[_attr]._originalDisplay;
             delete _this7[_attr]._originalState;
             if (states.show.__default) {
               delete states.show;
+              _this7.attr('states', states);
             }
           }
           delete _this7[_show];
@@ -8431,12 +8444,15 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
     value: function hide() {
       var _this8 = this;
 
-      if (this[_hide]) return this[_hide];
+      var state = this.attr('state');
+      if (this[_hide] || state === 'hide') return this[_hide];
       var _originalDisplay = this.attr('_originalDisplay');
       if (_originalDisplay == null) {
+        var display = this.attr('display');
+
         this.attr({
-          _originalDisplay: this.attr('display'),
-          _originalState: this.attr('state')
+          _originalDisplay: display !== 'none' ? display : '',
+          _originalState: state !== 'hide' ? state : 'default'
         });
       }
 
@@ -8449,8 +8465,9 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             beforeHide[key] = _this8.attr(key);
           });
           states.show = beforeHide;
+          this.attr('states', states);
         }
-        var deferred = this.resolveStates('show', 'hide');
+        var deferred = this.resolveStates(['show', 'hide']);
         deferred.promise = deferred.promise.then(function () {
           _this8.attr('display', 'none');
           delete _this8[_hide];
@@ -8472,20 +8489,24 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var states = this.attr('states');
       var ret = void 0;
       if (states && (states.beforeEnter || states.afterEnter)) {
-        var state = this.attr('state');
-        if (state !== 'beforeEnter' && state !== 'afterEnter' && (!states.afterEnter || states.afterEnter.__default)) {
-          var afterEnter = { __default: true };
-          (0, _keys2.default)(states.beforeEnter).forEach(function (key) {
-            afterEnter[key] = _this9.attr(key);
-          });
-          states.afterEnter = afterEnter;
-        }
-        var deferred = this.resolveStates('beforeEnter', 'afterEnter', toState || state);
+        var deferred = this.resolveStates(['beforeEnter', 'afterEnter'], function (_states) {
+          var state = _this9.attr('state');
+          _states.push(toState || state);
+          if (state !== 'beforeEnter' && state !== 'afterEnter' && (!states.afterEnter || states.afterEnter.__default)) {
+            var afterEnter = { __default: true };
+            (0, _keys2.default)(states.beforeEnter).forEach(function (key) {
+              afterEnter[key] = _this9.attr(key);
+            });
+            states.afterEnter = afterEnter;
+            _this9.attr('states', states);
+          }
+        });
         ret = deferred;
       } else {
         ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'enter', this).call(this);
       }
 
+      this[_enter] = ret;
       if (this.children) {
         var enterMode = this.attr('enterMode');
         if (enterMode === 'onebyone' || enterMode === 'onebyone-reverse') {
@@ -8502,15 +8523,17 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             children = [].concat((0, _toConsumableArray3.default)(children)).reverse();
           }
 
+          var currentTask = ret;
           children.forEach(function (c) {
             var states = c.attr('states');
             if (states && (states.beforeEnter || states.afterEnter)) {
               if (!states.afterEnter || states.afterEnter.__default) {
-                var _afterEnter = { __default: true };
+                var afterEnter = { __default: true };
                 (0, _keys2.default)(states.beforeEnter).forEach(function (key) {
-                  _afterEnter[key] = c.attr(key);
+                  afterEnter[key] = c.attr(key);
                 });
-                states.afterEnter = _afterEnter;
+                states.afterEnter = afterEnter;
+                c.attr('states', states);
               }
             }
             var toState = c.attr('state');
@@ -8518,46 +8541,50 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             promise = promise.then(function () {
               var d = c.enter(toState);
               if (d.promise) {
-                if (resolved && d.resolve) d.resolve();
+                currentTask = d;
+                if (resolved && d.resolve) {
+                  d.resolve();
+                }
                 return d.promise;
               }
               return d;
             });
           });
 
-          return {
+          this[_enter] = {
             promise: promise,
             resolve: function resolve() {
+              if (currentTask && currentTask.resolve) currentTask.resolve();
               resolved = true;
             }
           };
-        }
-
-        var entries = this.children.map(function (c) {
-          return c.enter();
-        }).filter(function (d) {
-          return d.promise;
-        });
-        if (ret.promise) {
-          entries.unshift(ret);
-        }
-        if (entries.length) {
-          var _deferred = {
-            promise: _promise2.default.all(entries.map(function (d) {
-              return d.promise;
-            })),
-            resolve: function resolve() {
-              entries.forEach(function (d) {
-                return d.resolve();
-              });
-              return _this9.promise;
-            }
-          };
-          return _deferred;
+        } else {
+          var entries = this.children.map(function (c) {
+            return c.enter();
+          }).filter(function (d) {
+            return d.promise;
+          });
+          if (ret.promise) {
+            entries.unshift(ret);
+          }
+          if (entries.length) {
+            var _deferred = {
+              promise: _promise2.default.all(entries.map(function (d) {
+                return d.promise;
+              })),
+              resolve: function resolve() {
+                entries.forEach(function (d) {
+                  return d.resolve();
+                });
+                return _this9.promise;
+              }
+            };
+            this[_enter] = _deferred;
+          }
         }
       }
 
-      return ret;
+      return this[_enter];
     }
   }, {
     key: 'exit',
@@ -8566,106 +8593,135 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       var onbyone = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-      var states = this.attr('states');
-      var ret = void 0;
-      var afterEnter = states.afterEnter || {};
-      if (states && (states.beforeExit || states.afterExit)) {
-        var state = this.attr('state');
-        if (state !== 'beforeExit' && state !== 'afterExit' && (!states.beforeExit || states.beforeExit.__default)) {
-          states.beforeExit = (0, _assign2.default)({}, afterEnter);
-          states.beforeExit.__default = true;
-        }
-        var deferred = this.resolveStates('beforeExit', 'afterExit');
-        deferred.promise.then(function () {
-          if (!onbyone) {
-            _this10.attr(afterEnter);
-            _this10[_attr].quietSet('state', toState || state);
-          }
-          return _this10;
-        });
-        ret = deferred;
-      } else {
-        ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', this).call(this);
-        this.attr(afterEnter);
-      }
-
-      if (this.children) {
-        var exitMode = this.attr('exitMode');
-        if (exitMode === 'onebyone' || exitMode === 'onebyone-reverse') {
-          var promise = _promise2.default.resolve(this);
-          var resolved = false;
-
-          var children = this.children;
-          if (exitMode === 'onebyone-reverse') {
-            children = [].concat((0, _toConsumableArray3.default)(children)).reverse();
-          }
-
-          children.forEach(function (c) {
-            var states = c.attr('states');
-            if (states && (states.beforeExit || states.afterExit)) {
-              if (!states.beforeExit || states.beforeExit.__default) {
-                states.beforeExit = (0, _assign2.default)({}, afterEnter);
-                states.beforeExit.__default = true;
-              }
+      var _exit = function _exit() {
+        var states = _this10.attr('states');
+        var ret = void 0;
+        var afterEnter = states.afterEnter || {};
+        if (states && (states.beforeExit || states.afterExit)) {
+          var state = void 0;
+          var deferred = _this10.resolveStates(['beforeExit', 'afterExit'], function () {
+            state = _this10.attr('state');
+            if (state !== 'beforeExit' && state !== 'afterExit' && (!states.beforeExit || states.beforeExit.__default)) {
+              states.beforeExit = (0, _assign2.default)({}, afterEnter);
+              states.beforeExit.__default = true;
+              _this10.attr('states', states);
             }
-            var toState = c.attr('state');
-            c.attr('state', 'beforeExit');
+          });
+          deferred.promise.then(function () {
+            if (!onbyone) {
+              _this10.attr(afterEnter);
+              _this10[_attr].quietSet('state', toState || state);
+            }
+            return _this10;
+          });
+          ret = deferred;
+        } else {
+          ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', _this10).call(_this10);
+          _this10.attr(afterEnter);
+        }
+
+        if (_this10.children) {
+          var exitMode = _this10.attr('exitMode');
+          if (exitMode === 'onebyone' || exitMode === 'onebyone-reverse') {
+            var promise = _promise2.default.resolve(_this10);
+            var resolved = false;
+
+            var children = _this10.children;
+            if (exitMode === 'onebyone-reverse') {
+              children = [].concat((0, _toConsumableArray3.default)(children)).reverse();
+            }
+
+            var currentTask = null;
+            children.forEach(function (c) {
+              var states = c.attr('states');
+              if (states && (states.beforeExit || states.afterExit)) {
+                if (!states.beforeExit || states.beforeExit.__default) {
+                  states.beforeExit = (0, _assign2.default)({}, afterEnter);
+                  states.beforeExit.__default = true;
+                  c.attr('states', states);
+                }
+              }
+              var toState = c.attr('state');
+              c.attr('state', 'beforeExit');
+              promise = promise.then(function () {
+                var d = c.exit(toState, true);
+                if (d.promise) {
+                  currentTask = d;
+                  if (resolved && d.resolve) d.resolve();
+                  return d.promise;
+                }
+                return d;
+              });
+              c.__toState = toState;
+            });
+
             promise = promise.then(function () {
-              var d = c.exit(toState, true);
-              if (d.promise) {
-                if (resolved && d.resolve) d.resolve();
-                return d.promise;
+              var p = ret.promise || _promise2.default.resolve(_this10);
+              currentTask = ret;
+              return p.then(function () {
+                _this10.children.forEach(function (c) {
+                  var states = c.attr('states');
+                  c.attr(states.afterEnter);
+                  c[_attr].quietSet('state', c.__toState);
+                  delete c.__toState;
+                });
+              });
+            });
+
+            return {
+              promise: promise,
+              resolve: function resolve() {
+                if (currentTask && currentTask.resolve) currentTask.resolve();
+                resolved = true;
               }
-              return d;
-            });
-            c.__toState = toState;
-          });
+            };
+          }
 
-          promise = promise.then(function () {
-            var p = ret.promise || _promise2.default.resolve(_this10);
-            return p.then(function () {
-              _this10.children.forEach(function (c) {
-                var states = c.attr('states');
-                c.attr(states.afterEnter);
-                c[_attr].quietSet('state', c.__toState);
-                delete c.__toState;
-              });
-            });
+          var exites = _this10.children.map(function (c) {
+            return c.exit();
+          }).filter(function (d) {
+            return d.promise;
           });
-
-          return {
-            promise: promise,
-            resolve: function resolve() {
-              resolved = true;
-            }
-          };
+          if (ret.promise) {
+            exites.unshift(ret);
+          }
+          if (exites.length) {
+            var _deferred2 = {
+              promise: _promise2.default.all(exites.map(function (d) {
+                return d.promise;
+              })),
+              resolve: function resolve() {
+                exites.forEach(function (d) {
+                  return d.resolve();
+                });
+                return _this10.promise;
+              }
+            };
+            return _deferred2;
+          }
         }
 
-        var exites = this.children.map(function (c) {
-          return c.exit();
-        }).filter(function (d) {
-          return d.promise;
+        return ret;
+      };
+
+      if (this[_enter] && this[_enter].promise) {
+        var resolved = false;
+        this[_enter].resolve();
+        var promise = this[_enter].promise.then(function () {
+          var deferred = _exit();
+          if (resolved && deferred.resolve) {
+            deferred.resolve();
+          }
+          return deferred.promise;
         });
-        if (ret.promise) {
-          exites.unshift(ret);
-        }
-        if (exites.length) {
-          var _deferred2 = {
-            promise: _promise2.default.all(exites.map(function (d) {
-              return d.promise;
-            })),
-            resolve: function resolve() {
-              exites.forEach(function (d) {
-                return d.resolve();
-              });
-              return _this10.promise;
-            }
-          };
-          return _deferred2;
-        }
+        return {
+          promise: promise,
+          resolve: function resolve() {
+            resolved = true;
+          }
+        };
       }
-
-      return ret;
+      return _exit();
     }
   }, {
     key: 'layer',
@@ -10359,7 +10415,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'states',
     set: function set(val) {
-      this.quietSet('states', val);
+      this.quietSet('states', (0, _assign2.default)({}, val));
     }
   }, {
     key: 'actions',

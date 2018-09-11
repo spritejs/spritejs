@@ -96,9 +96,9 @@ Action的匹配规则如下：
 
 ## 状态序列
 
-我们可以通过`resolveStates()`方法批量设置一组state，然后让元素从开始state变更到结束state。
+我们可以通过`resolveStates(states, before, after)`方法批量设置一组state，然后让元素从开始state变更到结束state。
 
-每个元素的`resolveStates()`方法是**互斥**的，也就是说如果同一时间调用两组`resolveState()`，spritejs会立即结束前面的动作，执行后一组动作。
+每个元素的`resolveStates(states, before, after)`方法是**互斥**的，也就是说如果同一时间调用两组`resolveState()`，spritejs会立即结束前面的动作，执行后一组动作。
 
 <div id="state-resolveStates" class="sprite-container"></div>
 

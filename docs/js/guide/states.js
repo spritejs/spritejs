@@ -264,11 +264,11 @@ var _spritejs = spritejs,
   layer.append(block);
 
   button1.on('click', function () {
-    block.resolveStates('a', 'b', 'c', 'd', 'a');
+    block.resolveStates(['a', 'b', 'c', 'd', 'a']);
   });
 
   button2.on('click', function () {
-    block.resolveStates('a', 'd', 'c', 'b', 'a');
+    block.resolveStates(['a', 'd', 'c', 'b', 'a']);
   });
 })();
 
