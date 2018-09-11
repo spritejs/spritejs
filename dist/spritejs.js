@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.1';
+var version = '2.15.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7610,7 +7610,9 @@ var _attr = (0, _symbol2.default)('attr'),
     _effects = (0, _symbol2.default)('effects'),
     _flow = (0, _symbol2.default)('flow'),
     _changeStateAction = (0, _symbol2.default)('changeStateAction'),
-    _resolveState = (0, _symbol2.default)('resolveState');
+    _resolveState = (0, _symbol2.default)('resolveState'),
+    _show = (0, _symbol2.default)('show'),
+    _hide = (0, _symbol2.default)('hide');
 
 var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'), (_class = (_temp = _class2 = function (_BaseNode) {
   (0, _inherits3.default)(BaseSprite, _BaseNode);
@@ -8370,7 +8372,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         rs.resolve();
         this.__ignoreAction = true;
         var promise = rs.promise.then(function () {
-          return _resolveStates();
+          return _resolveStates().promise;
         });
         return {
           promise: promise,
@@ -8391,16 +8393,33 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
     value: function show() {
       var _this7 = this;
 
+      if (this[_show]) return this[_show];
+
       var originalDisplay = this.attr('_originalDisplay') || '';
       var originalState = this.attr('_originalState') || 'default';
 
       var states = this.attr('states');
 
       if (states.show) {
-        this.once('state-from-hide', function () {
-          _this7.attr('display', originalDisplay);
+        var state = this.attr('state');
+        if (state === 'hide') {
+          this.once('state-from-hide', function () {
+            _this7.attr('display', originalDisplay);
+          });
+        }
+        var deferred = this.resolveStates('show', originalState);
+        deferred.promise = deferred.promise.then(function () {
+          if (!_this7[_hide]) {
+            delete _this7[_attr]._originalDisplay;
+            delete _this7[_attr]._originalState;
+            if (states.show.__default) {
+              delete states.show;
+            }
+          }
+          delete _this7[_show];
         });
-        return this.resolveStates('show', originalState);
+        this[_show] = deferred;
+        return deferred;
       }
 
       this.attr('state', originalState);
@@ -8412,27 +8431,33 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
     value: function hide() {
       var _this8 = this;
 
-      var _originalDisplay = this.attr('display');
-      var _originalState = this.attr('state');
-      this.attr({
-        _originalDisplay: _originalDisplay,
-        _originalState: _originalState
-      });
+      if (this[_hide]) return this[_hide];
+      var _originalDisplay = this.attr('_originalDisplay');
+      if (_originalDisplay == null) {
+        this.attr({
+          _originalDisplay: this.attr('display'),
+          _originalState: this.attr('state')
+        });
+      }
 
       var states = this.attr('states');
 
       if (states.hide) {
-        if (!states.show || states.show.__default) {
+        if (!states.show) {
           var beforeHide = { __default: true };
           (0, _keys2.default)(states.hide).forEach(function (key) {
             beforeHide[key] = _this8.attr(key);
           });
           states.show = beforeHide;
         }
-        return this.resolveStates('show', 'hide').promise.then(function () {
+        var deferred = this.resolveStates('show', 'hide');
+        deferred.promise = deferred.promise.then(function () {
           _this8.attr('display', 'none');
+          delete _this8[_hide];
           return _this8;
         });
+        this[_hide] = deferred;
+        return deferred;
       }
 
       this.attr('state', 'hide');

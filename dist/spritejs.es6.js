@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.1';
+const version = '2.15.2';
 
 
 
@@ -5548,7 +5548,9 @@ const _attr = Symbol('attr'),
       _effects = Symbol('effects'),
       _flow = Symbol('flow'),
       _changeStateAction = Symbol('changeStateAction'),
-      _resolveState = Symbol('resolveState');
+      _resolveState = Symbol('resolveState'),
+      _show = Symbol('show'),
+      _hide = Symbol('hide');
 
 let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"])('Instead use sprite.cache = null'), (_class = (_temp = _class2 = class BaseSprite extends _basenode__WEBPACK_IMPORTED_MODULE_4__["default"] {
 
@@ -6467,7 +6469,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     if (rs) {
       rs.resolve();
       this.__ignoreAction = true;
-      const promise = rs.promise.then(() => _resolveStates());
+      const promise = rs.promise.then(() => _resolveStates().promise);
       return {
         promise,
         resolve() {
@@ -6482,16 +6484,33 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
   // state: original -> show -> hide -> show -> original
   show() {
+    if (this[_show]) return this[_show];
+
     const originalDisplay = this.attr('_originalDisplay') || '';
     const originalState = this.attr('_originalState') || 'default';
 
     const states = this.attr('states');
 
     if (states.show) {
-      this.once('state-from-hide', () => {
-        this.attr('display', originalDisplay);
+      const state = this.attr('state');
+      if (state === 'hide') {
+        this.once('state-from-hide', () => {
+          this.attr('display', originalDisplay);
+        });
+      }
+      const deferred = this.resolveStates('show', originalState);
+      deferred.promise = deferred.promise.then(() => {
+        if (!this[_hide]) {
+          delete this[_attr]._originalDisplay;
+          delete this[_attr]._originalState;
+          if (states.show.__default) {
+            delete states.show;
+          }
+        }
+        delete this[_show];
       });
-      return this.resolveStates('show', originalState);
+      this[_show] = deferred;
+      return deferred;
     }
 
     this.attr('state', originalState);
@@ -6500,27 +6519,33 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   hide() {
-    const _originalDisplay = this.attr('display');
-    const _originalState = this.attr('state');
-    this.attr({
-      _originalDisplay,
-      _originalState
-    });
+    if (this[_hide]) return this[_hide];
+    const _originalDisplay = this.attr('_originalDisplay');
+    if (_originalDisplay == null) {
+      this.attr({
+        _originalDisplay: this.attr('display'),
+        _originalState: this.attr('state')
+      });
+    }
 
     const states = this.attr('states');
 
     if (states.hide) {
-      if (!states.show || states.show.__default) {
+      if (!states.show) {
         const beforeHide = { __default: true };
         Object.keys(states.hide).forEach(key => {
           beforeHide[key] = this.attr(key);
         });
         states.show = beforeHide;
       }
-      return this.resolveStates('show', 'hide').promise.then(() => {
+      const deferred = this.resolveStates('show', 'hide');
+      deferred.promise = deferred.promise.then(() => {
         this.attr('display', 'none');
+        delete this[_hide];
         return this;
       });
+      this[_hide] = deferred;
+      return deferred;
     }
 
     this.attr('state', 'hide');
