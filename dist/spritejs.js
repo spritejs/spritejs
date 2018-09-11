@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.3';
+var version = '2.15.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -2579,6 +2579,7 @@ var Timeline = function () {
             id = _ref5[0],
             timer = _ref5[1];
 
+        if (!timers.has(id)) return; // Need check because it maybe clearTimeout by former handler().
         var _timer$time = timer.time,
             isEntropy = _timer$time.isEntropy,
             delay = _timer$time.delay,

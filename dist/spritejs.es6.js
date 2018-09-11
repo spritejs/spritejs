@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.3';
+const version = '2.15.4';
 
 
 
@@ -411,6 +411,7 @@ let Timeline = class Timeline {
           timers = this[_timers];
 
     this.markTime({ time });[...timers].forEach(([id, timer]) => {
+      if (!timers.has(id)) return; // Need check because it maybe clearTimeout by former handler().
       const { isEntropy, delay, heading } = timer.time,
             { handler, startTime } = timer;
 
