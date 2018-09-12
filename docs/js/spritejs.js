@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.5';
+var version = '2.15.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10430,7 +10430,19 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'states',
     set: function set(val) {
-      this.quietSet('states', (0, _assign2.default)({}, val));
+      val = (0, _assign2.default)({}, val);
+      var states = this.get('states');
+      // recover __default
+      (0, _entries2.default)(states).forEach(function (_ref8) {
+        var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
+            key = _ref9[0],
+            value = _ref9[1];
+
+        if (value.__default && !(key in val)) {
+          val[key] = value;
+        }
+      });
+      this.quietSet('states', val);
     }
   }, {
     key: 'actions',
