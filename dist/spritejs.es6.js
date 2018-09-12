@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.4';
+const version = '2.15.5';
 
 
 
@@ -6517,7 +6517,11 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           this.attr('display', originalDisplay);
         });
       }
-      const deferred = this.resolveStates(['show', originalState]);
+      const _st = ['show', originalState];
+      if (states.beforeShow) {
+        _st.unshift('beforeShow');
+      }
+      const deferred = this.resolveStates(_st);
       deferred.promise = deferred.promise.then(() => {
         if (!this[_hide]) {
           delete this[_attr]._originalDisplay;
@@ -6556,6 +6560,11 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     if (states.hide) {
       if (!states.show) {
         const beforeHide = { __default: true };
+        if (states.beforeShow) {
+          Object.keys(states.beforeShow).forEach(key => {
+            beforeHide[key] = this.attr(key);
+          });
+        }
         Object.keys(states.hide).forEach(key => {
           beforeHide[key] = this.attr(key);
         });
@@ -7010,6 +7019,11 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
         ':hide': {
           duration: 300,
           easing: 'ease-out'
+        },
+        'hide:beforeShow': 'none',
+        'beforeShow:': {
+          duration: 300,
+          easing: 'ease-in'
         }
       },
       enterMode: 'normal',
@@ -7625,7 +7639,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
               actions = this.actions;
         if (actions) {
           action = !subject.__ignoreAction && (actions[`${oldState}:${val}`] || actions[`:${val}`] || actions[`${oldState}:`]);
-          if (action) {
+          if (action && action !== 'none') {
             const animation = subject.changeState(fromState, toState, action);
             const tag = Symbol('tag');
             animation.tag = tag;
@@ -7646,7 +7660,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           }
         }
       }
-      if (!action || subject.__ignoreAction) {
+      if (!action || action === 'none' || subject.__ignoreAction) {
         subject.dispatchEvent(`state-from-${oldState}`, { from: oldState, to: val }, true, true);
         if (toState) subject.attr(toState);
         subject.dispatchEvent(`state-to-${val}`, { from: oldState, to: val }, true, true);

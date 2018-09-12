@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.4';
+var version = '2.15.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8420,7 +8420,11 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             _this7.attr('display', originalDisplay);
           });
         }
-        var deferred = this.resolveStates(['show', originalState]);
+        var _st = ['show', originalState];
+        if (states.beforeShow) {
+          _st.unshift('beforeShow');
+        }
+        var deferred = this.resolveStates(_st);
         deferred.promise = deferred.promise.then(function () {
           if (!_this7[_hide]) {
             delete _this7[_attr]._originalDisplay;
@@ -8462,6 +8466,11 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       if (states.hide) {
         if (!states.show) {
           var beforeHide = { __default: true };
+          if (states.beforeShow) {
+            (0, _keys2.default)(states.beforeShow).forEach(function (key) {
+              beforeHide[key] = _this8.attr(key);
+            });
+          }
           (0, _keys2.default)(states.hide).forEach(function (key) {
             beforeHide[key] = _this8.attr(key);
           });
@@ -9756,6 +9765,11 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         ':hide': {
           duration: 300,
           easing: 'ease-out'
+        },
+        'hide:beforeShow': 'none',
+        'beforeShow:': {
+          duration: 300,
+          easing: 'ease-in'
         }
       },
       enterMode: 'normal',
@@ -10473,7 +10487,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
               actions = this.actions;
           if (actions) {
             action = !subject.__ignoreAction && (actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':']);
-            if (action) {
+            if (action && action !== 'none') {
               var animation = subject.changeState(fromState, toState, action);
               var tag = (0, _symbol2.default)('tag');
               animation.tag = tag;
@@ -10494,7 +10508,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
             }
           }
         }
-        if (!action || subject.__ignoreAction) {
+        if (!action || action === 'none' || subject.__ignoreAction) {
           subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val }, true, true);
           if (toState) subject.attr(toState);
           subject.dispatchEvent('state-to-' + val, { from: oldState, to: val }, true, true);
