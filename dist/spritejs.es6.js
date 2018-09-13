@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.10';
+const version = '2.15.11';
 
 
 
@@ -10445,11 +10445,16 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     if (context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('DOMNodeRemovedFromDocument', () => {
         this._savePlaybackRate = this.timeline.playbackRate;
+        this._saveChildren = [...this.children];
+        this.remove(...this.children);
         this.timeline.playbackRate = 0;
       });
       context.canvas.addEventListener('DOMNodeInsertedIntoDocument', () => {
-        this.timeline.playbackRate = this._savePlaybackRate || 1.0;
-        this.append(...this.children);
+        if (this._saveChildren) {
+          this.timeline.playbackRate = this._savePlaybackRate;
+          this.append(...this._saveChildren);
+          delete this._saveChildren;
+        }
       });
     }
   }

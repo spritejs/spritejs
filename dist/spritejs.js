@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.10';
+var version = '2.15.11';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14085,11 +14085,16 @@ var Layer = function (_BaseNode) {
     if (context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
         _this._savePlaybackRate = _this.timeline.playbackRate;
+        _this._saveChildren = [].concat((0, _toConsumableArray3.default)(_this.children));
+        _this.remove.apply(_this, (0, _toConsumableArray3.default)(_this.children));
         _this.timeline.playbackRate = 0;
       });
       context.canvas.addEventListener('DOMNodeInsertedIntoDocument', function () {
-        _this.timeline.playbackRate = _this._savePlaybackRate || 1.0;
-        _this.append.apply(_this, (0, _toConsumableArray3.default)(_this.children));
+        if (_this._saveChildren) {
+          _this.timeline.playbackRate = _this._savePlaybackRate;
+          _this.append.apply(_this, (0, _toConsumableArray3.default)(_this._saveChildren));
+          delete _this._saveChildren;
+        }
       });
     }
     return _this;
