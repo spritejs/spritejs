@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.7';
+var version = '2.15.8';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -20470,13 +20470,16 @@ var _default = function (_BaseNode) {
     value: function insertBefore(newchild, refchild) {
       var _this2 = this;
 
+      if (refchild == null) {
+        return this.appendLayer(newchild);
+      }
       if (!this.hasLayer(refchild)) {
         throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
       }
       this.appendLayer(newchild);
       this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
       var els = this.container.children;
-      els.forEach(function (el, i) {
+      [].concat((0, _toConsumableArray3.default)(els)).forEach(function (el, i) {
         var id = el.dataset.layerId;
         if (id) {
           var layer = _this2.layer(id);
@@ -20770,6 +20773,7 @@ var _default = function (_BaseNode) {
       if (!(layer instanceof _layer2.default)) {
         // append dom element
         layer.id = layer.id || '_layer' + Math.random();
+        layer.dataset.layerId = layer.id;
         layer.connect = function (parent, zOrder) {
           layer.parent = parent;
           Object.defineProperty(layer, 'zOrder', {

@@ -141,13 +141,16 @@ export default class extends BaseNode {
   }
 
   insertBefore(newchild, refchild) {
+    if(refchild == null) {
+      return this.appendLayer(newchild);
+    }
     if(!this.hasLayer(refchild)) {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
     this.appendLayer(newchild);
     this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
     const els = this.container.children;
-    els.forEach((el, i) => {
+    [...els].forEach((el, i) => {
       const id = el.dataset.layerId;
       if(id) {
         const layer = this.layer(id);
@@ -493,6 +496,7 @@ export default class extends BaseNode {
     if(!(layer instanceof Layer)) {
       // append dom element
       layer.id = layer.id || `_layer${Math.random()}`;
+      layer.dataset.layerId = layer.id;
       layer.connect = (parent, zOrder) => {
         layer.parent = parent;
         Object.defineProperty(layer, 'zOrder', {

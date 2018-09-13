@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.7';
+const version = '2.15.8';
 
 
 
@@ -15146,13 +15146,16 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   insertBefore(newchild, refchild) {
+    if (refchild == null) {
+      return this.appendLayer(newchild);
+    }
     if (!this.hasLayer(refchild)) {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
     this.appendLayer(newchild);
     this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
     const els = this.container.children;
-    els.forEach((el, i) => {
+    [...els].forEach((el, i) => {
       const id = el.dataset.layerId;
       if (id) {
         const layer = this.layer(id);
@@ -15495,6 +15498,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_1__["default"])) {
       // append dom element
       layer.id = layer.id || `_layer${Math.random()}`;
+      layer.dataset.layerId = layer.id;
       layer.connect = (parent, zOrder) => {
         layer.parent = parent;
         Object.defineProperty(layer, 'zOrder', {
