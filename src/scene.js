@@ -147,7 +147,7 @@ export default class extends BaseNode {
     if(!this.hasLayer(refchild)) {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
-    this.appendLayer(newchild);
+    this.appendLayer(newchild, false);
     this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
     const els = this.container.children;
     [...els].forEach((el, i) => {
@@ -464,16 +464,7 @@ export default class extends BaseNode {
   }
 
   layer(id = 'default', opts = {handleEvent: true}) {
-    if(typeof opts === 'number') {
-      opts = {zIndex: opts};
-    }
     if(!this.hasLayer(id)) {
-      let zIndex = 0;
-      if(opts.zIndex != null) {
-        zIndex = opts.zIndex;
-        delete opts.zIndex;
-      }
-
       /* istanbul ignore if  */
       if(typeof window !== 'undefined' && window.getComputedStyle) {
         const pos = window.getComputedStyle && window.getComputedStyle(this.container).position;
@@ -482,7 +473,7 @@ export default class extends BaseNode {
           this.container.style.position = 'relative';
         }
       }
-      this.appendLayer(new Layer(id, opts), zIndex);
+      this.appendLayer(new Layer(id, opts));
     }
 
     return this[_layerMap][id];
@@ -492,10 +483,13 @@ export default class extends BaseNode {
     return this[_layers];
   }
 
-  appendLayer(layer, zIndex = 0) {
+  appendLayer(layer, appendDOMElement = true) {
     if(!(layer instanceof Layer)) {
       // append dom element
       layer.id = layer.id || `_layer${Math.random()}`;
+      if(!layer.dataset) {
+        layer.dataset = {};
+      }
       layer.dataset.layerId = layer.id;
       layer.connect = (parent, zOrder) => {
         layer.parent = parent;
@@ -504,13 +498,9 @@ export default class extends BaseNode {
           writable: false,
           configurable: true,
         });
-        if(parent.container) {
-          parent.container.appendChild(layer);
-        }
       };
       layer.disconnect = (parent) => {
         delete layer.zOrder;
-        layer.remove();
       };
     }
     const id = layer.id;
@@ -522,7 +512,7 @@ export default class extends BaseNode {
     this.removeLayer(layer);
 
     this[_layerMap][id] = layer;
-    layer.connect(this, this[_zOrder]++, zIndex);
+    layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer);
     if(!this.stickExtend) {
       layer.resolution = this.layerResolution;
@@ -533,6 +523,7 @@ export default class extends BaseNode {
     if(setDebugToolsObserver && layer.id !== '__debuglayer__') {
       setDebugToolsObserver(this, layer);
     }
+    if(appendDOMElement) this.container.appendChild(layer.canvas || layer);
     return layer;
   }
 
@@ -542,6 +533,7 @@ export default class extends BaseNode {
     }
     if(this.hasLayer(layer)) {
       layer.disconnect(this);
+      this.container.removeChild(layer.canvas || layer);
       delete this[_layerMap][layer.id];
       this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
       /* istanbul ignore if  */

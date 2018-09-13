@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.8';
+var version = '2.15.10';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -14340,24 +14340,6 @@ var Layer = function (_BaseNode) {
       return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
   }, {
-    key: 'connect',
-    value: function connect(parent, zOrder, zIndex) /* istanbul ignore next  */{
-      var ret = (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'connect', this).call(this, parent, zOrder);
-      this.zIndex = zIndex;
-      if (parent && parent.container) {
-        parent.container.appendChild(this.outputContext.canvas);
-      }
-      return ret;
-    }
-  }, {
-    key: 'disconnect',
-    value: function disconnect(parent) /* istanbul ignore next  */{
-      if (this.canvas && this.canvas.remove) {
-        this.canvas.remove();
-      }
-      return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'disconnect', this).call(this, parent);
-    }
-  }, {
     key: 'group',
     value: function group() {
       var group = new _group2.default();
@@ -20476,7 +20458,7 @@ var _default = function (_BaseNode) {
       if (!this.hasLayer(refchild)) {
         throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
       }
-      this.appendLayer(newchild);
+      this.appendLayer(newchild, false);
       this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
       var els = this.container.children;
       [].concat((0, _toConsumableArray3.default)(els)).forEach(function (el, i) {
@@ -20742,16 +20724,7 @@ var _default = function (_BaseNode) {
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
       var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { handleEvent: true };
 
-      if (typeof opts === 'number') {
-        opts = { zIndex: opts };
-      }
       if (!this.hasLayer(id)) {
-        var zIndex = 0;
-        if (opts.zIndex != null) {
-          zIndex = opts.zIndex;
-          delete opts.zIndex;
-        }
-
         /* istanbul ignore if  */
         if (typeof window !== 'undefined' && window.getComputedStyle) {
           var pos = window.getComputedStyle && window.getComputedStyle(this.container).position;
@@ -20760,7 +20733,7 @@ var _default = function (_BaseNode) {
             this.container.style.position = 'relative';
           }
         }
-        this.appendLayer(new _layer2.default(id, opts), zIndex);
+        this.appendLayer(new _layer2.default(id, opts));
       }
 
       return this[_layerMap][id];
@@ -20768,11 +20741,14 @@ var _default = function (_BaseNode) {
   }, {
     key: 'appendLayer',
     value: function appendLayer(layer) {
-      var zIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var appendDOMElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
       if (!(layer instanceof _layer2.default)) {
         // append dom element
         layer.id = layer.id || '_layer' + Math.random();
+        if (!layer.dataset) {
+          layer.dataset = {};
+        }
         layer.dataset.layerId = layer.id;
         layer.connect = function (parent, zOrder) {
           layer.parent = parent;
@@ -20781,13 +20757,9 @@ var _default = function (_BaseNode) {
             writable: false,
             configurable: true
           });
-          if (parent.container) {
-            parent.container.appendChild(layer);
-          }
         };
         layer.disconnect = function (parent) {
           delete layer.zOrder;
-          layer.remove();
         };
       }
       var id = layer.id;
@@ -20799,7 +20771,7 @@ var _default = function (_BaseNode) {
       this.removeLayer(layer);
 
       this[_layerMap][id] = layer;
-      layer.connect(this, this[_zOrder]++, zIndex);
+      layer.connect(this, this[_zOrder]++);
       this.updateViewport(layer);
       if (!this.stickExtend) {
         layer.resolution = this.layerResolution;
@@ -20810,6 +20782,7 @@ var _default = function (_BaseNode) {
       if (_platform.setDebugToolsObserver && layer.id !== '__debuglayer__') {
         (0, _platform.setDebugToolsObserver)(this, layer);
       }
+      if (appendDOMElement) this.container.appendChild(layer.canvas || layer);
       return layer;
     }
   }, {
@@ -20820,6 +20793,7 @@ var _default = function (_BaseNode) {
       }
       if (this.hasLayer(layer)) {
         layer.disconnect(this);
+        this.container.removeChild(layer.canvas || layer);
         delete this[_layerMap][layer.id];
         this[_layers] = sortOrderedSprites((0, _values2.default)(this[_layerMap]), true);
         /* istanbul ignore if  */

@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.8';
+const version = '2.15.10';
 
 
 
@@ -10724,22 +10724,6 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     return super.dispatchEvent(type, evt, collisionState, swallow);
   }
 
-  connect(parent, zOrder, zIndex) /* istanbul ignore next  */{
-    const ret = super.connect(parent, zOrder);
-    this.zIndex = zIndex;
-    if (parent && parent.container) {
-      parent.container.appendChild(this.outputContext.canvas);
-    }
-    return ret;
-  }
-
-  disconnect(parent) /* istanbul ignore next  */{
-    if (this.canvas && this.canvas.remove) {
-      this.canvas.remove();
-    }
-    return super.disconnect(parent);
-  }
-
   group(...sprites) {
     const group = new _group__WEBPACK_IMPORTED_MODULE_5__["default"]();
     group.append(...sprites);
@@ -15152,7 +15136,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     if (!this.hasLayer(refchild)) {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
-    this.appendLayer(newchild);
+    this.appendLayer(newchild, false);
     this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
     const els = this.container.children;
     [...els].forEach((el, i) => {
@@ -15466,16 +15450,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   layer(id = 'default', opts = { handleEvent: true }) {
-    if (typeof opts === 'number') {
-      opts = { zIndex: opts };
-    }
     if (!this.hasLayer(id)) {
-      let zIndex = 0;
-      if (opts.zIndex != null) {
-        zIndex = opts.zIndex;
-        delete opts.zIndex;
-      }
-
       /* istanbul ignore if  */
       if (typeof window !== 'undefined' && window.getComputedStyle) {
         const pos = window.getComputedStyle && window.getComputedStyle(this.container).position;
@@ -15484,7 +15459,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
           this.container.style.position = 'relative';
         }
       }
-      this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_1__["default"](id, opts), zIndex);
+      this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_1__["default"](id, opts));
     }
 
     return this[_layerMap][id];
@@ -15494,10 +15469,13 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     return this[_layers];
   }
 
-  appendLayer(layer, zIndex = 0) {
+  appendLayer(layer, appendDOMElement = true) {
     if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_1__["default"])) {
       // append dom element
       layer.id = layer.id || `_layer${Math.random()}`;
+      if (!layer.dataset) {
+        layer.dataset = {};
+      }
       layer.dataset.layerId = layer.id;
       layer.connect = (parent, zOrder) => {
         layer.parent = parent;
@@ -15506,13 +15484,9 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
           writable: false,
           configurable: true
         });
-        if (parent.container) {
-          parent.container.appendChild(layer);
-        }
       };
       layer.disconnect = parent => {
         delete layer.zOrder;
-        layer.remove();
       };
     }
     const id = layer.id;
@@ -15524,7 +15498,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     this.removeLayer(layer);
 
     this[_layerMap][id] = layer;
-    layer.connect(this, this[_zOrder]++, zIndex);
+    layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer);
     if (!this.stickExtend) {
       layer.resolution = this.layerResolution;
@@ -15535,6 +15509,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     if (_platform__WEBPACK_IMPORTED_MODULE_3__["setDebugToolsObserver"] && layer.id !== '__debuglayer__') {
       Object(_platform__WEBPACK_IMPORTED_MODULE_3__["setDebugToolsObserver"])(this, layer);
     }
+    if (appendDOMElement) this.container.appendChild(layer.canvas || layer);
     return layer;
   }
 
@@ -15544,6 +15519,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     }
     if (this.hasLayer(layer)) {
       layer.disconnect(this);
+      this.container.removeChild(layer.canvas || layer);
       delete this[_layerMap][layer.id];
       this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
       /* istanbul ignore if  */
