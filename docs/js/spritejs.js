@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.6';
+var version = '2.15.7';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7327,6 +7327,11 @@ function drawRadiusBox(context, _ref) {
       h = _ref.h,
       r = _ref.r;
 
+  // avoid radius larger than width or height
+  r = Math.min(r, Math.floor(Math.min(w, h) / 2));
+  // avoid radius is negative
+  r = Math.max(r, 0);
+
   context.beginPath();
   context.moveTo(x + r, y);
   context.arcTo(x + w, y, x + w, y + h, r);
@@ -13951,10 +13956,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _toConsumableArray2 = __webpack_require__(99);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 var _assign = __webpack_require__(2);
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -13962,6 +13963,10 @@ var _assign2 = _interopRequireDefault(_assign);
 var _promise = __webpack_require__(125);
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var _toConsumableArray2 = __webpack_require__(99);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _set = __webpack_require__(159);
 
@@ -14064,15 +14069,6 @@ var Layer = function (_BaseNode) {
 
     _this.outputContext = context;
 
-    // auto release
-    /* istanbul ignore if  */
-    if (context.canvas && context.canvas.addEventListener) {
-      context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
-        _this.timeline.clear();
-        _this.clear();
-      });
-    }
-
     _this[_children] = [];
     _this[_updateSet] = new _set2.default();
     _this[_zOrder] = 0;
@@ -14083,6 +14079,19 @@ var Layer = function (_BaseNode) {
     _this[_node] = new _datanode2.default();
 
     _this.touchedTargets = {};
+
+    // auto release
+    /* istanbul ignore if  */
+    if (context.canvas && context.canvas.addEventListener) {
+      context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
+        _this._savePlaybackRate = _this.timeline.playbackRate;
+        _this.timeline.playbackRate = 0;
+      });
+      context.canvas.addEventListener('DOMNodeInsertedIntoDocument', function () {
+        _this.timeline.playbackRate = _this._savePlaybackRate || 1.0;
+        _this.append.apply(_this, (0, _toConsumableArray3.default)(_this.children));
+      });
+    }
     return _this;
   }
 
@@ -20465,14 +20474,8 @@ var _default = function (_BaseNode) {
         throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
       }
       this.appendLayer(newchild);
-      this.container.insertBefore(newchild.canvas, refchild.canvas);
-      var els = void 0;
-      /* istanbul ignore if */
-      if (this.container.querySelectorAll) {
-        els = this.container.querySelectorAll('canvas');
-      } else {
-        els = this.container.children;
-      }
+      this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
+      var els = this.container.children;
       els.forEach(function (el, i) {
         var id = el.dataset.layerId;
         if (id) {
@@ -20505,12 +20508,14 @@ var _default = function (_BaseNode) {
       var _layerViewport = (0, _slicedToArray3.default)(this.layerViewport, 2),
           width = _layerViewport[0],
           height = _layerViewport[1],
-          layers = layer ? [layer] : this[_layers],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
 
-      layers.forEach(function (layer) {
+      var layers = layer ? [layer] : this[_layers];
+
+      layers = layers.filter(function (layer) {
         var canvas = layer.canvas;
+        if (!canvas) return false; // ignore not canvas layer
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
         (0, _assign2.default)(canvas.style, {
@@ -20534,6 +20539,7 @@ var _default = function (_BaseNode) {
         if (stickExtend) {
           layer.resolution = _this3.layerResolution;
         }
+        return true;
       });
 
       this.dispatchEvent('viewportChange', { target: this, layers: layers });
@@ -20547,7 +20553,9 @@ var _default = function (_BaseNode) {
       var layers = layer ? [layer] : this[_layers];
 
       layers.forEach(function (layer) {
-        layer.resolution = _this4.layerResolution;
+        if (layer.canvas) {
+          layer.resolution = _this4.layerResolution;
+        }
       });
       this.dispatchEvent('resolutionChange', { target: this, layers: layers });
       return this;
@@ -20627,26 +20635,25 @@ var _default = function (_BaseNode) {
 
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (originalX != null && originalY != null) {
-            var _layer$toLocalPos = layer.toLocalPos(originalX, originalY);
-
-            var _layer$toLocalPos2 = (0, _slicedToArray3.default)(_layer$toLocalPos, 2);
-
-            x = _layer$toLocalPos2[0];
-            y = _layer$toLocalPos2[1];
-          } else if (x != null && y != null) {
-            var _layer$toGlobalPos = layer.toGlobalPos(x, y);
-
-            var _layer$toGlobalPos2 = (0, _slicedToArray3.default)(_layer$toGlobalPos, 2);
-
-            originalX = _layer$toGlobalPos2[0];
-            originalY = _layer$toGlobalPos2[1];
-          }
-          (0, _assign2.default)(evtArgs, {
-            layerX: x, layerY: y, originalX: originalX, originalY: originalY, x: x, y: y
-          });
-
           if (layer.handleEvent) {
+            if (originalX != null && originalY != null) {
+              var _layer$toLocalPos = layer.toLocalPos(originalX, originalY);
+
+              var _layer$toLocalPos2 = (0, _slicedToArray3.default)(_layer$toLocalPos, 2);
+
+              x = _layer$toLocalPos2[0];
+              y = _layer$toLocalPos2[1];
+            } else if (x != null && y != null) {
+              var _layer$toGlobalPos = layer.toGlobalPos(x, y);
+
+              var _layer$toGlobalPos2 = (0, _slicedToArray3.default)(_layer$toGlobalPos, 2);
+
+              originalX = _layer$toGlobalPos2[0];
+              originalY = _layer$toGlobalPos2[1];
+            }
+            (0, _assign2.default)(evtArgs, {
+              layerX: x, layerY: y, originalX: originalX, originalY: originalY, x: x, y: y
+            });
             layer.dispatchEvent(type, evtArgs);
           }
         }
@@ -20750,7 +20757,6 @@ var _default = function (_BaseNode) {
             this.container.style.position = 'relative';
           }
         }
-
         this.appendLayer(new _layer2.default(id, opts), zIndex);
       }
 
@@ -20761,6 +20767,25 @@ var _default = function (_BaseNode) {
     value: function appendLayer(layer) {
       var zIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
+      if (!(layer instanceof _layer2.default)) {
+        // append dom element
+        layer.id = layer.id || '_layer' + Math.random();
+        layer.connect = function (parent, zOrder) {
+          layer.parent = parent;
+          Object.defineProperty(layer, 'zOrder', {
+            value: zOrder,
+            writable: false,
+            configurable: true
+          });
+          if (parent.container) {
+            parent.container.appendChild(layer);
+          }
+        };
+        layer.disconnect = function (parent) {
+          delete layer.zOrder;
+          layer.remove();
+        };
+      }
       var id = layer.id;
 
       if (this.hasLayer(id) && this[_layerMap][id] !== layer) {
@@ -20854,7 +20879,9 @@ var _default = function (_BaseNode) {
                 }
 
                 layers.forEach(function (layer) {
-                  ctx.drawImage.apply(ctx, [layer.canvas].concat(rect));
+                  if (layer.canvas) {
+                    ctx.drawImage.apply(ctx, [layer.canvas].concat(rect));
+                  }
                 });
 
                 return _context2.abrupt('return', canvas);

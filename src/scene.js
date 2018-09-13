@@ -145,14 +145,8 @@ export default class extends BaseNode {
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
     this.appendLayer(newchild);
-    this.container.insertBefore(newchild.canvas, refchild.canvas);
-    let els;
-    /* istanbul ignore if */
-    if(this.container.querySelectorAll) {
-      els = this.container.querySelectorAll('canvas');
-    } else {
-      els = this.container.children;
-    }
+    this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
+    const els = this.container.children;
     els.forEach((el, i) => {
       const id = el.dataset.layerId;
       if(id) {
@@ -198,12 +192,13 @@ export default class extends BaseNode {
 
   updateViewport(layer) {
     const [width, height] = this.layerViewport,
-      layers = layer ? [layer] : this[_layers],
       stickMode = this.stickMode,
       stickExtend = this.stickExtend;
+    let layers = layer ? [layer] : this[_layers];
 
-    layers.forEach((layer) => {
+    layers = layers.filter((layer) => {
       const canvas = layer.canvas;
+      if(!canvas) return false; // ignore not canvas layer
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       Object.assign(canvas.style, {
@@ -227,6 +222,7 @@ export default class extends BaseNode {
       if(stickExtend) {
         layer.resolution = this.layerResolution;
       }
+      return true;
     });
 
     this.dispatchEvent('viewportChange', {target: this, layers});
@@ -328,7 +324,9 @@ export default class extends BaseNode {
     const layers = layer ? [layer] : this[_layers];
 
     layers.forEach((layer) => {
-      layer.resolution = this.layerResolution;
+      if(layer.canvas) {
+        layer.resolution = this.layerResolution;
+      }
     });
     this.dispatchEvent('resolutionChange', {target: this, layers});
     return this;
@@ -406,16 +404,15 @@ export default class extends BaseNode {
 
       for(let i = 0; i < layers.length; i++) {
         const layer = layers[i];
-        if(originalX != null && originalY != null) {
-          [x, y] = layer.toLocalPos(originalX, originalY);
-        } else if(x != null && y != null) {
-          [originalX, originalY] = layer.toGlobalPos(x, y);
-        }
-        Object.assign(evtArgs, {
-          layerX: x, layerY: y, originalX, originalY, x, y,
-        });
-
         if(layer.handleEvent) {
+          if(originalX != null && originalY != null) {
+            [x, y] = layer.toLocalPos(originalX, originalY);
+          } else if(x != null && y != null) {
+            [originalX, originalY] = layer.toGlobalPos(x, y);
+          }
+          Object.assign(evtArgs, {
+            layerX: x, layerY: y, originalX, originalY, x, y,
+          });
           layer.dispatchEvent(type, evtArgs);
         }
       }
@@ -482,7 +479,6 @@ export default class extends BaseNode {
           this.container.style.position = 'relative';
         }
       }
-
       this.appendLayer(new Layer(id, opts), zIndex);
     }
 
@@ -494,6 +490,25 @@ export default class extends BaseNode {
   }
 
   appendLayer(layer, zIndex = 0) {
+    if(!(layer instanceof Layer)) {
+      // append dom element
+      layer.id = layer.id || `_layer${Math.random()}`;
+      layer.connect = (parent, zOrder) => {
+        layer.parent = parent;
+        Object.defineProperty(layer, 'zOrder', {
+          value: zOrder,
+          writable: false,
+          configurable: true,
+        });
+        if(parent.container) {
+          parent.container.appendChild(layer);
+        }
+      };
+      layer.disconnect = (parent) => {
+        delete layer.zOrder;
+        layer.remove();
+      };
+    }
     const id = layer.id;
 
     if(this.hasLayer(id) && this[_layerMap][id] !== layer) {
@@ -573,7 +588,9 @@ export default class extends BaseNode {
     }
 
     layers.forEach((layer) => {
-      ctx.drawImage(layer.canvas, ...rect);
+      if(layer.canvas) {
+        ctx.drawImage(layer.canvas, ...rect);
+      }
     });
 
     return canvas;

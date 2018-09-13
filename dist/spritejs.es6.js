@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.6';
+const version = '2.15.7';
 
 
 
@@ -5369,6 +5369,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findColor", function() { return findColor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cacheContextPool", function() { return cacheContextPool; });
 function drawRadiusBox(context, { x, y, w, h, r }) {
+  // avoid radius larger than width or height
+  r = Math.min(r, Math.floor(Math.min(w, h) / 2));
+  // avoid radius is negative
+  r = Math.max(r, 0);
+
   context.beginPath();
   context.moveTo(x + r, y);
   context.arcTo(x + w, y, x + w, y + h, r);
@@ -10424,15 +10429,6 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
 
     this.outputContext = context;
 
-    // auto release
-    /* istanbul ignore if  */
-    if (context.canvas && context.canvas.addEventListener) {
-      context.canvas.addEventListener('DOMNodeRemovedFromDocument', () => {
-        this.timeline.clear();
-        this.clear();
-      });
-    }
-
     this[_children] = [];
     this[_updateSet] = new Set();
     this[_zOrder] = 0;
@@ -10443,6 +10439,19 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     this[_node] = new _datanode__WEBPACK_IMPORTED_MODULE_3__["default"]();
 
     this.touchedTargets = {};
+
+    // auto release
+    /* istanbul ignore if  */
+    if (context.canvas && context.canvas.addEventListener) {
+      context.canvas.addEventListener('DOMNodeRemovedFromDocument', () => {
+        this._savePlaybackRate = this.timeline.playbackRate;
+        this.timeline.playbackRate = 0;
+      });
+      context.canvas.addEventListener('DOMNodeInsertedIntoDocument', () => {
+        this.timeline.playbackRate = this._savePlaybackRate || 1.0;
+        this.append(...this.children);
+      });
+    }
   }
 
   attr(...args) {
@@ -15141,14 +15150,8 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
       throw new Error('Failed to execute \'insertBefore\' on \'Node\': The node before which the new node is to be inserted is not a child of this node.');
     }
     this.appendLayer(newchild);
-    this.container.insertBefore(newchild.canvas, refchild.canvas);
-    let els;
-    /* istanbul ignore if */
-    if (this.container.querySelectorAll) {
-      els = this.container.querySelectorAll('canvas');
-    } else {
-      els = this.container.children;
-    }
+    this.container.insertBefore(newchild.canvas || newchild, refchild.canvas || refchild);
+    const els = this.container.children;
     els.forEach((el, i) => {
       const id = el.dataset.layerId;
       if (id) {
@@ -15194,12 +15197,13 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
   updateViewport(layer) {
     const [width, height] = this.layerViewport,
-          layers = layer ? [layer] : this[_layers],
           stickMode = this.stickMode,
           stickExtend = this.stickExtend;
+    let layers = layer ? [layer] : this[_layers];
 
-    layers.forEach(layer => {
+    layers = layers.filter(layer => {
       const canvas = layer.canvas;
+      if (!canvas) return false; // ignore not canvas layer
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       Object.assign(canvas.style, {
@@ -15223,6 +15227,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
       if (stickExtend) {
         layer.resolution = this.layerResolution;
       }
+      return true;
     });
 
     this.dispatchEvent('viewportChange', { target: this, layers });
@@ -15324,7 +15329,9 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     const layers = layer ? [layer] : this[_layers];
 
     layers.forEach(layer => {
-      layer.resolution = this.layerResolution;
+      if (layer.canvas) {
+        layer.resolution = this.layerResolution;
+      }
     });
     this.dispatchEvent('resolutionChange', { target: this, layers });
     return this;
@@ -15399,16 +15406,15 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
       for (let i = 0; i < layers.length; i++) {
         const layer = layers[i];
-        if (originalX != null && originalY != null) {
-          [x, y] = layer.toLocalPos(originalX, originalY);
-        } else if (x != null && y != null) {
-          [originalX, originalY] = layer.toGlobalPos(x, y);
-        }
-        Object.assign(evtArgs, {
-          layerX: x, layerY: y, originalX, originalY, x, y
-        });
-
         if (layer.handleEvent) {
+          if (originalX != null && originalY != null) {
+            [x, y] = layer.toLocalPos(originalX, originalY);
+          } else if (x != null && y != null) {
+            [originalX, originalY] = layer.toGlobalPos(x, y);
+          }
+          Object.assign(evtArgs, {
+            layerX: x, layerY: y, originalX, originalY, x, y
+          });
           layer.dispatchEvent(type, evtArgs);
         }
       }
@@ -15475,7 +15481,6 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
           this.container.style.position = 'relative';
         }
       }
-
       this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_1__["default"](id, opts), zIndex);
     }
 
@@ -15487,6 +15492,25 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   appendLayer(layer, zIndex = 0) {
+    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_1__["default"])) {
+      // append dom element
+      layer.id = layer.id || `_layer${Math.random()}`;
+      layer.connect = (parent, zOrder) => {
+        layer.parent = parent;
+        Object.defineProperty(layer, 'zOrder', {
+          value: zOrder,
+          writable: false,
+          configurable: true
+        });
+        if (parent.container) {
+          parent.container.appendChild(layer);
+        }
+      };
+      layer.disconnect = parent => {
+        delete layer.zOrder;
+        layer.remove();
+      };
+    }
     const id = layer.id;
 
     if (this.hasLayer(id) && this[_layerMap][id] !== layer) {
@@ -15566,7 +15590,9 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     }
 
     layers.forEach(layer => {
-      ctx.drawImage(layer.canvas, ...rect);
+      if (layer.canvas) {
+        ctx.drawImage(layer.canvas, ...rect);
+      }
     });
 
     return canvas;
