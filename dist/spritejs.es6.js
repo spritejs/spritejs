@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.11';
+const version = '2.15.12';
 
 
 
@@ -6516,17 +6516,18 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     const states = this.attr('states');
 
     if (states.show) {
-      const state = this.attr('state');
-      if (state === 'hide') {
-        this.once('state-from-hide', () => {
-          this.attr('display', originalDisplay);
-        });
-      }
       const _st = ['show', originalState];
       if (states.beforeShow) {
         _st.unshift('beforeShow');
       }
-      const deferred = this.resolveStates(_st);
+      const deferred = this.resolveStates(_st, () => {
+        const state = this.attr('state');
+        if (state === 'hide') {
+          this.once('state-from-hide', () => {
+            this.attr('display', originalDisplay);
+          });
+        }
+      });
       deferred.promise = deferred.promise.then(() => {
         if (!this[_hide]) {
           delete this[_attr]._originalDisplay;
@@ -6542,6 +6543,16 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       return deferred;
     }
 
+    const rs = this[_resolveState];
+    if (rs) {
+      rs.resolve();
+      rs.promise.then(() => {
+        this.attr('state', originalState);
+        this.attr('display', originalDisplay);
+      });
+      return rs;
+    }
+
     this.attr('state', originalState);
     this.attr('display', originalDisplay);
     return this;
@@ -6549,7 +6560,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
   hide() {
     const state = this.attr('state');
-    if (this[_hide] || state === 'hide') return this[_hide];
+    if (this[_hide] || state === 'hide' || state === 'afterExit' || state === 'beforeExit') return this[_hide];
     const _originalDisplay = this.attr('_originalDisplay');
     if (_originalDisplay == null) {
       const display = this.attr('display');
@@ -6563,20 +6574,21 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     const states = this.attr('states');
 
     if (states.hide) {
-      if (!states.show) {
-        const beforeHide = { __default: true };
-        if (states.beforeShow) {
-          Object.keys(states.beforeShow).forEach(key => {
+      const deferred = this.resolveStates(['show', 'hide'], () => {
+        if (!states.show) {
+          const beforeHide = { __default: true };
+          if (states.beforeShow) {
+            Object.keys(states.beforeShow).forEach(key => {
+              beforeHide[key] = this.attr(key);
+            });
+          }
+          Object.keys(states.hide).forEach(key => {
             beforeHide[key] = this.attr(key);
           });
+          states.show = beforeHide;
+          this.attr('states', states);
         }
-        Object.keys(states.hide).forEach(key => {
-          beforeHide[key] = this.attr(key);
-        });
-        states.show = beforeHide;
-        this.attr('states', states);
-      }
-      const deferred = this.resolveStates(['show', 'hide']);
+      });
       deferred.promise = deferred.promise.then(() => {
         this.attr('display', 'none');
         delete this[_hide];
@@ -6584,6 +6596,16 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       });
       this[_hide] = deferred;
       return deferred;
+    }
+
+    const rs = this[_resolveState];
+    if (rs) {
+      rs.resolve();
+      rs.promise.then(() => {
+        this.attr('state', 'hide');
+        this.attr('display', 'none');
+      });
+      return rs;
     }
 
     this.attr('state', 'hide');
@@ -6709,8 +6731,18 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
         });
         ret = deferred;
       } else {
-        ret = super.exit();
-        this.attr(afterEnter);
+        const rs = this[_resolveState];
+        if (rs) {
+          rs.resolve();
+          rs.promise.then(() => {
+            this.attr(afterEnter);
+            return super.exit();
+          });
+          ret = rs;
+        } else {
+          ret = super.exit();
+          this.attr(afterEnter);
+        }
       }
 
       if (this.children) {
@@ -7645,35 +7677,35 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       const states = this.states;
 
       let action = null;
-      const toState = states[val];
+      const toState = states[val] || {};
       const subject = this.subject;
-      if (subject.parent && toState) {
+      if (subject.layer) {
         const fromState = states[oldState],
               actions = this.actions;
-        if (actions) {
-          action = !subject.__ignoreAction && (actions[`${oldState}:${val}`] || actions[`:${val}`] || actions[`${oldState}:`]);
-          if (action && action !== 'none') {
-            const animation = subject.changeState(fromState, toState, action);
-            const tag = Symbol('tag');
-            animation.tag = tag;
-            if (animation.__reversed) {
-              subject.dispatchEvent(`state-to-${oldState}`, {
-                from: val,
-                to: oldState,
-                action: animation.__reversed,
-                cancelled: true,
-                animation }, true, true);
-            }
-            subject.dispatchEvent(`state-from-${oldState}`, { from: oldState, to: val, action, animation }, true, true);
-            animation.finished.then(() => {
-              if (animation.tag === tag) {
-                subject.dispatchEvent(`state-to-${val}`, { from: oldState, to: val, action, animation }, true, true);
-              }
-            });
-          }
+        action = !subject.__ignoreAction && (actions[`${oldState}:${val}`] || actions[`:${val}`] || actions[`${oldState}:`]);
+        if (!action || action === 'none') action = { duration: 0 };
+
+        const animation = subject.changeState(fromState, toState, action);
+        const tag = Symbol('tag');
+        animation.tag = tag;
+        if (animation.__reversed) {
+          subject.dispatchEvent(`state-to-${oldState}`, {
+            from: val,
+            to: oldState,
+            action: animation.__reversed,
+            cancelled: true,
+            animation }, true, true);
         }
-      }
-      if (!action || action === 'none' || subject.__ignoreAction) {
+        subject.dispatchEvent(`state-from-${oldState}`, { from: oldState, to: val, action, animation }, true, true);
+        animation.finished.then(() => {
+          if (animation.tag === tag) {
+            subject.dispatchEvent(`state-to-${val}`, { from: oldState, to: val, action, animation }, true, true);
+          }
+        });
+        if (oldState === 'afterExit') {
+          animation.finish();
+        }
+      } else {
         subject.dispatchEvent(`state-from-${oldState}`, { from: oldState, to: val }, true, true);
         if (toState) subject.attr(toState);
         subject.dispatchEvent(`state-to-${val}`, { from: oldState, to: val }, true, true);
@@ -7947,14 +7979,13 @@ let BaseNode = class BaseNode {
 
     const zOrder = this.zOrder;
     delete this.zOrder;
+    delete this.parent;
+    delete this.isDirty;
 
     this.dispatchEvent('remove', {
       parent,
       zOrder
     }, true, true);
-
-    delete this.parent;
-    delete this.isDirty;
 
     return this;
   }

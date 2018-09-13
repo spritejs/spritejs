@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.11';
+var version = '2.15.12';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8419,17 +8419,18 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var states = this.attr('states');
 
       if (states.show) {
-        var state = this.attr('state');
-        if (state === 'hide') {
-          this.once('state-from-hide', function () {
-            _this7.attr('display', originalDisplay);
-          });
-        }
         var _st = ['show', originalState];
         if (states.beforeShow) {
           _st.unshift('beforeShow');
         }
-        var deferred = this.resolveStates(_st);
+        var deferred = this.resolveStates(_st, function () {
+          var state = _this7.attr('state');
+          if (state === 'hide') {
+            _this7.once('state-from-hide', function () {
+              _this7.attr('display', originalDisplay);
+            });
+          }
+        });
         deferred.promise = deferred.promise.then(function () {
           if (!_this7[_hide]) {
             delete _this7[_attr]._originalDisplay;
@@ -8445,6 +8446,16 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         return deferred;
       }
 
+      var rs = this[_resolveState];
+      if (rs) {
+        rs.resolve();
+        rs.promise.then(function () {
+          _this7.attr('state', originalState);
+          _this7.attr('display', originalDisplay);
+        });
+        return rs;
+      }
+
       this.attr('state', originalState);
       this.attr('display', originalDisplay);
       return this;
@@ -8455,7 +8466,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var _this8 = this;
 
       var state = this.attr('state');
-      if (this[_hide] || state === 'hide') return this[_hide];
+      if (this[_hide] || state === 'hide' || state === 'afterExit' || state === 'beforeExit') return this[_hide];
       var _originalDisplay = this.attr('_originalDisplay');
       if (_originalDisplay == null) {
         var display = this.attr('display');
@@ -8469,20 +8480,21 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var states = this.attr('states');
 
       if (states.hide) {
-        if (!states.show) {
-          var beforeHide = { __default: true };
-          if (states.beforeShow) {
-            (0, _keys2.default)(states.beforeShow).forEach(function (key) {
+        var deferred = this.resolveStates(['show', 'hide'], function () {
+          if (!states.show) {
+            var beforeHide = { __default: true };
+            if (states.beforeShow) {
+              (0, _keys2.default)(states.beforeShow).forEach(function (key) {
+                beforeHide[key] = _this8.attr(key);
+              });
+            }
+            (0, _keys2.default)(states.hide).forEach(function (key) {
               beforeHide[key] = _this8.attr(key);
             });
+            states.show = beforeHide;
+            _this8.attr('states', states);
           }
-          (0, _keys2.default)(states.hide).forEach(function (key) {
-            beforeHide[key] = _this8.attr(key);
-          });
-          states.show = beforeHide;
-          this.attr('states', states);
-        }
-        var deferred = this.resolveStates(['show', 'hide']);
+        });
         deferred.promise = deferred.promise.then(function () {
           _this8.attr('display', 'none');
           delete _this8[_hide];
@@ -8490,6 +8502,16 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         });
         this[_hide] = deferred;
         return deferred;
+      }
+
+      var rs = this[_resolveState];
+      if (rs) {
+        rs.resolve();
+        rs.promise.then(function () {
+          _this8.attr('state', 'hide');
+          _this8.attr('display', 'none');
+        });
+        return rs;
       }
 
       this.attr('state', 'hide');
@@ -8631,8 +8653,18 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           });
           ret = deferred;
         } else {
-          ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', _this10).call(_this10);
-          _this10.attr(afterEnter);
+          var rs = _this10[_resolveState];
+          if (rs) {
+            rs.resolve();
+            rs.promise.then(function () {
+              _this10.attr(afterEnter);
+              return (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', _this10).call(_this10);
+            });
+            ret = rs;
+          } else {
+            ret = (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'exit', _this10).call(_this10);
+            _this10.attr(afterEnter);
+          }
         }
 
         if (_this10.children) {
@@ -10497,35 +10529,35 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         var states = this.states;
 
         var action = null;
-        var toState = states[val];
+        var toState = states[val] || {};
         var subject = this.subject;
-        if (subject.parent && toState) {
+        if (subject.layer) {
           var fromState = states[oldState],
               actions = this.actions;
-          if (actions) {
-            action = !subject.__ignoreAction && (actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':']);
-            if (action && action !== 'none') {
-              var animation = subject.changeState(fromState, toState, action);
-              var tag = (0, _symbol2.default)('tag');
-              animation.tag = tag;
-              if (animation.__reversed) {
-                subject.dispatchEvent('state-to-' + oldState, {
-                  from: val,
-                  to: oldState,
-                  action: animation.__reversed,
-                  cancelled: true,
-                  animation: animation }, true, true);
-              }
-              subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val, action: action, animation: animation }, true, true);
-              animation.finished.then(function () {
-                if (animation.tag === tag) {
-                  subject.dispatchEvent('state-to-' + val, { from: oldState, to: val, action: action, animation: animation }, true, true);
-                }
-              });
-            }
+          action = !subject.__ignoreAction && (actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':']);
+          if (!action || action === 'none') action = { duration: 0 };
+
+          var animation = subject.changeState(fromState, toState, action);
+          var tag = (0, _symbol2.default)('tag');
+          animation.tag = tag;
+          if (animation.__reversed) {
+            subject.dispatchEvent('state-to-' + oldState, {
+              from: val,
+              to: oldState,
+              action: animation.__reversed,
+              cancelled: true,
+              animation: animation }, true, true);
           }
-        }
-        if (!action || action === 'none' || subject.__ignoreAction) {
+          subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val, action: action, animation: animation }, true, true);
+          animation.finished.then(function () {
+            if (animation.tag === tag) {
+              subject.dispatchEvent('state-to-' + val, { from: oldState, to: val, action: action, animation: animation }, true, true);
+            }
+          });
+          if (oldState === 'afterExit') {
+            animation.finish();
+          }
+        } else {
           subject.dispatchEvent('state-from-' + oldState, { from: oldState, to: val }, true, true);
           if (toState) subject.attr(toState);
           subject.dispatchEvent('state-to-' + val, { from: oldState, to: val }, true, true);
@@ -10956,14 +10988,13 @@ var BaseNode = function () {
 
       var zOrder = this.zOrder;
       delete this.zOrder;
+      delete this.parent;
+      delete this.isDirty;
 
       this.dispatchEvent('remove', {
         parent: parent,
         zOrder: zOrder
       }, true, true);
-
-      delete this.parent;
-      delete this.isDirty;
 
       return this;
     }
