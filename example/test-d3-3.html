@@ -18,13 +18,30 @@
   <script src="/js/spritejs.js"></script>
   <script>
 
-const paper = spritejs.Paper2D('#paper').setResolution(800, 600);
+const paper = spritejs.Paper2D('#paper').setResolution(3200, 2400);
 const fglayer = paper.layer('fglayer', {handleEvent: true});
+
+const sprite = new spritejs.Sprite({
+  pos: [100, 100],
+  size: [50, 50],
+  zIndex: 100,
+  bgcolor: 'red',
+});
+
+sprite.animate([
+  {rotate: 0},
+  {rotate: 360},
+], {
+  duration: 5000,
+  iterations: Infinity,
+});
+
+fglayer.append(sprite);
 
 const layer = d3.select(fglayer).append('group');
 
-const width = 1330;
-const height = 520;
+const width = 2660 * 2;
+const height = 1040 * 2;
 
 const projection = d3.geoMercator()
   .center([107, 38])
@@ -37,7 +54,6 @@ d3.json('/data/mapdata/china.json', (err, data) => {
   if(err) throw new Error(err);
 
   // let selectedTarget = null
-
   layer.selectAll('path')
     .data(data.features)
     .enter()
@@ -45,7 +61,12 @@ d3.json('/data/mapdata/china.json', (err, data) => {
     .attr('anchor', 0.5)
     .attr('color', 'black')
     .attr('lineWidth', 1)
-    .attr('d', path)
+    .attr('path', function (d) {
+      const bounds = path.bounds(d);
+      this.attr('pos', bounds[0]);
+      return {d: path(d), trim: true};
+    })
+    // .attr('enableCache', false)
     .attr('renderMode', 'fill')
     .attr('fillColor', '#d1eeee')
     .attr('bounding', 'path')
