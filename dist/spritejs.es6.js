@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.13';
+const version = '2.15.14';
 
 
 
@@ -15009,11 +15009,13 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
   }
 
   get zIndex() {
-    return this.canvas.style.zIndex;
+    return this.attr('zIndex');
   }
 
   set zIndex(zIndex) {
+    this.attr('zIndex', zIndex);
     this.canvas.style.zIndex = zIndex;
+    this.parent.layers.reverse();
   }
 };
 

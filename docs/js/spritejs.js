@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.13';
+var version = '2.15.14';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -20276,10 +20276,12 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'zIndex',
     get: function get() {
-      return this.canvas.style.zIndex;
+      return this.attr('zIndex');
     },
     set: function set(zIndex) {
+      this.attr('zIndex', zIndex);
       this.canvas.style.zIndex = zIndex;
+      this.parent.layers.reverse();
     }
   }]);
   return ExLayer;

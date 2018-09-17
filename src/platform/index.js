@@ -87,6 +87,14 @@ class Container extends EventEmitter {
     };
   }
 
+  removeChild(node) {
+    const idx = this.children.indexOf(node);
+    if(idx >= 0) {
+      return this.children.splice(idx, 1)[0];
+    }
+    return null;
+  }
+
   insertBefore(node, next) {
     const idx = this.children.indexOf(next);
     if(idx === -1) {

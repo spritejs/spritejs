@@ -201,11 +201,13 @@ class ExLayer extends Layer {
   }
 
   get zIndex() {
-    return this.canvas.style.zIndex;
+    return this.attr('zIndex');
   }
 
   set zIndex(zIndex) {
+    this.attr('zIndex', zIndex);
     this.canvas.style.zIndex = zIndex;
+    this.parent.layers.reverse();
   }
 }
 

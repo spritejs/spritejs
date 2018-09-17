@@ -458,7 +458,8 @@ test('scene-bg-fg-2', async (t) => {
   });
   scene.layer('bglayer').append(circle);
 
-  const fglayer = scene.layer('fglayer', -1);
+  const fglayer = scene.layer('fglayer');
+  fglayer.zIndex = -1;
   const block = new Sprite();
   block.attr({
     anchor: 0.5,
