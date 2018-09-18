@@ -16104,7 +16104,7 @@ exports.default = {
     var that = this;
     function remove(sprite) {
       delete child[_removeTask];
-      var idx = this.children.indexOf(child);
+      var idx = that.children.indexOf(child);
       if (idx === -1) {
         return null;
       }
