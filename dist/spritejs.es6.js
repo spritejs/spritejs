@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.16';
+const version = '2.15.17';
 
 
 
@@ -5907,16 +5907,16 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       // delete _toState.__default;
       const _fromState = {},
             _toState = {};
-      Object.entries(fromState).forEach(([key, value]) => {
+      Object.entries(fromState || {}).forEach(([key, value]) => {
         if (key !== '__default') {
           if (typeof value === 'function') {
-            _fromState[key] = value(this.attr(key));
+            _fromState[key] = this.attr(key);
           } else {
             _fromState[key] = value;
           }
         }
       });
-      Object.entries(toState).forEach(([key, value]) => {
+      Object.entries(toState || {}).forEach(([key, value]) => {
         if (key !== '__default') {
           if (typeof value === 'function') {
             _toState[key] = value(this.attr(key));
