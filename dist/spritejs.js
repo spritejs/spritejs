@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.18';
+var version = '2.15.19';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -11368,7 +11368,7 @@ var _default = function (_Animator) {
       return (0, _get3.default)(_default.prototype.__proto__ || (0, _getPrototypeOf2.default)(_default.prototype), 'finished', this).then(function () {
         var that = _this2;
         return new _promise2.default(function (resolve) {
-          (0, _fastAnimationFrame.requestAnimationFrame)(function update() {
+          function update() {
             sprite.attr(that.frame);
             var playState = that.playState;
             if (playState === 'finished' || playState === 'idle') {
@@ -11377,7 +11377,8 @@ var _default = function (_Animator) {
             } else {
               (0, _fastAnimationFrame.requestAnimationFrame)(update);
             }
-          });
+          }
+          update();
         });
       });
     }
