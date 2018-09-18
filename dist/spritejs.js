@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.15';
+var version = '2.15.16';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7881,12 +7881,37 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         }
       }
       if (!animation) {
-        var _ref8 = [(0, _assign2.default)({}, fromState), (0, _assign2.default)({}, toState)],
-            _fromState = _ref8[0],
-            _toState = _ref8[1];
+        // const [_fromState, _toState] = [Object.assign({}, fromState), Object.assign({}, toState)];
+        // delete _fromState.__default;
+        // delete _toState.__default;
+        var _fromState = {},
+            _toState = {};
+        (0, _entries2.default)(fromState).forEach(function (_ref8) {
+          var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
+              key = _ref9[0],
+              value = _ref9[1];
 
-        delete _fromState.__default;
-        delete _toState.__default;
+          if (key !== '__default') {
+            if (typeof value === 'function') {
+              _fromState[key] = value(_this4.attr(key));
+            } else {
+              _fromState[key] = value;
+            }
+          }
+        });
+        (0, _entries2.default)(toState).forEach(function (_ref10) {
+          var _ref11 = (0, _slicedToArray3.default)(_ref10, 2),
+              key = _ref11[0],
+              value = _ref11[1];
+
+          if (key !== '__default') {
+            if (typeof value === 'function') {
+              _toState[key] = value(_this4.attr(key));
+            } else {
+              _toState[key] = value;
+            }
+          }
+        });
         animation = this.animate([_fromState, _toState], (0, _assign2.default)({ fill: 'forwards' }, action));
         animation.finished.then(function () {
           if (_this4[_changeStateAction] && _this4[_changeStateAction].animation === animation) delete _this4[_changeStateAction];
@@ -8085,12 +8110,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
                 width = _outerSize[0],
                 height = _outerSize[1];
 
-            var _ref9 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
-                x = _ref9[0],
-                y = _ref9[1],
-                w = _ref9[2],
-                h = _ref9[3],
-                r = _ref9[4];
+            var _ref12 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
+                x = _ref12[0],
+                y = _ref12[1],
+                w = _ref12[2],
+                h = _ref12[3],
+                r = _ref12[4];
 
             (0, _render.drawRadiusBox)(this.context, { x: x, y: y, w: w, h: h, r: r });
             if (this.layer && this.layer.offset) {
@@ -8286,12 +8311,12 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var bgimage = this.attr('bgimage');
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
-        var _ref10 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x7 = _ref10[0],
-            _y = _ref10[1],
-            _w = _ref10[2],
-            _h = _ref10[3],
-            _r = _ref10[4];
+        var _ref13 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
+            _x7 = _ref13[0],
+            _y = _ref13[1],
+            _w = _ref13[2],
+            _h = _ref13[3],
+            _r = _ref13[4];
 
 
         (0, _render.drawRadiusBox)(drawingContext, { x: _x7, y: _y, w: _w, h: _h, r: _r });
@@ -8353,8 +8378,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
               if (after) after.call(_this6, states);
               resolve(_this6);
             });
-            _this6.once('state-from-' + fromState, function (_ref11) {
-              var animation = _ref11.animation;
+            _this6.once('state-from-' + fromState, function (_ref14) {
+              var animation = _ref14.animation;
 
               if (animation && resolved) animation.finish();else currentAnimation = animation;
             });
@@ -8873,9 +8898,9 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.hasLayout) {
         var layoutWidth = this.attr('layoutWidth'),
-            layoutHeight = this.attr('layoutHeight');var _ref12 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
-        width = _ref12[0];
-        height = _ref12[1];
+            layoutHeight = this.attr('layoutHeight');var _ref15 = [layoutWidth !== '' ? layoutWidth : width, layoutHeight !== '' ? layoutHeight : height];
+        width = _ref15[0];
+        height = _ref15[1];
       }
       if (isBorderBox) {
         var borderWidth = this.attr('border').width,
@@ -9148,10 +9173,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      (0, _entries2.default)(attrs).forEach(function (_ref13) {
-        var _ref14 = (0, _slicedToArray3.default)(_ref13, 2),
-            prop = _ref14[0],
-            handler = _ref14[1];
+      (0, _entries2.default)(attrs).forEach(function (_ref16) {
+        var _ref17 = (0, _slicedToArray3.default)(_ref16, 2),
+            prop = _ref17[0],
+            handler = _ref17[1];
 
         var getter = function getter() {
           return this.get(prop);
@@ -9222,12 +9247,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   var w = image.width,
       h = image.height;
 
-  var _ref15 = clip9 || [16, 16, 16, 16],
-      _ref16 = (0, _slicedToArray3.default)(_ref15, 4),
-      top = _ref16[0],
-      right = _ref16[1],
-      bottom = _ref16[2],
-      left = _ref16[3];
+  var _ref18 = clip9 || [16, 16, 16, 16],
+      _ref19 = (0, _slicedToArray3.default)(_ref18, 4),
+      top = _ref19[0],
+      right = _ref19[1],
+      bottom = _ref19[2],
+      left = _ref19[3];
 
   var leftTop = [0, 0, left, top],
       rightTop = [w - right, 0, right, top],
