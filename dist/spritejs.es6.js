@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.17';
+const version = '2.15.18';
 
 
 
@@ -7707,10 +7707,10 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       let action = null;
       const toState = states[val] || {};
       const subject = this.subject;
-      if (subject.layer) {
+      if (!subject.__ignoreAction && subject.layer) {
         const fromState = states[oldState],
               actions = this.actions;
-        action = !subject.__ignoreAction && (actions[`${oldState}:${val}`] || actions[`:${val}`] || actions[`${oldState}:`]);
+        action = actions[`${oldState}:${val}`] || actions[`:${val}`] || actions[`${oldState}:`];
         if (!action || action === 'none') action = { duration: 0 };
 
         const animation = subject.changeState(fromState, toState, action);

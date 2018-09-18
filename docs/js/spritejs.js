@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.17';
+var version = '2.15.18';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10565,10 +10565,10 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
         var action = null;
         var toState = states[val] || {};
         var subject = this.subject;
-        if (subject.layer) {
+        if (!subject.__ignoreAction && subject.layer) {
           var fromState = states[oldState],
               actions = this.actions;
-          action = !subject.__ignoreAction && (actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':']);
+          action = actions[oldState + ':' + val] || actions[':' + val] || actions[oldState + ':'];
           if (!action || action === 'none') action = { duration: 0 };
 
           var animation = subject.changeState(fromState, toState, action);
