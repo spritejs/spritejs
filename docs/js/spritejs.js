@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.19';
+var version = '2.15.20';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -16101,14 +16101,13 @@ exports.default = {
   removeChild: function removeChild(child) {
     if (child[_removeTask]) return child[_removeTask];
 
-    var idx = this.children.indexOf(child);
-    if (idx === -1) {
-      return null;
-    }
-
     var that = this;
     function remove(sprite) {
       delete child[_removeTask];
+      var idx = this.children.indexOf(child);
+      if (idx === -1) {
+        return null;
+      }
       that.children.splice(idx, 1);
       if (sprite.isVisible() || sprite.lastRenderBox) {
         sprite.forceUpdate();
