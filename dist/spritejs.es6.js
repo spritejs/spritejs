@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.20';
+const version = '2.15.21';
 
 
 
@@ -12102,9 +12102,15 @@ const _removeTask = Symbol('removeTask');
   removeChild(child) {
     if (child[_removeTask]) return child[_removeTask];
 
+    const idx = this.children.indexOf(child);
+    if (idx === -1) {
+      return null;
+    }
+
     const that = this;
     function remove(sprite) {
       delete child[_removeTask];
+      // re-calculate index because it's async...
       const idx = that.children.indexOf(child);
       if (idx === -1) {
         return null;
@@ -12148,20 +12154,27 @@ const _removeTask = Symbol('removeTask');
       return this.appendChild(newchild);
     }
     const idx = this.children.indexOf(refchild);
+    const refZOrder = refchild.zOrder;
     if (idx >= 0) {
       const _insert = () => {
-        const refZOrder = refchild.zOrder;
-        for (let i = idx; i < this.children.length; i++) {
+        let _idx = 0; // re-calculate because async...
+        // TODO: use binary search?
+        for (let i = 0; i < this.children.length; i++) {
           const child = this.children[i],
                 zOrder = child.zOrder;
-          delete child.zOrder;
-          Object.defineProperty(child, 'zOrder', {
-            value: zOrder + 1,
-            writable: false,
-            configurable: true
-          });
+          if (zOrder < refZOrder) {
+            _idx++;
+          } else {
+            delete child.zOrder;
+            Object.defineProperty(child, 'zOrder', {
+              value: zOrder + 1,
+              writable: false,
+              configurable: true
+            });
+          }
         }
-        this.children.splice(idx, 0, newchild);
+
+        this.children.splice(_idx, 0, newchild);
         newchild.connect(this, refZOrder);
         newchild.forceUpdate();
 
