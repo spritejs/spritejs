@@ -6297,12 +6297,14 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           shadow = this.attr('shadow'),
           enableCache = this.attr('enableCache');
 
+    const ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
+
     if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
       cachableContext = _helpers_render__WEBPACK_IMPORTED_MODULE_7__["cacheContextPool"].get(drawingContext);
       if (cachableContext) {
         // +2 to solve 1px problem
-        cachableContext.canvas.width = Math.ceil(bound[2]) + 2;
-        cachableContext.canvas.height = Math.ceil(bound[3]) + 2;
+        cachableContext.canvas.width = Math.ceil(bound[2] * ratio) + 2;
+        cachableContext.canvas.height = Math.ceil(bound[3] * ratio) + 2;
       }
     }
 
@@ -6322,6 +6324,9 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       cachableContext.save();
       // solve 1px problem
       cachableContext.translate(bound[0] - Math.floor(bound[0]) + 1, bound[1] - Math.floor(bound[1]) + 1);
+      if (ratio !== 1.0) {
+        cachableContext.scale(ratio, ratio);
+      }
     }
 
     this.dispatchEvent('beforedraw', evtArgs, true, true);
@@ -6351,7 +6356,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           drawingContext.shadowOffsetY = offset[1];
         }
       }
-      drawingContext.drawImage(cachableContext.canvas, Math.floor(bound[0]) - 1, Math.floor(bound[1]) - 1);
+      drawingContext.drawImage(cachableContext.canvas, Math.floor(bound[0]) - 1, Math.floor(bound[1]) - 1, bound[2] + 2, bound[3] + 2);
     }
 
     this.dispatchEvent('afterdraw', evtArgs, true, true);
@@ -6880,23 +6885,17 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   const boxRight = offsetWidth - right - borderWidth,
         boxBottom = offsetHeight - borderWidth - bottom;
 
-  // draw four corners
-  drawingContext.drawImage(image, ...leftTop, borderWidth, borderWidth, left, top);
-  drawingContext.drawImage(image, ...rightTop, boxRight, borderWidth, right, top);
-  drawingContext.drawImage(image, ...rightBottom, boxRight, boxBottom, left, bottom);
-  drawingContext.drawImage(image, ...leftBottom, borderWidth, boxBottom, left, bottom);
-
   // draw .9 cross
   const midWidth = w - left - right,
         midHeight = h - top - bottom;
 
   if (midWidth > 0) {
-    let midBoxWidth = clientWidth - left - right;
-    let leftOffset = borderWidth + left;
+    let midBoxWidth = clientWidth - left - right + 2;
+    let leftOffset = borderWidth + left - 1;
     while (midBoxWidth > 0) {
-      const ww = Math.min(midBoxWidth, midWidth);
-      const topPiece = [left, 0, ww, top],
-            bottomPiece = [left, h - bottom, ww, bottom];
+      const ww = Math.min(midBoxWidth, midWidth) + 1;
+      const topPiece = [left - 1, 0, ww, top],
+            bottomPiece = [left - 1, h - bottom, ww, bottom];
 
       drawingContext.drawImage(image, ...topPiece, leftOffset, borderWidth, ww, top);
       drawingContext.drawImage(image, ...bottomPiece, leftOffset, boxBottom, ww, bottom);
@@ -6908,12 +6907,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   }
 
   if (midHeight > 0) {
-    let midBoxHeight = clientHeight - top - bottom;
-    let topOffset = borderWidth + top;
+    let midBoxHeight = clientHeight - top - bottom + 2;
+    let topOffset = borderWidth + top - 1;
     while (midBoxHeight > 0) {
-      const hh = Math.min(midBoxHeight, midHeight);
-      const leftPiece = [0, top, left, hh],
-            rightPiece = [w - right, top, right, hh];
+      const hh = Math.min(midBoxHeight, midHeight) + 1;
+      const leftPiece = [0, top - 1, left, hh],
+            rightPiece = [w - right, top - 1, right, hh];
 
       drawingContext.drawImage(image, ...leftPiece, borderWidth, topOffset, left, hh);
       drawingContext.drawImage(image, ...rightPiece, boxRight, topOffset, right, hh);
@@ -6925,16 +6924,16 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   }
 
   if (midHeight && midWidth > 0) {
-    let midBoxWidth = clientWidth - left - right;
-    let leftOffset = borderWidth + left;
+    let midBoxWidth = clientWidth - left - right + 2;
+    let leftOffset = borderWidth + left - 1;
 
     while (midBoxWidth > 0) {
-      let midBoxHeight = clientHeight - top - bottom;
-      let topOffset = borderWidth + top;
+      let midBoxHeight = clientHeight - top - bottom + 2;
+      let topOffset = borderWidth + top - 1;
       while (midBoxHeight > 0) {
-        const ww = Math.min(midBoxWidth, midWidth),
-              hh = Math.min(midBoxHeight, midHeight);
-        const midPiece = [left, top, ww, hh];
+        const ww = Math.min(midBoxWidth, midWidth) + 1,
+              hh = Math.min(midBoxHeight, midHeight) + 1;
+        const midPiece = [left - 1, top - 1, ww, hh];
         drawingContext.drawImage(image, ...midPiece, leftOffset, topOffset, ww, hh);
         midBoxHeight -= midWidth;
         if (midBoxHeight > 0) {
@@ -6947,6 +6946,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
       }
     }
   }
+
+  // draw four corners
+  drawingContext.drawImage(image, ...leftTop, borderWidth, borderWidth, left, top);
+  drawingContext.drawImage(image, ...rightTop, boxRight, borderWidth, right, top);
+  drawingContext.drawImage(image, ...rightBottom, boxRight, boxBottom, left, bottom);
+  drawingContext.drawImage(image, ...leftBottom, borderWidth, boxBottom, left, bottom);
 }
 
 function drawBgImage(drawingContext, bgimage, borderWidth, offsetWidth, offsetHeight, clientWidth, clientHeight) {
@@ -10569,7 +10574,7 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     return [0, 0];
   }
 
-  clearContext(context) {
+  clearContext(context = this.outputContext) {
     if (context.canvas) {
       const { width, height } = context.canvas;
       context.clearRect(0, 0, width, height);
@@ -10661,6 +10666,10 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
 
   drawSprites(renderEls, t) {
     this[_updateSet].clear();
+    if (this.beforeDrawTransform) {
+      this.outputContext.save();
+      this.beforeDrawTransform();
+    }
     for (let i = 0; i < renderEls.length; i++) {
       const child = renderEls[i],
             isDirty = child.isDirty;
@@ -10684,6 +10693,9 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
         }
       }
     }
+    if (this.beforeDrawTransform) {
+      this.outputContext.restore();
+    }
   }
 
   renderRepaintAll(t, clearContext = true) {
@@ -10704,15 +10716,14 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     const renderEls = this[_children];
 
     outputContext.save();
+    if (this.beforeDrawTransform) {
+      this.beforeDrawTransform();
+    }
     outputContext.beginPath();
-
     Object(_helpers_dirty_check__WEBPACK_IMPORTED_MODULE_7__["clearDirtyRects"])(outputContext, updateEls, true);
-
-    if (clearContext) this.clearContext(outputContext);
-
-    this.drawSprites(renderEls, t);
-
     outputContext.restore();
+    if (clearContext) this.clearContext(outputContext);
+    this.drawSprites(renderEls, t);
   }
 
   pointCollision(evt) {
