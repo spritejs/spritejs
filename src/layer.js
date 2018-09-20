@@ -154,7 +154,7 @@ class ExLayer extends Layer {
       this.outputContext.scale(ratio, ratio);
     };
 
-    this.children.forEach((child) => {
+    this.childNodes.forEach((child) => {
       delete child.lastRenderBox;
       child.forceUpdate();
     });
@@ -195,7 +195,7 @@ class ExLayer extends Layer {
       context = snapshotCanvas.getContext('2d');
 
     context.drawImage(this.canvas, 0, 0);
-    const children = this.children.map(child => child.serialize());
+    const children = this.childNodes.map(child => child.serialize());
     return {context, children};
   }
 
@@ -216,8 +216,8 @@ class ExLayer extends Layer {
       this.appendChild(node, false);
     });
 
-    for(let i = 0; i < this.children.length; i++) {
-      const child = this.children[i];
+    for(let i = 0; i < this.childNodes.length; i++) {
+      const child = this.childNodes[i];
       child.dispatchEvent(
         'update',
         {
@@ -229,7 +229,7 @@ class ExLayer extends Layer {
       child.lastRenderBox = child.renderBox;
     }
 
-    return this.children;
+    return this.childNodes;
   }
 
   get zIndex() {

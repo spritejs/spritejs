@@ -124,7 +124,7 @@ export default class extends BaseNode {
   }
 
   get children() {
-    return this.layers;
+    return this.layers.filter(layer => layer.canvas);
   }
 
   get childNodes() {

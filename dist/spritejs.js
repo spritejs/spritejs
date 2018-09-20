@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.16.1';
+var version = '2.16.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10369,7 +10369,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
       this.set('zIndex', val);
       var subject = this.subject;
       if (subject.parent) {
-        subject.parent.children.sort(function (a, b) {
+        subject.parent.childNodes.sort(function (a, b) {
           if (a.zIndex === b.zIndex) {
             return a.zOrder - b.zOrder;
           }
@@ -14158,8 +14158,8 @@ var Layer = function (_BaseNode) {
     if (context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
         _this._savePlaybackRate = _this.timeline.playbackRate;
-        _this._saveChildren = [].concat((0, _toConsumableArray3.default)(_this.children));
-        _this.remove.apply(_this, (0, _toConsumableArray3.default)(_this.children));
+        _this._saveChildren = [].concat((0, _toConsumableArray3.default)(_this[_children]));
+        _this.remove.apply(_this, (0, _toConsumableArray3.default)(_this[_children]));
         _this.timeline.playbackRate = 0;
       });
       context.canvas.addEventListener('DOMNodeInsertedIntoDocument', function () {
@@ -14514,7 +14514,9 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'children',
     get: function get() {
-      return this[_children];
+      return this[_children].filter(function (child) {
+        return child instanceof _basenode2.default && !(child instanceof _datanode2.default);
+      });
     }
   }, {
     key: 'childNodes',
@@ -14769,6 +14771,14 @@ var _nodetype = __webpack_require__(206);
 
 var _path = __webpack_require__(221);
 
+var _basenode = __webpack_require__(202);
+
+var _basenode2 = _interopRequireDefault(_basenode);
+
+var _datanode = __webpack_require__(208);
+
+var _datanode2 = _interopRequireDefault(_datanode);
+
 var _layout2 = __webpack_require__(223);
 
 var layout = _interopRequireWildcard(_layout2);
@@ -14915,7 +14925,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
     value: function cloneNode(deepCopy) {
       var node = (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'cloneNode', this).call(this);
       if (deepCopy) {
-        var children = this.children;
+        var children = this[_children];
         children.forEach(function (child) {
           var subNode = child.cloneNode(deepCopy);
           node.append(subNode);
@@ -15020,7 +15030,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
   }, {
     key: 'relayout',
     value: function relayout() {
-      var items = this.children.filter(function (child) {
+      var items = this[_children].filter(function (child) {
         if (child.hasLayout) {
           child.attr('layoutWidth', null);
           child.attr('layoutHeight', null);
@@ -15131,7 +15141,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
   }, {
     key: 'children',
     get: function get() {
-      return this[_children];
+      return this[_children].filter(function (child) {
+        return child instanceof _basenode2.default && !(child instanceof _datanode2.default);
+      });
     }
   }, {
     key: 'childNodes',
@@ -16064,12 +16076,12 @@ exports.default = {
     var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
     var _append = function _append() {
-      var children = _this.children;
+      var children = _this.childNodes;
       children.push(sprite);
 
       _this[_zOrder] = _this[_zOrder] || 0;
       sprite.connect(_this, _this[_zOrder]++);
-      (0, _utils.sortOrderedSprites)(_this.children);
+      (0, _utils.sortOrderedSprites)(_this.childNodes);
 
       for (var i = children.length - 1; i > 0; i--) {
         var a = children[i],
@@ -16117,7 +16129,7 @@ exports.default = {
   removeChild: function removeChild(child) {
     if (child[_removeTask]) return child[_removeTask];
 
-    var idx = this.children.indexOf(child);
+    var idx = this.childNodes.indexOf(child);
     if (idx === -1) {
       return null;
     }
@@ -16126,11 +16138,11 @@ exports.default = {
     function remove(sprite) {
       delete child[_removeTask];
       // re-calculate index because it's async...
-      var idx = that.children.indexOf(child);
+      var idx = that.childNodes.indexOf(child);
       if (idx === -1) {
         return null;
       }
-      that.children.splice(idx, 1);
+      that.childNodes.splice(idx, 1);
       if (sprite.isVisible() || sprite.lastRenderBox) {
         sprite.forceUpdate();
       }
@@ -16152,7 +16164,7 @@ exports.default = {
   clear: function clear() {
     var _this3 = this;
 
-    var children = this.children.slice(0);
+    var children = this.childNodes.slice(0);
     children.forEach(function (child) {
       return _this3.removeChild(child);
     });
@@ -16180,12 +16192,12 @@ exports.default = {
     if (refchild == null) {
       return this.appendChild(newchild);
     }
-    var idx = this.children.indexOf(refchild);
+    var idx = this.childNodes.indexOf(refchild);
     var refZOrder = refchild.zOrder;
     if (idx >= 0) {
       var _insert = function _insert() {
-        for (var i = 0; i < _this5.children.length; i++) {
-          var child = _this5.children[i],
+        for (var i = 0; i < _this5.childNodes.length; i++) {
+          var child = _this5.childNodes[i],
               zOrder = child.zOrder;
           if (zOrder >= refZOrder) {
             delete child.zOrder;
@@ -16197,9 +16209,9 @@ exports.default = {
           }
         }
 
-        _this5.children.push(newchild);
+        _this5.childNodes.push(newchild);
         newchild.connect(_this5, refZOrder);
-        (0, _utils.sortOrderedSprites)(_this5.children);
+        (0, _utils.sortOrderedSprites)(_this5.childNodes);
         newchild.forceUpdate();
 
         _this5[_zOrder] = _this5[_zOrder] || 0;
@@ -20225,7 +20237,7 @@ var ExLayer = function (_Layer) {
         _this2.outputContext.scale(ratio, ratio);
       };
 
-      this.children.forEach(function (child) {
+      this.childNodes.forEach(function (child) {
         delete child.lastRenderBox;
         child.forceUpdate();
       });
@@ -20269,7 +20281,7 @@ var ExLayer = function (_Layer) {
 
 
                 context.drawImage(this.canvas, 0, 0);
-                children = this.children.map(function (child) {
+                children = this.childNodes.map(function (child) {
                   return child.serialize();
                 });
                 return _context.abrupt('return', { context: context, children: children });
@@ -20309,8 +20321,8 @@ var ExLayer = function (_Layer) {
         _this3.appendChild(node, false);
       });
 
-      for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
+      for (var i = 0; i < this.childNodes.length; i++) {
+        var child = this.childNodes[i];
         child.dispatchEvent('update', {
           target: child, context: child.context, renderBox: child.renderBox, lastRenderBox: child.lastRenderBox
         }, true);
@@ -20318,7 +20330,7 @@ var ExLayer = function (_Layer) {
         child.lastRenderBox = child.renderBox;
       }
 
-      return this.children;
+      return this.childNodes;
     }
   }, {
     key: 'id',
@@ -21113,7 +21125,9 @@ var _default = function (_BaseNode) {
   }, {
     key: 'children',
     get: function get() {
-      return this.layers;
+      return this.layers.filter(function (layer) {
+        return layer.canvas;
+      });
     }
   }, {
     key: 'childNodes',

@@ -74,6 +74,10 @@ class Container extends EventEmitter {
     this.attrs = {};
   }
 
+  get childNodes() {
+    return this.children;
+  }
+
   appendChild(node) {
     if(node.remove) {
       node.remove();
