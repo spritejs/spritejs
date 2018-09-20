@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.16.0';
+var version = '2.16.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -20183,6 +20183,8 @@ var ExLayer = function (_Layer) {
           } else {
             ratio = this.viewport[0] / this.resolution[0];
           }
+        } else {
+          ratio = parseFloat(ratio);
         }
       }
       if ((0, _isFinite2.default)(ratio)) {

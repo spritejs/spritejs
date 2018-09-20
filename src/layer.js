@@ -119,6 +119,8 @@ class ExLayer extends Layer {
         } else {
           ratio = this.viewport[0] / this.resolution[0];
         }
+      } else {
+        ratio = parseFloat(ratio);
       }
     }
     if(Number.isFinite(ratio)) {

@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.16.0';
+const version = '2.16.1';
 
 
 
@@ -14984,6 +14984,8 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
         } else {
           ratio = this.viewport[0] / this.resolution[0];
         }
+      } else {
+        ratio = parseFloat(ratio);
       }
     }
     if (Number.isFinite(ratio)) {
