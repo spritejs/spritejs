@@ -3,6 +3,7 @@ import {createCanvas} from './platform';
 
 const _resolution = Symbol('resolution');
 const _attrs = Symbol('attrs');
+const _displayRatio = Symbol('displayRatio');
 
 class ExLayer extends Layer {
   constructor(id, opts = {}) {
@@ -30,7 +31,7 @@ class ExLayer extends Layer {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
     }
 
-    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
+    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent', 'displayRatio']);
   }
 
   get id() {
@@ -94,7 +95,6 @@ class ExLayer extends Layer {
       let layerX = evt.layerX | 0,
         layerY = evt.layerY | 0;
       const [width, height, offsetLeft, offsetTop] = this.resolution;
-
       layerX += offsetLeft;
       layerY += offsetTop;
 
@@ -107,34 +107,64 @@ class ExLayer extends Layer {
     return true;
   }
 
-  set resolution(resolution) {
-    const [width, height, offsetLeft, offsetTop] = resolution;
+  setDisplayRatio(ratio, maxDisplayRatio = Infinity, updateDisplay = true) {
+    if(typeof ratio === 'string') {
+      if(ratio.endsWith('rw')) {
+        ratio = parseFloat(ratio);
+      } else if(ratio.endsWith('vw')) {
+        ratio = parseFloat(ratio) * this.viewport[0] / this.resolution[0];
+      } else if(ratio === 'auto') {
+        if(typeof window !== 'undefined' && window.devicePixelRatio) {
+          ratio = window.devicePixelRatio * this.viewport[0] / this.resolution[0];
+        } else {
+          ratio = this.viewport[0] / this.resolution[0];
+        }
+      }
+    }
+    if(Number.isFinite(ratio)) {
+      ratio = Math.min(ratio, maxDisplayRatio);
+    } else {
+      ratio = 1;
+    }
+    this[_displayRatio] = ratio;
+    if(updateDisplay) this.updateDisplay();
+    this.dispatchEvent('ratioChange', {target: this}, true, true);
+  }
+
+  get displayRatio() {
+    return this[_displayRatio];
+  }
+
+  updateDisplay() {
+    const ratio = this[_displayRatio];
+    const resolution = this[_resolution];
+
+    const [width, height, offsetLeft, offsetTop] = resolution.map(r => r * ratio);
     const outputCanvas = this.outputContext.canvas;
     outputCanvas.width = width;
     outputCanvas.height = height;
-    this.outputContext.clearRect(0, 0, width, height);
+    // this.outputContext.clearRect(0, 0, width, height);
 
-    if(offsetLeft || offsetTop) {
-      this.outputContext.translate(offsetLeft, offsetTop);
-    }
+    this.beforeDrawTransform = () => {
+      if(offsetLeft || offsetTop) {
+        this.outputContext.translate(offsetLeft, offsetTop);
+      }
+      this.outputContext.scale(ratio, ratio);
+    };
 
     this.children.forEach((child) => {
       delete child.lastRenderBox;
       child.forceUpdate();
     });
-
-    this[_resolution] = resolution;
-    this.dispatchEvent('resolutionChange', {target: this}, true, true);
   }
 
-  clearContext(context = this.outputContext) {
-    if(context.canvas) {
-      const resolution = this.resolution,
-        offsetTop = resolution[3],
-        offsetLeft = resolution[2];
-
-      context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
+  set resolution(resolution) {
+    this[_resolution] = resolution;
+    if(this[_displayRatio] == null) {
+      this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
     }
+    this.updateDisplay();
+    this.dispatchEvent('resolutionChange', {target: this}, true, true);
   }
 
   toLocalPos(x, y) {

@@ -1,5 +1,19 @@
 # Change Log
 
+## [2.16.0][2018-09-20]
+
+### 新功能
+
+- 增加了Scene和Layer的displayRatio配置
+- 增加了sprite的enableCache属性，可以设为false强制关闭缓存
+- 允许scene中添加dom元素
+
+### Bug修复
+
+- 修复了zIndex不为默认值时appendChild和insertBefore的bug
+- 修复了.9背景图片显示的bug
+- 修复了resolveStates的若干bug
+
 ## [2.15.0][2018-09-10]
 
 ### 改进

@@ -120,7 +120,7 @@ var _layer = __webpack_require__(264);
 
 var _layer2 = _interopRequireDefault(_layer);
 
-var _scene = __webpack_require__(265);
+var _scene = __webpack_require__(268);
 
 var _scene2 = _interopRequireDefault(_scene);
 
@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.15.21';
+var version = '2.16.0';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -16037,6 +16037,8 @@ var _symbol = __webpack_require__(39);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
+var _utils = __webpack_require__(157);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _zOrder = (0, _symbol2.default)('zOrder');
@@ -16054,6 +16056,7 @@ exports.default = {
 
       _this[_zOrder] = _this[_zOrder] || 0;
       sprite.connect(_this, _this[_zOrder]++);
+      (0, _utils.sortOrderedSprites)(_this.children);
 
       for (var i = children.length - 1; i > 0; i--) {
         var a = children[i],
@@ -16168,14 +16171,10 @@ exports.default = {
     var refZOrder = refchild.zOrder;
     if (idx >= 0) {
       var _insert = function _insert() {
-        var _idx = 0; // re-calculate because async...
-        // TODO: use binary search?
         for (var i = 0; i < _this5.children.length; i++) {
           var child = _this5.children[i],
               zOrder = child.zOrder;
-          if (zOrder < refZOrder) {
-            _idx++;
-          } else {
+          if (zOrder >= refZOrder) {
             delete child.zOrder;
             Object.defineProperty(child, 'zOrder', {
               value: zOrder + 1,
@@ -16185,8 +16184,9 @@ exports.default = {
           }
         }
 
-        _this5.children.splice(_idx, 0, newchild);
+        _this5.children.push(newchild);
         newchild.connect(_this5, refZOrder);
+        (0, _utils.sortOrderedSprites)(_this5.children);
         newchild.forceUpdate();
 
         _this5[_zOrder] = _this5[_zOrder] || 0;
@@ -20012,6 +20012,10 @@ var _asyncToGenerator2 = __webpack_require__(233);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
+var _isFinite = __webpack_require__(265);
+
+var _isFinite2 = _interopRequireDefault(_isFinite);
+
 var _slicedToArray2 = __webpack_require__(90);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
@@ -20056,6 +20060,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _resolution = (0, _symbol2.default)('resolution');
 var _attrs = (0, _symbol2.default)('attrs');
+var _displayRatio = (0, _symbol2.default)('displayRatio');
 
 var ExLayer = function (_Layer) {
   (0, _inherits3.default)(ExLayer, _Layer);
@@ -20094,7 +20099,7 @@ var ExLayer = function (_Layer) {
       _this[_resolution] = [_this.canvas.width, _this.canvas.height, 0, 0];
     }
 
-    _this[_attrs] = new _set2.default(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
+    _this[_attrs] = new _set2.default(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent', 'displayRatio']);
     return _this;
   }
 
@@ -20149,17 +20154,66 @@ var ExLayer = function (_Layer) {
       return true;
     }
   }, {
-    key: 'clearContext',
-    value: function clearContext() {
-      var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.outputContext;
+    key: 'setDisplayRatio',
+    value: function setDisplayRatio(ratio) {
+      var maxDisplayRatio = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Infinity;
+      var updateDisplay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      if (context.canvas) {
-        var resolution = this.resolution,
-            offsetTop = resolution[3],
-            offsetLeft = resolution[2];
-
-        context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
+      if (typeof ratio === 'string') {
+        if (ratio.endsWith('rw')) {
+          ratio = parseFloat(ratio);
+        } else if (ratio.endsWith('vw')) {
+          ratio = parseFloat(ratio) * this.viewport[0] / this.resolution[0];
+        } else if (ratio === 'auto') {
+          if (typeof window !== 'undefined' && window.devicePixelRatio) {
+            ratio = window.devicePixelRatio * this.viewport[0] / this.resolution[0];
+          } else {
+            ratio = this.viewport[0] / this.resolution[0];
+          }
+        }
       }
+      if ((0, _isFinite2.default)(ratio)) {
+        ratio = Math.min(ratio, maxDisplayRatio);
+      } else {
+        ratio = 1;
+      }
+      this[_displayRatio] = ratio;
+      if (updateDisplay) this.updateDisplay();
+      this.dispatchEvent('ratioChange', { target: this }, true, true);
+    }
+  }, {
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      var _this2 = this;
+
+      var ratio = this[_displayRatio];
+      var resolution = this[_resolution];
+
+      var _resolution$map = resolution.map(function (r) {
+        return r * ratio;
+      }),
+          _resolution$map2 = (0, _slicedToArray3.default)(_resolution$map, 4),
+          width = _resolution$map2[0],
+          height = _resolution$map2[1],
+          offsetLeft = _resolution$map2[2],
+          offsetTop = _resolution$map2[3];
+
+      var outputCanvas = this.outputContext.canvas;
+      outputCanvas.width = width;
+      outputCanvas.height = height;
+      // this.outputContext.clearRect(0, 0, width, height);
+
+      this.beforeDrawTransform = function () {
+        if (offsetLeft || offsetTop) {
+          _this2.outputContext.translate(offsetLeft, offsetTop);
+        }
+        _this2.outputContext.scale(ratio, ratio);
+      };
+
+      this.children.forEach(function (child) {
+        delete child.lastRenderBox;
+        child.forceUpdate();
+      });
     }
   }, {
     key: 'toLocalPos',
@@ -20222,7 +20276,7 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'putSnapshot',
     value: function putSnapshot(snapshot) {
-      var _this2 = this;
+      var _this3 = this;
 
       var outputContext = this.outputContext;
 
@@ -20237,7 +20291,7 @@ var ExLayer = function (_Layer) {
           node.id = child.id;
         }
         node.attr(JSON.parse(child.attrs));
-        _this2.appendChild(node, false);
+        _this3.appendChild(node, false);
       });
 
       for (var i = 0; i < this.children.length; i++) {
@@ -20267,27 +20321,11 @@ var ExLayer = function (_Layer) {
       return this[_resolution];
     },
     set: function set(resolution) {
-      var _resolution3 = (0, _slicedToArray3.default)(resolution, 4),
-          width = _resolution3[0],
-          height = _resolution3[1],
-          offsetLeft = _resolution3[2],
-          offsetTop = _resolution3[3];
-
-      var outputCanvas = this.outputContext.canvas;
-      outputCanvas.width = width;
-      outputCanvas.height = height;
-      this.outputContext.clearRect(0, 0, width, height);
-
-      if (offsetLeft || offsetTop) {
-        this.outputContext.translate(offsetLeft, offsetTop);
-      }
-
-      this.children.forEach(function (child) {
-        delete child.lastRenderBox;
-        child.forceUpdate();
-      });
-
       this[_resolution] = resolution;
+      if (this[_displayRatio] == null) {
+        this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
+      }
+      this.updateDisplay();
       this.dispatchEvent('resolutionChange', { target: this }, true, true);
     }
   }, {
@@ -20301,9 +20339,9 @@ var ExLayer = function (_Layer) {
         return this.parent.layerViewport;
       }
 
-      var _resolution4 = (0, _slicedToArray3.default)(this[_resolution], 2),
-          width = _resolution4[0],
-          height = _resolution4[1];
+      var _resolution3 = (0, _slicedToArray3.default)(this[_resolution], 2),
+          width = _resolution3[0],
+          height = _resolution3[1];
 
       return [width, height];
     }
@@ -20315,11 +20353,16 @@ var ExLayer = function (_Layer) {
   }, {
     key: 'center',
     get: function get() {
-      var _resolution5 = (0, _slicedToArray3.default)(this.resolution, 2),
-          width = _resolution5[0],
-          height = _resolution5[1];
+      var _resolution4 = (0, _slicedToArray3.default)(this.resolution, 2),
+          width = _resolution4[0],
+          height = _resolution4[1];
 
       return [width / 2, height / 2];
+    }
+  }, {
+    key: 'displayRatio',
+    get: function get() {
+      return this[_displayRatio];
     }
   }, {
     key: 'zIndex',
@@ -20339,6 +20382,35 @@ exports.default = ExLayer;
 
 /***/ }),
 /* 265 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(266), __esModule: true };
+
+/***/ }),
+/* 266 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(267);
+module.exports = __webpack_require__(7).Number.isFinite;
+
+
+/***/ }),
+/* 267 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 20.1.2.2 Number.isFinite(number)
+var $export = __webpack_require__(5);
+var _isFinite = __webpack_require__(6).isFinite;
+
+$export($export.S, 'Number', {
+  isFinite: function isFinite(it) {
+    return typeof it == 'number' && _isFinite(it);
+  }
+});
+
+
+/***/ }),
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20373,7 +20445,7 @@ var _slicedToArray2 = __webpack_require__(90);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _values = __webpack_require__(266);
+var _values = __webpack_require__(269);
 
 var _values2 = _interopRequireDefault(_values);
 
@@ -20440,7 +20512,8 @@ var _layerMap = (0, _symbol2.default)('layerMap'),
     _resizeHandler = (0, _symbol2.default)('resizeHandler'),
     _attrs = (0, _symbol2.default)('attrs'),
     _events = (0, _symbol2.default)('events'),
-    _subscribe = (0, _symbol2.default)('subscribe');
+    _subscribe = (0, _symbol2.default)('subscribe'),
+    _displayRatio = (0, _symbol2.default)('displayRatio');
 
 var _default = function (_BaseNode) {
   (0, _inherits3.default)(_default, _BaseNode);
@@ -20478,6 +20551,9 @@ var _default = function (_BaseNode) {
     _this.stickOffset = [0, 0];
     _this.resolution = options.resolution || [].concat((0, _toConsumableArray3.default)(_this.viewport));
 
+    _this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
+    _this.displayRatio = options.displayRatio || 1.0;
+
     // d3-friendly
     _this.namespaceURI = 'http://spritejs.org/scene';
     var that = _this;
@@ -20509,10 +20585,13 @@ var _default = function (_BaseNode) {
       }
     });
 
-    _this[_attrs] = new _set2.default(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    _this[_attrs] = new _set2.default(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe', 'displayRatio', 'maxDisplayRatio']);
     _this[_subscribe] = null;
     return _this;
   }
+
+  // unit vw、rw (default 1rw ?)
+
 
   (0, _createClass3.default)(_default, [{
     key: 'setAttribute',
@@ -20866,6 +20945,7 @@ var _default = function (_BaseNode) {
       this[_layerMap][id] = layer;
       layer.connect(this, this[_zOrder]++);
       this.updateViewport(layer);
+      // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
       if (!this.stickExtend) {
         layer.resolution = this.layerResolution;
       }
@@ -20972,16 +21052,37 @@ var _default = function (_BaseNode) {
       return snapshot;
     }()
   }, {
+    key: 'displayRatio',
+    set: function set(value) {
+      var _this7 = this;
+
+      var oldRatio = this[_displayRatio];
+      this[_displayRatio] = value;
+      if (oldRatio != null && oldRatio !== value) {
+        var layers = this[_layers];
+        layers.forEach(function (layer) {
+          if (layer.canvas) {
+            layer.setDisplayRatio(_this7[_displayRatio], _this7.maxDisplayRatio);
+          }
+        });
+        this.dispatchEvent('ratioChange', { target: this, layers: layers });
+      }
+      return this;
+    },
+    get: function get() {
+      return this[_displayRatio];
+    }
+  }, {
     key: 'subscribe',
     get: function get() {
       return this[_subscribe];
     },
     set: function set(events) {
-      var _this7 = this;
+      var _this8 = this;
 
       this[_subscribe] = events;
       events.forEach(function (event) {
-        return _this7.delegateEvent(event);
+        return _this8.delegateEvent(event);
       });
     }
   }, {
@@ -21064,7 +21165,7 @@ var _default = function (_BaseNode) {
   }, {
     key: 'viewport',
     set: function set(viewport) {
-      var _this8 = this;
+      var _this9 = this;
 
       if (!Array.isArray(viewport)) viewport = [viewport, viewport];
 
@@ -21078,9 +21179,9 @@ var _default = function (_BaseNode) {
       if (width === 'auto' || height === 'auto') {
         if (!this[_resizeHandler]) {
           this[_resizeHandler] = function () {
-            _this8.updateViewport();
-            if (_this8.resolution[0] === 'flex' || _this8.resolution[1] === 'flex') {
-              _this8.updateResolution();
+            _this9.updateViewport();
+            if (_this9.resolution[0] === 'flex' || _this9.resolution[1] === 'flex') {
+              _this9.updateResolution();
             }
           };
           window.addEventListener('resize', this[_resizeHandler]);
@@ -21185,21 +21286,21 @@ var _default = function (_BaseNode) {
 exports.default = _default;
 
 /***/ }),
-/* 266 */
+/* 269 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(267), __esModule: true };
+module.exports = { "default": __webpack_require__(270), __esModule: true };
 
 /***/ }),
-/* 267 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(268);
+__webpack_require__(271);
 module.exports = __webpack_require__(7).Object.values;
 
 
 /***/ }),
-/* 268 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries

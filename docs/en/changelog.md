@@ -1,5 +1,19 @@
 # Change Log
 
+## [2.16.0][2018-09-20]
+
+### features
+
+- Add displayRatio for Scene and Layer
+- Add enableCache attribute for all sprites 
+- Allow append DOM Element into Scene
+
+### bug fix
+
+- Fix zIndex bug when appendChild or insertBefore
+- Fix .9 Background Image one pixcel bug
+- Fix resolveStates bugs
+
 ## [2.15.0][2018-09-10]
 
 ### enhancement

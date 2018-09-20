@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.15.21';
+const version = '2.16.0';
 
 
 
@@ -12050,6 +12050,8 @@ function relayout(container, items) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(111);
+
 const _zOrder = Symbol('zOrder');
 const _removeTask = Symbol('removeTask');
 
@@ -12061,6 +12063,7 @@ const _removeTask = Symbol('removeTask');
 
       this[_zOrder] = this[_zOrder] || 0;
       sprite.connect(this, this[_zOrder]++);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(this.children);
 
       for (let i = children.length - 1; i > 0; i--) {
         const a = children[i],
@@ -12157,14 +12160,10 @@ const _removeTask = Symbol('removeTask');
     const refZOrder = refchild.zOrder;
     if (idx >= 0) {
       const _insert = () => {
-        let _idx = 0; // re-calculate because async...
-        // TODO: use binary search?
         for (let i = 0; i < this.children.length; i++) {
           const child = this.children[i],
                 zOrder = child.zOrder;
-          if (zOrder < refZOrder) {
-            _idx++;
-          } else {
+          if (zOrder >= refZOrder) {
             delete child.zOrder;
             Object.defineProperty(child, 'zOrder', {
               value: zOrder + 1,
@@ -12174,8 +12173,9 @@ const _removeTask = Symbol('removeTask');
           }
         }
 
-        this.children.splice(_idx, 0, newchild);
+        this.children.push(newchild);
         newchild.connect(this, refZOrder);
+        Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(this.children);
         newchild.forceUpdate();
 
         this[_zOrder] = this[_zOrder] || 0;
@@ -14857,6 +14857,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const _resolution = Symbol('resolution');
 const _attrs = Symbol('attrs');
+const _displayRatio = Symbol('displayRatio');
 
 let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   constructor(id, opts = {}) {
@@ -14884,7 +14885,7 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
     }
 
-    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent']);
+    this[_attrs] = new Set(['renderMode', 'autoRender', 'evaluateFps', 'handleEvent', 'displayRatio']);
   }
 
   get id() {
@@ -14948,7 +14949,6 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
       let layerX = evt.layerX | 0,
           layerY = evt.layerY | 0;
       const [width, height, offsetLeft, offsetTop] = this.resolution;
-
       layerX += offsetLeft;
       layerY += offsetTop;
 
@@ -14961,34 +14961,64 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     return true;
   }
 
-  set resolution(resolution) {
-    const [width, height, offsetLeft, offsetTop] = resolution;
+  setDisplayRatio(ratio, maxDisplayRatio = Infinity, updateDisplay = true) {
+    if (typeof ratio === 'string') {
+      if (ratio.endsWith('rw')) {
+        ratio = parseFloat(ratio);
+      } else if (ratio.endsWith('vw')) {
+        ratio = parseFloat(ratio) * this.viewport[0] / this.resolution[0];
+      } else if (ratio === 'auto') {
+        if (typeof window !== 'undefined' && window.devicePixelRatio) {
+          ratio = window.devicePixelRatio * this.viewport[0] / this.resolution[0];
+        } else {
+          ratio = this.viewport[0] / this.resolution[0];
+        }
+      }
+    }
+    if (Number.isFinite(ratio)) {
+      ratio = Math.min(ratio, maxDisplayRatio);
+    } else {
+      ratio = 1;
+    }
+    this[_displayRatio] = ratio;
+    if (updateDisplay) this.updateDisplay();
+    this.dispatchEvent('ratioChange', { target: this }, true, true);
+  }
+
+  get displayRatio() {
+    return this[_displayRatio];
+  }
+
+  updateDisplay() {
+    const ratio = this[_displayRatio];
+    const resolution = this[_resolution];
+
+    const [width, height, offsetLeft, offsetTop] = resolution.map(r => r * ratio);
     const outputCanvas = this.outputContext.canvas;
     outputCanvas.width = width;
     outputCanvas.height = height;
-    this.outputContext.clearRect(0, 0, width, height);
+    // this.outputContext.clearRect(0, 0, width, height);
 
-    if (offsetLeft || offsetTop) {
-      this.outputContext.translate(offsetLeft, offsetTop);
-    }
+    this.beforeDrawTransform = () => {
+      if (offsetLeft || offsetTop) {
+        this.outputContext.translate(offsetLeft, offsetTop);
+      }
+      this.outputContext.scale(ratio, ratio);
+    };
 
     this.children.forEach(child => {
       delete child.lastRenderBox;
       child.forceUpdate();
     });
-
-    this[_resolution] = resolution;
-    this.dispatchEvent('resolutionChange', { target: this }, true, true);
   }
 
-  clearContext(context = this.outputContext) {
-    if (context.canvas) {
-      const resolution = this.resolution,
-            offsetTop = resolution[3],
-            offsetLeft = resolution[2];
-
-      context.clearRect(-offsetLeft, -offsetTop, context.canvas.width, context.canvas.height);
+  set resolution(resolution) {
+    this[_resolution] = resolution;
+    if (this[_displayRatio] == null) {
+      this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
     }
+    this.updateDisplay();
+    this.dispatchEvent('resolutionChange', { target: this }, true, true);
   }
 
   toLocalPos(x, y) {
@@ -15091,7 +15121,8 @@ const _layerMap = Symbol('layerMap'),
       _resizeHandler = Symbol('resizeHandler'),
       _attrs = Symbol('attrs'),
       _events = Symbol('events'),
-      _subscribe = Symbol('subscribe');
+      _subscribe = Symbol('subscribe'),
+      _displayRatio = Symbol('displayRatio');
 
 let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
   constructor(container, options = {}) {
@@ -15124,6 +15155,9 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     this.stickOffset = [0, 0];
     this.resolution = options.resolution || [...this.viewport];
 
+    this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
+    this.displayRatio = options.displayRatio || 1.0;
+
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
     const that = this;
@@ -15152,8 +15186,28 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
       }
     });
 
-    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe', 'displayRatio', 'maxDisplayRatio']);
     this[_subscribe] = null;
+  }
+
+  // unit vw、rw (default 1rw ?)
+  set displayRatio(value) {
+    const oldRatio = this[_displayRatio];
+    this[_displayRatio] = value;
+    if (oldRatio != null && oldRatio !== value) {
+      const layers = this[_layers];
+      layers.forEach(layer => {
+        if (layer.canvas) {
+          layer.setDisplayRatio(this[_displayRatio], this.maxDisplayRatio);
+        }
+      });
+      this.dispatchEvent('ratioChange', { target: this, layers });
+    }
+    return this;
+  }
+
+  get displayRatio() {
+    return this[_displayRatio];
   }
 
   get subscribe() {
@@ -15586,6 +15640,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     this[_layerMap][id] = layer;
     layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer);
+    // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
     if (!this.stickExtend) {
       layer.resolution = this.layerResolution;
     }

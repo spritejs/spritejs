@@ -14,7 +14,8 @@ const _layerMap = Symbol('layerMap'),
   _resizeHandler = Symbol('resizeHandler'),
   _attrs = Symbol('attrs'),
   _events = Symbol('events'),
-  _subscribe = Symbol('subscribe');
+  _subscribe = Symbol('subscribe'),
+  _displayRatio = Symbol('displayRatio');
 
 export default class extends BaseNode {
   constructor(container, options = {}) {
@@ -47,6 +48,9 @@ export default class extends BaseNode {
     this.stickOffset = [0, 0];
     this.resolution = options.resolution || [...this.viewport];
 
+    this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
+    this.displayRatio = options.displayRatio || 1.0;
+
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
     const that = this;
@@ -77,8 +81,29 @@ export default class extends BaseNode {
       }
     });
 
-    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend', 'subscribe']);
+    this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend',
+      'subscribe', 'displayRatio', 'maxDisplayRatio']);
     this[_subscribe] = null;
+  }
+
+  // unit vw、rw (default 1rw ?)
+  set displayRatio(value) {
+    const oldRatio = this[_displayRatio];
+    this[_displayRatio] = value;
+    if(oldRatio != null && oldRatio !== value) {
+      const layers = this[_layers];
+      layers.forEach((layer) => {
+        if(layer.canvas) {
+          layer.setDisplayRatio(this[_displayRatio], this.maxDisplayRatio);
+        }
+      });
+      this.dispatchEvent('ratioChange', {target: this, layers});
+    }
+    return this;
+  }
+
+  get displayRatio() {
+    return this[_displayRatio];
   }
 
   get subscribe() {
@@ -514,6 +539,7 @@ export default class extends BaseNode {
     this[_layerMap][id] = layer;
     layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer);
+    // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
     if(!this.stickExtend) {
       layer.resolution = this.layerResolution;
     }
