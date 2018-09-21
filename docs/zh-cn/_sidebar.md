@@ -67,3 +67,5 @@
 * 其他
   * [相关资源](/zh-cn/resource)
   * [更新日志](/zh-cn/changelog)
+  * [Sprite-Vue](http://vue.spritejs.org)
+  * [Sprite-React](http://react.spritejs.org)

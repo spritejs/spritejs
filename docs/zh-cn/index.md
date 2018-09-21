@@ -19,6 +19,8 @@ sprite.js 是跨平台的2D绘图对象模型库，它能够支持web、node、�
 - 结构化对象树，对[d3](https://github.com/d3/d3)引擎友好，能够无缝使用
 - 支持[服务端渲染](#server-side-render)
 - 支持[微信小程序](https://github.com/spritejs/sprite-wxapp)
+- 支持[Vue](http://vue.spritejs.org)
+- 支持[React](http://react.spritejs.org)
 
 ## 安装和使用
 

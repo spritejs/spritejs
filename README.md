@@ -27,9 +27,13 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
 - [Server-side render](#server-side-render). Work with node-canvas.
+- [Sprite-vue](http://vue.spritejs.org). Work with [Vue](https://github.com/vuejs/vue).
+- [Sprite-React](http://react.spritejs.org). Work with [React](https://github.com/vuejs/react).
 - [微信小程序](https://github.com/spritejs/sprite-wxapp)
 
 ## Quick Start
+
+**SpriteJS**
 
 ```html
 <script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
@@ -48,6 +52,50 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
     })
 
     paper.layer().appendChild(sprite)
+</script>
+```
+
+**React JSX**
+
+```jsx
+<Scene id="container">
+  <layer>
+    <sprite
+      textures={imgUrl}
+      bgcolor="#fff"
+      pos={[0,0]}
+      size={[400, 400]}
+      borderRadius="200"
+    />
+  </layer>
+</Scene>
+```
+
+**Vue Component**
+
+```xml
+<template>
+  <scene id="container" :viewport="[300, 300]">
+    <layer>
+      <sprite
+        :textures="imgUrl"
+        bgcolor="#fff"
+        :pos="[0,0]"
+        :size="[400, 400]"
+        borderRadius="200"
+      />
+    </layer>
+  </scene>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      imgUrl: 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+    }
+  }
+}
 </script>
 ```
 

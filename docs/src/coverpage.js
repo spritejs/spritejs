@@ -17,6 +17,8 @@
     // viewport: ['auto', 'auto'],
     resolution: [3840, 2160],
     stickMode: 'width',
+    displayRatio: 'auto',
+    maxDisplayRatio: 1,
   });
   const coverpage = document.querySelector('#coverpage');
 

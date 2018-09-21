@@ -669,7 +669,9 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
           scene = new Scene('#coverpage', {
             // viewport: ['auto', 'auto'],
             resolution: [3840, 2160],
-            stickMode: 'width'
+            stickMode: 'width',
+            displayRatio: 'auto',
+            maxDisplayRatio: 1
           });
           coverpage = document.querySelector('#coverpage');
           fglayer = scene.layer('fglayer', {
