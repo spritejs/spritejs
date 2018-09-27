@@ -37,7 +37,7 @@ module.exports = function (env = {}) {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules\/(?!(sprite-\w+)\/|svg-path-to-canvas|fast-animation-frame).*/,
+          exclude: /node_modules\/(?!(sprite-[\w-]+)\/|svg-path-to-canvas|fast-animation-frame).*/,
           use: {
             loader: 'babel-loader',
             options: babelConf,
