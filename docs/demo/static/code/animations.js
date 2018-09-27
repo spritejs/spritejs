@@ -35,7 +35,7 @@ class Button extends spritejs.Label {
       viewport: ['auto', 'auto'],
       resolution: [1600, 1200],
       stickMode: 'width',
-      // stickExtend: true,
+      stickExtend: true,
     }),
     {Sprite, Group, Path} = spritejs;
 
