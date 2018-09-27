@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.0';
+var version = '2.17.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -21211,10 +21211,11 @@ var ExLayer = function (_Layer) {
       outputCanvas.height = height;
       // this.outputContext.clearRect(0, 0, width, height);
 
+      if (offsetLeft || offsetTop) {
+        this.outputContext.translate(offsetLeft, offsetTop);
+      }
+
       this.beforeDrawTransform = function () {
-        if (offsetLeft || offsetTop) {
-          _this2.outputContext.translate(offsetLeft, offsetTop);
-        }
         _this2.outputContext.scale(ratio, ratio);
       };
 
@@ -21244,6 +21245,20 @@ var ExLayer = function (_Layer) {
       y = y * viewport[1] / resolution[1] + resolution[3];
 
       return [x, y];
+    }
+  }, {
+    key: 'clearContext',
+    value: function clearContext() {
+      var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.outputContext;
+
+      if (context.canvas) {
+        var _context$canvas = context.canvas,
+            width = _context$canvas.width,
+            height = _context$canvas.height;
+
+        var resolution = this.resolution;
+        context.clearRect(-(resolution[2] | 0), -(resolution[3] | 0), width, height);
+      }
     }
   }, {
     key: 'takeSnapshot',
@@ -21796,6 +21811,9 @@ var _default = function (_BaseNode) {
 
           originalX = Math.round((clientX | 0) - left);
           originalY = Math.round((clientY | 0) - top);
+        } else {
+          originalX = NaN;
+          originalY = NaN;
         }
 
         for (var i = 0; i < layers.length; i++) {

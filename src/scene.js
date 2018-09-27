@@ -428,6 +428,9 @@ export default class extends BaseNode {
 
         originalX = Math.round((clientX | 0) - left);
         originalY = Math.round((clientY | 0) - top);
+      } else {
+        originalX = NaN;
+        originalY = NaN;
       }
 
       for(let i = 0; i < layers.length; i++) {

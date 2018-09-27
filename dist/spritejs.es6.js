@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.0';
+const version = '2.17.1';
 
 
 
@@ -15779,10 +15779,11 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     outputCanvas.height = height;
     // this.outputContext.clearRect(0, 0, width, height);
 
+    if (offsetLeft || offsetTop) {
+      this.outputContext.translate(offsetLeft, offsetTop);
+    }
+
     this.beforeDrawTransform = () => {
-      if (offsetLeft || offsetTop) {
-        this.outputContext.translate(offsetLeft, offsetTop);
-      }
       this.outputContext.scale(ratio, ratio);
     };
 
@@ -15819,6 +15820,14 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     y = y * viewport[1] / resolution[1] + resolution[3];
 
     return [x, y];
+  }
+
+  clearContext(context = this.outputContext) {
+    if (context.canvas) {
+      const { width, height } = context.canvas;
+      const resolution = this.resolution;
+      context.clearRect(-(resolution[2] | 0), -(resolution[3] | 0), width, height);
+    }
   }
 
   async takeSnapshot() {
@@ -16309,6 +16318,9 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
 
         originalX = Math.round((clientX | 0) - left);
         originalY = Math.round((clientY | 0) - top);
+      } else {
+        originalX = NaN;
+        originalY = NaN;
       }
 
       for (let i = 0; i < layers.length; i++) {

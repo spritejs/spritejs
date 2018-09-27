@@ -147,10 +147,11 @@ class ExLayer extends Layer {
     outputCanvas.height = height;
     // this.outputContext.clearRect(0, 0, width, height);
 
+    if(offsetLeft || offsetTop) {
+      this.outputContext.translate(offsetLeft, offsetTop);
+    }
+
     this.beforeDrawTransform = () => {
-      if(offsetLeft || offsetTop) {
-        this.outputContext.translate(offsetLeft, offsetTop);
-      }
       this.outputContext.scale(ratio, ratio);
     };
 
@@ -187,6 +188,14 @@ class ExLayer extends Layer {
     y = y * viewport[1] / resolution[1] + resolution[3];
 
     return [x, y];
+  }
+
+  clearContext(context = this.outputContext) {
+    if(context.canvas) {
+      const {width, height} = context.canvas;
+      const resolution = this.resolution;
+      context.clearRect(-(resolution[2] | 0), -(resolution[3] | 0), width, height);
+    }
   }
 
   async takeSnapshot() {
