@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.1';
+var version = '2.17.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -15742,6 +15742,8 @@ function relayout(containerSprite, itemsSprite) {
     var config = {
       width: width,
       height: height,
+      offsetWidth: item.contentSize[0],
+      offsetHeight: item.contentSize[1],
       minWidth: item.attributes.minWidth,
       maxWidth: item.attributes.maxWidth,
       minHeight: item.attributes.minHeight,

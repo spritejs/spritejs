@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.1';
+const version = '2.17.2';
 
 
 
@@ -11774,6 +11774,8 @@ function relayout(containerSprite, itemsSprite) {
     const config = {
       width,
       height,
+      offsetWidth: item.contentSize[0],
+      offsetHeight: item.contentSize[1],
       minWidth: item.attributes.minWidth,
       maxWidth: item.attributes.maxWidth,
       minHeight: item.attributes.minHeight,

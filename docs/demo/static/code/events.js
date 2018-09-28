@@ -62,7 +62,7 @@
 
   class KeyButton extends Label {
     pointCollision(evt) {
-      if(evt.type === 'keydown') {
+      if(evt.type === 'keydown' || evt.type === 'keyup') {
         return evt.originalEvent.key === this.text.toLowerCase();
       }
       return super.pointCollision(evt);
