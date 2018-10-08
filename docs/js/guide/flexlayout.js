@@ -423,7 +423,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     textAlign: 'center',
     size: [100, 100],
     bgcolor: 'red',
-    flex: 1
+    flexGrow: 1
   });
   var s2 = s1.cloneNode();
   s2.attr({ bgcolor: 'blue', text: '2' });
@@ -433,8 +433,8 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
-    pos: [300, 300],
-    width: 300,
+    pos: [770, 150],
+    width: 600,
     bgcolor: 'grey',
     display: 'flex',
     flexDirection: 'row'
@@ -445,19 +445,19 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
 
   var g2 = g1.cloneNode();
   g2.attr({
-    x: 800
+    y: 300
   });
   g2.append.apply(g2, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ flex: i + 1 });
+    return s.cloneNode().attr({ flexGrow: i });
   })));
   layer.append(g2);
 
   var g3 = g1.cloneNode();
   g3.attr({
-    x: 1300
+    y: 450
   });
   g3.append.apply(g3, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ flex: 1 + Math.abs(1 - i) });
+    return s.cloneNode().attr({ flexGrow: Math.abs(1 - i) });
   })));
   layer.append(g3);
 })();

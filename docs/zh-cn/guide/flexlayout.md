@@ -101,11 +101,13 @@ alignContent属性定义了多根轴线的对齐方式。如果项目只有一�
 
 ## 元素属性
 
-以下3个属性设置在元素上：
+以下5个属性设置在元素上：
 
 - order：决定元素的排序方式
-- flex：当元素被拉伸时，决定它被拉伸的比例
-- align-self：覆盖容器的alignItems属性
+- flexGrow：当元素被拉伸时，决定它被拉伸的比例
+- flexShrink：当元素被压缩时，决定它被压缩的比例
+- flexBasis：定义了在分配多余空间之前，项目占据的主轴空间（main size）。spritejs根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
+- alignSelf：覆盖容器的alignItems属性
 
 通过设置order来排序：
 
@@ -113,7 +115,7 @@ alignContent属性定义了多根轴线的对齐方式。如果项目只有一�
 
 <!-- demo: flex-order -->
 
-通过设置flex来决定元素占据的空间：
+通过设置flex-grow来决定元素占据的空间：
 
 <div id="flex-flex" class="sprite-container"></div>
 

@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.17.3",
+  "version": "2.17.4",
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
@@ -55,7 +55,7 @@
     "axios": "^0.16.2",
     "babel-decorators-runtime": "^0.2.0",
     "babel-runtime": "^6.26.0",
-    "sprite-core": "^2.19.3"
+    "sprite-core": "^2.19.5"
   },
   "devDependencies": {
     "ava": "^0.25.0",

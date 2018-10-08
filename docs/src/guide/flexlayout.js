@@ -395,7 +395,7 @@ const {Scene, Sprite, Group, Label} = spritejs
     textAlign: 'center',
     size: [100, 100],
     bgcolor: 'red',
-    flex: 1,
+    flexGrow: 1,
   });
   const s2 = s1.cloneNode();
   s2.attr({bgcolor: 'blue', text: '2'});
@@ -405,8 +405,8 @@ const {Scene, Sprite, Group, Label} = spritejs
   const g1 = new Group();
   g1.attr({
     anchor: 0.5,
-    pos: [300, 300],
-    width: 300,
+    pos: [770, 150],
+    width: 600,
     bgcolor: 'grey',
     display: 'flex',
     flexDirection: 'row',
@@ -417,15 +417,15 @@ const {Scene, Sprite, Group, Label} = spritejs
 
   const g2 = g1.cloneNode();
   g2.attr({
-    x: 800,
+    y: 300,
   });
-  g2.append(...[s1, s2, s3].map((s, i) => s.cloneNode().attr({flex: i + 1})));
+  g2.append(...[s1, s2, s3].map((s, i) => s.cloneNode().attr({flexGrow: i})));
   layer.append(g2);
 
   const g3 = g1.cloneNode();
   g3.attr({
-    x: 1300,
+    y: 450,
   });
-  g3.append(...[s1, s2, s3].map((s, i) => s.cloneNode().attr({flex: 1 + Math.abs(1 - i)})));
+  g3.append(...[s1, s2, s3].map((s, i) => s.cloneNode().attr({flexGrow: Math.abs(1 - i)})));
   layer.append(g3);
 }());
