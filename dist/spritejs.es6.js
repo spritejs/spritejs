@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.2';
+const version = '2.17.3';
 
 
 
@@ -11810,9 +11810,10 @@ function relayout(containerSprite, itemsSprite) {
   });
   layout.children.forEach((item, index) => {
     const sprite = itemsSprite[index];
+    const [ox, oy] = sprite.originalRect; // fix anchor
     sprite.attr({
-      layoutX: item.left,
-      layoutY: item.top,
+      layoutX: item.left - ox,
+      layoutY: item.top - oy,
       layoutWidth: item.width,
       layoutHeight: item.height,
       layoutRight: item.left + item.width,

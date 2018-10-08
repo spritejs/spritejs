@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.2';
+var version = '2.17.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -15778,9 +15778,15 @@ function relayout(containerSprite, itemsSprite) {
   });
   layout.children.forEach(function (item, index) {
     var sprite = itemsSprite[index];
+
+    var _sprite$originalRect = (0, _slicedToArray3.default)(sprite.originalRect, 2),
+        ox = _sprite$originalRect[0],
+        oy = _sprite$originalRect[1]; // fix anchor
+
+
     sprite.attr({
-      layoutX: item.left,
-      layoutY: item.top,
+      layoutX: item.left - ox,
+      layoutY: item.top - oy,
       layoutWidth: item.width,
       layoutHeight: item.height,
       layoutRight: item.left + item.width,
