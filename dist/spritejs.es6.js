@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.4';
+const version = '2.17.5';
 
 
 
@@ -6021,7 +6021,8 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
       if (width !== '') {
         width = Math.max(0, width - 2 * borderWidth - paddingLeft - paddingRight);
-      }if (width !== '') {
+      }
+      if (height !== '') {
         height = Math.max(0, height - 2 * borderWidth - paddingTop - paddingBottom);
       }
     }

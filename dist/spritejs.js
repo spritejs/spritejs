@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.4';
+var version = '2.17.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8939,7 +8939,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
         if (width !== '') {
           width = Math.max(0, width - 2 * borderWidth - paddingLeft - paddingRight);
-        }if (width !== '') {
+        }
+        if (height !== '') {
           height = Math.max(0, height - 2 * borderWidth - paddingTop - paddingBottom);
         }
       }

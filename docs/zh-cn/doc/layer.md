@@ -75,7 +75,7 @@ layer.clearContext = function(context) {
 
 ## toLocalPos()
 
-`toLocalPos(x, y)` 将相对于layer所在canvas的相对坐标还算成相对于layer的坐标
+`toLocalPos(x, y)` 将相对于layer所在canvas的相对坐标换算成相对于layer的坐标
 
 ## viewport
 
