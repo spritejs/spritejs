@@ -251,7 +251,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 | :---: | :---: | :---: | :---: | :---: | :---: | 
 
 | [<img src="https://avatars2.githubusercontent.com/u/424491?s=400&v=4" width="60px;"/><br /><sub><b>公子</b></sub>](https://github.com/lizheming)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=lizheming "Code") |  [<img src="https://avatars1.githubusercontent.com/u/26452939?s=400&v=4" width="60px;"/><br /><sub><b>justemit</b></sub>](https://github.com/justemit)<br />[💻](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Code")  [📖](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Documentation") [🐛](https://github.com/spritejs/sprite-core/issues/34 "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/40935?s=400&v=4" width="60px;"/><br /><sub><b>Welefen Lee</b></sub>](https://github.com/welefen)<br />[💻](https://github.com/spritejs/sprite-flex-layout "Code")   | [<img src="https://avatars2.githubusercontent.com/u/30425185?s=400&v=4" width="60px;"/><br /><sub><b>YUPENG12138</b></sub>](https://github.com/YUPENG12138)<br />[📖](https://github.com/spritejs/spritejs/issues/52 "Documentation")|
-| :---: | :---: | :---: | :---: | :---: | :---: | 
+| :---: | :---: | :---: | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
