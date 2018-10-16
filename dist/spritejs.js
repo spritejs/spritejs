@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.6';
+var version = '2.17.7';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6130,13 +6130,13 @@ var _set = __webpack_require__(159);
 
 var _set2 = _interopRequireDefault(_set);
 
-var _isNan = __webpack_require__(165);
-
-var _isNan2 = _interopRequireDefault(_isNan);
-
 var _toConsumableArray2 = __webpack_require__(99);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _isNan = __webpack_require__(165);
+
+var _isNan2 = _interopRequireDefault(_isNan);
 
 var _slicedToArray2 = __webpack_require__(90);
 
@@ -6238,7 +6238,8 @@ function parseValuesString(str, parser) {
   if (typeof str === 'string') {
     var values = str.split(/[\s,]+/g);
     return values.map(function (v) {
-      return parser ? parser(v) : v;
+      var ret = parser ? parser(v) : v;
+      return (0, _isNan2.default)(ret) ? v : ret;
     });
   }
   return str;
@@ -7151,7 +7152,7 @@ function relative() {
       descriptor.set = function (val) {
         if (typeof val === 'string') {
           val = val.trim();
-          if (val.endsWith('%')) {
+          if (val.slice(-1) === '%') {
             var parent = this.subject.parent;
             var pv = null;
             if (parent) {
@@ -7176,7 +7177,7 @@ function relative() {
               v: parseFloat(val) / 100,
               rv: val
             };
-          } else if (val.endsWith('rw')) {
+          } else if (val.slice(-2) === 'rw') {
             var layer = this.subject.layer;
             var _pv2 = null;
             if (layer) {
@@ -7188,7 +7189,7 @@ function relative() {
               v: parseFloat(val) / 100,
               rv: val
             };
-          } else if (val.endsWith('rh')) {
+          } else if (val.slice(-2) === 'rh') {
             var _layer = this.subject.layer;
             var _pv3 = null;
             if (_layer) {
@@ -11002,7 +11003,7 @@ var BaseNode = function () {
               layer.touchedTargets[touch.identifier].push(this);
             }
           }
-          if (type.startsWith('touch')) {
+          if (/^touch/.test(type)) {
             var touches = (0, _from2.default)(evt.originalEvent.touches),
                 _layer = this.layer;
             evt.targetTouches = [];
@@ -11704,9 +11705,9 @@ var elementProto = {
       // querySelector('nodeType')
       // querySelector('#id')
       // querySelector(':name')
-      if (selector.startsWith('#')) {
+      if (selector.charAt(0) === '#') {
         ret = this.getElementById(selector.slice(1));
-      } else if (selector.startsWith(':')) {
+      } else if (selector.charAt(0) === ':') {
         var name = selector.slice(1);
         var nodeList = querySelectorLimits(this, function (c) {
           return c.name === name;
@@ -11749,11 +11750,11 @@ var elementProto = {
     if (!selector || selector === '*') {
       ret = getAllSubNodes(this);
     } else if (typeof selector === 'string') {
-      if (selector.startsWith('#')) {
+      if (selector.charAt(0) === '#') {
         var sprite = this.getElementById(selector.slice(1));
         ret = sprite ? [sprite] : [];
       }
-      if (selector.startsWith(':')) {
+      if (selector.charAt(0) === ':') {
         ret = this.getElementsByName(selector.slice(1));
       }
       var nodeType = getNodeType(selector);
@@ -14473,7 +14474,7 @@ var Layer = function (_BaseNode) {
                 // detect mouseenter/mouseleave
                 targetSprites.push(sprite);
               }
-              if (evt.terminated && !type.startsWith('mouse')) {
+              if (evt.terminated && type !== 'mousemove') {
                 break;
               }
             }
@@ -15049,9 +15050,8 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           var parentX = void 0,
               parentY = void 0;
 
-          if (evt.offsetX) parentX = evt.offsetX - this.originalRect[0] - borderWidth - padding[3] + scrollLeft;
-          if (evt.offsetY) parentY = evt.offsetY - this.originalRect[1] - borderWidth - padding[0] + scrollTop;
-          // console.log(evt.parentX, evt.parentY)
+          if ('offsetX' in evt) parentX = evt.offsetX - this.originalRect[0] - borderWidth - padding[3] + scrollLeft;
+          if ('offsetY' in evt) parentY = evt.offsetY - this.originalRect[1] - borderWidth - padding[0] + scrollTop;
 
           var _parentX = evt.parentX,
               _parentY = evt.parentY;
@@ -15073,7 +15073,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
               }
               targetSprites.push(sprite);
             }
-            if (evt.terminated && !type.startsWith('mouse')) {
+            if (evt.terminated && type !== 'mousemove') {
               break;
             }
           }
@@ -15148,16 +15148,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
 
       if (!this.isVirtual) {
         (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'render', this).call(this, t, drawingContext);
-
-        var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
-            w = _attrSize[0],
-            h = _attrSize[1];
-
-        if (w !== '' || h !== '') {
-          drawingContext.beginPath();
-          drawingContext.rect(0, 0, this.contentSize[0], this.contentSize[1]);
-          drawingContext.clip();
-        }
+        drawingContext.beginPath();
+        drawingContext.rect(0, 0, this.contentSize[0], this.contentSize[1]);
+        drawingContext.clip();
       }
 
       drawingContext.save();
@@ -15197,9 +15190,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           bgcolor = this.attr('bgcolor'),
           _attr2 = this.attr('gradients'),
           bgGradient = _attr2.bgcolor,
-          _attrSize2 = (0, _slicedToArray3.default)(this.attrSize, 2),
-          width = _attrSize2[0],
-          height = _attrSize2[1],
+          _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1],
           _attr3 = this.attr('anchor'),
           _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
           anchorX = _attr4[0],
@@ -15225,9 +15218,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
     get: function get() {
       if (this.isVirtual) return [0, 0];
 
-      var _attrSize3 = (0, _slicedToArray3.default)(this.attrSize, 2),
-          width = _attrSize3[0],
-          height = _attrSize3[1];
+      var _attrSize2 = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize2[0],
+          height = _attrSize2[1];
 
       if (width === '' || height === '') {
         if (this.attr('clip')) {
