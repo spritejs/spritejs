@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.7';
+const version = '2.17.8';
 
 
 
@@ -8287,12 +8287,13 @@ let _default = class _default extends sprite_animator__WEBPACK_IMPORTED_MODULE_0
     });
   }
 
-  // finish() {
-  //   super.finish();
-  //   cancelAnimationFrame(this.requestId);
-  //   const sprite = this.target;
-  //   sprite.attr(this.frame);
-  // }
+  finish() {
+    // finish should change attrs synchronously
+    super.finish();
+    Object(_helpers_fast_animation_frame__WEBPACK_IMPORTED_MODULE_3__["cancelAnimationFrame"])(this.requestId);
+    const sprite = this.target;
+    sprite.attr(this.frame);
+  }
 
   play() {
     if (!this.target.parent || this.playState === 'running') {

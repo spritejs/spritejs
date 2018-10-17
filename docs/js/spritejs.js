@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.7';
+var version = '2.17.8';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -11361,16 +11361,16 @@ var _default = function (_Animator) {
   }
 
   (0, _createClass3.default)(_default, [{
+    key: 'finish',
+    value: function finish() {
+      // finish should change attrs synchronously
+      (0, _get3.default)(_default.prototype.__proto__ || (0, _getPrototypeOf2.default)(_default.prototype), 'finish', this).call(this);
+      (0, _fastAnimationFrame.cancelAnimationFrame)(this.requestId);
+      var sprite = this.target;
+      sprite.attr(this.frame);
+    }
+  }, {
     key: 'play',
-
-
-    // finish() {
-    //   super.finish();
-    //   cancelAnimationFrame(this.requestId);
-    //   const sprite = this.target;
-    //   sprite.attr(this.frame);
-    // }
-
     value: function play() {
       if (!this.target.parent || this.playState === 'running') {
         return;
