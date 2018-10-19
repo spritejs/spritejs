@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.8';
+var version = '2.17.9';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8087,12 +8087,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       return [x + x0, y + y0];
     }
   }, {
-    key: 'pointCollision',
-    value: function pointCollision(evt) {
-      /* istanbul ignore if */
-      if (!this.isVisible()) {
-        return false;
-      }
+    key: 'dispatchEvent',
+    value: function dispatchEvent(type, evt) {
+      var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       var parentX = void 0,
           parentY = void 0;
@@ -8106,15 +8104,30 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         parentY = evt.layerY;
       }
 
-      if (parentX == null && parentY == null) return true;
+      if (parentX == null && parentY == null) {
+        collisionState = true;
+      } else {
+        var _pointToOffset = this.pointToOffset(parentX, parentY),
+            _pointToOffset2 = (0, _slicedToArray3.default)(_pointToOffset, 2),
+            nx = _pointToOffset2[0],
+            ny = _pointToOffset2[1];
 
-      var _pointToOffset = this.pointToOffset(parentX, parentY),
-          _pointToOffset2 = (0, _slicedToArray3.default)(_pointToOffset, 2),
-          nx = _pointToOffset2[0],
-          ny = _pointToOffset2[1];
+        evt.offsetX = nx;
+        evt.offsetY = ny;
+      }
 
-      evt.offsetX = nx;
-      evt.offsetY = ny;
+      return (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
+    }
+  }, {
+    key: 'pointCollision',
+    value: function pointCollision(evt) {
+      /* istanbul ignore if */
+      if (!this.isVisible()) {
+        return false;
+      }
+
+      var nx = evt.offsetX,
+          ny = evt.offsetY;
 
       var _originalRect = (0, _slicedToArray3.default)(this.originalRect, 4),
           ox = _originalRect[0],
@@ -8338,14 +8351,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
         var _ref13 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x7 = _ref13[0],
+            _x9 = _ref13[0],
             _y = _ref13[1],
             _w = _ref13[2],
             _h = _ref13[3],
             _r = _ref13[4];
 
 
-        (0, _render.drawRadiusBox)(drawingContext, { x: _x7, y: _y, w: _w, h: _h, r: _r });
+        (0, _render.drawRadiusBox)(drawingContext, { x: _x9, y: _y, w: _w, h: _h, r: _r });
 
         if (bgcolor) {
           drawingContext.fillStyle = bgcolor;
@@ -16023,7 +16036,7 @@ var Config = function () {
     this.config = {};
     this.node = node;
     (0, _keys2.default)(config).forEach(function (item) {
-      if (!_util.flexProperties.includes(item)) {
+      if (_util.flexProperties.indexOf(item) === -1) {
         throw new Error('config ' + item + ' is not valid');
       }
       _this[item] = config[item];
@@ -16185,9 +16198,9 @@ var Config = function () {
       var flexFlow = this.flexFlow;
       if (flexFlow) {
         flexFlow.split(/\s+/).forEach(function (item) {
-          if (_util.flexDirectionValues.includes(item)) {
+          if (_util.flexDirectionValues.indexOf(item) > -1) {
             _this6.flexDirection = item;
-          } else if (_util.flexWrapValues.includes(item)) {
+          } else if (_util.flexWrapValues.indexOf(item) > -1) {
             _this6.flexWrap = item;
           } else {
             throw new Error('FlexFlow: ' + flexFlow + ' is not valid');

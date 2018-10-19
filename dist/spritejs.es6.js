@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.8';
+const version = '2.17.9';
 
 
 
@@ -6235,12 +6235,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     return [x + x0, y + y0];
   }
 
-  pointCollision(evt) {
-    /* istanbul ignore if */
-    if (!this.isVisible()) {
-      return false;
-    }
-
+  dispatchEvent(type, evt, collisionState = false, swallow = false) {
     let parentX, parentY;
 
     if (evt.parentX != null) {
@@ -6252,11 +6247,25 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       parentY = evt.layerY;
     }
 
-    if (parentX == null && parentY == null) return true;
+    if (parentX == null && parentY == null) {
+      collisionState = true;
+    } else {
+      const [nx, ny] = this.pointToOffset(parentX, parentY);
+      evt.offsetX = nx;
+      evt.offsetY = ny;
+    }
 
-    let [nx, ny] = this.pointToOffset(parentX, parentY);
-    evt.offsetX = nx;
-    evt.offsetY = ny;
+    return super.dispatchEvent(type, evt, collisionState, swallow);
+  }
+
+  pointCollision(evt) {
+    /* istanbul ignore if */
+    if (!this.isVisible()) {
+      return false;
+    }
+
+    let nx = evt.offsetX,
+        ny = evt.offsetY;
 
     const [ox, oy, ow, oh] = this.originalRect;
 
@@ -11979,7 +11988,7 @@ let Config = class Config {
     this.config = {};
     this.node = node;
     Object.keys(config).forEach(item => {
-      if (!_util__WEBPACK_IMPORTED_MODULE_0__["flexProperties"].includes(item)) {
+      if (_util__WEBPACK_IMPORTED_MODULE_0__["flexProperties"].indexOf(item) === -1) {
         throw new Error(`config ${item} is not valid`);
       }
       this[item] = config[item];
@@ -12117,9 +12126,9 @@ let Config = class Config {
     const flexFlow = this.flexFlow;
     if (flexFlow) {
       flexFlow.split(/\s+/).forEach(item => {
-        if (_util__WEBPACK_IMPORTED_MODULE_0__["flexDirectionValues"].includes(item)) {
+        if (_util__WEBPACK_IMPORTED_MODULE_0__["flexDirectionValues"].indexOf(item) > -1) {
           this.flexDirection = item;
-        } else if (_util__WEBPACK_IMPORTED_MODULE_0__["flexWrapValues"].includes(item)) {
+        } else if (_util__WEBPACK_IMPORTED_MODULE_0__["flexWrapValues"].indexOf(item) > -1) {
           this.flexWrap = item;
         } else {
           throw new Error(`FlexFlow: ${flexFlow} is not valid`);
