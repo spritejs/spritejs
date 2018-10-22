@@ -452,7 +452,7 @@ export default class extends BaseNode {
     return true;
   }
 
-  dispatchEvent(type, evt) {
+  dispatchEvent(type, evt = {}) {
     const container = this.container;
     container.dispatchEvent(new CustomEvent(type, {detail: evt}));
     super.dispatchEvent(type, evt, true);

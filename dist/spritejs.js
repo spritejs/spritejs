@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.9';
+var version = '2.17.10';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8087,11 +8087,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       return [x + x0, y + y0];
     }
   }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(type, evt) {
-      var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
+    key: 'getOffsetXY',
+    value: function getOffsetXY(evt) {
       var parentX = void 0,
           parentY = void 0;
 
@@ -8103,17 +8100,23 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         parentX = evt.layerX;
         parentY = evt.layerY;
       }
+      if (parentX !== null && parentY !== null) {
+        return this.pointToOffset(parentX, parentY);
+      }
+    }
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(type, evt) {
+      var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      if (parentX == null && parentY == null) {
-        collisionState = true;
-      } else {
-        var _pointToOffset = this.pointToOffset(parentX, parentY),
-            _pointToOffset2 = (0, _slicedToArray3.default)(_pointToOffset, 2),
-            nx = _pointToOffset2[0],
-            ny = _pointToOffset2[1];
 
-        evt.offsetX = nx;
-        evt.offsetY = ny;
+      if (collisionState) {
+        var offsetXY = this.getOffsetXY(evt);
+        if (offsetXY) {
+          evt.offsetX = offsetXY[0];
+          evt.offsetY = offsetXY[1];
+        }
       }
 
       return (0, _get3.default)(BaseSprite.prototype.__proto__ || (0, _getPrototypeOf2.default)(BaseSprite.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
@@ -8125,9 +8128,15 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       if (!this.isVisible()) {
         return false;
       }
+      var offsetXY = this.getOffsetXY(evt);
+      if (!offsetXY) return true;
 
-      var nx = evt.offsetX,
-          ny = evt.offsetY;
+      var _offsetXY = (0, _slicedToArray3.default)(offsetXY, 2),
+          nx = _offsetXY[0],
+          ny = _offsetXY[1];
+
+      evt.offsetX = nx;
+      evt.offsetY = ny;
 
       var _originalRect = (0, _slicedToArray3.default)(this.originalRect, 4),
           ox = _originalRect[0],
@@ -21911,7 +21920,9 @@ var _default = function (_BaseNode) {
     }
   }, {
     key: 'dispatchEvent',
-    value: function dispatchEvent(type, evt) {
+    value: function dispatchEvent(type) {
+      var evt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       var container = this.container;
       container.dispatchEvent(new CustomEvent(type, { detail: evt }));
       (0, _get3.default)(_default.prototype.__proto__ || (0, _getPrototypeOf2.default)(_default.prototype), 'dispatchEvent', this).call(this, type, evt, true);

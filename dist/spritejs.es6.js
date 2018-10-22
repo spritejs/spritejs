@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.17.9';
+const version = '2.17.10';
 
 
 
@@ -6235,7 +6235,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     return [x + x0, y + y0];
   }
 
-  dispatchEvent(type, evt, collisionState = false, swallow = false) {
+  getOffsetXY(evt) {
     let parentX, parentY;
 
     if (evt.parentX != null) {
@@ -6246,13 +6246,19 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       parentX = evt.layerX;
       parentY = evt.layerY;
     }
+    if (parentX !== null && parentY !== null) {
+      return this.pointToOffset(parentX, parentY);
+    }
+  }
 
-    if (parentX == null && parentY == null) {
-      collisionState = true;
-    } else {
-      const [nx, ny] = this.pointToOffset(parentX, parentY);
-      evt.offsetX = nx;
-      evt.offsetY = ny;
+  dispatchEvent(type, evt, collisionState = false, swallow = false) {
+
+    if (collisionState) {
+      const offsetXY = this.getOffsetXY(evt);
+      if (offsetXY) {
+        evt.offsetX = offsetXY[0];
+        evt.offsetY = offsetXY[1];
+      }
     }
 
     return super.dispatchEvent(type, evt, collisionState, swallow);
@@ -6263,9 +6269,12 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     if (!this.isVisible()) {
       return false;
     }
+    const offsetXY = this.getOffsetXY(evt);
+    if (!offsetXY) return true;
 
-    let nx = evt.offsetX,
-        ny = evt.offsetY;
+    let [nx, ny] = offsetXY;
+    evt.offsetX = nx;
+    evt.offsetY = ny;
 
     const [ox, oy, ow, oh] = this.originalRect;
 
@@ -16402,7 +16411,7 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
     return true;
   }
 
-  dispatchEvent(type, evt) {
+  dispatchEvent(type, evt = {}) {
     const container = this.container;
     container.dispatchEvent(new CustomEvent(type, { detail: evt }));
     super.dispatchEvent(type, evt, true);
