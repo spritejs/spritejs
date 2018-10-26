@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.18.1';
+const version = '2.18.2';
 
 
 
@@ -6252,7 +6252,6 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   dispatchEvent(type, evt, collisionState = false, swallow = false) {
-
     if (collisionState) {
       const offsetXY = this.getOffsetXY(evt);
       if (offsetXY) {
@@ -10877,6 +10876,11 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     if (evt.targetSprites.length > 0) {
       // bubbling
       collisionState = true;
+    }
+    const { layerX, layerY } = evt;
+    if (layerX != null && layerY != null) {
+      evt.offsetX = layerX + this.offset[0];
+      evt.offsetY = layerY + this.offset[1];
     }
     return super.dispatchEvent(type, evt, collisionState, swallow);
   }

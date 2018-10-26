@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.18.1';
+var version = '2.18.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8110,7 +8110,6 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-
       if (collisionState) {
         var offsetXY = this.getOffsetXY(evt);
         if (offsetXY) {
@@ -14510,6 +14509,13 @@ var Layer = function (_BaseNode) {
       if (evt.targetSprites.length > 0) {
         // bubbling
         collisionState = true;
+      }
+      var layerX = evt.layerX,
+          layerY = evt.layerY;
+
+      if (layerX != null && layerY != null) {
+        evt.offsetX = layerX + this.offset[0];
+        evt.offsetY = layerY + this.offset[1];
       }
       return (0, _get3.default)(Layer.prototype.__proto__ || (0, _getPrototypeOf2.default)(Layer.prototype), 'dispatchEvent', this).call(this, type, evt, collisionState, swallow);
     }
