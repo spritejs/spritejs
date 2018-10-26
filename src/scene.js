@@ -124,11 +124,15 @@ export default class extends BaseNode {
   }
 
   get children() {
-    return this.layers.filter(layer => layer.canvas);
+    return this.childNodes.filter(layer => layer.canvas);
   }
 
   get childNodes() {
-    return this.layers;
+    return Object.values(this[_layerMap]);
+  }
+
+  get sortedChildNodes() {
+    return this[_layers];
   }
 
   get id() {

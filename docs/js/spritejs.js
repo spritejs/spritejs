@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.17.10';
+var version = '2.18.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6347,7 +6347,7 @@ function appendUnit(value) {
 function sortOrderedSprites(sprites) {
   var reversed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-  return sprites.sort(function (a, b) {
+  return [].concat((0, _toConsumableArray3.default)(sprites)).sort(function (a, b) {
     if (reversed) {
       ;
       var _ref3 = [b, a];
@@ -10415,12 +10415,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
       this.set('zIndex', val);
       var subject = this.subject;
       if (subject.parent) {
-        subject.parent.childNodes.sort(function (a, b) {
-          if (a.zIndex === b.zIndex) {
-            return a.zOrder - b.zOrder;
-          }
-          return a.zIndex - b.zIndex;
-        });
+        subject.parent.sortedChildNodes = (0, _utils.sortOrderedSprites)(subject.parent.childNodes);
       }
     }
 
@@ -14196,8 +14191,7 @@ var _group4 = _interopRequireDefault(_group3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _children = (0, _symbol2.default)('children'),
-    _updateSet = (0, _symbol2.default)('updateSet'),
+var _updateSet = (0, _symbol2.default)('updateSet'),
     _zOrder = (0, _symbol2.default)('zOrder'),
     _tRecord = (0, _symbol2.default)('tRecord'),
     _timeline = (0, _symbol2.default)('timeline'),
@@ -14235,7 +14229,8 @@ var Layer = function (_BaseNode) {
 
     _this.outputContext = context;
 
-    _this[_children] = [];
+    _this.childNodes = [];
+    _this.sortedChildNodes = [];
     _this[_updateSet] = new _set2.default();
     _this[_zOrder] = 0;
     _this[_tRecord] = []; // calculate FPS
@@ -14251,8 +14246,8 @@ var Layer = function (_BaseNode) {
     if (context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('DOMNodeRemovedFromDocument', function () {
         _this._savePlaybackRate = _this.timeline.playbackRate;
-        _this._saveChildren = [].concat((0, _toConsumableArray3.default)(_this[_children]));
-        _this.remove.apply(_this, (0, _toConsumableArray3.default)(_this[_children]));
+        _this._saveChildren = [].concat((0, _toConsumableArray3.default)(_this.childNodes));
+        _this.remove.apply(_this, (0, _toConsumableArray3.default)(_this.childNodes));
         _this.timeline.playbackRate = 0;
       });
       context.canvas.addEventListener('DOMNodeInsertedIntoDocument', function () {
@@ -14400,7 +14395,7 @@ var Layer = function (_BaseNode) {
     value: function renderRepaintAll(t) {
       var clearContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      var renderEls = this[_children];
+      var renderEls = this.sortedChildNodes;
       var outputContext = this.outputContext;
       if (clearContext) this.clearContext(outputContext);
       this.drawSprites(renderEls, t);
@@ -14419,7 +14414,7 @@ var Layer = function (_BaseNode) {
 
       var outputContext = this.outputContext;
 
-      var renderEls = this[_children];
+      var renderEls = this.sortedChildNodes;
 
       outputContext.save();
       if (this.beforeDrawTransform) {
@@ -14468,7 +14463,7 @@ var Layer = function (_BaseNode) {
           isCollision = true;
         }
         if (isCollision || type === 'mouseleave') {
-          var sprites = this[_children].slice(0).reverse(),
+          var sprites = this.sortedChildNodes.slice(0).reverse(),
               targetSprites = [];
 
           if (changedTouches && type === 'touchend') {
@@ -14607,14 +14602,9 @@ var Layer = function (_BaseNode) {
   }, {
     key: 'children',
     get: function get() {
-      return this[_children].filter(function (child) {
+      return this.childNodes.filter(function (child) {
         return child instanceof _basenode2.default && !(child instanceof _datanode2.default);
       });
-    }
-  }, {
-    key: 'childNodes',
-    get: function get() {
-      return this[_children];
     }
   }, {
     key: 'timeline',
@@ -14886,8 +14876,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _applyDecoratedDescriptor = __webpack_require__(201);
 
-var _children = (0, _symbol2.default)('children'),
-    _zOrder = (0, _symbol2.default)('zOrder'),
+var _zOrder = (0, _symbol2.default)('zOrder'),
     _layoutTag = (0, _symbol2.default)('layoutTag');
 
 var GroupAttr = (_dec = (0, _utils.relative)('width'), _dec2 = (0, _utils.relative)('height'), _dec3 = (0, _utils.relative)('width'), _dec4 = (0, _utils.relative)('height'), _dec5 = (0, _utils.parseValue)(parseFloat), _dec6 = (0, _utils.parseValue)(parseFloat), (_class = (_temp = _class2 = function (_BaseSprite$Attr) {
@@ -14993,7 +14982,8 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
 
     var _this2 = (0, _possibleConstructorReturn3.default)(this, (Group.__proto__ || (0, _getPrototypeOf2.default)(Group)).call(this, attr));
 
-    _this2[_children] = [];
+    _this2.childNodes = [];
+    _this2.sortedChildNodes = [];
     _this2[_zOrder] = 0;
     _this2[_layoutTag] = false;
     return _this2;
@@ -15018,7 +15008,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
     value: function cloneNode(deepCopy) {
       var node = (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'cloneNode', this).call(this);
       if (deepCopy) {
-        var children = this[_children];
+        var children = this.childNodes;
         children.forEach(function (child) {
           var subNode = child.cloneNode(deepCopy);
           node.append(subNode);
@@ -15081,7 +15071,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           evt.parentX = parentX;
           evt.parentY = parentY;
 
-          var sprites = this[_children].slice(0).reverse();
+          var sprites = this.sortedChildNodes.slice(0).reverse();
 
           var targetSprites = [];
 
@@ -15122,7 +15112,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
   }, {
     key: 'relayout',
     value: function relayout() {
-      var items = this[_children].filter(function (child) {
+      var items = this.childNodes.filter(function (child) {
         if (child.hasLayout) {
           child.attr('layoutWidth', null);
           child.attr('layoutHeight', null);
@@ -15180,7 +15170,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           scrollTop = this.attr('scrollTop');
 
       drawingContext.translate(-scrollLeft, -scrollTop);
-      var sprites = this[_children];
+      var sprites = this.sortedChildNodes;
 
       for (var i = 0; i < sprites.length; i++) {
         var child = sprites[i],
@@ -15226,14 +15216,9 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
   }, {
     key: 'children',
     get: function get() {
-      return this[_children].filter(function (child) {
+      return this.childNodes.filter(function (child) {
         return child instanceof _basenode2.default && !(child instanceof _datanode2.default);
       });
-    }
-  }, {
-    key: 'childNodes',
-    get: function get() {
-      return this[_children];
     }
   }, {
     key: 'contentSize',
@@ -15256,7 +15241,7 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
 
           right = 0;
           bottom = 0;
-          this[_children].forEach(function (sprite) {
+          this.childNodes.forEach(function (sprite) {
             if (sprite.attr('display') !== 'none') {
               var renderBox = sprite.renderBox;
               if (renderBox) {
@@ -17136,17 +17121,17 @@ exports.default = {
 
       _this[_zOrder] = _this[_zOrder] || 0;
       sprite.connect(_this, _this[_zOrder]++);
-      (0, _utils.sortOrderedSprites)(_this.childNodes);
+      _this.sortedChildNodes = (0, _utils.sortOrderedSprites)(_this.childNodes);
 
-      for (var i = children.length - 1; i > 0; i--) {
-        var a = children[i],
-            b = children[i - 1];
+      // for(let i = children.length - 1; i > 0; i--) {
+      //   const a = children[i],
+      //     b = children[i - 1];
 
-        if (a.zIndex < b.zIndex) {
-          children[i] = b;
-          children[i - 1] = a;
-        }
-      }
+      //   if(a.zIndex < b.zIndex) {
+      //     children[i] = b;
+      //     children[i - 1] = a;
+      //   }
+      // }
 
       if (update) {
         sprite.forceUpdate();
@@ -17198,6 +17183,7 @@ exports.default = {
         return null;
       }
       that.childNodes.splice(idx, 1);
+      that.sortedChildNodes = (0, _utils.sortOrderedSprites)(that.childNodes);
       if (sprite.isVisible() || sprite.lastRenderBox) {
         sprite.forceUpdate();
       }
@@ -17263,10 +17249,9 @@ exports.default = {
             });
           }
         }
-
-        _this5.childNodes.push(newchild);
+        _this5.childNodes.splice(idx, 0, newchild);
         newchild.connect(_this5, refZOrder);
-        (0, _utils.sortOrderedSprites)(_this5.childNodes);
+        _this5.sortedChildNodes = (0, _utils.sortOrderedSprites)(_this5.childNodes);
         newchild.forceUpdate();
 
         _this5[_zOrder] = _this5[_zOrder] || 0;
@@ -22200,14 +22185,19 @@ var _default = function (_BaseNode) {
   }, {
     key: 'children',
     get: function get() {
-      return this.layers.filter(function (layer) {
+      return this.childNodes.filter(function (layer) {
         return layer.canvas;
       });
     }
   }, {
     key: 'childNodes',
     get: function get() {
-      return this.layers;
+      return (0, _values2.default)(this[_layerMap]);
+    }
+  }, {
+    key: 'sortedChildNodes',
+    get: function get() {
+      return this[_layers];
     }
   }, {
     key: 'id',
