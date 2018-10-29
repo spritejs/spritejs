@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.18.2';
+const version = '2.18.3';
 
 
 
@@ -16395,10 +16395,10 @@ let _default = class _default extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["
           } else if (x != null && y != null) {
             [originalX, originalY] = layer.toGlobalPos(x, y);
           }
-          Object.assign(evtArgs, {
+
+          layer.dispatchEvent(type, Object.assign({}, evtArgs, {
             layerX: x, layerY: y, originalX, originalY, x, y
-          });
-          layer.dispatchEvent(type, evtArgs);
+          }));
         }
       }
     }, { passive });

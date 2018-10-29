@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.18.2';
+var version = '2.18.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -21899,10 +21899,10 @@ var _default = function (_BaseNode) {
               originalX = _layer$toGlobalPos2[0];
               originalY = _layer$toGlobalPos2[1];
             }
-            (0, _assign2.default)(evtArgs, {
+
+            layer.dispatchEvent(type, (0, _assign2.default)({}, evtArgs, {
               layerX: x, layerY: y, originalX: originalX, originalY: originalY, x: x, y: y
-            });
-            layer.dispatchEvent(type, evtArgs);
+            }));
           }
         }
       }, { passive: passive });

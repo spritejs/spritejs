@@ -445,10 +445,10 @@ export default class extends BaseNode {
           } else if(x != null && y != null) {
             [originalX, originalY] = layer.toGlobalPos(x, y);
           }
-          Object.assign(evtArgs, {
+
+          layer.dispatchEvent(type, Object.assign({}, evtArgs, {
             layerX: x, layerY: y, originalX, originalY, x, y,
-          });
-          layer.dispatchEvent(type, evtArgs);
+          }));
         }
       }
     }, {passive});
