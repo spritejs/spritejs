@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.18.3';
+const version = '2.19.0';
 
 
 
@@ -5580,6 +5580,8 @@ const _attr = Symbol('attr'),
       _hide = Symbol('hide'),
       _enter = Symbol('enter');
 
+const CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
+
 let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"])('Instead use sprite.cache = null'), (_class = (_temp = _class2 = class BaseSprite extends _basenode__WEBPACK_IMPORTED_MODULE_4__["default"] {
 
   /**
@@ -6193,7 +6195,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   get cache() {
-    if (this[_cachePriority] >= 6) {
+    if (this[_cachePriority] >= CACHE_PRIORITY_THRESHOLDS) {
       return this.cacheContext;
     }
     if (this.cacheContext) {
@@ -7133,7 +7135,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       enterMode: 'normal',
       exitMode: 'normal',
       anchor: [0, 0],
-      enableCache: true,
+      enableCache: false,
       x: 0,
       y: 0,
       opacity: 1,
@@ -8763,7 +8765,8 @@ let TextureAttr = (_class = class TextureAttr extends _basesprite__WEBPACK_IMPOR
   constructor(subject) {
     super(subject);
     this.setDefault({
-      textures: []
+      textures: [],
+      enableCache: true
     });
   }
 
@@ -8933,29 +8936,6 @@ let Sprite = (_class2 = (_temp = _class3 = class Sprite extends _basesprite__WEB
     }
     return false;
   }
-
-  // set cache(context) {
-  //   if(context == null) {
-  //     cacheContextPool.put(...this[_texturesCache].values());
-  //     this[_texturesCache].clear();
-  //     return;
-  //   }
-  //   const key = JSON.stringify(this.textures),
-  //     cacheMap = this[_texturesCache];
-
-  //   if(!cacheMap.has(key)) {
-  //     cacheMap.set(key, context);
-  //   }
-  // }
-
-  // get cache() {
-  //   const key = JSON.stringify(this.textures),
-  //     cacheMap = this[_texturesCache];
-  //   if(cacheMap.has(key)) {
-  //     return cacheMap.get(key);
-  //   }
-  //   return null;
-  // }
 
   get cache() {
     const bg = this.attr('bgcolor') || this.attr('gradients').bgcolor;
@@ -9148,8 +9128,7 @@ let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inheri
       lineBreak: '',
       wordBreak: 'normal',
       letterSpacing: 0,
-      textIndent: 0,
-      enableCache: false
+      textIndent: 0
     });
   }
 
@@ -11383,6 +11362,14 @@ let Group = (_class3 = (_temp2 = _class4 = class Group extends _basesprite__WEBP
 
 Object.assign(Group.prototype, _helpers_group__WEBPACK_IMPORTED_MODULE_7__["default"]);
 Group.applyLayout('flex', _layout__WEBPACK_IMPORTED_MODULE_6__["flexLayout"]);
+
+Group.setAttributeEffects({
+  clip(clip1, clip2, p, start, end) {
+    clip1 = Object(_helpers_path__WEBPACK_IMPORTED_MODULE_3__["createSvgPath"])(clip1);
+    clip2 = Object(_helpers_path__WEBPACK_IMPORTED_MODULE_3__["createSvgPath"])(clip2);
+    return Object(_helpers_path__WEBPACK_IMPORTED_MODULE_3__["pathEffect"])(clip1.d, clip2.d, p, start, end);
+  }
+});
 
 Object(_nodetype__WEBPACK_IMPORTED_MODULE_2__["registerNodeType"])('group', Group, true);
 

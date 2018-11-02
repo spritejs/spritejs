@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Path</title>
+  <style>
+    #container {
+      width: 600px;
+      height: 600px;
+    };
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    const {Scene, Sprite, Path} = spritejs;
+    const scene = new Scene('#container', 600, 600),
+      layer = scene.layer();
+
+    const paths = [
+      'M280,250A200,200,0,1,1,680,250A200,200,0,1,1,280,250Z',
+    ];
+    const path = new Path();
+    path.attr({
+      path: {d: paths[0], transform: {scale: 0.1}, trim: true},
+      anchor: 0.5,
+      pos: [300, 300],
+      strokeColor: 'blue',
+      lineWidth: 1,
+    });
+    layer.append(path);
+    
+    const p2 = path.cloneNode(true);
+    p2.attr({x: x => x + 42});
+    layer.append(p2);
+
+    const p3 = path.cloneNode(true);
+    p3.attr({x: x => x - 42});
+    layer.append(p3);
+
+    const sprite = new Sprite();
+    sprite.attr({
+      size: [50, 50],
+      bgcolor: 'red',
+    });
+
+    layer.append(sprite);
+
+    p2.on('mouseenter', (evt) => {
+      evt.target.transition(0.3).attr({fillColor: 'red'});
+    });
+    p2.on('mouseleave', (evt) => {
+      evt.target.transition(0.3).attr({fillColor: 'yellow'});
+    });
+  </script>
+</body>
+</html>
