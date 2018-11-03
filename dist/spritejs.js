@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.19.0';
+var version = '2.19.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8231,7 +8231,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       var filter = this.attr('filter'),
           shadow = this.attr('shadow'),
-          enableCache = this.attr('enableCache');
+          enableCache = this.attr('enableCache') || shadow || filter;
 
       var ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
@@ -8275,6 +8275,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         }
       } else {
         this.render(t, drawingContext);
+      }
+
+      if ((shadow || filter) && !cachableContext) {
+        console.warn('No cachable context. Shadows and filters have been ignored.');
       }
 
       if (cachableContext && cachableContext.canvas.width > 0 && cachableContext.canvas.height > 0) {
