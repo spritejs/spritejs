@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.19.1';
+const version = '2.19.2';
 
 
 
@@ -6083,6 +6083,33 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     return this.offsetSize;
   }
 
+  getParentXY(lx = 0, ly = 0) {
+    const layer = this.layer;
+    if (!layer) return [0, 0];
+    const parents = [];
+    let target = this.parent;
+    while (target && target !== layer) {
+      parents.push(target);
+      target = target.parent;
+    }
+    parents.reverse();
+
+    let parentX = lx,
+        parentY = ly;
+
+    parents.forEach(node => {
+      const scrollLeft = node.attr('scrollLeft'),
+            scrollTop = node.attr('scrollTop'),
+            borderWidth = node.attr('border').width,
+            padding = node.attr('padding');
+
+      [parentX, parentY] = node.pointToOffset(parentX, parentY);
+      parentX = parentX - node.originalRect[0] - borderWidth - padding[3] + scrollLeft;
+      parentY = parentY - node.originalRect[1] - borderWidth - padding[0] + scrollTop;
+    });
+    return [parentX, parentY];
+  }
+
   getLayerXY(dx = 0, dy = 0) {
     const layer = this.layer;
     if (!layer) return [0, 0];
@@ -10808,24 +10835,31 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     if (!swallow && !evt.terminated && type !== 'mouseenter') {
       let isCollision = collisionState || this.pointCollision(evt);
       const changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
-      if (changedTouches && type === 'touchend') {
+      if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
         isCollision = true;
       }
       if (isCollision || type === 'mouseleave') {
         const sprites = this.sortedChildNodes.slice(0).reverse(),
               targetSprites = [];
 
-        if (changedTouches && type === 'touchend') {
+        if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
           const touch = changedTouches[0];
           if (touch && touch.identifier != null) {
             const targets = this.layer.touchedTargets[touch.identifier];
             if (targets) {
               targets.forEach(target => {
                 if (target !== this && target.layer === this) {
+                  const [parentX, parentY] = target.getParentXY(evt.layerX, evt.layerY);
+                  const _parentX = evt.parentX;
+                  const _parentY = evt.parentY;
+                  evt.parentX = parentX;
+                  evt.parentY = parentY;
                   target.dispatchEvent(type, evt, true, true);
+                  evt.parentX = _parentX;
+                  evt.parentY = _parentY;
                 }
               });
-              delete this.layer.touchedTargets[touch.identifier];
+              if (type === 'touchend') delete this.layer.touchedTargets[touch.identifier];
             }
           }
         } else {

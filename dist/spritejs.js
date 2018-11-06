@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.19.1';
+var version = '2.19.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7996,6 +7996,43 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
       return ret;
     }
   }, {
+    key: 'getParentXY',
+    value: function getParentXY() {
+      var lx = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var ly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+      var layer = this.layer;
+      if (!layer) return [0, 0];
+      var parents = [];
+      var target = this.parent;
+      while (target && target !== layer) {
+        parents.push(target);
+        target = target.parent;
+      }
+      parents.reverse();
+
+      var parentX = lx,
+          parentY = ly;
+
+      parents.forEach(function (node) {
+        var scrollLeft = node.attr('scrollLeft'),
+            scrollTop = node.attr('scrollTop'),
+            borderWidth = node.attr('border').width,
+            padding = node.attr('padding');
+
+        var _node$pointToOffset = node.pointToOffset(parentX, parentY);
+
+        var _node$pointToOffset2 = (0, _slicedToArray3.default)(_node$pointToOffset, 2);
+
+        parentX = _node$pointToOffset2[0];
+        parentY = _node$pointToOffset2[1];
+
+        parentX = parentX - node.originalRect[0] - borderWidth - padding[3] + scrollLeft;
+        parentY = parentY - node.originalRect[1] - borderWidth - padding[0] + scrollTop;
+      });
+      return [parentX, parentY];
+    }
+  }, {
     key: 'getLayerXY',
     value: function getLayerXY() {
       var dx = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -8365,14 +8402,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
         var _ref13 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x9 = _ref13[0],
+            _x11 = _ref13[0],
             _y = _ref13[1],
             _w = _ref13[2],
             _h = _ref13[3],
             _r = _ref13[4];
 
 
-        (0, _render.drawRadiusBox)(drawingContext, { x: _x9, y: _y, w: _w, h: _h, r: _r });
+        (0, _render.drawRadiusBox)(drawingContext, { x: _x11, y: _y, w: _w, h: _h, r: _r });
 
         if (bgcolor) {
           drawingContext.fillStyle = bgcolor;
@@ -14098,6 +14135,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
+var _slicedToArray2 = __webpack_require__(90);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
 var _assign = __webpack_require__(2);
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -14440,24 +14481,35 @@ var Layer = function (_BaseNode) {
       if (!swallow && !evt.terminated && type !== 'mouseenter') {
         var isCollision = collisionState || this.pointCollision(evt);
         var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
-        if (changedTouches && type === 'touchend') {
+        if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
           isCollision = true;
         }
         if (isCollision || type === 'mouseleave') {
           var sprites = this.sortedChildNodes.slice(0).reverse(),
               targetSprites = [];
 
-          if (changedTouches && type === 'touchend') {
+          if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
             var touch = changedTouches[0];
             if (touch && touch.identifier != null) {
               var targets = this.layer.touchedTargets[touch.identifier];
               if (targets) {
                 targets.forEach(function (target) {
                   if (target !== _this3 && target.layer === _this3) {
+                    var _target$getParentXY = target.getParentXY(evt.layerX, evt.layerY),
+                        _target$getParentXY2 = (0, _slicedToArray3.default)(_target$getParentXY, 2),
+                        parentX = _target$getParentXY2[0],
+                        parentY = _target$getParentXY2[1];
+
+                    var _parentX = evt.parentX;
+                    var _parentY = evt.parentY;
+                    evt.parentX = parentX;
+                    evt.parentY = parentY;
                     target.dispatchEvent(type, evt, true, true);
+                    evt.parentX = _parentX;
+                    evt.parentY = _parentY;
                   }
                 });
-                delete this.layer.touchedTargets[touch.identifier];
+                if (type === 'touchend') delete this.layer.touchedTargets[touch.identifier];
               }
             }
           } else {
