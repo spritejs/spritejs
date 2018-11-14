@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.19.3';
+const version = '2.19.4';
 
 
 
@@ -8290,6 +8290,8 @@ Object.assign(sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"], {
   scale: arrayEffect,
   translate: arrayEffect,
   skew: arrayEffect,
+  padding: arrayEffect,
+  margin: arrayEffect,
   color: colorEffect,
   strokeColor: colorEffect,
   fillColor: colorEffect

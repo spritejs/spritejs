@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.19.3';
+var version = '2.19.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -11402,6 +11402,8 @@ function colorEffect(color1, color2, p, start, end) {
   scale: arrayEffect,
   translate: arrayEffect,
   skew: arrayEffect,
+  padding: arrayEffect,
+  margin: arrayEffect,
   color: colorEffect,
   strokeColor: colorEffect,
   fillColor: colorEffect
