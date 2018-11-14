@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.19.2';
+var version = '2.19.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8139,7 +8139,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         parentX = evt.layerX;
         parentY = evt.layerY;
       }
-      if (parentX !== null && parentY !== null) {
+      if (parentX != null && parentY != null) {
         return this.pointToOffset(parentX, parentY);
       }
     }

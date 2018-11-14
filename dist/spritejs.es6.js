@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.19.2';
+const version = '2.19.3';
 
 
 
@@ -6275,7 +6275,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       parentX = evt.layerX;
       parentY = evt.layerY;
     }
-    if (parentX !== null && parentY !== null) {
+    if (parentX != null && parentY != null) {
       return this.pointToOffset(parentX, parentY);
     }
   }
