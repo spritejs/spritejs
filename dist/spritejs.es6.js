@@ -167,7 +167,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.19.4';
+const version = '2.19.5';
 
 
 
@@ -4443,7 +4443,7 @@ const parseColor = color => {
 };
 
 function parseColorString(color) {
-  if (color && typeof color === 'string') {
+  if (color && typeof color === 'string' && color !== 'inherit') {
     return parseColor(color).toString();
   }
   return color;
@@ -5145,15 +5145,15 @@ function attr(target, prop, descriptor) {
 
       if (ret == null) {
         ret = this.get(prop);
-      } else if (ret.inherit) {
-        const parent = subject.parent;
-        const pv = parent ? parent.attr(prop) : ret.pv;
-        if (pv !== ret.pv) {
-          this[prop] = 'inherit';
-          return this[prop];
+      } else if (ret === 'inherit') {
+        let value = null;
+        let parent = subject.parent;
+        while (parent) {
+          value = parent.attr(prop);
+          if (value != null) break;
+          parent = parent.parent;
         }
-        subject.cache = null;
-        return ret.pv;
+        return value != null ? value : this.__inheritDefaults[prop];
       }
       return ret;
     };
@@ -5197,28 +5197,10 @@ function cachable(target, prop, descriptor) {
 // after attr
 function inherit(defaultValue = '') {
   return function (target, prop, descriptor) {
-    if (descriptor.set) {
-      const setter = descriptor.set;
-      descriptor.__inherit = true;
-
-      descriptor.set = function (val) {
-        if (typeof val === 'string') {
-          val = val.trim();
-          if (val === 'inherit') {
-            const parent = this.subject.parent;
-            let pv = parent ? parent.attr(prop) : defaultValue;
-            if (pv === 'inherit') pv = defaultValue;
-            val = {
-              inherit: true,
-              pv
-            };
-          }
-        }
-        setter.call(this, val);
-      };
-
-      return descriptor;
-    }
+    target.__inheritDefaults = target.__inheritDefaults || {};
+    target.__inheritDefaults[prop] = defaultValue;
+    descriptor.__inherit = true;
+    return descriptor;
   };
 }
 
@@ -5766,7 +5748,11 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       this[_attr][key] = value;
       if (!this[_attr].__attributeNames.has(key)) {
         this[_attr].__extendAttributes.add(key);
-        this.forceUpdate(true);
+        this.forceUpdate();
+        if (key === 'color' && !this[_attr].__attributeNames.has('fillColor')) {
+          // fixed color inherit
+          this[_attr].fillColor = value;
+        }
       }
     };
     if (typeof props === 'object') {
@@ -9045,7 +9031,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _basesprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(119);
 /* harmony import */ var _nodetype__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(126);
 /* harmony import */ var _helpers_render__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(118);
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _desc, _value, _class, _desc2, _value2, _class2, _class3, _temp;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _desc, _value, _class, _desc2, _value2, _class2, _class3, _temp;
 
 const _applyDecoratedDescriptor = __webpack_require__(120);
 
@@ -9147,21 +9133,21 @@ function calculTextboxSize(node) {
   node[_boxSize] = [width, height];
 }
 
-let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])('normal normal normal 16px Arial'), _dec2 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), _dec3 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec4 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec5 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec6 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec7 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec8 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec9 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec10 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec11 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["relative"])('width'), _dec12 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["relative"])('height'), (_class = class LabelSpriteAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"].Attr {
+let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])('normal normal normal 16px Arial'), _dec2 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), _dec3 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec4 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])('left'), _dec5 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec6 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec7 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_1__["parseColorString"]), _dec8 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec9 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec10 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(''), _dec11 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(0), _dec12 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inherit"])(0), _dec13 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["relative"])('width'), _dec14 = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["relative"])('height'), (_class = class LabelSpriteAttr extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"].Attr {
   constructor(subject) {
     super(subject);
     this.setDefault({
-      font: 'normal normal normal 16px Arial',
-      textAlign: 'left',
-      strokeColor: '',
-      fillColor: '',
-      lineHeight: '',
+      font: 'inherit',
+      textAlign: 'inherit',
+      strokeColor: 'inherit',
+      fillColor: 'inherit',
+      lineHeight: 'inherit',
       text: '',
       flexible: false,
-      lineBreak: '',
-      wordBreak: 'normal',
-      letterSpacing: 0,
-      textIndent: 0
+      lineBreak: 'inherit',
+      wordBreak: 'inherit',
+      letterSpacing: 'inherit',
+      textIndent: 'inherit'
     });
   }
 
@@ -9311,7 +9297,7 @@ let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inheri
     if (this.lineBreak !== '') calculTextboxSize(this.subject);
     this.set('layoutWidth', val);
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'text', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontSize', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontFamily', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontFamily'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontStyle', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontStyle'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontVariant', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontVariant'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontWeight', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontWeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec2, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec3, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec4], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec5, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec6], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec7], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec8], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec9], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
+}, (_applyDecoratedDescriptor(_class.prototype, 'text', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontSize', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontFamily', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontFamily'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontStyle', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontStyle'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontVariant', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontVariant'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontWeight', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontWeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec2, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec3], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec4], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec5, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec6], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec7, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec8], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec9], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec13], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec14], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
 let Label = (_class2 = (_temp = _class3 = class Label extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
   constructor(attr) {
@@ -13147,14 +13133,14 @@ let PathSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["inherit
   constructor(subject) {
     super(subject);
     this.setDefault({
-      lineWidth: 1,
+      lineWidth: 'inherit',
       lineDash: null,
       lineDashOffset: 0,
-      lineCap: 'butt',
-      lineJoin: 'miter',
-      strokeColor: '',
-      fillColor: '',
-      bounding: 'box'
+      lineCap: 'inherit',
+      lineJoin: 'inherit',
+      strokeColor: 'inherit',
+      fillColor: 'inherit',
+      bounding: 'inherit'
     }, {
       color() {
         return this.strokeColor;
