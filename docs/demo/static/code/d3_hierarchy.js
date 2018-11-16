@@ -33,7 +33,7 @@
     const color = d3.scaleSequential(d3.interpolateMagma)
       .domain([-4, 4]);
 
-    layer.selectAll({label: s => s.name !== 'region'})
+    layer.selectAll('label[name!="region"]')
       .data(nodes.descendants())
       .enter()
       .append('label')
@@ -72,9 +72,9 @@
 
         if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
           // console.log(d.data.name)
-          layer.selectAll({label: s => s.name === 'region'})
+          layer.selectAll('label[name="region"]')
             .attr('text', d.data.name);
-          layer.selectAll({label: s => s.name !== 'region'})
+          layer.selectAll('label[name!="region"]')
             .attr('border', null);
           this.attr('border', [3, 'red']);
         }

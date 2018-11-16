@@ -72,7 +72,7 @@ const {Scene} = spritejs
       .attr('font', '42px Arial')
       .attr('text', '中国');
 
-    layer.selectAll({label: s => s.name !== 'region'})
+    layer.selectAll('label[name!="region"]')
       .data(nodes.descendants())
       .enter()
       .append('label')
@@ -107,9 +107,9 @@ const {Scene} = spritejs
           r = Math.round(d.r);
 
         if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
-          layer.selectAll({label: s => s.name === 'region'})
+          layer.selectAll('label[name="region"]')
             .attr('text', d.data.name);
-          layer.selectAll({label: s => s.name !== 'region'})
+          layer.selectAll('label[name!="region"]')
             .attr('border', null);
           d3.event.target.attr('border', [3, 'red']);
         }

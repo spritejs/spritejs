@@ -41,7 +41,7 @@ d3.json('/data/city.json', (err, data) => {
         .attr('font', '42px Arial')
         .attr('text', '中国')
 
-  const s = layer.selectAll({label: s => s.name !== 'region'})
+  const s = layer.selectAll('label[name!="region"]')
        .data(nodes.descendants())
        .enter()
        .append('label')
@@ -76,9 +76,9 @@ d3.json('/data/city.json', (err, data) => {
 
           if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
             //console.log(d.data.name)
-            layer.selectAll({label: s => s.name === 'region'})
+            layer.selectAll('label[name="region"]')
                 .attr('text', d.data.name)
-            layer.selectAll({label: s => s.name !== 'region'})
+            layer.selectAll('label[name!="region"]')
                 .attr('border', null)
             this.attr('border', [3, 'red'])
           }

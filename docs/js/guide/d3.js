@@ -49,9 +49,7 @@ var _spritejs = spritejs,
 
     layer.append('label').attr('pos', [1170, 50]).attr('name', 'region').attr('font', '42px Arial').attr('text', '中国');
 
-    layer.selectAll({ label: function label(s) {
-        return s.name !== 'region';
-      } }).data(nodes.descendants()).enter().append('label').attr('anchor', 0.5).attr('pos', function (d) {
+    layer.selectAll('label[name!="region"]').data(nodes.descendants()).enter().append('label').attr('anchor', 0.5).attr('pos', function (d) {
       var x = Math.round(d.x),
           y = Math.round(d.y);
 
@@ -77,12 +75,8 @@ var _spritejs = spritejs,
 
 
       if (Math.pow(offsetX, 2) + Math.pow(offsetY, 2) < Math.pow(r, 2)) {
-        layer.selectAll({ label: function label(s) {
-            return s.name === 'region';
-          } }).attr('text', d.data.name);
-        layer.selectAll({ label: function label(s) {
-            return s.name !== 'region';
-          } }).attr('border', null);
+        layer.selectAll('label[name="region"]').attr('text', d.data.name);
+        layer.selectAll('label[name!="region"]').attr('border', null);
         d3.event.target.attr('border', [3, 'red']);
       }
     }).on('mouseleave', function (d) {
