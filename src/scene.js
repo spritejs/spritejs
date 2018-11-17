@@ -1,4 +1,4 @@
-import {BaseNode, utils} from 'sprite-core';
+import {BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
 import Layer from './layer';
 import Resource from './resource';
 import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform';
@@ -17,13 +17,14 @@ const _layerMap = Symbol('layerMap'),
   _subscribe = Symbol('subscribe'),
   _displayRatio = Symbol('displayRatio');
 
-export default class extends BaseNode {
+export default class Scene extends BaseNode {
   constructor(container, options = {}) {
     super();
 
     container = getContainer(container);
 
     this.container = container;
+    container.scene_ = this;
 
     /* istanbul ignore if */
     if(arguments.length === 3) {
@@ -50,6 +51,8 @@ export default class extends BaseNode {
 
     this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
     this.displayRatio = options.displayRatio || 1.0;
+
+    this.useDocumentCSS = !!options.useDocumentCSS;
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
@@ -505,6 +508,9 @@ export default class extends BaseNode {
           this.container.style.position = 'relative';
         }
       }
+      if(this.useDocumentCSS && !('useDocumentCSS' in opts)) {
+        opts.useDocumentCSS = true;
+      }
       this.appendLayer(new Layer(id, opts));
     }
 
@@ -588,6 +594,14 @@ export default class extends BaseNode {
       layerID = layer.id;
     }
     return layer && this[_layerMap][layerID] === layer;
+  }
+
+  querySelector(selector) {
+    return querySelector(selector, this);
+  }
+
+  querySelectorAll(selector) {
+    return querySelectorAll(selector, this);
   }
 
   async snapshot() {

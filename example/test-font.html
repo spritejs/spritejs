@@ -9,32 +9,51 @@
     html, document {
       font-size: 32px;
     }
+    group.list {
+      --sprite-pos: 50, 50;
+    }
+    group.list > label {
+      --sprite-anchor: 0 0;
+      font: bold 1.5rem serif;
+    }
+    group.list > label:nth-child(2n+1) {
+      color: #f37;
+    }
+    group.list > label:nth-child(2n) {
+      color: #73f;
+    }
   </style>
 </head>
 <body>
-  <div style="font-size:5vw">abb</div>
-  <div style="font-size:2rem">abb</div>
+  <div style="font-size:5vw;">abb</div>
+  <div style="font-size:2rem;">abb</div>
+  <div style="font:22px 黑体;">测试</div>
+  <div style="font:22px serif;">测试</div>
   <div id="mycanvas"></div>
   <script src="/js/spritejs.js"></script>
   <script>
-const {Scene, Label} = spritejs;
+const {Scene, Group, Label} = spritejs;
 
 /* demo: bgimage */
-const scene = new Scene('#mycanvas', 800, 800);
+const scene = new Scene('#mycanvas', {
+  viewport: [800, 800],
+  resolution: 'flex',
+  useDocumentCSS: true,
+});
 const layer = scene.layer();
-const s3 = new Label('测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试.');
-s3.attr({
-  anchor: 0.5,
-  fillColor: '#f37',
-  pos: [150, 150],
-  width: 280,
-  height: 200,
-  font: '22px "宋体"',
-  // lineBreak: 'normal',
-  border: [4, '#aaa'],
+
+const group = new Group();
+group.attr({
+  class: 'list',
 });
 
-layer.append(s3);
+layer.append(group);
+
+for(let i = 0; i < 10; i++) {
+  const s = new Label(`line ${i}`);
+  s.attr({y: i * 60});
+  group.append(s);
+}
   </script>
 </body>
 </html>

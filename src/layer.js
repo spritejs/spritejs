@@ -16,14 +16,15 @@ class ExLayer extends Layer {
       handleEvent = true,
       evaluateFPS = false,
       renderMode = 'repaintAll',
-      autoRender = true} = opts;
+      autoRender = true,
+      useDocumentCSS = false} = opts;
 
     context = context || createCanvas().getContext('2d');
     const canvas = context.canvas;
     canvas.dataset.layerId = id;
     canvas.style.position = 'absolute';
 
-    super({context, handleEvent, evaluateFPS, renderMode, autoRender});
+    super({context, handleEvent, evaluateFPS, renderMode, autoRender, useDocumentCSS});
 
     if(resolution) {
       this.resolution = resolution;
@@ -36,10 +37,6 @@ class ExLayer extends Layer {
 
   get id() {
     return this.canvas.dataset.layerId;
-  }
-
-  get style() {
-    return this.canvas.style;
   }
 
   setAttribute(name, value) {
