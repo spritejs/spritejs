@@ -50,7 +50,7 @@ async function drawText1() {
     const [text1] = fglayer.putSnapshot(snapshot1);
     console.log(fglayer.getElementById('mytext'));
   } else {
-    fglayer.remove();
+    fglayer.clear();
     const text1 = new Label('SpriteJS.org');
 
     text1.attr({
@@ -78,7 +78,7 @@ async function drawText2() {
     // console.log('from snapshot!')
     const [text1] = fglayer.putSnapshot(snapshot2);
   } else {
-    fglayer.remove();
+    fglayer.clear();
     const text1 = new Label('Hello world');
 
     text1.attr({

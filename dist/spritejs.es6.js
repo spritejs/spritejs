@@ -171,7 +171,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.21.0';
+const version = '2.21.1';
 
 
 
@@ -4485,7 +4485,7 @@ function parseStringTransform(str) {
 }
 
 function parseValuesString(str, parser) {
-  if (typeof str === 'string') {
+  if (typeof str === 'string' && str !== '') {
     const values = str.split(/[\s,]+/g);
     return values.map(v => {
       const ret = parser ? parser(v) : v;
@@ -5167,7 +5167,8 @@ function attr(target, prop, descriptor) {
           if (value != null) break;
           parent = parent.parent;
         }
-        return value != null ? value : this.__inheritDefaults[prop];
+        // return value != null ? value : this.__inheritDefaults[prop];
+        return this.__inheritDefaults[prop];
       }
       return ret;
     };
@@ -7227,6 +7228,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     });
     this[_temp] = new Map(); // save non-serialized values
     this.__extendAttributes = new Set();
+    this.__attributesSet = new Set();
   }
 
   setDefault(attrs, props = {}) {
@@ -7254,8 +7256,12 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   quietSet(key, val) {
     if (val == null) {
       val = this[_default][key];
+      if (this.__attributesSet.has(key)) {
+        this.__attributesSet.delete(key);
+      }
     }
     this[_attr][key] = val;
+    this.__attributesSet.add(key);
   }
 
   clearStyle() {
@@ -7267,8 +7273,14 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   set(key, val) {
+    if (!this.__styleTag && val != null) {
+      this.__attributesSet.add(key);
+    }
     if (!this.__styleTag && val == null) {
       val = this[_default][key];
+      if (this.__attributesSet.has(key)) {
+        this.__attributesSet.delete(key);
+      }
     }
     const oldVal = this[_attr][key];
     if (this.__styleTag) {
@@ -7296,7 +7308,10 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   get(key) {
-    return this[_style][key] || this[_attr][key];
+    if (this[_style][key] && !this.__attributesSet.has(key)) {
+      return this[_style][key];
+    }
+    return this[_attr][key];
   }
 
   get attrs() {
@@ -7345,13 +7360,15 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   serialize() {
-    const attrs = this.attrs;
-    delete attrs.id;
+    const ret = {};
+    [...this.__attributesSet, ...this.__extendAttributes].forEach(key => {
+      if (key !== 'id') ret[key] = this[key];
+    });
     const offsetAngle = this.get('offsetAngle');
-    if (offsetAngle != null) attrs.offsetAngle = offsetAngle;
+    if (offsetAngle != null) ret.offsetAngle = offsetAngle;
     const offsetPoint = this.get('offsetPoint');
-    if (offsetPoint != null) attrs.offsetPoint = offsetPoint;
-    return JSON.stringify(attrs);
+    if (offsetPoint != null) ret.offsetPoint = offsetPoint;
+    return JSON.stringify(ret);
   }
 
   get subject() {
@@ -7928,7 +7945,6 @@ __webpack_require__.r(__webpack_exports__);
 const _eventHandlers = Symbol('eventHandlers'),
       _collisionState = Symbol('collisionState'),
       _data = Symbol('data'),
-      _style = Symbol('style'),
       _mouseCapture = Symbol('mouseCapture');
 
 function createGetterSetter(_symbol, attrPrefix) {
@@ -7937,13 +7953,10 @@ function createGetterSetter(_symbol, attrPrefix) {
       this[_symbol][key] = value;
       if (this.attributes) {
         const attrKey = `${attrPrefix}-${key}`;
-        if (attrPrefix !== 'css') {
-          this.attributes[attrKey] = value;
-        } else {
-          this.updateStyles();
-        }
         if (value == null) {
           delete this.attributes[attrKey];
+        } else {
+          this.attributes[attrKey] = value;
         }
       }
       if (value == null) {
@@ -7978,9 +7991,7 @@ let BaseNode = class BaseNode {
   constructor() {
     this[_eventHandlers] = {};
     this[_data] = {};
-    this[_style] = {};
     this.data = createGetterSetter(_data, 'data');
-    this.css = createGetterSetter(_style, 'css');
   }
 
   updateStyles() {
@@ -7998,10 +8009,6 @@ let BaseNode = class BaseNode {
 
   get dataset() {
     return this[_data];
-  }
-
-  get style() {
-    return this[_style];
   }
 
   getEventHandlers(type) {
@@ -8247,6 +8254,8 @@ __webpack_require__.r(__webpack_exports__);
 const cssWhat = __webpack_require__(146);
 const cssRules = [];
 
+const _matchedSelectors = Symbol('matchedSelectors');
+
 const CSSGetter = {
   opacity: true,
   width: true,
@@ -8479,17 +8488,23 @@ let order = 0;
   computeStyle(el) {
     if (!el.layer || !el.attributes) return {};
     const attrs = {};
+    const selectors = [];
     cssRules.forEach(rule => {
       const { selector, attributes } = rule;
       if (Object(_selector__WEBPACK_IMPORTED_MODULE_0__["isMatched"])(el, selector)) {
         Object.assign(attrs, attributes);
+        selectors.push(selector);
       }
     });
-    Object.assign(attrs, el.style);
-    el.attributes.clearStyle();
-    el.attributes.__styleTag = true;
-    el.attr(attrs);
-    el.attributes.__styleTag = false;
+    const matchedSelectors = selectors.join();
+    if (el[_matchedSelectors] !== matchedSelectors) {
+      el.dispatchEvent('stylechange', { oldSelectors: el[_matchedSelectors], newSelectors: matchedSelectors });
+      el[_matchedSelectors] = matchedSelectors;
+      el.attributes.clearStyle();
+      el.attributes.__styleTag = true;
+      el.attr(attrs);
+      el.attributes.__styleTag = false;
+    }
   }
 });
 
@@ -12278,13 +12293,13 @@ let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inheri
   }
 
   set width(val) {
-    if (this.lineBreak !== '') calculTextboxSize(this.subject);
     this.set('width', val);
+    if (this.lineBreak !== '') calculTextboxSize(this.subject);
   }
 
   set layoutWidth(val) {
-    if (this.lineBreak !== '') calculTextboxSize(this.subject);
     this.set('layoutWidth', val);
+    if (this.lineBreak !== '') calculTextboxSize(this.subject);
   }
 }, (_applyDecoratedDescriptor(_class.prototype, 'text', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'text'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'font', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec], Object.getOwnPropertyDescriptor(_class.prototype, 'font'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontSize', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontSize'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontFamily', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontFamily'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontStyle', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontStyle'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontVariant', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontVariant'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fontWeight', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'fontWeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineHeight', [_dec2, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec3], Object.getOwnPropertyDescriptor(_class.prototype, 'lineHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textAlign', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec4], Object.getOwnPropertyDescriptor(_class.prototype, 'textAlign'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'color'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_dec5, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec6], Object.getOwnPropertyDescriptor(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_dec7, _utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec8], Object.getOwnPropertyDescriptor(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec9], Object.getOwnPropertyDescriptor(_class.prototype, 'lineBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'wordBreak', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'wordBreak'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'letterSpacing', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'letterSpacing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'textIndent', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'textIndent'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec13], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils__WEBPACK_IMPORTED_MODULE_1__["attr"], _dec14], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype)), _class));
 let Label = (_class2 = (_temp = _class3 = class Label extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"] {
@@ -13578,6 +13593,9 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     this[_renderDeferer] = null;
 
     this[_node] = new _datanode__WEBPACK_IMPORTED_MODULE_3__["default"]();
+    this[_node].forceUpdate = () => {
+      this.prepareRender();
+    };
 
     this.touchedTargets = {};
 
@@ -13604,7 +13622,6 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
   }
 
   attr(...args) {
-    this.prepareRender();
     return this[_node].attr(...args);
   }
 

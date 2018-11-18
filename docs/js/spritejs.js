@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.21.0';
+var version = '2.21.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6246,7 +6246,7 @@ function parseStringTransform(str) {
 }
 
 function parseValuesString(str, parser) {
-  if (typeof str === 'string') {
+  if (typeof str === 'string' && str !== '') {
     var values = str.split(/[\s,]+/g);
     return values.map(function (v) {
       var ret = parser ? parser(v) : v;
@@ -7079,7 +7079,8 @@ function attr(target, prop, descriptor) {
           if (value != null) break;
           parent = parent.parent;
         }
-        return value != null ? value : this.__inheritDefaults[prop];
+        // return value != null ? value : this.__inheritDefaults[prop];
+        return this.__inheritDefaults[prop];
       }
       return ret;
     };
@@ -9989,6 +9990,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
     });
     this[_temp] = new _map2.default(); // save non-serialized values
     this.__extendAttributes = new _set2.default();
+    this.__attributesSet = new _set2.default();
   }
 
   (0, _createClass3.default)(SpriteAttr, [{
@@ -10029,8 +10031,12 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
     value: function quietSet(key, val) {
       if (val == null) {
         val = this[_default][key];
+        if (this.__attributesSet.has(key)) {
+          this.__attributesSet.delete(key);
+        }
       }
       this[_attr][key] = val;
+      this.__attributesSet.add(key);
     }
   }, {
     key: 'clearStyle',
@@ -10040,8 +10046,14 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'set',
     value: function set(key, val) {
+      if (!this.__styleTag && val != null) {
+        this.__attributesSet.add(key);
+      }
       if (!this.__styleTag && val == null) {
         val = this[_default][key];
+        if (this.__attributesSet.has(key)) {
+          this.__attributesSet.delete(key);
+        }
       }
       var oldVal = this[_attr][key];
       if (this.__styleTag) {
@@ -10070,7 +10082,10 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'get',
     value: function get(key) {
-      return this[_style][key] || this[_attr][key];
+      if (this[_style][key] && !this.__attributesSet.has(key)) {
+        return this[_style][key];
+      }
+      return this[_attr][key];
     }
   }, {
     key: 'clearCache',
@@ -10114,13 +10129,17 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'serialize',
     value: function serialize() {
-      var attrs = this.attrs;
-      delete attrs.id;
+      var _this3 = this;
+
+      var ret = {};
+      [].concat((0, _toConsumableArray3.default)(this.__attributesSet), (0, _toConsumableArray3.default)(this.__extendAttributes)).forEach(function (key) {
+        if (key !== 'id') ret[key] = _this3[key];
+      });
       var offsetAngle = this.get('offsetAngle');
-      if (offsetAngle != null) attrs.offsetAngle = offsetAngle;
+      if (offsetAngle != null) ret.offsetAngle = offsetAngle;
       var offsetPoint = this.get('offsetPoint');
-      if (offsetPoint != null) attrs.offsetPoint = offsetPoint;
-      return (0, _stringify2.default)(attrs);
+      if (offsetPoint != null) ret.offsetPoint = offsetPoint;
+      return (0, _stringify2.default)(ret);
     }
   }, {
     key: 'resetOffset',
@@ -10196,18 +10215,18 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'attrs',
     get: function get() {
-      var _this3 = this;
+      var _this4 = this;
 
       var ret = {};
       [].concat((0, _toConsumableArray3.default)(this.__attributeNames)).forEach(function (key) {
-        if (key in _this3[_props]) {
-          (0, _defineProperty2.default)(ret, key, _this3[_props][key]);
+        if (key in _this4[_props]) {
+          (0, _defineProperty2.default)(ret, key, _this4[_props][key]);
         } else {
-          ret[key] = _this3[key];
+          ret[key] = _this4[key];
         }
       });
       [].concat((0, _toConsumableArray3.default)(this.__extendAttributes)).forEach(function (key) {
-        ret[key] = _this3[key];
+        ret[key] = _this4[key];
       });
       return ret;
     }
@@ -10395,7 +10414,7 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'transform',
     set: function set(val) {
-      var _this4 = this;
+      var _this5 = this;
 
       /*
         rotate: 0,
@@ -10424,9 +10443,9 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
               value = _ref6[1];
 
           if (key === 'matrix' && Array.isArray(value)) {
-            _this4.set('transformMatrix', new _spriteMath.Matrix(value).m);
+            _this5.set('transformMatrix', new _spriteMath.Matrix(value).m);
           } else {
-            _this4[key] = value;
+            _this5[key] = value;
           }
           transformStr.push(key + '(' + value + ')');
         });
@@ -10908,7 +10927,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _eventHandlers = (0, _symbol3.default)('eventHandlers'),
     _collisionState = (0, _symbol3.default)('collisionState'),
     _data = (0, _symbol3.default)('data'),
-    _style = (0, _symbol3.default)('style'),
     _mouseCapture = (0, _symbol3.default)('mouseCapture');
 
 function createGetterSetter(_symbol, attrPrefix) {
@@ -10919,13 +10937,10 @@ function createGetterSetter(_symbol, attrPrefix) {
       _this[_symbol][key] = value;
       if (_this.attributes) {
         var attrKey = attrPrefix + '-' + key;
-        if (attrPrefix !== 'css') {
-          _this.attributes[attrKey] = value;
-        } else {
-          _this.updateStyles();
-        }
         if (value == null) {
           delete _this.attributes[attrKey];
+        } else {
+          _this.attributes[attrKey] = value;
         }
       }
       if (value == null) {
@@ -10966,9 +10981,7 @@ var BaseNode = function () {
 
     this[_eventHandlers] = {};
     this[_data] = {};
-    this[_style] = {};
     this.data = createGetterSetter(_data, 'data');
-    this.css = createGetterSetter(_style, 'css');
   }
 
   (0, _createClass3.default)(BaseNode, [{
@@ -11268,11 +11281,6 @@ var BaseNode = function () {
       return this[_data];
     }
   }, {
-    key: 'style',
-    get: function get() {
-      return this[_style];
-    }
-  }, {
     key: 'parentNode',
     get: function get() {
       return this.parent;
@@ -11310,12 +11318,18 @@ var _entries = __webpack_require__(142);
 
 var _entries2 = _interopRequireDefault(_entries);
 
+var _symbol = __webpack_require__(39);
+
+var _symbol2 = _interopRequireDefault(_symbol);
+
 var _selector = __webpack_require__(204);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var cssWhat = __webpack_require__(226);
 var cssRules = [];
+
+var _matchedSelectors = (0, _symbol2.default)('matchedSelectors');
 
 var CSSGetter = {
   opacity: true,
@@ -11565,19 +11579,25 @@ exports.default = {
   computeStyle: function computeStyle(el) {
     if (!el.layer || !el.attributes) return {};
     var attrs = {};
+    var selectors = [];
     cssRules.forEach(function (rule) {
       var selector = rule.selector,
           attributes = rule.attributes;
 
       if ((0, _selector.isMatched)(el, selector)) {
         (0, _assign2.default)(attrs, attributes);
+        selectors.push(selector);
       }
     });
-    (0, _assign2.default)(attrs, el.style);
-    el.attributes.clearStyle();
-    el.attributes.__styleTag = true;
-    el.attr(attrs);
-    el.attributes.__styleTag = false;
+    var matchedSelectors = selectors.join();
+    if (el[_matchedSelectors] !== matchedSelectors) {
+      el.dispatchEvent('stylechange', { oldSelectors: el[_matchedSelectors], newSelectors: matchedSelectors });
+      el[_matchedSelectors] = matchedSelectors;
+      el.attributes.clearStyle();
+      el.attributes.__styleTag = true;
+      el.attr(attrs);
+      el.attributes.__styleTag = false;
+    }
   }
 };
 
@@ -15871,14 +15891,14 @@ var LabelSpriteAttr = (_dec = (0, _utils.inherit)('normal normal normal 16px Ari
   }, {
     key: 'width',
     set: function set(val) {
-      if (this.lineBreak !== '') calculTextboxSize(this.subject);
       this.set('width', val);
+      if (this.lineBreak !== '') calculTextboxSize(this.subject);
     }
   }, {
     key: 'layoutWidth',
     set: function set(val) {
-      if (this.lineBreak !== '') calculTextboxSize(this.subject);
       this.set('layoutWidth', val);
+      if (this.lineBreak !== '') calculTextboxSize(this.subject);
     }
   }]);
   return LabelSpriteAttr;
@@ -17281,6 +17301,9 @@ var Layer = function (_BaseNode) {
     _this[_renderDeferer] = null;
 
     _this[_node] = new _datanode2.default();
+    _this[_node].forceUpdate = function () {
+      _this.prepareRender();
+    };
 
     _this.touchedTargets = {};
 
@@ -17312,7 +17335,6 @@ var Layer = function (_BaseNode) {
     value: function attr() {
       var _node2;
 
-      this.prepareRender();
       return (_node2 = this[_node]).attr.apply(_node2, arguments);
     }
   }, {
