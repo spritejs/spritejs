@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.3';
+var version = '2.22.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10899,10 +10899,13 @@ var _matchedSelectors = (0, _symbol2.default)('matchedSelectors');
 var _transitions = (0, _symbol2.default)('transitions');
 
 function parseTransitionValue(values) {
+  if (typeof values === 'string') values = values.trim().split(/\s*,\s*/g);
   var ret = [];
   for (var i = 0; i < values.length; i++) {
     var value = values[i].toString();
-    if (/ms$/.test(value)) {
+    if (value === 'initial') {
+      value = 0;
+    } else if (/ms$/.test(value)) {
       value = parseFloat(value) / 1000;
     } else {
       value = parseFloat(value);
@@ -10960,7 +10963,17 @@ var CSSGetter = {
   letterSpacing: true,
   textIndent: true,
   transitionDuration: parseTransitionValue,
-  transitionTimingFunction: true,
+  transitionTimingFunction: function transitionTimingFunction(values) {
+    if (typeof values === 'string') values = values.trim().split(/\s*,\s*/g);
+    var ret = [];
+    for (var i = 0; i < values.length; i++) {
+      var value = values[i].toString();
+      if (value === 'initial') value = 'ease';
+      ret.push(value);
+    }
+    return ret;
+  },
+
   transitionDelay: parseTransitionValue,
   transitionProperty: true
 };
@@ -11137,27 +11150,65 @@ exports.default = {
         var _loop = function _loop(j) {
           var rule = rules[j];
           var selectorText = rule.selectorText;
-          if (!rule.styleMap) return 'continue'; // eslint-disable-line no-continue
+          var isStyleMap = !!rule.styleMap;
+          var styleAttrs = void 0;
+
+          if (!isStyleMap) {
+            // eslint-disable-line no-continue
+            if (!rule.style) return 'continue'; // eslint-disable-line no-continue
+
+            var props = [].concat((0, _toConsumableArray3.default)(rule.style)).map(function (key) {
+              return [key, rule.style[key]];
+            }).filter(function (_ref3) {
+              var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
+                  key = _ref4[0],
+                  value = _ref4[1];
+
+              return value != null;
+            });
+
+            var matched = rule.cssText.match(/--sprite-[\w-]+\s*:\s*.+?(;|$)/img);
+            if (matched) {
+              matched.forEach(function (rule) {
+                var _rule$split = rule.split(':'),
+                    _rule$split2 = (0, _slicedToArray3.default)(_rule$split, 2),
+                    key = _rule$split2[0],
+                    value = _rule$split2[1];
+
+                props.push([key, value.trim().replace(/;$/, '')]);
+              });
+            }
+            var isIgnore = props['--sprite-ignore'];
+            if (isIgnore && isIgnore !== 'false' && isIgnore !== '0') {
+              return 'continue'; // eslint-disable-line no-continue
+            }
+
+            styleAttrs = props;
+          }
           if (rule.styleMap && rule.styleMap.has('--sprite-ignore')) {
-            var isIgnore = rule.styleMap.get('--sprite-ignore')[0].trim();
-            if (isIgnore !== 'false' && isIgnore !== '0' && isIgnore !== '') {
+            var _isIgnore = rule.styleMap.get('--sprite-ignore')[0].trim();
+            if (_isIgnore !== 'false' && _isIgnore !== '0' && _isIgnore !== '') {
               return 'continue'; // eslint-disable-line no-continue
             }
           }
-          var styleAttrs = [].concat((0, _toConsumableArray3.default)(rule.styleMap));
+          if (rule.styleMap) {
+            styleAttrs = [].concat((0, _toConsumableArray3.default)(rule.styleMap));
+          }
           var attrs = {},
               reserved = {};
           var border = null;
           var transition = null;
-          styleAttrs.forEach(function (_ref3) {
-            var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
-                key = _ref4[0],
-                value = _ref4[1];
+
+          styleAttrs.forEach(function (_ref5) {
+            var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+                key = _ref6[0],
+                value = _ref6[1];
 
             // eslint-disable-line complexity
             if (key.indexOf('--sprite-') === 0) {
               key = key.replace('--sprite-', '');
               key = toCamel(key);
+              if (isStyleMap) value = value[0][0].trim();
               if (key === 'borderStyle') {
                 border = border || { width: 1, color: 'rgba(0,0,0,0)' };
                 border.style = value;
@@ -11169,7 +11220,7 @@ exports.default = {
                 border = border || { width: 1, color: 'rgba(0,0,0,0)' };
                 border.color = value;
               } else if (key === 'border') {
-                var values = value[0][0].trim().split(/\s+/);
+                var values = value.split(/\s+/);
 
                 var _values = (0, _slicedToArray3.default)(values, 3),
                     style = _values[0],
@@ -11182,9 +11233,7 @@ exports.default = {
                 border.color = color;
               } else {
                 if (key !== 'fontSize') {
-                  value = value[0][0].trim().replace(/px$/, '');
-                } else {
-                  value = value[0][0].trim();
+                  value = value.replace(/px$/, '');
                 }
                 reserved[key] = value;
               }
@@ -11193,17 +11242,20 @@ exports.default = {
               if (key in CSSGetter) {
                 if (typeof CSSGetter[key] === 'function') {
                   value = CSSGetter[key](value);
-                } else if (key !== 'fontSize') {
-                  value = value[0].toString().replace(/px$/, '');
-                } else {
-                  value = value[0].toString();
+                } else if (isStyleMap) {
+                  if (key !== 'fontSize') {
+                    value = value[0].toString().replace(/px$/, '');
+                  } else {
+                    value = value[0].toString();
+                  }
                 }
+
+                if (value === 'initial') return;
                 if (key === 'backgroundColor') key = 'bgcolor';
                 if (key === 'fontVariantCaps') key = 'fontVariant';
                 if (key === 'lineHeight' && value === 'normal') value = '';
                 if (/^border/.test(key)) {
                   key = key.replace(/^border(Top|Right|Bottom|Left)/, '').toLowerCase();
-                  if (key === 'color' && value === 'initial') value = 'rgba(0,0,0,0)';
                   if (key === 'width') value = parseFloat(value);
                   if (/radius$/.test(key)) {
                     attrs.borderRadius = parseInt(value, 10);
@@ -11235,6 +11287,10 @@ exports.default = {
           (0, _assign2.default)(attrs, reserved);
           styleRules[selectorText] = styleRules[selectorText] || {};
           if (transition) {
+            transition.properties = transition.properties || 'all';
+            transition.delay = transition.delay || [0];
+            transition.duration = transition.duration || [0];
+            transition.easing = transition.easing || ['ease'];
             attrs.transitions = [];
             var properties = transition.properties.split(',').map(function (p) {
               return p.trim();
@@ -11258,7 +11314,7 @@ exports.default = {
               }
               if (_attrs) {
                 attrs.transitions.push({
-                  easing: transition.easing,
+                  easing: transition.easing[i],
                   attrs: _attrs,
                   delay: transition.delay[i],
                   duration: transition.duration[i] });
@@ -11266,7 +11322,6 @@ exports.default = {
             });
           }
           (0, _assign2.default)(styleRules[selectorText], attrs);
-          // console.log(styleRules[selectorText]);
         };
 
         for (var j = 0; j < rules.length; j++) {
@@ -11306,6 +11361,7 @@ exports.default = {
     });
     var matchedSelectors = selectors.join();
     if (el[_matchedSelectors] !== matchedSelectors) {
+      // console.log(transitions);
       if (el[_transitions]) {
         el[_transitions].forEach(function (t) {
           t.cancel(true);

@@ -17,12 +17,12 @@
   sprite.orange {
     background: orange;
     --sprite-pos: 300, 300;
-    transition: all 0.2s;
+    transition: all 0.5s;
   }
   sprite.cyan {
     background: cyan;
     --sprite-pos: 600, 300;
-    transition: all 0.2s;
+    transition: all 0.5s;
   }
 </style>
 
