@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.0';
+var version = '2.22.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7851,7 +7851,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         sec = sec.duration;
       }
 
-      return _ref7 = {}, (0, _defineProperty5.default)(_ref7, _animation, null), (0, _defineProperty5.default)(_ref7, 'end', function end() {
+      return _ref7 = {}, (0, _defineProperty5.default)(_ref7, _animation, null), (0, _defineProperty5.default)(_ref7, 'cancel', function cancel() {
+        var preserveState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+        var animation = this[_animation];
+        if (animation) {
+          animation.cancel(preserveState);
+        }
+      }), (0, _defineProperty5.default)(_ref7, 'end', function end() {
         var animation = this[_animation];
         if (animation && (animation.playState === 'running' || animation.playState === 'pending')) {
           animation.finish();
@@ -8433,14 +8440,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
         var _ref13 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-            _x13 = _ref13[0],
+            _x14 = _ref13[0],
             _y = _ref13[1],
             _w = _ref13[2],
             _h = _ref13[3],
             _r = _ref13[4];
 
 
-        (0, _render.drawRadiusBox)(drawingContext, { x: _x13, y: _y, w: _w, h: _h, r: _r });
+        (0, _render.drawRadiusBox)(drawingContext, { x: _x14, y: _y, w: _w, h: _h, r: _r });
 
         if (bgcolor) {
           drawingContext.fillStyle = bgcolor;

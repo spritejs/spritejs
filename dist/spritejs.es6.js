@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.0';
+const version = '2.22.1';
 
 
 
@@ -5884,6 +5884,12 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
     return {
       [_animation]: null,
+      cancel(preserveState = false) {
+        const animation = this[_animation];
+        if (animation) {
+          animation.cancel(preserveState);
+        }
+      },
       end() {
         const animation = this[_animation];
         if (animation && (animation.playState === 'running' || animation.playState === 'pending')) {
