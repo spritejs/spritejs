@@ -41,7 +41,8 @@
     * [事件 event](/zh-cn/behavior#响应-dom-事件)
   * 布局
     * [FlexLayout](/zh-cn/guide/flexlayout)
-
+  * 样式
+    * [CSS 样式](/zh-cn/guide/styles)
 * 高级用法
   * [屏幕适配](/zh-cn/guide/resolution)
   * [盒模型](/zh-cn/guide/boxmodel)

@@ -19,6 +19,7 @@ import {
 
   querySelector,
   querySelectorAll,
+  stylesheet,
 } from 'sprite-core';
 
 import BaseSprite from './basesprite';
@@ -53,6 +54,7 @@ export {
 
   querySelector,
   querySelectorAll,
+  stylesheet,
 
   BaseNode,
   BaseSprite,
