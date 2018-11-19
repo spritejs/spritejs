@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.2';
+var version = '2.22.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -10891,6 +10891,7 @@ var _selector = __webpack_require__(199);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var cssWhat = __webpack_require__(221);
+
 var cssRules = [];
 var relatedAttributes = new _set2.default();
 
@@ -11091,14 +11092,23 @@ exports.default = {
           return a;
         }, { tokens: [], priority: 0 });
 
-        var _rule = {
-          selector: r.tokens.join(''),
-          priority: r.priority,
-          attributes: attributes,
-          order: order++,
-          fromDoc: fromDoc
-        };
-        cssRules.push(_rule);
+        var selectorStr = r.tokens.join('');
+
+        try {
+          var compiled = (0, _selector.compile)(selectorStr);
+
+          var _rule = {
+            selector: selectorStr,
+            compiled: compiled,
+            priority: r.priority,
+            attributes: attributes,
+            order: order++,
+            fromDoc: fromDoc
+          };
+          cssRules.push(_rule);
+        } catch (ex) {
+          console.warn(ex.message);
+        }
       }
     });
     cssRules.sort(function (a, b) {
@@ -11275,10 +11285,11 @@ exports.default = {
     var selectors = [];
     var transitions = [];
     cssRules.forEach(function (rule) {
-      var selector = rule.selector,
+      var compiled = rule.compiled,
+          selector = rule.selector,
           attributes = rule.attributes;
 
-      if ((0, _selector.isMatched)(el, selector)) {
+      if ((0, _selector.isMatched)(el, compiled)) {
         (0, _assign2.default)(attrs, attributes);
         // console.log(JSON.stringify(attrs.transitions));
         if (attrs.transitions) {
@@ -11358,6 +11369,7 @@ var _from2 = _interopRequireDefault(_from);
 exports.querySelectorAll = querySelectorAll;
 exports.querySelector = querySelector;
 exports.isMatched = isMatched;
+exports.compile = compile;
 
 var _utils = __webpack_require__(157);
 
@@ -11537,6 +11549,10 @@ function querySelector(query, elems) {
 
 function isMatched(elem, query) {
   return CSSselect.is(elem, query, { adapter: adapter });
+}
+
+function compile(query) {
+  return CSSselect.compile(query, { adapter: adapter });
 }
 
 /***/ }),

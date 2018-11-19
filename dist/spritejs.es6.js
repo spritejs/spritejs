@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.2';
+const version = '2.22.3';
 
 
 
@@ -7972,6 +7972,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const cssWhat = __webpack_require__(145);
+
 let cssRules = [];
 const relatedAttributes = new Set();
 
@@ -8161,14 +8162,23 @@ let order = 0;
           return a;
         }, { tokens: [], priority: 0 });
 
-        const rule = {
-          selector: r.tokens.join(''),
-          priority: r.priority,
-          attributes,
-          order: order++,
-          fromDoc
-        };
-        cssRules.push(rule);
+        const selectorStr = r.tokens.join('');
+
+        try {
+          const compiled = Object(_selector__WEBPACK_IMPORTED_MODULE_0__["compile"])(selectorStr);
+
+          const rule = {
+            selector: selectorStr,
+            compiled,
+            priority: r.priority,
+            attributes,
+            order: order++,
+            fromDoc
+          };
+          cssRules.push(rule);
+        } catch (ex) {
+          console.warn(ex.message);
+        }
       }
     });
     cssRules.sort((a, b) => {
@@ -8325,8 +8335,8 @@ let order = 0;
     const selectors = [];
     const transitions = [];
     cssRules.forEach(rule => {
-      const { selector, attributes } = rule;
-      if (Object(_selector__WEBPACK_IMPORTED_MODULE_0__["isMatched"])(el, selector)) {
+      const { compiled, selector, attributes } = rule;
+      if (Object(_selector__WEBPACK_IMPORTED_MODULE_0__["isMatched"])(el, compiled)) {
         Object.assign(attrs, attributes);
         // console.log(JSON.stringify(attrs.transitions));
         if (attrs.transitions) {
@@ -8388,6 +8398,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() { return querySelectorAll; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "querySelector", function() { return querySelector; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMatched", function() { return isMatched; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compile", function() { return compile; });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(111);
 
 
@@ -8554,6 +8565,10 @@ function querySelector(query, elems) {
 
 function isMatched(elem, query) {
   return CSSselect.is(elem, query, { adapter });
+}
+
+function compile(query) {
+  return CSSselect.compile(query, { adapter });
 }
 
 /***/ }),
