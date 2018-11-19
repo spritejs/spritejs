@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.1';
+const version = '2.22.2';
 
 
 
@@ -8052,6 +8052,7 @@ function toCamel(str) {
 }
 
 function resolveToken(token) {
+  // eslint-disable-line complexity
   let ret = '',
       priority = 0,
       valid = true;
@@ -8079,7 +8080,8 @@ function resolveToken(token) {
     } else {
       ret = `:${token.name}`;
     }
-    valid = token.name !== 'hover'; // not support yet
+    // not support yet
+    valid = token.name !== 'hover' && token.name !== 'active' && token.name !== 'focus' && token.name !== 'link' && token.name !== 'visited' && token.name !== 'lang';
     priority = token.name !== 'not' ? 1000 : 0;
   } else if (token.type === 'pseudo-element') {
     ret = `::${token.name}`;

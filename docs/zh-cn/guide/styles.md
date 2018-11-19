@@ -63,7 +63,7 @@ const scene = new Scene('#css-basic', {
 
 **注意**：由于浏览器同源策略限制，ScriptJS不能读取跨域的css文件，只能是同域下的css文件或者inline css。
 
-SpriteJS支持绝大多数css3选择器，但是**不支持伪元素**，**不支持:hover伪类**。
+SpriteJS支持绝大多数css3选择器，但是**不支持伪元素**，**不支持`:hover,:atcive,:focus,:link,:visited,:lang`等伪类**。
 
 SpriteJS选择器可以和DOM元素混用，例如：
 
