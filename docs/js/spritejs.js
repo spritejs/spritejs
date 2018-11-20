@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.8';
+var version = '2.22.9';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7496,10 +7496,13 @@ var cacheContextPool = exports.cacheContextPool = {
     }
 
     contexts.every(function (context) {
-      context.canvas.width = 0;
-      context.canvas.height = 0;
-      contextPool.push(context);
-      return contextPool.length < maxPollSize;
+      var ret = contextPool.length < maxPollSize;
+      if (ret) {
+        context.canvas.width = 0;
+        context.canvas.height = 0;
+        contextPool.push(context);
+      }
+      return ret;
     });
   },
 

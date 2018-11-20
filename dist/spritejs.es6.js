@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.8';
+const version = '2.22.9';
 
 
 
@@ -5527,10 +5527,13 @@ const cacheContextPool = {
   },
   put(...contexts) {
     contexts.every(context => {
-      context.canvas.width = 0;
-      context.canvas.height = 0;
-      contextPool.push(context);
-      return contextPool.length < maxPollSize;
+      const ret = contextPool.length < maxPollSize;
+      if (ret) {
+        context.canvas.width = 0;
+        context.canvas.height = 0;
+        contextPool.push(context);
+      }
+      return ret;
     });
   },
   get size() {
