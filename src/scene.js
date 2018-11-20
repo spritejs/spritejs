@@ -1,4 +1,4 @@
-import {BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
+import {stylesheet, BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
 import Layer from './layer';
 import Resource from './resource';
 import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform';
@@ -52,7 +52,9 @@ export default class Scene extends BaseNode {
     this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
     this.displayRatio = options.displayRatio || 1.0;
 
-    this.useDocumentCSS = !!options.useDocumentCSS;
+    if(options.useDocumentCSS) {
+      stylesheet.fromDocumentCSS();
+    }
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
@@ -507,9 +509,6 @@ export default class Scene extends BaseNode {
         if(this.container.style && (pos !== 'absolute' && pos !== 'fixed')) {
           this.container.style.position = 'relative';
         }
-      }
-      if(this.useDocumentCSS && !('useDocumentCSS' in opts)) {
-        opts.useDocumentCSS = true;
       }
       this.appendLayer(new Layer(id, opts));
     }

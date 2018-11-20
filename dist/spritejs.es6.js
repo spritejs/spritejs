@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.6';
+const version = '2.22.7';
 
 
 
@@ -19330,7 +19330,9 @@ let Scene = class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNo
     this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
     this.displayRatio = options.displayRatio || 1.0;
 
-    this.useDocumentCSS = !!options.useDocumentCSS;
+    if (options.useDocumentCSS) {
+      sprite_core__WEBPACK_IMPORTED_MODULE_0__["stylesheet"].fromDocumentCSS();
+    }
 
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
@@ -19779,9 +19781,6 @@ let Scene = class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNo
         if (this.container.style && pos !== 'absolute' && pos !== 'fixed') {
           this.container.style.position = 'relative';
         }
-      }
-      if (this.useDocumentCSS && !('useDocumentCSS' in opts)) {
-        opts.useDocumentCSS = true;
       }
       this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_1__["default"](id, opts));
     }
