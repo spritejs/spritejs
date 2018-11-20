@@ -50,7 +50,7 @@ var _spritejs = spritejs,
   s1.on('mouseleave', function () {
     s1.attr('class', 'red circle');
   });
-
+  window.s1 = s1;
   s2.on('mouseenter', function () {
     s2.attr('class', 'cyan circle');
   });

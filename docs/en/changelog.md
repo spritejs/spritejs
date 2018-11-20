@@ -1,5 +1,53 @@
 # Change Log
 
+## [2.22.0][2018-11-19]
+
+### enhancement
+
+- Allow loading css rules from page document.
+
+## [2.21.0][2018-11-19]
+
+### enhancement
+
+- Support CSS-like styles.
+
+## [2.20.0][2018-11-16]
+
+### enhancement
+
+- Update selector, CSS3 selector supported.
+
+### bug fix
+
+- Fix attribute inherit bugs.
+
+## [2.19.0][2018-11-02]
+
+### bug fix
+
+- Change path cache policy to eliminate blinking.
+
+### enhancement
+
+- Add clip effect.
+
+## [2.18.1][2018-10-26]
+
+### enhancement
+
+- Make childNodes' ordered the same as dom nodes. 
+
+## [2.17.0][2018-09-21]
+
+### bug fix
+
+- Change label cache policy to eliminate blinking.
+
+### fetures
+
+- Update Flex Layout.
+
 ## [2.16.0][2018-09-20]
 
 ### features

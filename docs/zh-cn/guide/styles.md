@@ -176,6 +176,13 @@ spritejs.stylesheet.fromDocumentCSS();
 scene.children[0].updateStyles();
 ```
 
+同样出于性能考虑，SpriteJS应用css样式规则采用的是异步方式，因此给SpriteJS设置class或其他规则，如有导致样式变化，该变化在元素属性上不会立即体现，而是在下一次render时才会体现。
+
+```js
+sprite.attr('class', 'myclass');
+await layer.prepareRender(); // 经过一次render之后
+console.log(sprite.attributes); // sprite新的样式属性才会生效
+```
 
 
 <script src="/js/guide/styles.js"></script>

@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.4';
+const version = '2.22.5';
 
 
 
@@ -5774,20 +5774,27 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
   attr(props, val) {
     const setVal = (key, value) => {
-      this[_attr][key] = value;
       if (!this[_attr].__attributeNames.has(key)) {
-        if (value == null) {
-          delete this[_attr][key];
+        if (this[_attr].__styleTag) {
+          console.warn(`Ignoring unknown style key: ${key}`);
+        } else {
+          if (value != null) {
+            this[_attr][key] = value;
+          } else {
+            delete this[_attr][key];
+          }
+          this.forceUpdate();
+          // console.log(this, stylesheet.relatedAttributes, key);
+          if (_stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].relatedAttributes.has(key)) {
+            this.updateStyles();
+          }
+          if (key === 'color' && !this[_attr].__attributeNames.has('fillColor')) {
+            // fixed color inherit
+            this.attr('fillColor', value);
+          }
         }
-        this.forceUpdate();
-        // console.log(this, stylesheet.relatedAttributes, key);
-        if (_stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].relatedAttributes.has(key)) {
-          this.updateStyles();
-        }
-        if (key === 'color' && !this[_attr].__attributeNames.has('fillColor')) {
-          // fixed color inherit
-          this.attr('fillColor', value);
-        }
+      } else {
+        this[_attr][key] = value;
       }
     };
     if (typeof props === 'object') {
@@ -7339,7 +7346,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   get(key) {
-    if (this[_style][key] && !this.__attributesSet.has(key)) {
+    if (this.__styleTag || this[_style][key] != null && !this.__attributesSet.has(key)) {
       return this[_style][key];
     }
     return this[_attr][key];
@@ -8349,7 +8356,7 @@ let order = 0;
               if (key !== 'borderRadius' && /^border/.test(key)) {
                 key = 'border';
               }
-              if (key === 'backgroundColor') key = 'bgcolor';
+              if (key === 'backgroundColor' || key === 'background') key = 'bgcolor';
               if (key === 'fontVariantCaps') key = 'fontVariant';
               if (key === 'all') {
                 _attrs = Object.assign({}, attrs);
@@ -8387,7 +8394,11 @@ let order = 0;
           transitions.push(...attrs.transitions);
           attrs.transitions.forEach(t => {
             Object.keys(t.attrs).forEach(k => {
-              if (k in attrs) delete attrs[k];
+              // if(k in attrs) delete attrs[k];
+              el.attributes.__styleTag = true;
+              attrs[k] = el.attributes[k];
+              el.attributes.__styleTag = false;
+              // console.log(el.attributes.style[k]);
             });
           });
           delete attrs.transitions;
@@ -8415,7 +8426,7 @@ let order = 0;
           const transition = el.transition({ duration, delay }, easing, true);
           transition.__attrs = attrs;
           el[_transitions].push(transition);
-          return transition.attr(attrs);
+          return transition.attr(Object.assign({}, attrs));
         })).then(() => {
           el.dispatchEvent('transitionend', {}, true, true);
         });
@@ -8426,7 +8437,7 @@ let order = 0;
       el.attributes.__styleTag = true;
       el.attr(attrs);
       el.attributes.__styleTag = false;
-      if (el.forceUpdate) el.forceUpdate();
+      // if(el.forceUpdate) el.forceUpdate();
     }
   },
   get relatedAttributes() {
@@ -11221,15 +11232,10 @@ let BaseNode = class BaseNode {
 
   updateStyles() {
     // append to parent & reset name or class or id auto updateStyles
-    let elems = [];
-    if (this.parent && this.parent.querySelectorAll) {
-      elems = [this.parent, ...this.parent.querySelectorAll('*')];
-    } else if (this.querySelectorAll) {
-      elems = [this, ...this.querySelectorAll('*')];
+    if (this.layer) {
+      this.layer.__updateStyleTag = true;
+      this.forceUpdate();
     }
-    elems.forEach(el => {
-      _stylesheet__WEBPACK_IMPORTED_MODULE_0__["default"].computeStyle(el);
-    });
   }
 
   get dataset() {
@@ -12554,8 +12560,8 @@ let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inheri
 let Label = (_class2 = (_temp = _class3 = class Label extends _basesprite__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
   constructor(attr) {
-    if (typeof attr === 'string') {
-      attr = { text: attr };
+    if (typeof attr !== 'object') {
+      attr = { text: String(attr) };
     }
     super(attr);
   }
@@ -13966,6 +13972,14 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
   }
 
   draw(clearContext = true) {
+    if (this.__updateStyleTag) {
+      const nodes = this.querySelectorAll('*');
+      _stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].computeStyle(this);
+      nodes.forEach(node => {
+        _stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].computeStyle(node);
+      });
+      this.__updateStyleTag = false;
+    }
     const renderDeferrer = this[_renderDeferer];
     this[_renderDeferer] = null;
     if (this[_drawTask]) {
