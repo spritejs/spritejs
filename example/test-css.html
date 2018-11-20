@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="js/spritejs.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    #container {
+      width: 800px;
+      height: 600px;
+    }
+
+    label.circle {
+      width: 100px;
+      height: 100px;
+      --sprite-y: 100px;
+      --sprite-anchor: 0.5;
+      border-radius: 50px;
+      --sprite-border: solid 3px green;
+      color: #fff;
+      font: 42px arial;
+      line-height: 100px;
+      text-align: center;
+    }
+    label.circle:nth-child(2n+1) {
+      background-color: red;
+      transition: background-color 0.5s;
+    }
+
+    label.circle:nth-child(2n) {
+      background-color: blue;
+      transition: background-color 0.5s;
+    }  
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+const {Scene, Label, Group} = spritejs;
+const scene = new Scene('#container', {
+  viewport: ['auto', 'auto'],
+  resolution: 'flex',
+  useDocumentCSS: true,
+});
+
+const layer = scene.layer();
+const group = new Group();
+layer.append(group);
+
+let i = 1;
+
+const s0 = new Label('0');
+s0.className = 'circle';
+s0.attr('x', 60);
+group.append(s0);
+
+setTimeout(function f() {
+  const s = new Label(`${i}`);
+  s.className = 'circle';
+  s.attr('x', 60 + i * 120);
+  group.append(s);
+  if(++i < 10) {
+    setTimeout(f, 1000);
+  }
+}, 1000);
+  </script>
+</body>
+</html>

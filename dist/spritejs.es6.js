@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.5';
+const version = '2.22.6';
 
 
 
@@ -7346,7 +7346,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   get(key) {
-    if (this.__styleTag || this[_style][key] != null && !this.__attributesSet.has(key)) {
+    if (this.__getStyleTag || this[_style][key] != null && !this.__attributesSet.has(key)) {
       return this[_style][key];
     }
     return this[_attr][key];
@@ -8395,9 +8395,9 @@ let order = 0;
           attrs.transitions.forEach(t => {
             Object.keys(t.attrs).forEach(k => {
               // if(k in attrs) delete attrs[k];
-              el.attributes.__styleTag = true;
+              el.attributes.__getStyleTag = true;
               attrs[k] = el.attributes[k];
-              el.attributes.__styleTag = false;
+              el.attributes.__getStyleTag = false;
               // console.log(el.attributes.style[k]);
             });
           });
