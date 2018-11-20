@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.7';
+const version = '2.22.8';
 
 
 
@@ -8431,7 +8431,7 @@ let order = 0;
           el.dispatchEvent('transitionend', {}, true, true);
         });
       }
-      el.dispatchEvent('stylechange', { oldSelectors: el[_matchedSelectors], newSelectors: matchedSelectors });
+      el.dispatchEvent('stylechange', { oldSelectors: el[_matchedSelectors], newSelectors: matchedSelectors }, true, true);
       el[_matchedSelectors] = matchedSelectors;
       el.attributes.clearStyle();
       el.attributes.__styleTag = true;
