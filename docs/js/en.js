@@ -9,12 +9,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
+          localStorage.setItem('language', 'en');
+
           _spritejs = spritejs, Scene = _spritejs.Scene, Sprite = _spritejs.Sprite, Path = _spritejs.Path, Group = _spritejs.Group;
           scene = new Scene('#enlogo', { viewport: ['auto', 'auto'], resolution: [1200, 400] });
-          _context.next = 4;
+          _context.next = 5;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
-        case 4:
+        case 5:
           layer = scene.layer('fglayer');
           robot = new Sprite('guanguan1.png');
 
@@ -104,7 +106,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
             });
           });
 
-        case 25:
+        case 26:
         case 'end':
           return _context.stop();
       }

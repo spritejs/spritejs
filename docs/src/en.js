@@ -1,4 +1,6 @@
 (async function () {
+  localStorage.setItem('language', 'en');
+
   const {Scene, Sprite, Path, Group} = spritejs;
   const scene = new Scene('#enlogo', {viewport: ['auto', 'auto'], resolution: [1200, 400]});
   await scene.preload([

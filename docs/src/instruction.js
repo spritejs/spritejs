@@ -1,5 +1,7 @@
 /* demo: quickStart */
 (function () {
+  localStorage.setItem('language', 'zh-CN');
+
   const {Scene, Sprite} = spritejs;
 
   const scene = new Scene('#demo-quickStart', {

@@ -2,6 +2,8 @@
 
 /* demo: quickStart */
 (function () {
+  localStorage.setItem('language', 'zh-CN');
+
   var _spritejs = spritejs,
       Scene = _spritejs.Scene,
       Sprite = _spritejs.Sprite;

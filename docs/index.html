@@ -15,7 +15,8 @@
   <div id="app"></div>
   <script src="/js/plugin.js"></script>
   <script>
-    const language = navigator.language
+    /* global generateApiPlugin */
+    const language = localStorage.getItem('language') || navigator.language;
     // const language = 'en-US'
     window.$docsify = {
       name: 'spritejs <small>v2</small>',
@@ -38,7 +39,7 @@
       plugins: [
         generateApiPlugin,
       ],
-    }
+    };
   </script>
   <script src="//lib.baomitu.com/axios/0.18.0/axios.min.js"></script>
   <script src="//lib.baomitu.com/babel-polyfill/7.0.0-beta.44/polyfill.min.js"></script>
