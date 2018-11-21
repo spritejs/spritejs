@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.11';
+const version = '2.22.12';
 
 
 
@@ -8006,6 +8006,60 @@ function parseTransitionValue(values) {
   return ret;
 }
 
+function toPxValue(value, defaultWidth) {
+  if (typeof value === 'string') {
+    const matched = value.match(/^([\d.]+)(px|pt|pc|in|cm|mm|em|ex|rem|q|vw|vh|vmax|vmin)$/);
+    if (matched) {
+      // console.log(matched);
+      const v = parseFloat(matched[1]);
+      const unit = matched[2];
+      if (unit === 'px') {
+        value = v;
+      } else if (unit === 'pt') {
+        value = v / 0.75;
+      } else if (unit === 'pc') {
+        value = v * 16;
+      } else if (unit === 'in') {
+        value = v * 96;
+      } else if (unit === 'cm') {
+        value = v * 96.0 / 2.54;
+      } else if (unit === 'mm') {
+        value = v * 96.0 / 25.4;
+      } else if (unit === 'em' || unit === 'rem' || unit === 'ex') {
+        if (!defaultWidth && typeof getComputedStyle === 'function' && typeof document !== 'undefined') {
+          const root = getComputedStyle(document.documentElement).fontSize;
+          defaultWidth = toPxValue(root, 16);
+        }
+        value = v * defaultWidth;
+        if (unit === 'ex') value /= 2;
+      } else if (unit === 'q') {
+        value = v * 96.0 / 25.4 / 4;
+      } else if (unit === 'vw') {
+        if (typeof document !== 'undefined') {
+          const width = document.documentElement.clientWidth;
+          value = width * v / 100;
+        }
+      } else if (unit === 'vh') {
+        if (typeof document !== 'undefined') {
+          const height = document.documentElement.clientHeight;
+          value = height * v / 100;
+        }
+      } else if (unit === 'vmax' || unit === 'vmin') {
+        if (typeof document !== 'undefined') {
+          const width = document.documentElement.clientWidth;
+          const height = document.documentElement.clientHeight;
+          if (unit === 'vmax') {
+            value = Math.max(width, height) * v / 100;
+          } else {
+            value = Math.min(width, height) * v / 100;
+          }
+        }
+      }
+    }
+  }
+  return value;
+}
+
 const CSSGetter = {
   opacity: true,
   width: true,
@@ -8037,8 +8091,14 @@ const CSSGetter = {
   borderBottomLeftRadius: true,
   boxSizing: true,
   display: true,
-  padding: true,
-  margin: true,
+  paddingTop: true,
+  paddingRight: true,
+  paddingBottom: true,
+  paddingLeft: true,
+  marginTop: true,
+  marginRight: true,
+  marginBottom: true,
+  marginLeft: true,
   zIndex: true,
   font: true,
   fontSize: true,
@@ -8072,6 +8132,13 @@ function toCamel(str) {
   return str.replace(/([^-])(?:-+([^-]))/g, ($0, $1, $2) => {
     return $1 + $2.toUpperCase();
   });
+}
+
+function applyValue(key, value, values) {
+  if (/Top$/.test(key)) values[0] = value;
+  if (/Right$/.test(key)) values[1] = value;
+  if (/Bottom$/.test(key)) values[2] = value;
+  if (/Left$/.test(key)) values[3] = value;
 }
 
 function resolveToken(token) {
@@ -8272,7 +8339,13 @@ let order = 0;
               key = key.replace('--sprite-', '');
               key = toCamel(key);
               if (isStyleMap) value = value[0][0].trim();
-              if (key === 'gradient') {
+              if (/^margin\w+/.test(key)) {
+                reserved.margin = reserved.margin || [0, 0, 0, 0];
+                applyValue(key, toPxValue(value), reserved.margin);
+              } else if (/^padding\w+/.test(key)) {
+                reserved.padding = reserved.padding || [0, 0, 0, 0];
+                applyValue(key, toPxValue(value), reserved.padding);
+              } else if (key === 'gradient') {
                 // --sprite-gradient: bgcolor,color vector(0, 150, 150, 0) 0 #fff,0.5 rgba(33, 33, 77, 0.7),1 rgba(128, 45, 88, 0.5)
                 const matched = value.match(/(.+?)vector\((.+?)\)(.+)/);
                 if (matched) {
@@ -8291,7 +8364,7 @@ let order = 0;
                 border.style = value;
               } else if (key === 'borderWidth') {
                 border = border || { width: 1, color: 'rgba(0,0,0,0)' };
-                border.width = parseFloat(value);
+                border.width = toPxValue(value);
               } else if (key === 'borderColor') {
                 border = border || { width: 1, color: 'rgba(0,0,0,0)' };
                 border.color = value;
@@ -8300,11 +8373,16 @@ let order = 0;
                 const [style, width, color] = values;
                 border = border || {};
                 border.style = style;
-                border.width = parseInt(width, 10);
+                border.width = toPxValue(width);
                 border.color = color;
               } else {
                 if (key !== 'fontSize') {
-                  value = value.replace(/px$/, '');
+                  if (/,/.test(value)) {
+                    const values = value.split(',');
+                    value = values.map(v => toPxValue(v.trim()));
+                  } else {
+                    value = toPxValue(value);
+                  }
                 }
                 reserved[key] = value;
               }
@@ -8313,11 +8391,12 @@ let order = 0;
               if (key in CSSGetter) {
                 if (typeof CSSGetter[key] === 'function') {
                   value = CSSGetter[key](value);
-                } else if (isStyleMap) {
-                  if (key !== 'fontSize') {
-                    value = value[0].toString().replace(/px$/, '');
-                  } else {
+                } else {
+                  if (isStyleMap) {
                     value = value[0].toString();
+                  }
+                  if (key !== 'fontSize') {
+                    value = toPxValue(value);
                   }
                 }
 
@@ -8325,11 +8404,18 @@ let order = 0;
                 if (key === 'backgroundColor') key = 'bgcolor';
                 if (key === 'fontVariantCaps') key = 'fontVariant';
                 if (key === 'lineHeight' && value === 'normal') value = '';
-                if (/^border/.test(key)) {
+
+                if (/^margin\w+/.test(key)) {
+                  attrs.margin = attrs.margin || [0, 0, 0, 0];
+                  applyValue(key, toPxValue(value), attrs.margin);
+                } else if (/^padding\w+/.test(key)) {
+                  attrs.padding = attrs.padding || [0, 0, 0, 0];
+                  applyValue(key, toPxValue(value), attrs.padding);
+                } else if (/^border/.test(key)) {
                   key = key.replace(/^border(Top|Right|Bottom|Left)/, '').toLowerCase();
-                  if (key === 'width') value = parseFloat(value);
+                  if (key === 'width') value = toPxValue(value);
                   if (/radius$/.test(key)) {
-                    attrs.borderRadius = parseInt(value, 10);
+                    attrs.borderRadius = toPxValue(value);
                   } else {
                     border = border || {};
                     border[key] = value;
@@ -12445,7 +12531,7 @@ let LabelSpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["inheri
     if (val == null) val = '16px';
     let unit = 'px';
     if (typeof val === 'string') {
-      const unitReg = /^(\d+(?:.\d+)?)(\w+)/;
+      const unitReg = /^([\d.]+)(\w+)/;
       const matches = val.match(unitReg);
       if (!matches) {
         return null;

@@ -122,6 +122,7 @@ SpriteJS支持一部分原生CSS属性以及另一部分只特殊的属性，特
 | - | --sprite-d | - |
 | - | --sprite-clip | - |
 | - | --sprite-bounding | - |
+| - | --sprite-gradient | 格式示例： <br/>`color vector(0, 0, 70, 70) 0,red 0.5,yellow 1,green` |
 
 SpriteJS支持CSS Transition，所以我们可以添加CSS过度动画。你可以将鼠标移动到下面的红蓝小圆点上：
 
