@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.13';
+var version = '2.22.14';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -25152,7 +25152,9 @@ var ExLayer = function (_Layer) {
               _width = _canvas$getBoundingCl.width,
               _height = _canvas$getBoundingCl.height;
 
-          return [_width, _height];
+          if (_width > 0) {
+            return [_width, _height];
+          }
         }
         if (canvas.clientWidth) return [canvas.clientWidth, canvas.clientHeight];
       }

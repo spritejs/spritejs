@@ -71,7 +71,9 @@ class ExLayer extends Layer {
     if(canvas) {
       if(canvas.getBoundingClientRect) {
         const {width, height} = canvas.getBoundingClientRect();
-        return [width, height];
+        if(width > 0) {
+          return [width, height];
+        }
       }
       if(canvas.clientWidth) return [canvas.clientWidth, canvas.clientHeight];
     }

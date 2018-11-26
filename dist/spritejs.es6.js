@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.13';
+const version = '2.22.14';
 
 
 
@@ -19395,7 +19395,9 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     if (canvas) {
       if (canvas.getBoundingClientRect) {
         const { width, height } = canvas.getBoundingClientRect();
-        return [width, height];
+        if (width > 0) {
+          return [width, height];
+        }
       }
       if (canvas.clientWidth) return [canvas.clientWidth, canvas.clientHeight];
     }
