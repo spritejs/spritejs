@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.22.14';
+var version = '2.22.15';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -11082,6 +11082,9 @@ function toPxValue(value, defaultWidth) {
         }
       }
     } else {
+      if (value === 'top') value = 0;
+      if (value === 'bottom') value = 1.0;
+      if (value === 'center') value = 0.5;
       var _v = Number(value);
       if (!(0, _isNan2.default)(_v)) {
         value = _v;
@@ -11311,7 +11314,7 @@ function parseRuleAttrs(rule) {
         border.width = toPxValue(width);
         border.color = color;
       } else {
-        if (key !== 'fontSize') {
+        if (key !== 'fontSize' && typeof value === 'string') {
           if (/,/.test(value)) {
             var _values2 = value.split(',');
             value = _values2.map(function (v) {
