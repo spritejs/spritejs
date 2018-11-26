@@ -68,8 +68,12 @@ class ExLayer extends Layer {
 
   get viewport() {
     const canvas = this.canvas;
-    if(canvas && canvas.clientWidth) {
-      return [canvas.clientWidth, canvas.clientHeight];
+    if(canvas) {
+      if(canvas.getBoundingClientRect) {
+        const {width, height} = canvas.getBoundingClientRect();
+        return [width, height];
+      }
+      if(canvas.clientWidth) return [canvas.clientWidth, canvas.clientHeight];
     }
     if(this.parent) {
       return this.parent.layerViewport;

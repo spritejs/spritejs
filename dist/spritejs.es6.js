@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.22.12';
+const version = '2.22.13';
 
 
 
@@ -5584,7 +5584,8 @@ const _attr = Symbol('attr'),
       _resolveState = Symbol('resolveState'),
       _show = Symbol('show'),
       _hide = Symbol('hide'),
-      _enter = Symbol('enter');
+      _enter = Symbol('enter'),
+      _releaseKeys = Symbol('releaseKeys');
 
 const CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
 
@@ -5604,6 +5605,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     this[_animations] = new Set();
     this[_cachePriority] = 0;
     this[_flow] = {};
+    this[_releaseKeys] = new Set();
 
     if (attr) {
       this.attr(attr);
@@ -5667,6 +5669,10 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     if (attrs) this.addAttributes(attrs);
     if (effects) this.setAttributeEffects(effects);
     return this.Attr;
+  }
+
+  setReleaseKey(key) {
+    this[_releaseKeys].add(key);
   }
 
   get layer() {
@@ -6050,6 +6056,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     this.reflow();
     const ret = super.disconnect(parent);
     delete this.context;
+    [...this[_releaseKeys]].forEach(key => delete this[key]);
     return ret;
   }
 
@@ -7171,7 +7178,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var svg_path_to_canvas__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(svg_path_to_canvas__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(111);
 /* harmony import */ var _stylesheet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(122);
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _dec17, _dec18, _dec19, _dec20, _dec21, _dec22, _dec23, _dec24, _dec25, _dec26, _dec27, _desc, _value, _class;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _dec17, _dec18, _dec19, _dec20, _dec21, _dec22, _dec23, _dec24, _dec25, _dec26, _dec27, _dec28, _dec29, _dec30, _dec31, _dec32, _dec33, _dec34, _dec35, _desc, _value, _class;
 
 const _applyDecoratedDescriptor = __webpack_require__(120);
 
@@ -7186,7 +7193,7 @@ const _attr = Symbol('attr'),
       _subject = Symbol('subject'),
       _default = Symbol('default');
 
-let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"])('You can remove this call.'), _dec2 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"], _utils__WEBPACK_IMPORTED_MODULE_2__["oneOrTwoValues"]), _dec3 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec4 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec5 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec6 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec7 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"]), _dec8 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseColorString"]), _dec9 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec10 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec11 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec12 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec13 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec14 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"]), _dec15 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"], _utils__WEBPACK_IMPORTED_MODULE_2__["fourValuesShortCut"]), _dec16 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec17 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec18 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringTransform"]), _dec19 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"]), _dec20 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec21 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"], _utils__WEBPACK_IMPORTED_MODULE_2__["oneOrTwoValues"]), _dec22 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseInt), _dec23 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec24 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec25 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec26 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseInt), _dec27 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"], _utils__WEBPACK_IMPORTED_MODULE_2__["fourValuesShortCut"]), (_class = class SpriteAttr {
+let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"])('You can remove this call.'), _dec2 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"], _utils__WEBPACK_IMPORTED_MODULE_2__["oneOrTwoValues"]), _dec3 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec4 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec5 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec6 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec7 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"]), _dec8 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseColorString"]), _dec9 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec10 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec11 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec12 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('width'), _dec13 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["relative"])('height'), _dec14 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"]), _dec15 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"], _utils__WEBPACK_IMPORTED_MODULE_2__["fourValuesShortCut"]), _dec16 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec17 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec18 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec19 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec20 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec21 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec22 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringTransform"]), _dec23 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"]), _dec24 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec25 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringFloat"], _utils__WEBPACK_IMPORTED_MODULE_2__["oneOrTwoValues"]), _dec26 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseInt), _dec27 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec28 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec29 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec30 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseInt), _dec31 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_2__["parseStringInt"], _utils__WEBPACK_IMPORTED_MODULE_2__["fourValuesShortCut"]), _dec32 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec33 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec34 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), _dec35 = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseValue"])(parseFloat), (_class = class SpriteAttr {
   constructor(subject) {
     this[_subject] = subject;
     this[_default] = {};
@@ -7544,6 +7551,50 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     this.set('padding', val);
   }
 
+  set paddingTop(val) {
+    if (val == null) val = 0;
+    const margin = this.get('padding');
+    margin[0] = val;
+    this.set('padding', margin);
+  }
+
+  get paddingTop() {
+    return this.get('margin')[0];
+  }
+
+  set paddingRight(val) {
+    if (val == null) val = 0;
+    const margin = this.get('padding');
+    margin[1] = val;
+    this.set('padding', margin);
+  }
+
+  get paddingRight() {
+    return this.get('margin')[1];
+  }
+
+  set paddingBottom(val) {
+    if (val == null) val = 0;
+    const margin = this.get('padding');
+    margin[2] = val;
+    this.set('padding', margin);
+  }
+
+  get paddingBottom() {
+    return this.get('margin')[2];
+  }
+
+  set paddingLeft(val) {
+    if (val == null) val = 0;
+    const margin = this.get('padding');
+    margin[3] = val;
+    this.set('padding', margin);
+  }
+
+  get paddingLeft() {
+    return this.get('margin')[3];
+  }
+
   set borderRadius(val) {
     this.set('borderRadius', val);
   }
@@ -7850,6 +7901,50 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     this.set('margin', val);
   }
 
+  set marginTop(val) {
+    if (val == null) val = 0;
+    const margin = this.get('margin');
+    margin[0] = val;
+    this.set('margin', margin);
+  }
+
+  get marginTop() {
+    return this.get('margin')[0];
+  }
+
+  set marginRight(val) {
+    if (val == null) val = 0;
+    const margin = this.get('margin');
+    margin[1] = val;
+    this.set('margin', margin);
+  }
+
+  get marginRight() {
+    return this.get('margin')[1];
+  }
+
+  set marginBottom(val) {
+    if (val == null) val = 0;
+    const margin = this.get('margin');
+    margin[2] = val;
+    this.set('margin', margin);
+  }
+
+  get marginBottom() {
+    return this.get('margin')[2];
+  }
+
+  set marginLeft(val) {
+    if (val == null) val = 0;
+    const margin = this.get('margin');
+    margin[3] = val;
+    this.set('margin', margin);
+  }
+
+  get marginLeft() {
+    return this.get('margin')[3];
+  }
+
   /*
     {
       src: image | url,
@@ -7967,7 +8062,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   set exitMode(val) {
     this.set('exitMode', val);
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'clearCache', [_dec], Object.getOwnPropertyDescriptor(_class.prototype, 'clearCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'id', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'class', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'class'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'enableCache', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'enableCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec2, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutX', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec3, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutX'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutY', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec4, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutY'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec5, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec6, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec7, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec8, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_dec9, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec13], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec14, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec15, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec16, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSizing', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'boxSizing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec17, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec18, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_dec19, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec20, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec21, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_dec22, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec23, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexGrow', [_dec24, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexGrow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexShrink', [_dec25, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexShrink'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexBasis', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexBasis'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_dec26, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_dec27, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'margin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgimage', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'bgimage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'states', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'states'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'actions', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'actions'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'state', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'state'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'enterMode', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'enterMode'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'exitMode', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'exitMode'), _class.prototype)), _class));
+}, (_applyDecoratedDescriptor(_class.prototype, 'clearCache', [_dec], Object.getOwnPropertyDescriptor(_class.prototype, 'clearCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'id', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'id'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'name', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'name'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'class', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'class'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'enableCache', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'enableCache'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'anchor', [_dec2, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'anchor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'display', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'display'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutX', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec3, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutX'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutY', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec4, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutY'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'x', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec5, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'x'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'y', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec6, _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'y'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'pos', [_dec7, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'pos'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgcolor', [_dec8, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'bgcolor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'opacity', [_dec9, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'opacity'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'width', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec10], Object.getOwnPropertyDescriptor(_class.prototype, 'width'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'height', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec11], Object.getOwnPropertyDescriptor(_class.prototype, 'height'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutWidth', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec12], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'layoutHeight', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _dec13], Object.getOwnPropertyDescriptor(_class.prototype, 'layoutHeight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'size', [_dec14, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'size'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'border', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'border'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'padding', [_dec15, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'padding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'paddingTop', [_dec16, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'paddingTop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'paddingRight', [_dec17, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'paddingRight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'paddingBottom', [_dec18, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'paddingBottom'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'paddingLeft', [_dec19, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'paddingLeft'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'borderRadius', [_dec20, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'borderRadius'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'boxSizing', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'boxSizing'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'dashOffset', [_dec21, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'dashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transform', [_dec22, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'transform'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'transformOrigin', [_dec23, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'transformOrigin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'rotate', [_dec24, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'rotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'scale', [_dec25, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'scale'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'translate', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'translate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'skew', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'skew'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'zIndex', [_dec26, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'zIndex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'linearGradients', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'linearGradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'gradients', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'gradients'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetPath', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetPath'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetDistance', [_dec27, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetDistance'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'offsetRotate', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'offsetRotate'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'filter', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'filter'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'shadow', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'shadow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexGrow', [_dec28, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexGrow'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexShrink', [_dec29, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexShrink'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexBasis', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flexBasis'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flex', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'flex'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'order', [_dec30, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'order'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'position', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'position'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'alignSelf', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'alignSelf'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'margin', [_dec31, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"], _utils__WEBPACK_IMPORTED_MODULE_2__["cachable"]], Object.getOwnPropertyDescriptor(_class.prototype, 'margin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'marginTop', [_dec32, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'marginTop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'marginRight', [_dec33, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'marginRight'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'marginBottom', [_dec34, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'marginBottom'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'marginLeft', [_dec35, _utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'marginLeft'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bgimage', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'bgimage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'states', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'states'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'actions', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'actions'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'state', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'state'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'enterMode', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'enterMode'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'exitMode', [_utils__WEBPACK_IMPORTED_MODULE_2__["attr"]], Object.getOwnPropertyDescriptor(_class.prototype, 'exitMode'), _class.prototype)), _class));
 
 
 /* harmony default export */ __webpack_exports__["default"] = (SpriteAttr);
@@ -7984,10 +8079,13 @@ __webpack_require__.r(__webpack_exports__);
 const cssWhat = __webpack_require__(145);
 
 let cssRules = [];
+const keyFrames = {};
+
 const relatedAttributes = new Set();
 
 const _matchedSelectors = Symbol('matchedSelectors');
 const _transitions = Symbol('transitions');
+const _animation = Symbol('animation');
 
 function parseTransitionValue(values) {
   if (typeof values === 'string') values = values.trim().split(/\s*,\s*/g);
@@ -8054,6 +8152,11 @@ function toPxValue(value, defaultWidth) {
             value = Math.min(width, height) * v / 100;
           }
         }
+      }
+    } else {
+      const v = Number(value);
+      if (!Number.isNaN(v)) {
+        value = v;
       }
     }
   }
@@ -8125,20 +8228,255 @@ const CSSGetter = {
     return ret;
   },
   transitionDelay: parseTransitionValue,
-  transitionProperty: true
+  transitionProperty: true,
+  animationDuration(value) {
+    value = value.toString();
+    if (value === 'initial') {
+      value = 0;
+    } else if (/ms$/.test(value)) {
+      value = parseFloat(value);
+    } else {
+      value = parseFloat(value) * 1000;
+    }
+    return value;
+  },
+  animationTimingFunction(value) {
+    value = value.toString();
+    return value !== 'initial' ? value : 'ease';
+  },
+  animationDelay(value) {
+    value = value.toString();
+    if (value === 'initial') {
+      value = 0;
+    } else if (/ms$/.test(value)) {
+      value = parseFloat(value);
+    } else {
+      value = parseFloat(value) * 1000;
+    }
+    return value;
+  },
+  animationIterationCount(value) {
+    value = value.toString();
+    if (value === 'initial') return 1;
+    if (value === 'infinity') return Infinity;
+    return parseFloat(value);
+  },
+  animationDirection(value) {
+    value = value.toString();
+    return value !== 'initial' ? value : 'normal';
+  },
+  animationFillMode(value) {
+    value = value.toString();
+    if (value === 'initial' || value === 'none') value = 'auto';
+    return value;
+  },
+  animationPlayState: true,
+  animationName: true
 };
+
+function parseRuleAttrs(rule) {
+  let styleAttrs;
+  const isStyleMap = !!rule.styleMap;
+  if (!isStyleMap) {
+    if (!rule.style) return;
+
+    const props = [...rule.style].map(key => {
+      return [key, rule.style[key]];
+    }).filter(([key, value]) => value != null);
+
+    const matched = rule.cssText.match(/--sprite-[\w-]+\s*:\s*.+?(;|$)/img);
+    if (matched) {
+      matched.forEach(rule => {
+        const [key, value] = rule.split(':');
+        props.push([key, value.trim().replace(/;$/, '')]);
+      });
+    }
+    const isIgnore = props['--sprite-ignore'];
+    if (isIgnore && isIgnore !== 'false' && isIgnore !== '0') {
+      return;
+    }
+
+    styleAttrs = props;
+  }
+  if (rule.styleMap && rule.styleMap.has('--sprite-ignore')) {
+    const isIgnore = rule.styleMap.get('--sprite-ignore')[0].trim();
+    if (isIgnore !== 'false' && isIgnore !== '0' && isIgnore !== '') {
+      return;
+    }
+  }
+  if (rule.styleMap) {
+    styleAttrs = [...rule.styleMap];
+  }
+  const attrs = {},
+        reserved = {};
+  let border = null;
+  let transition = null;
+  const gradient = {};
+
+  styleAttrs.forEach(([key, value]) => {
+    // eslint-disable-line complexity
+    if (key === '--sprite-transition') {
+      throw new Error('Not support --sprite-transition, instead use transition.');
+    }
+    if (key === '--sprite-animation') {
+      throw new Error('Not support --sprite-animation, instead use animation.');
+    }
+    if (key.indexOf('--sprite-') === 0) {
+      key = key.replace('--sprite-', '');
+      key = toCamel(key);
+      if (isStyleMap) value = value[0][0].trim();
+      if (key === 'gradient') {
+        // --sprite-gradient: bgcolor,color vector(0, 150, 150, 0) 0 #fff,0.5 rgba(33, 33, 77, 0.7),1 rgba(128, 45, 88, 0.5)
+        const matched = value.match(/(.+?)vector\((.+?)\)(.+)/);
+        if (matched) {
+          const properties = matched[1].trim().split(/\s*,\s*/g),
+                vector = matched[2].split(',').map(s => Number(s.trim())),
+                colors = matched[3].trim().split(/\s+/).map(s => {
+            const [offset, color] = s.split(',');
+            return { offset: Number(offset.trim()), color: color.trim() };
+          });
+          properties.forEach(prop => {
+            gradient[prop] = { vector, colors };
+          });
+        }
+      } else if (key === 'borderStyle') {
+        border = border || { width: 1, color: 'rgba(0,0,0,0)' };
+        border.style = value;
+      } else if (key === 'borderWidth') {
+        border = border || { width: 1, color: 'rgba(0,0,0,0)' };
+        border.width = toPxValue(value);
+      } else if (key === 'borderColor') {
+        border = border || { width: 1, color: 'rgba(0,0,0,0)' };
+        border.color = value;
+      } else if (key === 'border') {
+        const values = value.split(/\s+/);
+        const [style, width, color] = values;
+        border = border || {};
+        border.style = style;
+        border.width = toPxValue(width);
+        border.color = color;
+      } else {
+        if (key !== 'fontSize') {
+          if (/,/.test(value)) {
+            const values = value.split(',');
+            value = values.map(v => toPxValue(v.trim()));
+          } else {
+            value = toPxValue(value);
+          }
+        }
+        reserved[key] = value;
+      }
+    } else {
+      key = toCamel(key);
+      if (key in CSSGetter) {
+        if (typeof CSSGetter[key] === 'function') {
+          value = CSSGetter[key](value);
+        } else {
+          if (isStyleMap) {
+            value = value[0].toString();
+          }
+          if (key !== 'fontSize') {
+            value = toPxValue(value);
+          }
+        }
+        if (/^animation/.test(key)) {
+          attrs.animation = attrs.animation || {};
+          attrs.animation[key] = value;
+          return;
+        }
+
+        if (value === 'initial') return;
+        if (key === 'backgroundColor') key = 'bgcolor';
+        if (key === 'fontVariantCaps') key = 'fontVariant';
+        if (key === 'lineHeight' && value === 'normal') value = '';
+
+        if (/^border/.test(key)) {
+          key = key.replace(/^border(Top|Right|Bottom|Left)/, '').toLowerCase();
+          if (key === 'width') value = toPxValue(value);
+          if (/radius$/.test(key)) {
+            attrs.borderRadius = toPxValue(value);
+          } else {
+            border = border || {};
+            border[key] = value;
+          }
+        } else if (key === 'transitionDelay') {
+          transition = transition || {};
+          transition.delay = value;
+        } else if (key === 'transitionDuration') {
+          transition = transition || {};
+          transition.duration = value;
+        } else if (key === 'transitionTimingFunction') {
+          transition = transition || {};
+          transition.easing = value;
+        } else if (key === 'transitionProperty') {
+          transition = transition || {};
+          transition.properties = value;
+        } else {
+          attrs[key] = value;
+        }
+      }
+    }
+  });
+  if (border) {
+    Object.assign(attrs, { border });
+  }
+  Object.assign(attrs, reserved, gradient);
+  if (transition) {
+    transition.properties = transition.properties || 'all';
+    transition.delay = transition.delay || [0];
+    transition.duration = transition.duration || [0];
+    transition.easing = transition.easing || ['ease'];
+    attrs.transitions = [];
+    const properties = transition.properties.split(',').map(p => p.trim());
+    properties.forEach((key, i) => {
+      let _attrs = null;
+      if (key.indexOf('--sprite-') === 0) {
+        key = key.replace('--sprite-', '');
+      }
+      key = toCamel(key);
+      if (key !== 'borderRadius' && /^border/.test(key)) {
+        key = 'border';
+      }
+      if (key === 'backgroundColor' || key === 'background') key = 'bgcolor';
+      if (key === 'fontVariantCaps') key = 'fontVariant';
+      if (key === 'all') {
+        _attrs = Object.assign({}, attrs);
+        delete _attrs.transitions;
+        delete _attrs.animation;
+      } else if (key in attrs) {
+        _attrs = { [key]: attrs[key] };
+      }
+      if (_attrs) {
+        attrs.transitions.push({
+          easing: transition.easing[i],
+          attrs: _attrs,
+          delay: transition.delay[i],
+          duration: transition.duration[i] });
+      }
+    });
+  }
+  return attrs;
+}
+
+function parseFrames(rule) {
+  const rules = rule.cssRules || rule.rules;
+  if (rules && rules.length > 0) {
+    const frames = [];
+    for (let i = 0; i < rules.length; i++) {
+      const rule = rules[i];
+      const offset = parseFloat(rule.keyText) / 100;
+      const frame = parseRuleAttrs(rule);
+      frame.offset = offset;
+      frames.push(frame);
+    }
+    return frames;
+  }
+}
 
 function toCamel(str) {
   return str.replace(/([^-])(?:-+([^-]))/g, ($0, $1, $2) => {
     return $1 + $2.toUpperCase();
   });
-}
-
-function applyValue(key, value, values) {
-  if (/Top$/.test(key)) values[0] = value;
-  if (/Right$/.test(key)) values[1] = value;
-  if (/Bottom$/.test(key)) values[2] = value;
-  if (/Left$/.test(key)) values[3] = value;
 }
 
 function resolveToken(token) {
@@ -8293,193 +8631,26 @@ let order = 0;
         for (let j = 0; j < rules.length; j++) {
           const rule = rules[j];
           const selectorText = rule.selectorText;
-          const isStyleMap = !!rule.styleMap;
-          let styleAttrs;
 
-          if (!isStyleMap) {
-            // eslint-disable-line no-continue
-            if (!rule.style) continue; // eslint-disable-line no-continue
-
-            const props = [...rule.style].map(key => {
-              return [key, rule.style[key]];
-            }).filter(([key, value]) => value != null);
-
-            const matched = rule.cssText.match(/--sprite-[\w-]+\s*:\s*.+?(;|$)/img);
-            if (matched) {
-              matched.forEach(rule => {
-                const [key, value] = rule.split(':');
-                props.push([key, value.trim().replace(/;$/, '')]);
-              });
-            }
-            const isIgnore = props['--sprite-ignore'];
-            if (isIgnore && isIgnore !== 'false' && isIgnore !== '0') {
-              continue; // eslint-disable-line no-continue
-            }
-
-            styleAttrs = props;
+          if (rule.type !== 1 && rule.type !== 7) {
+            // is not style rule or keyframesrule
+            continue; // eslint-disable-line no-continue
           }
-          if (rule.styleMap && rule.styleMap.has('--sprite-ignore')) {
-            const isIgnore = rule.styleMap.get('--sprite-ignore')[0].trim();
-            if (isIgnore !== 'false' && isIgnore !== '0' && isIgnore !== '') {
-              continue; // eslint-disable-line no-continue
-            }
-          }
-          if (rule.styleMap) {
-            styleAttrs = [...rule.styleMap];
-          }
-          const attrs = {},
-                reserved = {};
-          let border = null;
-          let transition = null;
-          const gradient = {};
 
-          styleAttrs.forEach(([key, value]) => {
-            // eslint-disable-line complexity
-            if (key.indexOf('--sprite-') === 0) {
-              key = key.replace('--sprite-', '');
-              key = toCamel(key);
-              if (isStyleMap) value = value[0][0].trim();
-              if (/^margin\w+/.test(key)) {
-                reserved.margin = reserved.margin || [0, 0, 0, 0];
-                applyValue(key, toPxValue(value), reserved.margin);
-              } else if (/^padding\w+/.test(key)) {
-                reserved.padding = reserved.padding || [0, 0, 0, 0];
-                applyValue(key, toPxValue(value), reserved.padding);
-              } else if (key === 'gradient') {
-                // --sprite-gradient: bgcolor,color vector(0, 150, 150, 0) 0 #fff,0.5 rgba(33, 33, 77, 0.7),1 rgba(128, 45, 88, 0.5)
-                const matched = value.match(/(.+?)vector\((.+?)\)(.+)/);
-                if (matched) {
-                  const properties = matched[1].trim().split(/\s*,\s*/g),
-                        vector = matched[2].split(',').map(s => Number(s.trim())),
-                        colors = matched[3].trim().split(/\s+/).map(s => {
-                    const [offset, color] = s.split(',');
-                    return { offset: Number(offset.trim()), color: color.trim() };
-                  });
-                  properties.forEach(prop => {
-                    gradient[prop] = { vector, colors };
-                  });
-                }
-              } else if (key === 'borderStyle') {
-                border = border || { width: 1, color: 'rgba(0,0,0,0)' };
-                border.style = value;
-              } else if (key === 'borderWidth') {
-                border = border || { width: 1, color: 'rgba(0,0,0,0)' };
-                border.width = toPxValue(value);
-              } else if (key === 'borderColor') {
-                border = border || { width: 1, color: 'rgba(0,0,0,0)' };
-                border.color = value;
-              } else if (key === 'border') {
-                const values = value.split(/\s+/);
-                const [style, width, color] = values;
-                border = border || {};
-                border.style = style;
-                border.width = toPxValue(width);
-                border.color = color;
-              } else {
-                if (key !== 'fontSize') {
-                  if (/,/.test(value)) {
-                    const values = value.split(',');
-                    value = values.map(v => toPxValue(v.trim()));
-                  } else {
-                    value = toPxValue(value);
-                  }
-                }
-                reserved[key] = value;
-              }
-            } else {
-              key = toCamel(key);
-              if (key in CSSGetter) {
-                if (typeof CSSGetter[key] === 'function') {
-                  value = CSSGetter[key](value);
-                } else {
-                  if (isStyleMap) {
-                    value = value[0].toString();
-                  }
-                  if (key !== 'fontSize') {
-                    value = toPxValue(value);
-                  }
-                }
-
-                if (value === 'initial') return;
-                if (key === 'backgroundColor') key = 'bgcolor';
-                if (key === 'fontVariantCaps') key = 'fontVariant';
-                if (key === 'lineHeight' && value === 'normal') value = '';
-
-                if (/^margin\w+/.test(key)) {
-                  attrs.margin = attrs.margin || [0, 0, 0, 0];
-                  applyValue(key, toPxValue(value), attrs.margin);
-                } else if (/^padding\w+/.test(key)) {
-                  attrs.padding = attrs.padding || [0, 0, 0, 0];
-                  applyValue(key, toPxValue(value), attrs.padding);
-                } else if (/^border/.test(key)) {
-                  key = key.replace(/^border(Top|Right|Bottom|Left)/, '').toLowerCase();
-                  if (key === 'width') value = toPxValue(value);
-                  if (/radius$/.test(key)) {
-                    attrs.borderRadius = toPxValue(value);
-                  } else {
-                    border = border || {};
-                    border[key] = value;
-                  }
-                } else if (key === 'transitionDelay') {
-                  transition = transition || {};
-                  transition.delay = value;
-                } else if (key === 'transitionDuration') {
-                  transition = transition || {};
-                  transition.duration = value;
-                } else if (key === 'transitionTimingFunction') {
-                  transition = transition || {};
-                  transition.easing = value;
-                } else if (key === 'transitionProperty') {
-                  transition = transition || {};
-                  transition.properties = value;
-                } else {
-                  attrs[key] = value;
-                }
-              }
-            }
-          });
-          if (border) {
-            Object.assign(attrs, { border });
+          if (rule.type === 7) {
+            const frames = parseFrames(rule);
+            keyFrames[rule.name] = frames;
+            continue; // eslint-disable-line no-continue
           }
-          Object.assign(attrs, reserved, gradient);
-          styleRules[selectorText] = styleRules[selectorText] || {};
-          if (transition) {
-            transition.properties = transition.properties || 'all';
-            transition.delay = transition.delay || [0];
-            transition.duration = transition.duration || [0];
-            transition.easing = transition.easing || ['ease'];
-            attrs.transitions = [];
-            const properties = transition.properties.split(',').map(p => p.trim());
-            properties.forEach((key, i) => {
-              let _attrs = null;
-              if (key.indexOf('--sprite-') === 0) {
-                key = key.replace('--sprite-', '');
-              }
-              key = toCamel(key);
-              if (key !== 'borderRadius' && /^border/.test(key)) {
-                key = 'border';
-              }
-              if (key === 'backgroundColor' || key === 'background') key = 'bgcolor';
-              if (key === 'fontVariantCaps') key = 'fontVariant';
-              if (key === 'all') {
-                _attrs = Object.assign({}, attrs);
-                delete _attrs.transitions;
-              } else if (key in attrs) {
-                _attrs = { [key]: attrs[key] };
-              }
-              if (_attrs) {
-                attrs.transitions.push({
-                  easing: transition.easing[i],
-                  attrs: _attrs,
-                  delay: transition.delay[i],
-                  duration: transition.duration[i] });
-              }
-            });
+
+          const attrs = parseRuleAttrs(rule);
+
+          if (attrs) {
+            styleRules[selectorText] = styleRules[selectorText] || {};
+            Object.assign(styleRules[selectorText], attrs);
           }
-          Object.assign(styleRules[selectorText], attrs);
         }
       }
-      // console.log(styleRules);
       this.add(styleRules, true);
     }
   },
@@ -8499,7 +8670,9 @@ let order = 0;
             Object.keys(t.attrs).forEach(k => {
               // if(k in attrs) delete attrs[k];
               el.attributes.__getStyleTag = true;
-              attrs[k] = el.attributes[k];
+              if (el.attributes[k]) {
+                attrs[k] = el.attributes[k];
+              }
               el.attributes.__getStyleTag = false;
               // console.log(el.attributes.style[k]);
             });
@@ -8512,6 +8685,31 @@ let order = 0;
     const matchedSelectors = selectors.join();
     if (el[_matchedSelectors] !== matchedSelectors) {
       // console.log(transitions);
+      if (attrs.animation) {
+        const animation = attrs.animation;
+        const delay = animation.animationDelay,
+              direction = animation.animationDirection,
+              duration = animation.animationDuration,
+              fill = animation.animationFillMode,
+              iterations = animation.animationIterationCount,
+              name = animation.animationName,
+              playState = animation.animationPlayState,
+              easing = animation.animationTimingFunction;
+
+        const frames = keyFrames[name];
+        if (frames) {
+          if (el[_animation]) {
+            el[_animation].cancel();
+          }
+          el[_animation] = el.animate(frames, { duration, delay, fill, iterations, easing, direction });
+          el.setReleaseKey(_animation);
+          if (playState !== 'running') el[_animation].pause();
+        } else {
+          console.warn(`Unknow animation: ${name}`);
+        }
+        delete attrs.animation;
+      }
+
       if (el[_transitions]) {
         el[_transitions].forEach(t => {
           t.cancel(true);
@@ -8524,6 +8722,7 @@ let order = 0;
 
       if (transitions.length > 0) {
         el[_transitions] = [];
+        el.setReleaseKey(_transitions);
         Promise.all(transitions.map(t => {
           const { attrs, delay, duration, easing } = t;
           const transition = el.transition({ duration, delay }, easing, true);
@@ -11604,7 +11803,7 @@ const defaultEffect = (from, to, p, start, end) => {
   let matchFrom = null,
       matchTo = null;
 
-  const exp = /^(\d+|\d*\.\d+)(%|rh|rw)$/i;
+  const exp = /^([\d.]+)(%|rh|rw)$/i;
   if (typeof from === 'string') {
     matchFrom = exp.exec(from);
     if (matchFrom) {
@@ -19193,8 +19392,12 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
 
   get viewport() {
     const canvas = this.canvas;
-    if (canvas && canvas.clientWidth) {
-      return [canvas.clientWidth, canvas.clientHeight];
+    if (canvas) {
+      if (canvas.getBoundingClientRect) {
+        const { width, height } = canvas.getBoundingClientRect();
+        return [width, height];
+      }
+      if (canvas.clientWidth) return [canvas.clientWidth, canvas.clientHeight];
     }
     if (this.parent) {
       return this.parent.layerViewport;
