@@ -47,8 +47,14 @@
     console.log(e);
   });
 
+  s.on('keydown', (e) => {
+    console.log(e);
+  });
+
   scene.delegateEvent('myevent');
   scene.dispatchEvent('myevent', {x: 1});
+
+  scene.delegateEvent('keydown', document);
   </script>
 </body>
 </html>

@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.1';
+var version = '2.23.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -25770,7 +25770,7 @@ var Scene = function (_BaseNode) {
             originalX = evtArgs.originalX;
             originalY = evtArgs.originalY;
           }
-        } else if (e.target.dataset.layerId && _this5[_layerMap][e.target.dataset.layerId]) {
+        } else {
           var _e$target$getBounding = e.target.getBoundingClientRect(),
               left = _e$target$getBounding.left,
               top = _e$target$getBounding.top;
@@ -25779,12 +25779,15 @@ var Scene = function (_BaseNode) {
               clientX = _ref.clientX,
               clientY = _ref.clientY;
 
-          originalX = Math.round((clientX | 0) - left);
-          originalY = Math.round((clientY | 0) - top);
-        } else {
-          originalX = NaN;
-          originalY = NaN;
+          if (clientX != null && clientY != null) {
+            originalX = Math.round((clientX | 0) - left);
+            originalY = Math.round((clientY | 0) - top);
+          }
         }
+        // else {
+        //   originalX = NaN;
+        //   originalY = NaN;
+        // }
 
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];

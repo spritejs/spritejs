@@ -431,16 +431,19 @@ export default class Scene extends BaseNode {
           originalX = evtArgs.originalX;
           originalY = evtArgs.originalY;
         }
-      } else if(e.target.dataset.layerId && this[_layerMap][e.target.dataset.layerId]) {
+      } else {
         const {left, top} = e.target.getBoundingClientRect();
         const {clientX, clientY} = e.changedTouches ? e.changedTouches[0] : e;
 
-        originalX = Math.round((clientX | 0) - left);
-        originalY = Math.round((clientY | 0) - top);
-      } else {
-        originalX = NaN;
-        originalY = NaN;
+        if(clientX != null && clientY != null) {
+          originalX = Math.round((clientX | 0) - left);
+          originalY = Math.round((clientY | 0) - top);
+        }
       }
+      // else {
+      //   originalX = NaN;
+      //   originalY = NaN;
+      // }
 
       for(let i = 0; i < layers.length; i++) {
         const layer = layers[i];
