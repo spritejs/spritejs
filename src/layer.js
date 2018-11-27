@@ -43,7 +43,7 @@ class ExLayer extends Layer {
     if(this[_attrs].has(name)) {
       this[name] = value;
     } else {
-      this.canvas.setAttribute(name, value);
+      super.setAttribute(name, value);
     }
   }
 
@@ -51,14 +51,14 @@ class ExLayer extends Layer {
     if(this[_attrs].has(name)) {
       return this[name];
     }
-    return this.canvas.getAttribute(name);
+    return super.getAttribute(name);
   }
 
   removeAttribute(name) {
     if(this[_attrs].has(name)) {
       this[name] = null;
     } else {
-      this.canvas.removeAttribute(name);
+      super.removeAttribute(name);
     }
   }
 

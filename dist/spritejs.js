@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.0';
+var version = '2.23.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6267,7 +6267,12 @@ function parseStringInt(str) {
 }
 
 function parseStringFloat(str) {
-  return parseValuesString(str, parseFloat);
+  return parseValuesString(str, function (v) {
+    if (v === 'center') return 0.5;
+    if (v === 'left' || v === 'top') return 0;
+    if (v === 'right' || v === 'bottom') return 1;
+    return parseFloat(v);
+  });
 }
 
 function oneOrTwoValues(val) {
@@ -7766,6 +7771,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         if (!_this2[_attr].__attributeNames.has(key) && !(key in _this2[_attr])) {
           (0, _defineProperty5.default)(_this2[_attr], key, {
             // enumerable: true,
+            configurable: true,
             set: function set(value) {
               var subject = this.subject;
               var owner = subject.__owner || subject;
@@ -8639,8 +8645,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       if (this[_show]) return this[_show];
 
-      var originalDisplay = this.attr('_originalDisplay') || '';
-      var originalState = this.attr('_originalState') || 'default';
+      var originalDisplay = this.attr('__originalDisplay') || '';
+      var originalState = this.attr('__originalState') || 'default';
 
       var states = this.attr('states');
 
@@ -8659,8 +8665,8 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
         });
         deferred.promise = deferred.promise.then(function () {
           if (!_this8[_hide]) {
-            delete _this8[_attr]._originalDisplay;
-            delete _this8[_attr]._originalState;
+            delete _this8[_attr].__originalDisplay;
+            delete _this8[_attr].__originalState;
             if (states.show.__default) {
               delete states.show;
               _this8.attr('states', states);
@@ -8693,13 +8699,13 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
       var state = this.attr('state');
       if (this[_hide] || state === 'hide' || state === 'afterExit' || state === 'beforeExit') return this[_hide];
-      var _originalDisplay = this.attr('_originalDisplay');
-      if (_originalDisplay == null) {
+      var __originalDisplay = this.attr('__originalDisplay');
+      if (__originalDisplay == null) {
         var display = this.attr('display');
 
         this.attr({
-          _originalDisplay: display !== 'none' ? display : '',
-          _originalState: state !== 'hide' ? state : 'default'
+          __originalDisplay: display !== 'none' ? display : '',
+          __originalState: state !== 'hide' ? state : 'default'
         });
       }
 
@@ -9055,6 +9061,10 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
             set: function set(target, prop, value) {
               if (typeof prop !== 'string' || /^__/.test(prop)) target[prop] = value;else target.subject.attr(prop, value);
               return true;
+            },
+            deleteProperty: function deleteProperty(target, prop) {
+              if (typeof prop !== 'string' || /^__/.test(prop)) delete target[prop];else target.subject.attr(prop, null);
+              return true;
             }
           });
         } catch (ex) {
@@ -9080,6 +9090,14 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
                 target.subject.attr(prop, value);
               } else {
                 target.subject[_style][prop] = value;
+              }
+              return true;
+            },
+            deleteProperty: function deleteProperty(target, prop) {
+              if (prop !== 'id' && prop !== 'name' && prop !== 'class' && target.__attributeNames.has(prop) || _utils.inheritAttributes.has(prop)) {
+                target.subject.attr(prop, null);
+              } else {
+                delete target.subject[_style][prop];
               }
               return true;
             }
@@ -11177,9 +11195,6 @@ function toPxValue(value, defaultWidth) {
         }
       }
     } else {
-      if (value === 'top' || value === 'left') value = 0;
-      if (value === 'bottom' || value === 'right') value = 1.0;
-      if (value === 'center') value = 0.5;
       var _v = Number(value);
       if (!(0, _isNan2.default)(_v)) {
         value = _v;
@@ -24990,6 +25005,10 @@ var _possibleConstructorReturn2 = __webpack_require__(187);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
+var _get2 = __webpack_require__(188);
+
+var _get3 = _interopRequireDefault(_get2);
+
 var _inherits2 = __webpack_require__(189);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
@@ -25057,7 +25076,7 @@ var ExLayer = function (_Layer) {
       if (this[_attrs].has(name)) {
         this[name] = value;
       } else {
-        this.canvas.setAttribute(name, value);
+        (0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'setAttribute', this).call(this, name, value);
       }
     }
   }, {
@@ -25066,7 +25085,7 @@ var ExLayer = function (_Layer) {
       if (this[_attrs].has(name)) {
         return this[name];
       }
-      return this.canvas.getAttribute(name);
+      return (0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'getAttribute', this).call(this, name);
     }
   }, {
     key: 'removeAttribute',
@@ -25074,7 +25093,7 @@ var ExLayer = function (_Layer) {
       if (this[_attrs].has(name)) {
         this[name] = null;
       } else {
-        this.canvas.removeAttribute(name);
+        (0, _get3.default)(ExLayer.prototype.__proto__ || (0, _getPrototypeOf2.default)(ExLayer.prototype), 'removeAttribute', this).call(this, name);
       }
     }
   }, {

@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.0';
+const version = '2.23.1';
 
 
 
@@ -4508,7 +4508,12 @@ function parseStringInt(str) {
 }
 
 function parseStringFloat(str) {
-  return parseValuesString(str, parseFloat);
+  return parseValuesString(str, v => {
+    if (v === 'center') return 0.5;
+    if (v === 'left' || v === 'top') return 0;
+    if (v === 'right' || v === 'bottom') return 1;
+    return parseFloat(v);
+  });
 }
 
 function oneOrTwoValues(val) {
@@ -5794,6 +5799,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       if (!this[_attr].__attributeNames.has(key) && !(key in this[_attr])) {
         Object.defineProperty(this[_attr], key, {
           // enumerable: true,
+          configurable: true,
           set(value) {
             const subject = this.subject;
             const owner = subject.__owner || subject;
@@ -5887,6 +5893,10 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           set(target, prop, value) {
             if (typeof prop !== 'string' || /^__/.test(prop)) target[prop] = value;else target.subject.attr(prop, value);
             return true;
+          },
+          deleteProperty(target, prop) {
+            if (typeof prop !== 'string' || /^__/.test(prop)) delete target[prop];else target.subject.attr(prop, null);
+            return true;
           }
         });
       } catch (ex) {
@@ -5911,6 +5921,14 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
               target.subject.attr(prop, value);
             } else {
               target.subject[_style][prop] = value;
+            }
+            return true;
+          },
+          deleteProperty(target, prop) {
+            if (prop !== 'id' && prop !== 'name' && prop !== 'class' && target.__attributeNames.has(prop) || _utils__WEBPACK_IMPORTED_MODULE_2__["inheritAttributes"].has(prop)) {
+              target.subject.attr(prop, null);
+            } else {
+              delete target.subject[_style][prop];
             }
             return true;
           }
@@ -6750,8 +6768,8 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   show() {
     if (this[_show]) return this[_show];
 
-    const originalDisplay = this.attr('_originalDisplay') || '';
-    const originalState = this.attr('_originalState') || 'default';
+    const originalDisplay = this.attr('__originalDisplay') || '';
+    const originalState = this.attr('__originalState') || 'default';
 
     const states = this.attr('states');
 
@@ -6770,8 +6788,8 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
       });
       deferred.promise = deferred.promise.then(() => {
         if (!this[_hide]) {
-          delete this[_attr]._originalDisplay;
-          delete this[_attr]._originalState;
+          delete this[_attr].__originalDisplay;
+          delete this[_attr].__originalState;
           if (states.show.__default) {
             delete states.show;
             this.attr('states', states);
@@ -6801,13 +6819,13 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   hide() {
     const state = this.attr('state');
     if (this[_hide] || state === 'hide' || state === 'afterExit' || state === 'beforeExit') return this[_hide];
-    const _originalDisplay = this.attr('_originalDisplay');
-    if (_originalDisplay == null) {
+    const __originalDisplay = this.attr('__originalDisplay');
+    if (__originalDisplay == null) {
       const display = this.attr('display');
 
       this.attr({
-        _originalDisplay: display !== 'none' ? display : '',
-        _originalState: state !== 'hide' ? state : 'default'
+        __originalDisplay: display !== 'none' ? display : '',
+        __originalState: state !== 'hide' ? state : 'default'
       });
     }
 
@@ -8238,9 +8256,6 @@ function toPxValue(value, defaultWidth) {
         }
       }
     } else {
-      if (value === 'top' || value === 'left') value = 0;
-      if (value === 'bottom' || value === 'right') value = 1.0;
-      if (value === 'center') value = 0.5;
       const v = Number(value);
       if (!Number.isNaN(v)) {
         value = v;
@@ -19492,7 +19507,7 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     if (this[_attrs].has(name)) {
       this[name] = value;
     } else {
-      this.canvas.setAttribute(name, value);
+      super.setAttribute(name, value);
     }
   }
 
@@ -19500,14 +19515,14 @@ let ExLayer = class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["La
     if (this[_attrs].has(name)) {
       return this[name];
     }
-    return this.canvas.getAttribute(name);
+    return super.getAttribute(name);
   }
 
   removeAttribute(name) {
     if (this[_attrs].has(name)) {
       this[name] = null;
     } else {
-      this.canvas.removeAttribute(name);
+      super.removeAttribute(name);
     }
   }
 
