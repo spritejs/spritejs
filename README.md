@@ -33,7 +33,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 ## Quick Start
 
-**SpriteJS**
+**SpriteJS** - spritejs.org
 
 ```html
 <script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
@@ -55,7 +55,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-**React JSX**
+**React JSX** - react.spritejs.org
 
 ```jsx
 <Scene id="container">
@@ -71,7 +71,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </Scene>
 ```
 
-**Vue Component**
+**Vue Component** - vue.spritejs.org
 
 ```xml
 <template>
@@ -250,8 +250,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 | [<img src="https://avatars2.githubusercontent.com/u/12529206?s=460&v=4" width="60px;"/><br /><sub><b>betseyliu</b></sub>](https://github.com/betseyliu)<br />[💻](https://github.com/spritejs/spritejs/commits?author=betseyliu "Code") [📖](https://github.com/spritejs/spritejs/commits?author=betseyliu "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/11631503?s=460&v=4" width="60px;"/><br /><sub><b>Shero0311</b></sub>](https://github.com/Shero0311)<br />[📖](https://github.com/spritejs/spritejs/commits?author=Shero0311 "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/16967069?s=460&v=4" width="60px;"/><br /><sub><b>有马</b></sub>](https://github.com/makeco)<br />[📖](https://github.com/spritejs/spritejs/commits?author=makeco "Documentation") [💻](https://github.com/spritejs/spritejs/commit/e2ef39bafd81ee09494f5ebbaf0f8319dbd85122 "Code")| [<img src="https://avatars1.githubusercontent.com/u/8180186?s=400&v=4" width="60px;"/><br /><sub><b>文蔺</b></sub>](https://github.com/AngusFu)<br />[💻](https://github.com/spritejs/spritejs/commits?author=AngusFu "Code") [🐛](https://github.com/spritejs/spritejs/issues/30 "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/5996758?s=400&v=4" width="60px;"/><br /><sub><b>蔡斯杰</b></sub>](https://github.com/SijieCai)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=SijieCai "Code") [📖](https://github.com/spritejs/spritejs/commits?author=SijieCai "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/726566?s=400&v=4" width="60px;"/><br /><sub><b>Shaofei Cheng</b></sub>](https://github.com/wintercn)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=wintercn "Code") [📖](https://github.com/spritejs/spritejs/commits?author=wintercn "Documentation") | 
 | :---: | :---: | :---: | :---: | :---: | :---: | 
 
-| [<img src="https://avatars2.githubusercontent.com/u/424491?s=400&v=4" width="60px;"/><br /><sub><b>公子</b></sub>](https://github.com/lizheming)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=lizheming "Code") |  [<img src="https://avatars1.githubusercontent.com/u/26452939?s=400&v=4" width="60px;"/><br /><sub><b>justemit</b></sub>](https://github.com/justemit)<br />[💻](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Code")  [📖](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Documentation") [🐛](https://github.com/spritejs/sprite-core/issues/34 "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/40935?s=400&v=4" width="60px;"/><br /><sub><b>Welefen Lee</b></sub>](https://github.com/welefen)<br />[💻](https://github.com/spritejs/sprite-flex-layout "Code")   | [<img src="https://avatars2.githubusercontent.com/u/30425185?s=400&v=4" width="60px;"/><br /><sub><b>YUPENG12138</b></sub>](https://github.com/YUPENG12138)<br />[📖](https://github.com/spritejs/spritejs/issues/52 "Documentation")|
-| :---: | :---: | :---: | :---: |
+| [<img src="https://avatars2.githubusercontent.com/u/424491?s=400&v=4" width="60px;"/><br /><sub><b>公子</b></sub>](https://github.com/lizheming)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=lizheming "Code") |  [<img src="https://avatars1.githubusercontent.com/u/26452939?s=400&v=4" width="60px;"/><br /><sub><b>justemit</b></sub>](https://github.com/justemit)<br />[💻](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Code")  [📖](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Documentation") [🐛](https://github.com/spritejs/sprite-core/issues/34 "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/40935?s=400&v=4" width="60px;"/><br /><sub><b>Welefen Lee</b></sub>](https://github.com/welefen)<br />[💻](https://github.com/spritejs/sprite-flex-layout "Code")   | [<img src="https://avatars2.githubusercontent.com/u/30425185?s=400&v=4" width="60px;"/><br /><sub><b>YUPENG12138</b></sub>](https://github.com/YUPENG12138)<br />[📖](https://github.com/spritejs/spritejs/issues/52 "Documentation")| [<img src="https://avatars1.githubusercontent.com/u/1617414?s=400&v=4" width="60px;"/><br /><sub><b>xinde</b></sub>](https://github.com/xinde)<br />[🐛](https://github.com/spritejs/spritejs/issues/59 "Bug reports")| [<img src="https://avatars2.githubusercontent.com/u/13284749?s=400&v=4" width="60px;"/><br /><sub><b>ggvswild</b></sub>](https://github.com/ggvswild)<br />[🐛](https://github.com/spritejs/spritejs/issues/70 "Bug reports")|
+| :---: | :---: | :---: | :---: | :---: | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
