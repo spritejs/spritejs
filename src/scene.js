@@ -199,6 +199,11 @@ export default class Scene extends BaseNode {
     this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
   }
 
+  replaceChild(newLayer, oldLayer) {
+    this.insertBefore(newLayer, oldLayer);
+    this.removeChild(oldLayer);
+  }
+
   appendChild(layer) {
     return this.appendLayer(layer);
   }

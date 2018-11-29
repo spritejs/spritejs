@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.2';
+const version = '2.23.3';
 
 
 
@@ -14261,7 +14261,8 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     this.renderMode = renderMode;
 
     this.outputContext = context;
-    context.canvas.layer_ = this;
+
+    if (context.canvas) context.canvas.layer_ = this;
 
     this.childNodes = [];
     this.sortedChildNodes = [];
@@ -16805,6 +16806,10 @@ const _removeTask = Symbol('removeTask');
       return _insert();
     }
     return null;
+  },
+  async replaceChild(newChild, oldChild) {
+    await this.insertBefore(newChild, oldChild);
+    this.removeChild(oldChild);
   }
 });
 
@@ -19925,6 +19930,11 @@ let Scene = class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNo
       }
     });
     this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
+  }
+
+  replaceChild(newLayer, oldLayer) {
+    this.insertBefore(newLayer, oldLayer);
+    this.removeChild(oldLayer);
   }
 
   appendChild(layer) {

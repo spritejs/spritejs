@@ -108,7 +108,7 @@ exports.Timeline = exports.Easings = exports.Effects = exports.Resource = export
 
 var _spriteCore = __webpack_require__(1);
 
-var _basesprite = __webpack_require__(263);
+var _basesprite = __webpack_require__(267);
 
 var _basesprite2 = _interopRequireDefault(_basesprite);
 
@@ -124,7 +124,7 @@ var _scene = __webpack_require__(303);
 
 var _scene2 = _interopRequireDefault(_scene);
 
-var _resource = __webpack_require__(264);
+var _resource = __webpack_require__(268);
 
 var _resource2 = _interopRequireDefault(_resource);
 
@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.2';
+var version = '2.23.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -248,7 +248,7 @@ var _basenode = __webpack_require__(232);
 
 var _basenode2 = _interopRequireDefault(_basenode);
 
-var _path = __webpack_require__(262);
+var _path = __webpack_require__(266);
 
 var _path2 = _interopRequireDefault(_path);
 
@@ -17972,7 +17972,7 @@ var _group2 = _interopRequireDefault(_group);
 
 var _nodetype = __webpack_require__(236);
 
-var _dirtyCheck = __webpack_require__(261);
+var _dirtyCheck = __webpack_require__(265);
 
 var _group3 = __webpack_require__(260);
 
@@ -18023,7 +18023,8 @@ var Layer = function (_BaseNode) {
     _this.renderMode = renderMode;
 
     _this.outputContext = context;
-    context.canvas.layer_ = _this;
+
+    if (context.canvas) context.canvas.layer_ = _this;
 
     _this.childNodes = [];
     _this.sortedChildNodes = [];
@@ -20989,6 +20990,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _regenerator = __webpack_require__(261);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = __webpack_require__(264);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _symbol = __webpack_require__(39);
 
 var _symbol2 = _interopRequireDefault(_symbol);
@@ -21170,765 +21179,20 @@ exports.default = {
       return _insert();
     }
     return null;
-  }
-};
-
-/***/ }),
-/* 261 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _toConsumableArray2 = __webpack_require__(99);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-exports.clearDirtyRect = clearDirtyRect;
-exports.clearDirtyRects = clearDirtyRects;
-
-var _utils = __webpack_require__(157);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// export function isSpriteDirty(sprite, dirtyEls, isUpdateEl = false) {
-//   for(let i = 0; i < dirtyEls.length; i++) {
-//     const dirtyEl = dirtyEls[i]
-//     const box1 = dirtyEl.renderBox,
-//       box2 = sprite.renderBox,
-//       box3 = dirtyEl.lastRenderBox
-
-//     if(boxIntersect(box1, box2) || isUpdateEl && box3 && boxIntersect(box3, box2)) {
-//       return true
-//     }
-//   }
-//   return false
-// }
-
-function clearDirtyRect(outputContext, box, width, height) {
-  box = box.map(function (b, i) {
-    return i < 2 ? b - 1 : b + 1;
-  });
-  var dirtyBox = (0, _utils.boxIntersect)(box, [0, 0, width, height]);
-
-  if (dirtyBox) {
-    var dirtyRect = (0, _utils.boxToRect)(dirtyBox);
-    outputContext.rect.apply(outputContext, (0, _toConsumableArray3.default)(dirtyRect));
-  }
-}
-
-function clearDirtyRects(outputContext, dirtyEls) {
-  var isUpdateEl = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  var _outputContext$canvas = outputContext.canvas,
-      width = _outputContext$canvas.width,
-      height = _outputContext$canvas.height;
-
-
-  outputContext.beginPath();
-  for (var i = 0; i < dirtyEls.length; i++) {
-    var dirtyEl = dirtyEls[i];
-    var box = dirtyEl.renderBox;
-
-    clearDirtyRect(outputContext, box, width, height);
-
-    if (isUpdateEl) {
-      var lastRenderBox = dirtyEl.lastRenderBox;
-      if (lastRenderBox && !(0, _utils.boxEqual)(lastRenderBox, box)) {
-        clearDirtyRect(outputContext, lastRenderBox, width, height);
-      }
-    }
-  }
-  outputContext.clip();
-}
-
-/***/ }),
-/* 262 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _slicedToArray2 = __webpack_require__(90);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
-var _get2 = __webpack_require__(188);
-
-var _get3 = _interopRequireDefault(_get2);
-
-var _getOwnPropertyDescriptor = __webpack_require__(175);
-
-var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
-
-var _assign = __webpack_require__(2);
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _getPrototypeOf = __webpack_require__(184);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(115);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(116);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(187);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(189);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _desc2, _value2, _class2, _class3, _temp;
-
-var _utils = __webpack_require__(157);
-
-var _basesprite = __webpack_require__(174);
-
-var _basesprite2 = _interopRequireDefault(_basesprite);
-
-var _render = __webpack_require__(173);
-
-var _path = __webpack_require__(250);
-
-var _nodetype = __webpack_require__(236);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _applyDecoratedDescriptor = __webpack_require__(231);
-
-var PathSpriteAttr = (_dec = (0, _utils.inherit)(1), _dec2 = (0, _utils.parseValue)(_utils.parseStringFloat), _dec3 = (0, _utils.parseValue)(parseFloat), _dec4 = (0, _utils.inherit)('butt'), _dec5 = (0, _utils.inherit)('miter'), _dec6 = (0, _utils.inherit)(''), _dec7 = (0, _utils.inherit)(''), _dec8 = (0, _utils.inherit)('box'), (_class = function (_BaseSprite$Attr) {
-  (0, _inherits3.default)(PathSpriteAttr, _BaseSprite$Attr);
-
-  function PathSpriteAttr(subject) {
-    (0, _classCallCheck3.default)(this, PathSpriteAttr);
-
-    var _this = (0, _possibleConstructorReturn3.default)(this, (PathSpriteAttr.__proto__ || (0, _getPrototypeOf2.default)(PathSpriteAttr)).call(this, subject));
-
-    _this.setDefault({
-      lineWidth: 'inherit',
-      lineDash: null,
-      lineDashOffset: 0,
-      lineCap: 'inherit',
-      lineJoin: 'inherit',
-      strokeColor: 'inherit',
-      fillColor: 'inherit',
-      bounding: 'inherit'
-    });
-    return _this;
-  }
-
-  (0, _createClass3.default)(PathSpriteAttr, [{
-    key: 'path',
-    set: function set(val) {
-      this.clearFlow();
-      if (val) {
-        val = typeof val === 'string' ? { d: val } : val;
-        this.subject.svg = (0, _path.createSvgPath)(val);
-        this.set('path', val);
-      } else {
-        this.subject.svg = null;
-        this.set('path', null);
-      }
-    }
-  }, {
-    key: 'd',
-    set: function set(val) {
-      if (val) {
-        var path = this.get('path');
-        if (!path) {
-          this.path = { d: val };
-        } else {
-          this.path = (0, _assign2.default)(path, { d: val });
-        }
-      } else {
-        this.path = null;
-      }
-    },
-    get: function get() {
-      return this.path ? this.path.d : null;
-    }
-  }, {
-    key: 'lineWidth',
-    set: function set(val) {
-      if (typeof val === 'string') val = parseFloat(val);
-      this.clearFlow();
-      this.set('lineWidth', Math.round(val));
-    }
-  }, {
-    key: 'lineDash',
-    set: function set(val) {
-      if (typeof val === 'number') val = [val];
-      this.set('lineDash', val);
-    }
-  }, {
-    key: 'lineDashOffset',
-    set: function set(val) {
-      this.set('lineDashOffset', val);
-    }
-
-    /**
-      lineCap: butt|round|square
-     */
-
-  }, {
-    key: 'lineCap',
-    set: function set(val) {
-      this.set('lineCap', val);
-    }
-
-    /**
-      lineJoin: miter|round|bevel
-     */
-
-  }, {
-    key: 'lineJoin',
-    set: function set(val) {
-      this.set('lineJoin', val);
-    }
-  }, {
-    key: 'strokeColor',
-    set: function set(val) {
-      this.set('strokeColor', (0, _utils.parseColorString)(val));
-    }
-  }, {
-    key: 'fillColor',
-    set: function set(val) {
-      this.set('fillColor', (0, _utils.parseColorString)(val));
-    }
-  }, {
-    key: 'flexible',
-    set: function set(val) {
-      this.clearFlow();
-      this.set('flexible', val);
-    }
-  }, {
-    key: 'bounding',
-    set: function set(val) {
-      // box | path
-      this.quietSet('bounding', val);
-    }
-  }, {
-    key: 'color',
-    set: function set(val) {
-      this.strokeColor = val;
-    },
-    get: function get() {
-      return this.strokeColor;
-    }
-  }]);
-  return PathSpriteAttr;
-}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'path', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'path'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_utils.attr, _dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDash', [_dec2, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDash'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDashOffset', [_dec3, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineCap', [_utils.attr, _dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineCap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineJoin', [_utils.attr, _dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineJoin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_utils.attr, _dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_utils.attr, _dec7], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bounding', [_utils.attr, _dec8], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bounding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype)), _class));
-var Path = (_class2 = (_temp = _class3 = function (_BaseSprite) {
-  (0, _inherits3.default)(Path, _BaseSprite);
-
-  function Path(attr) {
-    (0, _classCallCheck3.default)(this, Path);
-
-    if (typeof attr === 'string') {
-      attr = { d: attr };
-    }
-    return (0, _possibleConstructorReturn3.default)(this, (Path.__proto__ || (0, _getPrototypeOf2.default)(Path)).call(this, attr));
-  }
-
-  (0, _createClass3.default)(Path, [{
-    key: 'getPointAtLength',
-    value: function getPointAtLength(length) {
-      if (this.svg) {
-        return this.svg.getPointAtLength(length);
-      }
-      return [0, 0];
-    }
-  }, {
-    key: 'getPathLength',
-    value: function getPathLength() {
-      if (this.svg) {
-        return this.svg.getTotalLength();
-      }
-      return 0;
-    }
-  }, {
-    key: 'findPath',
-    value: function findPath(offsetX, offsetY) {
-      var rect = this.originalRect;
-      var pathOffset = this.pathOffset;
-      if (this.svg && this.svg.isPointInPath(offsetX - rect[0] - pathOffset[0], offsetY - rect[1] - pathOffset[1])) {
-        return [this.svg];
-      }
-      return [];
-    }
-  }, {
-    key: 'pointCollision',
-    value: function pointCollision(evt) {
-      if ((0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'pointCollision', this).call(this, evt)) {
-        var offsetX = evt.offsetX,
-            offsetY = evt.offsetY;
-
-        if (offsetX == null && offsetY == null) return true;
-
-        var svg = this.svg;
-        if (svg) {
-          var bounds = svg.bounds;
-          offsetX += Math.min(0, bounds[0]);
-          offsetY += Math.min(0, bounds[1]);
-        }
-        evt.targetPaths = this.findPath(offsetX, offsetY);
-        if (this.attr('bounding') === 'path') {
-          return evt.targetPaths.length > 0;
-        }
-        return true;
-      }
-      return false;
-    }
-  }, {
-    key: 'render',
-    value: function render(t, drawingContext) {
-      (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'render', this).call(this, t, drawingContext);
-      var d = this.attr('d'),
-          lineWidth = this.attr('lineWidth'),
-          lineCap = this.attr('lineCap'),
-          lineJoin = this.attr('lineJoin'),
-          lineDash = this.attr('lineDash'),
-          flexible = this.attr('flexible');
-
-      if (d) {
-        var svg = this.svg;
-
-        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 4),
-            ox = _svg$bounds[0],
-            oy = _svg$bounds[1],
-            ow = _svg$bounds[2],
-            oh = _svg$bounds[3];
-
-        var _pathOffset = (0, _slicedToArray3.default)(this.pathOffset, 2),
-            px = _pathOffset[0],
-            py = _pathOffset[1];
-
-        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
-            w = _contentSize[0],
-            h = _contentSize[1];
-
-        if (w < ow || h < oh) {
-          drawingContext.beginPath();
-          drawingContext.rect(0, 0, w, h);
-          drawingContext.clip();
-        }
-
-        if (flexible) {
-          svg.save();
-          var sw = w / (ow - Math.min(0, ox) + 2 * px);
-          svg.scale(sw, sw);
-          ox *= sw;
-          oy *= sw;
-          px *= sw;
-          py *= sw;
-        }
-
-        if (ox < 0 || oy < 0) {
-          drawingContext.translate(-Math.min(0, ox), -Math.min(0, oy));
-        }
-        drawingContext.translate(px, py);
-
-        svg.beginPath().to(drawingContext);
-
-        if (flexible) {
-          svg.restore();
-        }
-
-        drawingContext.lineWidth = lineWidth;
-        drawingContext.lineCap = lineCap;
-        drawingContext.lineJoin = lineJoin;
-
-        if (lineDash != null) {
-          drawingContext.setLineDash(lineDash);
-
-          var lineDashOffset = this.attr('lineDashOffset');
-          drawingContext.lineDashOffset = lineDashOffset;
-        }
-
-        var fillColor = (0, _render.findColor)(drawingContext, this, 'fillColor');
-        if (fillColor) {
-          drawingContext.fillStyle = fillColor;
-        }
-
-        var strokeColor = (0, _render.findColor)(drawingContext, this, 'strokeColor');
-
-        if (!strokeColor && !fillColor) {
-          strokeColor = (0, _utils.parseColorString)('black');
-        }
-        if (strokeColor) {
-          drawingContext.strokeStyle = strokeColor;
-        }
-
-        if (fillColor) {
-          drawingContext.fill();
-        }
-        if (strokeColor) {
-          drawingContext.stroke();
-        }
-      }
-    }
-  }, {
-    key: 'path',
-    set: function set(val) {
-      this.attr('path', val);
-    },
-    get: function get() {
-      return this.attr('path');
-    }
-  }, {
-    key: 'lineWidth',
-    get: function get() {
-      var lineWidth = this.attr('lineWidth'),
-          gradients = this.attr('gradients'),
-          fillColor = this.attr('fillColor'),
-          strokeColor = this.attr('strokeColor');
-
-      var hasStrokeColor = strokeColor || gradients && gradients.strokeColor,
-          hasFillColor = fillColor || gradients && gradients.fillColor;
-
-      if (!hasStrokeColor && hasFillColor) {
-        // fill: ignore stroke
-        return 0;
-      }
-      return lineWidth;
-    }
-  }, {
-    key: 'pathOffset',
-    get: function get() {
-      var lw = Math.round(this.lineWidth);
-      return [lw, lw];
-    }
-  }, {
-    key: 'pathSize',
-    get: function get() {
-      return this.svg ? this.svg.size : [0, 0];
-    }
-  }, {
-    key: 'contentSize',
-    get: function get() {
-      if (!this.svg) return (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'contentSize', this);
-
-      var bounds = this.svg.bounds;
-
-      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
-          width = _attrSize[0],
-          height = _attrSize[1];
-
-      var pathOffset = this.pathOffset;
-
-      if (width === '') {
-        width = bounds[2] - Math.min(0, bounds[0]) + 2 * pathOffset[0];
-      }
-      if (height === '') {
-        height = bounds[3] - Math.min(0, bounds[1]) + 2 * pathOffset[1];
-      }
-
-      if (this.attr('flexible') && this.attr('height') === '' && this.attr('layoutHeight') === '') {
-        height = Math.ceil(height * width / (bounds[2] - Math.min(0, bounds[0]) + 2 * pathOffset[0]));
-      }
-
-      return [width, height].map(Math.ceil);
-    }
-  }, {
-    key: 'originalRect',
-    get: function get() {
-      var svg = this.svg;
-      if (svg) {
-        var bounds = svg.bounds,
-            offset = this.pathOffset;
-
-        var _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
-            width = _offsetSize[0],
-            height = _offsetSize[1],
-            _attr = this.attr('anchor'),
-            _attr2 = (0, _slicedToArray3.default)(_attr, 2),
-            anchorX = _attr2[0],
-            anchorY = _attr2[1];
-
-        var rect = [0, 0, width, height],
-            offsetX = Math.min(0, bounds[0]),
-            offsetY = Math.min(0, bounds[1]);
-
-        rect[0] = offsetX - offset[0] - anchorX * (width + offsetX - 2 * offset[0]);
-        rect[1] = offsetY - offset[1] - anchorY * (height + offsetY - 2 * offset[1]);
-        return rect;
-      }
-
-      return (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this);
-    }
-  }]);
-  return Path;
-}(_basesprite2.default), _class3.Attr = PathSpriteAttr, _temp), (_applyDecoratedDescriptor(_class2.prototype, 'contentSize', [_utils.flow], (0, _getOwnPropertyDescriptor2.default)(_class2.prototype, 'contentSize'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'originalRect', [_utils.flow], (0, _getOwnPropertyDescriptor2.default)(_class2.prototype, 'originalRect'), _class2.prototype)), _class2);
-exports.default = Path;
-
-
-Path.setAttributeEffects({
-  d: _path.pathEffect,
-  path: function path(path1, path2, p, start, end) {
-    path1 = (0, _path.createSvgPath)(path1);
-    path2 = (0, _path.createSvgPath)(path2);
-    return (0, _path.pathEffect)(path1.d, path2.d, p, start, end);
-  }
-});
-
-(0, _nodetype.registerNodeType)('path', Path);
-
-/***/ }),
-/* 263 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _promise = __webpack_require__(125);
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _symbol = __webpack_require__(39);
-
-var _symbol2 = _interopRequireDefault(_symbol);
-
-var _spriteCore = __webpack_require__(1);
-
-var _resource = __webpack_require__(264);
-
-var _resource2 = _interopRequireDefault(_resource);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _loadBgImagePassport = (0, _symbol2.default)('loadBgImagePassport');
-
-_spriteCore.BaseSprite.prototype.loadBgImage = function (val) {
-  var _this = this;
-
-  var res = void 0;
-  if (val.id) {
-    res = _resource2.default.loadTexture({ id: val.id });
-  } else if (val.src) {
-    res = _resource2.default.loadTexture(val.src);
-  }
-  if (res instanceof _promise2.default) {
-    var passport = (0, _symbol2.default)('passport');
-    this[_loadBgImagePassport] = passport;
-    res.then(function (_ref) {
-      var img = _ref.img,
-          texture = _ref.texture;
-
-      if (passport === _this[_loadBgImagePassport]) {
-        var bgimage = _this.attr('bgimage');
-        bgimage.image = img;
-        _this.attr('bgimage', null);
-        _this.attr('bgimage', bgimage);
-      }
-    });
-  } else if (res) {
-    val.image = res.img;
-  }
-
-  return val;
-};
-
-exports.default = _spriteCore.BaseSprite;
-
-/***/ }),
-/* 264 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _regenerator = __webpack_require__(265);
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _slicedToArray2 = __webpack_require__(90);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
-var _entries = __webpack_require__(142);
-
-var _entries2 = _interopRequireDefault(_entries);
-
-var _asyncToGenerator2 = __webpack_require__(268);
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-var _promise = __webpack_require__(125);
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _map = __webpack_require__(105);
-
-var _map2 = _interopRequireDefault(_map);
-
-var _platform = __webpack_require__(269);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var axios = __webpack_require__(272);
-
-var loadedResources = new _map2.default();
-
-/**
-  loadTexture({
-    id: 'bird1',
-    src: 'http://some.path/brid1.png'
-  })
- */
-
-var Resource = {
-  loadTimeout: 30000,
-  loadTexture: function loadTexture(texture) {
-    var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Resource.loadTimeout;
-
-    if (typeof texture === 'string') {
-      texture = { src: texture };
-    }
-    if (!texture.id) {
-      texture.id = texture.src;
-    }
-
-    var mapKey = texture.id;
-
-    if (!loadedResources.has(mapKey)) {
-      var promise = new _promise2.default(function (resolve, reject) {
-        var timer = setTimeout(function () {
-          reject(new Error('load img timeout'));
-        }, timeout);
-
-        (0, _platform.loadImage)(texture.src).then(function (img) {
-          // save image not canvas for svg preserveAspectRatio
-          resolve({ img: img, texture: texture, fromCache: false });
-          loadedResources.set(mapKey, img);
-          clearTimeout(timer);
-        });
-      });
-      loadedResources.set(mapKey, promise);
-      return promise;
-    }
-    var img = loadedResources.get(mapKey);
-    if (img instanceof _promise2.default) {
-      return img.then(function (res) {
-        return {
-          img: res.img,
-          texture: texture,
-          fromCache: false
-        };
-      });
-    }
-    return {
-      img: img,
-      texture: texture,
-      fromCache: true
-    };
   },
-
-  /**
-    u3d-json compatible: https://www.codeandweb.com/texturepacker
-    {
-      frames: {
-        key: {
-          frame: {x, y, w, h},
-          trimmed: ...,
-          rotated: true|false,
-          spriteSourceSize: {x, y, w, h},
-          sourceSize: {w, h}
-        }
-      }
-    }
-   */
-  loadFrames: function () {
-    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(src, frameData) {
-      var texture, frames;
+  replaceChild: function () {
+    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(newChild, oldChild) {
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(typeof frameData === 'string')) {
-                _context.next = 5;
-                break;
-              }
+              _context.next = 2;
+              return this.insertBefore(newChild, oldChild);
 
-              _context.next = 3;
-              return axios.get(frameData);
+            case 2:
+              this.removeChild(oldChild);
 
             case 3:
-              frameData = _context.sent;
-
-              frameData = frameData.data;
-
-            case 5:
-              _context.next = 7;
-              return this.loadTexture(src);
-
-            case 7:
-              texture = _context.sent;
-              frames = frameData.frames;
-
-
-              (0, _entries2.default)(frames).forEach(function (_ref2) {
-                var _ref3 = (0, _slicedToArray3.default)(_ref2, 2),
-                    key = _ref3[0],
-                    frame = _ref3[1];
-
-                var _frame$sourceSize = frame.sourceSize,
-                    w = _frame$sourceSize.w,
-                    h = _frame$sourceSize.h;
-
-
-                var canvas = (0, _platform.createCanvas)(w, h),
-                    srcRect = frame.frame,
-                    rect = frame.spriteSourceSize,
-                    context = canvas.getContext('2d');
-
-                var rotated = frame.rotated;
-
-                context.save();
-
-                if (rotated) {
-                  context.translate(0, h);
-                  context.rotate(-0.5 * Math.PI);
-
-                  var tmp = rect.y;
-                  rect.y = rect.x;
-                  rect.x = h - srcRect.h - tmp;
-
-                  context.drawImage(texture.img, srcRect.x, srcRect.y, srcRect.h, srcRect.w, rect.x, rect.y, rect.h, rect.w);
-                } else {
-                  context.drawImage(texture.img, srcRect.x, srcRect.y, srcRect.w, srcRect.h, rect.x, rect.y, rect.w, rect.h);
-                }
-
-                context.restore();
-
-                loadedResources.set(key, canvas);
-              });
-
-              return _context.abrupt('return', texture);
-
-            case 11:
             case 'end':
               return _context.stop();
           }
@@ -21936,25 +21200,23 @@ var Resource = {
       }, _callee, this);
     }));
 
-    function loadFrames(_x2, _x3) {
+    function replaceChild(_x2, _x3) {
       return _ref.apply(this, arguments);
     }
 
-    return loadFrames;
+    return replaceChild;
   }()
 };
 
-exports.default = Resource;
-
 /***/ }),
-/* 265 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(266);
+module.exports = __webpack_require__(262);
 
 
 /***/ }),
-/* 266 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21979,7 +21241,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(267);
+module.exports = __webpack_require__(263);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -21995,7 +21257,7 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 267 */
+/* 263 */
 /***/ (function(module, exports) {
 
 /**
@@ -22728,7 +21990,7 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 268 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22770,6 +22032,779 @@ exports.default = function (fn) {
     });
   };
 };
+
+/***/ }),
+/* 265 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _toConsumableArray2 = __webpack_require__(99);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+exports.clearDirtyRect = clearDirtyRect;
+exports.clearDirtyRects = clearDirtyRects;
+
+var _utils = __webpack_require__(157);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// export function isSpriteDirty(sprite, dirtyEls, isUpdateEl = false) {
+//   for(let i = 0; i < dirtyEls.length; i++) {
+//     const dirtyEl = dirtyEls[i]
+//     const box1 = dirtyEl.renderBox,
+//       box2 = sprite.renderBox,
+//       box3 = dirtyEl.lastRenderBox
+
+//     if(boxIntersect(box1, box2) || isUpdateEl && box3 && boxIntersect(box3, box2)) {
+//       return true
+//     }
+//   }
+//   return false
+// }
+
+function clearDirtyRect(outputContext, box, width, height) {
+  box = box.map(function (b, i) {
+    return i < 2 ? b - 1 : b + 1;
+  });
+  var dirtyBox = (0, _utils.boxIntersect)(box, [0, 0, width, height]);
+
+  if (dirtyBox) {
+    var dirtyRect = (0, _utils.boxToRect)(dirtyBox);
+    outputContext.rect.apply(outputContext, (0, _toConsumableArray3.default)(dirtyRect));
+  }
+}
+
+function clearDirtyRects(outputContext, dirtyEls) {
+  var isUpdateEl = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var _outputContext$canvas = outputContext.canvas,
+      width = _outputContext$canvas.width,
+      height = _outputContext$canvas.height;
+
+
+  outputContext.beginPath();
+  for (var i = 0; i < dirtyEls.length; i++) {
+    var dirtyEl = dirtyEls[i];
+    var box = dirtyEl.renderBox;
+
+    clearDirtyRect(outputContext, box, width, height);
+
+    if (isUpdateEl) {
+      var lastRenderBox = dirtyEl.lastRenderBox;
+      if (lastRenderBox && !(0, _utils.boxEqual)(lastRenderBox, box)) {
+        clearDirtyRect(outputContext, lastRenderBox, width, height);
+      }
+    }
+  }
+  outputContext.clip();
+}
+
+/***/ }),
+/* 266 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _slicedToArray2 = __webpack_require__(90);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _get2 = __webpack_require__(188);
+
+var _get3 = _interopRequireDefault(_get2);
+
+var _getOwnPropertyDescriptor = __webpack_require__(175);
+
+var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
+
+var _assign = __webpack_require__(2);
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _getPrototypeOf = __webpack_require__(184);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(115);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(116);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(187);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(189);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _desc2, _value2, _class2, _class3, _temp;
+
+var _utils = __webpack_require__(157);
+
+var _basesprite = __webpack_require__(174);
+
+var _basesprite2 = _interopRequireDefault(_basesprite);
+
+var _render = __webpack_require__(173);
+
+var _path = __webpack_require__(250);
+
+var _nodetype = __webpack_require__(236);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _applyDecoratedDescriptor = __webpack_require__(231);
+
+var PathSpriteAttr = (_dec = (0, _utils.inherit)(1), _dec2 = (0, _utils.parseValue)(_utils.parseStringFloat), _dec3 = (0, _utils.parseValue)(parseFloat), _dec4 = (0, _utils.inherit)('butt'), _dec5 = (0, _utils.inherit)('miter'), _dec6 = (0, _utils.inherit)(''), _dec7 = (0, _utils.inherit)(''), _dec8 = (0, _utils.inherit)('box'), (_class = function (_BaseSprite$Attr) {
+  (0, _inherits3.default)(PathSpriteAttr, _BaseSprite$Attr);
+
+  function PathSpriteAttr(subject) {
+    (0, _classCallCheck3.default)(this, PathSpriteAttr);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (PathSpriteAttr.__proto__ || (0, _getPrototypeOf2.default)(PathSpriteAttr)).call(this, subject));
+
+    _this.setDefault({
+      lineWidth: 'inherit',
+      lineDash: null,
+      lineDashOffset: 0,
+      lineCap: 'inherit',
+      lineJoin: 'inherit',
+      strokeColor: 'inherit',
+      fillColor: 'inherit',
+      bounding: 'inherit'
+    });
+    return _this;
+  }
+
+  (0, _createClass3.default)(PathSpriteAttr, [{
+    key: 'path',
+    set: function set(val) {
+      this.clearFlow();
+      if (val) {
+        val = typeof val === 'string' ? { d: val } : val;
+        this.subject.svg = (0, _path.createSvgPath)(val);
+        this.set('path', val);
+      } else {
+        this.subject.svg = null;
+        this.set('path', null);
+      }
+    }
+  }, {
+    key: 'd',
+    set: function set(val) {
+      if (val) {
+        var path = this.get('path');
+        if (!path) {
+          this.path = { d: val };
+        } else {
+          this.path = (0, _assign2.default)(path, { d: val });
+        }
+      } else {
+        this.path = null;
+      }
+    },
+    get: function get() {
+      return this.path ? this.path.d : null;
+    }
+  }, {
+    key: 'lineWidth',
+    set: function set(val) {
+      if (typeof val === 'string') val = parseFloat(val);
+      this.clearFlow();
+      this.set('lineWidth', Math.round(val));
+    }
+  }, {
+    key: 'lineDash',
+    set: function set(val) {
+      if (typeof val === 'number') val = [val];
+      this.set('lineDash', val);
+    }
+  }, {
+    key: 'lineDashOffset',
+    set: function set(val) {
+      this.set('lineDashOffset', val);
+    }
+
+    /**
+      lineCap: butt|round|square
+     */
+
+  }, {
+    key: 'lineCap',
+    set: function set(val) {
+      this.set('lineCap', val);
+    }
+
+    /**
+      lineJoin: miter|round|bevel
+     */
+
+  }, {
+    key: 'lineJoin',
+    set: function set(val) {
+      this.set('lineJoin', val);
+    }
+  }, {
+    key: 'strokeColor',
+    set: function set(val) {
+      this.set('strokeColor', (0, _utils.parseColorString)(val));
+    }
+  }, {
+    key: 'fillColor',
+    set: function set(val) {
+      this.set('fillColor', (0, _utils.parseColorString)(val));
+    }
+  }, {
+    key: 'flexible',
+    set: function set(val) {
+      this.clearFlow();
+      this.set('flexible', val);
+    }
+  }, {
+    key: 'bounding',
+    set: function set(val) {
+      // box | path
+      this.quietSet('bounding', val);
+    }
+  }, {
+    key: 'color',
+    set: function set(val) {
+      this.strokeColor = val;
+    },
+    get: function get() {
+      return this.strokeColor;
+    }
+  }]);
+  return PathSpriteAttr;
+}(_basesprite2.default.Attr), (_applyDecoratedDescriptor(_class.prototype, 'path', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'path'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'd', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'd'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineWidth', [_utils.attr, _dec], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineWidth'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDash', [_dec2, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDash'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineDashOffset', [_dec3, _utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineDashOffset'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineCap', [_utils.attr, _dec4], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineCap'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'lineJoin', [_utils.attr, _dec5], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'lineJoin'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'strokeColor', [_utils.attr, _dec6], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'strokeColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'fillColor', [_utils.attr, _dec7], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'fillColor'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'flexible', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'flexible'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'bounding', [_utils.attr, _dec8], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'bounding'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'color', [_utils.attr], (0, _getOwnPropertyDescriptor2.default)(_class.prototype, 'color'), _class.prototype)), _class));
+var Path = (_class2 = (_temp = _class3 = function (_BaseSprite) {
+  (0, _inherits3.default)(Path, _BaseSprite);
+
+  function Path(attr) {
+    (0, _classCallCheck3.default)(this, Path);
+
+    if (typeof attr === 'string') {
+      attr = { d: attr };
+    }
+    return (0, _possibleConstructorReturn3.default)(this, (Path.__proto__ || (0, _getPrototypeOf2.default)(Path)).call(this, attr));
+  }
+
+  (0, _createClass3.default)(Path, [{
+    key: 'getPointAtLength',
+    value: function getPointAtLength(length) {
+      if (this.svg) {
+        return this.svg.getPointAtLength(length);
+      }
+      return [0, 0];
+    }
+  }, {
+    key: 'getPathLength',
+    value: function getPathLength() {
+      if (this.svg) {
+        return this.svg.getTotalLength();
+      }
+      return 0;
+    }
+  }, {
+    key: 'findPath',
+    value: function findPath(offsetX, offsetY) {
+      var rect = this.originalRect;
+      var pathOffset = this.pathOffset;
+      if (this.svg && this.svg.isPointInPath(offsetX - rect[0] - pathOffset[0], offsetY - rect[1] - pathOffset[1])) {
+        return [this.svg];
+      }
+      return [];
+    }
+  }, {
+    key: 'pointCollision',
+    value: function pointCollision(evt) {
+      if ((0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'pointCollision', this).call(this, evt)) {
+        var offsetX = evt.offsetX,
+            offsetY = evt.offsetY;
+
+        if (offsetX == null && offsetY == null) return true;
+
+        var svg = this.svg;
+        if (svg) {
+          var bounds = svg.bounds;
+          offsetX += Math.min(0, bounds[0]);
+          offsetY += Math.min(0, bounds[1]);
+        }
+        evt.targetPaths = this.findPath(offsetX, offsetY);
+        if (this.attr('bounding') === 'path') {
+          return evt.targetPaths.length > 0;
+        }
+        return true;
+      }
+      return false;
+    }
+  }, {
+    key: 'render',
+    value: function render(t, drawingContext) {
+      (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'render', this).call(this, t, drawingContext);
+      var d = this.attr('d'),
+          lineWidth = this.attr('lineWidth'),
+          lineCap = this.attr('lineCap'),
+          lineJoin = this.attr('lineJoin'),
+          lineDash = this.attr('lineDash'),
+          flexible = this.attr('flexible');
+
+      if (d) {
+        var svg = this.svg;
+
+        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 4),
+            ox = _svg$bounds[0],
+            oy = _svg$bounds[1],
+            ow = _svg$bounds[2],
+            oh = _svg$bounds[3];
+
+        var _pathOffset = (0, _slicedToArray3.default)(this.pathOffset, 2),
+            px = _pathOffset[0],
+            py = _pathOffset[1];
+
+        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
+            w = _contentSize[0],
+            h = _contentSize[1];
+
+        if (w < ow || h < oh) {
+          drawingContext.beginPath();
+          drawingContext.rect(0, 0, w, h);
+          drawingContext.clip();
+        }
+
+        if (flexible) {
+          svg.save();
+          var sw = w / (ow - Math.min(0, ox) + 2 * px);
+          svg.scale(sw, sw);
+          ox *= sw;
+          oy *= sw;
+          px *= sw;
+          py *= sw;
+        }
+
+        if (ox < 0 || oy < 0) {
+          drawingContext.translate(-Math.min(0, ox), -Math.min(0, oy));
+        }
+        drawingContext.translate(px, py);
+
+        svg.beginPath().to(drawingContext);
+
+        if (flexible) {
+          svg.restore();
+        }
+
+        drawingContext.lineWidth = lineWidth;
+        drawingContext.lineCap = lineCap;
+        drawingContext.lineJoin = lineJoin;
+
+        if (lineDash != null) {
+          drawingContext.setLineDash(lineDash);
+
+          var lineDashOffset = this.attr('lineDashOffset');
+          drawingContext.lineDashOffset = lineDashOffset;
+        }
+
+        var fillColor = (0, _render.findColor)(drawingContext, this, 'fillColor');
+        if (fillColor) {
+          drawingContext.fillStyle = fillColor;
+        }
+
+        var strokeColor = (0, _render.findColor)(drawingContext, this, 'strokeColor');
+
+        if (!strokeColor && !fillColor) {
+          strokeColor = (0, _utils.parseColorString)('black');
+        }
+        if (strokeColor) {
+          drawingContext.strokeStyle = strokeColor;
+        }
+
+        if (fillColor) {
+          drawingContext.fill();
+        }
+        if (strokeColor) {
+          drawingContext.stroke();
+        }
+      }
+    }
+  }, {
+    key: 'path',
+    set: function set(val) {
+      this.attr('path', val);
+    },
+    get: function get() {
+      return this.attr('path');
+    }
+  }, {
+    key: 'lineWidth',
+    get: function get() {
+      var lineWidth = this.attr('lineWidth'),
+          gradients = this.attr('gradients'),
+          fillColor = this.attr('fillColor'),
+          strokeColor = this.attr('strokeColor');
+
+      var hasStrokeColor = strokeColor || gradients && gradients.strokeColor,
+          hasFillColor = fillColor || gradients && gradients.fillColor;
+
+      if (!hasStrokeColor && hasFillColor) {
+        // fill: ignore stroke
+        return 0;
+      }
+      return lineWidth;
+    }
+  }, {
+    key: 'pathOffset',
+    get: function get() {
+      var lw = Math.round(this.lineWidth);
+      return [lw, lw];
+    }
+  }, {
+    key: 'pathSize',
+    get: function get() {
+      return this.svg ? this.svg.size : [0, 0];
+    }
+  }, {
+    key: 'contentSize',
+    get: function get() {
+      if (!this.svg) return (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'contentSize', this);
+
+      var bounds = this.svg.bounds;
+
+      var _attrSize = (0, _slicedToArray3.default)(this.attrSize, 2),
+          width = _attrSize[0],
+          height = _attrSize[1];
+
+      var pathOffset = this.pathOffset;
+
+      if (width === '') {
+        width = bounds[2] - Math.min(0, bounds[0]) + 2 * pathOffset[0];
+      }
+      if (height === '') {
+        height = bounds[3] - Math.min(0, bounds[1]) + 2 * pathOffset[1];
+      }
+
+      if (this.attr('flexible') && this.attr('height') === '' && this.attr('layoutHeight') === '') {
+        height = Math.ceil(height * width / (bounds[2] - Math.min(0, bounds[0]) + 2 * pathOffset[0]));
+      }
+
+      return [width, height].map(Math.ceil);
+    }
+  }, {
+    key: 'originalRect',
+    get: function get() {
+      var svg = this.svg;
+      if (svg) {
+        var bounds = svg.bounds,
+            offset = this.pathOffset;
+
+        var _offsetSize = (0, _slicedToArray3.default)(this.offsetSize, 2),
+            width = _offsetSize[0],
+            height = _offsetSize[1],
+            _attr = this.attr('anchor'),
+            _attr2 = (0, _slicedToArray3.default)(_attr, 2),
+            anchorX = _attr2[0],
+            anchorY = _attr2[1];
+
+        var rect = [0, 0, width, height],
+            offsetX = Math.min(0, bounds[0]),
+            offsetY = Math.min(0, bounds[1]);
+
+        rect[0] = offsetX - offset[0] - anchorX * (width + offsetX - 2 * offset[0]);
+        rect[1] = offsetY - offset[1] - anchorY * (height + offsetY - 2 * offset[1]);
+        return rect;
+      }
+
+      return (0, _get3.default)(Path.prototype.__proto__ || (0, _getPrototypeOf2.default)(Path.prototype), 'originalRect', this);
+    }
+  }]);
+  return Path;
+}(_basesprite2.default), _class3.Attr = PathSpriteAttr, _temp), (_applyDecoratedDescriptor(_class2.prototype, 'contentSize', [_utils.flow], (0, _getOwnPropertyDescriptor2.default)(_class2.prototype, 'contentSize'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'originalRect', [_utils.flow], (0, _getOwnPropertyDescriptor2.default)(_class2.prototype, 'originalRect'), _class2.prototype)), _class2);
+exports.default = Path;
+
+
+Path.setAttributeEffects({
+  d: _path.pathEffect,
+  path: function path(path1, path2, p, start, end) {
+    path1 = (0, _path.createSvgPath)(path1);
+    path2 = (0, _path.createSvgPath)(path2);
+    return (0, _path.pathEffect)(path1.d, path2.d, p, start, end);
+  }
+});
+
+(0, _nodetype.registerNodeType)('path', Path);
+
+/***/ }),
+/* 267 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _promise = __webpack_require__(125);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _symbol = __webpack_require__(39);
+
+var _symbol2 = _interopRequireDefault(_symbol);
+
+var _spriteCore = __webpack_require__(1);
+
+var _resource = __webpack_require__(268);
+
+var _resource2 = _interopRequireDefault(_resource);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _loadBgImagePassport = (0, _symbol2.default)('loadBgImagePassport');
+
+_spriteCore.BaseSprite.prototype.loadBgImage = function (val) {
+  var _this = this;
+
+  var res = void 0;
+  if (val.id) {
+    res = _resource2.default.loadTexture({ id: val.id });
+  } else if (val.src) {
+    res = _resource2.default.loadTexture(val.src);
+  }
+  if (res instanceof _promise2.default) {
+    var passport = (0, _symbol2.default)('passport');
+    this[_loadBgImagePassport] = passport;
+    res.then(function (_ref) {
+      var img = _ref.img,
+          texture = _ref.texture;
+
+      if (passport === _this[_loadBgImagePassport]) {
+        var bgimage = _this.attr('bgimage');
+        bgimage.image = img;
+        _this.attr('bgimage', null);
+        _this.attr('bgimage', bgimage);
+      }
+    });
+  } else if (res) {
+    val.image = res.img;
+  }
+
+  return val;
+};
+
+exports.default = _spriteCore.BaseSprite;
+
+/***/ }),
+/* 268 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _regenerator = __webpack_require__(261);
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _slicedToArray2 = __webpack_require__(90);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _entries = __webpack_require__(142);
+
+var _entries2 = _interopRequireDefault(_entries);
+
+var _asyncToGenerator2 = __webpack_require__(264);
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _promise = __webpack_require__(125);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _map = __webpack_require__(105);
+
+var _map2 = _interopRequireDefault(_map);
+
+var _platform = __webpack_require__(269);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var axios = __webpack_require__(272);
+
+var loadedResources = new _map2.default();
+
+/**
+  loadTexture({
+    id: 'bird1',
+    src: 'http://some.path/brid1.png'
+  })
+ */
+
+var Resource = {
+  loadTimeout: 30000,
+  loadTexture: function loadTexture(texture) {
+    var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Resource.loadTimeout;
+
+    if (typeof texture === 'string') {
+      texture = { src: texture };
+    }
+    if (!texture.id) {
+      texture.id = texture.src;
+    }
+
+    var mapKey = texture.id;
+
+    if (!loadedResources.has(mapKey)) {
+      var promise = new _promise2.default(function (resolve, reject) {
+        var timer = setTimeout(function () {
+          reject(new Error('load img timeout'));
+        }, timeout);
+
+        (0, _platform.loadImage)(texture.src).then(function (img) {
+          // save image not canvas for svg preserveAspectRatio
+          resolve({ img: img, texture: texture, fromCache: false });
+          loadedResources.set(mapKey, img);
+          clearTimeout(timer);
+        });
+      });
+      loadedResources.set(mapKey, promise);
+      return promise;
+    }
+    var img = loadedResources.get(mapKey);
+    if (img instanceof _promise2.default) {
+      return img.then(function (res) {
+        return {
+          img: res.img,
+          texture: texture,
+          fromCache: false
+        };
+      });
+    }
+    return {
+      img: img,
+      texture: texture,
+      fromCache: true
+    };
+  },
+
+  /**
+    u3d-json compatible: https://www.codeandweb.com/texturepacker
+    {
+      frames: {
+        key: {
+          frame: {x, y, w, h},
+          trimmed: ...,
+          rotated: true|false,
+          spriteSourceSize: {x, y, w, h},
+          sourceSize: {w, h}
+        }
+      }
+    }
+   */
+  loadFrames: function () {
+    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(src, frameData) {
+      var texture, frames;
+      return _regenerator2.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!(typeof frameData === 'string')) {
+                _context.next = 5;
+                break;
+              }
+
+              _context.next = 3;
+              return axios.get(frameData);
+
+            case 3:
+              frameData = _context.sent;
+
+              frameData = frameData.data;
+
+            case 5:
+              _context.next = 7;
+              return this.loadTexture(src);
+
+            case 7:
+              texture = _context.sent;
+              frames = frameData.frames;
+
+
+              (0, _entries2.default)(frames).forEach(function (_ref2) {
+                var _ref3 = (0, _slicedToArray3.default)(_ref2, 2),
+                    key = _ref3[0],
+                    frame = _ref3[1];
+
+                var _frame$sourceSize = frame.sourceSize,
+                    w = _frame$sourceSize.w,
+                    h = _frame$sourceSize.h;
+
+
+                var canvas = (0, _platform.createCanvas)(w, h),
+                    srcRect = frame.frame,
+                    rect = frame.spriteSourceSize,
+                    context = canvas.getContext('2d');
+
+                var rotated = frame.rotated;
+
+                context.save();
+
+                if (rotated) {
+                  context.translate(0, h);
+                  context.rotate(-0.5 * Math.PI);
+
+                  var tmp = rect.y;
+                  rect.y = rect.x;
+                  rect.x = h - srcRect.h - tmp;
+
+                  context.drawImage(texture.img, srcRect.x, srcRect.y, srcRect.h, srcRect.w, rect.x, rect.y, rect.h, rect.w);
+                } else {
+                  context.drawImage(texture.img, srcRect.x, srcRect.y, srcRect.w, srcRect.h, rect.x, rect.y, rect.w, rect.h);
+                }
+
+                context.restore();
+
+                loadedResources.set(key, canvas);
+              });
+
+              return _context.abrupt('return', texture);
+
+            case 11:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function loadFrames(_x2, _x3) {
+      return _ref.apply(this, arguments);
+    }
+
+    return loadFrames;
+  }()
+};
+
+exports.default = Resource;
 
 /***/ }),
 /* 269 */
@@ -23112,7 +23147,7 @@ var _desc, _value, _class;
 
 var _spriteCore = __webpack_require__(1);
 
-var _resource = __webpack_require__(264);
+var _resource = __webpack_require__(268);
 
 var _resource2 = _interopRequireDefault(_resource);
 
@@ -24965,11 +25000,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = __webpack_require__(265);
+var _regenerator = __webpack_require__(261);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = __webpack_require__(268);
+var _asyncToGenerator2 = __webpack_require__(264);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -25413,7 +25448,7 @@ var _isNan = __webpack_require__(165);
 
 var _isNan2 = _interopRequireDefault(_isNan);
 
-var _regenerator = __webpack_require__(265);
+var _regenerator = __webpack_require__(261);
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
@@ -25421,7 +25456,7 @@ var _promise = __webpack_require__(125);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _asyncToGenerator2 = __webpack_require__(268);
+var _asyncToGenerator2 = __webpack_require__(264);
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -25479,7 +25514,7 @@ var _layer = __webpack_require__(299);
 
 var _layer2 = _interopRequireDefault(_layer);
 
-var _resource = __webpack_require__(264);
+var _resource = __webpack_require__(268);
 
 var _resource2 = _interopRequireDefault(_resource);
 
@@ -25639,6 +25674,12 @@ var Scene = function (_BaseNode) {
         }
       });
       this[_layers] = sortOrderedSprites((0, _values2.default)(this[_layerMap]), true);
+    }
+  }, {
+    key: 'replaceChild',
+    value: function replaceChild(newLayer, oldLayer) {
+      this.insertBefore(newLayer, oldLayer);
+      this.removeChild(oldLayer);
     }
   }, {
     key: 'appendChild',
