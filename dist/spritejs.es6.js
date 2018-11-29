@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.3';
+const version = '2.23.4';
 
 
 
@@ -7298,8 +7298,22 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
     this[_style] = {};
 
     this[_temp] = new Map(); // save non-serialized values
-    this.__attributesSet = new Set();
-    this.__styleTag = false;
+
+    Object.defineProperty(this, '__attributesSet', {
+      value: new Set()
+    });
+    Object.defineProperty(this, '__styleTag', {
+      writable: true,
+      value: false
+    });
+    Object.defineProperty(this, '__updateTag', {
+      writable: true,
+      value: false
+    });
+    Object.defineProperty(this, '__reflowTag', {
+      writable: true,
+      value: false
+    });
 
     this.setDefault({
       state: 'default',
@@ -12434,6 +12448,11 @@ function registerNodeType(type, Class, isQuerable = false) {
   });
   // friendly to snabbdom
   Object.defineProperty(Class.prototype, 'tagName', {
+    get() {
+      return tagName;
+    }
+  });
+  Object.defineProperty(Class.prototype, 'nodeName', {
     get() {
       return tagName;
     }
