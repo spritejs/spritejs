@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.4';
+var version = '2.23.5';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6088,7 +6088,7 @@ module.exports = function isPath(str) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.sortOrderedSprites = exports.setDeprecation = exports.rectVertices = exports.rectToBox = exports.parseValue = exports.parseStringTransform = exports.parseStringInt = exports.parseStringFloat = exports.praseString = exports.parseColorString = exports.parseColor = exports.inheritAttributes = exports.inherit = exports.relative = exports.absolute = exports.oneOrTwoValues = exports.notice = exports.fourValuesShortCut = exports.flow = exports.deprecate = exports.Color = exports.boxUnion = exports.boxToRect = exports.boxIntersect = exports.boxEqual = exports.attr = exports.appendUnit = exports.cacheContextPool = exports.findColor = exports.cachable = undefined;
+exports.generateID = exports.sortOrderedSprites = exports.setDeprecation = exports.rectVertices = exports.rectToBox = exports.parseValue = exports.parseStringTransform = exports.parseStringInt = exports.parseStringFloat = exports.praseString = exports.parseColorString = exports.parseColor = exports.inheritAttributes = exports.inherit = exports.relative = exports.absolute = exports.oneOrTwoValues = exports.notice = exports.fourValuesShortCut = exports.flow = exports.deprecate = exports.Color = exports.boxUnion = exports.boxToRect = exports.boxIntersect = exports.boxEqual = exports.attr = exports.appendUnit = exports.cacheContextPool = exports.findColor = exports.cachable = undefined;
 
 var _utils = __webpack_require__(158);
 
@@ -6126,6 +6126,7 @@ exports.rectToBox = _utils.rectToBox;
 exports.rectVertices = _utils.rectVertices;
 exports.setDeprecation = _decorators.setDeprecation;
 exports.sortOrderedSprites = _utils.sortOrderedSprites;
+exports.generateID = _utils.generateID;
 
 /***/ }),
 /* 158 */
@@ -6137,7 +6138,11 @@ exports.sortOrderedSprites = _utils.sortOrderedSprites;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.sortOrderedSprites = exports.rectVertices = exports.rectToBox = exports.parseStringTransform = exports.parseStringInt = exports.parseStringFloat = exports.praseString = exports.parseColorString = exports.parseColor = exports.oneOrTwoValues = exports.notice = exports.fourValuesShortCut = exports.boxUnion = exports.boxToRect = exports.boxIntersect = exports.boxEqual = exports.appendUnit = exports.Color = undefined;
+exports.generateID = exports.sortOrderedSprites = exports.rectVertices = exports.rectToBox = exports.parseStringTransform = exports.parseStringInt = exports.parseStringFloat = exports.praseString = exports.parseColorString = exports.parseColor = exports.oneOrTwoValues = exports.notice = exports.fourValuesShortCut = exports.boxUnion = exports.boxToRect = exports.boxIntersect = exports.boxEqual = exports.appendUnit = exports.Color = undefined;
+
+var _weakMap = __webpack_require__(60);
+
+var _weakMap2 = _interopRequireDefault(_weakMap);
 
 var _set = __webpack_require__(159);
 
@@ -6388,6 +6393,16 @@ function notice(msg) {
   }
 }
 
+var IDMap = new _weakMap2.default();
+function generateID(obj) {
+  if (IDMap.has(obj)) {
+    return IDMap.get(obj);
+  }
+  var id = Math.random().toString(36).slice(2);
+  IDMap.set(obj, id);
+  return id;
+}
+
 exports.appendUnit = appendUnit;
 exports.boxEqual = boxEqual;
 exports.boxIntersect = boxIntersect;
@@ -6405,6 +6420,7 @@ exports.parseStringTransform = parseStringTransform;
 exports.rectToBox = rectToBox;
 exports.rectVertices = rectVertices;
 exports.sortOrderedSprites = sortOrderedSprites;
+exports.generateID = generateID;
 
 /***/ }),
 /* 159 */
@@ -16123,6 +16139,7 @@ var TextureAttr = (_class = function (_BaseSprite$Attr) {
         if (!texture.image) {
           texture = { image: texture };
         }
+        texture.__tag = (0, _utils.generateID)(texture.image); // prevent JSON.stringify ignorance
         return texture;
       });
 
@@ -22680,6 +22697,7 @@ var loadedResources = new _map2.default();
 
 var Resource = {
   loadTimeout: 30000,
+  loadedResources: loadedResources,
   loadTexture: function loadTexture(texture) {
     var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Resource.loadTimeout;
 
@@ -23175,6 +23193,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _applyDecoratedDescriptor = __webpack_require__(231);
 
 var attr = _spriteCore.utils.attr;
+var generateID = _spriteCore.utils.generateID;
 var _mapTextures = (0, _symbol2.default)('mapTextures'),
     _loadTexturePassport = (0, _symbol2.default)('loadTexturePassport');
 
@@ -23215,7 +23234,7 @@ var ResAttr = (_class = function (_Sprite$Attr) {
       var hasPromise = false;
       var tasks = textures.map(function (texture) {
         if (texture.image) {
-          return { img: texture.image, texture: texture };
+          return { img: texture.image, texture: texture, fromCache: true };
         }
 
         var loadingTexture = _resource2.default.loadTexture(texture);
@@ -23248,7 +23267,11 @@ var ResAttr = (_class = function (_Sprite$Attr) {
         if (typeof texture === 'string') {
           texture = { src: texture };
         } else if (!texture.src && !texture.id && !texture.image) {
-          texture = { image: texture };
+          var id = generateID(texture);
+          _resource2.default.loadedResources.set(id, texture);
+          texture = { image: texture, id: id };
+        } else if (texture.nodeType === 1) {
+          texture = { image: texture, src: texture.src };
         }
 
         return texture;

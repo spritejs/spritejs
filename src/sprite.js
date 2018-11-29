@@ -2,6 +2,7 @@ import {Sprite, utils} from 'sprite-core';
 import Resource from './resource';
 
 const attr = utils.attr;
+const generateID = utils.generateID;
 const _mapTextures = Symbol('mapTextures'),
   _loadTexturePassport = Symbol('loadTexturePassport');
 
@@ -26,7 +27,11 @@ class ResAttr extends Sprite.Attr {
       if(typeof texture === 'string') {
         texture = {src: texture};
       } else if(!texture.src && !texture.id && !texture.image) {
-        texture = {image: texture};
+        const id = generateID(texture);
+        Resource.loadedResources.set(id, texture);
+        texture = {image: texture, id};
+      } else if(texture.nodeType === 1) {
+        texture = {image: texture, src: texture.src};
       }
 
       return texture;
@@ -56,7 +61,7 @@ class ResAttr extends Sprite.Attr {
     let hasPromise = false;
     const tasks = textures.map((texture) => {
       if(texture.image) {
-        return {img: texture.image, texture};
+        return {img: texture.image, texture, fromCache: true};
       }
 
       const loadingTexture = Resource.loadTexture(texture);

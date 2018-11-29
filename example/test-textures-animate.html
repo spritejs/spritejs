@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+#container {
+  position:relative;
+  height:627px;
+}  
+  </style>
+</head>
+<body>
+  <button id="playBtn">Play</button>
+  <div id="container"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+let assets = null;
+(async function () {
+  const {Scene, Sprite} = spritejs;
+
+  const IMG_LIST = [
+    {id: 'a', src: 'https://s5.music.126.net/static_public/5b8518f91a1d4d39a0621d87/71.99ef632cc65cf5948d759a2209644dfe.jpg'},
+    {id: 'b', src: 'https://s5.music.126.net/static_public/5b8518f91a1d4d39a0621d87/72.b5c85f4d065cbfc620d9acd1ca1191c1.jpg'},
+    {id: 'c', src: 'https://s5.music.126.net/static_public/5b8518f91a1d4d39a0621d87/73.d1452760de1ecec2243ec4583bc03b80.jpg'},
+    {id: 'd', src: 'https://s5.music.126.net/static_public/5b8518f91a1d4d39a0621d87/74.b26a4ccfb4fff0c269c267bda2ba6b4a.jpg'},
+  ];
+
+  const scene = new Scene('#container', {
+    viewport: ['375', '627'],
+    resolution: [750, 1254],
+  });
+
+  assets = await scene.preload(...IMG_LIST);
+
+  const layer = scene.layer();
+
+  const sprite = new Sprite(IMG_LIST[0].src);
+  window.s = sprite;
+
+  sprite.attr({anchor: [0, 0], pos: [0, 0], size: [750, 1254]});
+
+  layer.append(sprite);
+
+  let animation = null;
+
+  function play() {
+    if(animation) animation.cancel();
+
+    const keyframes = assets.map((item) => {
+      return {textures: item.img};
+    });
+
+    const option = {duration: 3000, iterations: 1, easing: 'linear', fill: 'both'};
+
+    console.log('== 动画开始执行 ==');
+
+    // 执行动画
+    animation = sprite.animate(keyframes, option);
+    console.log(keyframes[0].offset, keyframes[1].offset);
+
+    animation.finished.then(() => {
+      console.log('== 动画执行完毕 ==');
+      animation = null;
+    });
+  }
+
+  playBtn.addEventListener('click', () => {
+    play();
+  });
+}());
+  </script>
+</body>
+</html>
