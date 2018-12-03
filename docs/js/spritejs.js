@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.5';
+var version = '2.23.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -274,17 +274,24 @@ var installed = new _weakMap2.default();
 var _merged = (0, _symbol2.default)('merged');
 
 var target = null;
-function use(plugin, options) {
+function use(plugin) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var merge = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
   if (!target) {
     target = (0, _assign2.default)({}, this);
     target.__spritejs = this;
-    target.use = use.bind(target);
+    // target.use = use.bind(target);
+    target.use = function (plugin) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var merge = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      return use.call(target, plugin, options, merge);
+    };
   }
   if (typeof options === 'boolean') {
     merge = options;
-    options = undefined;
+    options = null;
   }
   if (installed.has(plugin)) {
     var _ret = installed.get(plugin);
@@ -295,7 +302,7 @@ function use(plugin, options) {
     return _ret;
   }
   var install = plugin.install || plugin;
-  var ret = install(target, options) || {};
+  var ret = install.call(plugin, target, options) || {};
   installed.set(plugin, ret);
   if (merge) {
     (0, _assign2.default)(target.__spritejs, ret);
