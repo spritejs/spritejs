@@ -97,23 +97,6 @@ const {Scene, Sprite, Label} = spritejs
       attr.setDefault({
         r: [100, 0],
         color: 'black',
-      }, {
-        borderRadius() {
-          const [r1, r2] = this.r;
-          return (r1 + r2) / 2;
-        },
-        width() {
-          const r2 = this.r[1];
-          return 2 * r2;
-        },
-        height() {
-          const r2 = this.r[1];
-          return 2 * r2;
-        },
-        border() {
-          const [r1, r2] = this.r;
-          return {width: r1 - r2, color: this.color, style: 'solid'};
-        },
       });
     },
     r(attr, val) { // 定义半径属性 [外环，内环]
@@ -121,11 +104,17 @@ const {Scene, Sprite, Label} = spritejs
       if(!Array.isArray(val)) {
         val = [val, 0];
       }
+      const [r1, r2] = val;
       attr.set('r', val);
+      attr.set('borderRadius', (r1 + r2) / 2);
+      attr.size = [2 * r2, 2 * r2];
+      attr.set('border', {width: r1 - r2, color: attr.color, style: 'solid'});
     },
     color(attr, val) {
       attr.clearCache();
       attr.set('color', val);
+      const [r1, r2] = attr.r;
+      attr.set('border', {width: r1 - r2, color: attr.color, style: 'solid'});
     },
   });
 

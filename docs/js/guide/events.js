@@ -138,29 +138,6 @@ var _spritejs = spritejs,
       attr.setDefault({
         r: [100, 0],
         color: 'black'
-      }, {
-        borderRadius: function borderRadius() {
-          var _r = _slicedToArray(this.r, 2),
-              r1 = _r[0],
-              r2 = _r[1];
-
-          return (r1 + r2) / 2;
-        },
-        width: function width() {
-          var r2 = this.r[1];
-          return 2 * r2;
-        },
-        height: function height() {
-          var r2 = this.r[1];
-          return 2 * r2;
-        },
-        border: function border() {
-          var _r2 = _slicedToArray(this.r, 2),
-              r1 = _r2[0],
-              r2 = _r2[1];
-
-          return { width: r1 - r2, color: this.color, style: 'solid' };
-        }
       });
     },
     r: function r(attr, val) {
@@ -169,11 +146,26 @@ var _spritejs = spritejs,
       if (!Array.isArray(val)) {
         val = [val, 0];
       }
+
+      var _val = val,
+          _val2 = _slicedToArray(_val, 2),
+          r1 = _val2[0],
+          r2 = _val2[1];
+
       attr.set('r', val);
+      attr.set('borderRadius', (r1 + r2) / 2);
+      attr.size = [2 * r2, 2 * r2];
+      attr.set('border', { width: r1 - r2, color: attr.color, style: 'solid' });
     },
     color: function color(attr, val) {
       attr.clearCache();
       attr.set('color', val);
+
+      var _attr$r = _slicedToArray(attr.r, 2),
+          r1 = _attr$r[0],
+          r2 = _attr$r[1];
+
+      attr.set('border', { width: r1 - r2, color: attr.color, style: 'solid' });
     }
   });
 
