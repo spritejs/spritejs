@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.8';
+var version = '2.23.9';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -19157,9 +19157,15 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
           _attr4 = (0, _slicedToArray3.default)(_attr3, 2),
           anchorX = _attr4[0],
           anchorY = _attr4[1],
-          bgimage = this.attr('bgimage');
+          bgimage = this.attr('bgimage'),
+          _attr5 = this.attr('padding'),
+          _attr6 = (0, _slicedToArray3.default)(_attr5, 4),
+          paddingTop = _attr6[0],
+          paddingRight = _attr6[1],
+          paddingBottom = _attr6[2],
+          paddingLeft = _attr6[3];
 
-      return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient && !bgimage;
+      return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient && !bgimage && !paddingTop && !paddingRight && !paddingBottom && !paddingLeft;
     }
   }, {
     key: 'children',
