@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.7';
+const version = '2.23.8';
 
 
 
@@ -260,6 +260,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+_utils__WEBPACK_IMPORTED_MODULE_3__["parseFont"] = __webpack_require__(154);
 
 const Color = _utils__WEBPACK_IMPORTED_MODULE_3__["Color"];
 

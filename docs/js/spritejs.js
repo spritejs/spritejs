@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.7';
+var version = '2.23.8';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -267,6 +267,8 @@ var _stylesheet2 = _interopRequireDefault(_stylesheet);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+utils.parseFont = __webpack_require__(230);
 
 var Color = utils.Color;
 
