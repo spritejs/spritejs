@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.10';
+var version = '2.23.11';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -22440,25 +22440,22 @@ var Path = (_class2 = (_temp = _class3 = function (_BaseSprite) {
       if (d) {
         var svg = this.svg;
 
-        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 4),
+        var _svg$bounds = (0, _slicedToArray3.default)(svg.bounds, 3),
             ox = _svg$bounds[0],
             oy = _svg$bounds[1],
-            ow = _svg$bounds[2],
-            oh = _svg$bounds[3];
+            ow = _svg$bounds[2];
 
         var _pathOffset = (0, _slicedToArray3.default)(this.pathOffset, 2),
             px = _pathOffset[0],
             py = _pathOffset[1];
 
-        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 2),
-            w = _contentSize[0],
-            h = _contentSize[1];
-
-        if (w < ow || h < oh) {
-          drawingContext.beginPath();
-          drawingContext.rect(0, 0, w, h);
-          drawingContext.clip();
-        }
+        var _contentSize = (0, _slicedToArray3.default)(this.contentSize, 1),
+            w = _contentSize[0];
+        // if(w < ow || h < oh) {
+        //   drawingContext.beginPath();
+        //   drawingContext.rect(0, 0, w, h);
+        //   drawingContext.clip();
+        // }
 
         if (flexible) {
           svg.save();

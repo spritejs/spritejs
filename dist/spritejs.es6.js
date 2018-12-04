@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.10';
+const version = '2.23.11';
 
 
 
@@ -17187,14 +17187,14 @@ let Path = (_class2 = (_temp = _class3 = class Path extends _basesprite__WEBPACK
 
     if (d) {
       const svg = this.svg;
-      let [ox, oy, ow, oh] = svg.bounds;
+      let [ox, oy, ow] = svg.bounds;
       let [px, py] = this.pathOffset;
-      const [w, h] = this.contentSize;
-      if (w < ow || h < oh) {
-        drawingContext.beginPath();
-        drawingContext.rect(0, 0, w, h);
-        drawingContext.clip();
-      }
+      const [w] = this.contentSize;
+      // if(w < ow || h < oh) {
+      //   drawingContext.beginPath();
+      //   drawingContext.rect(0, 0, w, h);
+      //   drawingContext.clip();
+      // }
 
       if (flexible) {
         svg.save();
