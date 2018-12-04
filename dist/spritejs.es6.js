@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.23.9';
+const version = '2.23.10';
 
 
 
@@ -6642,6 +6642,7 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           [clientWidth, clientHeight] = this.clientSize;
 
     if (!this.needRender) {
+      drawingContext.translate(padding[3], padding[0]);
       return false;
     }
 

@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.23.9';
+var version = '2.23.10';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -8504,6 +8504,7 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
 
 
       if (!this.needRender) {
+        drawingContext.translate(padding[3], padding[0]);
         return false;
       }
 
