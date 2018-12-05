@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.1';
+var version = '2.24.2';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -6262,7 +6262,7 @@ function parseStringTransform(str) {
 }
 
 function parseValuesString(str, parser) {
-  if (typeof str === 'string' && str !== '') {
+  if (typeof str === 'string' && str !== '' && str !== 'inherit') {
     var values = str.split(/[\s,]+/g);
     return values.map(function (v) {
       var ret = parser ? parser(v) : v;
@@ -7336,7 +7336,7 @@ function parseValue() {
     var setter = descriptor.set;
 
     descriptor.set = function (val) {
-      if (val != null && val !== '') {
+      if (val != null && val !== '' && val !== 'inherit') {
         val = parsers.reduce(function (v, parser) {
           return parser(v);
         }, val);
