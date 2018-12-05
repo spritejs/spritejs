@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.0';
+var version = '2.24.1';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -12099,7 +12099,9 @@ function resolveQuery(query) {
   if (matches) {
     matches = matches.map(function (matched) {
       var kv = matched.slice(1, -1).split('=');
-      var arr = JSON.parse(kv[1].replace(/['"]/g, ''));
+      var arr = kv[1].slice(2, -2).split(/,/g).map(function (k) {
+        return k.trim();
+      });
       return [matched, '[' + kv[0] + '="[' + arr + ']"]'];
     });
     matches.forEach(function (_ref3) {

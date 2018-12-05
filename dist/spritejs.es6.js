@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.0';
+const version = '2.24.1';
 
 
 
@@ -9072,7 +9072,7 @@ function resolveQuery(query) {
   if (matches) {
     matches = matches.map(matched => {
       const kv = matched.slice(1, -1).split('=');
-      const arr = JSON.parse(kv[1].replace(/['"]/g, ''));
+      const arr = kv[1].slice(2, -2).split(/,/g).map(k => k.trim());
       return [matched, `[${kv[0]}="[${arr}]"]`];
     });
     matches.forEach(([r, p]) => {
