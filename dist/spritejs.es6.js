@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.2';
+const version = '2.24.3';
 
 
 
@@ -15153,12 +15153,18 @@ let Group = (_class3 = (_temp2 = _class4 = class Group extends _basesprite__WEBP
     }
   }
 
-  render(t, drawingContext) {
+  draw(t, drawingContext = this.context) {
+    // must relayout before draw
+    // prevent originalRect changing when rendering.
     const display = this.attr('display');
     if (display !== '' && display !== 'static' && !this[_layoutTag]) {
       this.relayout();
+      this[_layoutTag] = true;
     }
+    return super.draw(t, drawingContext);
+  }
 
+  render(t, drawingContext) {
     const clipPath = this.attr('clip');
     if (clipPath) {
       this.svg.beginPath().to(drawingContext);
@@ -15194,10 +15200,6 @@ let Group = (_class3 = (_temp2 = _class4 = class Group extends _basesprite__WEBP
       }
     }
     drawingContext.restore();
-
-    if (display !== '' && display !== 'static') {
-      this[_layoutTag] = true;
-    }
   }
 }, _class4.Attr = GroupAttr, _temp2), (_applyDecoratedDescriptor(_class3.prototype, 'contentSize', [_utils__WEBPACK_IMPORTED_MODULE_0__["flow"]], Object.getOwnPropertyDescriptor(_class3.prototype, 'contentSize'), _class3.prototype)), _class3);
 

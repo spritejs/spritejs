@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.2';
+var version = '2.24.3';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -19102,13 +19102,22 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
       }
     }
   }, {
-    key: 'render',
-    value: function render(t, drawingContext) {
+    key: 'draw',
+    value: function draw(t) {
+      var drawingContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.context;
+
+      // must relayout before draw
+      // prevent originalRect changing when rendering.
       var display = this.attr('display');
       if (display !== '' && display !== 'static' && !this[_layoutTag]) {
         this.relayout();
+        this[_layoutTag] = true;
       }
-
+      return (0, _get3.default)(Group.prototype.__proto__ || (0, _getPrototypeOf2.default)(Group.prototype), 'draw', this).call(this, t, drawingContext);
+    }
+  }, {
+    key: 'render',
+    value: function render(t, drawingContext) {
       var clipPath = this.attr('clip');
       if (clipPath) {
         this.svg.beginPath().to(drawingContext);
@@ -19144,10 +19153,6 @@ var Group = (_class3 = (_temp2 = _class4 = function (_BaseSprite) {
         }
       }
       drawingContext.restore();
-
-      if (display !== '' && display !== 'static') {
-        this[_layoutTag] = true;
-      }
     }
   }, {
     key: 'isVirtual',
