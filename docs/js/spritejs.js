@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.3';
+var version = '2.24.4';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -15199,6 +15199,11 @@ var BaseNode = function () {
         zOrder: zOrder
       }, true, true);
 
+      parent.dispatchEvent('appendChild', {
+        child: this,
+        zOrder: zOrder
+      }, true, true);
+
       return this;
     }
 
@@ -15218,6 +15223,11 @@ var BaseNode = function () {
 
       this.dispatchEvent('remove', {
         parent: parent,
+        zOrder: zOrder
+      }, true, true);
+
+      parent.dispatchEvent('removeChild', {
+        child: this,
         zOrder: zOrder
       }, true, true);
 

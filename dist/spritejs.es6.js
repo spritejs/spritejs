@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.3';
+const version = '2.24.4';
 
 
 
@@ -12032,6 +12032,11 @@ let BaseNode = class BaseNode {
       zOrder
     }, true, true);
 
+    parent.dispatchEvent('appendChild', {
+      child: this,
+      zOrder
+    }, true, true);
+
     return this;
   }
 
@@ -12048,6 +12053,11 @@ let BaseNode = class BaseNode {
 
     this.dispatchEvent('remove', {
       parent,
+      zOrder
+    }, true, true);
+
+    parent.dispatchEvent('removeChild', {
+      child: this,
       zOrder
     }, true, true);
 
