@@ -42,13 +42,21 @@
     });
     layer.append(s2);
 
-    s.on('click', (evt) => {
-      console.log(evt);
+    s.on('mouseenter', (evt) => {
+      console.log(evt.type);
     });
 
-    mycanvas.addEventListener('click', (evt) => {
+    mycanvas.addEventListener('mousemove', (evt) => {
       const {offsetX, offsetY} = evt;
-      s.dispatchEvent('click', {layerX: offsetX, layerY: offsetY, originEvent: evt});
+      s.dispatchEvent('mousemove', {layerX: offsetX, layerY: offsetY, originEvent: evt});
+    });
+    mycanvas.addEventListener('mousedown', (evt) => {
+      const {offsetX, offsetY} = evt;
+      s.dispatchEvent('mousedown', {layerX: offsetX, layerY: offsetY, originEvent: evt});
+    });
+    mycanvas.addEventListener('mouseup', (evt) => {
+      const {offsetX, offsetY} = evt;
+      s.dispatchEvent('mouseup', {layerX: offsetX, layerY: offsetY, originEvent: evt});
     });
   </script>
 </body>

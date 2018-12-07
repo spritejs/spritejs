@@ -26,6 +26,24 @@ class ExLayer extends Layer {
 
     super({context, handleEvent, evaluateFPS, renderMode, autoRender, useDocumentCSS});
 
+    if(context.canvas && context.canvas.addEventListener) {
+      context.canvas.addEventListener('mouseleave', (evt) => {
+        // fixed mouseleave outof range
+        const layers = this.parent ? this.parent.sortedChildNodes : [this];
+        const {left, top} = evt.target.getBoundingClientRect();
+        const {clientX, clientY} = evt;
+        const originalX = Math.round((clientX | 0) - left);
+        const originalY = Math.round((clientY | 0) - top);
+        const [x, y] = this.toLocalPos(originalX, originalY);
+
+        layers.forEach((layer) => {
+          if(layer.handleEvent) {
+            layer.dispatchEvent('mouseleave', {originalEvent: evt, layerX: x, layerY: y, originalX, originalY, x, y});
+          }
+        });
+      });
+    }
+
     if(resolution) {
       this.resolution = resolution;
     } else {
