@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.5';
+const version = '2.24.6';
 
 
 
@@ -9066,6 +9066,7 @@ const adapter = {
 };
 
 function resolveQuery(query) {
+  if (typeof query !== 'string') return query;
   let matches = query.match(/\[(bgcolor|fillColor|strokeColor|color)\s*=\s*['"]?\w+['"]?\]/g);
   if (matches) {
     matches = matches.map(matched => {
@@ -9100,11 +9101,11 @@ function querySelector(query, elems) {
 }
 
 function isMatched(elem, query) {
-  return CSSselect.is(elem, query, { adapter });
+  return CSSselect.is(elem, resolveQuery(query), { adapter });
 }
 
 function compile(query) {
-  return CSSselect.compile(query, { adapter });
+  return CSSselect.compile(resolveQuery(query), { adapter });
 }
 
 /***/ }),

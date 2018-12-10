@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.5';
+var version = '2.24.6';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -12089,6 +12089,7 @@ var adapter = {
 };
 
 function resolveQuery(query) {
+  if (typeof query !== 'string') return query;
   var matches = query.match(/\[(bgcolor|fillColor|strokeColor|color)\s*=\s*['"]?\w+['"]?\]/g);
   if (matches) {
     matches = matches.map(function (matched) {
@@ -12133,11 +12134,11 @@ function querySelector(query, elems) {
 }
 
 function isMatched(elem, query) {
-  return CSSselect.is(elem, query, { adapter: adapter });
+  return CSSselect.is(elem, resolveQuery(query), { adapter: adapter });
 }
 
 function compile(query) {
-  return CSSselect.compile(query, { adapter: adapter });
+  return CSSselect.compile(resolveQuery(query), { adapter: adapter });
 }
 
 /***/ }),
