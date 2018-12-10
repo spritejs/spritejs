@@ -41,7 +41,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
-    const paper = new Scene('#container', 400, 400)
+    const paper = new Scene('#container', { viewport: [400, 400] })
 
     const sprite = new Sprite(imgUrl)
     sprite.attr({
@@ -55,20 +55,74 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
+**With Document CSS** - Just set `useDocumentCSS` option to true, spritejs will auto load style rules from the document.
+
+```html
+<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<div id="container"></div>
+<style>
+  sprite.myclass {
+    background-color: red;
+    --sprite-x: 0;
+    --sprite-y: 0;
+    width: 400px;
+    height: 400px;
+    border-radius: 200px;
+  }
+</style>
+<script>
+    const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+    const {Scene, Sprite} = spritejs;
+    const paper = new Scene('#container', {
+      viewport: [400, 400],
+      useDocumentCSS: true,
+    })
+
+    const sprite = new Sprite(imgUrl)
+    sprite.className = 'myclass';
+
+    paper.layer().appendChild(sprite)
+</script>
+```
+
 **React JSX** - react.spritejs.org
 
 ```jsx
-<Scene id="container">
-  <layer>
-    <sprite
-      textures={imgUrl}
-      bgcolor="#fff"
-      pos={[0,0]}
-      size={[400, 400]}
-      borderRadius="200"
-    />
-  </layer>
-</Scene>
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Scene} from 'sprite-react';
+
+class Block extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {color: 'green'};
+  }
+
+  handleClick() {
+    this.setState({
+      color: 'blue',
+    });
+  }
+
+  render() {
+    return (
+      <sprite pos={[100, 100]} bgcolor={this.state.color} size={[50, 50]} onClick={this.handleClick.bind(this)}></sprite>
+    );
+  }
+}
+
+
+ReactDOM.render(
+  <Scene>
+    <layer id="fglayer" handleEvent={true}>
+      <group>
+        <sprite pos={[200, 100]} size={[50, 50]} bgcolor="red" onClick={function () { this.attr('bgcolor', 'blue') } }></sprite>
+        <Block/>
+      </group>
+    </layer>
+  </Scene>,
+  document.getElementById('app')
+);
 ```
 
 **Vue Component** - vue.spritejs.org
