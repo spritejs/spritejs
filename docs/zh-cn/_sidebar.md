@@ -57,16 +57,22 @@
   * [虚拟 Group](/zh-cn/guide/virtualgroup)
   * [缓存策略](/zh-cn/guide/cache)
   * [reflow](/zh-cn/guide/reflow)
+  * [快照](/zh-cn/guide/snapshot)
   * [与d3一同使用](/zh-cn/guide/d3)
   * [粒子系统](/zh-cn/guide/particle)
   * [物理引擎](/zh-cn/guide/matter)
-  * [快照](/zh-cn/guide/snapshot)
-  * [开发者工具](/zh-cn/guide/devtools)
-  * [跨平台](/zh-cn/guide/platforms)
   * [JSX语法](/zh-cn/guide/jsx)
+  * [跨平台](/zh-cn/guide/platforms)
+
+* 生态
+  * [微信小程序](https://github.com/spritejs/sprite-wxapp)
+  * [图形库](https://github.com/spritejs/sprite-extend-shapes)
+  * [Rough](https://github.com/spritejs/sprite-extend-rough)
+  * [流程图](https://github.com/spritejs/sprite-extend-dagre)
+  * [Vue](http://vue.spritejs.org)
+  * [React](http://react.spritejs.org)
+  * [开发者工具](/zh-cn/guide/devtools)
 
 * 其他
   * [相关资源](/zh-cn/resource)
   * [更新日志](/zh-cn/changelog)
-  * [Sprite-Vue](http://vue.spritejs.org)
-  * [Sprite-React](http://react.spritejs.org)

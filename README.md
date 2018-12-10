@@ -23,6 +23,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Multiple layers.
 - **Flex Layout**.
 - **Text typesetting**.
+- **CSS Supported**.
 - [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
