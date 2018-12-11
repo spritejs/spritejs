@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.10';
+const version = '2.24.11';
 
 
 
@@ -6535,8 +6535,28 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
 
   draw(t, drawingContext = this.context) {
     // eslint-disable-line complexity
-    if (this.__styleNeedUpdate) {
+    const styleNeedUpdate = this.__styleNeedUpdate;
+    if (styleNeedUpdate) {
       _stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].computeStyle(this);
+      if (this.querySelectorAll) {
+        const children = this.querySelectorAll('*');
+        children.forEach(child => _stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].computeStyle(child));
+      }
+      if (styleNeedUpdate === 'siblings') {
+        if (this.parent) {
+          const children = this.parent.children;
+          const index = children.indexOf(this);
+          const len = children.length;
+          for (let i = index + 1; i < len; i++) {
+            const node = children[i];
+            _stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].computeStyle(node);
+            if (node.querySelectorAll) {
+              const nodes = node.querySelectorAll('*');
+              nodes.forEach(child => _stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].computeStyle(child));
+            }
+          }
+        }
+      }
     }
     if (!this.isVisible()) {
       delete this.lastRenderBox;
@@ -7434,10 +7454,8 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   quietSet(key, val) {
-    let oldVal;
     if (key.length > 5 && key.indexOf('data-') === 0) {
       const dataKey = key.slice(5);
-      oldVal = this.subject.data(dataKey);
       this.subject.data(dataKey, val);
     } else {
       if (!this.__styleTag && val != null) {
@@ -7449,11 +7467,7 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
           this.__attributesSet.delete(key);
         }
       }
-      oldVal = this[_attr][key];
       this[_attr][key] = val;
-    }
-    if (oldVal !== val && _stylesheet__WEBPACK_IMPORTED_MODULE_3__["default"].relatedAttributes.has(key)) {
-      this.subject.updateStyles();
     }
   }
 
@@ -8834,7 +8848,7 @@ let order = 0;
   },
   computeStyle(el) {
     if (!el.layer || !el.attributes) return {};
-    this.__styleNeedUpdate = false;
+    el.__styleNeedUpdate = false;
     if (cssRules.length <= 0) return;
     const attrs = {};
     const selectors = [];
@@ -11849,16 +11863,16 @@ let BaseNode = class BaseNode {
 
   updateStyles(nextSibling = false) {
     // append to parent & reset name or class or id auto updateStyles
-    this.__styleNeedUpdate = true;
-    if (this.children) {
-      this.children.forEach(child => child.updateStyles());
-    }
-    if (nextSibling) {
-      const nextChild = this.nextElementSilbing;
-      if (nextChild) {
-        nextChild.updateStyles(true);
-      }
-    }
+    this.__styleNeedUpdate = nextSibling ? 'siblings' : 'children';
+    // if(this.children) {
+    //   this.children.forEach(child => child.updateStyles());
+    // }
+    // if(nextSibling) {
+    //   const nextChild = this.nextElementSibling;
+    //   if(nextChild) {
+    //     nextChild.updateStyles(true);
+    //   }
+    // }
     this.forceUpdate();
   }
 
@@ -12050,19 +12064,19 @@ let BaseNode = class BaseNode {
     return children[idx + distance];
   }
 
-  get nextSilbing() {
+  get nextSibling() {
     return this.getNodeNearBy(1);
   }
 
-  get previousSilbing() {
+  get previousSibling() {
     return this.getNodeNearBy(-1);
   }
 
-  get nextElementSilbing() {
+  get nextElementSibling() {
     return this.getNodeNearBy(1, true);
   }
 
-  get previousElementSilbing() {
+  get previousElementSibling() {
     return this.getNodeNearBy(-1, true);
   }
 
