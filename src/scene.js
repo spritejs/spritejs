@@ -555,17 +555,17 @@ export default class Scene extends BaseNode {
         layer.dataset = {};
       }
       layer.dataset.layerId = layer.id;
-      layer.connect = (parent, zOrder) => {
-        layer.parent = parent;
-        Object.defineProperty(layer, 'zOrder', {
-          value: zOrder,
-          writable: false,
-          configurable: true,
-        });
-      };
-      layer.disconnect = (parent) => {
-        delete layer.zOrder;
-      };
+      // layer.connect = (parent, zOrder) => {
+      //   layer.parent = parent;
+      //   Object.defineProperty(layer, 'zOrder', {
+      //     value: zOrder,
+      //     writable: false,
+      //     configurable: true,
+      //   });
+      // };
+      // layer.disconnect = (parent) => {
+      //   delete layer.zOrder;
+      // };
     }
     const id = layer.id;
 
