@@ -11775,10 +11775,12 @@ exports.default = {
       return d !== 0 ? d : a.order - b.order;
     });
   },
-  fromDocumentCSS: function fromDocumentCSS(stylesheets) {
-    cssRules = cssRules.filter(function (r) {
-      return !r.fromDoc;
-    });
+  fromDocumentCSS: function fromDocumentCSS(stylesheets, override) {
+    if (override) {
+      cssRules = cssRules.filter(function (r) {
+        return !r.fromDoc;
+      });
+    }
     if (typeof document === 'undefined') return;
     if (!stylesheets) stylesheets = document.styleSheets;
     if (stylesheets) {
