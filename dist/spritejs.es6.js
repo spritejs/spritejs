@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.8';
+const version = '2.24.9';
 
 
 
@@ -6534,6 +6534,9 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   relayout() {}
 
   draw(t, drawingContext = this.context) {
+    if (this.__styleNeedUpdate) {
+      _stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].computeStyle(this);
+    }
     const bound = this.originalRect;
     let cachableContext = !this.isVirtual && this.cache;
 
@@ -8825,6 +8828,7 @@ let order = 0;
   },
   computeStyle(el) {
     if (!el.layer || !el.attributes) return {};
+    if (cssRules.length <= 0) return;
     const attrs = {};
     const selectors = [];
     const transitions = [];
@@ -8851,6 +8855,7 @@ let order = 0;
         selectors.push(selector);
       }
     });
+    if (selectors.length <= 0) return;
     const matchedSelectors = selectors.join();
     if (el[_matchedSelectors] !== matchedSelectors) {
       // console.log(transitions);
@@ -8908,6 +8913,7 @@ let order = 0;
       el.attributes.__styleTag = true;
       el.attr(attrs);
       el.attributes.__styleTag = false;
+      this.__styleNeedUpdate = false;
       // if(el.forceUpdate) el.forceUpdate();
     }
   },
@@ -11835,12 +11841,19 @@ let BaseNode = class BaseNode {
     return this[_data];
   }
 
-  updateStyles() {
+  updateStyles(nextSibling = false) {
     // append to parent & reset name or class or id auto updateStyles
-    if (this.layer) {
-      this.layer.__updateStyleTag = true;
-      this.forceUpdate();
+    this.__styleNeedUpdate = true;
+    if (this.children) {
+      this.children.forEach(child => child.updateStyles());
     }
+    if (nextSibling) {
+      const nextChild = this.nextElementSilbing;
+      if (nextChild) {
+        nextChild.updateStyles(true);
+      }
+    }
+    this.forceUpdate();
   }
 
   get dataset() {
@@ -12021,6 +12034,30 @@ let BaseNode = class BaseNode {
 
   get parentNode() {
     return this.parent;
+  }
+
+  getNodeNearBy(distance = 1, isElement = false) {
+    if (!this.parent) return null;
+    if (distance === 0) return this;
+    const children = isElement ? this.parent.children : this.parent.childNodes;
+    const idx = children.indexOf(this);
+    return children[idx + distance];
+  }
+
+  get nextSilbing() {
+    return this.getNodeNearBy(1);
+  }
+
+  get previousSilbing() {
+    return this.getNodeNearBy(-1);
+  }
+
+  get nextElementSilbing() {
+    return this.getNodeNearBy(1, true);
+  }
+
+  get previousElementSilbing() {
+    return this.getNodeNearBy(-1, true);
   }
 
   contains(node) {
@@ -14360,8 +14397,7 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
       this.prepareRender();
     };
     this[_node].updateStyles = () => {
-      this.__updateStyleTag = true;
-      this.prepareRender();
+      this.updateStyles(true);
     };
 
     this.touchedTargets = {};
@@ -14506,16 +14542,13 @@ let Layer = class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"
     return this[_renderDeferer] ? this[_renderDeferer].promise : Promise.resolve();
   }
 
+  forceUpdate() {
+    return this.prepareRender();
+  }
+
   draw(clearContext = true) {
-    if (this.__updateStyleTag) {
-      if (_stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].cssRules.length > 0) {
-        const nodes = this.querySelectorAll('*');
-        _stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].computeStyle(this);
-        nodes.forEach(node => {
-          _stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].computeStyle(node);
-        });
-      }
-      this.__updateStyleTag = false;
+    if (this.__styleNeedUpdate) {
+      _stylesheet__WEBPACK_IMPORTED_MODULE_9__["default"].computeStyle(this);
     }
     const renderDeferrer = this[_renderDeferer];
     this[_renderDeferer] = null;
@@ -16780,7 +16813,7 @@ const _removeTask = Symbol('removeTask');
       }
 
       if (sprite.layer) {
-        sprite.updateStyles();
+        sprite.updateStyles(true);
         return sprite.enter();
       }
       return sprite;
@@ -16827,7 +16860,7 @@ const _removeTask = Symbol('removeTask');
       const parent = sprite.parent;
       sprite.disconnect(that);
       if (parent && parent.children[0]) {
-        parent.children[0].updateStyles();
+        parent.children[0].updateStyles(true);
       }
       return sprite;
     }
@@ -16887,7 +16920,7 @@ const _removeTask = Symbol('removeTask');
         this[_zOrder]++;
 
         if (this.layer) {
-          newchild.updateStyles();
+          newchild.updateStyles(true);
           return newchild.enter();
         }
       };
