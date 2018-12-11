@@ -11,9 +11,13 @@ export const {
   utils,
   use,
 
+  querySelector,
+  querySelectorAll,
+  stylesheet,
+
   BaseNode,
-  DataNode,
   BaseSprite,
+  DataNode,
   Sprite,
   Label,
   Path,
