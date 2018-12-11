@@ -173,7 +173,7 @@ function Paper2D(...args) {
   return new _scene__WEBPACK_IMPORTED_MODULE_4__["default"](...args);
 }
 
-const version = '2.24.11';
+const version = '2.24.12';
 
 
 
@@ -5855,9 +5855,9 @@ let BaseSprite = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
         });
       }
       this[_attr][key] = value;
-      if (_stylesheet__WEBPACK_IMPORTED_MODULE_7__["default"].relatedAttributes.has(key)) {
-        this.updateStyles();
-      }
+      // if(stylesheet.relatedAttributes.has(key)) {
+      //   this.updateStyles();
+      // }
     };
     if (typeof props === 'object') {
       Object.entries(props).forEach(([prop, value]) => {
@@ -7454,20 +7454,27 @@ let SpriteAttr = (_dec = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["deprecate"]
   }
 
   quietSet(key, val) {
+    let oldVal;
     if (key.length > 5 && key.indexOf('data-') === 0) {
       const dataKey = key.slice(5);
+      oldVal = this.subject.data(dataKey);
       this.subject.data(dataKey, val);
     } else {
-      if (!this.__styleTag && val != null) {
+      if (val != null) {
         this.__attributesSet.add(key);
-      }
-      if (!this.__styleTag && val == null) {
+      } else {
         val = this[_default][key];
         if (this.__attributesSet.has(key)) {
           this.__attributesSet.delete(key);
         }
       }
+      oldVal = this[_attr][key];
       this[_attr][key] = val;
+    }
+    if (_stylesheet__WEBPACK_IMPORTED_MODULE_3__["default"].relatedAttributes.has(key)) {
+      if (typeof oldVal === 'object' || typeof val === 'object' || oldVal !== val) {
+        this.subject.updateStyles();
+      }
     }
   }
 
@@ -8254,7 +8261,7 @@ const cssWhat = __webpack_require__(145);
 let cssRules = [];
 const keyFrames = {};
 
-const relatedAttributes = new Set(['__internal_state_hover_', '__internal_state_active_']);
+const relatedAttributes = new Set();
 
 const _matchedSelectors = Symbol('matchedSelectors');
 const _transitions = Symbol('transitions');
@@ -8698,6 +8705,11 @@ function resolveToken(token) {
     } else {
       ret = `:${token.name}`;
     }
+    if (token.name === 'hover') {
+      relatedAttributes.add('__internal_state_hover_');
+    } else if (token.name === 'active') {
+      relatedAttributes.add('__internal_state_active_');
+    }
     // not support yet
     valid = token.name !== 'focus' && token.name !== 'link' && token.name !== 'visited' && token.name !== 'lang';
     priority = token.name !== 'not' ? 1000 : 0;
@@ -8876,7 +8888,7 @@ let order = 0;
         selectors.push(selector);
       }
     });
-    if (selectors.length <= 0) return;
+    // if(selectors.length <= 0) return;
     const matchedSelectors = selectors.join();
     if (el[_matchedSelectors] !== matchedSelectors) {
       // console.log(transitions);

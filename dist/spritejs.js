@@ -152,7 +152,7 @@ function Paper2D() {
   return new (Function.prototype.bind.apply(_scene2.default, [null].concat(args)))();
 }
 
-var version = '2.24.11';
+var version = '2.24.12';
 
 exports._debugger = _platform._debugger;
 exports.version = version;
@@ -7841,9 +7841,9 @@ var BaseSprite = (_dec = (0, _utils.deprecate)('Instead use sprite.cache = null'
           });
         }
         _this2[_attr][key] = value;
-        if (_stylesheet2.default.relatedAttributes.has(key)) {
-          _this2.updateStyles();
-        }
+        // if(stylesheet.relatedAttributes.has(key)) {
+        //   this.updateStyles();
+        // }
       };
       if ((typeof props === 'undefined' ? 'undefined' : (0, _typeof3.default)(props)) === 'object') {
         (0, _entries2.default)(props).forEach(function (_ref) {
@@ -10246,20 +10246,27 @@ var SpriteAttr = (_dec = (0, _utils.deprecate)('You can remove this call.'), _de
   }, {
     key: 'quietSet',
     value: function quietSet(key, val) {
+      var oldVal = void 0;
       if (key.length > 5 && key.indexOf('data-') === 0) {
         var dataKey = key.slice(5);
+        oldVal = this.subject.data(dataKey);
         this.subject.data(dataKey, val);
       } else {
-        if (!this.__styleTag && val != null) {
+        if (val != null) {
           this.__attributesSet.add(key);
-        }
-        if (!this.__styleTag && val == null) {
+        } else {
           val = this[_default][key];
           if (this.__attributesSet.has(key)) {
             this.__attributesSet.delete(key);
           }
         }
+        oldVal = this[_attr][key];
         this[_attr][key] = val;
+      }
+      if (_stylesheet2.default.relatedAttributes.has(key)) {
+        if ((typeof oldVal === 'undefined' ? 'undefined' : (0, _typeof3.default)(oldVal)) === 'object' || (typeof val === 'undefined' ? 'undefined' : (0, _typeof3.default)(val)) === 'object' || oldVal !== val) {
+          this.subject.updateStyles();
+        }
       }
     }
   }, {
@@ -11204,7 +11211,7 @@ var cssWhat = __webpack_require__(221);
 var cssRules = [];
 var keyFrames = {};
 
-var relatedAttributes = new _set2.default(['__internal_state_hover_', '__internal_state_active_']);
+var relatedAttributes = new _set2.default();
 
 var _matchedSelectors = (0, _symbol2.default)('matchedSelectors');
 var _transitions = (0, _symbol2.default)('transitions');
@@ -11685,6 +11692,11 @@ function resolveToken(token) {
     } else {
       ret = ':' + token.name;
     }
+    if (token.name === 'hover') {
+      relatedAttributes.add('__internal_state_hover_');
+    } else if (token.name === 'active') {
+      relatedAttributes.add('__internal_state_active_');
+    }
     // not support yet
     valid = token.name !== 'focus' && token.name !== 'link' && token.name !== 'visited' && token.name !== 'lang';
     priority = token.name !== 'not' ? 1000 : 0;
@@ -11879,7 +11891,7 @@ exports.default = {
         selectors.push(selector);
       }
     });
-    if (selectors.length <= 0) return;
+    // if(selectors.length <= 0) return;
     var matchedSelectors = selectors.join();
     if (el[_matchedSelectors] !== matchedSelectors) {
       // console.log(transitions);
