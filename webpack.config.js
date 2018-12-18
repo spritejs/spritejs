@@ -11,16 +11,30 @@ module.exports = function (env = {}) {
   }
 
   const externals = {};
+
   const aliasFields = ['browser', 'esnext'];
   const outputPath = path.resolve(__dirname, env.outputPath || 'dist');
 
   const output = {
     path: outputPath,
-    filename: env.esnext ? '[name].es6' : '[name]',
+    filename: env.esnext ? 'spritejs.es6' : 'spritejs',
     publicPath: '/js/',
     library: 'spritejs',
     libraryTarget: env.esnext ? 'commonjs2' : 'umd',
   };
+
+  let alias = {};
+  let entry = './src/index';
+
+  if(env.mode === 'lite') {
+    output.filename += '.lite';
+    entry = './src/index.lite';
+    alias = {'sprite-core': 'sprite-core/src/index.dom.js'};
+  } else if(env.mode === 'core') {
+    output.filename += '.core';
+    entry = './src/index.core';
+    alias = {'sprite-core': 'sprite-core/src/index.basic.js'};
+  }
 
   if(env.production) {
     output.filename += '.min.js';
@@ -30,10 +44,7 @@ module.exports = function (env = {}) {
 
   return {
     mode: env.production ? 'production' : 'none',
-    entry: {
-      spritejs: './src/index',
-      'spritejs.lite': './src/index.lite',
-    },
+    entry,
     output,
 
     module: {
@@ -52,6 +63,7 @@ module.exports = function (env = {}) {
     },
     resolve: {
       aliasFields,
+      alias,
     },
     externals,
     // Don't follow/bundle these modules, but request them at runtime from the environment

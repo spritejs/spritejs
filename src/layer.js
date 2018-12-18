@@ -1,5 +1,4 @@
-import Layer from 'sprite-core/src/core/layer';
-import {createNode} from 'sprite-core/src/modules/dom/nodetype';
+import {Layer, createNode} from 'sprite-core';
 import {createCanvas} from './platform';
 
 const _resolution = Symbol('resolution');

@@ -20223,14 +20223,14 @@ let order = 0;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(122);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(194);
 
 
 
 const _loadBgImagePassport = Symbol('loadBgImagePassport');
 
-sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.loadBgImage = function (val) {
+sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = function (val) {
   let res;
 
   if (val.id) {
@@ -20262,7 +20262,7 @@ sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].prototyp
   return val;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"]);
 
 /***/ }),
 /* 194 */
@@ -22207,9 +22207,8 @@ module.exports = function spread(callback) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(127);
-/* harmony import */ var sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(111);
-/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(194);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(194);
 function _decorate(decorators, factory, superClass) { var r = factory(function initialize(O) { _initializeInstanceElements(O, decorated.elements); }, superClass); var decorated = _decorateClass(_coalesceClassElements(r.d.map(_createElementDescriptor)), decorators); _initializeClassElements(r.F, decorated.elements); return _runClassFinishers(r.F, decorated.finishers); }
 
 function _createElementDescriptor(def) { var key = _toPropertyKey(def.key); var descriptor; if (def.kind === "method") { descriptor = { value: def.value, writable: true, configurable: true, enumerable: false }; Object.defineProperty(def.value, "name", { value: typeof key === "symbol" ? "" : key, configurable: true }); } else if (def.kind === "get") { descriptor = { get: def.value, configurable: true, enumerable: false }; } else if (def.kind === "set") { descriptor = { set: def.value, configurable: true, enumerable: false }; } else if (def.kind === "field") { descriptor = { configurable: true, writable: true, enumerable: true }; } var element = { kind: def.kind === "field" ? "field" : "method", key: key, placement: def.static ? "static" : def.kind === "field" ? "own" : "prototype", descriptor: descriptor }; if (def.decorators) element.decorators = def.decorators; if (def.kind === "field") element.initializer = def.value; return element; }
@@ -22274,7 +22273,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
+const attr = sprite_core__WEBPACK_IMPORTED_MODULE_0__["utils"].attr;
+const generateID = sprite_core__WEBPACK_IMPORTED_MODULE_0__["utils"].generateID;
 
 const _mapTextures = Symbol('mapTextures'),
       _loadTexturePassport = Symbol('loadTexturePassport');
@@ -22293,7 +22293,7 @@ let ResAttr = _decorate(null, function (_initialize, _Sprite$Attr) {
     F: ResAttr,
     d: [{
       kind: "set",
-      decorators: [Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      decorators: [attr({
         value: []
       })],
       key: "textures",
@@ -22309,8 +22309,8 @@ let ResAttr = _decorate(null, function (_initialize, _Sprite$Attr) {
               src: texture
             };
           } else if (!texture.src && !texture.id && !texture.image) {
-            const id = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["generateID"])(texture);
-            _resource__WEBPACK_IMPORTED_MODULE_2__["default"].loadedResources.set(id, texture);
+            const id = generateID(texture);
+            _resource__WEBPACK_IMPORTED_MODULE_1__["default"].loadedResources.set(id, texture);
             texture = {
               image: texture,
               id
@@ -22371,7 +22371,7 @@ let ResAttr = _decorate(null, function (_initialize, _Sprite$Attr) {
             };
           }
 
-          const loadingTexture = _resource__WEBPACK_IMPORTED_MODULE_2__["default"].loadTexture(texture);
+          const loadingTexture = _resource__WEBPACK_IMPORTED_MODULE_1__["default"].loadTexture(texture);
 
           if (loadingTexture instanceof Promise) {
             hasPromise = true;
@@ -22395,10 +22395,10 @@ let ResAttr = _decorate(null, function (_initialize, _Sprite$Attr) {
 
     }]
   };
-}, sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr);
+}, sprite_core__WEBPACK_IMPORTED_MODULE_0__["Sprite"].Attr);
 
-sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr = ResAttr;
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_0__["default"]);
+sprite_core__WEBPACK_IMPORTED_MODULE_0__["Sprite"].Attr = ResAttr;
+/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_0__["Sprite"]);
 
 /***/ }),
 /* 224 */
@@ -22406,10 +22406,8 @@ sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_0__["default"].Attr = ResAt
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(134);
-/* harmony import */ var sprite_core_src_modules_dom_nodetype__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(190);
-/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(195);
-
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(195);
 
 
 
@@ -22419,7 +22417,7 @@ const _attrs = Symbol('attrs');
 
 const _displayRatio = Symbol('displayRatio');
 
-class ExLayer extends sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   constructor(id, opts = {}) {
     if (typeof id === 'object') {
       opts = id;
@@ -22435,7 +22433,7 @@ class ExLayer extends sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_0__["d
       autoRender = true,
       useDocumentCSS = false
     } = opts;
-    context = context || Object(_platform__WEBPACK_IMPORTED_MODULE_2__["createCanvas"])().getContext('2d');
+    context = context || Object(_platform__WEBPACK_IMPORTED_MODULE_1__["createCanvas"])().getContext('2d');
     const canvas = context.canvas;
     canvas.dataset.layerId = id;
     canvas.style.position = 'absolute';
@@ -22664,7 +22662,7 @@ class ExLayer extends sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_0__["d
     this.clearContext(outputContext);
     outputContext.drawImage(snapshot.context.canvas, 0, 0);
     snapshot.children.forEach(child => {
-      const node = Object(sprite_core_src_modules_dom_nodetype__WEBPACK_IMPORTED_MODULE_1__["createNode"])(child.nodeType);
+      const node = Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["createNode"])(child.nodeType);
 
       if (child.id) {
         node.id = child.id;
@@ -22709,20 +22707,20 @@ class ExLayer extends sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_0__["d
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Scene; });
-/* harmony import */ var sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(125);
-/* harmony import */ var sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(111);
-/* harmony import */ var sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(158);
-/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(224);
-/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(194);
-/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(195);
-/* harmony import */ var _platform_devtools__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(226);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(224);
+/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(194);
+/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(195);
+/* harmony import */ var _platform_devtools__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(226);
 
 
 
 
 
-
-
+const {
+  setDeprecation,
+  sortOrderedSprites
+} = sprite_core__WEBPACK_IMPORTED_MODULE_0__["utils"];
 
 const _layerMap = Symbol('layerMap'),
       _zOrder = Symbol('zOrder'),
@@ -22736,16 +22734,16 @@ const _layerMap = Symbol('layerMap'),
       _subscribe = Symbol('subscribe'),
       _displayRatio = Symbol('displayRatio');
 
-class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
   constructor(container, options = {}) {
     super();
-    container = Object(_platform__WEBPACK_IMPORTED_MODULE_5__["getContainer"])(container);
+    container = Object(_platform__WEBPACK_IMPORTED_MODULE_3__["getContainer"])(container);
     this.container = container;
     container.scene_ = this;
     /* istanbul ignore if */
 
     if (arguments.length === 3) {
-      Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["setDeprecation"])('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).');
+      setDeprecation('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).');
       /* eslint-disable prefer-rest-params */
 
       options = {
@@ -22757,7 +22755,7 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
     this[_zOrder] = 0;
     this[_layerMap] = {};
     this[_layers] = [];
-    this[_snapshot] = Object(_platform__WEBPACK_IMPORTED_MODULE_5__["createCanvas"])();
+    this[_snapshot] = Object(_platform__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
     const viewport = options.viewport || ['', ''];
     this.viewport = viewport; // scale, width, height, top, bottom, left, right
     // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
@@ -22877,7 +22875,7 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
         });
       }
     });
-    this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+    this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
   }
 
   replaceChild(newLayer, oldLayer) {
@@ -23201,15 +23199,15 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
       let task;
 
       if (typeof res === 'string') {
-        task = _resource__WEBPACK_IMPORTED_MODULE_4__["default"].loadTexture(res);
+        task = _resource__WEBPACK_IMPORTED_MODULE_2__["default"].loadTexture(res);
       } else if (Array.isArray(res)) {
-        task = _resource__WEBPACK_IMPORTED_MODULE_4__["default"].loadFrames(...res);
+        task = _resource__WEBPACK_IMPORTED_MODULE_2__["default"].loadFrames(...res);
       } else {
         const {
           id,
           src
         } = res;
-        task = _resource__WEBPACK_IMPORTED_MODULE_4__["default"].loadTexture({
+        task = _resource__WEBPACK_IMPORTED_MODULE_2__["default"].loadTexture({
           id,
           src
         });
@@ -23249,7 +23247,7 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
         }
       }
 
-      this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_3__["default"](id, opts));
+      this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_1__["default"](id, opts));
     }
 
     return this[_layerMap][id];
@@ -23260,7 +23258,7 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   appendLayer(layer, appendDOMElement = true) {
-    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"])) {
+    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_1__["default"])) {
       // append dom element
       layer.id = layer.id || `_layer${Math.random()}`;
 
@@ -23296,11 +23294,11 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
       layer.resolution = this.layerResolution;
     }
 
-    this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+    this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
     /* istanbul ignore if  */
 
-    if (_platform_devtools__WEBPACK_IMPORTED_MODULE_6__["setDebugToolsObserver"] && layer.id !== '__debuglayer__') {
-      Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_6__["setDebugToolsObserver"])(this, layer);
+    if (_platform_devtools__WEBPACK_IMPORTED_MODULE_4__["setDebugToolsObserver"] && layer.id !== '__debuglayer__') {
+      Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_4__["setDebugToolsObserver"])(this, layer);
     }
 
     if (appendDOMElement) this.container.appendChild(layer.canvas || layer);
@@ -23316,11 +23314,11 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
       layer.disconnect(this);
       this.container.removeChild(layer.canvas || layer);
       delete this[_layerMap][layer.id];
-      this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+      this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
       /* istanbul ignore if  */
 
-      if (_platform_devtools__WEBPACK_IMPORTED_MODULE_6__["removeDebugToolsObserver"]) {
-        Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_6__["removeDebugToolsObserver"])(layer);
+      if (_platform_devtools__WEBPACK_IMPORTED_MODULE_4__["removeDebugToolsObserver"]) {
+        Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_4__["removeDebugToolsObserver"])(layer);
       }
 
       return layer;
@@ -23343,11 +23341,11 @@ class Scene extends sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   querySelector(selector) {
-    return Object(sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_2__["querySelector"])(selector, this);
+    return Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["querySelector"])(selector, this);
   }
 
   querySelectorAll(selector) {
-    return Object(sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_2__["querySelectorAll"])(selector, this);
+    return Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["querySelectorAll"])(selector, this);
   }
 
   async snapshot() {

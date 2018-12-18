@@ -21734,14 +21734,14 @@ var order = 0;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(141);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
 /* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
 
 
 
 var _loadBgImagePassport = Symbol('loadBgImagePassport');
 
-sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.loadBgImage = function (val) {
+sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = function (val) {
   var _this = this;
 
   var res;
@@ -21778,7 +21778,7 @@ sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"].prototyp
   return val;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core_src_core_basesprite__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"]);
 
 /***/ }),
 /* 220 */
@@ -24604,9 +24604,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(146);
 /* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(152);
-/* harmony import */ var sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(128);
-/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(220);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(9);
+/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(220);
 
 
 
@@ -24616,7 +24615,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+var attr = sprite_core__WEBPACK_IMPORTED_MODULE_7__["utils"].attr;
+var generateID = sprite_core__WEBPACK_IMPORTED_MODULE_7__["utils"].generateID;
 
 var _mapTextures = Symbol('mapTextures'),
     _loadTexturePassport = Symbol('loadTexturePassport');
@@ -24652,7 +24652,7 @@ var ResAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___defau
     F: ResAttr,
     d: [{
       kind: "set",
-      decorators: [Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_8__["attr"])({
+      decorators: [attr({
         value: []
       })],
       key: "textures",
@@ -24667,8 +24667,8 @@ var ResAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___defau
               src: texture
             };
           } else if (!texture.src && !texture.id && !texture.image) {
-            var id = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_8__["generateID"])(texture);
-            _resource__WEBPACK_IMPORTED_MODULE_9__["default"].loadedResources.set(id, texture);
+            var id = generateID(texture);
+            _resource__WEBPACK_IMPORTED_MODULE_8__["default"].loadedResources.set(id, texture);
             texture = {
               image: texture,
               id: id
@@ -24726,7 +24726,7 @@ var ResAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___defau
             };
           }
 
-          var loadingTexture = _resource__WEBPACK_IMPORTED_MODULE_9__["default"].loadTexture(texture);
+          var loadingTexture = _resource__WEBPACK_IMPORTED_MODULE_8__["default"].loadTexture(texture);
 
           if (loadingTexture instanceof Promise) {
             hasPromise = true;
@@ -24749,10 +24749,10 @@ var ResAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___defau
       }
     }]
   };
-}, sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_7__["default"].Attr);
+}, sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr);
 
-sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_7__["default"].Attr = ResAttr;
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core_src_core_sprite__WEBPACK_IMPORTED_MODULE_7__["default"]);
+sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr = ResAttr;
+/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"]);
 
 /***/ }),
 /* 254 */
@@ -24780,10 +24780,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(6);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(160);
-/* harmony import */ var sprite_core_src_modules_dom_nodetype__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(216);
-/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(225);
-
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(9);
+/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(225);
 
 
 
@@ -24833,7 +24831,7 @@ function (_Layer) {
         autoRender = _opts$autoRender === void 0 ? true : _opts$autoRender,
         _opts$useDocumentCSS = _opts.useDocumentCSS,
         useDocumentCSS = _opts$useDocumentCSS === void 0 ? false : _opts$useDocumentCSS;
-    context = context || Object(_platform__WEBPACK_IMPORTED_MODULE_12__["createCanvas"])().getContext('2d');
+    context = context || Object(_platform__WEBPACK_IMPORTED_MODULE_11__["createCanvas"])().getContext('2d');
     var canvas = context.canvas;
     canvas.dataset.layerId = id;
     canvas.style.position = 'absolute';
@@ -25065,7 +25063,7 @@ function (_Layer) {
       this.clearContext(outputContext);
       outputContext.drawImage(snapshot.context.canvas, 0, 0);
       snapshot.children.forEach(function (child) {
-        var node = Object(sprite_core_src_modules_dom_nodetype__WEBPACK_IMPORTED_MODULE_11__["createNode"])(child.nodeType);
+        var node = Object(sprite_core__WEBPACK_IMPORTED_MODULE_10__["createNode"])(child.nodeType);
 
         if (child.id) {
           node.id = child.id;
@@ -25172,7 +25170,7 @@ function (_Layer) {
   }]);
 
   return ExLayer;
-}(sprite_core_src_core_layer__WEBPACK_IMPORTED_MODULE_10__["default"]);
+}(sprite_core__WEBPACK_IMPORTED_MODULE_10__["Layer"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (ExLayer);
 
@@ -25205,13 +25203,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(6);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(150);
-/* harmony import */ var sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(128);
-/* harmony import */ var sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(184);
-/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(254);
-/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(220);
-/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(225);
-/* harmony import */ var _platform_devtools__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(256);
+/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(9);
+/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(254);
+/* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(220);
+/* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(225);
+/* harmony import */ var _platform_devtools__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(256);
 
 
 
@@ -25228,8 +25224,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
+var setDeprecation = sprite_core__WEBPACK_IMPORTED_MODULE_11__["utils"].setDeprecation,
+    sortOrderedSprites = sprite_core__WEBPACK_IMPORTED_MODULE_11__["utils"].sortOrderedSprites;
 
 var _layerMap = Symbol('layerMap'),
     _zOrder = Symbol('zOrder'),
@@ -25256,13 +25252,13 @@ function (_BaseNode) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, Scene);
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene).call(this));
-    container = Object(_platform__WEBPACK_IMPORTED_MODULE_16__["getContainer"])(container);
+    container = Object(_platform__WEBPACK_IMPORTED_MODULE_14__["getContainer"])(container);
     _this.container = container;
     container.scene_ = _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_10___default()(_this));
     /* istanbul ignore if */
 
     if (arguments.length === 3) {
-      Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_12__["setDeprecation"])('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).');
+      setDeprecation('Scene(container, width, height)', 'Instead use Scene(container, {viewport, resolution}).');
       /* eslint-disable prefer-rest-params */
 
       options = {
@@ -25274,7 +25270,7 @@ function (_BaseNode) {
     _this[_zOrder] = 0;
     _this[_layerMap] = {};
     _this[_layers] = [];
-    _this[_snapshot] = Object(_platform__WEBPACK_IMPORTED_MODULE_16__["createCanvas"])();
+    _this[_snapshot] = Object(_platform__WEBPACK_IMPORTED_MODULE_14__["createCanvas"])();
     var viewport = options.viewport || ['', ''];
     _this.viewport = viewport; // scale, width, height, top, bottom, left, right
     // width-extend, height-extend, top-extend, bottom-extend, left-extend, right-extend
@@ -25351,7 +25347,7 @@ function (_BaseNode) {
         }
       });
 
-      this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_12__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+      this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
     }
   }, {
     key: "replaceChild",
@@ -25594,12 +25590,12 @@ function (_BaseNode) {
                   task = void 0;
 
                   if (typeof res === 'string') {
-                    task = _resource__WEBPACK_IMPORTED_MODULE_15__["default"].loadTexture(res);
+                    task = _resource__WEBPACK_IMPORTED_MODULE_13__["default"].loadTexture(res);
                   } else if (Array.isArray(res)) {
-                    task = _resource__WEBPACK_IMPORTED_MODULE_15__["default"].loadFrames.apply(_resource__WEBPACK_IMPORTED_MODULE_15__["default"], _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3___default()(res));
+                    task = _resource__WEBPACK_IMPORTED_MODULE_13__["default"].loadFrames.apply(_resource__WEBPACK_IMPORTED_MODULE_13__["default"], _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3___default()(res));
                   } else {
                     id = res.id, src = res.src;
-                    task = _resource__WEBPACK_IMPORTED_MODULE_15__["default"].loadTexture({
+                    task = _resource__WEBPACK_IMPORTED_MODULE_13__["default"].loadTexture({
                       id: id,
                       src: src
                     });
@@ -25661,7 +25657,7 @@ function (_BaseNode) {
           }
         }
 
-        this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_14__["default"](id, opts));
+        this.appendLayer(new _layer__WEBPACK_IMPORTED_MODULE_12__["default"](id, opts));
       }
 
       return this[_layerMap][id];
@@ -25671,7 +25667,7 @@ function (_BaseNode) {
     value: function appendLayer(layer) {
       var appendDOMElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"])) {
+      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_12__["default"])) {
         // append dom element
         layer.id = layer.id || "_layer".concat(Math.random());
 
@@ -25707,11 +25703,11 @@ function (_BaseNode) {
         layer.resolution = this.layerResolution;
       }
 
-      this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_12__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+      this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
       /* istanbul ignore if  */
 
-      if (_platform_devtools__WEBPACK_IMPORTED_MODULE_17__["setDebugToolsObserver"] && layer.id !== '__debuglayer__') {
-        Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_17__["setDebugToolsObserver"])(this, layer);
+      if (_platform_devtools__WEBPACK_IMPORTED_MODULE_15__["setDebugToolsObserver"] && layer.id !== '__debuglayer__') {
+        Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_15__["setDebugToolsObserver"])(this, layer);
       }
 
       if (appendDOMElement) this.container.appendChild(layer.canvas || layer);
@@ -25728,11 +25724,11 @@ function (_BaseNode) {
         layer.disconnect(this);
         this.container.removeChild(layer.canvas || layer);
         delete this[_layerMap][layer.id];
-        this[_layers] = Object(sprite_core_src_utils__WEBPACK_IMPORTED_MODULE_12__["sortOrderedSprites"])(Object.values(this[_layerMap]), true);
+        this[_layers] = sortOrderedSprites(Object.values(this[_layerMap]), true);
         /* istanbul ignore if  */
 
-        if (_platform_devtools__WEBPACK_IMPORTED_MODULE_17__["removeDebugToolsObserver"]) {
-          Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_17__["removeDebugToolsObserver"])(layer);
+        if (_platform_devtools__WEBPACK_IMPORTED_MODULE_15__["removeDebugToolsObserver"]) {
+          Object(_platform_devtools__WEBPACK_IMPORTED_MODULE_15__["removeDebugToolsObserver"])(layer);
         }
 
         return layer;
@@ -25757,12 +25753,12 @@ function (_BaseNode) {
   }, {
     key: "querySelector",
     value: function querySelector(selector) {
-      return Object(sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_13__["querySelector"])(selector, this);
+      return Object(sprite_core__WEBPACK_IMPORTED_MODULE_11__["querySelector"])(selector, this);
     }
   }, {
     key: "querySelectorAll",
     value: function querySelectorAll(selector) {
-      return Object(sprite_core_src_modules_dom__WEBPACK_IMPORTED_MODULE_13__["querySelectorAll"])(selector, this);
+      return Object(sprite_core__WEBPACK_IMPORTED_MODULE_11__["querySelectorAll"])(selector, this);
     }
   }, {
     key: "snapshot",
@@ -26062,7 +26058,7 @@ function (_BaseNode) {
   }]);
 
   return Scene;
-}(sprite_core_src_core_basenode__WEBPACK_IMPORTED_MODULE_11__["default"]);
+}(sprite_core__WEBPACK_IMPORTED_MODULE_11__["BaseNode"]);
 
 
 

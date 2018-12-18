@@ -1,11 +1,11 @@
-import BaseNode from 'sprite-core/src/core/basenode';
-import {setDeprecation, sortOrderedSprites} from 'sprite-core/src/utils';
-import {querySelector, querySelectorAll} from 'sprite-core/src/modules/dom';
+import {BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
 
 import Layer from './layer';
 import Resource from './resource';
 import {createCanvas, getContainer} from './platform';
 import {setDebugToolsObserver, removeDebugToolsObserver} from './platform/devtools';
+
+const {setDeprecation, sortOrderedSprites} = utils;
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),

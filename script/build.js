@@ -11,10 +11,14 @@ const buildTask = require('./build-task');
     const modified = content.replace('helpers.decorate = helper("7.1.5")`', 'helpers.decorate = helper("7.0.0-beta.0")`');
     fs.writeFileSync(helperPath, modified);
   }
-  await buildTask(); // build uncompressed file
-  await buildTask({production: true}); // build compressed file
+  await buildTask();
+  await buildTask({production: true});
+  await buildTask({mode: 'lite'});
+  await buildTask({production: true, mode: 'lite'});
+  await buildTask({mode: 'core'});
+  await buildTask({production: true, mode: 'core'});
   await buildTask({esnext: true});
-  // await buildTask({esnext: true, production: true})
+  await buildTask({production: true, esnext: true});
   if(content) {
     fs.writeFileSync(helperPath, content);
   }

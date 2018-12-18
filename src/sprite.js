@@ -1,7 +1,8 @@
-import Sprite from 'sprite-core/src/core/sprite';
-import {attr, generateID} from 'sprite-core/src/utils';
+import {Sprite, utils} from 'sprite-core';
 import Resource from './resource';
 
+const attr = utils.attr;
+const generateID = utils.generateID;
 const _mapTextures = Symbol('mapTextures'),
   _loadTexturePassport = Symbol('loadTexturePassport');
 

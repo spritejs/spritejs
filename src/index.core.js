@@ -1,11 +1,4 @@
 import {
-  querySelector,
-  querySelectorAll,
-  registerNodeType,
-  isValidNodeType,
-  createNode,
-  createElement,
-
   use,
   utils,
   math,
@@ -13,9 +6,6 @@ import {
   Label,
   Path,
   Group,
-  Effects,
-  Easings,
-  Timeline,
   Color,
 } from 'sprite-core';
 
@@ -30,20 +20,14 @@ if(shim) {
   shim();
 }
 
-registerNodeType('layer', Layer, true);
-registerNodeType('scene', Scene, true);
-
 const version = require('../package.json').version;
 
 export {
   version,
+
+  use,
   math,
   utils,
-  use,
-
-  querySelector,
-  querySelectorAll,
-
   BaseNode,
   BaseSprite,
   Sprite,
@@ -53,14 +37,7 @@ export {
   Layer,
   Scene,
 
-  registerNodeType,
-  isValidNodeType,
-  createNode,
-  createElement,
   Color,
 
   Resource,
-  Effects,
-  Easings,
-  Timeline,
 };
