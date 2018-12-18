@@ -1,4 +1,5 @@
-import {Layer, createNode} from 'sprite-core';
+import Layer from 'sprite-core/src/core/layer';
+import {createNode} from 'sprite-core/src/modules/dom/nodetype';
 import {createCanvas} from './platform';
 
 const _resolution = Symbol('resolution');
@@ -24,7 +25,9 @@ class ExLayer extends Layer {
     canvas.dataset.layerId = id;
     canvas.style.position = 'absolute';
 
-    super({context, handleEvent, evaluateFPS, renderMode, autoRender, useDocumentCSS});
+    super({context, evaluateFPS, renderMode, autoRender, useDocumentCSS});
+
+    this.handleEvent = handleEvent;
 
     if(context.canvas && context.canvas.addEventListener) {
       context.canvas.addEventListener('mouseleave', (evt) => {
@@ -55,29 +58,6 @@ class ExLayer extends Layer {
 
   get id() {
     return this.canvas.dataset.layerId;
-  }
-
-  setAttribute(name, value) {
-    if(this[_attrs].has(name)) {
-      this[name] = value;
-    } else {
-      super.setAttribute(name, value);
-    }
-  }
-
-  getAttribute(name) {
-    if(this[_attrs].has(name)) {
-      return this[name];
-    }
-    return super.getAttribute(name);
-  }
-
-  removeAttribute(name) {
-    if(this[_attrs].has(name)) {
-      this[name] = null;
-    } else {
-      super.removeAttribute(name);
-    }
   }
 
   get resolution() {
@@ -234,8 +214,6 @@ class ExLayer extends Layer {
 
     this.clearContext(outputContext);
     outputContext.drawImage(snapshot.context.canvas, 0, 0);
-
-    this.clearUpdate();
 
     snapshot.children.forEach((child) => {
       const node = createNode(child.nodeType);

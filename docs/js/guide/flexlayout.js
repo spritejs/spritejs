@@ -1,28 +1,40 @@
-'use strict';
+"use strict";
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite,
     Group = _spritejs.Group,
     Label = _spritejs.Label;
-_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+_asyncToGenerator(
+/*#__PURE__*/
+regeneratorRuntime.mark(function _callee() {
   var scene, layer, layout, s1, s2, s3, s4;
   return regeneratorRuntime.wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          scene = new Scene('#flex-basic', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+          scene = new Scene('#flex-basic', {
+            viewport: ['auto', 'auto'],
+            resolution: [1540, 600]
+          });
           _context.next = 3;
           return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
 
         case 3:
           layer = scene.layer(), layout = new Group();
-
-
           layout.attr({
             display: 'flex',
             alignItems: 'flex-start',
@@ -34,45 +46,50 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
             anchor: [0.5, 0],
             border: [6, '#aaa']
           });
-
           layer.append(layout);
-
           s1 = new Sprite('guanguan1.png'), s2 = new Sprite('guanguan2.png'), s3 = new Sprite('guanguan3.png'), s4 = new Sprite('guanguan3.png');
-
-
           s4.attr({
             anchor: 0.5,
             scale: [-1, 1]
           });
-
           layout.append(s1, s2, s3, s4);
-
-          layout.animate([{ width: 1200 }, { width: 400 }], {
+          layout.animate([{
+            width: 1200
+          }, {
+            width: 400
+          }], {
             duration: 3000,
             direction: 'alternate',
             iterations: Infinity
           });
 
         case 10:
-        case 'end':
+        case "end":
           return _context.stop();
       }
     }
   }, _callee, this);
-}))();(function () {
-  var scene = new Scene('#flex-direction', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+}))();
 
+(function () {
+  var scene = new Scene('#flex-direction', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Sprite();
   s1.attr({
     size: [50, 50],
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue' });
+  s2.attr({
+    bgcolor: 'blue'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green' });
-
+  s3.attr({
+    bgcolor: 'green'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -83,9 +100,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     flexDirection: 'row'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     x: 500,
@@ -95,7 +110,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     x: 800,
@@ -107,7 +121,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g3);
-
   var g4 = g1.cloneNode();
   g4.attr({
     x: 1100,
@@ -119,20 +132,27 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g4);
-})();(function () {
-  var scene = new Scene('#flex-wrap', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-wrap', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Sprite();
   s1.attr({
     size: [100, 100],
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue' });
+  s2.attr({
+    bgcolor: 'blue'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green' });
-
+  s3.attr({
+    bgcolor: 'green'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -144,9 +164,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     flexWrap: 'nowrap'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     x: 800,
@@ -156,7 +174,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     x: 1300,
@@ -166,20 +183,27 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g3);
-})();(function () {
-  var scene = new Scene('#flex-justify', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-justify', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Sprite();
   s1.attr({
     size: [50, 50],
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue' });
+  s2.attr({
+    bgcolor: 'blue'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green' });
-
+  s3.attr({
+    bgcolor: 'green'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -190,9 +214,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     justifyContent: 'flex-start'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     y: 200,
@@ -202,7 +224,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     y: 300,
@@ -212,7 +233,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g3);
-
   var g4 = g1.cloneNode();
   g4.attr({
     y: 400,
@@ -222,7 +242,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g4);
-
   var g5 = g1.cloneNode();
   g5.attr({
     y: 500,
@@ -232,24 +251,30 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g5);
-})();(function () {
-  var scene = new Scene('#flex-alignItems', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-alignItems', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Sprite();
   s1.attr({
     size: [50, 100],
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue', height: 200 });
+  s2.attr({
+    bgcolor: 'blue',
+    height: 200
+  });
   var s3 = new Label('中\n国');
   s3.attr({
     fillColor: 'cyan',
     font: '2rem "宋体"',
     bgcolor: 'green'
   });
-
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -261,9 +286,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     alignItems: 'flex-start'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     x: 550,
@@ -273,7 +296,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     x: 900,
@@ -283,7 +305,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g3);
-
   var g4 = g1.cloneNode();
   g4.attr({
     x: 1250,
@@ -293,20 +314,27 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g4);
-})();(function () {
-  var scene = new Scene('#flex-alignContent', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-alignContent', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Sprite();
   s1.attr({
     size: [100, 100],
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue' });
+  s2.attr({
+    bgcolor: 'blue'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green' });
-
+  s3.attr({
+    bgcolor: 'green'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -320,9 +348,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     alignContent: 'stretch'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     x: 500,
@@ -332,7 +358,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     x: 800,
@@ -342,7 +367,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g3);
-
   var g4 = g1.cloneNode();
   g4.attr({
     x: 1100,
@@ -352,7 +376,6 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g4);
-
   var g5 = g1.cloneNode();
   g5.attr({
     x: 1400,
@@ -362,10 +385,14 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return s.cloneNode();
   })));
   layer.append(g5);
-})();(function () {
-  var scene = new Scene('#flex-order', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-order', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Label('1');
   s1.attr({
     lineHeight: 100,
@@ -376,10 +403,15 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     bgcolor: 'red'
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue', text: '2' });
+  s2.attr({
+    bgcolor: 'blue',
+    text: '2'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green', text: '3' });
-
+  s3.attr({
+    bgcolor: 'green',
+    text: '3'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -391,30 +423,35 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     flexWrap: 'wrap'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     x: 800
   });
   g2.append.apply(g2, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ order: 2 - i });
+    return s.cloneNode().attr({
+      order: 2 - i
+    });
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     x: 1300
   });
   g3.append.apply(g3, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ order: Math.abs(1 - i) });
+    return s.cloneNode().attr({
+      order: Math.abs(1 - i)
+    });
   })));
   layer.append(g3);
-})();(function () {
-  var scene = new Scene('#flex-flex', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
+})();
 
+(function () {
+  var scene = new Scene('#flex-flex', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var s1 = new Label('1');
   s1.attr({
     lineHeight: 100,
@@ -426,10 +463,15 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     flexGrow: 1
   });
   var s2 = s1.cloneNode();
-  s2.attr({ bgcolor: 'blue', text: '2' });
+  s2.attr({
+    bgcolor: 'blue',
+    text: '2'
+  });
   var s3 = s1.cloneNode();
-  s3.attr({ bgcolor: 'green', text: '3' });
-
+  s3.attr({
+    bgcolor: 'green',
+    text: '3'
+  });
   var g1 = new Group();
   g1.attr({
     anchor: 0.5,
@@ -440,24 +482,25 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     flexDirection: 'row'
   });
   layer.append(g1);
-
   g1.append(s1, s2, s3);
-
   var g2 = g1.cloneNode();
   g2.attr({
     y: 300
   });
   g2.append.apply(g2, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ flexGrow: i });
+    return s.cloneNode().attr({
+      flexGrow: i
+    });
   })));
   layer.append(g2);
-
   var g3 = g1.cloneNode();
   g3.attr({
     y: 450
   });
   g3.append.apply(g3, _toConsumableArray([s1, s2, s3].map(function (s, i) {
-    return s.cloneNode().attr({ flexGrow: Math.abs(1 - i) });
+    return s.cloneNode().attr({
+      flexGrow: Math.abs(1 - i)
+    });
   })));
   layer.append(g3);
 })();

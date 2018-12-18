@@ -151,10 +151,6 @@ export function getContainer(container) {
   return container;
 }
 
-export const _debugger = null;
-export const setDebugToolsObserver = null;
-export const removeDebugToolsObserver = null;
-
 export function shim() {
   global.IS_NODE_ENV = true;
 

@@ -16,7 +16,7 @@ module.exports = function (env = {}) {
 
   const output = {
     path: outputPath,
-    filename: env.esnext ? 'spritejs.es6' : 'spritejs',
+    filename: env.esnext ? '[name].es6' : '[name]',
     publicPath: '/js/',
     library: 'spritejs',
     libraryTarget: env.esnext ? 'commonjs2' : 'umd',
@@ -30,7 +30,10 @@ module.exports = function (env = {}) {
 
   return {
     mode: env.production ? 'production' : 'none',
-    entry: './src/index',
+    entry: {
+      spritejs: './src/index',
+      'spritejs.lite': './src/index.lite',
+    },
     output,
 
     module: {

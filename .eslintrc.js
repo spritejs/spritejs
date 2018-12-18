@@ -19,5 +19,6 @@ module.exports = {
   plugins: ['html'],
   rules: {
     "complexity": ["warn", 25],
+    'import/prefer-default-export': 'off',
   },
 }

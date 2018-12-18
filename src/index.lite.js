@@ -1,44 +1,30 @@
+import {Effects, Easings, Timeline} from 'sprite-animator';
+import * as math from 'sprite-math';
+import * as utils from 'sprite-core/src/utils';
+import Label from 'sprite-core/src/core/label';
+import Group from 'sprite-core/src/core/group';
+import BaseNode from 'sprite-core/src/core/basenode';
+import Path from 'sprite-core/src/core/path';
+import use from 'sprite-core/src/core/use';
+import 'sprite-core/src/modules/animation';
 import {
-  BaseNode,
-  Label,
-  Group,
-  Effects,
-  Easings,
-  Timeline,
-  Path,
   registerNodeType,
-  isValidNodeType,
   createNode,
   createElement,
-  Color,
-
-  use,
-  utils,
-  math,
-
+  isValidNodeType,
   querySelector,
   querySelectorAll,
-  stylesheet,
-} from 'sprite-core';
+} from 'sprite-core/src/modules/dom';
+
 
 import BaseSprite from './basesprite';
 import Sprite from './sprite';
 import Layer from './layer';
-import BaseScene from './scene';
+import Scene from './scene';
 import Resource from './resource';
 import {shim} from './platform';
-import {_debugger} from './platform/devtools';
 
-class Scene extends BaseScene {
-  constructor(container, options = {}) {
-    super(container, options);
-    if(options.useDocumentCSS) {
-      stylesheet.fromDocumentCSS();
-    }
-  }
-}
-
-const {setDeprecation} = utils;
+const Color = utils.Color;
 
 if(shim) {
   shim();
@@ -47,15 +33,9 @@ if(shim) {
 registerNodeType('layer', Layer, true);
 registerNodeType('scene', Scene, true);
 
-function Paper2D(...args) {
-  setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');
-  return new Scene(...args);
-}
-
 const version = require('../package.json').version;
 
 export {
-  _debugger,
   version,
   math,
   utils,
@@ -63,7 +43,6 @@ export {
 
   querySelector,
   querySelectorAll,
-  stylesheet,
 
   BaseNode,
   BaseSprite,
@@ -73,7 +52,6 @@ export {
   Group,
   Layer,
   Scene,
-  Paper2D,
 
   registerNodeType,
   isValidNodeType,

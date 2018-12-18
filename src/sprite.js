@@ -1,8 +1,7 @@
-import {Sprite, utils} from 'sprite-core';
+import Sprite from 'sprite-core/src/core/sprite';
+import {attr, generateID} from 'sprite-core/src/utils';
 import Resource from './resource';
 
-const attr = utils.attr;
-const generateID = utils.generateID;
 const _mapTextures = Symbol('mapTextures'),
   _loadTexturePassport = Symbol('loadTexturePassport');
 
@@ -17,7 +16,7 @@ class ResAttr extends Sprite.Attr {
       filter: ...  //texture filters
     }
    */
-  @attr
+  @attr({value: []})
   set textures(textures) {
     if(!Array.isArray(textures)) {
       textures = [textures];

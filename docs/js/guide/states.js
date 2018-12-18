@@ -1,17 +1,18 @@
-'use strict';
+"use strict";
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Label = _spritejs.Label,
     Sprite = _spritejs.Sprite,
     Group = _spritejs.Group;
-
 /* demo: state-basic */
 
 (function () {
-  var scene = new Scene('#state-basic', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
+  var scene = new Scene('#state-basic', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
   var layer = scene.layer();
-
   var states = {
     stateA: {
       bgcolor: 'red',
@@ -29,9 +30,7 @@ var _spritejs = spritejs,
       rotate: 60
     }
   };
-
   var stateNames = Object.keys(states);
-
   var s = new Label(stateNames[0]);
   s.attr({
     anchor: 0.5,
@@ -45,18 +44,22 @@ var _spritejs = spritejs,
     state: stateNames[0]
   });
   layer.append(s);
-
   var i = 0;
   setInterval(function () {
-    s.attr({ state: stateNames[++i % 3] });
+    s.attr({
+      state: stateNames[++i % 3]
+    });
   }, 1000);
 })();
-
 /* demo: state-actions */
-(function () {
-  var scene = new Scene('#state-actions', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-actions', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var states = {
     stateA: {
       bgcolor: 'red',
@@ -74,9 +77,7 @@ var _spritejs = spritejs,
       rotate: 60
     }
   };
-
   var stateNames = Object.keys(states);
-
   var actions = [{
     from: 'stateA',
     to: 'stateB',
@@ -101,7 +102,6 @@ var _spritejs = spritejs,
       duration: 500
     }
   }];
-
   var s = new Label(stateNames[0]);
   s.attr({
     anchor: 0.5,
@@ -117,20 +117,23 @@ var _spritejs = spritejs,
     state: 'stateC'
   });
   layer.append(s);
-
   s.attr('state', 'stateA');
-
   var i = 0;
   setInterval(function () {
-    s.attr({ state: stateNames[++i % 3] });
+    s.attr({
+      state: stateNames[++i % 3]
+    });
   }, 1000);
 })();
-
 /* demo: state-reversable */
-(function () {
-  var scene = new Scene('#state-reversable', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-reversable', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var button1 = new Label('reversable');
   button1.attr({
     anchor: 0.5,
@@ -153,15 +156,12 @@ var _spritejs = spritejs,
     }]
   });
   layer.append(button1);
-
   button1.on('mouseenter', function () {
     this.attr('state', 'hover');
   });
-
   button1.on('mouseleave', function () {
     this.attr('state', 'normal');
   });
-
   var button2 = button1.cloneNode();
   button2.attr({
     text: 'not reversable',
@@ -174,23 +174,23 @@ var _spritejs = spritejs,
       reversable: false
     }]
   });
-
   layer.append(button2);
-
   button2.on('mouseenter', function () {
     this.attr('state', 'hover');
   });
-
   button2.on('mouseleave', function () {
     this.attr('state', 'normal');
   });
 })();
-
 /* demo: state-resolveStates */
-(function () {
-  var scene = new Scene('#state-resolveStates', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-resolveStates', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var button1 = new Label('动作 1');
   button1.attr({
     anchor: 0.5,
@@ -200,7 +200,6 @@ var _spritejs = spritejs,
     pos: [500, 300]
   });
   layer.append(button1);
-
   var button2 = button1.cloneNode();
   button2.attr({
     text: '动作 2',
@@ -209,21 +208,18 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button2);
-
   button1.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button1.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button2.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button2.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   var block = new Sprite({
     pos: [800, 300],
     size: [100, 100],
@@ -262,21 +258,22 @@ var _spritejs = spritejs,
     }]
   });
   layer.append(block);
-
   button1.on('click', function () {
     block.resolveStates(['a', 'b', 'c', 'd', 'a']);
   });
-
   button2.on('click', function () {
     block.resolveStates(['a', 'd', 'c', 'b', 'a']);
   });
 })();
-
 /* demo: state-toggleEnterExit */
-(function () {
-  var scene = new Scene('#state-toggleEnterExit', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-toggleEnterExit', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var group = new Group({
     display: 'flex',
     size: [700, 100],
@@ -284,7 +281,6 @@ var _spritejs = spritejs,
     anchor: 0.5,
     bgcolor: 'grey'
   });
-
   layer.append(group);
 
   function addBlock() {
@@ -306,6 +302,7 @@ var _spritejs = spritejs,
 
   function removeBlock() {
     var children = group.children;
+
     if (children.length > 0) {
       var child = children[children.length - 1];
       child.remove();
@@ -326,7 +323,6 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button1);
-
   var button2 = button1.cloneNode();
   button2.attr({
     text: '删除元素',
@@ -335,35 +331,34 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button2);
-
   button1.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button1.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button2.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button2.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button1.on('click', function () {
     addBlock();
   });
-
   button2.on('click', function () {
     removeBlock();
   });
 })();
-
 /* demo: state-fade */
-(function () {
-  var scene = new Scene('#state-fade', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-fade', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var sprite = new Sprite({
     display: 'flex',
     size: [700, 100],
@@ -376,9 +371,7 @@ var _spritejs = spritejs,
       }
     }
   });
-
   layer.append(sprite);
-
   var button1 = new Label('显示');
   button1.attr({
     anchor: 0.5,
@@ -393,7 +386,6 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button1);
-
   var button2 = button1.cloneNode();
   button2.attr({
     text: '隐藏',
@@ -402,35 +394,34 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button2);
-
   button1.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button1.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button2.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button2.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button1.on('click', function () {
     sprite.show();
   });
-
   button2.on('click', function () {
     sprite.hide();
   });
 })();
-
 /* demo: state-mode */
-(function () {
-  var scene = new Scene('#state-mode', { viewport: ['auto', 'auto'], resolution: [1540, 600] });
-  var layer = scene.layer();
 
+
+(function () {
+  var scene = new Scene('#state-mode', {
+    viewport: ['auto', 'auto'],
+    resolution: [1540, 600]
+  });
+  var layer = scene.layer();
   var group = new Group({
     display: 'flex',
     size: [700, 100],
@@ -472,7 +463,6 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button1);
-
   var button2 = button1.cloneNode();
   button2.attr({
     text: '批量移除',
@@ -481,25 +471,21 @@ var _spritejs = spritejs,
     }
   });
   layer.append(button2);
-
   button1.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button1.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button2.on('mouseenter', function () {
     layer.style.cursor = 'pointer';
   });
   button2.on('mouseleave', function () {
     layer.style.cursor = '';
   });
-
   button1.on('click', function () {
     layer.append(group);
   });
-
   button2.on('click', function () {
     group.remove();
   });

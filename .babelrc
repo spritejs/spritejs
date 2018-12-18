@@ -1,7 +1,35 @@
 {
-  "presets": ["env"],
-  "plugins": ["transform-runtime",
-              "transform-decorators-runtime",
-              "transform-class-properties",
-              "inline-package-json"]
+  "presets": [
+    ["@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            "> 1%",
+            "last 2 versions",
+            "not ie <= 8"
+          ]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-external-helpers",
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "decoratorsBeforeExport": false
+      }
+    ],
+    "@babel/plugin-proposal-class-properties",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": false,
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": false
+      }
+    ],
+    "inline-package-json"
+  ]
 }

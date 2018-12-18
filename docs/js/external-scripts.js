@@ -1,10 +1,33 @@
-'use strict';
+"use strict";
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 (function () {
-  var handleExternalScript = function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  function loadScript(script) {
+    var newScript = document.createElement('script');
+    Array.prototype.slice.call(script.attributes).forEach(function (attribute) {
+      newScript[attribute.name] = attribute.value;
+    });
+    var ret = new Promise(function (resolve) {
+      newScript.onload = function () {
+        resolve(script);
+      };
+    });
+    script.parentNode.insertBefore(newScript, script);
+    script.parentNode.removeChild(script);
+    return ret;
+  }
+
+  function handleExternalScript() {
+    return _handleExternalScript.apply(this, arguments);
+  }
+
+  function _handleExternalScript() {
+    _handleExternalScript = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee() {
       var container, scripts, i, script;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -12,7 +35,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             case 0:
               container = Docsify.dom.getNode('#main');
               scripts = Docsify.dom.findAll(container, 'script');
-
               /* eslint-disable no-await-in-loop */
 
               i = 0;
@@ -39,34 +61,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               break;
 
             case 11:
-            case 'end':
+            case "end":
               return _context.stop();
           }
         }
       }, _callee, this);
     }));
-
-    return function handleExternalScript() {
-      return _ref.apply(this, arguments);
-    };
-  }();
-
-  function loadScript(script) {
-    var newScript = document.createElement('script');
-
-    Array.prototype.slice.call(script.attributes).forEach(function (attribute) {
-      newScript[attribute.name] = attribute.value;
-    });
-    var ret = new Promise(function (resolve) {
-      newScript.onload = function () {
-        resolve(script);
-      };
-    });
-    script.parentNode.insertBefore(newScript, script);
-    script.parentNode.removeChild(script);
-    return ret;
+    return _handleExternalScript.apply(this, arguments);
   }
-
 
   var install = function install(hook) {
     hook.doneEach(handleExternalScript);

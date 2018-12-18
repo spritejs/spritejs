@@ -1,5 +1,3 @@
-import {_debugger, setDebugToolsObserver, removeDebugToolsObserver} from './devtools';
-
 export function createCanvas(width = 300, height = 150) {
   const canvas = document.createElement('canvas');
   canvas.width = width;
@@ -32,8 +30,6 @@ export function getContainer(container) {
   }
   return container;
 }
-
-export {_debugger, setDebugToolsObserver, removeDebugToolsObserver};
 
 export function shim() {
   // CustomEvent polyfill https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent/CustomEvent

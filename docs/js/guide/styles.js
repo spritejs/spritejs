@@ -1,9 +1,8 @@
-'use strict';
+"use strict";
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite;
-
 /* demo: css-basic */
 
 (function () {
@@ -13,19 +12,17 @@ var _spritejs = spritejs,
     useDocumentCSS: true
   });
   var layer = scene.layer();
-
   var s1 = new Sprite({
     class: 'red circle'
   });
-
   var s2 = new Sprite({
     class: 'blue circle'
   });
-
   layer.append(s1, s2);
 })();
-
 /* demo: css-transition */
+
+
 (function () {
   var scene = new Scene('#css-transition', {
     viewport: ['auto', 'auto'],
@@ -33,17 +30,13 @@ var _spritejs = spritejs,
     useDocumentCSS: true
   });
   var layer = scene.layer();
-
   var s1 = new Sprite({
     class: 'red circle'
   });
-
   var s2 = new Sprite({
     class: 'blue circle'
   });
-
   layer.append(s1, s2);
-
   s1.on('mouseenter', function () {
     s1.attr('class', 'orange circle');
   });

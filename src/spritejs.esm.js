@@ -17,7 +17,6 @@ export const {
 
   BaseNode,
   BaseSprite,
-  DataNode,
   Sprite,
   Label,
   Path,

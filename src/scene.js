@@ -1,9 +1,11 @@
-import {stylesheet, DataNode, BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
+import BaseNode from 'sprite-core/src/core/basenode';
+import {setDeprecation, sortOrderedSprites} from 'sprite-core/src/utils';
+import {querySelector, querySelectorAll} from 'sprite-core/src/modules/dom';
+
 import Layer from './layer';
 import Resource from './resource';
-import {createCanvas, getContainer, setDebugToolsObserver, removeDebugToolsObserver} from './platform';
-
-const {setDeprecation, sortOrderedSprites} = utils;
+import {createCanvas, getContainer} from './platform';
+import {setDebugToolsObserver, removeDebugToolsObserver} from './platform/devtools';
 
 const _layerMap = Symbol('layerMap'),
   _zOrder = Symbol('zOrder'),
@@ -15,8 +17,7 @@ const _layerMap = Symbol('layerMap'),
   _attrs = Symbol('attrs'),
   _events = Symbol('events'),
   _subscribe = Symbol('subscribe'),
-  _displayRatio = Symbol('displayRatio'),
-  _node = Symbol('node');
+  _displayRatio = Symbol('displayRatio');
 
 export default class Scene extends BaseNode {
   constructor(container, options = {}) {
@@ -53,10 +54,6 @@ export default class Scene extends BaseNode {
     this.maxDisplayRatio = options.maxDisplayRatio || Infinity;
     this.displayRatio = options.displayRatio || 1.0;
 
-    if(options.useDocumentCSS) {
-      stylesheet.fromDocumentCSS();
-    }
-
     // d3-friendly
     this.namespaceURI = 'http://spritejs.org/scene';
     const that = this;
@@ -90,16 +87,6 @@ export default class Scene extends BaseNode {
     this[_attrs] = new Set(['resolution', 'viewport', 'stickMode', 'stickExtend',
       'subscribe', 'displayRatio', 'maxDisplayRatio']);
     this[_subscribe] = null;
-
-    this[_node] = new DataNode();
-    this[_node].__owner = this;
-    this[_node].forceUpdate = () => {};
-    this[_node].updateStyles = () => {
-      this[_layers].forEach((layer) => {
-        layer.__updateStyleTag = true;
-        layer.prepareRender();
-      });
-    };
   }
 
   // unit vw、rw (default 1rw ?)
@@ -149,48 +136,6 @@ export default class Scene extends BaseNode {
 
   get sortedChildNodes() {
     return this[_layers];
-  }
-
-  get id() {
-    if(this.container) {
-      return this.container.id;
-    }
-    return undefined;
-  }
-
-  get style() {
-    return this.container.style;
-  }
-
-  get attributes() {
-    return this[_node].attributes;
-  }
-
-  get dataset() {
-    return this[_node].dataset;
-  }
-
-  setAttribute(name, value) {
-    if(this[_attrs].has(name)) {
-      this[name] = value;
-    } else {
-      this[_node].attr(name, value);
-    }
-  }
-
-  getAttribute(name) {
-    if(this[_attrs].has(name)) {
-      return this[name];
-    }
-    return this[_node].attr(name);
-  }
-
-  removeAttribute(name) {
-    if(this[_attrs].has(name)) {
-      this[name] = null;
-    } else {
-      this[_node].attr(name, null);
-    }
   }
 
   insertBefore(newchild, refchild) {
