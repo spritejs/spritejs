@@ -23,17 +23,24 @@ module.exports = function (env = {}) {
     libraryTarget: env.esnext ? 'commonjs2' : 'umd',
   };
 
-  let alias = {};
+  const alias = {
+    'sprite-core': 'sprite-core/src/index.js',
+    'sprite-math': 'sprite-math/src/index',
+    'svg-path-to-canvas': 'svg-path-to-canvas/src/index',
+    'sprite-animator': 'sprite-animator/src/index',
+    'sprite-flex-layout': 'sprite-flex-layout/src/index',
+    'sprite-timeline': 'sprite-timeline/src/index',
+  };
   let entry = './src/index';
 
   if(env.mode === 'lite') {
     output.filename += '.lite';
     entry = './src/index.lite';
-    alias = {'sprite-core': 'sprite-core/src/index.dom.js'};
+    alias['sprite-core'] = 'sprite-core/src/index.dom.js';
   } else if(env.mode === 'core') {
     output.filename += '.core';
     entry = './src/index.core';
-    alias = {'sprite-core': 'sprite-core/src/index.basic.js'};
+    alias['sprite-core'] = 'sprite-core/src/index.basic.js';
   }
 
   if(env.production) {
@@ -51,7 +58,7 @@ module.exports = function (env = {}) {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules\/(?!(sprite-[\w-]+)\/|svg-path-to-canvas|fast-animation-frame).*/,
+          exclude: /node_modules\/(?!(sprite-[\w-]+)\/|svg-path-to-canvas).*/,
           use: {
             loader: 'babel-loader',
             options: babelConf,
