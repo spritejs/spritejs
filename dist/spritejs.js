@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.25.1";
+var version = "2.25.2";
 
 
 /***/ }),
@@ -14420,13 +14420,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
 
 
-var defaultValues = {
-  flexGrow: 0,
-  flexShrink: 1,
-  flexBasis: 'auto',
-  order: 0,
-  alignSelf: ''
-};
 /*
   BaseAttr.addAttributes({
     flexGrow: {
@@ -14446,34 +14439,34 @@ _core_baseattr__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes({
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout: relayout
     })],
-    value: defaultValues.flexGrow
+    value: 0
   },
   flexShrink: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout: relayout
     })],
-    value: defaultValues.flexShrink
+    value: 1
   },
   flexBasis: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout: relayout,
       reflow: reflow
     })],
-    value: defaultValues.flexBasis
+    value: 'auto'
   },
   order: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseInt), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       cache: cache,
       relayout: relayout
     })],
-    value: defaultValues.order
+    value: 0
   },
   alignSelf: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       cache: cache,
       relayout: relayout
     })],
-    value: defaultValues.alignSelf
+    value: ''
   },
   flex: {
     set: function set(val) {
@@ -14521,37 +14514,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var sprite_flex_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(87);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(38);
+
 
 
 var attrs = {
-  init: function init(attr) {
-    attr.setDefault({
-      flexDirection: 'row',
-      alignItems: 'stretch',
-      justifyContent: 'flex-start',
-      flexWrap: 'nowrap',
-      alignContent: 'stretch'
-    });
+  flexDirection: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_2__["attr"])({
+      relayout: relayout
+    })],
+    value: 'row'
   },
-  flexDirection: function flexDirection(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('flexDirection', value);
+  flexWrap: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_2__["attr"])({
+      relayout: relayout
+    })],
+    value: 'nowrap'
   },
-  flexWrap: function flexWrap(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('flexWrap', value);
+  justifyContent: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_2__["attr"])({
+      relayout: relayout
+    })],
+    value: 'flex-start'
   },
-  justifyContent: function justifyContent(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('justifyContent', value);
+  alignItems: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_2__["attr"])({
+      relayout: relayout
+    })],
+    value: 'stretch'
   },
-  alignItems: function alignItems(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('alignItems', value);
-  },
-  alignContent: function alignContent(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('alignContent', value);
+  alignContent: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_2__["attr"])({
+      relayout: relayout
+    })],
+    value: 'stretch'
   }
 };
 function relayout(containerSprite, itemsSprite) {
@@ -19120,6 +19116,11 @@ var CSSGetter = {
   flexShrink: true,
   flexBasis: true,
   order: true,
+  flexDirection: true,
+  flexWrap: true,
+  justifyContent: true,
+  alignItems: true,
+  alignContent: true,
   position: true,
   alignSelf: true,
   transform: true,

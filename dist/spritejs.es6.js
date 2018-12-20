@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.25.1";
+const version = "2.25.2";
 
 
 /***/ }),
@@ -13007,13 +13007,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(20);
 
 
-const defaultValues = {
-  flexGrow: 0,
-  flexShrink: 1,
-  flexBasis: 'auto',
-  order: 0,
-  alignSelf: ''
-};
 /*
   BaseAttr.addAttributes({
     flexGrow: {
@@ -13033,34 +13026,34 @@ _core_baseattr__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes({
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout
     })],
-    value: defaultValues.flexGrow
+    value: 0
   },
   flexShrink: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseFloat), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout
     })],
-    value: defaultValues.flexShrink
+    value: 1
   },
   flexBasis: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       relayout,
       reflow
     })],
-    value: defaultValues.flexBasis
+    value: 'auto'
   },
   order: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseValue"])(parseInt), Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       cache,
       relayout
     })],
-    value: defaultValues.order
+    value: 0
   },
   alignSelf: {
     decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
       cache,
       relayout
     })],
-    value: defaultValues.alignSelf
+    value: ''
   },
   flex: {
     set(val) {
@@ -13108,43 +13101,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "attrs", function() { return attrs; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "relayout", function() { return relayout; });
 /* harmony import */ var sprite_flex_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(61);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(20);
+
 
 const attrs = {
-  init(attr) {
-    attr.setDefault({
-      flexDirection: 'row',
-      alignItems: 'stretch',
-      justifyContent: 'flex-start',
-      flexWrap: 'nowrap',
-      alignContent: 'stretch'
-    });
+  flexDirection: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      relayout
+    })],
+    value: 'row'
   },
-
-  flexDirection(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('flexDirection', value);
+  flexWrap: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      relayout
+    })],
+    value: 'nowrap'
   },
-
-  flexWrap(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('flexWrap', value);
+  justifyContent: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      relayout
+    })],
+    value: 'flex-start'
   },
-
-  justifyContent(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('justifyContent', value);
+  alignItems: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      relayout
+    })],
+    value: 'stretch'
   },
-
-  alignItems(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('alignItems', value);
-  },
-
-  alignContent(attr, value) {
-    attr.subject.clearLayout();
-    attr.set('alignContent', value);
+  alignContent: {
+    decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_1__["attr"])({
+      relayout
+    })],
+    value: 'stretch'
   }
-
 };
 function relayout(containerSprite, itemsSprite) {
   itemsSprite.sort((a, b) => {
@@ -17525,6 +17515,11 @@ const CSSGetter = {
   flexShrink: true,
   flexBasis: true,
   order: true,
+  flexDirection: true,
+  flexWrap: true,
+  justifyContent: true,
+  alignItems: true,
+  alignContent: true,
   position: true,
   alignSelf: true,
   transform: true,
