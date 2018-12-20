@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.25.2";
+var version = "2.25.3";
 
 
 /***/ }),
@@ -7873,11 +7873,10 @@ function createAttribute(attr, key) {
 
       this.quietSet(key, value);
       var subject = this.subject; // fixed color inherit
-
-      if (key === 'color') {
-        subject.attr('fillColor', value);
-      } // fixed font inherit
-
+      // if(key === 'color') {
+      //   subject.attr('fillColor', value);
+      // }
+      // fixed font inherit
 
       if (key === 'fontSize' || key === 'fontFamily' || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight') {
         var font = this.get('font') || 'normal normal normal 16px Arial';
@@ -9386,11 +9385,6 @@ var LabelSpriteAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8
       }
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_11__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_11__["composit"])('fillColor')],
-      key: "color",
-      value: void 0
-    }, {
-      kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_11__["parseColorString"]), _utils__WEBPACK_IMPORTED_MODULE_11__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_11__["inherit"])('')],
       key: "strokeColor",
       value: function value() {
@@ -9399,10 +9393,15 @@ var LabelSpriteAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_11__["parseColorString"]), _utils__WEBPACK_IMPORTED_MODULE_11__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_11__["inherit"])('')],
-      key: "fillColor",
+      key: "color",
       value: function value() {
         return 'inherit';
       }
+    }, {
+      kind: "field",
+      decorators: [_utils__WEBPACK_IMPORTED_MODULE_11__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_11__["composit"])('color')],
+      key: "fillColor",
+      value: void 0
     }, {
       kind: "field",
       decorators: [_utils__WEBPACK_IMPORTED_MODULE_11__["attr"]],
