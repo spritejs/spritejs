@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.25.0";
+var version = "2.25.1";
 
 
 /***/ }),
@@ -4277,7 +4277,7 @@ function applyInherit(elementDescriptor, defaultValue) {
     }
 
     target.__inheritDefaults[key] = defaultValue;
-    return elementDescriptor.descriptor;
+    return elementDescriptor;
   }
 
   return _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_0___default()({}, elementDescriptor, {
@@ -4356,7 +4356,6 @@ function applyRative(elementDescriptor, type) {
     setter.call(this, val);
   };
 
-  if (arguments.length === 3) return elementDescriptor.descriptor;
   return elementDescriptor;
 }
 
