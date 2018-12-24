@@ -17994,7 +17994,7 @@ function forEach(obj, fn) {
   }
 
   // Force an array if not already something iterable
-  if (typeof obj !== 'object' && !isArray(obj)) {
+  if (typeof obj !== 'object') {
     /*eslint no-param-reassign:0*/
     obj = [obj];
   }
@@ -18146,8 +18146,6 @@ var defaults = __webpack_require__(127);
 var utils = __webpack_require__(123);
 var InterceptorManager = __webpack_require__(139);
 var dispatchRequest = __webpack_require__(140);
-var isAbsoluteURL = __webpack_require__(143);
-var combineURLs = __webpack_require__(144);
 
 /**
  * Create a new instance of Axios
@@ -18176,13 +18174,8 @@ Axios.prototype.request = function request(config) {
     }, arguments[1]);
   }
 
-  config = utils.merge(defaults, this.defaults, { method: 'get' }, config);
+  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
   config.method = config.method.toLowerCase();
-
-  // Support baseURL config
-  if (config.baseURL && !isAbsoluteURL(config.url)) {
-    config.url = combineURLs(config.baseURL, config.url);
-  }
 
   // Hook up interceptors middleware
   var chain = [dispatchRequest, undefined];
@@ -18298,6 +18291,10 @@ var defaults = {
     return data;
   }],
 
+  /**
+   * A timeout in milliseconds to abort a request. If set to 0 (default) a
+   * timeout is not created.
+   */
   timeout: 0,
 
   xsrfCookieName: 'XSRF-TOKEN',
@@ -18610,7 +18607,7 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/mzabriskie/axios/issues/201)
+        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
         status: request.status === 1223 ? 204 : request.status,
         statusText: request.status === 1223 ? 'No Content' : request.statusText,
         headers: responseHeaders,
@@ -18858,9 +18855,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
       if (utils.isArray(val)) {
         key = key + '[]';
-      }
-
-      if (!utils.isArray(val)) {
+      } else {
         val = [val];
       }
 
@@ -18894,6 +18889,15 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 var utils = __webpack_require__(123);
 
+// Headers whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+var ignoreDuplicateOf = [
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+];
+
 /**
  * Parse headers into an object
  *
@@ -18921,7 +18925,14 @@ module.exports = function parseHeaders(headers) {
     val = utils.trim(line.substr(i + 1));
 
     if (key) {
-      parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+        return;
+      }
+      if (key === 'set-cookie') {
+        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+      } else {
+        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      }
     }
   });
 
@@ -19177,6 +19188,8 @@ var utils = __webpack_require__(123);
 var transformData = __webpack_require__(141);
 var isCancel = __webpack_require__(142);
 var defaults = __webpack_require__(127);
+var isAbsoluteURL = __webpack_require__(143);
+var combineURLs = __webpack_require__(144);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -19195,6 +19208,11 @@ function throwIfCancellationRequested(config) {
  */
 module.exports = function dispatchRequest(config) {
   throwIfCancellationRequested(config);
+
+  // Support baseURL config
+  if (config.baseURL && !isAbsoluteURL(config.url)) {
+    config.url = combineURLs(config.baseURL, config.url);
+  }
 
   // Ensure headers exist
   config.headers = config.headers || {};
