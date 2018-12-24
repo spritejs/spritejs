@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.25.4";
+var version = "2.25.5";
 
 
 /***/ }),
@@ -4750,10 +4750,12 @@ function _createElementDescriptor(def) {
       configurable: true,
       enumerable: false
     };
-    Object.defineProperty(def.value, "name", {
-      value: _typeof(key) === "symbol" ? "" : key,
-      configurable: true
-    });
+    try{
+      Object.defineProperty(def.value, "name", {
+        value: _typeof(key) === "symbol" ? "" : key,
+        configurable: true
+      });
+    } catch(ex) {};
   } else if (def.kind === "get") {
     descriptor = {
       get: def.value,

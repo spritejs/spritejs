@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.25.4";
+var version = "2.25.5";
 
 
 /***/ }),
@@ -6317,10 +6317,12 @@ function _createElementDescriptor(def) {
       configurable: true,
       enumerable: false
     };
-    Object.defineProperty(def.value, "name", {
-      value: _typeof(key) === "symbol" ? "" : key,
-      configurable: true
-    });
+    try{
+      Object.defineProperty(def.value, "name", {
+        value: _typeof(key) === "symbol" ? "" : key,
+        configurable: true
+      });
+    } catch(ex) {};
   } else if (def.kind === "get") {
     descriptor = {
       get: def.value,
