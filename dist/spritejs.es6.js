@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.25.3";
+const version = "2.25.4";
 
 
 /***/ }),
@@ -3838,7 +3838,7 @@ function applyInherit(elementDescriptor, defaultValue) {
   if (target) {
     if (!target.hasOwnProperty('__inheritDefaults')) {
       // eslint-disable-line no-prototype-builtins
-      target.__inheritDefaults = {}; // Object.assign({}, proto.__inheritDefaults);
+      target.__inheritDefaults = Object.create(target.__inheritDefaults || null);
     }
 
     target.__inheritDefaults[key] = defaultValue;
@@ -3855,7 +3855,7 @@ function applyInherit(elementDescriptor, defaultValue) {
 
       if (!proto.hasOwnProperty('__inheritDefaults')) {
         // eslint-disable-line no-prototype-builtins
-        proto.__inheritDefaults = {}; // Object.assign({}, proto.__inheritDefaults);
+        proto.__inheritDefaults = Object.create(proto.__inheritDefaults || null);
       }
 
       proto.__inheritDefaults[key] = defaultValue;
