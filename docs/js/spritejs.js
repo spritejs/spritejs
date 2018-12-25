@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.25.5";
+var version = "2.26.0";
 
 
 /***/ }),
@@ -3119,6 +3119,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fourValuesShortCut", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["fourValuesShortCut"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "eightValuesShortCut", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["eightValuesShortCut"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "notice", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["notice"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "oneOrTwoValues", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["oneOrTwoValues"]; });
@@ -3291,6 +3293,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseStringFloat", function() { return parseStringFloat; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "oneOrTwoValues", function() { return oneOrTwoValues; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fourValuesShortCut", function() { return fourValuesShortCut; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eightValuesShortCut", function() { return eightValuesShortCut; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rectVertices", function() { return rectVertices; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appendUnit", function() { return appendUnit; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sortOrderedSprites", function() { return sortOrderedSprites; });
@@ -3442,6 +3445,25 @@ function fourValuesShortCut(val) {
   }
 
   return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(val), [0, 0, 0, 0]).slice(0, 4);
+}
+function eightValuesShortCut(val) {
+  if (!Array.isArray(val)) {
+    return [val, val, val, val, val, val, val, val];
+  }
+
+  if (val.length === 1) {
+    return eightValuesShortCut(val[0]);
+  }
+
+  if (val.length === 2) {
+    return [val[0], val[1], val[0], val[1], val[0], val[1], val[0], val[1]];
+  }
+
+  if (val.length === 4) {
+    return [val[0], val[1], val[2], val[3], val[0], val[1], val[2], val[3]];
+  }
+
+  return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(val), [0, 0, 0, 0, 0, 0, 0, 0]).slice(0, 8);
 }
 function rectVertices(rect) {
   var _rect = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(rect, 4),
@@ -4814,22 +4836,79 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function drawRadiusBox(context, _ref) {
-  var x = _ref.x,
-      y = _ref.y,
-      w = _ref.w,
-      h = _ref.h,
-      r = _ref.r;
-  // avoid radius larger than width or height
-  r = Math.min(r, Math.floor(Math.min(w, h) / 2)); // avoid radius is negative
 
-  r = Math.max(r, 0);
+// export function drawRadiusBox(context, {x, y, w, h, r}) {
+//   // avoid radius larger than width or height
+//   r = Math.min(r, Math.floor(Math.min(w, h) / 2));
+//   // avoid radius is negative
+//   r = Math.max(r, 0);
+//   context.beginPath();
+//   context.moveTo(x + r, y);
+//   context.arcTo(x + w, y, x + w, y + h, r);
+//   context.arcTo(x + w, y + h, x, y + h, r);
+//   context.arcTo(x, y + h, x, y, r);
+//   context.arcTo(x, y, x + w, y, r);
+//   context.closePath();
+// }
+function drawEllipseBorder(ctx, x, y, w, h) {
+  var pos = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'leftTop';
+  var kappa = 0.5522848,
+      ox = w / 2 * kappa,
+      // control point offset horizontal
+  oy = h / 2 * kappa,
+      // control point offset vertical
+  xe = x + w,
+      // x-end
+  ye = y + h,
+      // y-end
+  xm = x + w / 2,
+      // x-middle
+  ym = y + h / 2; // y-middle
+
+  if (pos === 'leftTop') {
+    ctx.moveTo(x, ym);
+    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+  } else if (pos === 'rightTop') {
+    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+  } else if (pos === 'rightBottom') {
+    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+  } else if (pos === 'leftBottom') {
+    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+  }
+}
+
+function drawRadiusBox(context, _ref, radius) {
+  var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref, 4),
+      x = _ref2[0],
+      y = _ref2[1],
+      w = _ref2[2],
+      h = _ref2[3];
+
+  if (!radius) radius = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  var _radius$map = radius.map(function (r, i) {
+    if (i % 2) return Math.min(r, h / 2);
+    return Math.min(r, w / 2);
+  }),
+      _radius$map2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_radius$map, 8),
+      tl0 = _radius$map2[0],
+      tl1 = _radius$map2[1],
+      tr0 = _radius$map2[2],
+      tr1 = _radius$map2[3],
+      br0 = _radius$map2[4],
+      br1 = _radius$map2[5],
+      bl0 = _radius$map2[6],
+      bl1 = _radius$map2[7];
+
   context.beginPath();
-  context.moveTo(x + r, y);
-  context.arcTo(x + w, y, x + w, y + h, r);
-  context.arcTo(x + w, y + h, x, y + h, r);
-  context.arcTo(x, y + h, x, y, r);
-  context.arcTo(x, y, x + w, y, r);
+  context.moveTo(x, y + tl1);
+  drawEllipseBorder(context, x, y, tl0 * 2, tl1 * 2, 'leftTop');
+  context.lineTo(x + w - tr0, y);
+  drawEllipseBorder(context, x + w - tr0 * 2, y, tr0 * 2, tr1 * 2, 'rightTop');
+  context.lineTo(x + w, y + h - br1);
+  drawEllipseBorder(context, x + w - br0 * 2, y + h - br1 * 2, br0 * 2, br1 * 2, 'rightBottom');
+  context.lineTo(x + bl0, y + h);
+  drawEllipseBorder(context, x, y + h - bl1 * 2, bl0 * 2, bl1 * 2, 'leftBottom');
   context.closePath();
 }
 /* istanbul ignore next  */
@@ -5879,19 +5958,12 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
                   width = _this$outerSize[0],
                   height = _this$outerSize[1];
 
-              var _ref2 = [0, 0, width, height, Math.max(0, borderRadius + borderWidth / 2)],
-                  x = _ref2[0],
-                  y = _ref2[1],
-                  w = _ref2[2],
-                  h = _ref2[3],
-                  r = _ref2[4];
-              Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(this.context, {
-                x: x,
-                y: y,
-                w: w,
-                h: h,
-                r: r
-              });
+              var x = 0,
+                  y = 0,
+                  w = width,
+                  h = height,
+                  r = borderRadius;
+              Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(this.context, [x, y, w, h], r);
 
               if (this.layer && this.layer.offset) {
                 nx += this.layer.offset[0];
@@ -6124,13 +6196,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
               w = offsetWidth - borderWidth,
               h = offsetHeight - borderWidth,
               r = borderRadius;
-          Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(drawingContext, {
-            x: x,
-            y: y,
-            w: w,
-            h: h,
-            r: r
-          });
+          Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(drawingContext, [x, y, w, h], r);
 
           if (borderStyle && borderStyle !== 'solid') {
             var dashOffset = this.attr('dashOffset');
@@ -6152,19 +6218,19 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         var bgimage = this.attr('bgimage');
 
         if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
-          var _ref3 = [borderWidth, borderWidth, clientWidth, clientHeight, Math.max(0, borderRadius - borderWidth / 2)],
-              _x = _ref3[0],
-              _y = _ref3[1],
-              _w = _ref3[2],
-              _h = _ref3[3],
-              _r = _ref3[4];
-          Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(drawingContext, {
-            x: _x,
-            y: _y,
-            w: _w,
-            h: _h,
-            r: _r
-          });
+          var _x = borderWidth,
+              _y = borderWidth,
+              _w = clientWidth,
+              _h = clientHeight,
+              _r = borderRadius;
+
+          if (Array.isArray(_r)) {
+            _r = _r.map(function (r) {
+              return r - borderWidth / 2;
+            });
+          }
+
+          Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(drawingContext, [_x, _y, _w, _h], _r);
 
           if (bgcolor) {
             drawingContext.fillStyle = bgcolor;
@@ -6194,12 +6260,12 @@ function drawDot9Image(drawingContext, image, clip9, borderWidth, offsetWidth, o
   var w = image.width,
       h = image.height;
 
-  var _ref4 = clip9 || [16, 16, 16, 16],
-      _ref5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref4, 4),
-      top = _ref5[0],
-      right = _ref5[1],
-      bottom = _ref5[2],
-      left = _ref5[3];
+  var _ref2 = clip9 || [16, 16, 16, 16],
+      _ref3 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref2, 4),
+      top = _ref3[0],
+      right = _ref3[1],
+      bottom = _ref3[2],
+      left = _ref3[3];
 
   var leftTop = [0, 0, left, top],
       rightTop = [w - right, 0, right, top],
@@ -6790,10 +6856,12 @@ var SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
       value: void 0
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_13__["parseValue"])(parseFloat), _utils__WEBPACK_IMPORTED_MODULE_13__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_13__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_13__["parseStringFloat"], _utils__WEBPACK_IMPORTED_MODULE_13__["eightValuesShortCut"]), Object(_utils__WEBPACK_IMPORTED_MODULE_13__["attr"])({
+        reflow: reflow
+      })],
       key: "borderRadius",
       value: function value() {
-        return 0;
+        return '';
       }
     }, {
       kind: "field",
@@ -7955,7 +8023,7 @@ function () {
       var nextSibling = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       // append to parent & reset name or class or id auto updateStyles
       this.__styleNeedUpdate = nextSibling ? 'siblings' : 'children';
-      this.forceUpdate();
+      this.forceUpdate(true);
     }
   }, {
     key: "getEventHandlers",
@@ -19147,6 +19215,7 @@ var CSSGetter = {
 /* istanbul ignore next */
 
 function parseRuleAttrs(rule) {
+  // eslint-disable-line complexity
   var styleAttrs;
   var isStyleMap = !!rule.styleMap;
 
@@ -19199,7 +19268,7 @@ function parseRuleAttrs(rule) {
 
   var attrs = {},
       reserved = {};
-  var border = null;
+  var borderRadius = null;
   var transition = null;
   var gradient = {};
   styleAttrs.forEach(function (_ref3) {
@@ -19252,25 +19321,9 @@ function parseRuleAttrs(rule) {
             };
           });
         }
-      } else if (key === 'borderStyle') {
-        border = border || {
-          width: 1,
-          color: 'rgba(0,0,0,0)'
-        };
-        border.style = value;
-      } else if (key === 'borderWidth') {
-        border = border || {
-          width: 1,
-          color: 'rgba(0,0,0,0)'
-        };
-        border.width = toPxValue(value);
-      } else if (key === 'borderColor') {
-        border = border || {
-          width: 1,
-          color: 'rgba(0,0,0,0)'
-        };
-        border.color = value;
-      } else if (key === 'border') {
+      }
+
+      if (key === 'border') {
         var values = value.split(/\s+/);
 
         var _values = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(values, 3),
@@ -19278,10 +19331,11 @@ function parseRuleAttrs(rule) {
             width = _values[1],
             color = _values[2];
 
-        border = border || {};
-        border.style = style;
-        border.width = toPxValue(width);
-        border.color = color;
+        reserved.border = {
+          style: style,
+          width: width,
+          color: color
+        };
       } else {
         if (key !== 'fontSize' && typeof value === 'string') {
           if (/,/.test(value)) {
@@ -19324,15 +19378,37 @@ function parseRuleAttrs(rule) {
         if (key === 'fontVariantCaps') key = 'fontVariant';
         if (key === 'lineHeight' && value === 'normal') value = '';
 
-        if (/^border/.test(key)) {
-          key = key.replace(/^border(Top|Right|Bottom|Left)/, '').toLowerCase();
-          if (key === 'width') value = toPxValue(value);
-
-          if (/radius$/.test(key)) {
-            attrs.borderRadius = toPxValue(value);
+        if (/Radius$/.test(key)) {
+          if (typeof value === 'string') {
+            value = value.split(/\s+/).map(function (v) {
+              return toPxValue(v);
+            });
           } else {
-            border = border || {};
-            border[key] = value;
+            value = [value, value];
+          }
+
+          borderRadius = borderRadius || [0, 0, 0, 0, 0, 0, 0, 0];
+
+          if (key === 'borderTopLeftRadius') {
+            borderRadius[0] = value[0];
+            borderRadius[1] = value[1];
+          } else if (key === 'borderTopRightRadius') {
+            borderRadius[2] = value[0];
+            borderRadius[3] = value[1];
+          } else if (key === 'borderBottomRightRadius') {
+            borderRadius[4] = value[0];
+            borderRadius[5] = value[1];
+          } else if (key === 'borderBottomLeftRadius') {
+            borderRadius[6] = value[0];
+            borderRadius[7] = value[1];
+          }
+        } else if (/^border(Left|Right|Top|Bottom)\w+/.test(key)) {
+          if (/Color$/.test(key)) {
+            attrs.borderColor = value;
+          } else if (/Style$/.test(key)) {
+            attrs.borderStyle = value;
+          } else if (/Width$/.test(key)) {
+            attrs.borderWidth = value;
           }
         } else if (key === 'transitionDelay') {
           transition = transition || {};
@@ -19353,10 +19429,8 @@ function parseRuleAttrs(rule) {
     }
   });
 
-  if (border) {
-    Object.assign(attrs, {
-      border: border
-    });
+  if (borderRadius) {
+    attrs.borderRadius = borderRadius;
   }
 
   Object.assign(attrs, reserved, gradient);
