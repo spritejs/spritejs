@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.26.0";
+var version = "2.26.1";
 
 
 /***/ }),
@@ -4215,6 +4215,10 @@ function attr(options) {
     }
 
     if (composit) {
+      if (cache || reflow || relayout || quiet || value || extra) {
+        throw new Error('Cannot apply state to composit attribute.');
+      }
+
       descriptor.get = _getter;
     } else if (!relativeType && !inheritValue) {
       descriptor.get = function () {
@@ -4884,32 +4888,37 @@ function drawRadiusBox(context, _ref, radius) {
       w = _ref2[2],
       h = _ref2[3];
 
-  if (!radius) radius = [0, 0, 0, 0, 0, 0, 0, 0];
+  if (!radius) {
+    context.beginPath();
+    context.rect(x, y, w, h);
+  } else {
+    if (!radius) radius = [0, 0, 0, 0, 0, 0, 0, 0];
 
-  var _radius$map = radius.map(function (r, i) {
-    if (i % 2) return Math.min(r, h / 2);
-    return Math.min(r, w / 2);
-  }),
-      _radius$map2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_radius$map, 8),
-      tl0 = _radius$map2[0],
-      tl1 = _radius$map2[1],
-      tr0 = _radius$map2[2],
-      tr1 = _radius$map2[3],
-      br0 = _radius$map2[4],
-      br1 = _radius$map2[5],
-      bl0 = _radius$map2[6],
-      bl1 = _radius$map2[7];
+    var _radius$map = radius.map(function (r, i) {
+      if (i % 2) return Math.min(r, h / 2);
+      return Math.min(r, w / 2);
+    }),
+        _radius$map2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_radius$map, 8),
+        tl0 = _radius$map2[0],
+        tl1 = _radius$map2[1],
+        tr0 = _radius$map2[2],
+        tr1 = _radius$map2[3],
+        br0 = _radius$map2[4],
+        br1 = _radius$map2[5],
+        bl0 = _radius$map2[6],
+        bl1 = _radius$map2[7];
 
-  context.beginPath();
-  context.moveTo(x, y + tl1);
-  drawEllipseBorder(context, x, y, tl0 * 2, tl1 * 2, 'leftTop');
-  context.lineTo(x + w - tr0, y);
-  drawEllipseBorder(context, x + w - tr0 * 2, y, tr0 * 2, tr1 * 2, 'rightTop');
-  context.lineTo(x + w, y + h - br1);
-  drawEllipseBorder(context, x + w - br0 * 2, y + h - br1 * 2, br0 * 2, br1 * 2, 'rightBottom');
-  context.lineTo(x + bl0, y + h);
-  drawEllipseBorder(context, x, y + h - bl1 * 2, bl0 * 2, bl1 * 2, 'leftBottom');
-  context.closePath();
+    context.beginPath();
+    context.moveTo(x, y + tl1);
+    drawEllipseBorder(context, x, y, tl0 * 2, tl1 * 2, 'leftTop');
+    context.lineTo(x + w - tr0, y);
+    drawEllipseBorder(context, x + w - tr0 * 2, y, tr0 * 2, tr1 * 2, 'rightTop');
+    context.lineTo(x + w, y + h - br1);
+    drawEllipseBorder(context, x + w - br0 * 2, y + h - br1 * 2, br0 * 2, br1 * 2, 'rightBottom');
+    context.lineTo(x + bl0, y + h);
+    drawEllipseBorder(context, x, y + h - bl1 * 2, bl0 * 2, bl1 * 2, 'leftBottom');
+    context.closePath();
+  }
 }
 /* istanbul ignore next  */
 
@@ -7150,30 +7159,34 @@ var SpriteAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
       value: void 0
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["parseValue"])(parseInt), _utils__WEBPACK_IMPORTED_MODULE_12__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["parseValue"])(parseInt), Object(_utils__WEBPACK_IMPORTED_MODULE_12__["attr"])({
+        reflow: reflow
+      })],
       key: "borderWidth",
       value: function value() {
         return 0;
       }
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_12__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["attr"])({
+        reflow: reflow
+      })],
       key: "borderColor",
       value: function value() {
         return 'rgba(0,0,0,0)';
       }
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_12__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["attr"])({
+        reflow: reflow
+      })],
       key: "borderStyle",
       value: function value() {
         return 'solid';
       }
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["parseValue"])(parseBorderValue), Object(_utils__WEBPACK_IMPORTED_MODULE_12__["attr"])({
-        reflow: reflow
-      }), Object(_utils__WEBPACK_IMPORTED_MODULE_12__["composit"])({
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["parseValue"])(parseBorderValue), _utils__WEBPACK_IMPORTED_MODULE_12__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_12__["composit"])({
         width: 'borderWidth',
         color: 'borderColor',
         style: 'borderStyle'

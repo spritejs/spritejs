@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.26.0";
+const version = "2.26.1";
 
 
 /***/ }),
@@ -3585,6 +3585,10 @@ function attr(options) {
     }
 
     if (composit) {
+      if (cache || reflow || relayout || quiet || value || extra) {
+        throw new Error('Cannot apply state to composit attribute.');
+      }
+
       descriptor.get = _getter;
     } else if (!relativeType && !inheritValue) {
       descriptor.get = function () {
@@ -4169,21 +4173,26 @@ function drawEllipseBorder(ctx, x, y, w, h, pos = 'leftTop') {
 }
 
 function drawRadiusBox(context, [x, y, w, h], radius) {
-  if (!radius) radius = [0, 0, 0, 0, 0, 0, 0, 0];
-  const [tl0, tl1, tr0, tr1, br0, br1, bl0, bl1] = radius.map((r, i) => {
-    if (i % 2) return Math.min(r, h / 2);
-    return Math.min(r, w / 2);
-  });
-  context.beginPath();
-  context.moveTo(x, y + tl1);
-  drawEllipseBorder(context, x, y, tl0 * 2, tl1 * 2, 'leftTop');
-  context.lineTo(x + w - tr0, y);
-  drawEllipseBorder(context, x + w - tr0 * 2, y, tr0 * 2, tr1 * 2, 'rightTop');
-  context.lineTo(x + w, y + h - br1);
-  drawEllipseBorder(context, x + w - br0 * 2, y + h - br1 * 2, br0 * 2, br1 * 2, 'rightBottom');
-  context.lineTo(x + bl0, y + h);
-  drawEllipseBorder(context, x, y + h - bl1 * 2, bl0 * 2, bl1 * 2, 'leftBottom');
-  context.closePath();
+  if (!radius) {
+    context.beginPath();
+    context.rect(x, y, w, h);
+  } else {
+    if (!radius) radius = [0, 0, 0, 0, 0, 0, 0, 0];
+    const [tl0, tl1, tr0, tr1, br0, br1, bl0, bl1] = radius.map((r, i) => {
+      if (i % 2) return Math.min(r, h / 2);
+      return Math.min(r, w / 2);
+    });
+    context.beginPath();
+    context.moveTo(x, y + tl1);
+    drawEllipseBorder(context, x, y, tl0 * 2, tl1 * 2, 'leftTop');
+    context.lineTo(x + w - tr0, y);
+    drawEllipseBorder(context, x + w - tr0 * 2, y, tr0 * 2, tr1 * 2, 'rightTop');
+    context.lineTo(x + w, y + h - br1);
+    drawEllipseBorder(context, x + w - br0 * 2, y + h - br1 * 2, br0 * 2, br1 * 2, 'rightBottom');
+    context.lineTo(x + bl0, y + h);
+    drawEllipseBorder(context, x, y + h - bl1 * 2, bl0 * 2, bl1 * 2, 'leftBottom');
+    context.closePath();
+  }
 }
 /* istanbul ignore next  */
 
@@ -5871,7 +5880,9 @@ let SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
       value: void 0
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["parseValue"])(parseInt), _utils__WEBPACK_IMPORTED_MODULE_3__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["parseValue"])(parseInt), Object(_utils__WEBPACK_IMPORTED_MODULE_3__["attr"])({
+        reflow
+      })],
       key: "borderWidth",
 
       value() {
@@ -5880,7 +5891,9 @@ let SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
 
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_3__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["attr"])({
+        reflow
+      })],
       key: "borderColor",
 
       value() {
@@ -5889,7 +5902,9 @@ let SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
 
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_3__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["attr"])({
+        reflow
+      })],
       key: "borderStyle",
 
       value() {
@@ -5898,9 +5913,7 @@ let SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
 
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["parseValue"])(parseBorderValue), Object(_utils__WEBPACK_IMPORTED_MODULE_3__["attr"])({
-        reflow
-      }), Object(_utils__WEBPACK_IMPORTED_MODULE_3__["composit"])({
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_3__["parseValue"])(parseBorderValue), _utils__WEBPACK_IMPORTED_MODULE_3__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_3__["composit"])({
         width: 'borderWidth',
         color: 'borderColor',
         style: 'borderStyle'
