@@ -11,6 +11,7 @@
 [![Code Climate](https://codeclimate.com/github/spritejs/spritejs/badges/gpa.svg)](https://codeclimate.com/github/spritejs/spritejs)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/test_coverage)](https://codeclimate.com/github/spritejs/spritejs/test_coverage)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
+![No Easter Eggs](https://img.shields.io/badge/Easter%20eggs-None-brightgreen.svg)
 
 SpriteJS is a cross-platform lightweight 2D render object model.
 
