@@ -7,7 +7,7 @@ test('robot-snapshot', async (t) => {
     viewport: [300, 300],
     resolution: [300, 300],
   });
-  const robot = new Sprite('https://p0.ssl.qhimg.com/t01a72262146b87165f.png');
+  const robot = new Sprite('http://p0.ssl.qhimg.com/t01a72262146b87165f.png');
   robot.attr({
     id: 'robot',
     anchor: 0.5,
