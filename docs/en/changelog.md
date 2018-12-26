@@ -1,5 +1,76 @@
 # Change Log
 
+## [2.26.1][2018-12-25]
+
+### enhancement
+
+- Change borderRadius, consistent with CSS `border-radius`.
+
+## [2.25.3][2018-12-20]
+
+### enhancement
+
+- Completely refactoring the decorator implements.
+- Upgrade babel 6 to babel 7.
+- Minify the build js file size.
+- Modulized the animation, dom, style and layout.
+- Build sprite.core, sprite.lite and spritejs.
+- Add more unit tests.
+
+### bug fix
+
+- Add the lost flex rules.
+- Fixed label color/fillColor inherit bug.
+
+## [2.24.12][2018-12-11]
+
+### enhancement
+
+- `forDocumentCSS` support shadow DOM.
+- Optimized CSS updateStyles.
+
+## [2.24.5][2018-12-07]
+
+### enhancement
+
+- Add :hover and :active pseudos.
+
+## [2.24.4][2018-12-06]
+
+### enhancement
+
+- Add appendChild and removeChild event for group node.
+
+## [2.24.2][2018-12-05]
+
+### enhancement
+
+- Add `clipOverflow` attribute, default is `true`, set `false` to show the element's part overflow the parentNode.
+
+## [2.23.11][2018-12-04]
+
+### enhancement
+
+- No clipping when the path overflow the rect region, for rough.js
+- Export parseFont form utils.
+
+## [2.23.4][2018-11-29]
+
+### enhancement
+
+- Add element.replaceChild
+- Add element.nodeName
+
+### bug fix
+
+- Fix textures cache bug when playing animations.
+
+## [2.23.0][2018-11-27]
+
+### enhancement
+
+- Add element.style.
+
 ## [2.22.0][2018-11-19]
 
 ### enhancement
