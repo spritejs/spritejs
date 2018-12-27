@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.26.1";
+var version = "2.26.2";
 
 
 /***/ }),
@@ -6612,6 +6612,13 @@ var SpriteAttr = _decorate(null, function (_initialize, _NodeAttr) {
     F: SpriteAttr,
     d: [{
       kind: "method",
+      key: "clearFlow",
+      value: function value() {
+        this.__reflowTag = true;
+        return this;
+      }
+    }, {
+      kind: "method",
       key: "set",
       value: function value(key, _value) {
         var isQuiet = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -7407,13 +7414,6 @@ var Attr = _decorate(null, function (_initialize) {
         return _utils__WEBPACK_IMPORTED_MODULE_5__["attributeNames"];
       }
     }, {
-      kind: "field",
-      static: true,
-      key: "attrDefaultValues",
-      value: function value() {
-        return {};
-      }
-    }, {
       kind: "method",
       static: true,
       key: "addAttributes",
@@ -7481,15 +7481,6 @@ var Attr = _decorate(null, function (_initialize) {
       }
     }, {
       kind: "method",
-      key: "setAttrIndex",
-      value: function value(key, val, idx) {
-        if (val == null) val = this.getDefaultValue(key)[idx];
-        var arr = this[key];
-        arr[idx] = val;
-        this.set(key, arr);
-      }
-    }, {
-      kind: "method",
       key: "saveObj",
       value: function value(key, val) {
         this[_temp].set(key, val);
@@ -7513,13 +7504,6 @@ var Attr = _decorate(null, function (_initialize) {
       key: "clearStyle",
       value: function value() {
         this[_style] = {};
-      }
-    }, {
-      kind: "method",
-      key: "clearFlow",
-      value: function value() {
-        this.__reflowTag = true;
-        return this;
       }
     }, {
       kind: "method",
@@ -7928,7 +7912,7 @@ function () {
     }
   }, {
     key: "forceUpdate",
-    value: function forceUpdate() {
+    value: function forceUpdate(clearCache) {
       var parent = this.parent;
 
       if (parent) {
@@ -13680,10 +13664,10 @@ var defaultValues = {
     'beforeShow:': {
       duration: 300,
       easing: 'ease-in'
-    },
-    enterMode: 'normal',
-    exitMode: 'normal'
-  }
+    }
+  },
+  enterMode: 'normal',
+  exitMode: 'normal'
 };
 _core_baseattr__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes({
   states: {

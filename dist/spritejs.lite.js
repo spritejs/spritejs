@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.26.1";
+var version = "2.26.2";
 
 
 /***/ }),
@@ -6875,6 +6875,13 @@ var SpriteAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
     F: SpriteAttr,
     d: [{
       kind: "method",
+      key: "clearFlow",
+      value: function value() {
+        this.__reflowTag = true;
+        return this;
+      }
+    }, {
+      kind: "method",
       key: "set",
       value: function value(key, _value) {
         var isQuiet = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -7621,13 +7628,6 @@ var Attr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___default(
         return _utils__WEBPACK_IMPORTED_MODULE_5__["attributeNames"];
       }
     }, {
-      kind: "field",
-      static: true,
-      key: "attrDefaultValues",
-      value: function value() {
-        return {};
-      }
-    }, {
       kind: "method",
       static: true,
       key: "addAttributes",
@@ -7695,15 +7695,6 @@ var Attr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___default(
       }
     }, {
       kind: "method",
-      key: "setAttrIndex",
-      value: function value(key, val, idx) {
-        if (val == null) val = this.getDefaultValue(key)[idx];
-        var arr = this[key];
-        arr[idx] = val;
-        this.set(key, arr);
-      }
-    }, {
-      kind: "method",
       key: "saveObj",
       value: function value(key, val) {
         this[_temp].set(key, val);
@@ -7727,13 +7718,6 @@ var Attr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___default(
       key: "clearStyle",
       value: function value() {
         this[_style] = {};
-      }
-    }, {
-      kind: "method",
-      key: "clearFlow",
-      value: function value() {
-        this.__reflowTag = true;
-        return this;
       }
     }, {
       kind: "method",
@@ -8142,7 +8126,7 @@ function () {
     }
   }, {
     key: "forceUpdate",
-    value: function forceUpdate() {
+    value: function forceUpdate(clearCache) {
       var parent = this.parent;
 
       if (parent) {

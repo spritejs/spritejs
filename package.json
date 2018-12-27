@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.26.1",
+  "version": "2.26.2",
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
@@ -25,9 +25,9 @@
     "lint-demo": "eslint 'docs/demo/static/code/**/*.js' --fix",
     "start": "webpack-dev-server --watch-poll",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
-    "build": "rm -rf lib/* && babel src -d lib && rm -rf dist/* && ./script/build.js",
     "deploy": "npm run build",
-    "compile": "rm -rf lib/* && babel src -d lib --watch",
+    "compile": "rm -rf lib/* && babel src -d lib && cp src/index.d.ts lib/index.d.ts",
+    "build": "npm run compile && rm -rf dist/* && ./script/build.js",
     "doc": "babel docs/src -d docs/js --watch & webpack-dev-server --watch-poll --env.server=docs",
     "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
     "prepublishOnly": "npm run build-doc && npm run deploy"
@@ -54,7 +54,7 @@
   "dependencies": {
     "@babel/runtime": "^7.2.0",
     "axios": "^0.18.0",
-    "sprite-core": "^2.28.1"
+    "sprite-core": "^2.28.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
