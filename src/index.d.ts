@@ -6,16 +6,16 @@ declare namespace spritejs {
     model: string;
     value: Array<number>;
   }
-  
+
   interface ITransformMatrix extends Array<number> {
     [0]: number;
     [1]: number;
     [2]: number;
     [3]: number;
     [4]: number;
-    [5]: number;      
+    [5]: number;
   }
-  
+
   interface IPoint extends Array<number> {
     [0]: number;
     [1]: number;
@@ -25,13 +25,13 @@ declare namespace spritejs {
     [0]: number;
     [1]: number;
   }
-  
+
   interface IPoint3D extends Array<number> {
     [0]: number;
     [1]: number;
     [2]: number;
   }
-  
+
   interface IEventArguments {
     type: string;
     originalEvent: Object;
@@ -43,7 +43,7 @@ declare namespace spritejs {
     parentX?: number;
     parentY?: number;
   }
-  
+
   interface IBox extends Array<number> {
     [0]: number;
     [1]: number;
@@ -57,14 +57,14 @@ declare namespace spritejs {
     [2]: number;
     [3]: number;
   }
-  
+
   interface IRect extends Array<number> {
     [0]: number;
     [1]: number;
     [2]: number;
     [3]: number;
   }
-  
+
   interface ITransform {
     translate?: IPoint;
     rotate?: number;
@@ -75,14 +75,14 @@ declare namespace spritejs {
 
   interface IElementDecsriptor {
     kind: string;
-    key: string|symbol;
+    key: string | symbol;
     placement: string;
     descriptor: PropertyDecorator;
     initializer?: Function;
     extras?: IElementDecsriptor;
     finishier?: Function;
   }
-  
+
   interface IDecorator {
     (elementDescriptor: IElementDecsriptor): IElementDecsriptor;
   }
@@ -93,11 +93,11 @@ declare namespace spritejs {
     set?: Function;
     get?: Function;
   }
-  
+
   interface IBorder {
-    width: number,
-    color: string,
-    style: string,
+    width: number;
+    color: string;
+    style: string;
   }
 
   interface ITransition {
@@ -123,10 +123,16 @@ declare namespace spritejs {
   }
 
   class Color {
-    constructor(color: String|IColor);
+    constructor(color: String | IColor);
     toString(): string;
     readonly str: string;
   }
+
+  function use(
+    plugin: Function | object,
+    options?: object | boolean,
+    merge?: boolean
+  );
 
   namespace math {
     class Matrix {
@@ -154,7 +160,7 @@ declare namespace spritejs {
   class Attr {
     static relatedAttributes: Set;
     static attributeNames: Set;
-    static addAttributes(attrs: Array<Function|IAttributeDescriptor>);
+    static addAttributes(attrs: Array<Function | IAttributeDescriptor>);
     constructor(subject: BaseNode);
     setDefault(attrs: Array<Object>);
     getDefaultValue(key: string, value: any): any;
@@ -167,7 +173,7 @@ declare namespace spritejs {
     clearLayout();
     readonly style: Object;
     readonly attrs: Object;
-    merge(attrs: string|Object): Attr;
+    merge(attrs: string | Object): Attr;
     serialize(): string;
     readonly subject: BaseNode;
     id: string;
@@ -179,7 +185,7 @@ declare namespace spritejs {
     constructor(subject: BaseNode);
     clearFlow();
     set(key: string, value: any);
-    merge(attrs: string|Object): Attr;
+    merge(attrs: string | Object): Attr;
     serialize(): string;
     enableCache: boolean;
     anchor: IPoint;
@@ -196,11 +202,11 @@ declare namespace spritejs {
     flexBasis: string;
     order: number;
     alignSelf: string;
-    width: number|string;
-    height: number|string;
-    layoutWidth: number|string;
-    layoutHeight: number|string;
-    size: Array<number|string>;
+    width: number | string;
+    height: number | string;
+    layoutWidth: number | string;
+    layoutHeight: number | string;
+    size: Array<number | string>;
     borderWidth: number;
     borderStyle: string;
     borderColor: string;
@@ -214,7 +220,7 @@ declare namespace spritejs {
     boxSizing: string;
     dashOffset: number;
     transform: string;
-    transformOrigin: string|number;
+    transformOrigin: string | number;
     rotate: number;
     scale: IPoint;
     translate: IPoint;
@@ -223,28 +229,28 @@ declare namespace spritejs {
     offsetPath: string;
     offsetDistance: number;
     offsetRotate: number;
-    filter: string|Object;
-    shadow: string|Object;
+    filter: string | Object;
+    shadow: string | Object;
     position: string;
     marginTop: number;
     marginRight: number;
     marginBottom: number;
-    marginTop: number;
+    marginLeft: number;
     margin: Array<number>;
-    bgimage: string|Object;
+    bgimage: string | Object;
     clipOverflow: boolean;
     state: string;
     states: Object;
     actions: Object;
     enterMode: string;
-    exitMode: string; 
+    exitMode: string;
   }
 
   class GroupAttr extends BaseAttr {
     static inits: Array<Function>;
-    clip: string|IPath;
-    layoutWidth: number|string;
-    layoutHeight: number|string;
+    clip: string | IPath;
+    layoutWidth: number | string;
+    layoutHeight: number | string;
     display: string;
     scrollLeft: number;
     scrollTop: number;
@@ -264,7 +270,7 @@ declare namespace spritejs {
     fontFamily: string;
     fontStyle: string;
     fontVariant: string;
-    fontWeight: number|string;
+    fontWeight: number | string;
     lineHeight: number;
     textAlign: string;
     strokeColor: string;
@@ -280,9 +286,9 @@ declare namespace spritejs {
   }
 
   class PathAttr extends BaseAttr {
-    path: string|IPath;
+    path: string | IPath;
     d: string;
-    lineWidth: number|string;
+    lineWidth: number | string;
     lineDash?: Array<number>;
     lineDashOffset: number;
     lineCap: string;
@@ -296,11 +302,11 @@ declare namespace spritejs {
 
   class TextureAttr extends BaseAttr {
     constructor(subject: Sprite);
-    textures: Array<Object|string>;
+    textures: Array<Object | string>;
   }
 
   class BaseNode {
-    static Attr:Attr;
+    static Attr: Attr;
     constructor(attrs?: Object);
     serialize();
     clearLayout();
@@ -317,7 +323,7 @@ declare namespace spritejs {
     data(prop: string, val?: any): any;
     updateStyles(nextSibling: boolean);
     readonly dataset: Object;
-    getEventHandlers(type?:string): Array<Function>;
+    getEventHandlers(type?: string): Array<Function>;
     on(type: string, handler: Function): BaseNode;
     once(type: string, handler: Function): BaseNode;
     off(type: string, handler?: Function): BaseNode;
@@ -327,7 +333,12 @@ declare namespace spritejs {
     pointCollision(event: IEventArguments): boolean;
     setMouseCapture();
     releaseMouseCapture();
-    dispatchEvent(type: string, event: IEventArguments, collisionState: boolean, swallow: boolean): boolean;
+    dispatchEvent(
+      type: string,
+      event: IEventArguments,
+      collisionState: boolean,
+      swallow: boolean
+    ): boolean;
     connect(parent: BaseNode, zOrder: number): BaseNode;
     disconnect(parent: BaseNode): BaseNode;
     enter(): BaseNode;
@@ -354,7 +365,7 @@ declare namespace spritejs {
     readonly nodeName: string;
   }
 
-  class BaseSprite extends BaseNode{
+  class BaseSprite extends BaseNode {
     static Attr: BaseAttr;
     static setAttributeEffects(effects: Object);
     static addAttributes(attrs: Object);
@@ -371,8 +382,8 @@ declare namespace spritejs {
     readonly transform: ITransformMatrix;
     transition(sec: number, easing: string): ITransition;
     animate(frames: Array<Object>, timing: ITiming): Animation;
-    connect(parent: Group|Layer, zOrder:number);
-    disconnect(parent: Group|Layer);
+    connect(parent: Group | Layer, zOrder: number);
+    disconnect(parent: Group | Layer);
     readonly xy: IPoint;
     readonly attrSize: ISize;
     readonly contentSize: ISize;
@@ -391,7 +402,7 @@ declare namespace spritejs {
     readonly verticles: Array<IPoint>;
     cache: CanvasRenderingContext2D;
     remove();
-    appendTo(parent: Group|Layer);
+    appendTo(parent: Group | Layer);
     forceUpdate(clearCache: boolean);
     pointToOffset(x: number, y: number): IPoint;
     offsetToPoint(dx: number, dy: number): IPoint;
@@ -417,13 +428,13 @@ declare namespace spritejs {
     constructor(attr?: Object);
     cloneNode(): Sprite;
     images: Array<ImageBitmap>;
-    textures: Array<Object|string>;
+    textures: Array<Object | string>;
     readonly clientSize: ISize;
     pointCollision(event: IEventArguments): boolean;
     cache: CanvasRenderingContext2D;
     render(t: number, context: CanvasRenderingContext2D);
   }
-  
+
   class Label extends BaseSprite {
     static Attr;
     constructor(attr?: Object);
@@ -472,7 +483,12 @@ declare namespace spritejs {
     update(child: BaseNode);
     pointCollision(event: IEventArguments);
     readonly contentSize: ISize;
-    dispatchEvent(type: string, event: IEventArguments, collisionState: boolean, swallow: boolean): boolean;
+    dispatchEvent(
+      type: string,
+      event: IEventArguments,
+      collisionState: boolean,
+      swallow: boolean
+    ): boolean;
     relayout();
     clearLayout();
     render(t: number, context: CanvasRenderingContext2D);
@@ -548,7 +564,12 @@ declare namespace spritejs {
     drawSprites(renderEls: Array<BaseNode>, t: number);
     repaint(t: number, clearContext);
     pointCollision(event: IEventArguments): boolean;
-    dispatchEvent(type: string, event: IEventArguments, collisionState: boolean, swallow: boolean): boolean;
+    dispatchEvent(
+      type: string,
+      event: IEventArguments,
+      collisionState: boolean,
+      swallow: boolean
+    ): boolean;
     group(...sprites: Array<BaseNode>): Group;
     batch(...sprites: Array<BaseNode>): Batch;
     adjust(handler: Function, update: boolean);
@@ -564,14 +585,18 @@ declare namespace spritejs {
     readonly viewport: Array<number>;
     readonly offset: IPoint;
     readonly center: IPoint;
-    setDisplayRatio(ratio: number|string, maxDisplayRatio: number, updateDisplay: boolean);
+    setDisplayRatio(
+      ratio: number | string,
+      maxDisplayRatio: number,
+      updateDisplay: boolean
+    );
     readonly displayRatio: number;
     updateDisplay();
     toLocalPos(x: number, y: number);
     toGolbalPos(x: number, y: number);
     zIndex: number;
   }
-  
+
   interface Easings {
     linear: (p) => number;
     ease: (p) => number;
@@ -615,7 +640,7 @@ declare namespace spritejs {
 
   class Scene extends BaseNode {
     constructor(container: HTMLElement, options: Object);
-    displayRatio: number|string;
+    displayRatio: number | string;
     subscribe: Array<string>;
     readonly childNodes: Array<BaseNode>;
     readonly children: Array<BaseNode>;
@@ -636,7 +661,7 @@ declare namespace spritejs {
     delegateEvent(event: string, receiver: HTMLElement);
     dispatchEvent(type: string, event: IEventArguments);
     preload(...resources: Array<any>): Promise;
-    layer(id: string, options: Object);
+    layer(id?: string, options?: Object);
     readonly layers: Array<Layer>;
     appendLayer(layer: Layer, appendDOMElement: boolean): Layer;
     removeLayer(layer: Layer): Layer;
@@ -647,30 +672,42 @@ declare namespace spritejs {
   }
 
   namespace utils {
-    function cachable(elementDescriptor: IElementDecsriptor): IElementDecsriptor;
+    function cachable(
+      elementDescriptor: IElementDecsriptor
+    ): IElementDecsriptor;
     function composit(struct: Object): Function;
-    function findColor(context: CanvasRenderingContext2D, sprite: BaseNode, prop: string): string|Object;
+    function findColor(
+      context: CanvasRenderingContext2D,
+      sprite: BaseNode,
+      prop: string
+    ): string | Object;
     interface cacheContextPool {
       get: (context: CanvasRenderingContext2D) => CanvasRenderingContext2D;
       put: (...contexts: Array<CanvasRenderingContext2D>) => undefined;
       readonly size: number;
     }
-    function drawRadiusBox(context: CanvasRenderingContext2D, rect: IRect, radius: Array<number>);
-    function appendUnit(value: number|string, defaultUnit: string): string;
+    function drawRadiusBox(
+      context: CanvasRenderingContext2D,
+      rect: IRect,
+      radius: Array<number>
+    );
+    function appendUnit(value: number | string, defaultUnit: string): string;
     function attr(elementDescriptor: IElementDecsriptor): IElementDecsriptor;
     function attr(options: Object): Function;
-    function deprecate(elementDescriptor: IElementDecsriptor): IElementDecsriptor;
+    function deprecate(
+      elementDescriptor: IElementDecsriptor
+    ): IElementDecsriptor;
     function deprecate(...args: Array<string>): IDecorator;
     function flow(elementDescriptor: IElementDecsriptor): IElementDecsriptor;
-    function fourValuesShortCut(value: number|Array<number>): Array<number>;
-    function eightValuesShortCut(value: number|Array<number>): Array<number>;
+    function fourValuesShortCut(value: number | Array<number>): Array<number>;
+    function eightValuesShortCut(value: number | Array<number>): Array<number>;
     function notice(msg: string, level: string);
-    function oneOrTwoValues(value: number|Array<number>): Array<number>;
+    function oneOrTwoValues(value: number | Array<number>): Array<number>;
     function absolute(elementDescriptor: IElementDecsriptor): Function;
     function relative(type: string): Function;
     function inherit(defaultValue: any): Function;
-    function parseColor(color: string|IColor): Color;
-    function parseColorString(color: string|IColor): string;
+    function parseColor(color: string | IColor): Color;
+    function parseColorString(color: string | IColor): string;
     function praseString(str: string): Array<any>;
     function parseStringFloat(str: string): Array<number>;
     function parseStringInt(str: string): Array<number>;
@@ -680,8 +717,8 @@ declare namespace spritejs {
     function rectVertices(rect: IRect): Array<IPoint>;
     function sortOrderedSprites(sprites: Array<BaseNode>, reversed: boolean);
     function generateID(): string;
-    function sizeToPixel(value: number|string, defaultWidth: number);
+    function sizeToPixel(value: number | string, defaultWidth: number);
     function decorators(...funcs: Array<Function>): Function;
-    function createSvgPath(path: string|Object): SvgPath;
+    function createSvgPath(path: string | Object): SvgPath;
   }
 }
