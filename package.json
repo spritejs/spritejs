@@ -26,7 +26,7 @@
     "start": "webpack-dev-server --watch-poll",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "deploy": "npm run build",
-    "compile": "rm -rf lib/* && babel src -d lib && cp src/index.d.ts lib/index.d.ts",
+    "compile": "rm -rf lib/* && babel src -d lib",
     "build": "npm run compile && rm -rf dist/* && ./script/build.js",
     "doc": "babel docs/src -d docs/js --watch & webpack-dev-server --watch-poll --env.server=docs",
     "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
