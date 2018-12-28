@@ -333,12 +333,7 @@ declare namespace spritejs {
     pointCollision(event: IEventArguments): boolean;
     setMouseCapture();
     releaseMouseCapture();
-    dispatchEvent(
-      type: string,
-      event: IEventArguments,
-      collisionState: boolean,
-      swallow: boolean
-    ): boolean;
+    dispatchEvent(type: string, event: IEventArguments, collisionState?: boolean, swallow?: boolean): boolean;
     connect(parent: BaseNode, zOrder: number): BaseNode;
     disconnect(parent: BaseNode): BaseNode;
     enter(): BaseNode;
@@ -476,23 +471,18 @@ declare namespace spritejs {
     scrollTo(x: number, y: number);
     scrollBy(dx: number, dy: number);
     cloneNode(): BaseNode;
-    cloneNode(deepCopy: boolean): BaseNode;
+    cloneNode(deepCopy?: boolean): BaseNode;
     readonly childNodes: Array<BaseNode>;
     readonly children: Array<BaseNode>;
     readonly sortedChildNodes: Array<BaseNode>;
     update(child: BaseNode);
     pointCollision(event: IEventArguments);
     readonly contentSize: ISize;
-    dispatchEvent(
-      type: string,
-      event: IEventArguments,
-      collisionState: boolean,
-      swallow: boolean
-    ): boolean;
+    dispatchEvent(type: string, event: IEventArguments, collisionState?: boolean, swallow?: boolean): boolean;
     relayout();
     clearLayout();
     render(t: number, context: CanvasRenderingContext2D);
-    appendChild(sprite: BaseNode, update: boolean): BaseNode;
+    appendChild(sprite: BaseNode, update?: boolean): BaseNode;
     append(...sprites: Array<BaseNode>);
     removeChild(sprite: BaseNode): BaseNode;
     replaceChild(newChild: BaseNode, oldChild: BaseNode);
@@ -646,7 +636,7 @@ declare namespace spritejs {
     readonly children: Array<BaseNode>;
     readonly sortedChildNodes: Array<BaseNode>;
     insertBefore(newChild: BaseNode, refChild: BaseNode): BaseNode;
-    appendChild(sprite: BaseNode, update): BaseNode;
+    appendChild(sprite: BaseNode): BaseNode;
     removeChild(sprite: BaseNode): BaseNode;
     replaceChild(newChild: BaseNode, oldChild: BaseNode);
     readonly layerViewport: Array<number>;
@@ -658,12 +648,12 @@ declare namespace spritejs {
     updateResolution(layer: Layer);
     setViewport(width: number, height: number);
     setResolution(width: number, height: number);
-    delegateEvent(event: string, receiver: HTMLElement);
+    delegateEvent(event: string, receiver?: HTMLElement);
     dispatchEvent(type: string, event: IEventArguments);
     preload(...resources: Array<any>): Promise;
     layer(id?: string, options?: Object);
     readonly layers: Array<Layer>;
-    appendLayer(layer: Layer, appendDOMElement: boolean): Layer;
+    appendLayer(layer: Layer, appendDOMElement?: boolean): Layer;
     removeLayer(layer: Layer): Layer;
     hasLayer(layer: Layer): boolean;
     querySelector(selector: string): BaseNode;
