@@ -18,10 +18,11 @@
   <script src="/js/spritejs.js"></script>
   <script>
 
-const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200)
+const paper = spritejs.Paper2D('#paper', 600, 600).setResolution(1200, 1200);
 
-const layer = d3.select(paper).append('fglayer')
+const layer = d3.select(paper).append('fglayer');
 
+/* eslint-disable */
 d3.json('/data/city.json', (err, data) => {
 
   const root = d3.hierarchy(data)
@@ -40,7 +41,7 @@ d3.json('/data/city.json', (err, data) => {
         .attr('font', '42px Arial')
         .attr('text', '中国')
 
-  const s = layer.selectAll({label: s => s.name !== 'region'})
+  const s = layer.selectAll('label[name!="region"]')
        .data(nodes.descendants())
        .enter()
        .append('label')
@@ -67,7 +68,7 @@ d3.json('/data/city.json', (err, data) => {
        })
        .attr('textAlign', 'center')
        .attr('text', d => d.data.name)
-       .on('mousemove', d => {
+       .on('mousemove', function(d) {
           d3.event.stopDispatch()
           
           const {offsetX, offsetY} = d3.event,
@@ -75,16 +76,21 @@ d3.json('/data/city.json', (err, data) => {
 
           if(offsetX ** 2 + offsetY ** 2 < r ** 2) {
             //console.log(d.data.name)
-            layer.selectAll({label: s => s.name === 'region'})
+            layer.selectAll('label[name="region"]')
                 .attr('text', d.data.name)
+            layer.selectAll('label[name!="region"]')
+                .attr('border', null)
+            this.attr('border', [3, 'red'])
           }
        })
-       .on('mouseenter', d => {
-          d3.event.target.attr('border', [3, 'red'])
-       })
-       .on('mouseleave', d => {
-          d3.event.target.attr('border', [0, 'transparent'])
-       })
+      //  .on('mouseenter', d => {
+      //     console.log('enter')
+      //     d3.event.target.attr('border', [3, 'red'])
+      //  })
+      //  .on('mouseleave', d => {
+      //     console.log('leave')
+      //     d3.event.target.attr('border', [0, 'transparent'])
+      //  })
 })
 
 

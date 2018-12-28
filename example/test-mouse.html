@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Base Sprite</title>
+  <style>
+    sprite {
+      --sprite-bgcolor: blue;
+    }
+    sprite:hover {
+      --sprite-bgcolor: orange;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    const {Scene, Sprite, Group} = spritejs;
+    const Layer = spritejs.Layer;
+
+    const scene = new Scene('#container', {
+      viewport: [600, 600],
+      resolution: [600, 600],
+      useDocumentCSS: true,
+    });
+    const layer = scene.layer('fglayer');
+    const bglayer = scene.layer('bglayer');
+
+    const s = new Group({
+      anchor: 0.5,
+      size: [300, 300],
+      pos: [450, 450],
+      bgcolor: 'red',
+    });
+    layer.append(s);
+
+    const b1 = new Sprite({
+      size: [50, 50],
+      pos: [0, 0],
+    });
+    s.append(b1);
+
+    const b2 = new Sprite({
+      size: [50, 50],
+      pos: [250, 250],
+    });
+    s.append(b2);
+
+    b1.on('mouseleave', (evt) => {
+      console.log('b1', evt);
+    });
+    b2.on('mouseleave', (evt) => {
+      console.log('b2', evt);
+    });
+
+    layer.on('mouseenter', (evt) => {
+      console.log('layer', 'enter');
+    });
+    layer.on('mouseleave', (evt) => {
+      console.log('layer', 'leave');
+    });
+  </script>
+</body>
+</html>

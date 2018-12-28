@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <script src="/js/spritejs.js"></script>
+    <!-- <script src="https://s3.ssl.qhres.com/!45070e34/spritejs.min.js"></script> -->
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="container"></div>
+    <script>
+      const {Scene, Sprite, Path, Group} = spritejs;
+      const [width, height] = [window.innerWidth, window.innerHeight];
+      const div = document.createElement('div');
+      div.style.width = '100%';
+      div.style.height = '100%';
+      const scene = new Scene(div, {
+        viewport: [width, height],
+      });
+      const layer = scene.layer();
+
+      const [gw, gh] = [width, height];
+
+      const color = [255, 0, 0];
+
+      const ss = [],
+        ss2 = [];
+
+      for(let i = 0; i < 1000; i++) {
+        const pos = [Math.random() * width, Math.random() * height];
+        const s = new Sprite({
+          bgcolor: '#f00',
+          borderRadius: 50,
+          size: [100, 100],
+          anchor: [0.5, 0.5],
+          pos,
+          gradients: {
+            bgcolor: {
+              vector: [50, 50, 0, 50, 50, 50],
+              colors: [
+                {
+                  offset: 0,
+                  color: 'rgba(255, 0, 0, 0.1)',
+                }, {
+                  offset: 1,
+                  color: 'rgba(255, 0, 0, 8)',
+                },
+              ],
+            },
+          },
+          timer: Math.random(),
+        });
+        const s2 = new Sprite({
+          // bgcolor: '#f00',
+          borderRadius: 10,
+          size: [20, 20],
+          anchor: [0.5, 0.5],
+          pos,
+          bgcolor: 'rgba(255, 0, 0, 8)',
+        });
+        layer.append(s, s2);
+        ss.push(s);
+        ss2.push(s2);
+      }
+
+      layer.batch(...ss);
+      layer.batch(...ss2);
+      
+      function render() {
+        ss.forEach((s) => {
+          let timer = s.getAttribute('timer');
+          timer += 0.02;
+          const scale = timer % 1;
+          s.attr({
+            scale,
+          });
+          s.attr({
+            opacity: 1 - scale,
+          });
+          s.attr({
+            timer,
+          });
+        });
+
+        requestAnimationFrame(render);
+      }
+      render();
+
+      document.getElementById('container').appendChild(div);
+      window.addEventListener('resize', () => {
+        scene.viewport = [window.innerWidth, window.innerHeight];
+        scene.resolution = [window.innerWidth, window.innerHeight];
+      });
+    </script>
+  </body>
+
+</html>

@@ -2,45 +2,45 @@ const {Scene, Sprite, Label} = spritejs
 
 /* demo: adaptive */
 ;(function () {
-  const scene = new Scene('#adaptive', {resolution: [700, 700]})
+  const scene = new Scene('#adaptive', {resolution: [700, 700]});
 
-  const resolution = scene.resolution
-  const viewport = scene.viewport
+  const resolution = scene.resolution;
+  const viewport = scene.viewport;
 
-  const layer = scene.layer('fglayer')
+  const layer = scene.layer('fglayer');
 
-  const label = new Label(`resolution: ${resolution} | viewport: ${viewport}`)
+  const label = new Label(`resolution: ${resolution} | viewport: ${viewport}`);
   label.attr({
     anchor: [0.5, 0.5],
     pos: [350, 350],
     font: '36px Arial',
-  })
+  });
 
-  layer.append(label)
+  layer.append(label);
 }())
 
 /* demo: resize */
 ;(function () {
-  const scene = new Scene('#resize', {viewport: ['auto', 'auto'], resolution: [770, 770]})
+  const scene = new Scene('#resize', {viewport: ['auto', 'auto'], resolution: [770, 770]});
 
-  const resolution = scene.resolution
-  const viewport = scene.viewport
+  const resolution = scene.resolution;
+  const viewport = scene.viewport;
 
-  const layer = scene.layer('fglayer')
+  const layer = scene.layer('fglayer');
 
-  const label = new Label(`resolution: ${resolution} | viewport: ${viewport}`)
+  const label = new Label(`resolution: ${resolution} | viewport: ${viewport}`);
   label.attr({
     anchor: [0.5, 0.5],
     pos: [350, 350],
     font: '36px Arial',
-  })
+  });
 
-  layer.append(label)
+  layer.append(label);
 
   scene.on('viewportChange', () => {
-    const viewport = scene.viewport
-    label.text = `resolution: ${resolution} | viewport: ${viewport}`
-  })
+    const viewport = scene.viewport;
+    label.text = `resolution: ${resolution} | viewport: ${viewport}`;
+  });
 }())
 
 /* demo: stickMode */
@@ -50,47 +50,47 @@ const {Scene, Sprite, Label} = spritejs
     resolution: [640, 1000],
     stickMode: 'width',
     // renderMode: 'repaintDirty',
-  })
+  });
 
   const heightBtn = document.getElementById('heightBtn'),
     stickMode = document.getElementById('stickMode'),
-    extendBtn = document.getElementById('extendBtn')
+    extendBtn = document.getElementById('extendBtn');
 
   heightBtn.addEventListener('change', (evt) => {
-    stickMode.style.paddingBottom = `${50 + evt.target.value / 2}%`
-    scene.updateViewport()
-  })
+    stickMode.style.paddingBottom = `${50 + evt.target.value / 2}%`;
+    scene.updateViewport();
+  });
 
   extendBtn.addEventListener('click', (evt) => {
-    scene.stickExtend = evt.target.checked
-    scene.updateViewport().updateResolution()
-  })
+    scene.stickExtend = evt.target.checked;
+    scene.updateViewport().updateResolution();
+  });
 
   await scene.preload(
     {id: 'snow', src: 'https://p5.ssl.qhimg.com/t01bfde08606e87f1fe.png'},
     {id: 'cloud', src: 'https://p5.ssl.qhimg.com/t01d2ff600bae7fe897.png'}
-  )
+  );
 
-  const layer = scene.layer('fglayer')
+  const layer = scene.layer('fglayer');
 
-  const cloud = new Sprite('cloud')
+  const cloud = new Sprite('cloud');
   cloud.attr({
     anchor: [0.5, 0],
     pos: [320, -50],
     size: [200, 130],
-  })
-  layer.append(cloud)
+  });
+  layer.append(cloud);
 
   function addRandomSnow() {
-    const snow = new Sprite('snow')
+    const snow = new Sprite('snow');
     const x0 = 20 + Math.random() * 600,
-      y0 = 0
+      y0 = 0;
 
     snow.attr({
       anchor: [0.5, 0.5],
       pos: [x0, y0],
       size: [50, 50],
-    })
+    });
 
     snow.animate([
       {x: x0 - 10},
@@ -101,7 +101,7 @@ const {Scene, Sprite, Label} = spritejs
       direction: 'alternate',
       iterations: Infinity,
       easing: 'ease-in-out',
-    })
+    });
 
     const dropAnim = snow.animate([
       {y: -200, rotate: 0},
@@ -109,14 +109,14 @@ const {Scene, Sprite, Label} = spritejs
     ], {
       duration: 15000,
       fill: 'forwards',
-    })
+    });
 
     dropAnim.finished.then(() => {
-      snow.remove()
-    })
+      snow.remove();
+    });
 
-    layer.append(snow)
+    layer.append(snow);
   }
 
-  setInterval(addRandomSnow, 200)
-}())
+  setInterval(addRandomSnow, 200);
+}());

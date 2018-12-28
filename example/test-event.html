@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background-color: #222;
+  }
+
+  #container {
+    width: 100%;
+    height: 100%;
+  }  
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+  const {Scene, Sprite} = spritejs;
+  const scene = new Scene('#container', {
+    viewport: ['auto', 'auto'],
+    resolution: [800, 600],
+    stickMode: 'width',
+  });
+  const layer = scene.layer('fglayer');
+  const s = new Sprite();
+  s.attr({
+    anchor: 0.5,
+    pos: [300, 200],
+    size: [100, 100],
+    bgcolor: '#ee9',
+  });
+  layer.append(s);
+
+  layer.on('myevent', (e) => {
+    console.log(e);
+  });
+  s.on('myevent', (e) => {
+    console.log(e);
+  });
+
+  s.on('keydown', (e) => {
+    console.log(e);
+  });
+
+  scene.delegateEvent('myevent');
+  scene.dispatchEvent('myevent', {x: 1});
+
+  scene.delegateEvent('keydown', document);
+  </script>
+</body>
+</html>

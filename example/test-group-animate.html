@@ -36,111 +36,111 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const scene = new spritejs.Scene('#paper'),
-      fglayer = scene.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Group = spritejs.Group
+  fglayer = scene.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Group = spritejs.Group;
 
-scene.setResolution(800, 600) 
+scene.setResolution(800, 600);
 
-const s1 = new Sprite()
+const s1 = new Sprite();
 s1.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'red',
   rotate: 90,
-})
+});
 
-const s2 = new Sprite()
+const s2 = new Sprite();
 s2.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'green',
   rotate: 180,
-})
+});
 
-const s3 = new Sprite()
+const s3 = new Sprite();
 s3.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'blue',
-})
+});
 
-const s4 = new Sprite()
+const s4 = new Sprite();
 s4.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'blue',
-})
+});
 
-const group = new Group()
+const group = new Group();
 
-group.append(s1, s2, s3)
-fglayer.appendChild(s4)
-fglayer.append(group)
+group.append(s1, s2, s3);
+fglayer.appendChild(s4);
+fglayer.append(group);
 
 group.attr({
   anchor: 0.5,
   pos: [200, 200],
-  rotate: 0, 
+  rotate: 0,
   border: [1, 'red'],
   size: [200, 200],
-})
+});
 
-s1.on('click', evt => {
-  console.log(evt)
-})
+s1.on('click', (evt) => {
+  console.log(evt);
+});
 
 group.animate([
-  {rotate: 360}
+  {rotate: 360},
 ], {
   duration: 2000,
   iterations: Infinity,
   direction: 'reverse',
-})
+});
 
 s1.animate([
-  {rotate: 450}
+  {rotate: 450},
 ], {
   duration: 1000,
   iterations: Infinity,
-})
+});
 
 s2.animate([
-  {rotate: 540}
+  {rotate: 540},
 ], {
   duration: 1000,
   iterations: Infinity,
-})
+});
 
 s3.animate([
-  {rotate: 360}
+  {rotate: 360},
 ], {
   duration: 1000,
   iterations: Infinity,
-})
+});
 s4.animate([
-  {rotate: 360}
+  {rotate: 360},
 ], {
   duration: 1000,
   iterations: Infinity,
-})
+});
 
 
-window.addEventListener('resize', evt => {
-  scene.setViewport('auto', 'auto')
-})
+window.addEventListener('resize', (evt) => {
+  scene.setViewport('auto', 'auto');
+});
 
-function pausePlayer () {
-  fglayer.timeline.playbackRate = 0
-  console.log(fglayer.timeline)
+function pausePlayer() {
+  fglayer.timeline.playbackRate = 0;
+  console.log(fglayer.timeline);
 }
-function resumePlayer () {
-  fglayer.timeline.playbackRate = 1
-  console.log(fglayer.timeline)
+function resumePlayer() {
+  fglayer.timeline.playbackRate = 1;
+  console.log(fglayer.timeline);
 }
-   
-function speedUp () {
-  fglayer.timeline.playbackRate += 0.1
+
+function speedUp() {
+  fglayer.timeline.playbackRate += 0.1;
 }
   </script>
 </body>

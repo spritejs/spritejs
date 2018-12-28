@@ -36,10 +36,10 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Label = spritejs.Label  
+  fglayer = paper.layer('fglayer'),
+  Label = spritejs.Label;
 
-paper.setResolution(1600, 600) 
+paper.setResolution(1600, 600);
 
 // let dis = 1
 // setInterval(() => {
@@ -50,10 +50,10 @@ paper.setResolution(1600, 600)
 //   })
 // }, 10)
 
-const text1 = new Label('SpriteJS.org 中国')
+const text1 = new Label('SpriteJS.org 中国');
 
 text1.attr({
-  anchor: "0.5",
+  anchor: '0.5',
   pos: [800, 300],
   font: '48px Arial',
   color: '#fff',
@@ -62,7 +62,7 @@ text1.attr({
   // lineHeight: 100,
   scale: [paper.distortion, 1],
   padding: [0, 20, 0, 20],
-})
+});
 
 
 // let i = 1
@@ -77,11 +77,11 @@ text1.attr({
 // })
 
 
-fglayer.appendChild(text1)
+fglayer.appendChild(text1);
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
+window.addEventListener('resize', (evt) => {
+  paper.setViewport('auto', 'auto');
+});
   </script>
 </body>
 </html>

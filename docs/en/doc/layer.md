@@ -65,10 +65,6 @@ Readonly，get the context of the current Layer's canvas object for rendering.
 
 Readonly, get the current layer's id.
 
-## isNodeVisible()
-
-`isNodeVisible(node)` Determines whether the element is visible in the layer.
-
 ## resolution
 
 Get the resolution of the current Layer.

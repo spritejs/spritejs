@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Base Sprite</title>
+</head>
+<body>
+  <div id="wrapper" style="position:relative;border:solid 1px red;">
+    <div id="mycanvas"></div>
+  </div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    const {Scene, Sprite, Group} = spritejs;
+    const scene = new Scene('#mycanvas', 600, 600),
+      layer = scene.layer()
+
+    ;(function () {
+      const g = new Group({
+        size: [300, 600],
+        bgcolor: 'grey',
+      });
+      const b1 = new Sprite({
+        bgcolor: 'red',
+        size: [50, 50],
+        pos: [100, 300],
+      });
+      const b2 = b1.cloneNode();
+      const b3 = b1.cloneNode();
+
+      b2.attr({
+        x: 200,
+        bgcolor: 'blue',
+      });
+
+      b3.attr({
+        x: 300,
+        bgcolor: 'green',
+      });
+
+      layer.append(g);
+      g.append(b1, b2, b3);
+
+      // g.on('click', (evt) => {
+      //   console.log(evt.target);
+      // });
+      b1.on('click', (evt) => {
+        console.log(evt.target);
+      });
+      // b2.on('mouseenter', (evt) => {
+      //   console.log(evt.target);
+      // });
+      // b3.on('mouseenter', (evt) => {
+      //   console.log(evt.target);
+      // });
+      // b1.on('mouseleave', (evt) => {
+      //   console.log(evt.target);
+      // });
+      // b2.on('mouseleave', (evt) => {
+      //   console.log(evt.target);
+      // });
+      // b3.on('mouseleave', (evt) => {
+      //   console.log(evt.target);
+      // });
+    }());
+  </script>
+</body>
+</html>

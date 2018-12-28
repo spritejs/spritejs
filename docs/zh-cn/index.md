@@ -17,8 +17,12 @@ sprite.js 是跨平台的2D绘图对象模型库，它能够支持web、node、�
 - 支持DOM事件代理、自定义事件派发
 - 使用ES6+语法和面向对象编程
 - 结构化对象树，对[d3](https://github.com/d3/d3)引擎友好，能够无缝使用
+- 支持布局和文字排版
+- 支持直接使用文档中的CSS
 - 支持[服务端渲染](#server-side-render)
 - 支持[微信小程序](https://github.com/spritejs/sprite-wxapp)
+- 支持[Vue](http://vue.spritejs.org)
+- 支持[React](http://react.spritejs.org)
 
 ## 安装和使用
 
@@ -63,7 +67,7 @@ spritejs提供四类基础精灵元素、图层管理和负责协调多个图层
 ![架构图](/res/spritejs-design1.svg)
 
 ## 基本用法 
-[JSBin](https://code.h5jun.com/qeter/edit?js,output)
+[JSBin](https://code.h5jun.com/vomuc/edit?js,output)
 
 <!-- demo: quickStart -->
 

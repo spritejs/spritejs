@@ -14,6 +14,7 @@
     * [Group](/zh-cn/doc/group)
     * [Label](/zh-cn/doc/label)
     * [Layer](/zh-cn/doc/layer)
+    * [Layout](/zh-cn/doc/layout)
     * [Path](/zh-cn/doc/path)
     * [Scene](/zh-cn/doc/scene)
     * [Sprite](/zh-cn/doc/sprite)
@@ -35,14 +36,19 @@
     * [阴影 shadow](/zh-cn/effect#阴影-shadow)
     * [滤镜 filter](/zh-cn/effect#滤镜-filter)
     * [渐变 gradient](/zh-cn/effect#渐变-gradient)
+    * [背景 bgimage](/zh-cn/bgimage)
   * 行为
     * [事件 event](/zh-cn/behavior#响应-dom-事件)
-
+  * 布局
+    * [FlexLayout](/zh-cn/guide/flexlayout)
+  * 样式
+    * [CSS 样式](/zh-cn/guide/styles)
 * 高级用法
   * [屏幕适配](/zh-cn/guide/resolution)
   * [盒模型](/zh-cn/guide/boxmodel)
   * [预加载与雪碧图](/zh-cn/guide/resource)
   * [高级动画](/zh-cn/guide/animations)
+  * [状态切换](/zh-cn/guide/states)
   * [Bitmap Font](/zh-cn/guide/bmfont)
   * [外部时钟](/zh-cn/guide/ticker)
   * [碰撞检测](/zh-cn/guide/collision)
@@ -50,12 +56,22 @@
   * [创建新的精灵类型](/zh-cn/guide/nodes)
   * [虚拟 Group](/zh-cn/guide/virtualgroup)
   * [缓存策略](/zh-cn/guide/cache)
+  * [reflow](/zh-cn/guide/reflow)
+  * [快照](/zh-cn/guide/snapshot)
   * [与d3一同使用](/zh-cn/guide/d3)
   * [粒子系统](/zh-cn/guide/particle)
   * [物理引擎](/zh-cn/guide/matter)
-  * [快照](/zh-cn/guide/snapshot)
-  * [开发者工具](/zh-cn/guide/devtools)
+  * [JSX语法](/zh-cn/guide/jsx)
   * [跨平台](/zh-cn/guide/platforms)
+
+* 生态
+  * [微信小程序](https://github.com/spritejs/sprite-wxapp)
+  * [图形库](https://github.com/spritejs/sprite-extend-shapes)
+  * [Rough](https://github.com/spritejs/sprite-extend-rough)
+  * [流程图](https://github.com/spritejs/sprite-extend-dagre)
+  * [Vue](http://vue.spritejs.org)
+  * [React](http://react.spritejs.org)
+  * [开发者工具](/zh-cn/guide/devtools)
 
 * 其他
   * [相关资源](/zh-cn/resource)

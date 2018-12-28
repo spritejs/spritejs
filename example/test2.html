@@ -22,27 +22,27 @@ html, body {
 const paper = new spritejs.Scene('#paper', {
   viewport: 'auto',
   resolution: 'flex',
-})
-//paper.setResolution(800, 600)
+});
+// paper.setResolution(800, 600)
 
-const sprite = new spritejs.Sprite()
+const sprite = new spritejs.Sprite();
 sprite.attr({
   bgcolor: '#000',
   pos: [10, 10],
   size: [100, 100],
-})
-let i = 0
-sprite.on('afterdraw', evt => {
-  const context = evt.context
-  context.font = '48px Arial'
-  context.strokeStyle = '#f00'
-  context.strokeText(String(++i), 10, 90)  
-})
-paper.layer().appendChild(sprite)
+});
+let i = 0;
+sprite.on('afterdraw', (evt) => {
+  const context = evt.context;
+  context.font = '48px Arial';
+  context.strokeStyle = '#f00';
+  context.strokeText(String(++i), 10, 90);
+});
+paper.layer().appendChild(sprite);
 
 setInterval(() => {
-  sprite.forceUpdate(true)
-}, 1000)
+  sprite.forceUpdate(true);
+}, 1000);
   </script>
 </body>
 </html>

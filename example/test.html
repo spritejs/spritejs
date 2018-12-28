@@ -25,72 +25,72 @@
   <script src="/js/spritejs.js"></script>
   <script src="/js/gif.js"></script>
   <script>
-  const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
+  const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
 
-  ;(async function(){
-    const paper = spritejs.Paper2D('#paper', 
+  ;(async function () {
+    const paper = spritejs.Paper2D('#paper',
       {
-        viewport: ['auto', 'auto'], 
-        resolution: [800, 400], 
+        viewport: ['auto', 'auto'],
+        resolution: [800, 400],
         stickMode: 'height',
         // stickExtend: true,
-      })
-    console.log(paper.distortion)
+      });
+    console.log(paper.distortion);
     const Sprite = spritejs.Sprite,
-          Path = spritejs.Path,
-          Label = spritejs.Label
-    const layer = paper.layer('fglayer', {renderMode: 'repaintDirty'})
-    
+      Path = spritejs.Path,
+      Label = spritejs.Label;
+    const layer = paper.layer('fglayer', {renderMode: 'repaintDirty'});
+  
     await paper.preload(
-      [birdsRes, birdsJsonUrl]   // 预加载资源，支持雪碧图
-    )  
+      [birdsRes, birdsJsonUrl] // 预加载资源，支持雪碧图
+    );
 
     const s = new Sprite({
       attributeChangedCallback(...args) {
-        //console.log(args)
-      }
-    })
+        // console.log(args)
+      },
+    });
 
     s.attr({
       anchor: [0.5, 0.5],
       pos: [300, 100],
-      //size: [50, 50],
-      //bgcolor: 'green',
-      //opacity: 0.5,
+      // size: [50, 50],
+      // bgcolor: 'green',
+      // opacity: 0.5,
       transform: {
-        //translate: [30, 30],
-        //rotate: 30,
+        // translate: [30, 30],
+        // rotate: 30,
         scale: [0.5, 0.5],
       },
       offsetPath: 'M10,80 q100,120 120,20 q140,-50 160,0',
-      //offsetDistance: 0.5,
-      //offsetRotate: 30,
+      // offsetDistance: 0.5,
+      // offsetRotate: 30,
       zIndex: 200,
-    })
+    });
 
-    layer.appendChild(s)
+    layer.appendChild(s);
 
-    s.textures = ['bird1.png']
+    s.textures = ['bird1.png'];
 
     s.animate([
       {offsetDistance: 0},
-      {offsetDistance: 1}
+      {offsetDistance: 1},
     ], {
       duration: 3000,
       direction: 'alternate',
       iterations: Infinity,
-    })
+    });
 
     s.animate([
-      {scale: [.5, .5], offsetRotate: 'auto'},
-      {scale: [.5, -.5], offsetRotate: 'reverse'},
-      {scale: [.5, .5], offsetRotate: 'auto'},
+      {scale: [0.5, 0.5], offsetRotate: 'auto'},
+      {scale: [0.5, -0.5], offsetRotate: 'reverse'},
+      {scale: [0.5, 0.5], offsetRotate: 'auto'},
     ], {
       duration: 6000,
       iterations: Infinity,
       easing: 'step-end',
-    })
+    });
 
     s.animate([
       {textures: 'bird1.png'},
@@ -100,10 +100,10 @@
       duration: 300,
       direction: 'alternate',
       iterations: Infinity,
-    })
+    });
 
     window.s = s;
-    //paper.removeChild(s);
+    // paper.removeChild(s);
 
     // console.log('box', s3.renderBox)
 
@@ -145,7 +145,7 @@
     //   console.log(evt)
     // })
 
-    const s2 = new Sprite()
+    const s2 = new Sprite();
 
     s2.attr({
       anchor: [0.5, 0.5],
@@ -170,7 +170,7 @@
           }, {
             offset: 1,
             color: 'green',
-          }]
+          }],
         },
         border: {
           direction: 135,
@@ -180,14 +180,14 @@
           }, {
             offset: 1,
             color: '#c73',
-          }]
+          }],
         },
       },
-    })
+    });
 
-    window.s2 = s2
+    window.s2 = s2;
 
-    const s3 = new Sprite()
+    const s3 = new Sprite();
 
     s3.attr({
       anchor: [0.5, 0.5],
@@ -197,38 +197,38 @@
       border: [15, 'blue'],
       opacity: 0.5,
       zIndex: -500,
-    })
+    });
 
 
     layer.append(s2, s3);
 
-    window.s3 = s3
+    window.s3 = s3;
 
-    s2.on('click', e => {
-      console.log(111)
-      e.stopDispatch()
-    })
-    s3.on('click', e => {
-      console.log(222)
-    })
+    s2.on('click', (e) => {
+      console.log(111);
+      e.stopDispatch();
+    });
+    s3.on('click', (e) => {
+      console.log(222);
+    });
 
-    const s4 = new Path()
+    const s4 = new Path();
 
     s4.attr({
       anchor: [0, 0],
       pos: [300, 100],
-      //size: [200, 200],
-      bgcolor: '#ddd',
+      // size: [200, 200],
+      // bgcolor: '#ddd',
       color: 'red',
-      //renderMode: 'fill',
+      // renderMode: 'fill',
       lineWidth: 6,
       lineCap: 'round',
       d: 'M10,80 q100,120 120,20 q140,-50 160,0',
-      //d: 'M10 80 h260 v206 h-260Z',
+      // d: 'M10 80 h260 v206 h-260Z',
       linearGradients: {
         strokeColor: {
-          //direction: 45,
-          //rect: [0, 0, 100, 100],
+          // direction: 45,
+          // rect: [0, 0, 100, 100],
           vector: [10, 50, 290, 200],
           colors: [{
             offset: 0,
@@ -236,31 +236,31 @@
           }, {
             offset: 1,
             color: 'rgba(255,0,0,0)',
-          }]
+          }],
         },
-      }  
-    })
-    
-    layer.append(s4)
-    window.s4 = s4
+      },
+    });
+  
+    layer.append(s4);
+    window.s4 = s4;
 
-    const a1 = new Animator(1000,  p => {
-          const colors = [
-            {offset: 0, color: 'rgba(255,0,0,0)'},
-            {offset: p, color: 'rgba(255,0,0,1)'},
-            {offset: p, color: 'rgba(255,0,0,0)'},
-          ]
+    const a1 = new Animator(1000, (p) => {
+      const colors = [
+        {offset: 0, color: 'rgba(255,0,0,0)'},
+        {offset: p, color: 'rgba(255,0,0,1)'},
+        {offset: p, color: 'rgba(255,0,0,0)'},
+      ];
 
-          const linearGradients = s4.attr('linearGradients')
-          linearGradients.strokeColor.colors = colors
-          s4.attr({linearGradients})
-    })
+      const linearGradients = s4.attr('linearGradients');
+      linearGradients.strokeColor.colors = colors;
+      s4.attr({linearGradients});
+    });
 
-    a1.animate()
+    a1.animate();
 
 
-    const label = new Label('Hello World!\n你好，世界！')
-    
+    const label = new Label('Hello World!\n你好，世界！');
+  
     label.attr({
       anchor: [0.5, 0.5],
       pos: [300, 150],
@@ -277,80 +277,83 @@
           }, {
             offset: 1,
             color: 'green',
-          }]
+          }],
         },
-      }      
-    })
+      },
+    });
 
-    layer.append(label)
+    layer.append(label);
 
     label.animate([
       {rotate: 0},
-      {rotate: 360}
+      {rotate: 360},
     ], {
       duration: 10000,
       iterations: Infinity,
-    })
+    });
 
-    s.on('update', evt => {
-      if(s.OBBCollision(label)){
-        label.attr('opacity', 0.7)
+    s.on('update', (evt) => {
+      if(s.OBBCollision(label)) {
+        label.attr('opacity', 0.7);
       } else {
-        label.attr('opacity', 0.3)
+        label.attr('opacity', 0.3);
       }
-    })
+    });
 
-    let gif, timer
-    startRecord.onclick = function(){
-      startRecord.disabled = 'disabled'
-      stopRecord.disabled = ''
+    let gif,
+      timer;
+    startRecord.onclick = function () {
+      startRecord.disabled = 'disabled';
+      stopRecord.disabled = '';
 
       gif = new GIF({
         workers: 4,
         workerScript: '/js/gif.worker.js',
         quality: 10,
         background: '#fff',
-      })
+      });
 
-      gif.addFrame(layer.canvas, {delay: 1, copy: true})
+      gif.addFrame(layer.canvas, {delay: 1, copy: true});
 
-      //gif.addFrame(layer.canvas, {delay: 1000, copy: true})
-      //gif.addFrame(layer.canvas, {delay: 2000, copy: true})
-      //gif.addFrame(layer.canvas, {delay: 3000, copy: true})
+      // gif.addFrame(layer.canvas, {delay: 1000, copy: true})
+      // gif.addFrame(layer.canvas, {delay: 2000, copy: true})
+      // gif.addFrame(layer.canvas, {delay: 3000, copy: true})
 
-      //gif.addFrame(layer.canvas, {delay: 100})
+      // gif.addFrame(layer.canvas, {delay: 100})
 
       timer = setInterval(() => {
-        gif.addFrame(layer.canvas, {delay: 1, copy: true})
-      }, 100)
+        gif.addFrame(layer.canvas, {delay: 1, copy: true});
+      }, 100);
 
-      gif.on('finished', function(blob) {
+      gif.on('finished', (blob) => {
         const url = URL.createObjectURL(blob);
-        startRecord.disabled = ''
-        //recordGif.src = url
+        startRecord.disabled = '';
+        // recordGif.src = url
 
-        const link = document.createElement('a')
+        const link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('download', 'snap.gif');
-        link.click()
+        link.click();
 
-        message.innerHTML = ''
-        s3.attr('opacity', 0.5)
+        message.innerHTML = '';
+        s3.attr('opacity', 0.5);
       });
-      
-      //console.log(gif.frames)
-      
-    }
+  
+      // console.log(gif.frames)
+    };
 
-    stopRecord.onclick = function(){
-      stopRecord.disabled = 'disabled'
-      s3.attr('opacity', 0)
-      clearInterval(timer)
-      layer.off('update')
-      gif.render()
-      message.innerHTML = 'generating gif... please wait.'
-    }
-  })()
+    stopRecord.onclick = function () {
+      stopRecord.disabled = 'disabled';
+      s3.attr('opacity', 0);
+      clearInterval(timer);
+      layer.off('update');
+      gif.render();
+      message.innerHTML = 'generating gif... please wait.';
+    };
+
+    window.layer = layer;
+    window.scene = paper;
+  }());
   </script>
 </body>
 </html>

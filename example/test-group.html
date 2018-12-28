@@ -38,38 +38,38 @@
 const paper = spritejs.Paper2D('#paper'),
   fglayer = paper.layer('fglayer'),
   Sprite = spritejs.Sprite,
-  Group = spritejs.Group
+  Group = spritejs.Group;
 
-paper.setResolution(800, 600)
+paper.setResolution(800, 600);
 
-const s1 = new Sprite()
+const s1 = new Sprite();
 s1.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'red',
   rotate: 90,
-})
+});
 
-const s2 = new Sprite()
+const s2 = new Sprite();
 s2.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'green',
   rotate: 180,
-})
+});
 
-const s3 = new Sprite()
+const s3 = new Sprite();
 s3.attr({
   pos: [100, 100],
   size: [50, 50],
   bgcolor: 'blue',
-})
+});
 
-const group = new Group()
+const group = new Group();
 
-group.append(s1, s2, s3)
+group.append(s1, s2, s3);
 
-fglayer.append(group)
+fglayer.append(group);
 
 group.attr({
   anchor: 0.5,
@@ -78,48 +78,48 @@ group.attr({
   border: [20, 'red'],
   bgcolor: 'grey',
   // size: [200, 200],
-})
+});
 
 s1.on('click', (evt) => {
-  console.log(evt)
-})
+  console.log(evt);
+});
 
 group.animate([
-  {rotate: 360}
+  {rotate: 360},
 ], {
   duration: 20000,
   iterations: Infinity,
   direction: 'reverse',
-})
+});
 
 s1.animate([
   {rotate: 450},
 ], {
   duration: 10000,
   iterations: Infinity,
-})
+});
 
 s2.animate([
   {rotate: 540},
 ], {
   duration: 10000,
   iterations: Infinity,
-})
+});
 
 s3.animate([
   {rotate: 360},
 ], {
   duration: 10000,
   iterations: Infinity,
-})
+});
 
 group.on('mouseenter', (evt) => {
-  console.log('enter')
-})
+  console.log('enter');
+});
 
 group.on('mouseleave', (evt) => {
-  console.log('leave')
-})
+  console.log('leave');
+});
   </script>
 </body>
 </html>

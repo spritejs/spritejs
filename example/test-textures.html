@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+  #container {
+    width: 300px;
+    height: 300px;
+  }  
+  </style>
+</head>
+<body>
+  <script src="/js/spritejs.js"></script>
+  <div id="container"></div>
+  <script>
+const {Scene, Sprite} = spritejs;
+const scene = new Scene('#container', {
+  resolution: [600, 600],
+});
+const layer = scene.layer('fglayer');
+
+const texture = 'https://p5.ssl.qhimg.com/t01a2bd87890397464a.png';
+
+const s1 = new Sprite();
+s1.attr({
+  textures: [
+    {src: texture, rect: [0, 0, 190, 268], srcRect: [0, 0, 190, 268]},
+    {src: texture, rect: [200, 278, 190, 268], srcRect: [191, 269, 190, 268]},
+    {src: texture, rect: [0, 278, 190, 268], srcRect: [0, 269, 190, 268]},
+    {src: texture, rect: [200, 0, 190, 268], srcRect: [191, 0, 190, 268]},
+  ],
+  border: [2, 'grey'],
+  pos: [100, 20],
+});
+layer.append(s1);
+  </script>
+</body>
+</html>

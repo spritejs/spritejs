@@ -25,5 +25,5 @@
 
 <!-- demo: render-demo -->
 
-<script src="https://s5.ssl.qhres.com/!a75e6d57/sprite-extend-matter.js"></script>
+<script src="https://unpkg.com/sprite-extend-matter/dist/sprite-extend-matter.js"></script>
 <script src="/js/guide/matter.js"></script>

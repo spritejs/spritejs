@@ -1,5 +1,345 @@
 # Change Log
 
+## [2.26.1][2018-12-25]
+
+### 改进
+
+- 修改了绘制borderRadius的机制，支持了与DOM一致的圆角方式
+
+## [2.25.3][2018-12-20]
+
+### 改进
+
+- 完全重构了底层decorator的实现
+- 将babel 6升级到babel 7
+- 缩小了编译后js文件的体积
+- 将animation、dom、style、layout模块化
+- 提供针对不同环境的输出
+- 增加了css的测试用例
+
+### bug修复
+
+- 添加了缺少的flex属性相关的css
+- 修复了label的color/fillColor继承导致的问题
+
+## [2.24.12][2018-12-11]
+
+### 改进
+
+- 允许fromDocumentCSS传入Shadow DOM的根元素
+- 优化了CSS规则更新的性能
+
+## [2.24.5][2018-12-07]
+
+### 改进
+
+- 增加了对:hover、:active伪类的支持
+
+## [2.24.4][2018-12-06]
+
+### 改进
+
+- Group元素增加了appendChild和removeChide事件
+
+
+## [2.24.2][2018-12-05]
+
+### 改进
+
+- 增加了一个clipOverflow的属性，默认为true，如果设置为flase，那么元素超过group范围仍然能正常显示
+
+## [2.23.11][2018-12-04]
+
+### 改进
+
+- 取消对Path元素超出rect区域的截取，以适合像rough.js这样的库
+- 将parseFont方法从utils中导出
+
+## [2.23.4][2018-11-29]
+
+### 改进
+
+- 增加了元素的replaceChild方法
+- 增加了元素的nodeName属性
+
+### bug修复
+
+- 修复了动画播放时texture缓存的bug
+
+## [2.23.0][2018-11-27]
+
+### 改进
+
+- 增加了元素的style属性
+
+## [2.22.0][2018-11-19]
+
+### 改进
+
+- 允许读取页面上的CSS规则并赋给SpriteJS元素
+
+## [2.21.0][2018-11-19]
+
+### 改进
+
+- 支持了类似CSS的样式表，可以将样式赋给SpriteJS元素
+
+## [2.20.0][2018-11-16]
+
+### 改进
+
+- 改良了Selector，支持标准的CSS3 Selector
+
+### Bug修复
+
+- 修复了属性继承的bug
+
+## [2.19.0][2018-11-02]
+
+### Bug修复
+
+- 进一步调整缓存策略，消除元素绘制时的抖动
+
+### 改进
+
+- 增加了clip的Effect
+
+## [2.18.1][2018-10-26]
+
+### 改进
+
+- childNodes在parent中的顺序按照添加顺序排，不再预先排序，以便与DOM一致
+
+## [2.17.0][2018-09-21]
+
+### Bug修复
+
+- 由于label缓存在不同浏览器下行为不一，切换缓存会导致抖动问题，取消label默认缓存开启策略
+
+### 新功能
+
+- 升级flex布局，以支持新的标准属性
+
+## [2.16.0][2018-09-20]
+
+### 新功能
+
+- 增加了Scene和Layer的displayRatio配置
+- 增加了sprite的enableCache属性，可以设为false强制关闭缓存
+- 允许scene中添加dom元素
+
+### Bug修复
+
+- 修复了zIndex不为默认值时appendChild和insertBefore的bug
+- 修复了.9背景图片显示的bug
+- 修复了resolveStates的若干bug
+
+## [2.15.0][2018-09-10]
+
+### 改进
+
+- 针对sprite-vue增加了兼容的DOM API
+- 对width、height、x、y支持了百分值和rw、rh单位
+- 增加了属性继承，font、color等属性可以继承父容器属性
+- 更新和优化了缓存策略
+- 优化了动画的性能
+
+## [2.10.0][2018-08-29]
+
+### 改进
+
+- 增加了fontStyle、fontFamily、fontWeight、fontVariant和fontSize
+- 属性里attrs的设置支持数组
+
+## [2.9.0][2018-08-26]
+
+### 改进
+
+- 修改了事件的event.target为当前点击到最外层的元素，以便支持事件代理
+- 增加了event.stopPropagation阻止冒泡
+
+## [2.8.0][2018-08-24]
+
+### 新特性
+
+- 添加了不可见的DataNode节点，用来存储信息等。
+
+## [2.7.9][2018-08-23]
+
+### 改进
+
+- 添加了一些DOM兼容API来适配VirtualDOM库
+
+## [2.7.8][2018-08-21]
+
+### 改进
+
+- 添加spritejs.esm.js以支持rollup
+
+## [2.7.6][2018-08-21]
+
+### 改进
+
+- 添加eslint规则：complexity，重构了部分代码
+- es6版本构建用commonjs2替代umd
+
+## [2.7.5][2018-08-15]
+
+### bug 修复
+
+- 修复removeChild之后重新添加sprite不会马上绘制的bug
+
+## [2.7.4][2018-08-09]
+
+### 改进
+
+- 取消了layer.isNodeVisible()，提升性能
+
+## [2.7.3][2018-08-06]
+
+### 改进
+
+- 添加 d.ts 文件
+
+## [2.7.2][2018-08-06]
+
+### 改进
+
+- 调整了eslint配置，统一使用eslint-config-sprite
+
+## [2.7.1][2018-08-03]
+
+### bug 修复
+
+- 动画keyframe上的easing被错误复制给了其他帧
+
+## [2.7.0][2018-08-03]
+
+### bug 修复
+
+- 修复了带border和padding的group下的元素事件坐标不对的bug
+
+### 改进
+
+- 使用reflow机制提升了渲染性能
+- 实现了Group的自定义layout
+- 增加了精灵的getLayerXY()方法获取精灵相对于所在layer的坐标
+
+## [2.6.4][2018-08-02]
+
+### bug 修复
+
+- 修复flex布局的一些细小bug
+- 修改布局判断的硬编码
+
+## [2.6.3][2018-08-01]
+
+### bug 修复
+
+- mouseleave事件在event被terminate之后没有触发
+- 把border属性设置为null会报错
+
+## [2.6.2][2018-07-31]
+
+### bug 修复
+
+- 修复了base64图片在早期webkit下报跨域的bug
+
+## [2.6.1][2018-07-31]
+
+### bug 修复
+
+- 修复了flexlayout嵌套的bug
+
+## [2.6.0][2018-07-31]
+
+### 新特性
+
+- 支持了所有元素的bgimage属性
+
+### bug 修复
+
+- 修复了label在设置固定宽高和lineBreak后显示不正确的bug
+- 修复了多行文本textAlign设置为center和right后显示不正确的bug
+
+## [2.5.2][2018-07-27]
+
+### 改进
+
+- 增加了Label的letterSpacing、textIndent属性
+- 增加了Group的scrollLeft、scrollTop属性
+- 增加了Group的scrollTo、scrollBy方法
+
+## [2.5.1][2018-07-25]
+
+### 改进
+
+- 增加了boxSizing属性
+
+## [2.5.0][2018-07-24]
+
+### 改进
+
+- 更好地支持多点触摸，touch事件按照浏览器标准实现，添加了event的touches、targetTouches和changedTouches属性
+- 增加了sprite.setMouseCapture()方法
+- Path支持bounding属性，默认值'box'，可以设置为'path'，这样的话事件判断区域将默认为'path'
+
+## [2.4.5][2018-07-23]
+
+### 改进
+
+- 将webpack升级到webpack4
+- 优化了es6构建版本
+
+## [2.4.4][2018-07-20]
+
+### bug修复
+
+- 修复layout group嵌套非layout group时被嵌套的元素强制布局的bug
+
+### 改进
+
+- 增加layout下元素的margin属性
+- 增加Label元素的排版，支持line-break和work-break
+
+## [2.4.3][2018-07-13]
+
+### bug修复
+
+- 补上忘记导出的createElement。。。
+
+## [2.4.2][2018-07-13]
+
+### bug修复
+
+- 修复CI脚本
+- 修复size属性在layout容器下不能动画的bug
+- 修复改变display属性不能清除layout的bug
+- 改变部分扩展（sprite-extend-*）的实现方式以支持layout
+
+### 文档
+
+- 改变部分demo和文档的js引入方式，以便在扩展升级时自动更新文档依赖的版本
+
+## [2.4.1][2018-07-12]
+
+### bug修复
+
+- 修复group位置动画不能正常获取初始值的bug
+- 修复layout的layoutHeight设置成layoutWidth的bug
+- 修改了layer更新机制，允许在draw的过程中更新其他已绘制元素的属性
+
+## [2.4.0][2018-07-12]
+
+### 新特性
+
+- 支持了Flex布局
+- 添加了createElement方法
+
+### 改进
+
+- 单独设置Sprite元素的宽或高，textures将保持比例（与html的img行为保持一致）
+
 ## [2.3.2][2018-07-05]
 
 ### 改进

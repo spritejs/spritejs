@@ -36,84 +36,84 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper'),
-      fglayer = paper.layer('fglayer'),
-      Label = spritejs.Label  
+  fglayer = paper.layer('fglayer'),
+  Label = spritejs.Label;
 
-paper.setResolution(1600, 600) 
+paper.setResolution(1600, 600);
 
-let snapshot1, snapshot2;
+let snapshot1,
+  snapshot2;
 
-async function drawText1(){
-  
+async function drawText1() {
   if(snapshot1) {
-    //clearTimeout(timer)
-    const [text1] = fglayer.putSnapshot(snapshot1)
-    console.log(fglayer.getElementById('mytext'))
+    // clearTimeout(timer)
+    const [text1] = fglayer.putSnapshot(snapshot1);
+    console.log(fglayer.getElementById('mytext'));
   } else {
-    fglayer.remove()
-    const text1 = new Label('SpriteJS.org')
+    fglayer.clear();
+    const text1 = new Label('SpriteJS.org');
 
     text1.attr({
       id: 'mytext',
-      anchor: "0.5",
+      anchor: '0.5',
       pos: [400, 300],
       font: '48px Arial',
       color: '#fff',
       bgcolor: 'blue',
       renderMode: 'stroke',
       lineHeight: 100,
-      scale: [paper.distortion, 1]
-    })
+      scale: [paper.distortion, 1],
+    });
 
-    fglayer.appendChild(text1)
+    fglayer.appendChild(text1);
   }
 
   if(!snapshot1) {
-    snapshot1 = await fglayer.takeSnapshot()
+    snapshot1 = await fglayer.takeSnapshot();
   }
 }
 
-async function drawText2(){
+async function drawText2() {
   if(snapshot2) {
-    //console.log('from snapshot!')
-    const [text1] = fglayer.putSnapshot(snapshot2)
+    // console.log('from snapshot!')
+    const [text1] = fglayer.putSnapshot(snapshot2);
   } else {
-    fglayer.remove()
-    const text1 = new Label('Hello world')
+    fglayer.clear();
+    const text1 = new Label('Hello world');
 
     text1.attr({
-      //id: "mytext",
-      anchor: "0.5",
+      // id: "mytext",
+      anchor: '0.5',
       pos: [400, 300],
       font: '48px Arial',
       color: '#f0f',
       bgcolor: 'blue',
       renderMode: 'fill',
       lineHeight: 100,
-      scale: [paper.distortion, 1]
-    })
+      scale: [paper.distortion, 1],
+    });
 
-    fglayer.appendChild(text1)
+    fglayer.appendChild(text1);
   }
 
   if(!snapshot2) {
-    snapshot2 = await fglayer.takeSnapshot()
+    snapshot2 = await fglayer.takeSnapshot();
   }
 }
 
 function $toggle(...functors) {
-  const len = functors.length
-  let idx = 0
-  return function() {
-    functors[idx++ % len]()
-  }
+  const len = functors.length;
+  let idx = 0;
+  return function () {
+    functors[idx++ % len]();
+  };
 }
 
-let timer = setInterval($toggle(drawText1, drawText2), 1000)
+const timer = setInterval($toggle(drawText1, drawText2), 1000);
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
+window.addEventListener('resize', (evt) => {
+  paper.setViewport('auto', 'auto');
+});
   </script>
 </body>
 </html>

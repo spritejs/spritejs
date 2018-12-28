@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Base Sprite</title>
+</head>
+<body>
+  <div id="mycanvas"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    const {Scene, Label, Resource} = spritejs;
+    const scene = new Scene('#mycanvas', {viewport: [600, 600], resolution: [1200, 1200]}),
+      layer = scene.layer('fglayer', {renderMode: 'repaintDirty'})
+
+    ;(async function () {
+      await Resource.loadTexture({id: '9scale', src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg'});
+      // console.log('load')
+      const s = new Label('测试');
+      s.attr({
+        // textures: [img],
+        textAlign: 'center',
+        font: '34px "宋体"',
+        lineHeight: 300,
+        anchor: 0.5,
+        border: [6, 'black'],
+        pos: [360, 600],
+        size: [600, 600],
+        bgcolor: 'black',
+        // rotate: 10,
+        bgimage: {
+          // id: '9scale',
+          src: 'https://p2.ssl.qhimg.com/t01c18f4e677c09a87e.jpg',
+          display: '.9',
+          clip9: 64,
+          // offset: [0, 50],
+        },
+      });
+      const s2 = s.cloneNode();
+      s2.attr({
+        x: 500,
+        bgimage: {
+          id: '9scale',
+          display: '.9',
+          clip9: 34,
+          // offset: [0, 50],
+        },
+      });
+      layer.append(s);
+      s.on('click', (evt) => {
+        console.log(evt.target);
+      });
+    }());
+  </script>
+</body>
+</html>

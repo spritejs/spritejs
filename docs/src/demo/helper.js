@@ -3,23 +3,23 @@ window.helpers = (function () {
     setInterval(() => {
       // TODO: showFPS
       // console.log(layer.fps)
-    }, 1000)
+    }, 1000);
   }
   function loadScript(url) {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = url
-    document.body.appendChild(script)
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    document.body.appendChild(script);
 
     return new Promise((resolve) => {
       script.onload = () => {
-        resolve()
-      }
-    })
+        resolve();
+      };
+    });
   }
 
   return {
     showPerformance,
     loadScript,
-  }
-}())
+  };
+}());

@@ -22,25 +22,25 @@
   <script src="/js/spritejs.js"></script>
   <script>
 const paper = spritejs.Paper2D('#paper'),
-      bglayer = paper.layer('bglayer', {handleEvent: false}),
-      fglayer = paper.layer('fglayer'),
-      Sprite = spritejs.Sprite,
-      Label = spritejs.Label
+  bglayer = paper.layer('bglayer', {handleEvent: false}),
+  fglayer = paper.layer('fglayer'),
+  Sprite = spritejs.Sprite,
+  Label = spritejs.Label;
 
-const earthCfg = '/images/earth.plist.json'
-const earthRes = '/images/earth.png'
+const earthCfg = '/images/earth.plist.json';
+const earthRes = '/images/earth.png';
 
-paper.setResolution(1600, 1200) 
+paper.setResolution(1600, 1200);
 
-const loading = new Label('loading, please wait...')
+const loading = new Label('loading, please wait...');
 loading.attr({
   anchor: [0.5, 0.5],
   pos: [800, 600],
   color: 'white',
   font: '32px Arial',
-})
+});
 
-bglayer.appendChild(loading)
+bglayer.appendChild(loading);
 
 paper.preload(
   [earthRes, earthCfg],
@@ -52,17 +52,17 @@ paper.preload(
     id: 'tree2',
     src: '/images/tree2.png',
   }
-).then(function() {
-  bglayer.removeChild(loading)
+).then(() => {
+  bglayer.removeChild(loading);
 
-  const bgsky = new Sprite()
+  const bgsky = new Sprite();
   bgsky.attr({
     size: [1600, 1200],
-    bgcolor: '#2b3649'
-  })
-  bglayer.appendChild(bgsky)
+    bgcolor: '#2b3649',
+  });
+  bglayer.appendChild(bgsky);
 
-  const earth = new Sprite()
+  const earth = new Sprite();
   earth.attr({
     anchor: [0.5, 0.5],
     pos: [800, 600],
@@ -72,8 +72,8 @@ paper.preload(
         src: 'earth_shadow1.png',
         rect: [0, -9, 237, 248],
         filter: {
-          opacity: 0.5
-        }
+          opacity: 0.5,
+        },
       },
       {
         src: 'earth_blue.png',
@@ -81,9 +81,9 @@ paper.preload(
       },
       {
         src: 'earth_shadow2.png',
-      }
+      },
     ],
-  })
+  });
 
   earth.animate([
     {rotate: 0},
@@ -91,39 +91,38 @@ paper.preload(
   ], {
     duration: 15000,
     iterations: Infinity,
-  })
+  });
 
-  fglayer.appendChild(earth)
+  fglayer.appendChild(earth);
 
-  const trees = []
+  const trees = [];
 
-  for(let i = 0; i < 8; i++){
-    const tree = new Sprite()
+  for(let i = 0; i < 8; i++) {
+    const tree = new Sprite();
     tree.attr({
       anchor: [0.5, 1],
       pos: [800, 600],
       textures: [
-        `tree${i % 2 + 1}`
+        `tree${i % 2 + 1}`,
       ],
       rotate: i * 45,
-    })
+    });
     tree.animate([
       {rotate: i * 45},
       {rotate: i * 45 + 360},
     ], {
       duration: 15000,
       iterations: Infinity,
-    })
-    trees.push(tree)
+    });
+    trees.push(tree);
   }
 
-  fglayer.append(...trees)
-})
+  fglayer.append(...trees);
+});
 
-window.addEventListener('resize', evt => {
-  paper.setViewport('auto', 'auto')
-})
-
+window.addEventListener('resize', (evt) => {
+  paper.setViewport('auto', 'auto');
+});
   </script>
 </body>
 </html>

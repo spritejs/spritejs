@@ -2,13 +2,13 @@ const {Scene, Sprite} = spritejs
 
 /* demo: normal-cach */
 ;(function () {
-  const scene = new Scene('#normal-cache', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const scene = new Scene('#normal-cache', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
 
-  const colors = ['red', 'blue', 'green']
+  const colors = ['red', 'blue', 'green'];
 
   function randomBlock() {
-    const block = new Sprite()
+    const block = new Sprite();
     block.attr({
       x: 1540 * Math.random(),
       y: 600 * Math.random(),
@@ -16,58 +16,59 @@ const {Scene, Sprite} = spritejs
       bgcolor: colors[0],
       opacity: 0.5,
       rotate: Math.random() * 360,
-    })
-    return block
+    });
+    return block;
   }
 
-  const blocks = []
+  const blocks = [];
   for(let i = 0; i < 2000; i++) {
-    blocks.push(randomBlock())
+    blocks.push(randomBlock());
   }
-  layer.append(...blocks)
+  layer.append(...blocks);
 
-  const ctrlBtn = document.getElementById('toggle-normal-cache')
+  const ctrlBtn = document.getElementById('toggle-normal-cache');
 
-  let timerId
+  let timerId;
 
   ctrlBtn.addEventListener('click', () => {
-    if(timerId) return
-    let i = 0
+    if(timerId) return;
+    let i = 0;
     timerId = setInterval(() => {
-      i++
+      i++;
       blocks.forEach((block) => {
-        block.attr('bgcolor', colors[i % 3])
-      })
+        block.attr('bgcolor', colors[i % 3]);
+      });
       if(timerId && i >= 12) {
-        clearInterval(timerId)
-        timerId = null
+        clearInterval(timerId);
+        timerId = null;
       }
-    }, 100)
-  })
+    }, 100);
+  });
 }())
 
 /* demo: user-cach */
 ;(function () {
-  const scene = new Scene('#user-cache', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const scene = new Scene('#user-cache', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
 
-  const colors = ['red', 'blue', 'green']
+  const colors = ['red', 'blue', 'green'];
 
-  const cacheMap = {}
+  const cacheMap = {};
 
   class Block extends Sprite {
     get cache() {
-      return cacheMap[this.attr('bgcolor')]
+      return cacheMap[this.attr('bgcolor')];
     }
+
     set cache(cacheContext) {
       if(cacheContext) {
-        cacheMap[this.attr('bgcolor')] = cacheContext
+        cacheMap[this.attr('bgcolor')] = cacheContext;
       }
     }
   }
 
   function randomBlock() {
-    const block = new Block()
+    const block = new Block();
     block.attr({
       x: 1540 * Math.random(),
       y: 600 * Math.random(),
@@ -75,45 +76,45 @@ const {Scene, Sprite} = spritejs
       bgcolor: colors[0],
       opacity: 0.5,
       rotate: Math.random() * 360,
-    })
-    return block
+    });
+    return block;
   }
 
-  const blocks = []
+  const blocks = [];
   for(let i = 0; i < 2000; i++) {
-    blocks.push(randomBlock())
+    blocks.push(randomBlock());
   }
-  layer.append(...blocks)
+  layer.append(...blocks);
 
-  const ctrlBtn = document.getElementById('toggle-user-cache')
+  const ctrlBtn = document.getElementById('toggle-user-cache');
 
-  let timerId
+  let timerId;
 
   ctrlBtn.addEventListener('click', () => {
-    if(timerId) return
-    let i = 0
+    if(timerId) return;
+    let i = 0;
     timerId = setInterval(() => {
-      i++
+      i++;
       blocks.forEach((block) => {
-        block.attr('bgcolor', colors[i % 3])
-      })
+        block.attr('bgcolor', colors[i % 3]);
+      });
       if(timerId && i >= 12) {
-        clearInterval(timerId)
-        timerId = null
+        clearInterval(timerId);
+        timerId = null;
       }
-    }, 100)
-  })
+    }, 100);
+  });
 }())
 
 /* demo: use-batch */
 ;(function () {
-  const scene = new Scene('#use-batch', {viewport: ['auto', 'auto'], resolution: [1540, 600]})
-  const layer = scene.layer()
+  const scene = new Scene('#use-batch', {viewport: ['auto', 'auto'], resolution: [1540, 600]});
+  const layer = scene.layer();
 
-  const colors = ['red', 'blue', 'green']
+  const colors = ['red', 'blue', 'green'];
 
   function randomBlock() {
-    const block = new Sprite()
+    const block = new Sprite();
     block.attr({
       x: 1540 * Math.random(),
       y: 600 * Math.random(),
@@ -121,30 +122,30 @@ const {Scene, Sprite} = spritejs
       bgcolor: colors[0],
       opacity: 0.5,
       rotate: Math.random() * 360,
-    })
-    return block
+    });
+    return block;
   }
 
-  const blocks = []
+  const blocks = [];
   for(let i = 0; i < 2000; i++) {
-    blocks.push(randomBlock())
+    blocks.push(randomBlock());
   }
-  const batch = layer.batch(...blocks)
+  const batch = layer.batch(...blocks);
 
-  const ctrlBtn = document.getElementById('toggle-use-batch')
+  const ctrlBtn = document.getElementById('toggle-use-batch');
 
-  let timerId
+  let timerId;
 
   ctrlBtn.addEventListener('click', () => {
-    if(timerId) return
-    let i = 0
+    if(timerId) return;
+    let i = 0;
     timerId = setInterval(() => {
-      i++
-      batch.baseNode.attr('bgcolor', colors[i % 3])
+      i++;
+      batch.baseNode.attr('bgcolor', colors[i % 3]);
       if(timerId && i >= 12) {
-        clearInterval(timerId)
-        timerId = null
+        clearInterval(timerId);
+        timerId = null;
       }
-    }, 100)
-  })
-}())
+    }, 100);
+  });
+}());

@@ -18,116 +18,108 @@
   <canvas id="bgcanvas" width="800" height="800"></canvas>
   <canvas id="mycanvas" width="800" height="800"></canvas>
   <script>
-    const canvas = document.getElementById('mycanvas')
-    const context = canvas.getContext('2d')
-    const bgcontext = bgcanvas.getContext('2d')
-    const axisZero = [400, 400]
+    const canvas = document.getElementById('mycanvas');
+    const context = canvas.getContext('2d');
+    const bgcontext = bgcanvas.getContext('2d');
+    const axisZero = [400, 400];
     function drawCircle() {
-      bgcontext.fillStyle = 'rgba(17,51,153,0.5)'
-      bgcontext.arc(...axisZero,400,0,360,false)
-      bgcontext.fill()
+      bgcontext.fillStyle = 'rgba(17,51,153,0.5)';
+      bgcontext.arc(...axisZero, 400, 0, 360, false);
+      bgcontext.fill();
     }
     // {x, y, ang}
-    const birds = []
-    const birdTexture  = new Image()
-    birdTexture.crossOrigin = 'anonymous'
-    birdTexture.src = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+    const birds = [];
+    const birdTexture = new Image();
+    birdTexture.crossOrigin = 'anonymous';
+    birdTexture.src = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
 
-    function pointAdd(p1, p2 = [0, 0]){
-      return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
-    }
-    
-    function pointSub(p1, p2 = [0, 0]){
-      return [p1[0] - p2[0], p1[1] - p2[1]].map(Math.round)
-    }
-
-    const wings = [[2, 126, 86, 60], [2, 64, 86, 60], [2, 2, 86, 60]]
+    const wings = [[2, 126, 86, 60], [2, 64, 86, 60], [2, 2, 86, 60]];
     function drawBird(bird, init) {
-      let {x, y, ang, wing} = bird
-      
-      context.save()
-      context.translate(400, 400)
+      const {x, y, ang, wing} = bird;
+    
+      context.save();
+      context.translate(400, 400);
 
       if(ang > 0.5 * Math.PI && ang < 1.5 * Math.PI) {
-        context.scale(-1, 1)
+        context.scale(-1, 1);
       }
-      context.drawImage(birdTexture, ...wings[wing], -43 + x, -30 + y, 86, 60)
-      context.restore()
+      context.drawImage(birdTexture, ...wings[wing], -43 + x, -30 + y, 86, 60);
+      context.restore();
     }
 
     function moveTo(bird, ang) {
-      let flip = 1
+      let flip = 1;
       if(ang > 0.5 * Math.PI && ang < 1.5 * Math.PI) {
-        flip = -1
+        flip = -1;
       }
-      const {x: x0, y: y0} = bird
-      const x1 = flip * 350 * Math.cos(ang)
-      const y1 = flip * 350 * Math.sin(ang)
-      const distance = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2)
+      const {x: x0, y: y0} = bird;
+      const x1 = flip * 350 * Math.cos(ang);
+      const y1 = flip * 350 * Math.sin(ang);
+      const distance = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
       const startTime = Date.now(),
-          T = 5 * distance + 100
-      
+        T = 5 * distance + 100;
+    
       requestAnimationFrame(function f() {
-        let p = (Date.now() - startTime) / T
-        p = Math.min(1.0, p)
-        bird.x = x0 + p * (x1 - x0)
-        bird.y = y0 + p * (y1 - y0)
-        if(p < 1){
-          requestAnimationFrame(f)
+        let p = (Date.now() - startTime) / T;
+        p = Math.min(1.0, p);
+        bird.x = x0 + p * (x1 - x0);
+        bird.y = y0 + p * (y1 - y0);
+        if(p < 1) {
+          requestAnimationFrame(f);
         } else {
           setTimeout(() => {
-            const newAng = Math.random() * 2 * Math.PI
-            moveTo(bird, newAng)
-          }, 500)
-        } 
-      })      
+            const newAng = Math.random() * 2 * Math.PI;
+            moveTo(bird, newAng);
+          }, 500);
+        }
+      });
     }
     
-    drawCircle()
+    drawCircle();
 
-    let drawCount = 0
+    let drawCount = 0;
     function draw() {
-      drawCount++
-      context.clearRect(0, 0, 800, 800)
+      drawCount++;
+      context.clearRect(0, 0, 800, 800);
 
-      birds.forEach(bird => {
-        drawBird(bird)
-      })
+      birds.forEach((bird) => {
+        drawBird(bird);
+      });
     }
 
     function randomBird() {
-      const ang = Math.random() * 2 * Math.PI
-      const bird = {x: 0, y: 0, ang, wing: 0}
-      birds.push(bird)
-      spriteCount.innerHTML = birds.length
+      const ang = Math.random() * 2 * Math.PI;
+      const bird = {x: 0, y: 0, ang, wing: 0};
+      birds.push(bird);
+      spriteCount.innerHTML = birds.length;
       setInterval(() => {
-        bird.wing = (++bird.wing) % 3
-      }, 100)
-      
-      moveTo(bird, ang)
-      return bird    
+        bird.wing = (++bird.wing) % 3;
+      }, 100);
+    
+      moveTo(bird, ang);
+      return bird;
     }
 
-    mycanvas.addEventListener('click', evt => {
-      randomBird()
-    })
+    mycanvas.addEventListener('click', (evt) => {
+      randomBird();
+    });
 
-    randomBird()
+    randomBird();
 
     requestAnimationFrame(function f() {
-      draw()
-      requestAnimationFrame(f)
-    })
+      draw();
+      requestAnimationFrame(f);
+    });
 
     setInterval(() => {
-      fps.innerHTML = drawCount
-      drawCount = 0
-    }, 1000)
-    birdCount = 1
-    let timer = setInterval(() => {
-      if(birdCount++ < 1000) randomBird()
-      else clearInterval(timer)
-    }, 16)    
+      fps.innerHTML = drawCount;
+      drawCount = 0;
+    }, 1000);
+    let birdCount = 1;
+    const timer = setInterval(() => {
+      if(birdCount++ < 1500) randomBird();
+      else clearInterval(timer);
+    }, 16);
   </script>
 </body>
 </html>

@@ -1,13 +1,25 @@
-'use strict';
+"use strict";
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var level = 0;
+
 function parseApi(content) {
   var base = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
   level++;
   var pattern = /([+-.])\s*(attribute|property|get|function|async)\s*(\w+)(?:\((.*?)\))?(?::((?:\w|\|)+))?\s(.*?)\n([\s\S]*?)\n---/img;
   var matched = pattern.exec(content);
@@ -34,13 +46,13 @@ function parseApi(content) {
     if (params) {
       params = params.split(/\s*,\s*/g).map(function (p) {
         if (p.startsWith('...')) {
-          p = p + ':Array';
+          p = "".concat(p, ":Array");
         }
+
         return p.split(/\s*:\s*/);
       });
       params.forEach(function (param) {
-        var pattern = new RegExp('\\* ' + param[0] + ' - (.+?)?(\n|$)', 'im');
-
+        var pattern = new RegExp("\\* ".concat(param[0], " - (.+?)?(\n|$)"), 'im');
         var m = details.match(pattern);
 
         if (m) {
@@ -49,11 +61,13 @@ function parseApi(content) {
         } else {
           param.push('&nbsp;');
         }
+
         if (param[1].endsWith(' optional')) {
           param.push('No');
           param[1] = param[1].replace(' optional', '');
         } else {
           var _matched = param[1].match(/ = (.+)/);
+
           if (_matched) {
             param.push('No');
             param.push(_matched[1]);
@@ -78,8 +92,20 @@ function parseApi(content) {
     } else {
       access = 'private';
     }
+
     var inheritance = base || '';
-    var item = { text: text, inheritance: inheritance, access: access, type: type, name: name, params: params, returnType: returnType, returnComment: returnComment, details: details, level: level };
+    var item = {
+      text: text,
+      inheritance: inheritance,
+      access: access,
+      type: type,
+      name: name,
+      params: params,
+      returnType: returnType,
+      returnComment: returnComment,
+      details: details,
+      level: level
+    };
 
     if (type === 'attribute') {
       api.attributes.push(item);
@@ -96,13 +122,15 @@ function parseApi(content) {
     _loop();
   }
 
-  return { api: api, text: content.replace(pattern, '') };
+  return {
+    api: api,
+    text: content.replace(pattern, '')
+  };
 }
 
 function generateHtml(context, searchIndex) {
   var api = context.api,
       text = context.text;
-
   text = format('attributes', api.attributes, text);
   text = format('properties', api.properties, text);
   text = format('methods', api.methods, text);
@@ -123,6 +151,7 @@ function createSearchIndex(region, list, searchIndex) {
     searchIndex.push(sIdx);
     return searchIndex;
   }
+
   if (region === 'properties') {
     list.forEach(function (_ref) {
       var text = _ref.text,
@@ -135,16 +164,16 @@ function createSearchIndex(region, list, searchIndex) {
           returnComment = _ref.returnComment,
           details = _ref.details,
           level = _ref.level;
+      var sIdx = {}; // privatereadonly-boundrect-array-basesprite
 
-      var sIdx = {};
-      // privatereadonly-boundrect-array-basesprite
-      sIdx.slug = ('?id=' + access + (type === 'get' ? 'readonly' : '') + '-' + name + '-' + returnType + '-' + inheritance).toLowerCase();
+      sIdx.slug = "?id=".concat(access).concat(type === 'get' ? 'readonly' : '', "-").concat(name, "-").concat(returnType, "-").concat(inheritance).toLowerCase();
       sIdx.body = text;
       sIdx.title = name;
       searchIndex.push(sIdx);
     });
     return searchIndex;
   }
+
   if (region === 'methods') {
     list.forEach(function (_ref2) {
       var text = _ref2.text,
@@ -157,17 +186,18 @@ function createSearchIndex(region, list, searchIndex) {
           returnComment = _ref2.returnComment,
           details = _ref2.details,
           level = _ref2.level;
-
       var sIdx = {};
       var paramList = '';
+
       if (params.length) {
         /* eslint-disable no-confusing-arrow */
-        paramList = '' + params.map(function (a) {
-          return a[4] ? a[0] + ' = ' + a[4] : a[0];
-        }).join(', ');
+        paramList = "".concat(params.map(function (a) {
+          return a[4] ? "".concat(a[0], " = ").concat(a[4]) : a[0];
+        }).join(', '));
         /* eslint-enable no-confusing-arrow */
       }
-      sIdx.slug = ('?id=' + access + '-' + name + paramList.replace(/\s*[,=]\s*/g, '-') + '-' + inheritance).toLowerCase();
+
+      sIdx.slug = "?id=".concat(access, "-").concat(name).concat(paramList.replace(/\s*[,=]\s*/g, '-'), "-").concat(inheritance).toLowerCase();
       sIdx.body = text;
       sIdx.title = name;
       searchIndex.push(sIdx);
@@ -180,39 +210,58 @@ function format(region, list, content) {
   if (!list.length) {
     return content;
   }
+
   list.sort(function (a, b) {
     if (a.name === 'constructor' && b.name !== 'constructor') {
       return -1;
-    } else if (b.name === 'constructor' && a.name !== 'constructor') {
+    }
+
+    if (b.name === 'constructor' && a.name !== 'constructor') {
       return 1;
     }
+
     if (a.access === 'private' && b.access === 'public') {
       return -1;
-    } else if (a.access === 'public' && b.access === 'private') {
-      return 1;
-    } else if (a.name > b.name) {
-      return 1;
-    } else if (a.name < b.name) {
-      return -1;
-    } else if (a.level !== b.level) {
-      return a.level - b.level < 0 ? -1 : 1;
-    } else if (a.params.join('') > b.params.join('')) {
+    }
+
+    if (a.access === 'public' && b.access === 'private') {
       return 1;
     }
+
+    if (a.name > b.name) {
+      return 1;
+    }
+
+    if (a.name < b.name) {
+      return -1;
+    }
+
+    if (a.level !== b.level) {
+      return a.level - b.level < 0 ? -1 : 1;
+    }
+
+    if (a.params.join('') > b.params.join('')) {
+      return 1;
+    }
+
     return -1;
   });
+
   for (var i = list.length - 1; i > 0; i--) {
     if (list[i - 1].name === list[i].name && (list[i - 1].level !== list[i].level || list[i - 1].params.join('') === list[i].params.join(''))) {
       list.splice(i, 1);
+
       if (!list[i - 1].inheritance) {
         list[i - 1].inheritance = 'override';
       }
     }
   }
-  var text = void 0;
+
+  var text;
   /* eslint-disable */
+
   if (region === 'attributes') {
-    text = '\n## ' + region + '\n\n<table>\n    <thead>\n      <tr>\n        <th> Name </th><th> Type </th><th> Default Value </th><th> Description </th>\n      </tr>\n    </thead>\n    <tbody>\n    ' + (list = list.map(function (item) {
+    text = "\n## ".concat(region, "\n\n<table>\n    <thead>\n      <tr>\n        <th> Name </th><th> Type </th><th> Default Value </th><th> Description </th>\n      </tr>\n    </thead>\n    <tbody>\n    ").concat(list = list.map(function (item) {
       var access = item.access,
           inheritance = item.inheritance,
           type = item.type,
@@ -221,16 +270,17 @@ function format(region, list, content) {
           returnType = item.returnType,
           returnComment = item.returnComment,
           details = item.details;
-
       var defaultPattern = /\* default: (.*)/im;
       var matched = details.match(defaultPattern);
       var defaultValue = '';
+
       if (matched) {
         defaultValue = matched[1];
         details = details.replace(defaultPattern, '');
       }
-      return '<tr><td class="' + access + '" title="' + access + ' ' + name + '"> ' + name + ' </td><td> ' + returnType + ' </td><td> ' + defaultValue + ' </td><td> ' + details + ' </td></tr>';
-    }).join('')) + '\n    </tbody>\n</table>\n';
+
+      return "<tr><td class=\"".concat(access, "\" title=\"").concat(access, " ").concat(name, "\"> ").concat(name, " </td><td> ").concat(returnType, " </td><td> ").concat(defaultValue, " </td><td> ").concat(details, " </td></tr>");
+    }).join(''), "\n    </tbody>\n</table>\n");
   } else {
     list = list.map(function (item) {
       var access = item.access,
@@ -241,34 +291,38 @@ function format(region, list, content) {
           returnType = item.returnType,
           returnComment = item.returnComment,
           details = item.details;
-
       var paramList = '( )',
           paramTable = '';
 
       if (params.length) {
-        paramList = '(' + params.map(function (a) {
-          return a[4] ? a[0] + ' = ' + a[4] : a[0];
-        }).join(', ') + ')';
-        paramTable = '\n* **Paramaters:**\n\n| Name | Type | Required | Description |\n| --- | --- | --- | --- |\n' + params.map(function (param) {
-          return '| ' + param[0].replace(/^\.\.\./, '') + ' | ' + param[1].replace(/\|/g, '<span class="or">or</span>') + ' | ' + param[3] + ' | ' + param[2] + ' |\n';
-        }).join('') + '\n';
+        paramList = "(".concat(params.map(function (a) {
+          return a[4] ? "".concat(a[0], " = ").concat(a[4]) : a[0];
+        }).join(', '), ")");
+        paramTable = "\n* **Paramaters:**\n\n| Name | Type | Required | Description |\n| --- | --- | --- | --- |\n".concat(params.map(function (param) {
+          return "| ".concat(param[0].replace(/^\.\.\./, ''), " | ").concat(param[1].replace(/\|/g, '<span class="or">or</span>'), " | ").concat(param[3], " | ").concat(param[2], " |\n");
+        }).join(''), "\n");
       }
-      return '\n### ' + (type !== 'attribute' ? '<span class="access">' + access + '</span>' : '') + (type === 'get' ? '<span class="readonly">readonly</span>' : '') + (type === 'async' ? '<span class="async">async</span>' : '') + ' ' + name + (type === 'function' || type === 'async' ? paramList : returnType ? ': ' + returnType : '') + ' <span class="inheritance">' + inheritance + '</span>\n\n' + (type === 'function' || type === 'async' ? paramTable : '') + '\n\n\n' + (type === 'function' || type === 'async' ? '* **Returns:** ' + returnType + (returnComment ? ' - ' : '') + returnComment : '') + '\n\n' + details + '\n\n';
+
+      return "\n### ".concat(type !== 'attribute' ? "<span class=\"access\">".concat(access, "</span>") : '').concat(type === 'get' ? '<span class="readonly">readonly</span>' : '').concat(type === 'async' ? '<span class="async">async</span>' : '', " ").concat(name).concat(type === 'function' || type === 'async' ? paramList : returnType ? ': ' + returnType : '', " <span class=\"inheritance\">").concat(inheritance, "</span>\n\n").concat(type === 'function' || type === 'async' ? paramTable : '', "\n\n\n").concat(type === 'function' || type === 'async' ? "* **Returns:** ".concat(returnType).concat(returnComment ? ' - ' : '').concat(returnComment) : '', "\n\n").concat(details, "\n\n");
     });
-    text = '\n## ' + region + '\n\n' + list.join('\n\n') + '\n\n';
+    text = "\n## ".concat(region, "\n\n").concat(list.join('\n\n'), "\n\n");
   }
   /* eslint-enable */
-  var pattern = new RegExp('<!--' + region + '-->', 'img');
+
+
+  var pattern = new RegExp("<!--".concat(region, "-->"), 'img');
+
   if (pattern.test(content)) {
     content = content.replace(pattern, text);
   } else {
     content += text;
   }
+
   return content;
 }
 
 function getBase(base, res) {
-  return fetch('/api/' + base + '.md').then(function (res) {
+  return fetch("/api/".concat(base, ".md")).then(function (res) {
     return res.text();
   }).then(function (baseContent) {
     var _res$api$attributes, _res$api$properties, _res$api$methods;
@@ -276,13 +330,17 @@ function getBase(base, res) {
     var r = parseApi(baseContent, base);
 
     (_res$api$attributes = res.api.attributes).push.apply(_res$api$attributes, _toConsumableArray(r.api.attributes));
+
     (_res$api$properties = res.api.properties).push.apply(_res$api$properties, _toConsumableArray(r.api.properties));
+
     (_res$api$methods = res.api.methods).push.apply(_res$api$methods, _toConsumableArray(r.api.methods));
 
     var basePattern = /\+ extends (\w+)/im;
     var extendList = baseContent.match(basePattern);
+
     if (extendList) {
       var _base = extendList[1].trim().toLowerCase();
+
       return getBase(_base, res);
     }
 
@@ -309,23 +367,27 @@ window.generateApiPlugin = function (hook, vm) {
       }
     } else {
       var externalJS = content.match(/\n<script src="\/js\/(.*?)">/);
+
       if (externalJS) {
-        var jsFile = '/src/' + externalJS[1];
+        var jsFile = "/src/".concat(externalJS[1]);
         var matched = content.match(/<!-- demo: .*? -->/g);
+
         if (matched) {
           axios.get(jsFile).then(function (res) {
             var jsContent = res.data;
             matched.forEach(function (mark) {
               var jsMark = mark.replace(/<!--/, '/*').replace(/-->/, '*/');
               var parts = jsContent.split(jsMark);
+
               if (parts[1]) {
                 var m = parts[1].match(/\n;?\((async )?function \(\) \{\n([\s\S]*?)\}\(\)\)/im);
+
                 if (m && m[2]) {
                   if (!m[1]) {
                     var code = m[2].replace(/^ {2}/mg, '');
-                    content = content.replace(mark, '```js\n' + code + '\n```');
+                    content = content.replace(mark, "```js\n".concat(code, "\n```"));
                   } else {
-                    content = content.replace(mark, '```js\n' + m[0].slice(1) + '\n```');
+                    content = content.replace(mark, "```js\n".concat(m[0].slice(1), "\n```"));
                   }
                 }
               }
@@ -346,19 +408,24 @@ window.generateApiPlugin = function (hook, vm) {
 
     if (path.startsWith('/api/')) {
       var searchIndexData = JSON.parse(localStorage.getItem('docsify.search.index'));
+
       if (searchIndexData) {
         searchIndexData[path] = searchIndexData[path] || {};
         searchIndex.forEach(function (_ref3, i) {
           var slug = _ref3.slug,
               body = _ref3.body,
               title = _ref3.title;
-
-          slug = '#' + path + slug;
-          searchIndexData[path][slug] = { slug: slug, body: body, title: title };
+          slug = "#".concat(path).concat(slug);
+          searchIndexData[path][slug] = {
+            slug: slug,
+            body: body,
+            title: title
+          };
         });
         localStorage.setItem('docsify.search.index', JSON.stringify(searchIndexData));
       }
-      next('<div id="api-doc">' + content + '</div>');
+
+      next("<div id=\"api-doc\">".concat(content, "</div>"));
     } else {
       var _content$split = content.split('<script>'),
           _content$split2 = _slicedToArray(_content$split, 2),
@@ -368,9 +435,10 @@ window.generateApiPlugin = function (hook, vm) {
       if (!js) {
         js = '';
       } else {
-        js = '<script>' + js;
+        js = "<script>".concat(js);
       }
-      next('<div id="page-' + pageId + '">' + doc + '</div>' + js);
+
+      next("<div id=\"page-".concat(pageId, "\">").concat(doc, "</div>").concat(js));
     }
   });
 };

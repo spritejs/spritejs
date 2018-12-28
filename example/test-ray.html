@@ -20,28 +20,28 @@
   <script src="/js/gif.js"></script>
   <script>
 
-  ;(async function(){
-    const paper = spritejs.Paper2D('#paper', 600, 400)
+  (async function () {
+    const paper = spritejs.Paper2D('#paper', 600, 400);
     const Sprite = spritejs.Sprite,
-          Path = spritejs.Path
+      Path = spritejs.Path;
 
-    const s4 = new Path()
+    const s4 = new Path();
 
     s4.attr({
       anchor: [0, 0],
       pos: [300, 100],
-      //size: [200, 200],
-      //bgcolor: '#ddd',
-      //color: 'red',
-      //renderMode: 'fill',
+      // size: [200, 200],
+      // bgcolor: '#ddd',
+      // color: 'red',
+      // renderMode: 'fill',
       lineWidth: 6,
       lineCap: 'round',
       d: 'M10,80 q140,-50 160,0',
-      //d: 'M10 80 h260 v206 h-260Z',
+      // d: 'M10 80 h260 v206 h-260Z',
       linearGradients: {
         strokeColor: {
-          //direction: 90,
-          //rect: [0, 0, 100, 100],
+          // direction: 90,
+          // rect: [0, 0, 100, 100],
           vector: [10, 30, 180, 90],
           colors: [{
             offset: 0,
@@ -49,47 +49,47 @@
           }, {
             offset: 1,
             color: 'rgba(255,0,0,0)',
-          }]
+          }],
         },
-      }  
-    })
-    
-    paper.layer().append(s4)
-    window.s4 = s4
+      },
+    });
+  
+    paper.layer().append(s4);
+    window.s4 = s4;
 
-    const a1 = new Animator(3000,  p => {
-      let q = 0
+    const a1 = new Animator(3000, (p) => {
+      let q = 0;
 
       if(p > 0.618) {
-        q = 1 - (1 - p) / 0.382
+        q = 1 - (1 - p) / 0.382;
       }
 
-      p = Math.min(p / 0.7, 1)
+      p = Math.min(p / 0.7, 1);
 
       const colors = [
         {offset: 0, color: 'rgba(255,0,0,0)'},
         {offset: q, color: 'rgba(255,0,0,0)'},
         {offset: p, color: 'rgba(255,0,0,1)'},
         {offset: Math.min(p + 0.06, 1), color: 'rgba(255,0,0,0)'},
-      ]
-      
-      const linearGradients = s4.attr('linearGradients')
-      linearGradients.strokeColor.colors = colors
+      ];
+  
+      const linearGradients = s4.attr('linearGradients');
+      linearGradients.strokeColor.colors = colors;
 
-      const len = s4.getPathLength()
-      const [x, y] = s4.getPointAtLength(p * len)
+      const len = s4.getPathLength();
+      const [x, y] = s4.getPointAtLength(p * len);
 
-      linearGradients.strokeColor.vector = [10, 30, x + 5, y]
+      linearGradients.strokeColor.vector = [10, 30, x + 5, y];
 
-      s4.attr({linearGradients})
-    })
+      s4.attr({linearGradients});
+    });
 
-    window.s4 = s4
+    window.s4 = s4;
 
     do {
-      await a1.animate()
-    }while(1)
-  })()
+      await a1.animate();
+    } while(1);
+  }());
   </script>
 </body>
 </html>

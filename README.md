@@ -11,6 +11,7 @@
 [![Code Climate](https://codeclimate.com/github/spritejs/spritejs/badges/gpa.svg)](https://codeclimate.com/github/spritejs/spritejs)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/test_coverage)](https://codeclimate.com/github/spritejs/spritejs/test_coverage)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
+![No Easter Eggs](https://img.shields.io/badge/Easter%20eggs-None-brightgreen.svg)
 
 SpriteJS is a cross-platform lightweight 2D render object model.
 
@@ -21,13 +22,20 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Manipulate the **sprites** element as you do with the DOM elements.
 - Perform fast drawing with smart cache.
 - Multiple layers.
+- **Flex Layout**.
+- **Text typesetting**.
+- **CSS Supported**.
 - [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
 - Controllable event dispatching.
 - Object Oriented Programmed Development with ES6+
 - [Server-side render](#server-side-render). Work with node-canvas.
+- [Sprite-vue](http://vue.spritejs.org). Work with [Vue](https://github.com/vuejs/vue).
+- [Sprite-React](http://react.spritejs.org). Work with [React](https://github.com/vuejs/react).
 - [微信小程序](https://github.com/spritejs/sprite-wxapp)
 
 ## Quick Start
+
+**SpriteJS** - spritejs.org
 
 ```html
 <script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
@@ -35,7 +43,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
-    const paper = new Scene('#container', 400, 400)
+    const paper = new Scene('#container', { viewport: [400, 400] })
 
     const sprite = new Sprite(imgUrl)
     sprite.attr({
@@ -46,6 +54,104 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
     })
 
     paper.layer().appendChild(sprite)
+</script>
+```
+
+**With Document CSS** - Just set `useDocumentCSS` option to true, spritejs will auto load style rules from the document.
+
+```html
+<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<div id="container"></div>
+<style>
+  sprite.myclass {
+    background-color: red;
+    --sprite-x: 0;
+    --sprite-y: 0;
+    width: 400px;
+    height: 400px;
+    border-radius: 200px;
+  }
+</style>
+<script>
+    const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+    const {Scene, Sprite} = spritejs;
+    const paper = new Scene('#container', {
+      viewport: [400, 400],
+      useDocumentCSS: true,
+    })
+
+    const sprite = new Sprite(imgUrl)
+    sprite.className = 'myclass';
+
+    paper.layer().appendChild(sprite)
+</script>
+```
+
+**React JSX** - react.spritejs.org
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Scene} from 'sprite-react';
+
+class Block extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {color: 'green'};
+  }
+
+  handleClick() {
+    this.setState({
+      color: 'blue',
+    });
+  }
+
+  render() {
+    return (
+      <sprite pos={[100, 100]} bgcolor={this.state.color} size={[50, 50]} onClick={this.handleClick.bind(this)}></sprite>
+    );
+  }
+}
+
+
+ReactDOM.render(
+  <Scene>
+    <layer id="fglayer" handleEvent={true}>
+      <group>
+        <sprite pos={[200, 100]} size={[50, 50]} bgcolor="red" onClick={function () { this.attr('bgcolor', 'blue') } }></sprite>
+        <Block/>
+      </group>
+    </layer>
+  </Scene>,
+  document.getElementById('app')
+);
+```
+
+**Vue Component** - vue.spritejs.org
+
+```xml
+<template>
+  <scene id="container" :viewport="[300, 300]">
+    <layer>
+      <sprite
+        :textures="imgUrl"
+        bgcolor="#fff"
+        :pos="[0,0]"
+        :size="[400, 400]"
+        borderRadius="200"
+      />
+    </layer>
+  </scene>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      imgUrl: 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+    }
+  }
+}
 </script>
 ```
 
@@ -189,6 +295,21 @@ bglayer.append(text)
   fs.writeFileSync('snap.png', canvas.toBuffer())
 }())
 ```
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+
+| [<img src="https://avatars2.githubusercontent.com/u/12529206?s=460&v=4" width="60px;"/><br /><sub><b>betseyliu</b></sub>](https://github.com/betseyliu)<br />[💻](https://github.com/spritejs/spritejs/commits?author=betseyliu "Code") [📖](https://github.com/spritejs/spritejs/commits?author=betseyliu "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/11631503?s=460&v=4" width="60px;"/><br /><sub><b>Shero0311</b></sub>](https://github.com/Shero0311)<br />[📖](https://github.com/spritejs/spritejs/commits?author=Shero0311 "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/16967069?s=460&v=4" width="60px;"/><br /><sub><b>有马</b></sub>](https://github.com/makeco)<br />[📖](https://github.com/spritejs/spritejs/commits?author=makeco "Documentation") [💻](https://github.com/spritejs/spritejs/commit/e2ef39bafd81ee09494f5ebbaf0f8319dbd85122 "Code")| [<img src="https://avatars1.githubusercontent.com/u/8180186?s=400&v=4" width="60px;"/><br /><sub><b>文蔺</b></sub>](https://github.com/AngusFu)<br />[💻](https://github.com/spritejs/spritejs/commits?author=AngusFu "Code") [🐛](https://github.com/spritejs/spritejs/issues/30 "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/5996758?s=400&v=4" width="60px;"/><br /><sub><b>蔡斯杰</b></sub>](https://github.com/SijieCai)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=SijieCai "Code") [📖](https://github.com/spritejs/spritejs/commits?author=SijieCai "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/726566?s=400&v=4" width="60px;"/><br /><sub><b>Shaofei Cheng</b></sub>](https://github.com/wintercn)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=wintercn "Code") [📖](https://github.com/spritejs/spritejs/commits?author=wintercn "Documentation") | 
+| :---: | :---: | :---: | :---: | :---: | :---: | 
+
+| [<img src="https://avatars2.githubusercontent.com/u/424491?s=400&v=4" width="60px;"/><br /><sub><b>公子</b></sub>](https://github.com/lizheming)<br />[💻](https://github.com/spritejs/sprite-core/commits?author=lizheming "Code") |  [<img src="https://avatars1.githubusercontent.com/u/26452939?s=400&v=4" width="60px;"/><br /><sub><b>justemit</b></sub>](https://github.com/justemit)<br />[💻](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Code")  [📖](https://github.com/spritejs/sprite-extend-shapes/commits?author=justemit "Documentation") [🐛](https://github.com/spritejs/sprite-core/issues/34 "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/40935?s=400&v=4" width="60px;"/><br /><sub><b>Welefen Lee</b></sub>](https://github.com/welefen)<br />[💻](https://github.com/spritejs/sprite-flex-layout "Code")   | [<img src="https://avatars2.githubusercontent.com/u/30425185?s=400&v=4" width="60px;"/><br /><sub><b>YUPENG12138</b></sub>](https://github.com/YUPENG12138)<br />[📖](https://github.com/spritejs/spritejs/issues/52 "Documentation")| [<img src="https://avatars1.githubusercontent.com/u/1617414?s=400&v=4" width="60px;"/><br /><sub><b>xinde</b></sub>](https://github.com/xinde)<br />[🐛](https://github.com/spritejs/spritejs/issues/59 "Bug reports")| [<img src="https://avatars2.githubusercontent.com/u/13284749?s=400&v=4" width="60px;"/><br /><sub><b>ggvswild</b></sub>](https://github.com/ggvswild)<br />[🐛](https://github.com/spritejs/spritejs/issues/70 "Bug reports")|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License
 

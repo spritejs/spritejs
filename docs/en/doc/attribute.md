@@ -72,6 +72,24 @@ _Sprite, Group, Label, Path_
 
 Get or set border-radius.
 
+## bounding
+
+_Path_
+
+Get or set the collision area of Path. The value is 'box' (default) or 'path. If the value is 'box', the event collision area is the boundingBox of the Path element, otherwise the event collision area is the path area of the Path element.
+
+## boxSizing
+
+_Sprite, Group, Label, Path_
+
+Defines how to calculate the total width and height of an element.
+
+- content-box
+  - This is the initial and default value as specified by the CSS standard. The width and height properties include the content, but does not include the padding, border, or margin. For example, `{width: 350, border: {width: 10}}` renders a box that is 370px wide.
+Here, the dimensions of the element are calculated as: width = width of the content, and height = height of the content. (Borders and padding are not included in the calculation.)
+- border-box
+  - The width and height properties include the content, padding, and border, but do not include the margin. Note that padding and border will be inside of the box. For example, `{width: 350, border: {width: 10}}` renders a box that is 350px wide. The content box can't be negative and is floored to 0, making it impossible to use border-box to make the element disappear.
+
 ## clip
 
 _Group_
@@ -130,6 +148,17 @@ Get or set the height of the element. The default value is the height of the tex
 
 _Sprite, Group, Label, Path_
 
+## letterSpacing
+
+_Label_
+
+Specifies the spacing behavior between text characters.
+
+## lineBreak
+
+_Label_
+
+Get or set the label's linefeed mechanism. The default value is 'none'. The optional values are: `normal | strict | none`. When the width of the Label element is fixed, the text that exceeds the width will be wrapped according to the lineBreak setting.
 
 ## lineCap
 
@@ -213,6 +242,18 @@ _Sprite, Group, Label, Path_
 
 `[x, y]` Get or set the scaling of the element, if set to negative values, the element will be flipped.
 
+## scrollLeft
+
+_Group_
+
+Gets or sets the number of pixels that a group's children is scrolled to the left.
+
+## scrollTop
+
+_Group_
+
+Gets or sets the number of pixels that a group's children is scrolled to the top.
+
 ## shadow
 
 _Sprite, Group, Label, Path_
@@ -252,6 +293,12 @@ Get or set the text content of the Label.
 _Label_
 
 `left|center|right` Get or set text alignment.
+
+## textIndent
+
+_Lebel_
+
+Specifies the amount of indentation (empty space) that is put before lines of text in a block. 
 
 ## textures
 
@@ -300,6 +347,12 @@ _Sprite, Group, Label, Path_
 _Sprite, Group, Label, Path_
 
 Get or set the width of the element. The default value is the height of the texture image. If there is no textures, the default value is 0.
+
+## wordBreak
+
+_Label_
+
+Get or set the linefeed policy of the Label element. When the lineBreak attribute is not 'none' and the 'width' attribute is set, the text performs a line break. The optional values are `normal | break-all | break-word | keep-all`.
 
 ## x
 

@@ -19,6 +19,23 @@
 
 <!-- demo: resize -->
 
+## displayRatio
+
+当我们给Scene设置了resolution的时候，默认的resolution决定了Canvas的绘图大小，但是有时候我们的屏幕比较小，设置了很大的resolution会导致Canvas绘图性能消耗比较大。这时候，我们可以给Scene设置displayRatio和maxDisplayRatio。
+
+```js
+const scene = new Scene('#container', {
+  viewport: ['auto', 'auto'],
+  resolution: [3840, 2160],  // 绘制一个很大的Canvas
+  displayRatio: '2vw',      // 设置实际创建的Canvas宽度不会超过viewport宽度的2倍
+  maxDisplayRatio: 1,       // 设置最大Canvas宽度不超过实际resolution宽度
+})
+```
+
+在webkit浏览器上，有window.devicePixelRatio，如果我们把displayRatio设置为'auto'，那么实际displayRatio会自动根据devicePixelRatio实际值进行设置。
+
+另外我们可以通过`layer.setDisplayRatio(ratio, maxRatio)`来单独设置layer上的值，使得不同的layer用不同的displayRatio。不过如果之后我们重置了scene的displayRatio值，那么所有layer的displayRatio将会被覆盖更新。
+
 ## Stick Mode 粘连模式
 
 在移动设备上，要适配不同的屏幕比例，简单的auto适配可能会导致sprite元素被拉伸变形。如果要避免这个问题，我们可以通过配置Scene的Stick Mode相关属性来解决这个问题。

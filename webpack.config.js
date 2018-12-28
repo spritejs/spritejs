@@ -1,65 +1,96 @@
-// const conf = require('./package.json')
+const path = require('path');
+const fs = require('fs');
 
 module.exports = function (env = {}) {
-  const webpack = require('webpack'),
-    path = require('path'),
-    fs = require('fs')
+  let babelConf;
 
-  const outputPath = path.resolve(__dirname, env.outputPath || 'dist')
-
-  const proxyPort = 9091,
-    plugins = [],
-    jsLoaders = []
-
-  if(env.production) {
-    // compress js in production environment
-
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-      output: {
-        comments: false, // remove all comments
-      },
-      compress: {
-        warnings: false,
-        drop_console: false,
-      },
-    }))
+  const babelRC = env.esnext ? './.es6.babelrc' : './.babelrc';
+  if(fs.existsSync(babelRC)) {
+    babelConf = JSON.parse(fs.readFileSync(babelRC));
+    babelConf.babelrc = false;
   }
 
-  if(fs.existsSync('./.babelrc')) {
-    // use babel
-    const babelConf = JSON.parse(fs.readFileSync('.babelrc'))
-    jsLoaders.push({
-      loader: 'babel-loader',
-      options: babelConf,
-    })
+  const externals = {};
+
+  const aliasFields = ['browser', 'esnext'];
+  const outputPath = path.resolve(__dirname, env.outputPath || 'dist');
+
+  const output = {
+    path: outputPath,
+    filename: env.esnext ? 'spritejs.es6' : 'spritejs',
+    publicPath: '/js/',
+    library: 'spritejs',
+    libraryTarget: env.esnext ? 'commonjs2' : 'umd',
+  };
+
+  const alias = {
+    'sprite-core': 'sprite-core/src/index.js',
+    'sprite-math': 'sprite-math/src/index',
+    'svg-path-to-canvas': 'svg-path-to-canvas/src/index',
+    'sprite-animator': 'sprite-animator/src/index',
+    'sprite-flex-layout': 'sprite-flex-layout/src/index',
+    'sprite-timeline': 'sprite-timeline/src/index',
+  };
+  let entry = './src/index';
+
+  if(env.mode === 'lite') {
+    output.filename += '.lite';
+    entry = './src/index.lite';
+    alias['sprite-core'] = 'sprite-core/src/index.dom.js';
+  } else if(env.mode === 'core') {
+    output.filename += '.core';
+    entry = './src/index.core';
+    alias['sprite-core'] = 'sprite-core/src/index.basic.js';
+  }
+
+  if(env.production) {
+    output.filename += '.min.js';
+  } else {
+    output.filename += '.js';
   }
 
   return {
-    entry: './src/index.js',
-    output: {
-      filename: env.production ? 'spritejs.min.js' : 'spritejs.js',
-      path: outputPath,
-      publicPath: '/js/',
-      library: 'spritejs',
-      libraryTarget: 'umd',
-    },
-
-    plugins,
+    mode: env.production ? 'production' : 'none',
+    entry,
+    output,
 
     module: {
-      rules: [{
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: jsLoaders,
-      }],
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules\/(?!(sprite-[\w-]+)\/|svg-path-to-canvas).*/,
+          use: {
+            loader: 'babel-loader',
+            options: babelConf,
+          },
+        },
+      ],
+
+      /* Advanced module configuration (click to show) */
     },
+    resolve: {
+      aliasFields,
+      alias,
+    },
+    externals,
+    // Don't follow/bundle these modules, but request them at runtime from the environment
+
+    stats: 'errors-only',
+    // lets you precisely control what bundle information gets displayed
 
     devServer: {
-      open: true,
-      proxy: {
-        '*': `http://127.0.0.1:${proxyPort}`,
-      },
+      contentBase: path.join(__dirname, env.server || 'example'),
+      compress: true,
+      port: 9090,
+      // ...
     },
-    // devtool: 'inline-source-map',
-  }
-}
+
+    plugins: [
+      // ...
+    ],
+    // list of additional plugins
+
+
+    /* Advanced configuration (click to show) */
+  };
+};

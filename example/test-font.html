@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Base Sprite</title>
+  <style>
+    html, document {
+      font-size: 32px;
+    }
+    group.list {
+      --sprite-pos: 50, 50;
+    }
+    group.list > label {
+      --sprite-anchor: 0 0;
+      font: bold 1.5rem serif;
+    }
+    group.list > label:nth-child(2n+1) {
+      color: #f37;
+    }
+    group.list > label:nth-child(2n) {
+      color: #73f;
+    }
+  </style>
+</head>
+<body>
+  <div style="font-size:5vw;">abb</div>
+  <div style="font-size:2rem;">abb</div>
+  <div style="font:22px 黑体;">测试</div>
+  <div style="font:22px serif;">测试</div>
+  <div id="mycanvas"></div>
+  <script src="/js/spritejs.js"></script>
+  <script>
+const {Scene, Group, Label} = spritejs;
+
+/* demo: bgimage */
+const scene = new Scene('#mycanvas', {
+  viewport: [800, 800],
+  resolution: 'flex',
+  useDocumentCSS: true,
+});
+const layer = scene.layer();
+
+const group = new Group();
+group.attr({
+  class: 'list',
+});
+
+layer.append(group);
+
+for(let i = 0; i < 10; i++) {
+  const s = new Label(`line ${i}`);
+  s.attr({y: i * 60});
+  group.append(s);
+}
+  </script>
+</body>
+</html>

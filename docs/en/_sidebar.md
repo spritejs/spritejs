@@ -10,10 +10,12 @@
   * [Group](/en/doc/group)
   * [Label](/en/doc/label)
   * [Layer](/en/doc/layer)
+  * [Layout](/en/doc/layout)
   * [Path](/en/doc/path)
   * [Scene](/en/doc/scene)
   * [Sprite](/en/doc/sprite)
   * [Transition](/en/doc/transition)
+  * [JSX](/en/doc/jsx)
 * API
   * [Sprite](/api/sprite)
   * [Label](/api/label)
@@ -21,3 +23,6 @@
   * [Group](/api/group)
   * [Layer](/api/layer)
   * [Scene](/api/scene)
+* Others
+  * [ChangeLog](/en/changelog)
+  

@@ -59,10 +59,6 @@ layer.clearContext = function(context) {
 
 只读属性，获得当前Layer的id
 
-## isNodeVisible()
-
-`isNodeVisible(node)` 判断元素在layer中是否可见，可见性影响渲染过程。
-
 ## resolution
 
 获得当前Layer的resolution（分辨率），关于resolution，详见[屏幕适配](/zh-cn/guide/resolution)
@@ -73,13 +69,13 @@ layer.clearContext = function(context) {
 
 具体参考[动画](/zh-cn/effect#动画-animate)
 
-## toGolbalPos()
+## toGlobalPos()
 
 `toGlobalPos(x, y)` 将相对于layer的坐标换算成相对于layer所在canvas的相对坐标
 
 ## toLocalPos()
 
-`toLocalPos(x, y)` 将相对于layer所在canvas的相对坐标还算成相对于layer的坐标
+`toLocalPos(x, y)` 将相对于layer所在canvas的相对坐标换算成相对于layer的坐标
 
 ## viewport
 
