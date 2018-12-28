@@ -563,8 +563,8 @@ test('scene-bg-fg-removed', async (t) => {
 test('scene-loadframes', async (t) => {
   const scene = new Scene('#preload-many', {viewport: [600, 600], resolution: [1200, 1200]});
   await scene.preload([
-    'http://p3.ssl.qhimg.com/t010ded517024020e10.png',
-    'http://s1.ssl.qhres.com/static/6ead70a354da7aa4.json',
+    'http://p3.qhimg.com/t010ded517024020e10.png',
+    'http://s1.qhres.com/static/6ead70a354da7aa4.json',
   ]);
 
   const ground = new Sprite();
@@ -620,8 +620,8 @@ test('scene-loadframes', async (t) => {
 test('scene-loadframes-2', async (t) => {
   const scene = new Scene('#preload-many', {viewport: [600, 600], resolution: [1200, 1200]});
   await scene.preload([
-    'http://p3.ssl.qhimg.com/t017baa4debc87f4320.png',
-    'http://s1.ssl.qhres.com/static/337f0a0d2d7e9f34.json',
+    'http://p3.qhimg.com/t017baa4debc87f4320.png',
+    'http://s1.qhres.com/static/337f0a0d2d7e9f34.json',
   ]);
 
   const lambda = new Sprite('ramda.png');
@@ -647,22 +647,22 @@ test('scene-preload', async (t) => {
   scene.setResolution(1540, 600);
 
   const images = [
-    'http://p1.ssl.qhimg.com/t016dc86e4b2c9b83a4.jpg',
-    'http://p0.ssl.qhimg.com/t01408bb4e2bed11d2e.jpg',
-    'http://p2.ssl.qhimg.com/t014e6d3eddccf40638.jpg',
-    'http://p2.ssl.qhimg.com/t014db3a8e2bf146c5b.jpg',
-    'http://p4.ssl.qhimg.com/t01ff1bf2a37a741821.jpg',
-    'http://p2.ssl.qhimg.com/t01dc1341ab5d0fe663.jpg',
-    'http://p5.ssl.qhimg.com/t01a0acf6aa37d00f91.jpg',
-    'http://p1.ssl.qhimg.com/t013b8514570a69a1c8.jpg',
-    'http://p2.ssl.qhimg.com/t011c71494e6d98d92b.jpg',
-    'http://p4.ssl.qhimg.com/t01ab40609e924d995c.jpg',
-    'http://p0.ssl.qhimg.com/t01794495bebb84f47d.jpg',
-    'http://p4.ssl.qhimg.com/t01a30bb66a9d11d624.jpg',
-    'http://p4.ssl.qhimg.com/t01b3d2c0b0093a957d.jpg',
-    'http://p0.ssl.qhimg.com/t010da5e7311c8dd3a9.jpg',
-    'http://p5.ssl.qhimg.com/t0189dd547c322b2357.jpg',
-    {id: 'foo', src: 'http://p4.ssl.qhimg.com/t01feb50457ebbada10.jpg'},
+    'http://p1.qhimg.com/t016dc86e4b2c9b83a4.jpg',
+    'http://p0.qhimg.com/t01408bb4e2bed11d2e.jpg',
+    'http://p2.qhimg.com/t014e6d3eddccf40638.jpg',
+    'http://p2.qhimg.com/t014db3a8e2bf146c5b.jpg',
+    'http://p4.qhimg.com/t01ff1bf2a37a741821.jpg',
+    'http://p2.qhimg.com/t01dc1341ab5d0fe663.jpg',
+    'http://p5.qhimg.com/t01a0acf6aa37d00f91.jpg',
+    'http://p1.qhimg.com/t013b8514570a69a1c8.jpg',
+    'http://p2.qhimg.com/t011c71494e6d98d92b.jpg',
+    'http://p4.qhimg.com/t01ab40609e924d995c.jpg',
+    'http://p0.qhimg.com/t01794495bebb84f47d.jpg',
+    'http://p4.qhimg.com/t01a30bb66a9d11d624.jpg',
+    'http://p4.qhimg.com/t01b3d2c0b0093a957d.jpg',
+    'http://p0.qhimg.com/t010da5e7311c8dd3a9.jpg',
+    'http://p5.qhimg.com/t0189dd547c322b2357.jpg',
+    {id: 'foo', src: 'http://p4.qhimg.com/t01feb50457ebbada10.jpg'},
   ];
   async function loadRes() {
     scene.on('preload', (evt) => {

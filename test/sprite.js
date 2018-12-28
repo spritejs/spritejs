@@ -8,7 +8,7 @@ test('robot', async (t) => {
     viewport: [300, 300],
     resolution: [300, 300],
   });
-  const robot = new Sprite('http://p0.ssl.qhimg.com/t01a72262146b87165f.png');
+  const robot = new Sprite('http://p0.qhimg.com/t01a72262146b87165f.png');
   robot.attr({
     anchor: 0.5,
     pos: [150, 150],
@@ -32,7 +32,7 @@ test('robot-load-img', async (t) => {
     viewport: [300, 300],
     resolution: [300, 300],
   });
-  const image = await loadImage('http://p0.ssl.qhimg.com/t01a72262146b87165f.png');
+  const image = await loadImage('http://p0.qhimg.com/t01a72262146b87165f.png');
 
   const robot = new Sprite();
   robot.attr({
@@ -63,7 +63,7 @@ test('load-bgimg', async (t) => {
     size: [300, 300],
     bgcolor: 'blue',
     bgimage: {
-      src: 'http://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg',
+      src: 'http://p3.qhimg.com/t01f0e5810120ea0cf0.jpg',
       display: '.9',
       clip9: 64,
       // offset: [0, 50],
@@ -72,7 +72,7 @@ test('load-bgimg', async (t) => {
   const layer = scene.layer('layer1');
   layer.append(s);
 
-  await Resource.loadTexture('http://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg');
+  await Resource.loadTexture('http://p3.qhimg.com/t01f0e5810120ea0cf0.jpg');
 
   const canvas = await scene.snapshot();
   const isEqual = await compare(canvas, 'background-image');
@@ -85,7 +85,7 @@ test('load-bgimg-2', async (t) => {
     resolution: [600, 600],
   });
 
-  await Resource.loadTexture('http://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg');
+  await Resource.loadTexture('http://p3.qhimg.com/t01f0e5810120ea0cf0.jpg');
 
   const s = new Sprite();
   s.attr({
@@ -95,7 +95,7 @@ test('load-bgimg-2', async (t) => {
     size: [300, 300],
     bgcolor: 'blue',
     bgimage: {
-      id: 'http://p3.ssl.qhimg.com/t01f0e5810120ea0cf0.jpg',
+      id: 'http://p3.qhimg.com/t01f0e5810120ea0cf0.jpg',
       display: '.9',
       clip9: 64,
       // offset: [0, 50],
