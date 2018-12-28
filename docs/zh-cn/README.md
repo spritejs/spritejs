@@ -1,7 +1,7 @@
 <style>
   @font-face {
     font-family: 'pfang';
-    src: url('http://s6.qhres.com/static/dc42fa0ad4e7e042.ttf');
+    src: url('//s6.qhres.com/static/dc42fa0ad4e7e042.ttf');
   }
   main {
     display: none;
