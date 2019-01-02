@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.26.2";
+const version = "2.26.3";
 
 
 /***/ }),
@@ -3706,17 +3706,16 @@ function attr(options) {
         _setter.call(this, val);
 
         if (subject && !this.__quietTag && this.__updateTag) {
+          let clearLayout = this.__clearLayout;
+
           if (subject.hasLayout) {
             const offsetSize = subject.boxOffsetSize,
                   layoutSize = subject.__lastLayout;
-
-            if (this.__clearLayout || !layoutSize || offsetSize[0] !== layoutSize[0] || offsetSize[1] !== layoutSize[1]) {
-              subject.clearLayout();
-            }
-
+            clearLayout |= !layoutSize || offsetSize[0] !== layoutSize[0] || offsetSize[1] !== layoutSize[1];
             subject.__lastLayout = offsetSize;
           }
 
+          if (clearLayout) subject.clearLayout();
           subject.forceUpdate(_clearCache);
 
           if (this.__reflowTag) {
@@ -10393,14 +10392,46 @@ let GroupAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
         relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["relative"])('width')],
       key: "layoutWidth",
-      value: void 0
+
+      value() {
+        return '';
+      }
+
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({
         relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["relative"])('height')],
       key: "layoutHeight",
-      value: void 0
+
+      value() {
+        return '';
+      }
+
+    }, {
+      kind: "field",
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({
+        reflow,
+        relayout
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["relative"])('width')],
+      key: "width",
+
+      value() {
+        return '';
+      }
+
+    }, {
+      kind: "field",
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({
+        reflow,
+        relayout
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["relative"])('height')],
+      key: "height",
+
+      value() {
+        return '';
+      }
+
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({

@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.26.2";
+var version = "2.26.3";
 
 
 /***/ }),
@@ -4336,17 +4336,16 @@ function attr(options) {
         _setter.call(this, val);
 
         if (subject && !this.__quietTag && this.__updateTag) {
+          var clearLayout = this.__clearLayout;
+
           if (subject.hasLayout) {
             var offsetSize = subject.boxOffsetSize,
                 layoutSize = subject.__lastLayout;
-
-            if (this.__clearLayout || !layoutSize || offsetSize[0] !== layoutSize[0] || offsetSize[1] !== layoutSize[1]) {
-              subject.clearLayout();
-            }
-
+            clearLayout |= !layoutSize || offsetSize[0] !== layoutSize[0] || offsetSize[1] !== layoutSize[1];
             subject.__lastLayout = offsetSize;
           }
 
+          if (clearLayout) subject.clearLayout();
           subject.forceUpdate(_clearCache);
 
           if (this.__reflowTag) {
@@ -11723,14 +11722,38 @@ var GroupAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___def
         relayout: relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('width')],
       key: "layoutWidth",
-      value: void 0
+      value: function value() {
+        return '';
+      }
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
         relayout: relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('height')],
       key: "layoutHeight",
-      value: void 0
+      value: function value() {
+        return '';
+      }
+    }, {
+      kind: "field",
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
+        reflow: reflow,
+        relayout: relayout
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('width')],
+      key: "width",
+      value: function value() {
+        return '';
+      }
+    }, {
+      kind: "field",
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
+        reflow: reflow,
+        relayout: relayout
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('height')],
+      key: "height",
+      value: function value() {
+        return '';
+      }
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
