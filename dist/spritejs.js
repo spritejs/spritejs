@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.26.3";
+var version = "2.26.4";
 
 
 /***/ }),
@@ -7322,7 +7322,9 @@ var SpriteAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
       }
     }, {
       kind: "field",
-      decorators: [_utils__WEBPACK_IMPORTED_MODULE_12__["attr"]],
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_12__["attr"])({
+        cache: cache
+      })],
       key: "transformMatrix",
       value: function value() {
         return [1, 0, 0, 1, 0, 0];
@@ -11545,6 +11547,7 @@ function () {
           throw new Error('Node already batched!');
         }
 
+        node.attr('enableCache', true);
         var that = _this;
         Object.defineProperty(node, 'cache', {
           configurable: true,
