@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.26.4";
+const version = "2.27.0";
 
 
 /***/ }),
@@ -1683,6 +1683,21 @@ class SvgPath {
     return Object(_platform__WEBPACK_IMPORTED_MODULE_1__["isPointInPath"])(this, x, y);
   }
 
+  isPointInStroke(x, y, {
+    lineWidth = 1,
+    lineCap = 'butt',
+    lineJoin = 'miter'
+  }) {
+    if (_platform__WEBPACK_IMPORTED_MODULE_1__["isPointInStroke"]) {
+      return Object(_platform__WEBPACK_IMPORTED_MODULE_1__["isPointInStroke"])(this, x, y, {
+        lineWidth,
+        lineCap,
+        lineJoin
+      });
+    } // node-canvas return undefined
+
+  }
+
   getPointAtLength(len) {
     return Object(_platform__WEBPACK_IMPORTED_MODULE_1__["getPointAtLength"])(this.d, len);
   }
@@ -2010,6 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPointAtLength", function() { return getPointAtLength; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTotalLength", function() { return getTotalLength; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPointInPath", function() { return isPointInPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPointInStroke", function() { return isPointInStroke; });
 function createSvgPath(d) {
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', d);
@@ -2028,12 +2044,30 @@ function getTotalLength(d, len) {
   const path = createSvgPath(d);
   return path.getTotalLength(len);
 }
+let context = null;
 function isPointInPath({
   d
 }, x, y) {
+  if (!context) context = document.createElement('canvas').getContext('2d');
   const path = new Path2D(d);
-  const context = document.createElement('canvas').getContext('2d');
   return context.isPointInPath(path, x, y);
+}
+function isPointInStroke({
+  d
+}, x, y, {
+  lineWidth = 1,
+  lineCap = 'butt',
+  lineJoin = 'miter'
+}) {
+  if (!context) context = document.createElement('canvas').getContext('2d');
+  context.save();
+  context.lineWidth = lineWidth;
+  context.lineCap = lineCap;
+  context.lineJoin = lineJoin;
+  const path = new Path2D(d);
+  const ret = context.isPointInStroke(path, x, y);
+  context.restore();
+  return ret;
 }
 
 /***/ }),
@@ -4642,6 +4676,7 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
 
       value(parent, zOrder = 0) {
         if (parent && !(parent instanceof _basenode__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+          // directly connect to canvas2d context
           const node = new _basenode__WEBPACK_IMPORTED_MODULE_4__["default"]();
           node.context = parent;
           node.timeline = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
@@ -11233,7 +11268,7 @@ let PathSpriteAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({
         quiet
-      }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["inherit"])('box')],
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_0__["inherit"])('auto')],
       key: "bounding",
 
       value() {
@@ -11318,14 +11353,50 @@ let Path = _decorate(null, function (_initialize2, _BaseSprite) {
 
     }, {
       kind: "method",
+      key: "isClosed",
+
+      value() {
+        const d = this.attr('d');
+
+        if (d) {
+          return /z$/img.test(d);
+        }
+
+        return false;
+      }
+
+    }, {
+      kind: "method",
       key: "findPath",
 
       value(offsetX, offsetY) {
         const rect = this.originalRect;
         const pathOffset = this.pathOffset;
+        const svg = this.svg;
 
-        if (this.svg && this.svg.isPointInPath(offsetX - rect[0] - pathOffset[0], offsetY - rect[1] - pathOffset[1])) {
-          return [this.svg];
+        if (svg) {
+          const x = offsetX - rect[0] - pathOffset[0],
+                y = offsetY - rect[1] - pathOffset[1];
+          let collision = false;
+
+          if (this.isClosed()) {
+            collision = svg.isPointInPath(x, y);
+          }
+
+          if (!collision) {
+            const lineWidth = this.attr('lineWidth') + (parseFloat(this.attr('bounding')) || 0),
+                  lineCap = this.attr('lineCap'),
+                  lineJoin = this.attr('lineJoin');
+            collision = svg.isPointInStroke(x, y, {
+              lineWidth,
+              lineCap,
+              lineJoin
+            });
+          }
+
+          if (collision) {
+            return [svg];
+          }
         }
 
         return [];
@@ -11423,7 +11494,9 @@ let Path = _decorate(null, function (_initialize2, _BaseSprite) {
       key: "pointCollision",
 
       value(evt) {
-        if (_get(_getPrototypeOf(Path.prototype), "pointCollision", this).call(this, evt)) {
+        const bounding = this.attr('bounding');
+
+        if (_get(_getPrototypeOf(Path.prototype), "pointCollision", this).call(this, evt) || bounding !== 'auto' && bounding !== 'box' && bounding !== 'path' && bounding !== 0) {
           let {
             offsetX,
             offsetY
@@ -11439,7 +11512,7 @@ let Path = _decorate(null, function (_initialize2, _BaseSprite) {
 
           evt.targetPaths = this.findPath(offsetX, offsetY);
 
-          if (this.attr('bounding') === 'path') {
+          if (bounding !== 'box' && !(bounding === 'auto' && (this.attr('borderWidth') > 0 || this.attr('bgcolor') || this.attr('gradients').bgcolor))) {
             return evt.targetPaths.length > 0;
           }
 

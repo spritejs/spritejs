@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.26.4";
+var version = "2.27.0";
 
 
 /***/ }),
@@ -2109,6 +2109,25 @@ function () {
       return Object(_platform__WEBPACK_IMPORTED_MODULE_6__["isPointInPath"])(this, x, y);
     }
   }, {
+    key: "isPointInStroke",
+    value: function isPointInStroke(x, y, _ref) {
+      var _ref$lineWidth = _ref.lineWidth,
+          lineWidth = _ref$lineWidth === void 0 ? 1 : _ref$lineWidth,
+          _ref$lineCap = _ref.lineCap,
+          lineCap = _ref$lineCap === void 0 ? 'butt' : _ref$lineCap,
+          _ref$lineJoin = _ref.lineJoin,
+          lineJoin = _ref$lineJoin === void 0 ? 'miter' : _ref$lineJoin;
+
+      if (_platform__WEBPACK_IMPORTED_MODULE_6__["isPointInStroke"]) {
+        return Object(_platform__WEBPACK_IMPORTED_MODULE_6__["isPointInStroke"])(this, x, y, {
+          lineWidth: lineWidth,
+          lineCap: lineCap,
+          lineJoin: lineJoin
+        });
+      } // node-canvas return undefined
+
+    }
+  }, {
     key: "getPointAtLength",
     value: function getPointAtLength(len) {
       return Object(_platform__WEBPACK_IMPORTED_MODULE_6__["getPointAtLength"])(this.d, len);
@@ -2573,6 +2592,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPointAtLength", function() { return getPointAtLength; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTotalLength", function() { return getTotalLength; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPointInPath", function() { return isPointInPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPointInStroke", function() { return isPointInStroke; });
 function createSvgPath(d) {
   var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', d);
@@ -2592,11 +2612,30 @@ function getTotalLength(d, len) {
   var path = createSvgPath(d);
   return path.getTotalLength(len);
 }
+var context = null;
 function isPointInPath(_ref, x, y) {
   var d = _ref.d;
+  if (!context) context = document.createElement('canvas').getContext('2d');
   var path = new Path2D(d);
-  var context = document.createElement('canvas').getContext('2d');
   return context.isPointInPath(path, x, y);
+}
+function isPointInStroke(_ref2, x, y, _ref3) {
+  var d = _ref2.d;
+  var _ref3$lineWidth = _ref3.lineWidth,
+      lineWidth = _ref3$lineWidth === void 0 ? 1 : _ref3$lineWidth,
+      _ref3$lineCap = _ref3.lineCap,
+      lineCap = _ref3$lineCap === void 0 ? 'butt' : _ref3$lineCap,
+      _ref3$lineJoin = _ref3.lineJoin,
+      lineJoin = _ref3$lineJoin === void 0 ? 'miter' : _ref3$lineJoin;
+  if (!context) context = document.createElement('canvas').getContext('2d');
+  context.save();
+  context.lineWidth = lineWidth;
+  context.lineCap = lineCap;
+  context.lineJoin = lineJoin;
+  var path = new Path2D(d);
+  var ret = context.isPointInStroke(path, x, y);
+  context.restore();
+  return ret;
 }
 
 /***/ }),
@@ -5400,6 +5439,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         var zOrder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
         if (parent && !(parent instanceof _basenode__WEBPACK_IMPORTED_MODULE_14__["default"])) {
+          // directly connect to canvas2d context
           var node = new _basenode__WEBPACK_IMPORTED_MODULE_14__["default"]();
           node.context = parent;
           node.timeline = new sprite_animator__WEBPACK_IMPORTED_MODULE_11__["Timeline"]();
@@ -12466,7 +12506,7 @@ var PathSpriteAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
         quiet: quiet
-      }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["inherit"])('box')],
+      }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["inherit"])('auto')],
       key: "bounding",
       value: function value() {
         return 'inherit';
@@ -12550,13 +12590,47 @@ var Path = _decorate(null, function (_initialize2, _BaseSprite) {
       }
     }, {
       kind: "method",
+      key: "isClosed",
+      value: function value() {
+        var d = this.attr('d');
+
+        if (d) {
+          return /z$/img.test(d);
+        }
+
+        return false;
+      }
+    }, {
+      kind: "method",
       key: "findPath",
       value: function value(offsetX, offsetY) {
         var rect = this.originalRect;
         var pathOffset = this.pathOffset;
+        var svg = this.svg;
 
-        if (this.svg && this.svg.isPointInPath(offsetX - rect[0] - pathOffset[0], offsetY - rect[1] - pathOffset[1])) {
-          return [this.svg];
+        if (svg) {
+          var x = offsetX - rect[0] - pathOffset[0],
+              y = offsetY - rect[1] - pathOffset[1];
+          var collision = false;
+
+          if (this.isClosed()) {
+            collision = svg.isPointInPath(x, y);
+          }
+
+          if (!collision) {
+            var lineWidth = this.attr('lineWidth') + (parseFloat(this.attr('bounding')) || 0),
+                lineCap = this.attr('lineCap'),
+                lineJoin = this.attr('lineJoin');
+            collision = svg.isPointInStroke(x, y, {
+              lineWidth: lineWidth,
+              lineCap: lineCap,
+              lineJoin: lineJoin
+            });
+          }
+
+          if (collision) {
+            return [svg];
+          }
         }
 
         return [];
@@ -12653,7 +12727,9 @@ var Path = _decorate(null, function (_initialize2, _BaseSprite) {
       kind: "method",
       key: "pointCollision",
       value: function value(evt) {
-        if (_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Path.prototype), "pointCollision", this).call(this, evt)) {
+        var bounding = this.attr('bounding');
+
+        if (_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Path.prototype), "pointCollision", this).call(this, evt) || bounding !== 'auto' && bounding !== 'box' && bounding !== 'path' && bounding !== 0) {
           var offsetX = evt.offsetX,
               offsetY = evt.offsetY;
           if (offsetX == null && offsetY == null) return true;
@@ -12667,7 +12743,7 @@ var Path = _decorate(null, function (_initialize2, _BaseSprite) {
 
           evt.targetPaths = this.findPath(offsetX, offsetY);
 
-          if (this.attr('bounding') === 'path') {
+          if (bounding !== 'box' && !(bounding === 'auto' && (this.attr('borderWidth') > 0 || this.attr('bgcolor') || this.attr('gradients').bgcolor))) {
             return evt.targetPaths.length > 0;
           }
 
