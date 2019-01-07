@@ -106,15 +106,15 @@ const {Scene, Sprite, Label} = spritejs
       }
       const [r1, r2] = val;
       attr.set('r', val);
-      attr.set('borderRadius', (r1 + r2) / 2);
+      attr.borderRadius = (r1 + r2) / 2;
       attr.size = [2 * r2, 2 * r2];
-      attr.set('border', {width: r1 - r2, color: attr.color, style: 'solid'});
+      attr.border = {width: r1 - r2, color: attr.color, style: 'solid'};
     },
     color(attr, val) {
       attr.clearCache();
       attr.set('color', val);
       const [r1, r2] = attr.r;
-      attr.set('border', {width: r1 - r2, color: attr.color, style: 'solid'});
+      attr.border = {width: r1 - r2, color: attr.color, style: 'solid'};
     },
   });
 
@@ -156,6 +156,7 @@ const {Scene, Sprite, Label} = spritejs
       evt.target.attr('opacity', 0.5);
     });
   });
+  window.c1 = c1;
 }())
 
 /* demo: custom-event */

@@ -183,13 +183,13 @@ var _spritejs = spritejs,
           r2 = _val2[1];
 
       attr.set('r', val);
-      attr.set('borderRadius', (r1 + r2) / 2);
+      attr.borderRadius = (r1 + r2) / 2;
       attr.size = [2 * r2, 2 * r2];
-      attr.set('border', {
+      attr.border = {
         width: r1 - r2,
         color: attr.color,
         style: 'solid'
-      });
+      };
     },
     color: function color(attr, val) {
       attr.clearCache();
@@ -199,11 +199,11 @@ var _spritejs = spritejs,
           r1 = _attr$r[0],
           r2 = _attr$r[1];
 
-      attr.set('border', {
+      attr.border = {
         width: r1 - r2,
         color: attr.color,
         style: 'solid'
-      });
+      };
     }
   });
   var c1 = new Circle();
@@ -241,6 +241,7 @@ var _spritejs = spritejs,
       evt.target.attr('opacity', 0.5);
     });
   });
+  window.c1 = c1;
 })();
 
 _asyncToGenerator(
