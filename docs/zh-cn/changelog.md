@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.27.0][2019-01-07]
+
+### 改进
+
+- 修改了Path的bounding属性策略，默认值改为为auto，当不设置背景色和border宽度时，相当于`bounding: path`，否则为`bounding: box`
+- 允许设置Path的bounding为数值，表示碰撞检测范围
+
 ## [2.26.1][2018-12-25]
 
 ### 改进

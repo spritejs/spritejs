@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.27.0][2019-01-07]
+
+### enhancement
+
+- Change Path's bounding attribute, default value is `auto`.
+- If Path's bounding is `auto` with `bgcolor` and `borderWidth` is not set, it equals to `bounding path` otherwise is `bounding box`.
+- Allowing seting bounding with a float value(for collision tolerance).
+
 ## [2.26.1][2018-12-25]
 
 ### enhancement
