@@ -24,7 +24,7 @@ layer.append(s)
 
 精灵支持的基本属性如下：
 
-## anchor 
+## anchor
 
 _Sprite, Group, Label, Path_
 
@@ -77,10 +77,6 @@ _Sprite, Group, Label, Path_
 读取或设置盒模型。默认为'content-box'，可选值`content-box | border-box`。如果设置为`border-box`，那么元素的contentSize为“border+padding+内容宽高”，否则元素的contentSize是内容宽高。
 
 ## clip
-
-_Sprite, Group, Label, Path_
-
-改变元素的盒模型，默认值为`content-box`，可选值为`content-box | border-box`。
 
 _Group_
 
