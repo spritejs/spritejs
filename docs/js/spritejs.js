@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.1";
+var version = "2.27.2";
 
 
 /***/ }),
@@ -11918,7 +11918,7 @@ var Group = _decorate(null, function (_initialize2, _BaseSprite) {
         if (!swallow && !evt.terminated && type !== 'mouseenter') {
           var isCollision = collisionState || this.pointCollision(evt);
 
-          if (isCollision || type === 'mouseleave' || this.attr('clipOverflow')) {
+          if (isCollision || type === 'mouseleave' || !this.attr('clipOverflow')) {
             var scrollLeft = this.attr('scrollLeft'),
                 scrollTop = this.attr('scrollTop'),
                 borderWidth = this.attr('border').width,
