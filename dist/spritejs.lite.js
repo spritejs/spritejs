@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.0";
+var version = "2.27.1";
 
 
 /***/ }),
@@ -11927,7 +11927,7 @@ var Group = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___default
         if (!swallow && !evt.terminated && type !== 'mouseenter') {
           var isCollision = collisionState || this.pointCollision(evt);
 
-          if (isCollision || type === 'mouseleave') {
+          if (isCollision || type === 'mouseleave' || this.attr('clipOverflow')) {
             var scrollLeft = this.attr('scrollLeft'),
                 scrollTop = this.attr('scrollTop'),
                 borderWidth = this.attr('border').width,

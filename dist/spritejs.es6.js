@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.0";
+const version = "2.27.1";
 
 
 /***/ }),
@@ -10705,7 +10705,7 @@ let Group = _decorate(null, function (_initialize2, _BaseSprite) {
         if (!swallow && !evt.terminated && type !== 'mouseenter') {
           const isCollision = collisionState || this.pointCollision(evt);
 
-          if (isCollision || type === 'mouseleave') {
+          if (isCollision || type === 'mouseleave' || this.attr('clipOverflow')) {
             const scrollLeft = this.attr('scrollLeft'),
                   scrollTop = this.attr('scrollTop'),
                   borderWidth = this.attr('border').width,
