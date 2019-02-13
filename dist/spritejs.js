@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.2";
+var version = "2.27.3";
 
 
 /***/ }),
@@ -24018,17 +24018,20 @@ function (_BaseNode) {
           layer.dataset = {};
         }
 
-        layer.dataset.layerId = layer.id; // layer.connect = (parent, zOrder) => {
-        //   layer.parent = parent;
-        //   Object.defineProperty(layer, 'zOrder', {
-        //     value: zOrder,
-        //     writable: false,
-        //     configurable: true,
-        //   });
-        // };
-        // layer.disconnect = (parent) => {
-        //   delete layer.zOrder;
-        // };
+        layer.dataset.layerId = layer.id; // fixed layer replacer
+
+        layer.connect = function (parent, zOrder) {
+          layer.parent = parent;
+          Object.defineProperty(layer, 'zOrder', {
+            value: zOrder,
+            writable: false,
+            configurable: true
+          });
+        };
+
+        layer.disconnect = function (parent) {
+          delete layer.zOrder;
+        };
       }
 
       var id = layer.id;

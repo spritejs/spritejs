@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.2";
+const version = "2.27.3";
 
 
 /***/ }),
@@ -21472,17 +21472,20 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
         layer.dataset = {};
       }
 
-      layer.dataset.layerId = layer.id; // layer.connect = (parent, zOrder) => {
-      //   layer.parent = parent;
-      //   Object.defineProperty(layer, 'zOrder', {
-      //     value: zOrder,
-      //     writable: false,
-      //     configurable: true,
-      //   });
-      // };
-      // layer.disconnect = (parent) => {
-      //   delete layer.zOrder;
-      // };
+      layer.dataset.layerId = layer.id; // fixed layer replacer
+
+      layer.connect = (parent, zOrder) => {
+        layer.parent = parent;
+        Object.defineProperty(layer, 'zOrder', {
+          value: zOrder,
+          writable: false,
+          configurable: true
+        });
+      };
+
+      layer.disconnect = parent => {
+        delete layer.zOrder;
+      };
     }
 
     const id = layer.id;

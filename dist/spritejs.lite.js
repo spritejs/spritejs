@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.2";
+var version = "2.27.3";
 
 
 /***/ }),
@@ -20735,17 +20735,20 @@ function (_BaseNode) {
           layer.dataset = {};
         }
 
-        layer.dataset.layerId = layer.id; // layer.connect = (parent, zOrder) => {
-        //   layer.parent = parent;
-        //   Object.defineProperty(layer, 'zOrder', {
-        //     value: zOrder,
-        //     writable: false,
-        //     configurable: true,
-        //   });
-        // };
-        // layer.disconnect = (parent) => {
-        //   delete layer.zOrder;
-        // };
+        layer.dataset.layerId = layer.id; // fixed layer replacer
+
+        layer.connect = function (parent, zOrder) {
+          layer.parent = parent;
+          Object.defineProperty(layer, 'zOrder', {
+            value: zOrder,
+            writable: false,
+            configurable: true
+          });
+        };
+
+        layer.disconnect = function (parent) {
+          delete layer.zOrder;
+        };
       }
 
       var id = layer.id;
