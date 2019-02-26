@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.3";
+const version = "2.27.4";
 
 
 /***/ }),
