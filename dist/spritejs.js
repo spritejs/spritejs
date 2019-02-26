@@ -8457,7 +8457,7 @@ function () {
   }, {
     key: "pointCollision",
     value: function pointCollision(evt) {
-      throw Error('you mast override this method');
+      throw Error('you must override this method');
     }
   }, {
     key: "setMouseCapture",
@@ -13274,6 +13274,14 @@ Object.assign(sprite_animator__WEBPACK_IMPORTED_MODULE_8__["Effects"], {
   transform: transformEffect,
   bgcolor: colorEffect,
   border: function border(v1, v2, p, start, end) {
+    if (Array.isArray(v2)) {
+      v2 = {
+        width: v2[0],
+        color: v2[1],
+        style: v2[2] || 'solid'
+      };
+    }
+
     return {
       width: defaultEffect(v1.width, v2.width, p, start, end),
       color: colorEffect(v1.color, v2.color, p, start, end),
@@ -17811,10 +17819,10 @@ compile.Pseudos = Pseudos;
 
 module.exports = parse;
 
-var re_name = /^(?:\\.|[\w\-\u00c0-\uFFFF])+/,
+var re_name = /^(?:\\.|[\w\-\u00b0-\uFFFF])+/,
     re_escape = /\\([\da-f]{1,6}\s?|(\s)|.)/ig,
     //modified version of https://github.com/jquery/sizzle/blob/master/src/sizzle.js#L87
-    re_attr = /^\s*((?:\\.|[\w\u00c0-\uFFFF\-])+)\s*(?:(\S?)=\s*(?:(['"])([^]*?)\3|(#?(?:\\.|[\w\u00c0-\uFFFF\-])*)|)|)\s*(i)?\]/;
+    re_attr = /^\s*((?:\\.|[\w\u00b0-\uFFFF\-])+)\s*(?:(\S?)=\s*(?:(['"])([^]*?)\3|(#?(?:\\.|[\w\u00b0-\uFFFF\-])*)|)|)\s*(i)?\]/;
 
 var actionTypes = {
 	__proto__: null,
