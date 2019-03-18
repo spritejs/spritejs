@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.4";
+var version = "2.27.5";
 
 
 /***/ }),
@@ -19948,6 +19948,7 @@ function (_Layer) {
     }
 
     if (resolution) {
+      _this._userInitResolution = true;
       _this.resolution = resolution;
     } else {
       _this[_resolution] = [_this.canvas.width, _this.canvas.height, 0, 0];
@@ -20168,7 +20169,7 @@ function (_Layer) {
     set: function set(resolution) {
       this[_resolution] = resolution;
 
-      if (this[_displayRatio] == null) {
+      if (this[_displayRatio] == null && !this._userInitResolution) {
         this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
       }
 
@@ -20471,7 +20472,7 @@ function (_BaseNode) {
           canvas.style.left = '0';
         }
 
-        if (stickExtend) {
+        if (stickExtend && !layer._userInitResolution) {
           layer.resolution = _this3.layerResolution;
         }
 
@@ -20490,7 +20491,7 @@ function (_BaseNode) {
 
       var layers = layer ? [layer] : this[_layers];
       layers.forEach(function (layer) {
-        if (layer.canvas) {
+        if (layer.canvas && !layer._userInitResolution) {
           layer.resolution = _this4.layerResolution;
         }
       });
@@ -20770,7 +20771,7 @@ function (_BaseNode) {
       layer.connect(this, this[_zOrder]++);
       this.updateViewport(layer); // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
 
-      if (!this.stickExtend) {
+      if (!this.stickExtend && !layer._userInitResolution) {
         layer.resolution = this.layerResolution;
       }
 

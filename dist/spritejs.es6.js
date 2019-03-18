@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.4";
+const version = "2.27.5";
 
 
 /***/ }),
@@ -20692,6 +20692,7 @@ class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
     }
 
     if (resolution) {
+      this._userInitResolution = true;
       this.resolution = resolution;
     } else {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
@@ -20822,7 +20823,7 @@ class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   set resolution(resolution) {
     this[_resolution] = resolution;
 
-    if (this[_displayRatio] == null) {
+    if (this[_displayRatio] == null && !this._userInitResolution) {
       this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
     }
 
@@ -21155,7 +21156,7 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
         canvas.style.left = '0';
       }
 
-      if (stickExtend) {
+      if (stickExtend && !layer._userInitResolution) {
         layer.resolution = this.layerResolution;
       }
 
@@ -21272,7 +21273,7 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
   updateResolution(layer) {
     const layers = layer ? [layer] : this[_layers];
     layers.forEach(layer => {
-      if (layer.canvas) {
+      if (layer.canvas && !layer._userInitResolution) {
         layer.resolution = this.layerResolution;
       }
     });
@@ -21507,7 +21508,7 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
     layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer); // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
 
-    if (!this.stickExtend) {
+    if (!this.stickExtend && !layer._userInitResolution) {
       layer.resolution = this.layerResolution;
     }
 

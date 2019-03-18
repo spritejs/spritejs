@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    width: 800px;
+    height: 300px;
+    border: solid 1px red;
+  }
+  #paper canvas {
+    background-color: #fdd;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <script src="/js/spritejs.js"></script>
+  <script src="/js/gif.js"></script>
+  <script>
+    const {Scene, Layer} = spritejs;
+    const scene = new Scene('#paper', {
+      resolution: [1920, 1080],
+    });
+    const fglayer = scene.layer('fglayer');
+    const bglayer = scene.layer('bglayer', {
+      resolution: [19200, 10800],
+    });
+    console.log(fglayer.resolution);
+  </script>
+</body>
+</html>

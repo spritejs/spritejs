@@ -225,7 +225,7 @@ export default class Scene extends BaseNode {
         canvas.style.top = '0';
         canvas.style.left = '0';
       }
-      if(stickExtend) {
+      if(stickExtend && !layer._userInitResolution) {
         layer.resolution = this.layerResolution;
       }
       return true;
@@ -330,7 +330,7 @@ export default class Scene extends BaseNode {
     const layers = layer ? [layer] : this[_layers];
 
     layers.forEach((layer) => {
-      if(layer.canvas) {
+      if(layer.canvas && !layer._userInitResolution) {
         layer.resolution = this.layerResolution;
       }
     });
@@ -525,7 +525,7 @@ export default class Scene extends BaseNode {
     layer.connect(this, this[_zOrder]++);
     this.updateViewport(layer);
     // layer.setDisplayRatio(this.displayRatio, this.maxDisplayRatio, false);
-    if(!this.stickExtend) {
+    if(!this.stickExtend && !layer._userInitResolution) {
       layer.resolution = this.layerResolution;
     }
 

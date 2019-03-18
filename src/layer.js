@@ -47,6 +47,7 @@ class ExLayer extends Layer {
     }
 
     if(resolution) {
+      this._userInitResolution = true;
       this.resolution = resolution;
     } else {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
@@ -163,7 +164,7 @@ class ExLayer extends Layer {
 
   set resolution(resolution) {
     this[_resolution] = resolution;
-    if(this[_displayRatio] == null) {
+    if(this[_displayRatio] == null && !this._userInitResolution) {
       this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
     }
     this.updateDisplay();
