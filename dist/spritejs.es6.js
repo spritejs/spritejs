@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.5";
+const version = "2.27.6";
 
 
 /***/ }),
@@ -20693,7 +20693,7 @@ class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
 
     if (resolution) {
       this._userInitResolution = true;
-      this.resolution = resolution;
+      this.resolution = [...resolution, 0, 0];
     } else {
       this[_resolution] = [this.canvas.width, this.canvas.height, 0, 0];
     }
@@ -20823,8 +20823,12 @@ class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   set resolution(resolution) {
     this[_resolution] = resolution;
 
-    if (this[_displayRatio] == null && !this._userInitResolution) {
-      this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
+    if (this[_displayRatio] == null) {
+      if (this.parent && this.parent.displayRatio) {
+        this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
+      } else {
+        this[_displayRatio] = 1.0;
+      }
     }
 
     this.updateDisplay();

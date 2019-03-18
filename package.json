@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "2.27.5",
+  "version": "2.27.6",
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"

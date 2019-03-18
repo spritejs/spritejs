@@ -10,9 +10,6 @@
     height: 300px;
     border: solid 1px red;
   }
-  #paper canvas {
-    background-color: #fdd;
-  }
   </style>
 </head>
 <body>
@@ -21,7 +18,7 @@
   <script src="/js/spritejs.js"></script>
   <script src="/js/gif.js"></script>
   <script>
-    const {Scene, Layer} = spritejs;
+    const {Scene, Layer, Sprite} = spritejs;
     const scene = new Scene('#paper', {
       resolution: [1920, 1080],
     });
@@ -30,6 +27,14 @@
       resolution: [19200, 10800],
     });
     console.log(fglayer.resolution);
+
+    const sprite = new Sprite();
+    sprite.attr({
+      bgcolor: 'red',
+      pos: [300, 300],
+      size: [200, 200],
+    });
+    bglayer.appendChild(sprite);
   </script>
 </body>
 </html>
