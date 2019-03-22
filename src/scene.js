@@ -426,11 +426,8 @@ export default class Scene extends BaseNode {
         }
       } 
 
-      console.log(originalCoordinates.length)
-
       for(const originalCoordinate of originalCoordinates)
         for(var layer of layers) {
-          debugger;
           if(layer.handleEvent) {
             if(originalCoordinate.x != null && originalCoordinate.y != null) {
               [x, y] = layer.toLocalPos(originalCoordinate.x, originalCoordinate.y);
