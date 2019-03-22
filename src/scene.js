@@ -406,23 +406,16 @@ export default class Scene extends BaseNode {
         }
       } else {
         const {left, top} = e.target.getBoundingClientRect();
-        if(e.changedTouches) {
-          for(var touch of e.changedTouches) {
-            const {clientX, clientY} = touch;
-            if(clientX != null && clientY != null) {
-              originalCoordinates.push({
-                x: Math.round((clientX | 0) - left),
-                y: Math.round((clientY | 0) - top)
-              });
-            }
+        var pointers = e.changedTouches || e;
+
+        for(var pointer of pointers) {
+          const {clientX, clientY} = pointer;
+          if(clientX != null && clientY != null) {
+            originalCoordinates.push({
+              x: Math.round((clientX | 0) - left),
+              y: Math.round((clientY | 0) - top)
+            });
           }
-        } else {
-          const {clientX, clientY} = e;
-          console.log(e);
-          originalCoordinates.push({
-            x: Math.round((clientX | 0) - left),
-            y: Math.round((clientY | 0) - top)
-          });
         }
       } 
 
