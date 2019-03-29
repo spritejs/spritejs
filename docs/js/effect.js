@@ -57,7 +57,7 @@ var _spritejs = spritejs,
               return _context.stop();
           }
         }
-      }, _callee, this);
+      }, _callee);
     }));
     return _createBubble.apply(this, arguments);
   }
@@ -220,7 +220,7 @@ regeneratorRuntime.mark(function _callee2() {
           return _context2.stop();
       }
     }
-  }, _callee2, this);
+  }, _callee2);
 }))();
 
 _asyncToGenerator(
@@ -322,7 +322,7 @@ regeneratorRuntime.mark(function _callee3() {
           return _context3.stop();
       }
     }
-  }, _callee3, this);
+  }, _callee3);
 }))();
 
 (function () {
@@ -403,7 +403,7 @@ regeneratorRuntime.mark(function _callee4() {
           return _context4.stop();
       }
     }
-  }, _callee4, this);
+  }, _callee4);
 }))();
 
 (function () {

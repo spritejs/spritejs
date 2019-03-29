@@ -65,7 +65,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _context.stop();
           }
         }
-      }, _callee, this);
+      }, _callee);
     }));
     return _handleExternalScript.apply(this, arguments);
   }

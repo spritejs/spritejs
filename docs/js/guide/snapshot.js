@@ -111,7 +111,7 @@ regeneratorRuntime.mark(function _callee2() {
                       return _context.stop();
                   }
                 }
-              }, _callee, this);
+              }, _callee);
             }));
 
             return function (_x) {
@@ -124,5 +124,5 @@ regeneratorRuntime.mark(function _callee2() {
           return _context2.stop();
       }
     }
-  }, _callee2, this);
+  }, _callee2);
 }))();

@@ -21,6 +21,7 @@
     const {Scene, Layer, Sprite} = spritejs;
     const scene = new Scene('#paper', {
       resolution: [1920, 1080],
+      displayRatio: 2.0,
     });
     const fglayer = scene.layer('fglayer');
     const bglayer = scene.layer('bglayer', {
