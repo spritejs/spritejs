@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.27.7";
+var version = "2.27.8";
 
 
 /***/ }),
@@ -16206,7 +16206,7 @@ function (_Layer) {
       return this[_resolution];
     },
     set: function set(resolution) {
-      this[_resolution] = resolution;
+      this[_resolution] = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(resolution), [0, 0]).slice(0, 4);
 
       if (this[_displayRatio] == null) {
         if (this.parent && this.parent.displayRatio) {

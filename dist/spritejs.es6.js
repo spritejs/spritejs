@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.7";
+const version = "2.27.8";
 
 
 /***/ }),
@@ -20570,7 +20570,7 @@ class ExLayer extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["Layer"] {
   }
 
   set resolution(resolution) {
-    this[_resolution] = resolution;
+    this[_resolution] = [...resolution, 0, 0].slice(0, 4);
 
     if (this[_displayRatio] == null) {
       if (this.parent && this.parent.displayRatio) {

@@ -163,7 +163,7 @@ class ExLayer extends Layer {
   }
 
   set resolution(resolution) {
-    this[_resolution] = resolution;
+    this[_resolution] = [...resolution, 0, 0].slice(0, 4);
     if(this[_displayRatio] == null) {
       if(this.parent && this.parent.displayRatio) {
         this.setDisplayRatio(this.parent.displayRatio, this.parent.maxDisplayRatio, false);
