@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>qchart</title>
+    <style>
+      #app {
+        width: 1200px;
+        height: 600px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script src="/js/spritejs.js"></script>
+    <script>
+      const { Scene, Group, Ring } = spritejs
+
+      const scene = new Scene('#app', {
+        displayRatio: 'auto',
+        viewport: [1200, 600]
+      })
+      const layer = scene.layer('d', { handleEvent: false })
+
+      layer.on('update', () => {
+        console.log('update: ', layer)
+      })
+
+      const group = new Group({ 
+        size: [100, 100],
+        display: 'flex' 
+      })
+
+      const group2 = new Group({ 
+        display: 'flex', 
+        bgcolor: 'red',
+        // size: [1, 1],
+      })
+      group.appendChild(group2)
+
+      layer.appendChild(group)
+
+      layer.prepareRender().then(() => {
+        console.log(group.attr('layoutHeight'))
+      });
+    </script>
+  </body>
+</html>

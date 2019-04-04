@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.8";
+var version = "2.27.9";
 
 
 /***/ }),
@@ -11763,6 +11763,7 @@ var GroupAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___def
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
+        reflow: reflow,
         relayout: relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('width')],
       key: "layoutWidth",
@@ -11772,6 +11773,7 @@ var GroupAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___def
     }, {
       kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
+        reflow: reflow,
         relayout: relayout
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["relative"])('height')],
       key: "layoutHeight",
