@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.9";
+const version = "2.27.10";
 
 
 /***/ }),
@@ -21136,14 +21136,16 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
             [originalX, originalY] = layer.toGlobalPos(x, y);
           }
 
-          layer.dispatchEvent(type, Object.assign({}, evtArgs, {
+          const evt = Object.assign({}, evtArgs, {
             layerX: x,
             layerY: y,
             originalX,
             originalY,
             x,
             y
-          }));
+          });
+          layer.dispatchEvent(type, evt);
+          if (evt.terminated) break;
         }
       }
     }, {

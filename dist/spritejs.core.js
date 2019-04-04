@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.27.9";
+var version = "2.27.10";
 
 
 /***/ }),
@@ -16643,14 +16643,16 @@ function (_BaseNode) {
               originalY = _layer$toGlobalPos2[1];
             }
 
-            layer.dispatchEvent(type, Object.assign({}, evtArgs, {
+            var evt = Object.assign({}, evtArgs, {
               layerX: x,
               layerY: y,
               originalX: originalX,
               originalY: originalY,
               x: x,
               y: y
-            }));
+            });
+            layer.dispatchEvent(type, evt);
+            if (evt.terminated) break;
           }
         }
       }, {

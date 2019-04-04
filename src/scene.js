@@ -423,9 +423,13 @@ export default class Scene extends BaseNode {
             [originalX, originalY] = layer.toGlobalPos(x, y);
           }
 
-          layer.dispatchEvent(type, Object.assign({}, evtArgs, {
+          const evt = Object.assign({}, evtArgs, {
             layerX: x, layerY: y, originalX, originalY, x, y,
-          }));
+          });
+
+          layer.dispatchEvent(type, evt);
+
+          if(evt.terminated) break;
         }
       }
     }, {passive});
