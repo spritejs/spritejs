@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.10";
+const version = "2.27.11";
 
 
 /***/ }),
@@ -6843,7 +6843,7 @@ function createAttribute(attr, key) {
         subject.attr('font', `${style} ${variant} ${weight} ${fontSize} ${family}`);
       }
 
-      if (key === 'font' || key === 'lineHeight' || key === 'lineBreak' || key === 'wordBreak' || key === 'letterSpacing' || key === 'textIndent') {
+      if ((key === 'font' || key === 'lineHeight' || key === 'lineBreak' || key === 'wordBreak' || key === 'letterSpacing' || key === 'textIndent') && subject.querySelectorAll) {
         const children = subject.querySelectorAll('*');
         children.forEach(node => {
           if (node.retypesetting) node.retypesetting();
