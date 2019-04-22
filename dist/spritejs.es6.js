@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.11";
+const version = "2.27.12";
 
 
 /***/ }),
@@ -1582,6 +1582,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const _initialPath = Symbol('initialPath');
+
 const _path = Symbol('path');
 
 const _bounds = Symbol('bounds');
@@ -1598,8 +1600,8 @@ class SvgPath {
       throw new Error('Not an SVG path!');
     }
 
-    const path = Object(_normalize_svg_path__WEBPACK_IMPORTED_MODULE_4__["default"])(Object(_abs_svg_path__WEBPACK_IMPORTED_MODULE_3__["default"])(Object(_parse_svg_path__WEBPACK_IMPORTED_MODULE_2__["default"])(d)));
-    this[_path] = path;
+    this[_initialPath] = Object(_abs_svg_path__WEBPACK_IMPORTED_MODULE_3__["default"])(Object(_parse_svg_path__WEBPACK_IMPORTED_MODULE_2__["default"])(d));
+    this[_path] = Object(_normalize_svg_path__WEBPACK_IMPORTED_MODULE_4__["default"])(this[_initialPath]);
     this[_bounds] = null;
     this[_savedPaths] = [];
     this[_renderProps] = {};
@@ -1669,14 +1671,25 @@ class SvgPath {
   }
 
   get d() {
-    return this[_path].map(p => {
+    let path = this[_path].map(p => {
       const [c, ...points] = p;
       return c + points.join();
     }).join('');
+
+    if (this.isClosed) {
+      path += 'Z';
+    }
+
+    return path;
   }
 
   get path() {
     return this[_path];
+  }
+
+  get isClosed() {
+    const part = this[_initialPath][this[_initialPath].length - 1];
+    return part && part[0] === 'Z';
   }
 
   isPointInPath(x, y) {
@@ -1776,6 +1789,10 @@ class SvgPath {
           context.bezierCurveTo(...args);
         }
       });
+
+      if (this.isClosed) {
+        context.closePath();
+      }
     }
 
     Object.assign(context, renderProps);
@@ -2060,14 +2077,17 @@ function isPointInStroke({
   lineJoin = 'miter'
 }) {
   if (!context) context = document.createElement('canvas').getContext('2d');
-  context.save();
-  context.lineWidth = lineWidth;
-  context.lineCap = lineCap;
-  context.lineJoin = lineJoin;
-  const path = new Path2D(d);
-  const ret = context.isPointInStroke(path, x, y);
-  context.restore();
-  return ret;
+
+  if (context.isPointInStroke) {
+    context.save();
+    context.lineWidth = lineWidth;
+    context.lineCap = lineCap;
+    context.lineJoin = lineJoin;
+    const path = new Path2D(d);
+    const ret = context.isPointInStroke(path, x, y);
+    context.restore();
+    return ret;
+  }
 }
 
 /***/ }),
