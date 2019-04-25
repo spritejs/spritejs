@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.12";
+var version = "2.27.13";
 
 
 /***/ }),
@@ -6006,6 +6006,7 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
               h = offsetHeight - borderWidth,
               r = borderRadius;
           Object(_utils__WEBPACK_IMPORTED_MODULE_11__["drawRadiusBox"])(drawingContext, [x, y, w, h], r);
+          drawingContext.save();
 
           if (borderStyle && borderStyle !== 'solid') {
             var dashOffset = this.attr('dashOffset');
@@ -6020,6 +6021,7 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
 
           drawingContext.strokeStyle = Object(_utils__WEBPACK_IMPORTED_MODULE_11__["findColor"])(drawingContext, this, 'border');
           drawingContext.stroke();
+          drawingContext.restore();
         } // draw bgcolor
 
 
@@ -11804,6 +11806,8 @@ var Group = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___default
       value: function value() {
         var display = this.attr('display');
         if (display !== '' && display !== 'none') return false;
+        var parent = this.parent;
+        if (parent && parent instanceof Group && !parent.isVirtual) return false;
 
         var _this$attr = this.attr('border'),
             borderWidth = _this$attr.width,

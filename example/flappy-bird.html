@@ -15,7 +15,9 @@
   <script src="/js/spritejs.js"></script>
   <script>
   (async function () {
-    const paper = spritejs.Paper2D('#container', 600, 400);
+    const paper = spritejs.Paper2D('#container', {
+      viewport: [600, 400],
+    });
     const Sprite = spritejs.Sprite;
 
     const res = await paper.preload(

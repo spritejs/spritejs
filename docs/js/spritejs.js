@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.12";
+var version = "2.27.13";
 
 
 /***/ }),
@@ -6239,6 +6239,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
               h = offsetHeight - borderWidth,
               r = borderRadius;
           Object(_utils__WEBPACK_IMPORTED_MODULE_12__["drawRadiusBox"])(drawingContext, [x, y, w, h], r);
+          drawingContext.save();
 
           if (borderStyle && borderStyle !== 'solid') {
             var dashOffset = this.attr('dashOffset');
@@ -6253,6 +6254,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
 
           drawingContext.strokeStyle = Object(_utils__WEBPACK_IMPORTED_MODULE_12__["findColor"])(drawingContext, this, 'border');
           drawingContext.stroke();
+          drawingContext.restore();
         } // draw bgcolor
 
 
@@ -11599,6 +11601,8 @@ var Group = _decorate(null, function (_initialize2, _BaseSprite) {
       value: function value() {
         var display = this.attr('display');
         if (display !== '' && display !== 'none') return false;
+        var parent = this.parent;
+        if (parent && parent instanceof Group && !parent.isVirtual) return false;
 
         var _this$attr = this.attr('border'),
             borderWidth = _this$attr.width,
