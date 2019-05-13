@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.14";
+var version = "2.27.15";
 
 
 /***/ }),
@@ -11693,7 +11693,7 @@ var _removeTask = Symbol('removeTask');
       return sprite;
     };
 
-    var _remove = sprite.remove();
+    var _remove = this.removeChild(sprite);
 
     if (_remove && _remove.promise) {
       // deferred

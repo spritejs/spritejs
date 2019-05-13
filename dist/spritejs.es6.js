@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.14";
+const version = "2.27.15";
 
 
 /***/ }),
@@ -10483,7 +10483,7 @@ const _removeTask = Symbol('removeTask');
       return sprite;
     };
 
-    const _remove = sprite.remove();
+    const _remove = this.removeChild(sprite);
 
     if (_remove && _remove.promise) {
       // deferred

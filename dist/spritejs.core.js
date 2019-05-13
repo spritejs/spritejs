@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.27.14";
+var version = "2.27.15";
 
 
 /***/ }),
@@ -11849,7 +11849,7 @@ var _removeTask = Symbol('removeTask');
       return sprite;
     };
 
-    var _remove = sprite.remove();
+    var _remove = this.removeChild(sprite);
 
     if (_remove && _remove.promise) {
       // deferred

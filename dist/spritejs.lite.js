@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.14";
+var version = "2.27.15";
 
 
 /***/ }),
@@ -11898,7 +11898,7 @@ var _removeTask = Symbol('removeTask');
       return sprite;
     };
 
-    var _remove = sprite.remove();
+    var _remove = this.removeChild(sprite);
 
     if (_remove && _remove.promise) {
       // deferred
