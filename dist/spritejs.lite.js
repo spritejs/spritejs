@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.27.17";
+var version = "2.27.18";
 
 
 /***/ }),
@@ -5937,7 +5937,6 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
         this.dispatchEvent('afterdraw', evtArgs, true, true);
 
         if (cachableContext) {
-          if (!this.cache) _utils__WEBPACK_IMPORTED_MODULE_11__["cacheContextPool"].put(cachableContext);
           cachableContext.restore();
         }
 

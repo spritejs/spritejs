@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.17";
+const version = "2.27.18";
 
 
 /***/ }),
@@ -5321,7 +5321,6 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         this.dispatchEvent('afterdraw', evtArgs, true, true);
 
         if (cachableContext) {
-          if (!this.cache) _utils__WEBPACK_IMPORTED_MODULE_2__["cacheContextPool"].put(cachableContext);
           cachableContext.restore();
         }
 
