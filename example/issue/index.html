@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/js/spritejs.js"></script>
+    <style>
+    #container {
+        height: 90vw;
+        width: 90vw;
+    }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+</body>
+<script>
+    /* eslint-disable */
+    const {Scene, Sprite, Group} = spritejs;
+
+    const scene = new Scene('#container', {
+        viewport: ['auto', 'auto'],
+        resolution: [1000, 500],
+    });
+
+    const layer = scene.layer();
+    const group = new Group()
+    group.attr({
+        pos: [261, 97],
+        size: [346, 42],
+        border: [1, 'red'],
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        flexWrap: 'nowrap',
+    })
+    layer.append(group)
+    const test = new Sprite()
+    test.attr({
+        textures: 'status1.png',
+        size: [115, 38]
+    })
+    group.append(test)
+    // 如果 同时 设置 textures 和 size ,则 size 更改不生效
+    test.on('click', (evt) => {
+        evt.target.attr({
+            textures: 'status2.png',
+            size: [115, 42],
+        })
+    })
+    // 如果 单独 设置 size, 则 size 会生效
+    // test.on('click', (evt) => {
+    //     evt.target.attr({
+    //         size: [115, 42]
+    //     })
+    // })
+</script>
+</html>
