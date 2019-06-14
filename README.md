@@ -221,6 +221,19 @@ Compatible with [d3.js](https://github.com/d3/d3).
 - [Layer](http://spritejs.org/#/api/layer)
 - [Scene](http://spritejs.org/#/api/scene)
 
+### Ecosystem & Extensions
+
+| **Project**                         | **Description**                           |
+| ------------------------------- | ----------------------------------- |
+| [sprite-vue](https://github.com/spritejs/sprite-vue)| SpriteJS for Vue.js. |
+| [sprite-react](https://github.com/spritejs/sprite-react)| Rendering spritejs elements with React. |
+| [sprite-wxapp](https://github.com/spritejs/sprite-wxapp)| SpriteJS for weixin mini-program. |
+| [sprite-extend-echarts](https://github.com/akira-cn/sprite-extend-echarts)| Rendering echarts with spritejs. |
+| [sprite-extend-proton](https://github.com/spritejs/sprite-extend-proton)| Particle renderer for proton-js. |
+| [sprite-extend-matter](https://github.com/spritejs/sprite-extend-matter)| Matter.js renderer for spritejs. |
+| [cat-charts-vue](https://github.com/spritejs/cat-charts-vue)| A visulization library based on spritejs , qcharts and Vue. |
+
+
 ### Build
 
 Build with NPM
