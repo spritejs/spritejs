@@ -308,6 +308,12 @@ bglayer.append(text)
 }())
 ```
 
+# Compatibility
+
+Compatible for most modern browsers.
+
+You should import [babel-polyfill](https://cdn.baomitu.com/babel-polyfill) for early browers(i.e. iOS 8).
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
