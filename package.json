@@ -1,12 +1,12 @@
 {
   "name": "spritejs",
-  "version": "2.27.19",
+  "version": "2.27.20",
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
-  "main": "lib/index.js",
+  "main": "dist/spritejs.js",
   "module": "src/spritejs.esm.js",
   "directories": {
     "example": "example"
@@ -54,7 +54,7 @@
   "dependencies": {
     "@babel/runtime": "^7.2.0",
     "axios": "^0.19.0",
-    "sprite-core": "^2.29.15"
+    "sprite-core": "^2.29.16"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
