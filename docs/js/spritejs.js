@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.27.20";
+var version = "2.27.21";
 
 
 /***/ }),
@@ -23337,6 +23337,7 @@ function (_BaseNode) {
           canvas.style.top = '50%';
           canvas.style.left = '50%';
           canvas.style.transform = 'translate(-50%, -50%)';
+          canvas.style.webkitTransform = 'translate(-50%, -50%)';
         } else if (!stickExtend && (stickMode === 'right' || stickMode === 'bottom')) {
           canvas.style.right = '0';
           canvas.style.bottom = '0';
