@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.28.0";
+var version = "2.28.1";
 
 
 /***/ }),
@@ -5857,7 +5857,7 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
         var cachableContext = !this.isVirtual && this.cache;
         var filter = this.attr('filter'),
             shadow = this.attr('shadow'),
-            enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && this.__labelCount || shadow || filter;
+            enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && !this.__labelCount || shadow || filter;
         var ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
         if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
