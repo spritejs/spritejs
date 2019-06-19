@@ -1,13 +1,13 @@
 {
   "name": "spritejs",
-  "version": "2.27.21",
+  "version": "2.27.22",
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
   "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
   "main": "dist/spritejs.js",
-  "module": "src/spritejs.esm.js",
+  "module": "dist/spritejs.esm.js",
   "directories": {
     "example": "example"
   },
@@ -65,6 +65,7 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/register": "^7.0.0",
+    "@purtuga/esm-webpack-plugin": "^1.1.0",
     "ava": "^1.4.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",

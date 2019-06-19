@@ -1,4 +1,4 @@
-module.exports =
+var spritejs =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.21";
+const version = "2.27.22";
 
 
 /***/ }),
@@ -21213,3 +21213,30 @@ const removeDebugToolsObserver = null;
 
 /***/ })
 /******/ ]);
+
+export const _debugger = spritejs['_debugger'];
+export const version = spritejs['version'];
+export const math = spritejs['math'];
+export const utils = spritejs['utils'];
+export const use = spritejs['use'];
+export const querySelector = spritejs['querySelector'];
+export const querySelectorAll = spritejs['querySelectorAll'];
+export const stylesheet = spritejs['stylesheet'];
+export const BaseNode = spritejs['BaseNode'];
+export const BaseSprite = spritejs['BaseSprite'];
+export const Sprite = spritejs['Sprite'];
+export const Label = spritejs['Label'];
+export const Path = spritejs['Path'];
+export const Group = spritejs['Group'];
+export const Layer = spritejs['Layer'];
+export const Scene = spritejs['Scene'];
+export const Paper2D = spritejs['Paper2D'];
+export const registerNodeType = spritejs['registerNodeType'];
+export const isValidNodeType = spritejs['isValidNodeType'];
+export const createNode = spritejs['createNode'];
+export const createElement = spritejs['createElement'];
+export const Color = spritejs['Color'];
+export const Resource = spritejs['Resource'];
+export const Effects = spritejs['Effects'];
+export const Easings = spritejs['Easings'];
+export const Timeline = spritejs['Timeline'];

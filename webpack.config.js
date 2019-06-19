@@ -1,3 +1,4 @@
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,11 +18,17 @@ module.exports = function (env = {}) {
 
   const output = {
     path: outputPath,
-    filename: env.esnext ? 'spritejs.es6' : 'spritejs',
+    filename: env.esnext ? 'spritejs.esm' : 'spritejs',
     publicPath: '/js/',
     library: 'spritejs',
-    libraryTarget: env.esnext ? 'commonjs2' : 'umd',
+    libraryTarget: env.esnext ? 'var' : 'umd',
   };
+
+  const plugins = [];
+
+  if(env.esnext) {
+    plugins.push(new EsmWebpackPlugin());
+  }
 
   const alias = {
     'sprite-core': 'sprite-core/src/index.js',
@@ -85,9 +92,7 @@ module.exports = function (env = {}) {
       // ...
     },
 
-    plugins: [
-      // ...
-    ],
+    plugins,
     // list of additional plugins
 
 
