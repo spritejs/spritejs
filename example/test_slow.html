@@ -41,7 +41,7 @@
         name: 'root',
         children: arr
       }
-    })(1000); // mock 数据，这里是数据个数
+    })(3000); // mock 数据，这里是数据个数
 
     const root = d3.hierarchy(data)
       .sum(d => d.value)
@@ -60,37 +60,39 @@
       .attr('pos', [500, 500])
       .attr('anchor', [0.5, 0.5])
       .attr('size', [size, size])
-      .attr('enableCache', true)
+      // .attr('enableCache', true)
       .on('mousemove', (d) => {
-        const evt = d3.event;
+        // console.log(111);
+        // const evt = d3.event;
         const target = d3.event.target;
-        const name = target.attr('data-name');
+        target.attr('border', [3, 'green']);
+        // const name = target.attr('data-name');
 
-        let offsetX,
-          offsetY;
+        // let offsetX,
+        //   offsetY;
 
-        if(target !== group.node()) {
-          const parent = target.parent;
-          const borderWidth = parent.attr('borderWidth');
-          const padding = parent.attr('padding');
-          const parentX = evt.offsetX - parent.originalRect[0] - borderWidth - padding[3];
-          const parentY = evt.offsetY - parent.originalRect[1] - borderWidth - padding[0];
-          [offsetX, offsetY] = target.pointToOffset(parentX, parentY);
-        } else {
-          offsetX = evt.offsetX;
-          offsetY = evt.offsetY;
-        }
+        // if(target !== group.node()) {
+        //   const parent = target.parent;
+        //   const borderWidth = parent.attr('borderWidth');
+        //   const padding = parent.attr('padding');
+        //   const parentX = evt.offsetX - parent.originalRect[0] - borderWidth - padding[3];
+        //   const parentY = evt.offsetY - parent.originalRect[1] - borderWidth - padding[0];
+        //   [offsetX, offsetY] = target.pointToOffset(parentX, parentY);
+        // } else {
+        //   offsetX = evt.offsetX;
+        //   offsetY = evt.offsetY;
+        // }
 
-        const r = Math.round(target.attr('width') / 2);
-        // target.attr('border', [3, 'red']);
-        // console.log(offsetX, offsetY, r);
-        if (offsetX ** 2 + offsetY ** 2 < r ** 2) {
-          // layer.selectAll('label[name="region"]')
-          //   .attr('text', name);
-          // layer.selectAll('label[name!="region"]')
-          //   .attr('border', null);
-          target.attr('border', [3, 'green']);
-        }
+        // const r = Math.round(target.attr('width') / 2);
+        // // target.attr('border', [3, 'red']);
+        // // console.log(offsetX, offsetY, r);
+        // if (offsetX ** 2 + offsetY ** 2 < r ** 2) {
+        //   // layer.selectAll('label[name="region"]')
+        //   //   .attr('text', name);
+        //   // layer.selectAll('label[name!="region"]')
+        //   //   .attr('border', null);
+        //   target.attr('border', [3, 'green']);
+        // }
       });
 
     group.selectAll('label[name!="region"]')

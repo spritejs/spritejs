@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.27.22";
+const version = "2.28.0";
 
 
 /***/ }),
@@ -5239,7 +5239,7 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         let cachableContext = !this.isVirtual && this.cache;
         const filter = this.attr('filter'),
               shadow = this.attr('shadow'),
-              enableCache = this.attr('enableCache') || shadow || filter;
+              enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && this.__labelCount || shadow || filter;
         const ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
         if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
@@ -8400,6 +8400,40 @@ let Label = _decorate(null, function (_initialize2, _BaseSprite) {
 
     }, {
       kind: "method",
+      key: "connect",
+
+      value(parent, zOrder = 0) {
+        const ret = _get(_getPrototypeOf(Label.prototype), "connect", this).call(this, parent, zOrder);
+
+        let _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          ++_p.__labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+
+    }, {
+      kind: "method",
+      key: "disconnect",
+
+      value(parent) {
+        const ret = _get(_getPrototypeOf(Label.prototype), "disconnect", this).call(this, parent);
+
+        let _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          --_p.__labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+
+    }, {
+      kind: "method",
       key: "retypesetting",
 
       value() {
@@ -9982,6 +10016,15 @@ let GroupAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
       }
 
     }, {
+      kind: "field",
+      decorators: [_utils__WEBPACK_IMPORTED_MODULE_0__["attr"]],
+      key: "enableCache",
+
+      value() {
+        return 'auto';
+      }
+
+    }, {
       kind: "set",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_0__["attr"])({
         reflow,
@@ -10096,6 +10139,7 @@ let Group = _decorate(null, function (_initialize2, _BaseSprite) {
       this.sortedChildNodes = [];
       this[_zOrder] = 0;
       this[_layoutTag] = false;
+      this.__labelCount = 0;
     }
 
   }
@@ -10153,6 +10197,42 @@ let Group = _decorate(null, function (_initialize2, _BaseSprite) {
               bgimage = this.attr('bgimage'),
               [paddingTop, paddingRight, paddingBottom, paddingLeft] = this.attr('padding');
         return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient && !bgimage && !paddingTop && !paddingRight && !paddingBottom && !paddingLeft;
+      }
+
+    }, {
+      kind: "method",
+      key: "connect",
+
+      value(parent, zOrder = 0) {
+        const ret = _get(_getPrototypeOf(Group.prototype), "connect", this).call(this, parent, zOrder);
+
+        const labelCount = this.__labelCount;
+        let _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          _p.__labelCount += labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+
+    }, {
+      kind: "method",
+      key: "disconnect",
+
+      value(parent) {
+        const ret = _get(_getPrototypeOf(Group.prototype), "disconnect", this).call(this, parent);
+
+        const labelCount = this.__labelCount;
+        let _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          _p.__labelCount -= labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
       }
 
     }, {

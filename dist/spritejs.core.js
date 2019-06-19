@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.27.22";
+var version = "2.28.0";
 
 
 /***/ }),
@@ -4407,7 +4407,7 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
         var cachableContext = !this.isVirtual && this.cache;
         var filter = this.attr('filter'),
             shadow = this.attr('shadow'),
-            enableCache = this.attr('enableCache') || shadow || filter;
+            enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && this.__labelCount || shadow || filter;
         var ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
         if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
@@ -9653,6 +9653,38 @@ var Label = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___default
       }
     }, {
       kind: "method",
+      key: "connect",
+      value: function value(parent) {
+        var zOrder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+        var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Label.prototype), "connect", this).call(this, parent, zOrder);
+
+        var _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          ++_p.__labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+    }, {
+      kind: "method",
+      key: "disconnect",
+      value: function value(parent) {
+        var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Label.prototype), "disconnect", this).call(this, parent);
+
+        var _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          --_p.__labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+    }, {
+      kind: "method",
       key: "retypesetting",
       value: function value() {
         // calculTextboxSize(this);
@@ -11363,6 +11395,13 @@ var GroupAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___def
         return [];
       }
     }, {
+      kind: "field",
+      decorators: [_utils__WEBPACK_IMPORTED_MODULE_9__["attr"]],
+      key: "enableCache",
+      value: function value() {
+        return 'auto';
+      }
+    }, {
       kind: "set",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
         reflow: reflow,
@@ -11471,6 +11510,7 @@ var Group = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___default
       _this2.sortedChildNodes = [];
       _this2[_zOrder] = 0;
       _this2[_layoutTag] = false;
+      _this2.__labelCount = 0;
       return _this2;
     }
 
@@ -11533,6 +11573,40 @@ var Group = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_8___default
             paddingLeft = _this$attr6[3];
 
         return !anchorX && !anchorY && !width && !height && !borderRadius && !borderWidth && !bgcolor && !bgGradient && !bgimage && !paddingTop && !paddingRight && !paddingBottom && !paddingLeft;
+      }
+    }, {
+      kind: "method",
+      key: "connect",
+      value: function value(parent) {
+        var zOrder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+        var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Group.prototype), "connect", this).call(this, parent, zOrder);
+
+        var labelCount = this.__labelCount;
+        var _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          _p.__labelCount += labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
+      }
+    }, {
+      kind: "method",
+      key: "disconnect",
+      value: function value(parent) {
+        var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default()(Group.prototype), "disconnect", this).call(this, parent);
+
+        var labelCount = this.__labelCount;
+        var _p = parent;
+
+        while (_p && _p.__labelCount != null) {
+          _p.__labelCount -= labelCount;
+          _p = _p.parent;
+        }
+
+        return ret;
       }
     }, {
       kind: "method",
