@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.28.1";
+const version = "2.28.2";
 
 
 /***/ }),
@@ -4364,7 +4364,7 @@ function findColor(context, sprite, prop) {
 }
 const contextPool = [],
       contextReady = [],
-      maxPollSize = 20;
+      maxPollSize = 50;
 const cacheContextPool = {
   get(context) {
     if (contextReady.length > 0) {
@@ -4467,7 +4467,7 @@ const _animations = Symbol('animations'),
       _flow = Symbol('flow'),
       _releaseKeys = Symbol('releaseKeys');
 
-const CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
+const CACHE_PRIORITY_THRESHOLDS = 6; // const CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
 
 let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
   class BaseSprite extends _BaseNode {
@@ -5239,7 +5239,8 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         let cachableContext = !this.isVirtual && this.cache;
         const filter = this.attr('filter'),
               shadow = this.attr('shadow'),
-              enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && !this.__labelCount || shadow || filter;
+              clipOverflow = this.attr('clipOverflow'),
+              enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && !this.__labelCount && clipOverflow || shadow || filter;
         const ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
         if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
@@ -5292,6 +5293,10 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
 
         if ((shadow || filter) && !cachableContext) {
           console.warn('No cachable context. Shadows and filters have been ignored.');
+        }
+
+        if (!clipOverflow && cachableContext) {
+          console.warn('Clip overflow is ignored because of cache enabled.');
         }
 
         if (cachableContext && cachableContext.canvas.width > 0 && cachableContext.canvas.height > 0) {
@@ -5416,7 +5421,7 @@ let BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
         const bgcolor = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["findColor"])(drawingContext, this, 'bgcolor');
         const bgimage = this.attr('bgimage');
 
-        if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
+        if (!this.cache || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
           let [x, y, w, h, r] = [borderWidth, borderWidth, clientWidth, clientHeight, borderRadius];
 
           if (Array.isArray(r)) {

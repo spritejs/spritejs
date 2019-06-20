@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.28.1";
+var version = "2.28.2";
 
 
 /***/ }),
@@ -3444,7 +3444,7 @@ function findColor(context, sprite, prop) {
 }
 var contextPool = [],
     contextReady = [],
-    maxPollSize = 20;
+    maxPollSize = 50;
 var cacheContextPool = {
   get: function get(context) {
     if (contextReady.length > 0) {
@@ -3543,7 +3543,7 @@ var _animations = Symbol('animations'),
     _flow = Symbol('flow'),
     _releaseKeys = Symbol('releaseKeys');
 
-var CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
+var CACHE_PRIORITY_THRESHOLDS = 6; // const CACHE_PRIORITY_THRESHOLDS = 0; // disable cache_priority, for canvas drawing bug...
 
 var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___default()(null, function (_initialize, _BaseNode) {
   var BaseSprite =
@@ -4407,7 +4407,8 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
         var cachableContext = !this.isVirtual && this.cache;
         var filter = this.attr('filter'),
             shadow = this.attr('shadow'),
-            enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && !this.__labelCount || shadow || filter;
+            clipOverflow = this.attr('clipOverflow'),
+            enableCache = this.attr('enableCache') === true || this.attr('enableCache') === 'auto' && !this.__labelCount && clipOverflow || shadow || filter;
         var ratio = this.layer ? this.layer.displayRatio || 1.0 : 1.0;
 
         if (enableCache && (shadow || filter || cachableContext !== false) && !cachableContext) {
@@ -4460,6 +4461,10 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
 
         if ((shadow || filter) && !cachableContext) {
           console.warn('No cachable context. Shadows and filters have been ignored.');
+        }
+
+        if (!clipOverflow && cachableContext) {
+          console.warn('Clip overflow is ignored because of cache enabled.');
         }
 
         if (cachableContext && cachableContext.canvas.width > 0 && cachableContext.canvas.height > 0) {
@@ -4586,7 +4591,7 @@ var BaseSprite = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_6___de
         var bgcolor = Object(_utils__WEBPACK_IMPORTED_MODULE_11__["findColor"])(drawingContext, this, 'bgcolor');
         var bgimage = this.attr('bgimage');
 
-        if (this.cache == null || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
+        if (!this.cache || borderWidth || borderRadius || bgcolor || bgimage && bgimage.display !== 'none') {
           var _x = borderWidth,
               _y = borderWidth,
               _w = clientWidth,
