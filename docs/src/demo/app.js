@@ -20,15 +20,17 @@ editor.on('change', debounce((evt) => {
   output.innerHTML = '';
   const hash = Date.now();
   if(window.location.hash.startsWith('#d3_')) {
-    window.frames[0].location.href = `/demo/sendbox2.html?t=${hash}`;
+    window.frames[0].location.href = `/demo/sandbox2.html?t=${hash}`;
   } else if(window.location.hash.startsWith('#matterjs_')) {
-    window.frames[0].location.href = `/demo/sendbox3.html?t=${hash}`;
+    window.frames[0].location.href = `/demo/sandbox3.html?t=${hash}`;
   } else if(window.location.hash.startsWith('#proton')) {
-    window.frames[0].location.href = `/demo/sendbox4.html?t=${hash}`;
+    window.frames[0].location.href = `/demo/sandbox4.html?t=${hash}`;
   } else if(window.location.hash.startsWith('#curvejs')) {
-    window.frames[0].location.href = `/demo/sendboxCurvejs.html?t=${hash}`;
+    window.frames[0].location.href = `/demo/sandboxCurvejs.html?t=${hash}`;
+  } else if(window.location.hash.startsWith('#echart')) {
+    window.frames[0].location.href = `/demo/sandboxECharts.html?t=${hash}`;
   } else {
-    window.frames[0].location.href = `/demo/sendbox.html?t=${hash}`;
+    window.frames[0].location.href = `/demo/sandbox.html?t=${hash}`;
   }
 }));
 

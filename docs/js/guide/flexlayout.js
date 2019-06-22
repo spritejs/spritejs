@@ -68,7 +68,7 @@ regeneratorRuntime.mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee, this);
+  }, _callee);
 }))();
 
 (function () {

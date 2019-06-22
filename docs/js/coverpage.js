@@ -215,7 +215,7 @@ regeneratorRuntime.mark(function _callee6() {
                       return _context5.stop();
                   }
                 }
-              }, _callee5, this);
+              }, _callee5);
             }));
             return _showMore.apply(this, arguments);
           };
@@ -445,7 +445,7 @@ regeneratorRuntime.mark(function _callee6() {
                       return _context4.stop();
                   }
                 }
-              }, _callee4, this);
+              }, _callee4);
             }));
             return _showGuanGuan.apply(this, arguments);
           };
@@ -562,7 +562,7 @@ regeneratorRuntime.mark(function _callee6() {
                       return _context3.stop();
                   }
                 }
-              }, _callee3, this);
+              }, _callee3);
             }));
             return _showHuanHuan.apply(this, arguments);
           };
@@ -622,7 +622,7 @@ regeneratorRuntime.mark(function _callee6() {
                       return _context2.stop();
                   }
                 }
-              }, _callee2, this);
+              }, _callee2);
             }));
             return _showIntroText.apply(this, arguments);
           };
@@ -700,7 +700,7 @@ regeneratorRuntime.mark(function _callee6() {
                       return _context.stop();
                   }
                 }
-              }, _callee, this);
+              }, _callee);
             }));
             return _showLogoText.apply(this, arguments);
           };
@@ -903,5 +903,5 @@ regeneratorRuntime.mark(function _callee6() {
           return _context6.stop();
       }
     }
-  }, _callee6, this);
+  }, _callee6);
 }))();

@@ -18,9 +18,9 @@ Path的mouse和touch事件会调用这个方法，把命中的svgpath结果放�
 
 获取svgpath路径的总长度
 
-## getPointsAtLength()
+## getPointAtLength()
 
-`getPointsAtLength(length)` 获取svgpath路径上指定长度的点的位置
+`getPointAtLength(length)` 获取svgpath路径上指定长度的点的位置
 
 ## lineWidth
 

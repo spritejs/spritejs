@@ -29,15 +29,17 @@ editor.on('change', debounce(function (evt) {
   var hash = Date.now();
 
   if (window.location.hash.startsWith('#d3_')) {
-    window.frames[0].location.href = "/demo/sendbox2.html?t=".concat(hash);
+    window.frames[0].location.href = "/demo/sandbox2.html?t=".concat(hash);
   } else if (window.location.hash.startsWith('#matterjs_')) {
-    window.frames[0].location.href = "/demo/sendbox3.html?t=".concat(hash);
+    window.frames[0].location.href = "/demo/sandbox3.html?t=".concat(hash);
   } else if (window.location.hash.startsWith('#proton')) {
-    window.frames[0].location.href = "/demo/sendbox4.html?t=".concat(hash);
+    window.frames[0].location.href = "/demo/sandbox4.html?t=".concat(hash);
   } else if (window.location.hash.startsWith('#curvejs')) {
-    window.frames[0].location.href = "/demo/sendboxCurvejs.html?t=".concat(hash);
+    window.frames[0].location.href = "/demo/sandboxCurvejs.html?t=".concat(hash);
+  } else if (window.location.hash.startsWith('#echart')) {
+    window.frames[0].location.href = "/demo/sandboxECharts.html?t=".concat(hash);
   } else {
-    window.frames[0].location.href = "/demo/sendbox.html?t=".concat(hash);
+    window.frames[0].location.href = "/demo/sandbox.html?t=".concat(hash);
   }
 }));
 var loadingState = document.querySelector('#paper .loading');

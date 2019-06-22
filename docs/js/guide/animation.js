@@ -59,7 +59,7 @@ regeneratorRuntime.mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee, this);
+  }, _callee);
 }))();
 
 _asyncToGenerator(
@@ -171,7 +171,7 @@ regeneratorRuntime.mark(function _callee2() {
           return _context2.stop();
       }
     }
-  }, _callee2, this);
+  }, _callee2);
 }))();
 
 (function () {
@@ -285,7 +285,7 @@ regeneratorRuntime.mark(function _callee3() {
           return _context3.stop();
       }
     }
-  }, _callee3, this);
+  }, _callee3);
 }))();
 
 (function () {

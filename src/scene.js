@@ -218,6 +218,7 @@ export default class Scene extends BaseNode {
         canvas.style.top = '50%';
         canvas.style.left = '50%';
         canvas.style.transform = 'translate(-50%, -50%)';
+        canvas.style.webkitTransform = 'translate(-50%, -50%)';
       } else if(!stickExtend && (stickMode === 'right' || stickMode === 'bottom')) {
         canvas.style.right = '0';
         canvas.style.bottom = '0';
@@ -430,6 +431,7 @@ export default class Scene extends BaseNode {
             layer.dispatchEvent(type, Object.assign({}, evtArgs, {
               layerX: x, layerY: y, originalX: originalCoordinate.x, originalY: originalCoordinate.y, x, y,
             }));
+            if(evt.terminated) break;
           }
         }
     }, {passive});

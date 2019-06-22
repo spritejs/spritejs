@@ -16,9 +16,9 @@ const p1 = new Path('M280,250A200,200,0,1,1,680,250A200,200,0,1,1,280,250Z')
 
 Get the total length of the svgpath.
 
-## getPointsAtLength()
+## getPointAtLength()
 
-`getPointsAtLength(length)` Get the position of the point of the specified length on the svgpath.
+`getPointAtLength(length)` Get the position of the point of the specified length on the svgpath.
 
 ## lineWidth
 
