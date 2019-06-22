@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    width: 400px;
+    height: 300px;
+    border: solid 1px red;
+  }
+  #paper canvas {
+    background-color: #fdd;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <img id="recordGif"/>
+  <script src="https://lib.baomitu.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    /* eslint-disable */
+    // 阻止双击放大
+    var lastTouchEnd = 0;
+    document.addEventListener('touchstart', function(event) {
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    });
+    document.addEventListener('touchend', function(event) {
+        var now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // 阻止双指放大
+    document.addEventListener('gesturestart', function(event) {
+        event.preventDefault();
+    });
+
+    var scene = spritejs.Paper2D('#paper',
+      {
+        viewport: ['auto', 'auto'],
+        resolution: [400, 300],
+        stickMode: 'height',
+        // stickExtend: true,
+      });
+    var s = new spritejs.Sprite({
+      bgcolor: 'red',
+      size: [100, 100],
+      pos: [100, 100],
+    });
+    var s2 = s.cloneNode();
+    s2.attr({
+      pos: [200, 200],
+      bgcolor: 'blue',
+    });
+    scene.layer().append(s, s2);
+    let ox, oy;
+    s.on('touchstart', (evt) => {
+      ox = evt.offsetX;
+      oy = evt.offsetY;
+      console.log(evt.type, evt.identifier);
+    });
+    s.on('touchmove', (evt) => {
+      const px = evt.parentX;
+      const py = evt.parentY;
+      evt.target.attr('pos', [px - ox, py - oy]);
+    });
+
+    let ox2, oy2;
+    s2.on('touchstart', (evt) => {
+      ox2 = evt.offsetX;
+      oy2 = evt.offsetY;
+    });
+    s2.on('touchmove', (evt) => {
+      const px = evt.parentX;
+      const py = evt.parentY;
+      evt.target.attr('pos', [px - ox2, py - oy2]);
+    });
+  </script>
+</body>
+</html>

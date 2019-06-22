@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.28.2";
+const version = "2.28.3";
 
 
 /***/ }),
@@ -7238,17 +7238,13 @@ class BaseNode {
 
     if (!evt.terminated && (isCollision || captured)) {
       if (!evt.target) evt.target = this;
-      const changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+      const identifier = evt.identifier;
 
-      if (changedTouches) {
+      if (identifier != null) {
         if (type === 'touchstart') {
-          const touch = changedTouches[0],
-                layer = this.layer;
-
-          if (touch && touch.identifier != null) {
-            layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
-            layer.touchedTargets[touch.identifier].push(this);
-          }
+          const layer = this.layer;
+          layer.touchedTargets[identifier] = layer.touchedTargets[identifier] || [];
+          layer.touchedTargets[identifier].push(this);
         }
 
         if (/^touch/.test(type)) {
@@ -7262,8 +7258,6 @@ class BaseNode {
               evt.targetTouches.push(touch);
             }
           });
-          evt.touches = touches;
-          evt.changedTouches = Array.from(changedTouches);
         }
       }
 
@@ -9607,9 +9601,9 @@ class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
     if (!swallow && !evt.terminated && type !== 'mouseenter') {
       let isCollision = collisionState || this.pointCollision(evt);
-      const changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+      const identifier = evt.identifier;
 
-      if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
+      if (identifier != null && (type === 'touchend' || type === 'touchmove')) {
         isCollision = true;
       }
 
@@ -9617,29 +9611,34 @@ class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"] {
         const sprites = this.sortedChildNodes.slice(0).reverse(),
               targetSprites = [];
 
-        if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
-          const touch = changedTouches[0];
+        if (identifier != null && (type === 'touchend' || type === 'touchmove')) {
+          const touches = evt.originalEvent.changedTouches;
 
-          if (touch && touch.identifier != null) {
-            const targets = this.layer.touchedTargets[touch.identifier];
+          for (let i = 0; i < touches.length; i++) {
+            const touch = touches[i];
 
-            if (targets) {
-              targets.forEach(target => {
-                if (target !== this && target.layer === this) {
-                  const [parentX, parentY] = target.getParentXY(evt.layerX, evt.layerY);
-                  const _parentX = evt.parentX;
-                  const _parentY = evt.parentY;
-                  evt.parentX = parentX;
-                  evt.parentY = parentY;
-                  target.dispatchEvent(type, evt, true, true);
-                  evt.parentX = _parentX;
-                  evt.parentY = _parentY;
-                }
-              });
-              if (type === 'touchend') delete this.layer.touchedTargets[touch.identifier];
+            if (touch.identifier === identifier) {
+              const targets = this.layer.touchedTargets[identifier];
+
+              if (targets) {
+                targets.forEach(target => {
+                  if (target !== this && target.layer === this) {
+                    const [parentX, parentY] = target.getParentXY(evt.layerX, evt.layerY);
+                    const _parent = [evt.parentX, evt.parentY];
+                    evt.parentX = parentX;
+                    evt.parentY = parentY;
+                    target.dispatchEvent(type, evt, true, true);
+                    [evt.parentX, evt.parentY] = _parent;
+                  }
+                });
+                if (type === 'touchend') delete this.layer.touchedTargets[identifier];
+              }
             }
           }
         } else {
+          evt.parentX = evt.layerX;
+          evt.parentY = evt.layerY;
+
           for (let i = 0; i < sprites.length; i++) {
             const sprite = sprites[i];
             const hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
@@ -9658,6 +9657,9 @@ class Layer extends _basenode__WEBPACK_IMPORTED_MODULE_2__["default"] {
               break;
             }
           }
+
+          delete evt.parentX;
+          delete evt.parentY;
         }
 
         evt.targetSprites = targetSprites; // stopDispatch can only terminate event in the same level
@@ -21019,7 +21021,8 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
 
       }; // mouse event layerX, layerY value change while browser scaled.
 
-      let originalX, originalY, x, y;
+      let x, y;
+      const originalCoordinates = [];
       /* istanbul ignore else */
 
       if (e instanceof CustomEvent) {
@@ -21028,52 +21031,66 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
         if (evtArgs.x != null && evtArgs.y != null) {
           x = evtArgs.x;
           y = evtArgs.y;
+          originalCoordinates.push({
+            x: null,
+            y: null
+          });
         } else if (evtArgs.originalX != null && evtArgs.originalY != null) {
-          originalX = evtArgs.originalX;
-          originalY = evtArgs.originalY;
+          originalCoordinates.push({
+            x: evtArgs.originalX,
+            y: evtArgs.originalY
+          });
         }
       } else {
         const {
           left,
           top
         } = e.target.getBoundingClientRect();
-        const {
-          clientX,
-          clientY
-        } = e.changedTouches ? e.changedTouches[0] : e;
+        const pointers = e.changedTouches || [e];
 
-        if (clientX != null && clientY != null) {
-          originalX = Math.round((clientX | 0) - left);
-          originalY = Math.round((clientY | 0) - top);
-        }
-      } // else {
-      //   originalX = NaN;
-      //   originalY = NaN;
-      // }
+        for (let i = 0; i < pointers.length; i++) {
+          const pointer = pointers[i];
+          const identifier = pointer.identifier;
+          const {
+            clientX,
+            clientY
+          } = pointer;
 
-
-      for (let i = 0; i < layers.length; i++) {
-        const layer = layers[i];
-
-        if (layer.handleEvent) {
-          if (originalX != null && originalY != null) {
-            [x, y] = layer.toLocalPos(originalX, originalY);
-          } else if (x != null && y != null) {
-            [originalX, originalY] = layer.toGlobalPos(x, y);
+          if (clientX != null && clientY != null) {
+            originalCoordinates.push({
+              x: Math.round((clientX | 0) - left),
+              y: Math.round((clientY | 0) - top),
+              identifier
+            });
           }
-
-          const evt = Object.assign({}, evtArgs, {
-            layerX: x,
-            layerY: y,
-            originalX,
-            originalY,
-            x,
-            y
-          });
-          layer.dispatchEvent(type, evt);
-          if (evt.terminated) break;
         }
       }
+
+      originalCoordinates.forEach(originalCoordinate => {
+        for (let i = 0; i < layers.length; i++) {
+          const layer = layers[i];
+
+          if (layer.handleEvent) {
+            if (originalCoordinate.x != null && originalCoordinate.y != null) {
+              [x, y] = layer.toLocalPos(originalCoordinate.x, originalCoordinate.y);
+            } else if (x != null && y != null) {
+              [originalCoordinate.x, originalCoordinate.y] = layer.toGlobalPos(x, y);
+            }
+
+            const evt = Object.assign({}, evtArgs, {
+              layerX: x,
+              layerY: y,
+              originalX: originalCoordinate.x,
+              originalY: originalCoordinate.y,
+              x,
+              y,
+              identifier: originalCoordinate.identifier
+            });
+            layer.dispatchEvent(type, evt);
+            if (evt.terminated) break;
+          }
+        }
+      });
     }, {
       passive
     });

@@ -386,9 +386,10 @@ export default class Scene extends BaseNode {
       };
 
       // mouse event layerX, layerY value change while browser scaled.
-      let x, y;
-      let originalCoordinates = [];
-      
+      let x,
+        y;
+      const originalCoordinates = [];
+
       /* istanbul ignore else */
       if(e instanceof CustomEvent) {
         Object.assign(evtArgs, e.detail);
@@ -397,43 +398,55 @@ export default class Scene extends BaseNode {
           y = evtArgs.y;
           originalCoordinates.push({
             x: null,
-            y: null
+            y: null,
           });
         } else if(evtArgs.originalX != null && evtArgs.originalY != null) {
           originalCoordinates.push({
             x: evtArgs.originalX,
-            y: evtArgs.originalY
+            y: evtArgs.originalY,
           });
         }
       } else {
         const {left, top} = e.target.getBoundingClientRect();
-        var pointers = e.changedTouches || e;
+        const pointers = e.changedTouches || [e];
 
-        for(var pointer of pointers) {
+        for(let i = 0; i < pointers.length; i++) {
+          const pointer = pointers[i];
+          const identifier = pointer.identifier;
           const {clientX, clientY} = pointer;
           if(clientX != null && clientY != null) {
             originalCoordinates.push({
               x: Math.round((clientX | 0) - left),
-              y: Math.round((clientY | 0) - top)
+              y: Math.round((clientY | 0) - top),
+              identifier,
             });
           }
         }
-      } 
+      }
 
-      for(const originalCoordinate of originalCoordinates)
-        for(var layer of layers) {
+      originalCoordinates.forEach((originalCoordinate) => {
+        for(let i = 0; i < layers.length; i++) {
+          const layer = layers[i];
           if(layer.handleEvent) {
             if(originalCoordinate.x != null && originalCoordinate.y != null) {
               [x, y] = layer.toLocalPos(originalCoordinate.x, originalCoordinate.y);
             } else if(x != null && y != null) {
               [originalCoordinate.x, originalCoordinate.y] = layer.toGlobalPos(x, y);
             }
-            layer.dispatchEvent(type, Object.assign({}, evtArgs, {
-              layerX: x, layerY: y, originalX: originalCoordinate.x, originalY: originalCoordinate.y, x, y,
-            }));
+            const evt = Object.assign({}, evtArgs, {
+              layerX: x,
+              layerY: y,
+              originalX: originalCoordinate.x,
+              originalY: originalCoordinate.y,
+              x,
+              y,
+              identifier: originalCoordinate.identifier,
+            });
+            layer.dispatchEvent(type, evt);
             if(evt.terminated) break;
           }
         }
+      });
     }, {passive});
 
     return true;

@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.28.2";
+var version = "2.28.3";
 
 
 /***/ }),
@@ -8461,17 +8461,13 @@ function () {
 
       if (!evt.terminated && (isCollision || captured)) {
         if (!evt.target) evt.target = this;
-        var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+        var identifier = evt.identifier;
 
-        if (changedTouches) {
+        if (identifier != null) {
           if (type === 'touchstart') {
-            var touch = changedTouches[0],
-                layer = this.layer;
-
-            if (touch && touch.identifier != null) {
-              layer.touchedTargets[touch.identifier] = layer.touchedTargets[touch.identifier] || [];
-              layer.touchedTargets[touch.identifier].push(this);
-            }
+            var layer = this.layer;
+            layer.touchedTargets[identifier] = layer.touchedTargets[identifier] || [];
+            layer.touchedTargets[identifier].push(this);
           }
 
           if (/^touch/.test(type)) {
@@ -8485,8 +8481,6 @@ function () {
                 evt.targetTouches.push(touch);
               }
             });
-            evt.touches = touches;
-            evt.changedTouches = Array.from(changedTouches);
           }
         }
 
@@ -10927,9 +10921,9 @@ function (_BaseNode) {
 
       if (!swallow && !evt.terminated && type !== 'mouseenter') {
         var isCollision = collisionState || this.pointCollision(evt);
-        var changedTouches = evt.originalEvent && evt.originalEvent.changedTouches;
+        var identifier = evt.identifier;
 
-        if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
+        if (identifier != null && (type === 'touchend' || type === 'touchmove')) {
           isCollision = true;
         }
 
@@ -10937,35 +10931,41 @@ function (_BaseNode) {
           var sprites = this.sortedChildNodes.slice(0).reverse(),
               targetSprites = [];
 
-          if (changedTouches && (type === 'touchend' || type === 'touchmove')) {
-            var touch = changedTouches[0];
+          if (identifier != null && (type === 'touchend' || type === 'touchmove')) {
+            var touches = evt.originalEvent.changedTouches;
 
-            if (touch && touch.identifier != null) {
-              var targets = this.layer.touchedTargets[touch.identifier];
+            for (var i = 0; i < touches.length; i++) {
+              var touch = touches[i];
 
-              if (targets) {
-                targets.forEach(function (target) {
-                  if (target !== _this6 && target.layer === _this6) {
-                    var _target$getParentXY = target.getParentXY(evt.layerX, evt.layerY),
-                        _target$getParentXY2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_target$getParentXY, 2),
-                        parentX = _target$getParentXY2[0],
-                        parentY = _target$getParentXY2[1];
+              if (touch.identifier === identifier) {
+                var targets = this.layer.touchedTargets[identifier];
 
-                    var _parentX = evt.parentX;
-                    var _parentY = evt.parentY;
-                    evt.parentX = parentX;
-                    evt.parentY = parentY;
-                    target.dispatchEvent(type, evt, true, true);
-                    evt.parentX = _parentX;
-                    evt.parentY = _parentY;
-                  }
-                });
-                if (type === 'touchend') delete this.layer.touchedTargets[touch.identifier];
+                if (targets) {
+                  targets.forEach(function (target) {
+                    if (target !== _this6 && target.layer === _this6) {
+                      var _target$getParentXY = target.getParentXY(evt.layerX, evt.layerY),
+                          _target$getParentXY2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_target$getParentXY, 2),
+                          parentX = _target$getParentXY2[0],
+                          parentY = _target$getParentXY2[1];
+
+                      var _parent = [evt.parentX, evt.parentY];
+                      evt.parentX = parentX;
+                      evt.parentY = parentY;
+                      target.dispatchEvent(type, evt, true, true);
+                      evt.parentX = _parent[0];
+                      evt.parentY = _parent[1];
+                    }
+                  });
+                  if (type === 'touchend') delete this.layer.touchedTargets[identifier];
+                }
               }
             }
           } else {
-            for (var i = 0; i < sprites.length; i++) {
-              var sprite = sprites[i];
+            evt.parentX = evt.layerX;
+            evt.parentY = evt.layerY;
+
+            for (var _i = 0; _i < sprites.length; _i++) {
+              var sprite = sprites[_i];
               var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
 
               if (hit) {
@@ -10982,6 +10982,9 @@ function (_BaseNode) {
                 break;
               }
             }
+
+            delete evt.parentX;
+            delete evt.parentY;
           }
 
           evt.targetSprites = targetSprites; // stopDispatch can only terminate event in the same level
@@ -20477,7 +20480,8 @@ function (_BaseNode) {
           }
         }; // mouse event layerX, layerY value change while browser scaled.
 
-        var originalX, originalY, x, y;
+        var x, y;
+        var originalCoordinates = [];
         /* istanbul ignore else */
 
         if (e instanceof CustomEvent) {
@@ -20486,61 +20490,74 @@ function (_BaseNode) {
           if (evtArgs.x != null && evtArgs.y != null) {
             x = evtArgs.x;
             y = evtArgs.y;
+            originalCoordinates.push({
+              x: null,
+              y: null
+            });
           } else if (evtArgs.originalX != null && evtArgs.originalY != null) {
-            originalX = evtArgs.originalX;
-            originalY = evtArgs.originalY;
+            originalCoordinates.push({
+              x: evtArgs.originalX,
+              y: evtArgs.originalY
+            });
           }
         } else {
           var _e$target$getBounding = e.target.getBoundingClientRect(),
               left = _e$target$getBounding.left,
               top = _e$target$getBounding.top;
 
-          var _ref = e.changedTouches ? e.changedTouches[0] : e,
-              clientX = _ref.clientX,
-              clientY = _ref.clientY;
+          var pointers = e.changedTouches || [e];
 
-          if (clientX != null && clientY != null) {
-            originalX = Math.round((clientX | 0) - left);
-            originalY = Math.round((clientY | 0) - top);
-          }
-        } // else {
-        //   originalX = NaN;
-        //   originalY = NaN;
-        // }
+          for (var i = 0; i < pointers.length; i++) {
+            var pointer = pointers[i];
+            var identifier = pointer.identifier;
+            var clientX = pointer.clientX,
+                clientY = pointer.clientY;
 
-
-        for (var i = 0; i < layers.length; i++) {
-          var layer = layers[i];
-
-          if (layer.handleEvent) {
-            if (originalX != null && originalY != null) {
-              var _layer$toLocalPos = layer.toLocalPos(originalX, originalY);
-
-              var _layer$toLocalPos2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_layer$toLocalPos, 2);
-
-              x = _layer$toLocalPos2[0];
-              y = _layer$toLocalPos2[1];
-            } else if (x != null && y != null) {
-              var _layer$toGlobalPos = layer.toGlobalPos(x, y);
-
-              var _layer$toGlobalPos2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_layer$toGlobalPos, 2);
-
-              originalX = _layer$toGlobalPos2[0];
-              originalY = _layer$toGlobalPos2[1];
+            if (clientX != null && clientY != null) {
+              originalCoordinates.push({
+                x: Math.round((clientX | 0) - left),
+                y: Math.round((clientY | 0) - top),
+                identifier: identifier
+              });
             }
-
-            var evt = Object.assign({}, evtArgs, {
-              layerX: x,
-              layerY: y,
-              originalX: originalX,
-              originalY: originalY,
-              x: x,
-              y: y
-            });
-            layer.dispatchEvent(type, evt);
-            if (evt.terminated) break;
           }
         }
+
+        originalCoordinates.forEach(function (originalCoordinate) {
+          for (var _i = 0; _i < layers.length; _i++) {
+            var layer = layers[_i];
+
+            if (layer.handleEvent) {
+              if (originalCoordinate.x != null && originalCoordinate.y != null) {
+                var _layer$toLocalPos = layer.toLocalPos(originalCoordinate.x, originalCoordinate.y);
+
+                var _layer$toLocalPos2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_layer$toLocalPos, 2);
+
+                x = _layer$toLocalPos2[0];
+                y = _layer$toLocalPos2[1];
+              } else if (x != null && y != null) {
+                var _layer$toGlobalPos = layer.toGlobalPos(x, y);
+
+                var _layer$toGlobalPos2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_layer$toGlobalPos, 2);
+
+                originalCoordinate.x = _layer$toGlobalPos2[0];
+                originalCoordinate.y = _layer$toGlobalPos2[1];
+              }
+
+              var evt = Object.assign({}, evtArgs, {
+                layerX: x,
+                layerY: y,
+                originalX: originalCoordinate.x,
+                originalY: originalCoordinate.y,
+                x: x,
+                y: y,
+                identifier: originalCoordinate.identifier
+              });
+              layer.dispatchEvent(type, evt);
+              if (evt.terminated) break;
+            }
+          }
+        });
       }, {
         passive: passive
       });
