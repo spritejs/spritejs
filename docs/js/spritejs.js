@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.28.3";
+var version = "2.29.0";
 
 
 /***/ }),
@@ -5961,6 +5961,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
       value: function value(type, evt) {
         var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
         var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+        var useCapturePhase = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
 
         if (collisionState) {
           var offsetXY = this.getOffsetXY(evt);
@@ -5971,7 +5972,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
           }
         }
 
-        return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(BaseSprite.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow);
+        return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_9___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(BaseSprite.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow, useCapturePhase);
       }
     }, {
       kind: "method",
@@ -8026,6 +8027,8 @@ function () {
     value: function on(type, handler) {
       var _this3 = this;
 
+      var useCapture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
       if (Array.isArray(type)) {
         type.forEach(function (t) {
           return _this3.on(t, handler);
@@ -8033,7 +8036,10 @@ function () {
       } else {
         this[_eventHandlers][type] = this[_eventHandlers][type] || [];
 
-        this[_eventHandlers][type].push(handler);
+        this[_eventHandlers][type].push({
+          handler: handler,
+          useCapture: useCapture
+        });
       }
 
       return this;
@@ -8042,6 +8048,8 @@ function () {
     key: "once",
     value: function once(type, handler) {
       var _this4 = this;
+
+      var useCapture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
       if (Array.isArray(type)) {
         type.forEach(function (t) {
@@ -8071,10 +8079,18 @@ function () {
           return _this5.off(t, handler);
         });
       } else if (handler && this[_eventHandlers][type]) {
-        var idx = this[_eventHandlers][type].indexOf(handler);
+        var handlers = this[_eventHandlers][type];
 
-        if (idx >= 0) {
-          this[_eventHandlers][type].splice(idx, 1);
+        if (handlers) {
+          for (var i = 0; i < handlers.length; i++) {
+            var _handler = handlers[i].handler;
+
+            if (_handler === handler) {
+              this[_eventHandlers][type].splice(i, 1);
+
+              break;
+            }
+          }
         }
       } else {
         delete this[_eventHandlers][type];
@@ -8116,8 +8132,15 @@ function () {
 
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      var useCapturePhase = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
       // eslint-disable-line complexity
       var handlers = this.getEventHandlers(type);
+      if (this.children && useCapturePhase === true) handlers = handlers.filter(function (handler) {
+        return handler.useCapture;
+      });
+      if (this.children && useCapturePhase === false) handlers = handlers.filter(function (handler) {
+        return !handler.useCapture;
+      });
       evt.returnValue = true;
 
       if (swallow && handlers.length === 0) {
@@ -8193,7 +8216,7 @@ function () {
         }
 
         _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(handlers).forEach(function (handler) {
-          return handler.call(_this6, evt);
+          return handler.handler.call(_this6, evt);
         });
 
         if (!this[_collisionState] && isCollision && type === 'mousemove') {
@@ -10685,10 +10708,15 @@ function (_BaseNode) {
 
       var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      var useCapturePhase = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+      // eslint-disable-line complexity
+      var handlers = this.getEventHandlers(type);
 
-      if (swallow && this.getEventHandlers(type).length === 0) {
+      if (swallow && handlers.length === 0) {
         return;
       }
+
+      var hasCapturePhase = false;
 
       if (!swallow && !evt.terminated && type !== 'mouseenter') {
         var isCollision = collisionState || this.pointCollision(evt);
@@ -10699,8 +10727,8 @@ function (_BaseNode) {
         }
 
         if (isCollision || type === 'mouseleave') {
-          var sprites = this.sortedChildNodes.slice(0).reverse(),
-              targetSprites = [];
+          var sprites = this.sortedChildNodes.slice(0).reverse();
+          var targetSprites = [];
 
           if (identifier != null && (type === 'touchend' || type === 'touchmove')) {
             var touches = evt.originalEvent.changedTouches;
@@ -10722,7 +10750,7 @@ function (_BaseNode) {
                       var _parent = [evt.parentX, evt.parentY];
                       evt.parentX = parentX;
                       evt.parentY = parentY;
-                      target.dispatchEvent(type, evt, true, true);
+                      target.dispatchEvent(type, evt, true, true, useCapturePhase);
                       evt.parentX = _parent[0];
                       evt.parentY = _parent[1];
                     }
@@ -10735,22 +10763,33 @@ function (_BaseNode) {
             evt.parentX = evt.layerX;
             evt.parentY = evt.layerY;
 
-            for (var _i = 0; _i < sprites.length; _i++) {
-              var sprite = sprites[_i];
-              var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
+            if (isCollision && handlers.length && handlers.some(function (handler) {
+              return handler.useCapture;
+            })) {
+              hasCapturePhase = true;
+              if (!evt.target) evt.target = this.getTargetFromXY(evt.parentX, evt.parentY);
 
-              if (hit) {
-                if (evt.targetSprites) {
-                  targetSprites.push.apply(targetSprites, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(evt.targetSprites));
-                  delete evt.targetSprites;
-                } // detect mouseenter/mouseleave
+              _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchEvent", this).call(this, type, evt, isCollision, swallow, true);
+            }
+
+            if (!hasCapturePhase || !evt.cancelBubble) {
+              for (var _i = 0; _i < sprites.length; _i++) {
+                var sprite = sprites[_i];
+                var hit = sprite.dispatchEvent(type, evt, collisionState, swallow, useCapturePhase);
+
+                if (hit) {
+                  if (evt.targetSprites) {
+                    targetSprites.push.apply(targetSprites, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(evt.targetSprites));
+                    delete evt.targetSprites;
+                  } // detect mouseenter/mouseleave
 
 
-                targetSprites.push(sprite);
-              }
+                  targetSprites.push(sprite);
+                }
 
-              if (evt.terminated && type !== 'mousemove') {
-                break;
+                if (evt.terminated && type !== 'mousemove') {
+                  break;
+                }
               }
             }
 
@@ -10772,6 +10811,10 @@ function (_BaseNode) {
         return false;
       }
 
+      if (hasCapturePhase) {
+        return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow, false);
+      }
+
       if (evt.targetSprites.length > 0) {
         // bubbling
         collisionState = true;
@@ -10785,7 +10828,7 @@ function (_BaseNode) {
         evt.offsetY = layerY + this.offset[1];
       }
 
-      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow);
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow, useCapturePhase);
     }
   }, {
     key: "group",
@@ -11575,10 +11618,14 @@ var Group = _decorate(null, function (_initialize2, _BaseSprite) {
       value: function value(type, evt) {
         var collisionState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
         var swallow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+        var useCapturePhase = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+        var handlers = this.getEventHandlers(type);
 
-        if (swallow && this.getEventHandlers(type).length === 0) {
+        if (swallow && handlers.length === 0) {
           return;
         }
+
+        var hasCapturePhase = false;
 
         if (!swallow && !evt.terminated && type !== 'mouseenter') {
           var isCollision = collisionState || this.pointCollision(evt);
@@ -11595,24 +11642,37 @@ var Group = _decorate(null, function (_initialize2, _BaseSprite) {
                 _parentY = evt.parentY;
             evt.parentX = parentX;
             evt.parentY = parentY;
-            var sprites = this.sortedChildNodes.slice(0).reverse();
+
+            if (isCollision && handlers.length && handlers.some(function (handler) {
+              return handler.useCapture;
+            })) {
+              hasCapturePhase = true;
+              if (!evt.target) evt.target = this.getTargetFromXY(parentX, parentY);
+
+              _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Group.prototype), "dispatchEvent", this).call(this, type, evt, isCollision, swallow, true);
+            }
+
             var targetSprites = [];
 
-            for (var i = 0; i < sprites.length && evt.isInClip !== false; i++) {
-              var sprite = sprites[i];
-              var hit = sprite.dispatchEvent(type, evt, collisionState, swallow);
+            if (!hasCapturePhase || !evt.cancelBubble) {
+              var sprites = this.sortedChildNodes.slice(0).reverse();
 
-              if (hit) {
-                if (evt.targetSprites) {
-                  targetSprites.push.apply(targetSprites, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(evt.targetSprites));
-                  delete evt.targetSprites;
+              for (var i = 0; i < sprites.length && evt.isInClip !== false; i++) {
+                var sprite = sprites[i];
+                var hit = sprite.dispatchEvent(type, evt, collisionState, swallow, useCapturePhase);
+
+                if (hit) {
+                  if (evt.targetSprites) {
+                    targetSprites.push.apply(targetSprites, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(evt.targetSprites));
+                    delete evt.targetSprites;
+                  }
+
+                  targetSprites.push(sprite);
                 }
 
-                targetSprites.push(sprite);
-              }
-
-              if (evt.terminated && type !== 'mousemove') {
-                break;
+                if (evt.terminated && type !== 'mousemove') {
+                  break;
+                }
               }
             }
 
@@ -11632,12 +11692,16 @@ var Group = _decorate(null, function (_initialize2, _BaseSprite) {
           return false;
         }
 
+        if (hasCapturePhase) {
+          return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Group.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow, false);
+        }
+
         if (evt.targetSprites.length > 0) {
           // bubbling
           collisionState = true;
         }
 
-        return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Group.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow);
+        return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Group.prototype), "dispatchEvent", this).call(this, type, evt, collisionState, swallow, useCapturePhase);
       }
     }, {
       kind: "method",
@@ -11755,6 +11819,28 @@ var _zOrder = Symbol('zOrder');
 var _removeTask = Symbol('removeTask');
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  getTargetFromXY: function getTargetFromXY(x, y) {
+    var children = this.children;
+    var target = this;
+    children.some(function (child) {
+      var evt = {
+        parentX: x,
+        parentY: y
+      };
+      var hit = child.pointCollision(evt);
+
+      if (hit) {
+        if (child.getTargetFromXY) {
+          target = child.getTargetFromXY(evt.offsetX, evt.offsetY);
+        } else {
+          target = child;
+        }
+      }
+
+      return hit;
+    });
+    return target;
+  },
   appendChild: function appendChild(sprite) {
     var _this = this;
 
