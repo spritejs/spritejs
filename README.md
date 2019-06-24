@@ -198,6 +198,20 @@ Compatible with [d3.js](https://github.com/d3/d3).
 - [Map](http://spritejs.org/demo/#d3_map)
 - [Force Links](http://spritejs.org/demo/#d3_links)
 
+### [Q-Charts](https://github.com/spritejs/q-charts)
+
+A visulization library based on spritejs.
+
+- [QCharts basic](http://spritejs.org/demo/#qchart_basic)
+- [Lines](http://spritejs.org/demo/#qchart_double_line)
+- [Smooth Lines](http://spritejs.org/demo/#qchart_smooth_line)
+- [Lines & Bars](http://spritejs.org/demo/#qchart_multicharts)
+- [Area Chart](http://spritejs.org/demo/#qchart_area)
+- [Pie Chart](http://spritejs.org/demo/#qchart_pie)
+- [Rose Chart](http://spritejs.org/demo/#qchart_rose)
+- [Radar Chart](http://spritejs.org/demo/#qchart_radar)
+- [Bubble Chart](http://spritejs.org/demo/#qchart_bubble)
+
 ### With Proton
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 

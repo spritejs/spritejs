@@ -67,6 +67,7 @@
 * 生态
   * [微信小程序](https://github.com/spritejs/sprite-wxapp)
   * [图形库](https://github.com/spritejs/sprite-extend-shapes)
+  * [图表库](https://www.spritejs.com/q-charts)
   * [Rough](https://github.com/spritejs/sprite-extend-rough)
   * [流程图](https://github.com/spritejs/sprite-extend-dagre)
   * [Vue](http://vue.spritejs.org)
