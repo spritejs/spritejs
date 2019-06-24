@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.29.1";
+var version = "2.29.2";
 
 
 /***/ }),
@@ -12016,10 +12016,7 @@ Object.assign(Group.prototype, _helpers_group__WEBPACK_IMPORTED_MODULE_11__["def
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(31);
-
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(31);
 
 
 var _zOrder = Symbol('zOrder');
@@ -12058,21 +12055,27 @@ var _removeTask = Symbol('removeTask');
       _this[_zOrder] = _this[_zOrder] || 0;
       sprite.connect(_this, _this[_zOrder]++);
       var children = _this.childNodes;
-
-      var orderedSprites = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(children);
-
       children.push(sprite); // quick insert
 
+      var orderedSprites = _this.sortedChildNodes || [];
       var len = orderedSprites.length;
-      var i = len;
+      var i;
+      var left = 0,
+          right = len - 1;
       var zIndex = sprite.attr('zIndex');
 
-      for (; i > 0; i--) {
-        var child = orderedSprites[i - 1];
-        if (child.attr('zIndex') <= zIndex) break;
+      for (; i == null && left < right;) {
+        var rightSprite = orderedSprites[right];
+        var leftSprite = orderedSprites[left];
+        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
+          // between left & right
+          var mid = Math.ceil((left + right) / 2);
+          var midSprite = orderedSprites[mid];
+          if (zIndex >= midSprite.zIndex) left = mid;else right = mid;
+        }
       }
 
-      if (i === len) orderedSprites.push(sprite);else orderedSprites.splice(i, 0, sprite);
+      if (i == null || i === len) orderedSprites.push(sprite);else orderedSprites.splice(i, 0, sprite);
       _this.sortedChildNodes = orderedSprites;
 
       if (update) {
@@ -12133,7 +12136,7 @@ var _removeTask = Symbol('removeTask');
       }
 
       that.childNodes.splice(idx, 1);
-      that.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(that.childNodes);
+      that.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(that.childNodes);
 
       if (sprite.isVisible() || sprite.lastRenderBox) {
         sprite.forceUpdate();
@@ -12210,7 +12213,7 @@ var _removeTask = Symbol('removeTask');
         _this5.childNodes.splice(idx, 0, newchild);
 
         newchild.connect(_this5, refZOrder);
-        _this5.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(_this5.childNodes);
+        _this5.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(_this5.childNodes);
         newchild.forceUpdate();
         _this5[_zOrder] = _this5[_zOrder] || 0;
         _this5[_zOrder]++;

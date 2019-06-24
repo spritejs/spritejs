@@ -38,6 +38,8 @@ editor.on('change', debounce(function (evt) {
     window.frames[0].location.href = "/demo/sandboxCurvejs.html?t=".concat(hash);
   } else if (window.location.hash.startsWith('#echart')) {
     window.frames[0].location.href = "/demo/sandboxECharts.html?t=".concat(hash);
+  } else if (window.location.hash.startsWith('#qchart')) {
+    window.frames[0].location.href = "/demo/sandboxQCharts.html?t=".concat(hash);
   } else {
     window.frames[0].location.href = "/demo/sandbox.html?t=".concat(hash);
   }

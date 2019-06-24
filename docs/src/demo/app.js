@@ -29,6 +29,8 @@ editor.on('change', debounce((evt) => {
     window.frames[0].location.href = `/demo/sandboxCurvejs.html?t=${hash}`;
   } else if(window.location.hash.startsWith('#echart')) {
     window.frames[0].location.href = `/demo/sandboxECharts.html?t=${hash}`;
+  } else if(window.location.hash.startsWith('#qchart')) {
+    window.frames[0].location.href = `/demo/sandboxQCharts.html?t=${hash}`;
   } else {
     window.frames[0].location.href = `/demo/sandbox.html?t=${hash}`;
   }

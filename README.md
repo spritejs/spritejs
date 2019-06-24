@@ -231,6 +231,7 @@ Compatible with [d3.js](https://github.com/d3/d3).
 | [sprite-extend-echarts](https://github.com/akira-cn/sprite-extend-echarts)| Rendering echarts with spritejs. |
 | [sprite-extend-proton](https://github.com/spritejs/sprite-extend-proton)| Particle renderer for proton-js. |
 | [sprite-extend-matter](https://github.com/spritejs/sprite-extend-matter)| Matter.js renderer for spritejs. |
+| [q-charts](https://github.com/spritejs/q-charts) | A visulization library based on spritejs |
 | [cat-charts-vue](https://github.com/spritejs/cat-charts-vue)| A visulization library based on spritejs , qcharts and Vue. |
 
 

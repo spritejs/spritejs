@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.29.1";
+const version = "2.29.2";
 
 
 /***/ }),
@@ -10633,19 +10633,27 @@ const _removeTask = Symbol('removeTask');
       this[_zOrder] = this[_zOrder] || 0;
       sprite.connect(this, this[_zOrder]++);
       const children = this.childNodes;
-      const orderedSprites = [...children];
       children.push(sprite); // quick insert
 
+      const orderedSprites = this.sortedChildNodes || [];
       const len = orderedSprites.length;
-      let i = len;
+      let i;
+      let left = 0,
+          right = len - 1;
       const zIndex = sprite.attr('zIndex');
 
-      for (; i > 0; i--) {
-        const child = orderedSprites[i - 1];
-        if (child.attr('zIndex') <= zIndex) break;
+      for (; i == null && left < right;) {
+        const rightSprite = orderedSprites[right];
+        const leftSprite = orderedSprites[left];
+        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
+          // between left & right
+          const mid = Math.ceil((left + right) / 2);
+          const midSprite = orderedSprites[mid];
+          if (zIndex >= midSprite.zIndex) left = mid;else right = mid;
+        }
       }
 
-      if (i === len) orderedSprites.push(sprite);else orderedSprites.splice(i, 0, sprite);
+      if (i == null || i === len) orderedSprites.push(sprite);else orderedSprites.splice(i, 0, sprite);
       this.sortedChildNodes = orderedSprites;
 
       if (update) {
