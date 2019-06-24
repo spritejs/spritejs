@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.29.0";
+var version = "2.29.1";
 
 
 /***/ }),
@@ -11811,7 +11811,10 @@ Object.assign(Group.prototype, _helpers_group__WEBPACK_IMPORTED_MODULE_12__["def
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(38);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
+
 
 
 var _zOrder = Symbol('zOrder');
@@ -11847,18 +11850,25 @@ var _removeTask = Symbol('removeTask');
     var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
     var _append = function _append() {
-      var children = _this.childNodes;
-      children.push(sprite);
       _this[_zOrder] = _this[_zOrder] || 0;
       sprite.connect(_this, _this[_zOrder]++);
-      _this.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(_this.childNodes); // for(let i = children.length - 1; i > 0; i--) {
-      //   const a = children[i],
-      //     b = children[i - 1];
-      //   if(a.zIndex < b.zIndex) {
-      //     children[i] = b;
-      //     children[i - 1] = a;
-      //   }
-      // }
+      var children = _this.childNodes;
+
+      var orderedSprites = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(children);
+
+      children.push(sprite); // quick insert
+
+      var len = orderedSprites.length;
+      var i = len;
+      var zIndex = sprite.attr('zIndex');
+
+      for (; i > 0; i--) {
+        var child = orderedSprites[i - 1];
+        if (child.attr('zIndex') <= zIndex) break;
+      }
+
+      if (i === len) orderedSprites.push(sprite);else orderedSprites.splice(i, 0, sprite);
+      _this.sortedChildNodes = orderedSprites;
 
       if (update) {
         sprite.forceUpdate();
@@ -11918,7 +11928,7 @@ var _removeTask = Symbol('removeTask');
       }
 
       that.childNodes.splice(idx, 1);
-      that.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(that.childNodes);
+      that.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(that.childNodes);
 
       if (sprite.isVisible() || sprite.lastRenderBox) {
         sprite.forceUpdate();
@@ -11995,7 +12005,7 @@ var _removeTask = Symbol('removeTask');
         _this5.childNodes.splice(idx, 0, newchild);
 
         newchild.connect(_this5, refZOrder);
-        _this5.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sortOrderedSprites"])(_this5.childNodes);
+        _this5.sortedChildNodes = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["sortOrderedSprites"])(_this5.childNodes);
         newchild.forceUpdate();
         _this5[_zOrder] = _this5[_zOrder] || 0;
         _this5[_zOrder]++;
@@ -18719,16 +18729,9 @@ var nodeTypes = new Map();
 
 var ownerDocumentDescriptor = {
   get: function get() {
-    var that = this;
     return {
       createElementNS: function createElementNS(uri, name) {
-        var sprite = createNode(name);
-
-        if (sprite) {
-          return that.appendChild(sprite);
-        }
-
-        return null;
+        return createNode(name);
       }
     };
   }
