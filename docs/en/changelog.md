@@ -1,5 +1,22 @@
 # Change Log
 
+## [2.29.0][2019-06-23]
+
+### enhancement
+
+- Add event capture phase.
+- Optimize the performance of append nodes.
+
+## [2.28.0][2019-06-20]
+
+### enhancement
+
+- Optimize cache policy.
+
+### bug fix
+
+- Fixed multi-touch events.
+
 ## [2.27.0][2019-01-07]
 
 ### enhancement
