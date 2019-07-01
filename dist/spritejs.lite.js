@@ -101,40 +101,40 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
-/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "math", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["math"]; });
+/* harmony import */ var _spritejs_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "math", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["math"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["utils"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["utils"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "use", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["use"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "use", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["use"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "querySelector", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["querySelector"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "querySelector", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["querySelector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["querySelectorAll"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["querySelectorAll"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseNode", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseNode", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Label"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Label"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Path"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Path"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Group"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Group"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "registerNodeType", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "registerNodeType", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidNodeType", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["isValidNodeType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidNodeType", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["isValidNodeType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createNode", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["createNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createNode", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["createNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["createElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["createElement"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Color"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Color"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Effects"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Effects"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Easings", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Easings"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Easings", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Easings"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timeline", function() { return sprite_core__WEBPACK_IMPORTED_MODULE_0__["Timeline"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timeline", function() { return _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["Timeline"]; });
 
 /* harmony import */ var _basesprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(110);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseSprite", function() { return _basesprite__WEBPACK_IMPORTED_MODULE_1__["default"]; });
@@ -164,8 +164,8 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
-Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
+Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
+Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
 var version = "2.29.3";
 
 
@@ -16737,14 +16737,14 @@ module.exports = _construct;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _spritejs_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(111);
 
 
 
 var _loadBgImagePassport = Symbol('loadBgImagePassport');
 
-sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = function (val) {
+_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = function (val) {
   var _this = this;
 
   var res;
@@ -16781,7 +16781,7 @@ sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"].prototype.loadBgImage = f
   return val;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"]);
+/* harmony default export */ __webpack_exports__["default"] = (_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["BaseSprite"]);
 
 /***/ }),
 /* 111 */
@@ -19690,7 +19690,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(54);
 /* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(1);
+/* harmony import */ var _spritejs_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(1);
 /* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(111);
 
 
@@ -19701,8 +19701,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var attr = sprite_core__WEBPACK_IMPORTED_MODULE_7__["utils"].attr;
-var generateID = sprite_core__WEBPACK_IMPORTED_MODULE_7__["utils"].generateID;
+var attr = _spritejs_core__WEBPACK_IMPORTED_MODULE_7__["utils"].attr;
+var generateID = _spritejs_core__WEBPACK_IMPORTED_MODULE_7__["utils"].generateID;
 
 var _mapTextures = Symbol('mapTextures'),
     _loadTexturePassport = Symbol('loadTexturePassport');
@@ -19835,10 +19835,10 @@ var ResAttr = _babel_runtime_helpers_decorate__WEBPACK_IMPORTED_MODULE_4___defau
       }
     }]
   };
-}, sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr);
+}, _spritejs_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr);
 
-sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr = ResAttr;
-/* harmony default export */ __webpack_exports__["default"] = (sprite_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"]);
+_spritejs_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"].Attr = ResAttr;
+/* harmony default export */ __webpack_exports__["default"] = (_spritejs_core__WEBPACK_IMPORTED_MODULE_7__["Sprite"]);
 
 /***/ }),
 /* 145 */
@@ -19868,7 +19868,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(48);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(1);
+/* harmony import */ var _spritejs_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(1);
 /* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(116);
 
 
@@ -20153,7 +20153,7 @@ function (_Layer) {
       this.clearContext(outputContext);
       outputContext.drawImage(snapshot.context.canvas, 0, 0);
       snapshot.children.forEach(function (child) {
-        var node = Object(sprite_core__WEBPACK_IMPORTED_MODULE_11__["createNode"])(child.nodeType);
+        var node = Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_11__["createNode"])(child.nodeType);
 
         if (child.id) {
           node.id = child.id;
@@ -20264,7 +20264,7 @@ function (_Layer) {
   }]);
 
   return ExLayer;
-}(sprite_core__WEBPACK_IMPORTED_MODULE_11__["Layer"]);
+}(_spritejs_core__WEBPACK_IMPORTED_MODULE_11__["Layer"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (ExLayer);
 
@@ -20297,7 +20297,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(48);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var sprite_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(1);
+/* harmony import */ var _spritejs_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(1);
 /* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(145);
 /* harmony import */ var _resource__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(111);
 /* harmony import */ var _platform__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(116);
@@ -20318,8 +20318,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var setDeprecation = sprite_core__WEBPACK_IMPORTED_MODULE_11__["utils"].setDeprecation,
-    sortOrderedSprites = sprite_core__WEBPACK_IMPORTED_MODULE_11__["utils"].sortOrderedSprites;
+var setDeprecation = _spritejs_core__WEBPACK_IMPORTED_MODULE_11__["utils"].setDeprecation,
+    sortOrderedSprites = _spritejs_core__WEBPACK_IMPORTED_MODULE_11__["utils"].sortOrderedSprites;
 
 var _layerMap = Symbol('layerMap'),
     _zOrder = Symbol('zOrder'),
@@ -20871,12 +20871,12 @@ function (_BaseNode) {
   }, {
     key: "querySelector",
     value: function querySelector(selector) {
-      return Object(sprite_core__WEBPACK_IMPORTED_MODULE_11__["querySelector"])(selector, this);
+      return Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_11__["querySelector"])(selector, this);
     }
   }, {
     key: "querySelectorAll",
     value: function querySelectorAll(selector) {
-      return Object(sprite_core__WEBPACK_IMPORTED_MODULE_11__["querySelectorAll"])(selector, this);
+      return Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_11__["querySelectorAll"])(selector, this);
     }
   }, {
     key: "snapshot",
@@ -21176,7 +21176,7 @@ function (_BaseNode) {
   }]);
 
   return Scene;
-}(sprite_core__WEBPACK_IMPORTED_MODULE_11__["BaseNode"]);
+}(_spritejs_core__WEBPACK_IMPORTED_MODULE_11__["BaseNode"]);
 
 
 
