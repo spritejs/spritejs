@@ -1,4 +1,4 @@
-import {BaseSprite} from 'sprite-core';
+import {BaseSprite} from '@spritejs/core';
 import Resource from './resource';
 
 const _loadBgImagePassport = Symbol('loadBgImagePassport');

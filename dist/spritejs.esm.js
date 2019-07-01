@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.29.2";
+const version = "2.29.3";
 
 
 /***/ }),
@@ -10642,7 +10642,7 @@ const _removeTask = Symbol('removeTask');
           right = len - 1;
       const zIndex = sprite.attr('zIndex');
 
-      for (; i == null && left < right;) {
+      for (; i == null && left <= right;) {
         const rightSprite = orderedSprites[right];
         const leftSprite = orderedSprites[left];
         if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
@@ -21146,6 +21146,10 @@ class Scene extends sprite_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
         }
       }
 
+      if (originalCoordinates.length <= 0) originalCoordinates.push({
+        x,
+        y
+      });
       originalCoordinates.forEach(originalCoordinate => {
         for (let i = 0; i < layers.length; i++) {
           const layer = layers[i];

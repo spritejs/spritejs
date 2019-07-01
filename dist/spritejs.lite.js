@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(sprite_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.29.2";
+var version = "2.29.3";
 
 
 /***/ }),
@@ -12064,7 +12064,7 @@ var _removeTask = Symbol('removeTask');
           right = len - 1;
       var zIndex = sprite.attr('zIndex');
 
-      for (; i == null && left < right;) {
+      for (; i == null && left <= right;) {
         var rightSprite = orderedSprites[right];
         var leftSprite = orderedSprites[left];
         if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
@@ -20615,6 +20615,10 @@ function (_BaseNode) {
           }
         }
 
+        if (originalCoordinates.length <= 0) originalCoordinates.push({
+          x: x,
+          y: y
+        });
         originalCoordinates.forEach(function (originalCoordinate) {
           for (var _i = 0; _i < layers.length; _i++) {
             var layer = layers[_i];

@@ -1,4 +1,4 @@
-import {Sprite, utils} from 'sprite-core';
+import {Sprite, utils} from '@spritejs/core';
 import Resource from './resource';
 
 const attr = utils.attr;

@@ -1,4 +1,4 @@
-import {BaseNode, utils, querySelector, querySelectorAll} from 'sprite-core';
+import {BaseNode, utils, querySelector, querySelectorAll} from '@spritejs/core';
 
 import Layer from './layer';
 import Resource from './resource';
@@ -423,6 +423,8 @@ export default class Scene extends BaseNode {
           }
         }
       }
+
+      if(originalCoordinates.length <= 0) originalCoordinates.push({x, y});
 
       originalCoordinates.forEach((originalCoordinate) => {
         for(let i = 0; i < layers.length; i++) {

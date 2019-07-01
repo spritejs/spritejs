@@ -31,7 +31,7 @@ module.exports = function (env = {}) {
   }
 
   const alias = {
-    'sprite-core': 'sprite-core/src/index.js',
+    '@spritejs/core': '@spritejs/core/src/index.js',
     'sprite-math': 'sprite-math/src/index',
     'svg-path-to-canvas': 'svg-path-to-canvas/src/index',
     'sprite-animator': 'sprite-animator/src/index',
@@ -43,11 +43,11 @@ module.exports = function (env = {}) {
   if(env.mode === 'lite') {
     output.filename += '.lite';
     entry = './src/index.lite';
-    alias['sprite-core'] = 'sprite-core/src/index.dom.js';
+    alias['@spritejs/core'] = '@spritejs/core/src/index.dom.js';
   } else if(env.mode === 'core') {
     output.filename += '.core';
     entry = './src/index.core';
-    alias['sprite-core'] = 'sprite-core/src/index.basic.js';
+    alias['@spritejs/core'] = '@spritejs/core/src/index.basic.js';
   }
 
   if(env.production) {
@@ -65,7 +65,7 @@ module.exports = function (env = {}) {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules\/(?!(sprite-[\w-]+)\/|svg-path-to-canvas).*/,
+          exclude: /node_modules\/(?!(sprite-[\w-]+)|(@spritejs)\/|svg-path-to-canvas).*/,
           use: {
             loader: 'babel-loader',
             options: babelConf,

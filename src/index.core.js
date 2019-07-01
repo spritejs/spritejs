@@ -7,7 +7,7 @@ import {
   Path,
   Group,
   Color,
-} from 'sprite-core';
+} from '@spritejs/core';
 
 import BaseSprite from './basesprite';
 import Sprite from './sprite';

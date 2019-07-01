@@ -1,4 +1,4 @@
-import {Layer, createNode} from 'sprite-core';
+import {Layer, createNode} from '@spritejs/core';
 import {createCanvas} from './platform';
 
 const _resolution = Symbol('resolution');
