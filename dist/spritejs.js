@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.29.3";
+var version = "2.29.4";
 
 
 /***/ }),
@@ -12166,12 +12166,12 @@ var _removeTask = Symbol('removeTask');
       var i;
       var left = 0,
           right = len - 1;
-      var zIndex = sprite.attr('zIndex');
+      var zIndex = sprite.attr('zIndex') | 0;
 
       for (; i == null && left <= right;) {
         var rightSprite = orderedSprites[right];
         var leftSprite = orderedSprites[left];
-        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
+        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left >= right - 1) i = right;else {
           // between left & right
           var mid = Math.ceil((left + right) / 2);
           var midSprite = orderedSprites[mid];

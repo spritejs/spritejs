@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.29.3";
+const version = "2.29.4";
 
 
 /***/ }),
@@ -10640,12 +10640,12 @@ const _removeTask = Symbol('removeTask');
       let i;
       let left = 0,
           right = len - 1;
-      const zIndex = sprite.attr('zIndex');
+      const zIndex = sprite.attr('zIndex') | 0;
 
       for (; i == null && left <= right;) {
         const rightSprite = orderedSprites[right];
         const leftSprite = orderedSprites[left];
-        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left === right - 1) i = right;else {
+        if (zIndex >= rightSprite.zIndex) i = right + 1;else if (zIndex < leftSprite.zIndex) i = left;else if (left >= right - 1) i = right;else {
           // between left & right
           const mid = Math.ceil((left + right) / 2);
           const midSprite = orderedSprites[mid];
