@@ -1,0 +1,12 @@
+{
+  "presets": [
+    ["babel-preset-poi",
+      {
+        "jsx": "vue"
+      }
+    ]
+  ],
+  "plugins": [
+
+  ]
+}

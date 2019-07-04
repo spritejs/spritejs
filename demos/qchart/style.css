@@ -1,0 +1,17 @@
+html,body{
+  margin: 0;
+  padding: 0;
+  background: #151718;
+  height: 100%;
+  width: 100%;
+}
+
+#main {
+  padding-bottom: 20px;
+  background: #ccc;
+}
+
+#app {
+  width: 100%;
+  padding-bottom: 100%;
+}

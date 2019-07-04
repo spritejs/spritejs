@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{128:function(n,d,i){"use strict";i.r(d),d.default='<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>SandBox</title>\n</head>\n<body>\n  <div id="main">\n    <div id="app"></div>\n  </div>\n</body>\n</html>'}}]);

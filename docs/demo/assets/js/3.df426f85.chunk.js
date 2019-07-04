@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{129:function(n,d,i){"use strict";i.r(d),d.default="html,body{\n  margin: 0;\n  padding: 0;\n  background: #151718;\n  height: 100%;\n  width: 100%;\n}\n\n#main {\n  padding-bottom: 20px;\n  background: #ccc;\n}\n\n#app {\n  width: 100%;\n  padding-bottom: 100%;\n}\n"}}]);

@@ -1,0 +1,108 @@
+[
+  {
+    "label": "quick start",
+    "src": "quick_start"
+  },{
+    "label": "basic sprites",
+    "src": "basic_sprites"
+  },{
+    "label": "path & groups",
+    "src": "path_groups"
+  },{
+    "label": "labels",
+    "src": "labels"
+  },{
+    "label": "buttons",
+    "src": "buttons"
+  },{
+    "label": "transforms",
+    "src": "transforms"
+  },{
+    "label": "events",
+    "src": "events"
+  },{
+    "label": "filters",
+    "src": "filters"
+  },{
+    "label": "animations",
+    "src": "animations"
+  },{
+    "label": "svg path",
+    "src": "svg_path"
+  },{
+    "label": "offset api",
+    "src": "offset_api"
+  },{
+    "label": "groups",
+    "src": "groups"
+  },{
+    "label": "ray",
+    "src": "ray"
+  },{
+    "label": "obb",
+    "src": "obb"
+  },{
+    "label": "d3 bar",
+    "src": "d3/bar"
+  },{
+    "label": "d3 hierarchy",
+    "src": "d3/hierarchy"
+  },{
+    "label": "d3 map",
+    "src": "d3/map"
+  },{
+    "label": "d3 links",
+    "src": "d3/links"
+  },{
+    "label": "d3 map centroid",
+    "src": "d3/map_centroid"
+  },{
+    "label": "d3 map search",
+    "src": "d3/map_search"
+  },{
+    "label": "qcharts basic",
+    "src": "qchart/basic"
+  },{
+    "label": "qcharts lines",
+    "src": "qchart/double_line"
+  },{
+    "label": "qcharts smooth lines",
+    "src": "qchart/smooth_line"
+  },{
+    "label": "qcharts lines & bars",
+    "src": "qchart/multicharts"
+  },{
+    "label": "qcharts areas",
+    "src": "qchart/area"
+  },{
+    "label": "qcharts pie",
+    "src": "qchart/pie"
+  },{
+    "label": "qcharts rose",
+    "src": "qchart/rose"
+  },{
+    "label": "qcharts radar",
+    "src": "qchart/radar"
+  },{
+    "label": "qcharts bubble",
+    "src": "qchart/bubble"
+  },{
+    "label": "echarts basic",
+    "src": "echart/basic"
+  },{
+    "label": "matterjs shapes",
+    "src": "matterjs/mixed_shapes"
+  },{
+    "label": "proton behavior",
+    "src": "proton/behavior"
+  },{
+    "label": "proton fire",
+    "src": "proton/fire"
+  },{
+    "label": "proton bg particles",
+    "src": "proton/position"
+  },{
+    "label": "curvejs simple",
+    "src": "curvejs/simple"
+  }
+]
