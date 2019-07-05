@@ -44,7 +44,7 @@ chart.source(data, {
 
 const area = new Area()
   .style('point', {fillColor: 'transparent'})
-  .style('point:hover', {color: '#fff'});
+  .style('point:hover', {fillColor: '#fff'});
 
 const axisBottom = new Axis();
 const axisLeft = new Axis({orient: 'left'})

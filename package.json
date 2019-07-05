@@ -30,6 +30,7 @@
     "build": "npm run compile && rm -rf dist/* && ./script/build.js",
     "doc": "babel docs/src -d docs/js --watch & webpack-dev-server --watch-poll --env.server=docs",
     "demo:dev": "webpack --watch & cross-env NODE_ENV=development demosify --serve",
+    "demo": "cross-env NODE_ENV=prodution demosify",
     "demo:prod": "cross-env NODE_ENV=prodution demosify --prod",
     "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
     "prepublishOnly": "npm run build-doc && npm run deploy"
@@ -68,7 +69,7 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/register": "^7.0.0",
-    "@demosify/core": "^0.1.12",
+    "@demosify/core": "^0.1.13",
     "@purtuga/esm-webpack-plugin": "^1.1.0",
     "ava": "^1.4.1",
     "babel-eslint": "^10.0.1",
