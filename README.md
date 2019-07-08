@@ -193,38 +193,38 @@ npm install spritejs --save
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [Bar Graph](http://spritejs.org/demo/#d3_bar)
-- [Hierarchy](http://spritejs.org/demo/#d3-2)
-- [Map](http://spritejs.org/demo/#d3_map)
-- [Force Links](http://spritejs.org/demo/#d3_links)
+- [Bar Graph](http://spritejs.org/demo/#/d3/bar)
+- [Hierarchy](http://spritejs.org/demo/#/d3/hierarchy)
+- [Map](http://spritejs.org/demo/#/d3/map)
+- [Force Links](http://spritejs.org/demo/#/d3/links)
 
 ### [Q-Charts](https://github.com/spritejs/q-charts)
 
 A visulization library based on spritejs.
 
-- [QCharts basic](http://spritejs.org/demo/#qchart_basic)
-- [Lines](http://spritejs.org/demo/#qchart_double_line)
-- [Smooth Lines](http://spritejs.org/demo/#qchart_smooth_line)
-- [Lines & Bars](http://spritejs.org/demo/#qchart_multicharts)
-- [Area Chart](http://spritejs.org/demo/#qchart_area)
-- [Pie Chart](http://spritejs.org/demo/#qchart_pie)
-- [Rose Chart](http://spritejs.org/demo/#qchart_rose)
-- [Radar Chart](http://spritejs.org/demo/#qchart_radar)
-- [Bubble Chart](http://spritejs.org/demo/#qchart_bubble)
+- [QCharts basic](http://spritejs.org/demo/#/qchart/basic)
+- [Lines](http://spritejs.org/demo/#/qchart/double_line)
+- [Smooth Lines](http://spritejs.org/demo/#/qchart/smooth_line)
+- [Lines & Bars](http://spritejs.org/demo/#/qchart/multicharts)
+- [Area Chart](http://spritejs.org/demo/#/qchart/area)
+- [Pie Chart](http://spritejs.org/demo/#/qchart/pie)
+- [Rose Chart](http://spritejs.org/demo/#/qchart/rose)
+- [Radar Chart](http://spritejs.org/demo/#/qchart/radar)
+- [Bubble Chart](http://spritejs.org/demo/#/qchart/bubble)
 
 ### With Proton
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
 
-- [Big Fire](http://spritejs.org/demo/#proton_fire)
-- [Background Particles](http://spritejs.org/demo/#proton_position)
-- [Custom Behavior](http://spritejs.org/demo/#proton_behavior)
+- [Big Fire](http://spritejs.org/demo/#/proton/fire)
+- [Background Particles](http://spritejs.org/demo/#/proton/position)
+- [Custom Behavior](http://spritejs.org/demo/#/proton/behavior)
 
 ### With Matter-js
 
 [Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
 
-- [Mixed shapes](http://spritejs.org/demo/#matterjs_mixed_shapes)
+- [Mixed shapes](http://spritejs.org/demo/#/matterjs/mixed_shapes)
 
 ### API Doc
 

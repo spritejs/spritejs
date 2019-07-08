@@ -68,7 +68,7 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/register": "^7.0.0",
-    "@demosify/core": "^0.1.16",
+    "@demosify/core": "^0.2.0",
     "@purtuga/esm-webpack-plugin": "^1.1.0",
     "ava": "^1.4.1",
     "babel-eslint": "^10.0.1",

@@ -102,37 +102,37 @@
 
 <ul class="demos">
   <li>
-    <a data-nosearch href="/demo/#d3_bar">
+    <a data-nosearch href="/demo/#/d3/bar">
       <img src="/res/demos/d3_bar.png">
       <span>bar graph</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#d3_hierarchy">
+    <a data-nosearch href="/demo/#/d3/hierarchy">
       <img src="/res/demos/d3_hierarchy.png">
       <span>hierarchy</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#d3_map">
+    <a data-nosearch href="/demo/#/d3/map">
       <img src="/res/demos/d3_map.png">
       <span>map</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#d3_links">
+    <a data-nosearch href="/demo/#/d3/links">
       <img src="/res/demos/d3_links.png">
       <span>links</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#d3_map_centroid">
+    <a data-nosearch href="/demo/#/d3/map_centroid">
       <img src="/res/demos/d3_map_centroid.png">
       <span>map centroid</span>
     </index>
   </li>
   <li>
-    <a data-nosearch href="/demo/#d3_map_search">
+    <a data-nosearch href="/demo/#/d3/map_search">
       <img src="/res/demos/d3_map_search.png">
       <span>map search</span>
     </a>
@@ -145,7 +145,7 @@
 
 <ul class="demos">
   <li>
-    <a data-nosearch href="/demo/#matterjs_mixed_shapes">
+    <a data-nosearch href="/demo/#/matterjs/mixed_shapes">
       <img src="/res/demos/matterjs_mixed_shapes.png">
       <span>mixed shapes</span>
     </a>
@@ -158,19 +158,19 @@
 
 <ul class="demos">
   <li>
-    <a data-nosearch href="/demo/#proton_behavior">
+    <a data-nosearch href="/demo/#/proton/behavior">
       <img src="https://p0.ssl.qhimg.com/t010b2c0041913666e0.jpg">
       <span>custom behavior</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#proton_fire">
+    <a data-nosearch href="/demo/#/proton/fire">
       <img src="https://p4.ssl.qhimg.com/t012debb97e0dca4c86.jpg">
       <span>big fire</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#proton_position">
+    <a data-nosearch href="/demo/#/proton/position">
       <img src="https://p3.ssl.qhimg.com/t011e0452ffad2d05ce.jpg">
       <span>bg particles</span>
     </a>

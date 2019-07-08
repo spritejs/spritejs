@@ -155,24 +155,24 @@ npm install spritejs --save
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [Bar Graph](http://spritejs.org/demo/#d3_bar)
-- [Hierarchy](http://spritejs.org/demo/#d3-2)
-- [Map](http://spritejs.org/demo/#d3_map)
-- [Force Links](http://spritejs.org/demo/#d3_links)
+- [Bar Graph](http://spritejs.org/demo/#/d3/bar)
+- [Hierarchy](http://spritejs.org/demo/#/d3/hierarchy)
+- [Map](http://spritejs.org/demo/#/d3/map)
+- [Force Links](http://spritejs.org/demo/#/d3/links)
 
 ### With Proton
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
 
-- [Big Fire](http://spritejs.org/demo/#proton_fire)
-- [Background Particles](http://spritejs.org/demo/#proton_position)
-- [Custom Behavior](http://spritejs.org/demo/#proton_behavior)
+- [Big Fire](http://spritejs.org/demo/#/proton/fire)
+- [Background Particles](http://spritejs.org/demo/#/proton/position)
+- [Custom Behavior](http://spritejs.org/demo/#/proton/behavior)
 
 ### With Matter-js
 
 [Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
 
-- [Mixed shapes](http://spritejs.org/demo/#matterjs_mixed_shapes)
+- [Mixed shapes](http://spritejs.org/demo/#/matterjs/mixed_shapes)
 
 ### API Doc
 
