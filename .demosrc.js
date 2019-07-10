@@ -1,4 +1,4 @@
-module.exports = function(env) {
+export default function(env) {
   const spritejs = env === 'development' ? '/spritejs.js'
     : 'https://unpkg.com/spritejs/dist/spritejs.min.js';
   return {
