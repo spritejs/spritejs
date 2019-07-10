@@ -49,3 +49,16 @@ sftp-config.json
 jsconfig.json
 esconfig.json
 package-lock.json
+
+# npm ignore
+benchmark/
+demos/
+.vscode/
+docs/
+example/
+script/
+test/
+.codeclimate.yml
+.demosrc.js
+.travis.yml
+
