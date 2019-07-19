@@ -12,15 +12,19 @@ spritejs的事件触发规则是基于坐标位置（主要是mouse和touch坐�
 
 上面的例子里，我们通过layer的`mousemove`事件的targetSprites参数来判断s1是否被触发，如果触发，通过evt.x、evt.y拿到鼠标相对于layer的坐标，然后再通过`s1.pointToOffset`，可以得到鼠标相对于s1元素的相对坐标（以anchor point为坐标原点）。不过这样做有点麻烦，我们可以直接在s1上也注册`mousemove`事件，这样我们可以通过事件参数的`offsetX、offsetY`直接拿到鼠标的相对位置。但是，我们需要解决一个问题——
 
-## 阻止事件继续传播
+## 阻止事件冒泡
 
-我们可以同时在layer和s1上注册mousemove事件，以修改label的提示文字。但是，如果鼠标停留在s1上时，我们不能让layer的mousemove事件仍被触发，否则的话文字就会被覆盖。在sprite提供的事件参数中，`stopDispatch()`方法正是用来阻止事件从当前的元素向下一个**同级**元素传播的。利用它就可以实现元素之间的遮挡。
+我们可以同时在layer和s1上注册mousemove事件，以修改label的提示文字。但是，如果鼠标停留在s1上时，我们不能让layer的mousemove事件仍被触发，否则的话文字就会被覆盖。在sprite提供的事件参数中。与DOM事件一样，我们可以用`stopPropagation()`方法阻止事件冒泡，这样就可以让mousemove事件不在layer上被重复触发。
 
 <div id="dom-events-stop-dispatch" class="sprite-container"></div>
 
 <!-- demo: dom-events-stop-dispatch -->
 
 ## 利用 zIndex 和 stopDispatch 遮挡
+
+SpriteJS的元素针对事件默认是**不遮挡**的，因此当元素之间相互重叠时，事件仍然会传播给下一个兄弟元素。
+
+`stopDispatch()`方法可以阻止事件从当前的元素向下一个**同级**元素传播的。利用它就可以实现元素之间的遮挡。
 
 比如我们可以利用改变元素的zIndex和stopDispatch来实现元素间的拖拽。
 

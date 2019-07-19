@@ -110,7 +110,7 @@ const {Scene, Sprite, Label, Path} = spritejs
     const {x, y, offsetX, offsetY} = evt;
     label.text = `鼠标位置：\n相对于 layer: ${Math.round(x)}, ${Math.round(y)}\n相对于元素：${Math.round(offsetX)}, ${Math.round(offsetY)}`;
 
-    evt.stopDispatch();
+    evt.stopPropagation();
   });
 }())
 

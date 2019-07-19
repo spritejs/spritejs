@@ -124,7 +124,7 @@ var _spritejs = spritejs,
         offsetX = evt.offsetX,
         offsetY = evt.offsetY;
     label.text = "\u9F20\u6807\u4F4D\u7F6E\uFF1A\n\u76F8\u5BF9\u4E8E layer: ".concat(Math.round(x), ", ").concat(Math.round(y), "\n\u76F8\u5BF9\u4E8E\u5143\u7D20\uFF1A").concat(Math.round(offsetX), ", ").concat(Math.round(offsetY));
-    evt.stopDispatch();
+    evt.stopPropagation();
   });
 })();
 
