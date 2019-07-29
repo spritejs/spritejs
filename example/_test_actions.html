@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo</title>
+  <style>
+  #paper {
+    width: 400px;
+    height: 300px;
+    border: solid 1px red;
+  }
+  #paper canvas {
+    background-color: #fdd;
+  }
+  </style>
+</head>
+<body>
+  <div id="paper"></div>
+  <img id="recordGif"/>
+  <script src="https://lib.baomitu.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+  <script src="/js/spritejs.js"></script>
+  <script>
+    /* eslint-disable */
+
+    var scene = spritejs.Paper2D('#paper',
+      {
+        viewport: ['auto', 'auto'],
+        resolution: [400, 300],
+        stickMode: 'height',
+        // stickExtend: true,
+      });
+
+    const sprite = new spritejs.Sprite({
+      size: [100, 100],
+      pos: [100, 100],
+      borderRadius: [50, 50],
+      states: {
+        stateA: {
+          bgcolor: 'green'
+        },
+        stateB: {
+          bgcolor: 'blue'
+        }
+      },
+      actions: [
+        {
+          both: ['stateA', 'stateB'],
+          duration: 600,
+          easing: 'ease-in-out'
+        }
+      ],
+      state: 'stateA',
+    });
+
+    scene.layer().append(sprite);
+
+  </script>
+</body>
+</html>
