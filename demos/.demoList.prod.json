@@ -104,5 +104,32 @@
   },{
     "label": "curvejs simple",
     "src": "curvejs/simple"
+  },{
+    "label": "spritevue basic",
+    "src": "spritevue/basic"
+  },{
+    "label": "spritevue helloworld",
+    "src": "spritevue/helloworld"
+  },{
+    "label": "spritevue key",
+    "src": "spritevue/key"
+  },{
+    "label": "spritevue component",
+    "src": "spritevue/component"
+  },{
+    "label": "spritevue node",
+    "src": "spritevue/node"
+  },{
+    "label": "spritevue states",
+    "src": "spritevue/states"
+  },{
+    "label": "spritevue transition",
+    "src": "spritevue/transition"
+  },{
+    "label": "spritevue transition2",
+    "src": "spritevue/transition2"
+  },{
+    "label": "spritevue preload",
+    "src": "spritevue/preload"
   }
 ]

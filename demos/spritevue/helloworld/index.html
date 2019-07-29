@@ -1,0 +1,11 @@
+<div id="app">
+  <scene :viewport="[300, 300]" :resolution="[600, 600]">
+    <layer>
+      <group x="20">
+        <sprite textures='https://p0.ssl.qhimg.com/t01baf69053977eb690.png' y="300" :anchor="[0, 0.5]"></sprite>
+        <s-label :font="font" :pos="[300, 300]" anchor="0.5">HelloWorld</s-label>
+        <s-path d="M480,50L423.8,182.6L280,194.8L389.2,289.4L356.4,430L480,355.4L480,355.4L603.6,430L570.8,289.4L680,194.8L536.2,182.6Z" scale="0.5" :attrs={fillColor:"red"}></s-path>
+      </group>
+    </layer>
+  </scene>
+</div>

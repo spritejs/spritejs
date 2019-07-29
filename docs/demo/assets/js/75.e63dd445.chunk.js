@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[75],{513:function(n,t,e){"use strict";e.r(t),t.default='<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>SandBox</title>\n</head>\n<body>\n  <div id="paper"></div>\n</body>\n</html>'}}]);

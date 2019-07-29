@@ -1,0 +1,11 @@
+<div id="app">
+  <scene id="container" :viewport="[300, 300]" :resolution="[600, 600]">
+    <layer>
+      <s-transition :enter="['fade-in', 600]" exit="fade-out">
+        <traffic-light v-if="state==='stop'" radius="50" x="150" y="300" color="red" key="stop"></traffic-light>
+        <traffic-light v-else-if="state==='warn'" radius="50" x="300" y="300" color="orange" key="warn"></traffic-light>
+        <traffic-light v-else radius="50" x="450" y="300" color="green" key="pass"></traffic-light>
+      </s-transition>
+    </layer>
+  </scene>  
+</div>

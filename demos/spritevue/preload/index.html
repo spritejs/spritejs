@@ -1,0 +1,18 @@
+<div id="app">
+  <scene id="container" :viewport=viewport :resources="[[
+                                                       'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+                                                       'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+                                                       ]]" @load="load" @preload="loading">
+    <layer v-if="preload" id="fglayer" @click="toggle">
+      <s-transition enter="fade-in" :show="['fade-in', 800]" hide="fade-out">
+        <sprite v-show="selected===0" :attrs="{x: 100, y: 100, textures: 'guanguan1.png', scale: 0.5, id: 'a'}"
+                ></sprite>
+        <sprite v-show="selected===1" :attrs="{x: 300, y: 100, textures: 'guanguan2.png', scale: 0.5, id: 'b'}"
+                ></sprite>
+        <sprite v-show="selected===2" :attrs="{x: 500, y: 100, textures: 'guanguan3.png', scale: 0.5, id: 'c'}"
+                ></sprite>
+      </s-transition>
+    </layer>
+    <div v-else>Loading...</div>
+  </scene>
+</div>
