@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.29.4";
+var version = "2.29.5";
 
 
 /***/ }),
@@ -16433,7 +16433,7 @@ function (_BaseNode) {
       }
     });
     _this[_events] = new Set();
-    var events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
+    var events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick'];
     events.forEach(function (event) {
       return _this.delegateEvent(event);
     });

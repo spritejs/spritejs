@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.29.4";
+const version = "2.29.5";
 
 
 /***/ }),
@@ -20759,7 +20759,7 @@ class Scene extends _spritejs_core__WEBPACK_IMPORTED_MODULE_0__["BaseNode"] {
 
     });
     this[_events] = new Set();
-    const events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'click', 'dblclick'];
+    const events = ['mousedown', 'mouseup', 'mousemove', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick'];
     events.forEach(event => this.delegateEvent(event));
     /* istanbul ignore next */
 

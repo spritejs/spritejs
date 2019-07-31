@@ -71,7 +71,7 @@ export default class Scene extends BaseNode {
     this[_events] = new Set();
 
     const events = ['mousedown', 'mouseup', 'mousemove',
-      'touchstart', 'touchend', 'touchmove',
+      'touchstart', 'touchend', 'touchmove', 'touchcancel',
       'click', 'dblclick'];
 
     events.forEach(event => this.delegateEvent(event));
