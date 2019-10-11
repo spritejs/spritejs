@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.29.6][2019-10-11]
+
+### bug fix
+
+- Fixed renderBox 1px problem.
+- Fixed lineWidth rounding problem.
+- Fixed css-style priority problem.
+
 ## [2.29.0][2019-06-23]
 
 ### enhancement
