@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.29.5";
+var version = "2.29.6";
 
 
 /***/ }),
@@ -4225,21 +4225,21 @@ function attr(options) {
 
     if (quiet && (cache || reflow || relayout)) {
       throw new Error("".concat(key, ": quietSet cannot enable cache or reflow or relayout"));
-    }
+    } // let _symbolKey = key;
 
-    var _symbolKey = key,
-        defaultValue = value != null ? value : elementDescriptor.value;
+
+    var defaultValue = value != null ? value : elementDescriptor.value;
     var relativeType = elementDescriptor.descriptor.__relative;
     var inheritValue = elementDescriptor.descriptor.__inherit;
     var composit = elementDescriptor.descriptor.__composit;
 
     if (kind === 'field') {
-      defaultValue = elementDescriptor.initializer ? elementDescriptor.initializer() : value;
-      _symbolKey = Symbol(key);
+      defaultValue = elementDescriptor.initializer ? elementDescriptor.initializer() : value; // _symbolKey = Symbol(key);
+
       var setter = quiet ? function (val) {
-        this.quietSet(_symbolKey, val);
+        this.quietSet(key, val);
       } : function (val) {
-        this.set(_symbolKey, val);
+        this.set(key, val);
       };
       elementDescriptor = {
         kind: 'method',
@@ -4250,7 +4250,7 @@ function attr(options) {
           enumerable: true,
           set: setter,
           get: function get() {
-            return this.get(_symbolKey);
+            return this.get(key);
           }
         }
       };
@@ -5816,7 +5816,7 @@ var BaseSprite = _decorate(null, function (_initialize, _BaseNode) {
       value: function value() {
         var bound = this.boundingRect,
             pos = this.xy;
-        return [Math.floor(pos[0] + bound[0]), Math.floor(pos[1] + bound[1]), Math.ceil(pos[0] + bound[0] + bound[2]), Math.ceil(pos[1] + bound[1] + bound[3])];
+        return [pos[0] + bound[0], pos[1] + bound[1], pos[0] + bound[0] + bound[2], pos[1] + bound[1] + bound[3]];
       }
     }, {
       kind: "get",
@@ -12182,7 +12182,7 @@ var PathSpriteAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
       }
     }, {
       kind: "field",
-      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(parseFloat, Math.round), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_9__["parseValue"])(parseFloat), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["attr"])({
         reflow: reflow
       }), Object(_utils__WEBPACK_IMPORTED_MODULE_9__["inherit"])(1)],
       key: "lineWidth",
