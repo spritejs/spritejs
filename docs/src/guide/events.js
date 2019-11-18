@@ -320,7 +320,9 @@ const {Scene, Sprite, Label} = spritejs
     init(attr) {
       attr.setDefault({
         font: '42px Arial',
-        border: {width: 4, color: 'black', style: 'solid'},
+        borderWidth: 4,
+        borderColor: 'black',
+        borderStyle: 'solid',
         width: 50,
         height: 50,
         anchor: [0.5, 0.5],
@@ -339,6 +341,7 @@ const {Scene, Sprite, Label} = spritejs
     const keyButtons = [...keys[i]];
     for(let j = 0; j < keyButtons.length; j++) {
       const key = new KeyButton(keyButtons[j]);
+      console.log(key);
       key.attr({
         pos: [250 + j * 80, 200 + i * 100],
       });
