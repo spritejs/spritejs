@@ -1,23 +1,17 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite,
     Path = _spritejs.Path;
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee2() {
+(function _callee2() {
   var scene, bglayer, randomTriangle, i, birdsJsonUrl, birdsRes, fglayer, bird, snapshotBtn, snapshotList;
-  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+  return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          randomTriangle = function _ref3() {
+          randomTriangle = function _ref() {
             var triangle = new Path();
             var pos = [Math.random() * 1540, Math.random() * 600];
             var d = 'M0,0L0,10L8.66, 5z';
@@ -50,7 +44,7 @@ regeneratorRuntime.mark(function _callee2() {
           birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
           birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
           _context2.next = 8;
-          return scene.preload([birdsRes, birdsJsonUrl]);
+          return regeneratorRuntime.awrap(scene.preload([birdsRes, birdsJsonUrl]));
 
         case 8:
           fglayer = scene.layer('fglayer');
@@ -84,45 +78,35 @@ regeneratorRuntime.mark(function _callee2() {
             iterations: Infinity
           });
           snapshotBtn = document.getElementById('take-snapshot'), snapshotList = document.getElementById('snapshot-list');
-          snapshotBtn.addEventListener('click',
-          /*#__PURE__*/
-          function () {
-            var _ref2 = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee(evt) {
-              var canvas, snapshot, listItem;
-              return regeneratorRuntime.wrap(function _callee$(_context) {
-                while (1) {
-                  switch (_context.prev = _context.next) {
-                    case 0:
-                      _context.next = 2;
-                      return scene.snapshot();
+          snapshotBtn.addEventListener('click', function _callee(evt) {
+            var canvas, snapshot, listItem;
+            return regeneratorRuntime.async(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    _context.next = 2;
+                    return regeneratorRuntime.awrap(scene.snapshot());
 
-                    case 2:
-                      canvas = _context.sent;
-                      snapshot = new Image();
-                      snapshot.src = canvas.toDataURL();
-                      listItem = document.createElement('li');
-                      listItem.appendChild(snapshot);
-                      snapshotList.appendChild(listItem);
+                  case 2:
+                    canvas = _context.sent;
+                    snapshot = new Image();
+                    snapshot.src = canvas.toDataURL();
+                    listItem = document.createElement('li');
+                    listItem.appendChild(snapshot);
+                    snapshotList.appendChild(listItem);
 
-                    case 8:
-                    case "end":
-                      return _context.stop();
-                  }
+                  case 8:
+                  case "end":
+                    return _context.stop();
                 }
-              }, _callee);
-            }));
-
-            return function (_x) {
-              return _ref2.apply(this, arguments);
-            };
-          }());
+              }
+            });
+          });
 
         case 16:
         case "end":
           return _context2.stop();
       }
     }
-  }, _callee2);
-}))();
+  });
+})();

@@ -12,24 +12,18 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+(function _callee() {
+  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, showLogoText, showIntroText, showHuanHuan, showGuanGuan, registerButton, showButtons, showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, calculateScroll;
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee6() {
-  var loadingHint, _onScroll, _spritejs, Scene, Sprite, Group, Label, Path, scene, coverpage, fglayer, maxScroll, fixMobile, _fixMobile, animations, wait, showLogoText, _showLogoText, showIntroText, _showIntroText, showHuanHuan, _showHuanHuan, showGuanGuan, _showGuanGuan, registerButton, showButtons, showMore, _showMore, hideSprites, showSprites, showFeatures, requestId, autoScroll, text, buttons, huanhuan, guanguan, more, featureGroup, scrolled, features, calculateScroll;
-
-  return regeneratorRuntime.wrap(function _callee6$(_context6) {
+  return regeneratorRuntime.async(function _callee$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
-          calculateScroll = function _ref20() {
+          calculateScroll = function _ref14() {
             var r = parseInt(fglayer.canvas.style.width, 10) / scene.resolution[0];
             var a = (coverpage.clientHeight - fglayer.canvas.clientHeight) / 2;
             var b = (440 + 465) * r;
@@ -37,7 +31,7 @@ regeneratorRuntime.mark(function _callee6() {
             return features.getBoundingClientRect().y - a - b + c + window.pageYOffset;
           };
 
-          autoScroll = function _ref19(scrollBy) {
+          autoScroll = function _ref13(scrollBy) {
             var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
             if (requestId !== null) return;
             var startTime = Date.now();
@@ -54,7 +48,7 @@ regeneratorRuntime.mark(function _callee6() {
             });
           };
 
-          showFeatures = function _ref18() {
+          showFeatures = function _ref12() {
             var group = new Group();
             group.attr({
               size: [2160, 930],
@@ -114,7 +108,7 @@ regeneratorRuntime.mark(function _callee6() {
             return group;
           };
 
-          showSprites = function _ref17(sprites) {
+          showSprites = function _ref11(sprites) {
             sprites.forEach(function (sprite) {
               sprite.attr({
                 opacity: 1
@@ -122,7 +116,7 @@ regeneratorRuntime.mark(function _callee6() {
             });
           };
 
-          hideSprites = function _ref16(sprites) {
+          hideSprites = function _ref10(sprites) {
             sprites.forEach(function (sprite) {
               sprite.attr({
                 opacity: 0
@@ -130,101 +124,92 @@ regeneratorRuntime.mark(function _callee6() {
             });
           };
 
-          _showMore = function _ref15() {
-            _showMore = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee5() {
-              var more, blinkSpots, blinkSpot1, blinkSpotGap, blinkAnimKeyframes, blinkSpot2, blinkSpot3;
-              return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                while (1) {
-                  switch (_context5.prev = _context5.next) {
-                    case 0:
-                      //  小鼠标
-                      more = new Sprite();
-                      more.attr({
-                        textures: 'more.png',
-                        anchor: 0.5,
-                        pos: [1920, 1800],
-                        opacity: 0
-                      });
-                      fglayer.append(more);
-                      _context5.next = 5;
-                      return more.transition(0.5).attr({
-                        opacity: 1
-                      });
+          showMore = function _ref9() {
+            var more, blinkSpots, blinkSpot1, blinkSpotGap, blinkAnimKeyframes, blinkSpot2, blinkSpot3;
+            return regeneratorRuntime.async(function showMore$(_context5) {
+              while (1) {
+                switch (_context5.prev = _context5.next) {
+                  case 0:
+                    //  小鼠标
+                    more = new Sprite();
+                    more.attr({
+                      textures: 'more.png',
+                      anchor: 0.5,
+                      pos: [1920, 1800],
+                      opacity: 0
+                    });
+                    fglayer.append(more);
+                    _context5.next = 5;
+                    return regeneratorRuntime.awrap(more.transition(0.5).attr({
+                      opacity: 1
+                    }));
 
-                    case 5:
-                      registerButton(more, function () {});
-                      document.querySelector('main').style.display = 'block'; // 呼吸的小圆点
+                  case 5:
+                    registerButton(more, function () {});
+                    document.querySelector('main').style.display = 'block'; // 呼吸的小圆点
 
-                      blinkSpots = new Group();
-                      blinkSpot1 = new Sprite();
-                      blinkSpotGap = 30;
-                      blinkAnimKeyframes = [{
-                        opacity: 1,
-                        offset: 0.25
-                      }, {
-                        opacity: 0.2,
-                        offset: 0.5
-                      }];
-                      blinkSpot1.attr({
-                        bgcolor: 'white',
-                        size: [10, 10],
-                        anchor: 0.5,
-                        pos: [1918, 1870],
-                        borderRadius: 5,
-                        opacity: 0.2
-                      });
-                      blinkSpot1.animate(blinkAnimKeyframes, {
-                        duration: 2000,
-                        iterations: Infinity,
-                        easing: 'ease-in-out'
-                      });
-                      blinkSpots.append(blinkSpot1);
-                      blinkSpot2 = blinkSpot1.cloneNode();
-                      blinkSpot2.attr({
-                        y: function y(_y) {
-                          return _y + blinkSpotGap;
-                        }
-                      });
-                      blinkSpot2.animate(blinkAnimKeyframes, {
-                        duration: 2000,
-                        iterations: Infinity,
-                        delay: 330,
-                        easing: 'ease-in-out'
-                      });
-                      blinkSpots.append(blinkSpot2);
-                      blinkSpot3 = blinkSpot2.cloneNode();
-                      blinkSpot3.attr({
-                        y: function y(_y2) {
-                          return _y2 + blinkSpotGap;
-                        }
-                      });
-                      blinkSpot3.animate(blinkAnimKeyframes, {
-                        duration: 2000,
-                        iterations: Infinity,
-                        delay: 660,
-                        easing: 'ease-in-out'
-                      });
-                      blinkSpots.append(blinkSpot3);
-                      fglayer.append(blinkSpots);
-                      return _context5.abrupt("return", [more, blinkSpots]);
+                    blinkSpots = new Group();
+                    blinkSpot1 = new Sprite();
+                    blinkSpotGap = 30;
+                    blinkAnimKeyframes = [{
+                      opacity: 1,
+                      offset: 0.25
+                    }, {
+                      opacity: 0.2,
+                      offset: 0.5
+                    }];
+                    blinkSpot1.attr({
+                      bgcolor: 'white',
+                      size: [10, 10],
+                      anchor: 0.5,
+                      pos: [1918, 1870],
+                      borderRadius: 5,
+                      opacity: 0.2
+                    });
+                    blinkSpot1.animate(blinkAnimKeyframes, {
+                      duration: 2000,
+                      iterations: Infinity,
+                      easing: 'ease-in-out'
+                    });
+                    blinkSpots.append(blinkSpot1);
+                    blinkSpot2 = blinkSpot1.cloneNode();
+                    blinkSpot2.attr({
+                      y: function y(_y) {
+                        return _y + blinkSpotGap;
+                      }
+                    });
+                    blinkSpot2.animate(blinkAnimKeyframes, {
+                      duration: 2000,
+                      iterations: Infinity,
+                      delay: 330,
+                      easing: 'ease-in-out'
+                    });
+                    blinkSpots.append(blinkSpot2);
+                    blinkSpot3 = blinkSpot2.cloneNode();
+                    blinkSpot3.attr({
+                      y: function y(_y2) {
+                        return _y2 + blinkSpotGap;
+                      }
+                    });
+                    blinkSpot3.animate(blinkAnimKeyframes, {
+                      duration: 2000,
+                      iterations: Infinity,
+                      delay: 660,
+                      easing: 'ease-in-out'
+                    });
+                    blinkSpots.append(blinkSpot3);
+                    fglayer.append(blinkSpots);
+                    return _context5.abrupt("return", [more, blinkSpots]);
 
-                    case 24:
-                    case "end":
-                      return _context5.stop();
-                  }
+                  case 24:
+                  case "end":
+                    return _context5.stop();
                 }
-              }, _callee5);
-            }));
-            return _showMore.apply(this, arguments);
+              }
+            });
           };
 
-          showMore = function _ref14() {
-            return _showMore.apply(this, arguments);
-          };
-
-          showButtons = function _ref13() {
+          showButtons = function _ref8() {
             var githubBtn = new Label('GitHub');
             githubBtn.attr({
               anchor: [0.5, 0],
@@ -300,7 +285,7 @@ regeneratorRuntime.mark(function _callee6() {
             return [githubBtn, giteeBtn, getStartBtn, demoBtn];
           };
 
-          registerButton = function _ref12(button, link) {
+          registerButton = function _ref7(button, link) {
             button.on('mouseenter', function (evt) {
               document.documentElement.style.cursor = 'pointer';
             });
@@ -346,376 +331,340 @@ regeneratorRuntime.mark(function _callee6() {
             }
           };
 
-          _showGuanGuan = function _ref11() {
-            _showGuanGuan = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee4() {
-              var guanguan, anim3, anim31, anim4;
-              return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                while (1) {
-                  switch (_context4.prev = _context4.next) {
-                    case 0:
-                      guanguan = new Sprite('guanguan3.png');
-                      guanguan.attr({
-                        anchor: 0.5,
-                        scale: [-1, 1],
-                        pos: [3000, 1140]
-                      });
-                      fglayer.append(guanguan);
-                      anim3 = guanguan.animate([{
-                        x: 3000
-                      }, {
-                        x: 2700
-                      }], {
-                        duration: 400,
-                        fill: 'forwards'
-                      });
-                      _context4.next = 6;
-                      return anim3.finished;
+          showGuanGuan = function _ref6() {
+            var guanguan, anim3, anim31, anim4;
+            return regeneratorRuntime.async(function showGuanGuan$(_context4) {
+              while (1) {
+                switch (_context4.prev = _context4.next) {
+                  case 0:
+                    guanguan = new Sprite('guanguan3.png');
+                    guanguan.attr({
+                      anchor: 0.5,
+                      scale: [-1, 1],
+                      pos: [3000, 1140]
+                    });
+                    fglayer.append(guanguan);
+                    anim3 = guanguan.animate([{
+                      x: 3000
+                    }, {
+                      x: 2700
+                    }], {
+                      duration: 400,
+                      fill: 'forwards'
+                    });
+                    _context4.next = 6;
+                    return regeneratorRuntime.awrap(anim3.finished);
 
-                    case 6:
-                      guanguan.textures = 'guanguan1.png';
-                      anim31 = guanguan.animate([{
-                        textures: 'guanguan1.png'
-                      }, {
-                        textures: 'guanguan2.png'
-                      }], {
-                        duration: 300,
-                        iterations: 2,
-                        fill: 'backwards'
-                      });
-                      _context4.next = 10;
-                      return anim31.finished;
+                  case 6:
+                    guanguan.textures = 'guanguan1.png';
+                    anim31 = guanguan.animate([{
+                      textures: 'guanguan1.png'
+                    }, {
+                      textures: 'guanguan2.png'
+                    }], {
+                      duration: 300,
+                      iterations: 2,
+                      fill: 'backwards'
+                    });
+                    _context4.next = 10;
+                    return regeneratorRuntime.awrap(anim31.finished);
 
-                    case 10:
-                      _context4.next = 12;
-                      return wait(300);
+                  case 10:
+                    _context4.next = 12;
+                    return regeneratorRuntime.awrap(wait(300));
 
-                    case 12:
-                      guanguan.textures = 'guanguan3.png';
-                      anim4 = guanguan.animate([{
-                        x: 2700
-                      }, {
-                        x: 2380
-                      }], {
-                        duration: 400,
-                        fill: 'forwards'
-                      });
-                      _context4.next = 16;
-                      return anim4.finished;
+                  case 12:
+                    guanguan.textures = 'guanguan3.png';
+                    anim4 = guanguan.animate([{
+                      x: 2700
+                    }, {
+                      x: 2380
+                    }], {
+                      duration: 400,
+                      fill: 'forwards'
+                    });
+                    _context4.next = 16;
+                    return regeneratorRuntime.awrap(anim4.finished);
 
-                    case 16:
-                      guanguan.textures = 'guanguan1.png';
-                      _context4.next = 19;
-                      return wait(300);
+                  case 16:
+                    guanguan.textures = 'guanguan1.png';
+                    _context4.next = 19;
+                    return regeneratorRuntime.awrap(wait(300));
 
-                    case 19:
-                      guanguan.animate([{
-                        textures: 'guanguan1.png'
-                      }, {
-                        textures: 'guanguan2.png'
-                      }], {
-                        duration: 200,
-                        fill: 'backwards'
-                      });
-                      guanguan.attr({
-                        zIndex: 100 // rotate: 20,
+                  case 19:
+                    guanguan.animate([{
+                      textures: 'guanguan1.png'
+                    }, {
+                      textures: 'guanguan2.png'
+                    }], {
+                      duration: 200,
+                      fill: 'backwards'
+                    });
+                    guanguan.attr({
+                      zIndex: 100 // rotate: 20,
 
-                      });
-                      guanguan.on('mouseenter', function (evt) {
-                        if (guanguan.textures[0].id !== 'guanguan3.png') {
-                          guanguan.textures = ['guanguan2.png'];
-                          guanguan.transition(0.2).attr({
-                            rotate: 30
-                          });
-                        }
-                      });
-                      guanguan.on('mouseleave', function (evt) {
-                        if (guanguan.textures[0].id !== 'guanguan3.png') {
-                          guanguan.textures = ['guanguan1.png'];
-                          guanguan.transition(0.2).attr({
-                            rotate: 0
-                          });
-                        }
-                      });
-                      return _context4.abrupt("return", guanguan);
+                    });
+                    guanguan.on('mouseenter', function (evt) {
+                      if (guanguan.textures[0].id !== 'guanguan3.png') {
+                        guanguan.textures = ['guanguan2.png'];
+                        guanguan.transition(0.2).attr({
+                          rotate: 30
+                        });
+                      }
+                    });
+                    guanguan.on('mouseleave', function (evt) {
+                      if (guanguan.textures[0].id !== 'guanguan3.png') {
+                        guanguan.textures = ['guanguan1.png'];
+                        guanguan.transition(0.2).attr({
+                          rotate: 0
+                        });
+                      }
+                    });
+                    return _context4.abrupt("return", guanguan);
 
-                    case 24:
-                    case "end":
-                      return _context4.stop();
-                  }
+                  case 24:
+                  case "end":
+                    return _context4.stop();
                 }
-              }, _callee4);
-            }));
-            return _showGuanGuan.apply(this, arguments);
+              }
+            });
           };
 
-          showGuanGuan = function _ref10() {
-            return _showGuanGuan.apply(this, arguments);
-          };
+          showHuanHuan = function _ref5() {
+            var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, anim;
+            return regeneratorRuntime.async(function showHuanHuan$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    huanhuanGroup = new Group();
+                    huanhuanGroup.attr({
+                      anchor: 0.5,
+                      pos: [980, 744],
+                      rotate: 30,
+                      size: [200, 320],
+                      opacity: 0,
+                      zIndex: 100 // bgcolor: 'red',
 
-          _showHuanHuan = function _ref9() {
-            _showHuanHuan = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee3() {
-              var huanhuanGroup, huanhuan, huanhuanFire, fx, fy, anim2, anim;
-              return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                while (1) {
-                  switch (_context3.prev = _context3.next) {
-                    case 0:
-                      huanhuanGroup = new Group();
-                      huanhuanGroup.attr({
-                        anchor: 0.5,
-                        pos: [980, 744],
-                        rotate: 30,
-                        size: [200, 320],
-                        opacity: 0,
-                        zIndex: 100 // bgcolor: 'red',
+                    });
+                    fglayer.append(huanhuanGroup);
+                    huanhuan = new Sprite('huanhuan.png');
+                    huanhuan.attr({
+                      pos: [0, 0]
+                    });
+                    huanhuanGroup.append(huanhuan);
+                    huanhuanFire = new Path();
+                    huanhuanFire.attr({
+                      path: {
+                        d: 'M0,0Q-1,12,5,36Q30,22,30,0z',
+                        transform: {
+                          scale: 2
+                        }
+                      },
+                      anchor: [0, 0],
+                      fillColor: '#FEE139',
+                      pos: [60, 230],
+                      lineWidth: 6,
+                      strokeColor: '#FB6F4A',
+                      zIndex: -1,
+                      rotate: -5
+                    });
+                    huanhuanGroup.append(huanhuanFire); // random burn fire
 
-                      });
-                      fglayer.append(huanhuanGroup);
-                      huanhuan = new Sprite('huanhuan.png');
-                      huanhuan.attr({
-                        pos: [0, 0]
-                      });
-                      huanhuanGroup.append(huanhuan);
-                      huanhuanFire = new Path();
+                    fx = 5, fy = 6;
+                    fglayer.timeline.setInterval(function () {
+                      var deltaX = Math.floor(Math.random() * 5) - 2,
+                          // -1 0 1,
+                      deltaY = Math.floor(Math.random() * 5) - 2;
+                      fx += deltaX;
+                      if (fx < 0) fx = 0;
+                      if (fx > 20) fx = 20;
+                      fx += deltaY;
+                      if (fy < 0) fy = 0;
+                      if (fy > 25) fy = 25;
+                      var q1 = [-1, 12, -5 + fx, 30 + fy];
+                      var q2 = [30, 22, 30, 0];
+                      var d = "M0,0Q".concat(q1, "Q").concat(q2, "z");
                       huanhuanFire.attr({
                         path: {
-                          d: 'M0,0Q-1,12,5,36Q30,22,30,0z',
+                          d: d,
                           transform: {
                             scale: 2
                           }
-                        },
-                        anchor: [0, 0],
-                        fillColor: '#FEE139',
-                        pos: [60, 230],
-                        lineWidth: 6,
-                        strokeColor: '#FB6F4A',
-                        zIndex: -1,
-                        rotate: -5
+                        }
                       });
-                      huanhuanGroup.append(huanhuanFire); // random burn fire
+                    }, 100);
+                    anim2 = huanhuanGroup.animate([{
+                      pos: [980, 744],
+                      opacity: 0
+                    }, {
+                      pos: [1080, 450],
+                      opacity: 1
+                    }], {
+                      duration: 500,
+                      fill: 'forwards'
+                    });
+                    huanhuanGroup.on('mouseenter', function (evt) {
+                      huanhuan.textures = 'huanhuan2.png';
+                    });
+                    huanhuanGroup.on('mouseleave', function (evt) {
+                      huanhuan.textures = 'huanhuan.png';
+                    });
+                    _context3.next = 16;
+                    return regeneratorRuntime.awrap(anim2.finished);
 
-                      fx = 5, fy = 6;
-                      fglayer.timeline.setInterval(function () {
-                        var deltaX = Math.floor(Math.random() * 5) - 2,
-                            // -1 0 1,
-                        deltaY = Math.floor(Math.random() * 5) - 2;
-                        fx += deltaX;
-                        if (fx < 0) fx = 0;
-                        if (fx > 20) fx = 20;
-                        fx += deltaY;
-                        if (fy < 0) fy = 0;
-                        if (fy > 25) fy = 25;
-                        var q1 = [-1, 12, -5 + fx, 30 + fy];
-                        var q2 = [30, 22, 30, 0];
-                        var d = "M0,0Q".concat(q1, "Q").concat(q2, "z");
-                        huanhuanFire.attr({
-                          path: {
-                            d: d,
-                            transform: {
-                              scale: 2
-                            }
-                          }
-                        });
-                      }, 100);
-                      anim2 = huanhuanGroup.animate([{
-                        pos: [980, 744],
-                        opacity: 0
-                      }, {
-                        pos: [1080, 450],
-                        opacity: 1
-                      }], {
-                        duration: 500,
-                        fill: 'forwards'
-                      });
-                      huanhuanGroup.on('mouseenter', function (evt) {
-                        huanhuan.textures = 'huanhuan2.png';
-                      });
-                      huanhuanGroup.on('mouseleave', function (evt) {
-                        huanhuan.textures = 'huanhuan.png';
-                      });
-                      _context3.next = 16;
-                      return anim2.finished;
+                  case 16:
+                    anim = huanhuanGroup.animate([{
+                      y: 450
+                    }, {
+                      y: 460
+                    }, {
+                      y: 450
+                    }, {
+                      y: 440
+                    }, {
+                      y: 450
+                    }], {
+                      duration: 2000,
+                      iterations: Infinity
+                    });
+                    animations.push(anim);
+                    return _context3.abrupt("return", huanhuanGroup);
 
-                    case 16:
-                      anim = huanhuanGroup.animate([{
-                        y: 450
-                      }, {
-                        y: 460
-                      }, {
-                        y: 450
-                      }, {
-                        y: 440
-                      }, {
-                        y: 450
-                      }], {
-                        duration: 2000,
-                        iterations: Infinity
-                      });
-                      animations.push(anim);
-                      return _context3.abrupt("return", huanhuanGroup);
-
-                    case 19:
-                    case "end":
-                      return _context3.stop();
-                  }
+                  case 19:
+                  case "end":
+                    return _context3.stop();
                 }
-              }, _callee3);
-            }));
-            return _showHuanHuan.apply(this, arguments);
+              }
+            });
           };
 
-          showHuanHuan = function _ref8() {
-            return _showHuanHuan.apply(this, arguments);
-          };
+          showIntroText = function _ref4(text) {
+            var introText, anim;
+            return regeneratorRuntime.async(function showIntroText$(_context2) {
+              while (1) {
+                switch (_context2.prev = _context2.next) {
+                  case 0:
+                    introText = new Group();
+                    introText.attr({
+                      anchor: 0.5,
+                      pos: [2160, 918],
+                      size: [720, 80],
+                      opacity: 0 // bgcolor: 'rgba(0, 0, 0, 0.3)',
 
-          _showIntroText = function _ref7() {
-            _showIntroText = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee2(text) {
-              var introText, anim;
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                while (1) {
-                  switch (_context2.prev = _context2.next) {
-                    case 0:
-                      introText = new Group();
-                      introText.attr({
-                        anchor: 0.5,
-                        pos: [2160, 918],
-                        size: [720, 80],
-                        opacity: 0 // bgcolor: 'rgba(0, 0, 0, 0.3)',
+                    });
+                    fglayer.append(introText);
 
+                    _toConsumableArray(text).forEach(function (char, i) {
+                      var label = new Label(char);
+                      label.attr({
+                        pos: [i * 80, 0],
+                        font: '36px "pfang"',
+                        fillColor: '#fff'
                       });
-                      fglayer.append(introText);
+                      introText.append(label);
+                    });
 
-                      _toConsumableArray(text).forEach(function (char, i) {
-                        var label = new Label(char);
-                        label.attr({
-                          pos: [i * 80, 0],
-                          font: '36px "pfang"',
-                          fillColor: '#fff'
-                        });
-                        introText.append(label);
-                      });
+                    anim = introText.animate([{
+                      x: 2160,
+                      opacity: 0
+                    }, {
+                      x: 2000,
+                      opacity: 0.8
+                    }], {
+                      duration: 800,
+                      fill: 'forwards',
+                      easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                    });
+                    _context2.next = 7;
+                    return regeneratorRuntime.awrap(anim.finished);
 
-                      anim = introText.animate([{
-                        x: 2160,
-                        opacity: 0
-                      }, {
-                        x: 2000,
-                        opacity: 0.8
-                      }], {
-                        duration: 800,
-                        fill: 'forwards',
-                        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-                      });
-                      _context2.next = 7;
-                      return anim.finished;
+                  case 7:
+                    return _context2.abrupt("return", introText);
 
-                    case 7:
-                      return _context2.abrupt("return", introText);
-
-                    case 8:
-                    case "end":
-                      return _context2.stop();
-                  }
+                  case 8:
+                  case "end":
+                    return _context2.stop();
                 }
-              }, _callee2);
-            }));
-            return _showIntroText.apply(this, arguments);
+              }
+            });
           };
 
-          showIntroText = function _ref6(_x4) {
-            return _showIntroText.apply(this, arguments);
-          };
+          showLogoText = function _ref3(text, pos, posList) {
+            var delay,
+                els,
+                i,
+                letter,
+                x,
+                letterEl,
+                _args = arguments;
+            return regeneratorRuntime.async(function showLogoText$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    delay = _args.length > 3 && _args[3] !== undefined ? _args[3] : 0;
+                    els = [];
+                    i = 0;
 
-          _showLogoText = function _ref5() {
-            _showLogoText = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee(text, pos, posList) {
-              var delay,
-                  els,
-                  i,
-                  letter,
-                  x,
-                  letterEl,
-                  _args = arguments;
-              return regeneratorRuntime.wrap(function _callee$(_context) {
-                while (1) {
-                  switch (_context.prev = _context.next) {
-                    case 0:
-                      delay = _args.length > 3 && _args[3] !== undefined ? _args[3] : 0;
-                      els = [];
-                      i = 0;
-
-                    case 3:
-                      if (!(i < text.length)) {
-                        _context.next = 16;
-                        break;
-                      }
-
-                      letter = text.charAt(i), x = posList[i];
-                      letterEl = new Sprite("letter-".concat(letter, ".png"));
-                      letterEl.attr({
-                        pos: [pos[0] + x, pos[1]],
-                        translate: [250, 0],
-                        opacity: 0
-                      });
-
-                      if (letter === 'j') {
-                        letterEl.attr({
-                          zIndex: 20
-                        });
-                      }
-
-                      els.push(letterEl);
-                      /* eslint-disable no-await-in-loop */
-
-                      _context.next = 11;
-                      return wait(delay);
-
-                    case 11:
-                      /* eslint-enable no-await-in-loop */
-                      fglayer.append(letterEl);
-                      letterEl.animate([{
-                        opacity: 1,
-                        translate: [0, 0]
-                      }], {
-                        duration: 500,
-                        fill: 'forwards'
-                      });
-
-                    case 13:
-                      i++;
-                      _context.next = 3;
+                  case 3:
+                    if (!(i < text.length)) {
+                      _context.next = 16;
                       break;
+                    }
 
-                    case 16:
-                      return _context.abrupt("return", els);
+                    letter = text.charAt(i), x = posList[i];
+                    letterEl = new Sprite("letter-".concat(letter, ".png"));
+                    letterEl.attr({
+                      pos: [pos[0] + x, pos[1]],
+                      translate: [250, 0],
+                      opacity: 0
+                    });
 
-                    case 17:
-                    case "end":
-                      return _context.stop();
-                  }
+                    if (letter === 'j') {
+                      letterEl.attr({
+                        zIndex: 20
+                      });
+                    }
+
+                    els.push(letterEl);
+                    /* eslint-disable no-await-in-loop */
+
+                    _context.next = 11;
+                    return regeneratorRuntime.awrap(wait(delay));
+
+                  case 11:
+                    /* eslint-enable no-await-in-loop */
+                    fglayer.append(letterEl);
+                    letterEl.animate([{
+                      opacity: 1,
+                      translate: [0, 0]
+                    }], {
+                      duration: 500,
+                      fill: 'forwards'
+                    });
+
+                  case 13:
+                    i++;
+                    _context.next = 3;
+                    break;
+
+                  case 16:
+                    return _context.abrupt("return", els);
+
+                  case 17:
+                  case "end":
+                    return _context.stop();
                 }
-              }, _callee);
-            }));
-            return _showLogoText.apply(this, arguments);
+              }
+            });
           };
 
-          showLogoText = function _ref4(_x, _x2, _x3) {
-            return _showLogoText.apply(this, arguments);
-          };
-
-          wait = function _ref3(ms) {
+          wait = function _ref2(ms) {
             return new Promise(function (resolve) {
               setTimeout(resolve, ms);
             });
           };
 
-          fixMobile = function _ref2() {
+          fixMobile = function _ref() {
             scene.updateViewport();
 
             var _scene$viewport = _slicedToArray(scene.viewport, 1),
@@ -765,36 +714,36 @@ regeneratorRuntime.mark(function _callee6() {
           window.addEventListener('resize', _fixMobile);
           animations = []; // 预加载资源
 
-          _context6.next = 42;
-          return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
+          _context6.next = 37;
+          return regeneratorRuntime.awrap(scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']));
 
-        case 42:
+        case 37:
           document.body.removeChild(loadingHint);
           requestId = null;
-          _context6.next = 46;
-          return showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200);
+          _context6.next = 41;
+          return regeneratorRuntime.awrap(showLogoText('spritejs', [1108, 482], [0, 256, 500, 760, 848, 1078, 1286, 1488], 200));
 
-        case 46:
-          _context6.next = 48;
-          return showIntroText('跨平台绘图对象模型');
+        case 41:
+          _context6.next = 43;
+          return regeneratorRuntime.awrap(showIntroText('跨平台绘图对象模型'));
 
-        case 48:
+        case 43:
           text = _context6.sent;
           buttons = showButtons();
-          _context6.next = 52;
-          return showHuanHuan();
+          _context6.next = 47;
+          return regeneratorRuntime.awrap(showHuanHuan());
 
-        case 52:
+        case 47:
           huanhuan = _context6.sent;
-          _context6.next = 55;
-          return showGuanGuan();
+          _context6.next = 50;
+          return regeneratorRuntime.awrap(showGuanGuan());
 
-        case 55:
+        case 50:
           guanguan = _context6.sent;
-          _context6.next = 58;
-          return showMore();
+          _context6.next = 53;
+          return regeneratorRuntime.awrap(showMore());
 
-        case 58:
+        case 53:
           more = _context6.sent;
 
           more.c1 = function () {
@@ -898,10 +847,10 @@ regeneratorRuntime.mark(function _callee6() {
           }, 16);
           window.addEventListener('scroll', scene[_onScroll]);
 
-        case 68:
+        case 63:
         case "end":
           return _context6.stop();
       }
     }
-  }, _callee6);
-}))();
+  });
+})();

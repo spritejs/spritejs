@@ -1,9 +1,5 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite,
@@ -18,48 +14,39 @@ var _spritejs = spritejs,
   var layer = scene.layer('fglayer');
 
   function createBubble() {
-    return _createBubble.apply(this, arguments);
-  }
+    var x, y, r, g, b, bgcolor, bubble;
+    return regeneratorRuntime.async(function createBubble$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            x = 100 + Math.random() * 1340, y = 100 + Math.random() * 400;
+            r = Math.round(255 * Math.random()), g = Math.round(255 * Math.random()), b = Math.round(255 * Math.random());
+            bgcolor = "rgb(".concat(r, ",").concat(g, ",").concat(b, ")");
+            bubble = new Sprite();
+            bubble.attr({
+              anchor: 0.5,
+              bgcolor: bgcolor,
+              size: [50, 50],
+              x: x,
+              y: y,
+              borderRadius: 25
+            });
+            layer.append(bubble);
+            _context.next = 8;
+            return regeneratorRuntime.awrap(bubble.transition(2.0).attr({
+              scale: [2.0, 2.0],
+              opacity: 0
+            }));
 
-  function _createBubble() {
-    _createBubble = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee() {
-      var x, y, r, g, b, bgcolor, bubble;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              x = 100 + Math.random() * 1340, y = 100 + Math.random() * 400;
-              r = Math.round(255 * Math.random()), g = Math.round(255 * Math.random()), b = Math.round(255 * Math.random());
-              bgcolor = "rgb(".concat(r, ",").concat(g, ",").concat(b, ")");
-              bubble = new Sprite();
-              bubble.attr({
-                anchor: 0.5,
-                bgcolor: bgcolor,
-                size: [50, 50],
-                x: x,
-                y: y,
-                borderRadius: 25
-              });
-              layer.append(bubble);
-              _context.next = 8;
-              return bubble.transition(2.0).attr({
-                scale: [2.0, 2.0],
-                opacity: 0
-              });
+          case 8:
+            bubble.remove();
 
-            case 8:
-              bubble.remove();
-
-            case 9:
-            case "end":
-              return _context.stop();
-          }
+          case 9:
+          case "end":
+            return _context.stop();
         }
-      }, _callee);
-    }));
-    return _createBubble.apply(this, arguments);
+      }
+    });
   }
 
   setInterval(function () {
@@ -114,11 +101,9 @@ var _spritejs = spritejs,
   });
 })();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee2() {
+(function _callee() {
   var birdsJsonUrl, birdsRes, scene, layer, d, path, s, pathSize, i, startTime, T;
-  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+  return regeneratorRuntime.async(function _callee$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -131,7 +116,7 @@ regeneratorRuntime.mark(function _callee2() {
           layer = scene.layer('fglayer');
           d = 'M480,437l-29-26.4c-103-93.4-171-155-171-230.6c0-61.6,48.4-110,110-110c34.8,0,68.2,16.2,90,41.8C501.8,86.2,535.2,70,570,70c61.6,0,110,48.4,110,110c0,75.6-68,137.2-171,230.8L480,437z';
           _context2.next = 7;
-          return scene.preload([birdsRes, birdsJsonUrl]);
+          return regeneratorRuntime.awrap(scene.preload([birdsRes, birdsJsonUrl]));
 
         case 7:
           path = new Path();
@@ -220,18 +205,16 @@ regeneratorRuntime.mark(function _callee2() {
           return _context2.stop();
       }
     }
-  }, _callee2);
-}))();
+  });
+})();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee3() {
+(function _callee2() {
   var birdsJsonUrl, birdsRes, scene, layer, timeline, playbackRate, speedUp, slowDown, pause, resume, updateSpeed, i, bird, delay;
-  return regeneratorRuntime.wrap(function _callee3$(_context3) {
+  return regeneratorRuntime.async(function _callee2$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          updateSpeed = function _ref3() {
+          updateSpeed = function _ref() {
             playbackRate.innerHTML = "playbackRate: ".concat(timeline.playbackRate.toFixed(1));
           };
 
@@ -265,7 +248,7 @@ regeneratorRuntime.mark(function _callee3() {
             updateSpeed();
           });
           _context3.next = 17;
-          return scene.preload([birdsRes, birdsJsonUrl]);
+          return regeneratorRuntime.awrap(scene.preload([birdsRes, birdsJsonUrl]));
 
         case 17:
           for (i = 0; i < 10; i++) {
@@ -322,8 +305,8 @@ regeneratorRuntime.mark(function _callee3() {
           return _context3.stop();
       }
     }
-  }, _callee3);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#shadow', {
@@ -345,15 +328,13 @@ regeneratorRuntime.mark(function _callee3() {
   layer.append(p);
 })();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee4() {
+(function _callee3() {
   var images, scene, layer, y1, y2, applyFilters, filters1, filters2;
-  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+  return regeneratorRuntime.async(function _callee3$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
-          applyFilters = function _ref5(id, filters, y) {
+          applyFilters = function _ref2(id, filters, y) {
             var scale = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
             filters.forEach(function (f, i) {
               var s = new Sprite();
@@ -390,7 +371,7 @@ regeneratorRuntime.mark(function _callee4() {
           layer = scene.layer('fglayer');
           y1 = 50, y2 = 320;
           _context4.next = 7;
-          return scene.preload.apply(scene, images);
+          return regeneratorRuntime.awrap(scene.preload.apply(scene, images));
 
         case 7:
           filters1 = [[], ['brightness', '150%'], ['grayscale', '50%'], ['blur', '12px'], ['dropShadow', [15, 15, 5, '#033']], ['hueRotate', 45]];
@@ -403,8 +384,8 @@ regeneratorRuntime.mark(function _callee4() {
           return _context4.stop();
       }
     }
-  }, _callee4);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#gradients', {

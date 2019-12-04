@@ -10,10 +10,6 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -38,7 +34,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -244,76 +240,64 @@ var _spritejs = spritejs,
   window.c1 = c1;
 })();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee4() {
-  var chickRes, chickJSON, scene, layer, claw, i, chick, pressed, moving, moveClaw, _moveClaw, ctrl;
-
-  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+(function _callee3() {
+  var chickRes, chickJSON, scene, layer, claw, i, chick, pressed, moving, moveClaw, ctrl;
+  return regeneratorRuntime.async(function _callee3$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
-          _moveClaw = function _ref5() {
-            _moveClaw = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee3(speed) {
-              var _x3, anim, x0;
+          moveClaw = function _ref(speed) {
+            var _x, anim, x0;
 
-              return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                while (1) {
-                  switch (_context3.prev = _context3.next) {
-                    case 0:
-                      if (!pressed) {
-                        _context3.next = 7;
-                        break;
-                      }
-
-                      _x3 = claw.attr('x');
-                      anim = claw.animate([{
-                        x: _x3
-                      }, {
-                        x: _x3 + speed
-                      }], {
-                        duration: 500,
-                        fill: 'forwards'
-                      });
-                      /* eslint-disable no-await-in-loop */
-
-                      _context3.next = 5;
-                      return anim.finished;
-
-                    case 5:
-                      _context3.next = 0;
+            return regeneratorRuntime.async(function moveClaw$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    if (!pressed) {
+                      _context.next = 7;
                       break;
+                    }
 
-                    case 7:
-                      x0 = claw.attr('x');
-                      _context3.next = 10;
-                      return claw.animate([{
-                        x: x0
-                      }, {
-                        x: x0 + speed / 5
-                      }], {
-                        duration: 100,
-                        fill: 'forwards',
-                        easing: 'ease-out'
-                      }).finished;
+                    _x = claw.attr('x');
+                    anim = claw.animate([{
+                      x: _x
+                    }, {
+                      x: _x + speed
+                    }], {
+                      duration: 500,
+                      fill: 'forwards'
+                    });
+                    /* eslint-disable no-await-in-loop */
 
-                    case 10:
-                      moving = null;
+                    _context.next = 5;
+                    return regeneratorRuntime.awrap(anim.finished);
 
-                    case 11:
-                    case "end":
-                      return _context3.stop();
-                  }
+                  case 5:
+                    _context.next = 0;
+                    break;
+
+                  case 7:
+                    x0 = claw.attr('x');
+                    _context.next = 10;
+                    return regeneratorRuntime.awrap(claw.animate([{
+                      x: x0
+                    }, {
+                      x: x0 + speed / 5
+                    }], {
+                      duration: 100,
+                      fill: 'forwards',
+                      easing: 'ease-out'
+                    }).finished);
+
+                  case 10:
+                    moving = null;
+
+                  case 11:
+                  case "end":
+                    return _context.stop();
                 }
-              }, _callee3);
-            }));
-            return _moveClaw.apply(this, arguments);
-          };
-
-          moveClaw = function _ref4(_x) {
-            return _moveClaw.apply(this, arguments);
+              }
+            });
           };
 
           chickRes = 'https://p5.ssl.qhimg.com/t01acd5010cb5a500d5.png', chickJSON = 'https://s2.ssl.qhres.com/static/930e3b2e60496c6e.json';
@@ -322,10 +306,10 @@ regeneratorRuntime.mark(function _callee4() {
             resolution: [1540, 600]
           });
           layer = scene.layer();
-          _context4.next = 7;
-          return scene.preload([chickRes, chickJSON]);
+          _context4.next = 6;
+          return regeneratorRuntime.awrap(scene.preload([chickRes, chickJSON]));
 
-        case 7:
+        case 6:
           claw = new Sprite('chickclaw.png');
           claw.attr({
             anchor: [0.5, 0],
@@ -345,115 +329,103 @@ regeneratorRuntime.mark(function _callee4() {
           }
 
           pressed = false;
-          layer.on('buttonDown',
-          /*#__PURE__*/
-          function () {
-            var _ref2 = _asyncToGenerator(
-            /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee2(evt) {
-              var buttonId;
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                while (1) {
-                  switch (_context2.prev = _context2.next) {
-                    case 0:
-                      pressed = true;
-                      buttonId = evt.buttonId;
+          layer.on('buttonDown', function _callee2(evt) {
+            var buttonId;
+            return regeneratorRuntime.async(function _callee2$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    pressed = true;
+                    buttonId = evt.buttonId;
 
-                      if (!(!moving && buttonId === 'leftBtn')) {
-                        _context2.next = 6;
-                        break;
-                      }
-
-                      moving = moveClaw(-50);
-                      _context2.next = 14;
+                    if (!(!moving && buttonId === 'leftBtn')) {
+                      _context3.next = 6;
                       break;
+                    }
 
-                    case 6:
-                      if (!(!moving && buttonId === 'rightBtn')) {
-                        _context2.next = 10;
-                        break;
-                      }
+                    moving = moveClaw(-50);
+                    _context3.next = 14;
+                    break;
 
-                      moving = moveClaw(50);
-                      _context2.next = 14;
+                  case 6:
+                    if (!(!moving && buttonId === 'rightBtn')) {
+                      _context3.next = 10;
                       break;
+                    }
 
-                    case 10:
-                      if (!(buttonId === 'downBtn')) {
-                        _context2.next = 14;
-                        break;
-                      }
+                    moving = moveClaw(50);
+                    _context3.next = 14;
+                    break;
 
-                      _context2.next = 13;
-                      return moving;
+                  case 10:
+                    if (!(buttonId === 'downBtn')) {
+                      _context3.next = 14;
+                      break;
+                    }
 
-                    case 13:
-                      moving = _asyncToGenerator(
-                      /*#__PURE__*/
-                      regeneratorRuntime.mark(function _callee() {
-                        return regeneratorRuntime.wrap(function _callee$(_context) {
-                          while (1) {
-                            switch (_context.prev = _context.next) {
-                              case 0:
-                                _context.next = 2;
-                                return claw.animate([{
-                                  y: 0
-                                }, {
-                                  y: 400
-                                }], {
-                                  duration: 2000,
-                                  fill: 'forwards'
-                                }).finished;
+                    _context3.next = 13;
+                    return regeneratorRuntime.awrap(moving);
 
-                              case 2:
-                                layer.children.forEach(function (child) {
-                                  if (child !== claw && claw.OBBCollision(child)) {
-                                    child.attr('zIndex', 200);
-                                    child.animate([{
-                                      y: 600
-                                    }, {
-                                      y: 200
-                                    }], {
-                                      duration: 3000,
-                                      fill: 'forwards'
-                                    }).finished.then(function () {
-                                      return child.remove();
-                                    });
-                                  }
-                                });
-                                _context.next = 5;
-                                return claw.animate([{
-                                  y: 400
-                                }, {
-                                  y: 0
-                                }], {
-                                  duration: 3000,
-                                  fill: 'forwards'
-                                }).finished;
+                  case 13:
+                    moving = function _callee() {
+                      return regeneratorRuntime.async(function _callee$(_context2) {
+                        while (1) {
+                          switch (_context2.prev = _context2.next) {
+                            case 0:
+                              _context2.next = 2;
+                              return regeneratorRuntime.awrap(claw.animate([{
+                                y: 0
+                              }, {
+                                y: 400
+                              }], {
+                                duration: 2000,
+                                fill: 'forwards'
+                              }).finished);
 
-                              case 5:
-                                moving = null;
+                            case 2:
+                              layer.children.forEach(function (child) {
+                                if (child !== claw && claw.OBBCollision(child)) {
+                                  child.attr('zIndex', 200);
+                                  child.animate([{
+                                    y: 600
+                                  }, {
+                                    y: 200
+                                  }], {
+                                    duration: 3000,
+                                    fill: 'forwards'
+                                  }).finished.then(function () {
+                                    return child.remove();
+                                  });
+                                }
+                              });
+                              _context2.next = 5;
+                              return regeneratorRuntime.awrap(claw.animate([{
+                                y: 400
+                              }, {
+                                y: 0
+                              }], {
+                                duration: 3000,
+                                fill: 'forwards'
+                              }).finished);
 
-                              case 6:
-                              case "end":
-                                return _context.stop();
-                            }
+                            case 5:
+                              moving = null;
+
+                            case 6:
+                            case "end":
+                              return _context2.stop();
                           }
-                        }, _callee);
-                      }))();
+                        }
+                      });
+                    }();
 
-                    case 14:
-                    case "end":
-                      return _context2.stop();
-                  }
+                  case 14:
+                  case "end":
+                    return _context3.stop();
                 }
-              }, _callee2);
-            }));
-
-            return function (_x2) {
-              return _ref2.apply(this, arguments);
-            };
-          }());
+              }
+            });
+          });
           layer.on('buttonUp', function (evt) {
             pressed = false;
           });
@@ -471,19 +443,17 @@ regeneratorRuntime.mark(function _callee4() {
             layer.dispatchEvent('buttonUp', {}, true, true);
           });
 
-        case 17:
+        case 16:
         case "end":
           return _context4.stop();
       }
     }
-  }, _callee4);
-}))();
+  });
+})();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee5() {
+(function _callee4() {
   var scene, layer, image;
-  return regeneratorRuntime.wrap(function _callee5$(_context5) {
+  return regeneratorRuntime.async(function _callee4$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
@@ -493,10 +463,10 @@ regeneratorRuntime.mark(function _callee5() {
           });
           layer = scene.layer();
           _context5.next = 4;
-          return scene.preload({
+          return regeneratorRuntime.awrap(scene.preload({
             id: 'beauty',
             src: 'https://p0.ssl.qhimg.com/t01300d8189b2edf8ca.jpg'
-          });
+          }));
 
         case 4:
           image = new Sprite('beauty');
@@ -507,9 +477,9 @@ regeneratorRuntime.mark(function _callee5() {
 
           });
           layer.append(image);
-          image.on('afterdraw', function (_ref7) {
-            var target = _ref7.target,
-                context = _ref7.context;
+          image.on('afterdraw', function (_ref2) {
+            var target = _ref2.target,
+                context = _ref2.context;
 
             var _target$renderRect = _slicedToArray(target.renderRect, 4),
                 x = _target$renderRect[0],
@@ -522,10 +492,10 @@ regeneratorRuntime.mark(function _callee5() {
                 cy = height / 2;
 
             for (var i = 0; i < imageData.data.length; i += 4) {
-              var _x4 = i / 4 % width,
+              var _x2 = i / 4 % width,
                   _y = Math.floor(i / 4 / width);
 
-              var dist = Math.sqrt(Math.pow(cx - _x4, 2) + Math.pow(cy - _y, 2));
+              var dist = Math.sqrt(Math.pow(cx - _x2, 2) + Math.pow(cy - _y, 2));
               imageData.data[i + 3] = 255 - Math.round(255 * dist / 600);
             }
 
@@ -537,8 +507,8 @@ regeneratorRuntime.mark(function _callee5() {
           return _context5.stop();
       }
     }
-  }, _callee5);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#event-delegate', {

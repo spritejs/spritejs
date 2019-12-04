@@ -4,23 +4,17 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite;
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee() {
+(function _callee() {
   var scene, layer, sprite;
-  return regeneratorRuntime.wrap(function _callee$(_context) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -38,36 +32,34 @@ regeneratorRuntime.mark(function _callee() {
           });
           layer.append(sprite);
           _context.next = 6;
-          return sprite.transition(2.0).attr({
+          return regeneratorRuntime.awrap(sprite.transition(2.0).attr({
             bgcolor: 'green',
             width: function width(_width) {
               return _width + 100;
             }
-          });
+          }));
 
         case 6:
           _context.next = 8;
-          return sprite.transition(1.0).attr({
+          return regeneratorRuntime.awrap(sprite.transition(1.0).attr({
             bgcolor: 'orange',
             height: function height(_height) {
               return _height + 100;
             }
-          });
+          }));
 
         case 8:
         case "end":
           return _context.stop();
       }
     }
-  }, _callee);
-}))();
+  });
+})();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee2() {
+(function _callee2() {
   var _spritejs2, Scene, Sprite, Path, Group, scene, layer, robot, d, shadowD, shadow, lemon, lemonGroup, d2, i, t, transition;
 
-  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+  return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -77,7 +69,7 @@ regeneratorRuntime.mark(function _callee2() {
             resolution: [1540, 600]
           });
           _context2.next = 4;
-          return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
+          return regeneratorRuntime.awrap(scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']));
 
         case 4:
           layer = scene.layer('fglayer');
@@ -171,8 +163,8 @@ regeneratorRuntime.mark(function _callee2() {
           return _context2.stop();
       }
     }
-  }, _callee2);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#circle', {
@@ -201,16 +193,14 @@ regeneratorRuntime.mark(function _callee2() {
   layer.append(sprite);
 })();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee3() {
+(function _callee3() {
   var scene, layer, _document$querySelect, _document$querySelect2, speed1, speed2, speed4, halfSpeed, pause, reversePlay, timeline, addRandomSnow;
 
-  return regeneratorRuntime.wrap(function _callee3$(_context3) {
+  return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          addRandomSnow = function _ref4() {
+          addRandomSnow = function _ref() {
             var snow = new Sprite('snow');
             var x0 = 20 + Math.random() * 1500,
                 y0 = -100;
@@ -252,10 +242,10 @@ regeneratorRuntime.mark(function _callee3() {
           });
           layer = scene.layer();
           _context3.next = 5;
-          return scene.preload({
+          return regeneratorRuntime.awrap(scene.preload({
             id: 'snow',
             src: 'https://p5.ssl.qhimg.com/t01bfde08606e87f1fe.png'
-          });
+          }));
 
         case 5:
           _document$querySelect = document.querySelectorAll('#speed1, #speed2, #speed4, #halfSpeed, #pause, #reversePlay'), _document$querySelect2 = _slicedToArray(_document$querySelect, 6), speed1 = _document$querySelect2[0], speed2 = _document$querySelect2[1], speed4 = _document$querySelect2[2], halfSpeed = _document$querySelect2[3], pause = _document$querySelect2[4], reversePlay = _document$querySelect2[5];
@@ -285,8 +275,8 @@ regeneratorRuntime.mark(function _callee3() {
           return _context3.stop();
       }
     }
-  }, _callee3);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#animate-tweenjs', {

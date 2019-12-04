@@ -1,15 +1,9 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee() {
+(function _callee() {
   var _spritejs, Scene, Sprite, Path, Group, scene, layer, robot, d, shadowD, shadow, lemon, lemonGroup, d2, i, t, transition;
 
-  return regeneratorRuntime.wrap(function _callee$(_context) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -20,7 +14,7 @@ regeneratorRuntime.mark(function _callee() {
             resolution: [1200, 400]
           });
           _context.next = 5;
-          return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
+          return regeneratorRuntime.awrap(scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']));
 
         case 5:
           layer = scene.layer('fglayer');
@@ -114,5 +108,5 @@ regeneratorRuntime.mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee);
-}))();
+  });
+})();

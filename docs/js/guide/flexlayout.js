@@ -8,21 +8,15 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite,
     Group = _spritejs.Group,
     Label = _spritejs.Label;
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee() {
+(function _callee() {
   var scene, layer, layout, s1, s2, s3, s4;
-  return regeneratorRuntime.wrap(function _callee$(_context) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -31,7 +25,7 @@ regeneratorRuntime.mark(function _callee() {
             resolution: [1540, 600]
           });
           _context.next = 3;
-          return scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']);
+          return regeneratorRuntime.awrap(scene.preload(['https://p5.ssl.qhimg.com/t01f47a319aebf27174.png', 'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json']));
 
         case 3:
           layer = scene.layer(), layout = new Group();
@@ -68,8 +62,8 @@ regeneratorRuntime.mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee);
-}))();
+  });
+})();
 
 (function () {
   var scene = new Scene('#flex-direction', {

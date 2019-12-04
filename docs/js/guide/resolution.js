@@ -1,9 +1,5 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite,
@@ -46,15 +42,13 @@ var _spritejs = spritejs,
   });
 })();
 
-_asyncToGenerator(
-/*#__PURE__*/
-regeneratorRuntime.mark(function _callee() {
+(function _callee() {
   var scene, heightBtn, stickMode, extendBtn, layer, cloud, addRandomSnow;
-  return regeneratorRuntime.wrap(function _callee$(_context) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          addRandomSnow = function _ref2() {
+          addRandomSnow = function _ref() {
             var snow = new Sprite('snow');
             var x0 = 20 + Math.random() * 600,
                 y0 = 0;
@@ -106,13 +100,13 @@ regeneratorRuntime.mark(function _callee() {
             scene.updateViewport().updateResolution();
           });
           _context.next = 7;
-          return scene.preload({
+          return regeneratorRuntime.awrap(scene.preload({
             id: 'snow',
             src: 'https://p5.ssl.qhimg.com/t01bfde08606e87f1fe.png'
           }, {
             id: 'cloud',
             src: 'https://p5.ssl.qhimg.com/t01d2ff600bae7fe897.png'
-          });
+          }));
 
         case 7:
           layer = scene.layer('fglayer');
@@ -130,5 +124,5 @@ regeneratorRuntime.mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee);
-}))();
+  });
+})();
