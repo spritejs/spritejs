@@ -32328,6 +32328,7 @@ function wrapLayer(layer) {
     delete layer.zOrder;
   };
 
+  layer.canvas = layer;
   return layer;
 }
 
@@ -32458,7 +32459,7 @@ function delegateEvents(scene) {
 }
 
 function setViewport(options, canvas) {
-  if (canvas.style) {
+  if (canvas && canvas.style) {
     let {
       width,
       height,
@@ -32614,7 +32615,7 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
     const canvas = layer.canvas;
 
     if (!layer.offscreen) {
-      this.container.appendChild(canvas || layer);
+      this.container.appendChild(canvas);
     } else {
       this[_offscreenLayerCount]++;
     }

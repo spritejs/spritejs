@@ -30,6 +30,7 @@ function wrapLayer(layer) {
   layer.disconnect = (parent) => {
     delete layer.zOrder;
   };
+  layer.canvas = layer;
   return layer;
 }
 
@@ -142,7 +143,7 @@ function delegateEvents(scene) {
 }
 
 function setViewport(options, canvas) {
-  if(canvas.style) {
+  if(canvas && canvas.style) {
     let {width, height, mode, container} = options;
     const {clientWidth, clientHeight} = container;
 
@@ -282,7 +283,7 @@ export default class Scene extends Group {
     const ret = super.appendChild(layer);
     const canvas = layer.canvas;
     if(!layer.offscreen) {
-      this.container.appendChild(canvas || layer);
+      this.container.appendChild(canvas);
     } else {
       this[_offscreenLayerCount]++;
     }
