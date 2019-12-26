@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="http://spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
+  <a href="http://v2.spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
 </p>
 
-<a href="http://spritejs.org"><h1 align="center">spritejs.org</h1></a>
+<a href="http://v2.spritejs.org"><h1 align="center">spritejs.org</h1></a>
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
@@ -34,7 +34,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 ## Quick Start
 
-**SpriteJS** - spritejs.org
+**SpriteJS** - v2.spritejs.org
 
 ```html
 <script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
@@ -154,7 +154,7 @@ export default {
 </script>
 ```
 
-<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/"><font size="36">spritejs.org</font></a></strong> </div>
+<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://v2.spritejs.org/"><font size="36">spritejs.org</font></a></strong> </div>
 
 ---
 
@@ -176,64 +176,64 @@ npm install spritejs --save
 
 ### Basic
 
-- [Overview](http://spritejs.org/demo/)
-- [Sprites](http://spritejs.org/demo/#basic_sprites)
-- [Path & Group](http://spritejs.org/demo/#path_groups)
-- [Labels](http://spritejs.org/demo/#labels)
-- [Buttons](http://spritejs.org/demo/#buttons)
-- [Transforms](http://spritejs.org/demo/#transforms)
-- [Events](http://spritejs.org/demo/#events)
-- [Filters](http://spritejs.org/demo/#filters)
-- [Animations](http://spritejs.org/demo/#animations)
-- [SVG Paths](http://spritejs.org/demo/#svg_path)
-- [Offset API](http://spritejs.org/demo/#offset_api)
-- [OBB Hit](http://spritejs.org/demo/#obb)
+- [Overview](http://v2.spritejs.org/demo/)
+- [Sprites](http://v2.spritejs.org/demo/#basic_sprites)
+- [Path & Group](http://v2.spritejs.org/demo/#path_groups)
+- [Labels](http://v2.spritejs.org/demo/#labels)
+- [Buttons](http://v2.spritejs.org/demo/#buttons)
+- [Transforms](http://v2.spritejs.org/demo/#transforms)
+- [Events](http://v2.spritejs.org/demo/#events)
+- [Filters](http://v2.spritejs.org/demo/#filters)
+- [Animations](http://v2.spritejs.org/demo/#animations)
+- [SVG Paths](http://v2.spritejs.org/demo/#svg_path)
+- [Offset API](http://v2.spritejs.org/demo/#offset_api)
+- [OBB Hit](http://v2.spritejs.org/demo/#obb)
 
 ### With D3
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [Bar Graph](http://spritejs.org/demo/#/d3/bar)
-- [Hierarchy](http://spritejs.org/demo/#/d3/hierarchy)
-- [Map](http://spritejs.org/demo/#/d3/map)
-- [Force Links](http://spritejs.org/demo/#/d3/links)
+- [Bar Graph](http://v2.spritejs.org/demo/#/d3/bar)
+- [Hierarchy](http://v2.spritejs.org/demo/#/d3/hierarchy)
+- [Map](http://v2.spritejs.org/demo/#/d3/map)
+- [Force Links](http://v2.spritejs.org/demo/#/d3/links)
 
 ### [Q-Charts](https://github.com/spritejs/q-charts)
 
 A visulization library based on spritejs.
 
-- [QCharts basic](http://spritejs.org/demo/#/qchart/basic)
-- [Lines](http://spritejs.org/demo/#/qchart/double_line)
-- [Smooth Lines](http://spritejs.org/demo/#/qchart/smooth_line)
-- [Lines & Bars](http://spritejs.org/demo/#/qchart/multicharts)
-- [Area Chart](http://spritejs.org/demo/#/qchart/area)
-- [Pie Chart](http://spritejs.org/demo/#/qchart/pie)
-- [Rose Chart](http://spritejs.org/demo/#/qchart/rose)
-- [Radar Chart](http://spritejs.org/demo/#/qchart/radar)
-- [Bubble Chart](http://spritejs.org/demo/#/qchart/bubble)
+- [QCharts basic](http://v2.spritejs.org/demo/#/qchart/basic)
+- [Lines](http://v2.spritejs.org/demo/#/qchart/double_line)
+- [Smooth Lines](http://v2.spritejs.org/demo/#/qchart/smooth_line)
+- [Lines & Bars](http://v2.spritejs.org/demo/#/qchart/multicharts)
+- [Area Chart](http://v2.spritejs.org/demo/#/qchart/area)
+- [Pie Chart](http://v2.spritejs.org/demo/#/qchart/pie)
+- [Rose Chart](http://v2.spritejs.org/demo/#/qchart/rose)
+- [Radar Chart](http://v2.spritejs.org/demo/#/qchart/radar)
+- [Bubble Chart](http://v2.spritejs.org/demo/#/qchart/bubble)
 
 ### With Proton
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
 
-- [Big Fire](http://spritejs.org/demo/#/proton/fire)
-- [Background Particles](http://spritejs.org/demo/#/proton/position)
-- [Custom Behavior](http://spritejs.org/demo/#/proton/behavior)
+- [Big Fire](http://v2.spritejs.org/demo/#/proton/fire)
+- [Background Particles](http://v2.spritejs.org/demo/#/proton/position)
+- [Custom Behavior](http://v2.spritejs.org/demo/#/proton/behavior)
 
 ### With Matter-js
 
 [Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
 
-- [Mixed shapes](http://spritejs.org/demo/#/matterjs/mixed_shapes)
+- [Mixed shapes](http://v2.spritejs.org/demo/#/matterjs/mixed_shapes)
 
 ### API Doc
 
-- [Sprite](http://spritejs.org/#/api/sprite)
-- [Label](http://spritejs.org/#/api/label)
-- [Path](http://spritejs.org/#/api/path)
-- [Group](http://spritejs.org/#/api/group)
-- [Layer](http://spritejs.org/#/api/layer)
-- [Scene](http://spritejs.org/#/api/scene)
+- [Sprite](http://v2.spritejs.org/#/api/sprite)
+- [Label](http://v2.spritejs.org/#/api/label)
+- [Path](http://v2.spritejs.org/#/api/path)
+- [Group](http://v2.spritejs.org/#/api/group)
+- [Layer](http://v2.spritejs.org/#/api/layer)
+- [Scene](http://v2.spritejs.org/#/api/scene)
 
 ### Ecosystem & Extensions
 
