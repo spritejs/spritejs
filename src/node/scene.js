@@ -11,6 +11,28 @@ import ownerDocument from '../document';
 
 const _enteredTargets = Symbol('enteredTargets');
 
+function wrapLayer(layer) {
+  // append dom element
+  layer.id = layer.id || `_layer${Math.random().toString(36).slice(2, 12)}`;
+  if(!layer.dataset) {
+    layer.dataset = {};
+  }
+  layer.dataset.layerId = layer.id;
+  // fixed layer replacer
+  layer.connect = (parent, zOrder) => {
+    layer.parent = parent;
+    Object.defineProperty(layer, 'zOrder', {
+      value: zOrder,
+      writable: false,
+      configurable: true,
+    });
+  };
+  layer.disconnect = (parent) => {
+    delete layer.zOrder;
+  };
+  return layer;
+}
+
 function getRefCanvas(scene, layer) {
   const children = scene.children;
   let ref = null;
@@ -254,6 +276,9 @@ export default class Scene extends Group {
 
   /* override */
   appendChild(layer) {
+    if(!(layer instanceof Layer) && !(layer instanceof LayerWorker)) {
+      wrapLayer(layer);
+    }
     const ret = super.appendChild(layer);
     const canvas = layer.canvas;
     if(!layer.offscreen) {
@@ -278,6 +303,9 @@ export default class Scene extends Group {
 
   /* override */
   insertBefore(layer, ref) {
+    if(!(layer instanceof Layer) && !(layer instanceof LayerWorker)) {
+      wrapLayer(layer);
+    }
     const ret = super.insertBefore(layer, ref);
     const canvas = layer.canvas;
 

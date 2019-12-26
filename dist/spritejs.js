@@ -36722,6 +36722,32 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 var _enteredTargets = Symbol('enteredTargets');
 
+function wrapLayer(layer) {
+  // append dom element
+  layer.id = layer.id || "_layer".concat(Math.random().toString(36).slice(2, 12));
+
+  if (!layer.dataset) {
+    layer.dataset = {};
+  }
+
+  layer.dataset.layerId = layer.id; // fixed layer replacer
+
+  layer.connect = function (parent, zOrder) {
+    layer.parent = parent;
+    Object.defineProperty(layer, 'zOrder', {
+      value: zOrder,
+      writable: false,
+      configurable: true
+    });
+  };
+
+  layer.disconnect = function (parent) {
+    delete layer.zOrder;
+  };
+
+  return layer;
+}
+
 function getRefCanvas(scene, layer) {
   var children = scene.children;
   var ref = null;
@@ -36965,6 +36991,10 @@ function (_Group) {
 
     /* override */
     value: function appendChild(layer) {
+      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"])) {
+        wrapLayer(layer);
+      }
+
       var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "appendChild", this).call(this, layer);
 
       var canvas = layer.canvas;
@@ -36999,6 +37029,10 @@ function (_Group) {
   }, {
     key: "insertBefore",
     value: function insertBefore(layer, ref) {
+      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"])) {
+        wrapLayer(layer);
+      }
+
       var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "insertBefore", this).call(this, layer, ref);
 
       var canvas = layer.canvas;

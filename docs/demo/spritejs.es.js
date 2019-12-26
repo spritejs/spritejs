@@ -32305,6 +32305,32 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 const _enteredTargets = Symbol('enteredTargets');
 
+function wrapLayer(layer) {
+  // append dom element
+  layer.id = layer.id || `_layer${Math.random().toString(36).slice(2, 12)}`;
+
+  if (!layer.dataset) {
+    layer.dataset = {};
+  }
+
+  layer.dataset.layerId = layer.id; // fixed layer replacer
+
+  layer.connect = (parent, zOrder) => {
+    layer.parent = parent;
+    Object.defineProperty(layer, 'zOrder', {
+      value: zOrder,
+      writable: false,
+      configurable: true
+    });
+  };
+
+  layer.disconnect = parent => {
+    delete layer.zOrder;
+  };
+
+  return layer;
+}
+
 function getRefCanvas(scene, layer) {
   const children = scene.children;
   let ref = null;
@@ -32580,6 +32606,10 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
 
 
   appendChild(layer) {
+    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+      wrapLayer(layer);
+    }
+
     const ret = super.appendChild(layer);
     const canvas = layer.canvas;
 
@@ -32608,6 +32638,10 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
 
 
   insertBefore(layer, ref) {
+    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+      wrapLayer(layer);
+    }
+
     const ret = super.insertBefore(layer, ref);
     const canvas = layer.canvas;
 
