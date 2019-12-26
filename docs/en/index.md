@@ -21,7 +21,7 @@ Spritejs<sup>Next</sup> is the new version of spritejs. It is renderer agnostic 
 With NPM:
 
 ```bash
-npm install @spritejs/next
+npm install spritejs
 ```
 
 Spritejs is cross platform. you can run it in a node environment, depend on [node canvas](https://github.com/automatic/node-canvas) or [node canvas webgl](https://github.com/akira-cn/node-canvas-webgl).
@@ -33,7 +33,7 @@ npm install canvas@next
 In browser with CDN:
 
 ```html
-<script src="https://unpkg.com/@spritejs/next/dist/spritejs.js"></script>
+<script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
 ```
 
 ## Architecture

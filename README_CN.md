@@ -1,6 +1,8 @@
-[![npm status](https://img.shields.io/npm/v/@spritejs/next.svg)](https://www.npmjs.com/package/@spritejs/next)
-[![build status](https://api.travis-ci.org/spritejs/next.svg?branch=master)](https://travis-ci.org/spritejs/next)
-[![Maintainability](https://api.codeclimate.com/v1/badges/9ba455ffc1fa95cc56ad/maintainability)](https://codeclimate.com/github/spritejs/next/maintainability)
+[![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
+[![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
+[![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
+[![Package Quality](http://npm.packagequality.com/shield/spritejs.svg)](http://packagequality.com/#?package=spritejs)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/maintainability)](https://codeclimate.com/github/spritejs/spritejs/maintainability)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
 ## 简介
@@ -28,7 +30,7 @@ SpriteJS <sup>Next</sup> 是SpriteJS的新版本，在浏览器端支持 webgl2 
 如果你使用NPM进行包管理，可以直接使用npm命令安装
 
 ```bash
-npm install @spritejs/next
+npm install spritejs
 ```
 
 由于spritejs是跨平台的，如果在node环境中跑，需要自行安装依赖库[node-canvas](https://github.com/Automattic/node-canvas)
@@ -40,7 +42,7 @@ npm install canvas@next
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
-<script src="https://unpkg.com/@spritejs/next/dist/spritejs.js"></script>
+<script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
 ```
 
 如果你要在node服务端使用spritejs渲染，你需要安装[node-canvas](https://github.com/Automattic/node-canvas)

@@ -21,7 +21,7 @@ SpriteJS <sup>Next</sup> 是SpriteJS的新版本，在浏览器端支持 webgl2 
 如果你使用NPM进行包管理，可以直接使用npm命令安装
 
 ```bash
-npm install @spritejs/next
+npm install spritejs
 ```
 
 由于spritejs是跨平台的，如果在node环境中跑，需要自行安装依赖库[node-canvas](https://github.com/Automattic/node-canvas)
@@ -33,7 +33,7 @@ npm install canvas@next
 如果你在浏览器中直接使用，可以使用CDN版本
 
 ```html
-<script src="https://unpkg.com/@spritejs/next/dist/spritejs.js"></script>
+<script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
 ```
 
 如果你要在node服务端使用spritejs渲染，你需要安装[node-canvas](https://github.com/Automattic/node-canvas)
