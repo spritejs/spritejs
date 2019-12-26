@@ -31,6 +31,9 @@ function wrapLayer(layer) {
     delete layer.zOrder;
   };
   layer.canvas = layer;
+  layer.getResolution = () => { return {width: 0, height: 0} };
+  layer.setResolution = () => false;
+  layer.options = {handleEvent: false};
   return layer;
 }
 
@@ -494,7 +497,7 @@ export default class Scene extends Group {
       const layer = layers[i];
       if(layer.render) layer.render();
       const canvas = layer.canvas;
-      if(canvas) {
+      if(canvas && canvas !== layer) {
         context.drawImage(canvas, 0, 0, width, height);
       }
     }

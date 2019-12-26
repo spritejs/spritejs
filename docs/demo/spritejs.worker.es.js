@@ -18226,6 +18226,8 @@ const _captureEventListeners = Symbol('captureEventListeners');
 
 const _filters = Symbol('filters');
 
+const _display = Symbol('display');
+
 class Node {
   constructor(attrs = {}) {
     this.attributes = new this.constructor.Attr(this);
@@ -18403,10 +18405,6 @@ class Node {
 
   attr(...args) {
     if (args.length === 0) return this.attributes[attributes];
-
-    if (args[0] === 'attrs') {
-      if (args[1]) return this.attr(args[1]);
-    }
 
     if (args.length > 1) {
       let [key, value] = args;
@@ -18603,6 +18601,10 @@ class Node {
   }
 
   setAttribute(key, value) {
+    if (key === 'attrs') {
+      this.attr(value);
+    }
+
     this.attributes[key] = value;
   }
 
@@ -18634,6 +18636,19 @@ class Node {
       width,
       height
     });
+  }
+
+  show() {
+    if (this.attributes.display === 'none') {
+      this.attributes.display = this[_display] || '';
+    }
+  }
+
+  hide() {
+    if (this.attributes.display !== 'none') {
+      this[_display] = this.attributes.display;
+      this.attributes.display = 'none';
+    }
   }
 
   releaseMouseCapture() {
@@ -18949,7 +18964,8 @@ class Node {
       offsetRotate: 'auto',
       pointerEvents: 'visible',
       // none | visible | visibleFill | visibleStroke | all
-      filter: 'none'
+      filter: 'none',
+      display: ''
     });
     this[declareAlias]('class', 'pos');
     this[_changedAttrs] = new Set();
@@ -19249,6 +19265,14 @@ class Node {
 
   set filter(value) {
     this[setAttribute]('filter', value);
+  }
+
+  get display() {
+    return this[getAttribute]('display');
+  }
+
+  set display(value) {
+    this[setAttribute]('display', value);
   }
   /* istanbul ignore next */
 
@@ -24299,6 +24323,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
   }
 
   get mesh() {
+    if (this.attributes.display === 'none') return null;
     const box = this.clientBox;
 
     if (box) {
@@ -25446,6 +25471,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
   }
 
   get mesh() {
+    if (this.attributes.display === 'none') return null;
     const path = this.path;
 
     if (path) {

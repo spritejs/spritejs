@@ -38,6 +38,7 @@ export default class Path extends Node {
   }
 
   get mesh() {
+    if(this.attributes.display === 'none') return null;
     const path = this.path;
     if(path) {
       let mesh = this[_mesh];

@@ -14,6 +14,7 @@ const _animations = Symbol('animations');
 const _eventListeners = Symbol('eventListeners');
 const _captureEventListeners = Symbol('captureEventListeners');
 const _filters = Symbol('filters');
+const _display = Symbol('display');
 
 export default class Node {
   static Attr = Attr;
@@ -171,9 +172,6 @@ export default class Node {
 
   attr(...args) {
     if(args.length === 0) return this.attributes[attributes];
-    if(args[0] === 'attrs') {
-      if(args[1]) return this.attr(args[1]);
-    }
     if(args.length > 1) {
       let [key, value] = args;
       if(typeof value === 'function') {
@@ -332,6 +330,9 @@ export default class Node {
   }
 
   setAttribute(key, value) {
+    if(key === 'attrs') {
+      this.attr(value);
+    }
     this.attributes[key] = value;
   }
 
@@ -349,6 +350,19 @@ export default class Node {
       this.forceUpdate();
     }
     if(this.mesh) this.mesh.setResolution({width, height});
+  }
+
+  show() {
+    if(this.attributes.display === 'none') {
+      this.attributes.display = this[_display] || '';
+    }
+  }
+
+  hide() {
+    if(this.attributes.display !== 'none') {
+      this[_display] = this.attributes.display;
+      this.attributes.display = 'none';
+    }
   }
 
   releaseMouseCapture() {

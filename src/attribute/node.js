@@ -151,6 +151,7 @@ export default class Node {
       offsetRotate: 'auto',
       pointerEvents: 'visible', // none | visible | visibleFill | visibleStroke | all
       filter: 'none',
+      display: '',
     });
 
     this[declareAlias]('class', 'pos');
@@ -430,6 +431,14 @@ export default class Node {
 
   set filter(value) {
     this[setAttribute]('filter', value);
+  }
+
+  get display() {
+    return this[getAttribute]('display');
+  }
+
+  set display(value) {
+    this[setAttribute]('display', value);
   }
 
   /* istanbul ignore next */

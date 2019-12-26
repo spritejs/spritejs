@@ -62,6 +62,7 @@ export default class Block extends Node {
   }
 
   get mesh() {
+    if(this.attributes.display === 'none') return null;
     const box = this.clientBox;
     if(box) {
       let mesh = this[_mesh];

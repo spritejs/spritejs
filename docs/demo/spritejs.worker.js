@@ -20638,6 +20638,8 @@ var _captureEventListeners = Symbol('captureEventListeners');
 
 var _filters = Symbol('filters');
 
+var _display = Symbol('display');
+
 var Node =
 /*#__PURE__*/
 function () {
@@ -20729,10 +20731,6 @@ function () {
       }
 
       if (args.length === 0) return this.attributes[attributes];
-
-      if (args[0] === 'attrs') {
-        if (args[1]) return this.attr(args[1]);
-      }
 
       if (args.length > 1) {
         var key = args[0],
@@ -20947,6 +20945,10 @@ function () {
   }, {
     key: "setAttribute",
     value: function setAttribute(key, value) {
+      if (key === 'attrs') {
+        this.attr(value);
+      }
+
       this.attributes[key] = value;
     }
   }, {
@@ -20978,6 +20980,21 @@ function () {
         width: width,
         height: height
       });
+    }
+  }, {
+    key: "show",
+    value: function show() {
+      if (this.attributes.display === 'none') {
+        this.attributes.display = this[_display] || '';
+      }
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      if (this.attributes.display !== 'none') {
+        this[_display] = this.attributes.display;
+        this.attributes.display = 'none';
+      }
     }
   }, {
     key: "releaseMouseCapture",
@@ -21492,7 +21509,8 @@ function () {
       offsetRotate: 'auto',
       pointerEvents: 'visible',
       // none | visible | visibleFill | visibleStroke | all
-      filter: 'none'
+      filter: 'none',
+      display: ''
     });
 
     this[_declareAlias]('class', 'pos');
@@ -21815,6 +21833,14 @@ function () {
     },
     set: function set(value) {
       this[_setAttribute]('filter', value);
+    }
+  }, {
+    key: "display",
+    get: function get() {
+      return this[_getAttribute]('display');
+    },
+    set: function set(value) {
+      this[_setAttribute]('display', value);
     }
     /* istanbul ignore next */
 
@@ -27268,6 +27294,7 @@ function (_Node) {
   }, {
     key: "mesh",
     get: function get() {
+      if (this.attributes.display === 'none') return null;
       var box = this.clientBox;
 
       if (box) {
@@ -28703,6 +28730,7 @@ function (_Node) {
   }, {
     key: "mesh",
     get: function get() {
+      if (this.attributes.display === 'none') return null;
       var path = this.path;
 
       if (path) {
