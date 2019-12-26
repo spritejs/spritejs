@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+    #block {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      background: red;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="block"></div>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      width: 600,
+      height: 600,
+      autoRender: false,
+      // contextType: '2d',
+    });
+    const fglayer = scene.layer('fglayer');
+
+    const s = new spritejs.Sprite({
+      anchor: 0.5,
+      pos: [300, 300],
+      size: [100, 100],
+      bgcolor: 'red',
+    });
+    fglayer.append(s);
+
+    requestAnimationFrame(function update(t) {
+      fglayer.render();
+      requestAnimationFrame(update);
+      // const block = document.getElementById('block');
+      // block.style.left = Math.random() * 100 + 'px';
+    });
+  </script>
+</body>
+</html>

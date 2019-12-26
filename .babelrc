@@ -13,14 +13,10 @@
     ]
   ],
   "plugins": [
-    "@babel/plugin-external-helpers",
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "decoratorsBeforeExport": false
-      }
-    ],
     "@babel/plugin-proposal-class-properties",
+    ["transform-gl-matrix", {
+      "glMatrixArray": false
+    }],
     [
       "@babel/plugin-transform-runtime",
       {
@@ -29,7 +25,6 @@
         "regenerator": true,
         "useESModules": false
       }
-    ],
-    "inline-package-json"
+    ]
   ]
 }

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`attribute set get offsetPath 1`] = `
+Array [
+  6.123233995736766e-17,
+  1,
+  -1,
+  6.123233995736766e-17,
+  20,
+  0,
+]
+`;
+
+exports[`attribute set get offsetPath 2`] = `
+Array [
+  6.123233995736766e-17,
+  -1,
+  1,
+  6.123233995736766e-17,
+  0,
+  0,
+]
+`;

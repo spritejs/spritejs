@@ -1,29 +1,30 @@
-class Button extends spritejs.Label {
+const {Scene, Sprite, Label, Group, Path} = spritejs;
+class Button extends Label {
   connect(parent, zOrder) {
     super.connect(parent, zOrder);
 
-    this.on('mouseenter', (evt) => {
+    this.addEventListener('mouseenter', (evt) => {
       this.attr({
-        color: '#635d47',
+        fillColor: '#635d47',
         bgcolor: '#00e15e',
       });
     });
 
-    this.on('mousedown', (evt) => {
+    this.addEventListener('mousedown', (evt) => {
       this.attr({
         scale: 0.95,
       });
     });
 
-    this.on('mouseup', (evt) => {
+    this.addEventListener('mouseup', (evt) => {
       this.attr({
         scale: 1,
       });
     });
 
-    this.on('mouseleave', (evt) => {
+    this.addEventListener('mouseleave', (evt) => {
       this.attr({
-        color: '#00e15e',
+        fillColor: '#00e15e',
         bgcolor: '',
       });
     });
@@ -31,21 +32,22 @@ class Button extends spritejs.Label {
 }
 
 (async function () {
-  const paper = new spritejs.Scene('#paper', {
-      viewport: ['auto', 'auto'],
-      resolution: [1600, 1200],
-      stickMode: 'width',
-      stickExtend: true,
-    }),
-    {Sprite, Group, Path} = spritejs;
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 1600,
+    height: 1200,
+    mode: 'stickyWidth',
+    // contextType: '2d',
+  });
 
-  await paper.preload([
+  await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
   ]);
 
-  const bglayer = paper.layer('bg'),
-    fglayer = paper.layer('fg', {
+  const bglayer = scene.layer('bg'),
+    fglayer = scene.layer('fg', {
       handleEvent: false,
       renderMode: 'repaintAll',
     });
@@ -88,9 +90,9 @@ class Button extends spritejs.Label {
     });
 
     g.animate([
-      {transform: {rotate: 30, scale: [1, 1]}},
-      {transform: {rotate: -30, scale: [-1, 1]}},
-      {transform: {rotate: 30, scale: [1, 1]}},
+      {rotate: 30, scale: [1, 1]},
+      {rotate: -30, scale: [-1, 1]},
+      {rotate: 30, scale: [1, 1]},
     ], {
       duration: duration * 20,
       iterations: Infinity,
@@ -102,7 +104,7 @@ class Button extends spritejs.Label {
 
     const outerFire = new Path();
     outerFire.attr({
-      path: {d: outerFireD},
+      d: outerFireD,
       pos: [22, 90],
       fillColor: 'rgb(253,88,45)',
       zIndex: -1,
@@ -113,7 +115,7 @@ class Button extends spritejs.Label {
 
     const innerFire = new Path();
     innerFire.attr({
-      path: {d: innerFireD},
+      d: innerFireD,
       pos: [30, 90],
       rotate: 15,
       fillColor: 'rgb(254,222,9)',
@@ -141,7 +143,7 @@ class Button extends spritejs.Label {
         font: '36px Arial',
         lineHeight: 50,
         textAlign: 'center',
-        color: '#00e15e',
+        fillColor: '#00e15e',
         border: [3, '#00e15e'],
         borderRadius: 25,
         padding: 30,
@@ -152,19 +154,19 @@ class Button extends spritejs.Label {
     });
 
   speedupBtn.id = 'speedUp';
-  speedupBtn.on('click', (evt) => {
+  speedupBtn.addEventListener('click', (evt) => {
     fglayer.timeline.playbackRate += 0.2;
   });
 
-  slowdownBtn.on('click', (evt) => {
+  slowdownBtn.addEventListener('click', (evt) => {
     fglayer.timeline.playbackRate -= 0.2;
   });
 
-  pauseBtn.on('click', (evt) => {
+  pauseBtn.addEventListener('click', (evt) => {
     fglayer.timeline.playbackRate = 0;
   });
 
-  playBtn.on('click', (evt) => {
+  playBtn.addEventListener('click', (evt) => {
     fglayer.timeline.playbackRate = 1;
   });
 
@@ -172,7 +174,7 @@ class Button extends spritejs.Label {
   birdCountLabel.attr({
     pos: [60, 20],
     font: '36px Arial',
-    color: 'white',
+    fillColor: 'white',
   });
 
   bglayer.appendChild(birdCountLabel);
@@ -180,4 +182,6 @@ class Button extends spritejs.Label {
   setInterval(() => {
     birdCountLabel.text = `playbackRate: ${fglayer.timeline.playbackRate.toFixed(2)}`;
   }, 100);
+
+  window.scene = scene;
 }());

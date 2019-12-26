@@ -1,29 +1,24 @@
-import merge from 'merge';
-import base from '~/base.config';
-
 export default async () => {
-  const [htmlCode, jsCode, cssCode] = await Promise.all([
-    import('!raw-loader!~/common/index.html'),
+  const [html, javascript, css] = await Promise.all([
+    import('!raw-loader!~/index.html'),
     import('!raw-loader!./index.js'),
-    import('!raw-loader!~/common/style.css'),
+    import('!raw-loader!~/style.css'),
   ]);
 
-  return merge.recursive(true, base, {
-    javascript: {
-      code: jsCode,
-    },
+  return {
+    javascript,
     html: {
-      code: htmlCode,
+      code: html,
     },
     css: {
-      code: cssCode,
+      code: css,
     },
     packages: {
       js: [
-        '//s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js',
-        '//lib.baomitu.com/d3/4.10.2/d3.min.js',
+        '//lib.baomitu.com/d3/4.10.2/d3.js',
         '//s0.ssl.qhres.com/!6ec3437a/mapRelation.js',
+        '//s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js',
       ],
     },
-  });
+  };
 };

@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[99],{548:function(n,e,s){"use strict";s.r(e),e.default='<div id="app">\n  <scene :viewport="[300, 300]" :resolution="[600, 600]">\n    <layer>\n      <s-label @click="clicked" :font="font" :pos="[300, 300]" anchor="0.5">{{messages[idx]}}</s-label>\n    </layer>\n  </scene>\n</div>'}}]);

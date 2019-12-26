@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #201e1e;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background: #201e1e;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+  (async function () {
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 1200,
+    });
+    await scene.preload([
+      'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+      'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+    ]);
+
+    const bglayer = scene.layer('bg', {
+      handleEvent: false,
+    });
+
+    const fglayer = scene.layer('fg', {
+      handleEvent: false,
+    });
+
+    const center = [600, 640];
+
+    const region = new Sprite();
+
+    region.attr({
+      anchor: 0.5,
+      size: [920, 920],
+      pos: center,
+      bgcolor: '#f4f2e6',
+      borderRadius: 120,
+    });
+    bglayer.append(region);
+
+    const robot = new Sprite('guanguan1.png');
+    robot.attr({
+      anchor: [0.5, 1],
+      pos: [280, 600],
+      transformOrigin: [0, -300],
+      scale: 0.4,
+    });
+    fglayer.append(robot);
+    window.robot = robot;
+
+    async function robotMotion() {
+      await robot.animate([
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan2.png'},
+        {texture: 'guanguan3.png'},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan2.png'},
+        {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
+        {texture: 'guanguan1.png', scale: [0.4, 0.4]},
+      ], {
+        duration: 3000,
+        easing: 'step-end',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {y: 600},
+        {y: 1280},
+      ], {
+        duration: 500,
+        easing: 'ease-in',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan2.png'},
+        {texture: 'guanguan3.png', scale: [0.4, 0.4]},
+      ], {
+        duration: 2000,
+        easing: 'step-end',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {x: 280},
+        {x: 940},
+      ], {
+        duration: 2000,
+        easing: 'ease-in-out',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {rotate: 0},
+        {rotate: -70},
+      ], {
+        duration: 1000,
+        easing: 'ease-in-out',
+        direction: 'alternate',
+        iterations: 2,
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {texture: 'guanguan3.png'},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan2.png'},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan3.png'},
+      ], {
+        duration: 2500,
+        easing: 'step-end',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {rotate: 0},
+        {rotate: -70},
+      ], {
+        duration: 1000,
+        easing: 'ease-in-out',
+        direction: 'alternate',
+        iterations: 2,
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {texture: 'guanguan3.png'},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan2.png'},
+        {texture: 'guanguan1.png'},
+        {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
+      ], {
+        duration: 2500,
+        easing: 'step-end',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {x: 940},
+        {x: 280, offset: 0.99, scale: [-0.4, 0.4]},
+        {x: 280, scale: [0.4, 0.4]},
+      ], {
+        duration: 1000,
+        easing: 'ease-in-out',
+        fill: 'forwards',
+      }).finished;
+
+      await robot.animate([
+        {x: 280, y: 1280, rotate: 0},
+        {x: 940, y: 1280, rotate: 0, offset: 0.3},
+        {x: 940, y: 1280, rotate: -90, offset: 0.35},
+        {x: 940, y: 600, rotate: -90, offset: 0.65},
+        {x: 940, y: 600, rotate: -180, offset: 0.7},
+        {x: 280, y: 600, rotate: -180},
+      ], {
+        delay: 500,
+        duration: 3500,
+        easing: 'ease-in',
+        fill: 'forwards',
+      }).finished;
+
+      robot.attr({
+        texture: 'guanguan1.png',
+      });
+
+      await robot.animate([
+        {y: 600, rotate: -180},
+        {y: 600, rotate: 0},
+      ], {
+        delay: 1000,
+        duration: 1000,
+        fill: 'forwards',
+      }).finished;
+    }
+    window.scene = scene;
+    // noprotect
+    while(1) {
+      /* eslint-disable no-await-in-loop */
+      await robotMotion();
+      /* eslint-enable no-await-in-loop */
+    }
+  }());
+  </script>
+</body>
+</html>

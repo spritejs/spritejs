@@ -1,318 +1,64 @@
-# Change Log
+## Change Logs
 
-## [2.29.6][2019-10-11]
+#### [2019-12-26] v3.0.0 🚀
 
-### bug fix
+- SpriteJS v3.0 released!
 
-- Fixed renderBox 1px problem.
-- Fixed lineWidth rounding problem.
-- Fixed css-style priority problem.
+#### 【2019-12-26】 v0.2.5
 
-## [2.29.0][2019-06-23]
+- Fixed a bug that didn't display labels on earlier chrome browsers.
+- Fixed a bug that texture might be lost when compresses mesh data.
+- Fixed bug in displaying label error in wechat miniprograms.
 
-### enhancement
+#### 【2019-12-19】 v0.2.1
 
-- Add event capture phase.
-- Optimize the performance of append nodes.
+- Added radius attribute of Star element.
 
-## [2.28.0][2019-06-20]
+#### 【2019-12-19】 v0.2.0
 
-### enhancement
+- Added cloud nodes.
+- Added group's seal mode.
+- Greatly improved performance.
 
-- Optimize cache policy.
+#### 【2019-11-29】 v0.1.8
 
-### bug fix
+- Fix the bug of event mask under multiple layers.
+- Added support for OffScreen layers.
 
-- Fixed multi-touch events.
+#### 【2019-11-26】 v0.1.7
 
-## [2.27.0][2019-01-07]
+- Increase the proxy for mousewheel events.
+- Imporve node-canvas and unit test environment.
 
-### enhancement
+#### 【2019-11-26】 v0.1.6
 
-- Change Path's bounding attribute, default value is `auto`.
-- If Path's bounding is `auto` with `bgcolor` and `borderWidth` is not set, it equals to `bounding path` otherwise is `bounding box`.
-- Allowing seting bounding with a float value(for collision tolerance).
+- Fixed a bug in renderMatrix under multi-level group.
 
-## [2.26.1][2018-12-25]
+#### 【2019-11-26】 v0.1.5
 
-### enhancement
+- Fixed the bug that removeEventListener may throw an error.
 
-- Change borderRadius, consistent with CSS `border-radius`.
+#### 【2019-11-22】 v0.1.4
 
-## [2.25.3][2018-12-20]
+- Fixed modifying resolution bug.
+- Added the properties of scene.mode, scene.displayratio, scene.width and scene.height.
+- setMouseCapture and releaseMouseCapture are supported.
 
-### enhancement
+#### 【2019-11-21】 v0.1.3
 
-- Completely refactoring the decorator implements.
-- Upgrade babel 6 to babel 7.
-- Minify the build js file size.
-- Modulized the animation, dom, style and layout.
-- Build sprite.core, sprite.lite and spritejs.
-- Add more unit tests.
+- Changed the displayratio policy.
+- Add append and remove events with elements.
 
-### bug fix
+#### 【2019-11-20】 v0.1.2
 
-- Add the lost flex rules.
-- Fixed label color/fillColor inherit bug.
+- Fix the bug that ring appears as a circle when the angle is 360 degrees.
 
-## [2.24.12][2018-12-11]
+#### 【2019-11-20】 v0.1.1
 
-### enhancement
+- Fix the bug that scene mode changes cannot be redrawn in some cases.
 
-- `forDocumentCSS` support shadow DOM.
-- Optimized CSS updateStyles.
+#### 【2019-11-20】 v0.1.0
 
-## [2.24.5][2018-12-07]
-
-### enhancement
-
-- Add :hover and :active pseudos.
-
-## [2.24.4][2018-12-06]
-
-### enhancement
-
-- Add appendChild and removeChild event for group node.
-
-## [2.24.2][2018-12-05]
-
-### enhancement
-
-- Add `clipOverflow` attribute, default is `true`, set `false` to show the element's part overflow the parentNode.
-
-## [2.23.11][2018-12-04]
-
-### enhancement
-
-- No clipping when the path overflow the rect region, for rough.js
-- Export parseFont form utils.
-
-## [2.23.4][2018-11-29]
-
-### enhancement
-
-- Add element.replaceChild
-- Add element.nodeName
-
-### bug fix
-
-- Fix textures cache bug when playing animations.
-
-## [2.23.0][2018-11-27]
-
-### enhancement
-
-- Add element.style.
-
-## [2.22.0][2018-11-19]
-
-### enhancement
-
-- Allow loading css rules from page document.
-
-## [2.21.0][2018-11-19]
-
-### enhancement
-
-- Support CSS-like styles.
-
-## [2.20.0][2018-11-16]
-
-### enhancement
-
-- Update selector, CSS3 selector supported.
-
-### bug fix
-
-- Fix attribute inherit bugs.
-
-## [2.19.0][2018-11-02]
-
-### bug fix
-
-- Change path cache policy to eliminate blinking.
-
-### enhancement
-
-- Add clip effect.
-
-## [2.18.1][2018-10-26]
-
-### enhancement
-
-- Make childNodes' ordered the same as dom nodes. 
-
-## [2.17.0][2018-09-21]
-
-### bug fix
-
-- Change label cache policy to eliminate blinking.
-
-### fetures
-
-- Update Flex Layout.
-
-## [2.16.0][2018-09-20]
-
-### features
-
-- Add displayRatio for Scene and Layer
-- Add enableCache attribute for all sprites 
-- Allow append DOM Element into Scene
-
-### bug fix
-
-- Fix zIndex bug when appendChild or insertBefore
-- Fix .9 Background Image one pixcel bug
-- Fix resolveStates bugs
-
-## [2.15.0][2018-09-10]
-
-### enhancement
-
-- Add DOM API for sprite-vue
-- Add percent value for width/height and x/y
-- Add rw、rh unit for width/height and x/y
-- Support `inherit` value for font, color attributes
-- Optimized cache policy
-- Optimized animation performance
-
-## [2.10.0][2018-08-29]
-
-### enhancement
-
-- Add fontStyle,fontFamily,fontWeight,fontVariant and fontSize
-- attr.attrs support array
-
-## [2.9.0][2018-08-26]
-
-### enhancement
-
-- Change event.target for delegate event.
-- Add event.stopPropagation method.
-
-## [2.8.0][2018-08-24]
-
-### feature
-
-- Add DataNode Element.
-
-## [2.7.9][2018-08-23]
-
-### enhancement
-
-- Add more compatible API for VirtualDOM.
-
-## [2.7.8][2018-08-21]
-
-### enhancement
-
-- Add spritejs.esm.js to support rollup.
-
-## [2.7.6][2018-08-15]
-
-### enhancement
-
-- Add eslint rule: complexity，refectoring part of codes.
-- Output commonjs2 target instead of umd target for es6 package.
-
-## [2.7.5][2018-08-15]
-
-### bug fix
-
-- Sprite element re-append to layer cannot trigger layer's update.
-
-## [2.7.4][2018-08-09]
-
-### enhancement
-
-- Discard layer.isNodeVisible() for better performance.
-
-## [2.7.3][2018-08-06]
-
-### enhancement
-
-- Add d.ts file.
-
-## [2.7.2][2018-08-06]
-
-### enhancement
-
-- Update eslint config, use eslint-config-sprite.
-
-## [2.7.1][2018-08-03]
-
-### bug fix
-
-- fix animation keyframe easing be copied to other keyframes
-
-## [2.7.0][2018-08-03]
-
-### bug fix
-
-- fix group with border or padding pointCollision calculate error
-
-### feature
-
-- Add reflow policy for better rendering performance
-- Group.applyLayout(name, customLayout)
-- element.getLayerXY(dx, dy)
-
-## [2.6.4][2018-08-02]
-
-### bug fix
-
-- fix flexlayout bug
-- remove hard code of layout
-
-## [2.6.3][2018-08-01]
-
-### bug fix
-
-- fix mouseleave event not trigger when event has been terminated.
-- fix border attribute set to null cause error.
-
-## [2.6.2][2018-07-31]
-
-### bug fix
-
-- fix base64 image's cross-origin bug in early webkit
-
-## [2.6.1][2018-07-31]
-
-### bug fix
-
-- fix nested layout bug
-
-## [2.6.0][2018-07-31]
-
-### feature
-
-- Add `bgimage` attribute for all elements
-
-### bug fix
-
-- Fixed label with both height and width fixed display lineBreak error.
-- Fixed textAlign center or right in multi-line text display error.
-
-## [2.5.2][2018-07-27]
-
-### feature
-
-- Add `letterSpacing` and `textIndent` attributes for Label.
-- Add `scrollLeft` and `scrollTop` attributes for Group.
-- Add `scrollTo(x, y)` and `scrollBy(x, y)` methods for Group.
-
-## [2.5.1][2018-07-25]
-
-### feature
-
-- Add `boxSizing` attribute.
-
-## [2.5.0][2018-07-24]
-
-### feature
-
-- Support multi touches, add touches,targetTouches and changedTouches attributes.
-- Add `sprite.setMouseCapture()`.
-- Add bounding attribute for Path element.
+- documentation and examples.
+- Adjust code details.
+- Release beta.

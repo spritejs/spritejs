@@ -1,4 +1,4 @@
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 
@@ -11,91 +11,86 @@ module.exports = function (env = {}) {
     babelConf.babelrc = false;
   }
 
-  const externals = {};
-
-  const aliasFields = ['browser', 'esnext'];
-  const outputPath = path.resolve(__dirname, env.outputPath || 'dist');
-
-  const output = {
-    path: outputPath,
-    filename: env.esnext ? 'spritejs.esm' : 'spritejs',
-    publicPath: '/js/',
-    library: 'spritejs',
-    libraryTarget: env.esnext ? 'var' : 'umd',
-  };
-
   const plugins = [];
 
-  if(env.esnext) {
-    plugins.push(new EsmWebpackPlugin());
+  if(env.mode === 'development') {
+    plugins.push(new webpack.HotModuleReplacementPlugin({
+      multiStep: true,
+    }));
   }
 
-  const alias = {
-    '@spritejs/core': '@spritejs/core/src/index.js',
-    'sprite-math': 'sprite-math/src/index',
-    'svg-path-to-canvas': 'svg-path-to-canvas/src/index',
-    'sprite-animator': 'sprite-animator/src/index',
-    'sprite-flex-layout': 'sprite-flex-layout/src/index',
-    'sprite-timeline': 'sprite-timeline/src/index',
+  plugins.push(new webpack.DefinePlugin({
+    __DEV__: env.mode === 'development',
+  }));
+
+  let filename = '[name]';
+  if(env.esnext) filename += '.es';
+  if(env.mode === 'production') filename += '.min';
+  filename += '.js';
+
+  const entry = {
+    spritejs: './src/index',
+    'spritejs.worker': './src/index.worker',
   };
-  let entry = './src/index';
-
-  if(env.mode === 'lite') {
-    output.filename += '.lite';
-    entry = './src/index.lite';
-    alias['@spritejs/core'] = '@spritejs/core/src/index.dom.js';
-  } else if(env.mode === 'core') {
-    output.filename += '.core';
-    entry = './src/index.core';
-    alias['@spritejs/core'] = '@spritejs/core/src/index.basic.js';
-  }
-
-  if(env.production) {
-    output.filename += '.min.js';
-  } else {
-    output.filename += '.js';
-  }
 
   return {
-    mode: env.production ? 'production' : 'none',
+    mode: env.mode || 'none',
     entry,
-    output,
-
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename,
+      publicPath: '/js/',
+      library: ['spritejs'],
+      libraryTarget: 'umd',
+      // libraryExport: 'default',
+      globalObject: 'this',
+    },
+    resolve: {
+      alias: {
+        'gl-renderer': 'gl-renderer/src',
+        '@mesh.js/core': '@mesh.js/core/src',
+      },
+    },
     module: {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules\/(?!(sprite-[\w-]+)|(@spritejs)\/|svg-path-to-canvas).*/,
+          exclude: /node_modules\/(?!@mesh.js|gl-renderer).*/,
           use: {
             loader: 'babel-loader',
             options: babelConf,
+          },
+        },
+        {
+          test: /\.(frag|vert|glsl)$/,
+          use: {
+            loader: 'raw-loader',
+            options: {},
           },
         },
       ],
 
       /* Advanced module configuration (click to show) */
     },
-    resolve: {
-      aliasFields,
-      alias,
+
+    externals: {
+
     },
-    externals,
     // Don't follow/bundle these modules, but request them at runtime from the environment
 
     stats: 'errors-only',
     // lets you precisely control what bundle information gets displayed
 
     devServer: {
-      contentBase: path.join(__dirname, env.server || 'example'),
+      contentBase: path.join(__dirname, env.server || '.'),
       compress: true,
-      host: '0.0.0.0',
       port: 9090,
+      hot: true,
       // ...
     },
 
     plugins,
     // list of additional plugins
-
 
     /* Advanced configuration (click to show) */
   };

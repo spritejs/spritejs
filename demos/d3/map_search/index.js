@@ -13,31 +13,32 @@ submitBtn.type = 'submit';
 submitBtn.id = 'moveToBtn';
 submitBtn.innerHTML = '确认';
 formEl.appendChild(submitBtn);
-const paperEl = document.getElementById('paper');
-paperEl.appendChild(formEl)
+const container = document.getElementById('stage');
+container.appendChild(formEl);
 
-;(async function () {
-  const paper = new spritejs.Scene('#paper', {
-    viewport: ['auto', 'auto'],
-    resolution: [900, 500],
-    stickMode: 'width',
+/* globals d3,mapRelation,Animator */
+const {Scene} = spritejs;
+
+(async function () {
+  const scene = new Scene({
+    container,
+    width: 900,
+    height: 500,
+    mode: 'stickyWidth',
   });
 
-  const worldLayer = paper.layer('world-layer', {
+  const worldLayer = scene.layer('world-layer', {
     handleEvent: false,
   });
 
-  function mapTransform(layer, matrix, update = true) {
-    layer.adjust((context) => {
-      context.restore();
-      context.save();
-      context.transform(...matrix);
-    }, update);
+  function mapTransform(layer, matrix) {
+    layer.attributes.transform = matrix;
   }
 
   const MapLoader = {
     cache: {},
     load(mapId) {
+      worldLayer.attributes.transform = [1, 0, 0, 1, 0, 0];
       const cached = this.cache[mapId];
       if(cached) {
         return Promise.resolve(cached);
@@ -115,8 +116,7 @@ paperEl.appendChild(formEl)
 
     async draw() {
       const layer = this.layer;
-
-      const [width, height] = layer.resolution;
+      const {width, height} = layer.getResolution();
 
       const projection = d3.geoMercator()
         .center(this.metaData[this.mapId].cp)
@@ -153,7 +153,7 @@ paperEl.appendChild(formEl)
 
       const mapId = this.mapId;
 
-      layer.clear();
+      layer.removeAllChildren();
 
       d3.select(layer).selectAll('path')
         .data(filted)

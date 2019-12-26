@@ -28,32 +28,74 @@
   </style>
 </head>
 <body>
-  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">0</span></div>
+  <div>sprites: <span id="spriteCount">0</span></div>
   <div id="paper"></div>
   
-  <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script>
+  <!-- <script src="https://s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js"></script> -->
   <script src="/js/spritejs.js"></script>
   
   <script>
+  class Animator {
+    constructor(duration, update, easing) {
+      this.duration = duration
+      this.update = update
+      this.easing = easing
+    }
+
+    animate(startTime) {
+      startTime = startTime || 0
+
+      const duration = this.duration,
+        update = this.update,
+        easing = this.easing,
+        self = this
+
+      return new Promise(((resolve, reject) => {
+        let qId = 0
+        function step(timestamp) {
+          startTime = startTime || timestamp
+          const p = Math.min(1.0, (timestamp - startTime) / duration)
+
+          update.call(self, easing ? easing(p) : p, p)
+
+          if(p < 1.0) {
+            qId = requestAnimationFrame(step)
+          } else {
+            resolve(startTime + duration)
+          }
+        }
+
+        self.cancel = function () {
+          cancelAnimationFrame(qId)
+          update.call(self, 0, 0)
+          resolve(startTime + duration)
+        }
+        qId = requestAnimationFrame(step)
+      }))
+    }
+
+    ease(easing) {
+      return new Animator(this.duration, this.update, easing)
+    }
+  }
+
   /* eslint-disable */
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json'
   const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
-
+  const container = document.getElementById('paper');
   ;(async function(){
-    const scene = new spritejs.Scene('#paper')
-    scene.setResolution(800, 800) // 设置 Paper 的实际分辨率
+    const scene = new spritejs.Scene({container, width: 800, height: 800})
     
     const bglayer = scene.layer('bg'),  // 背景层
           // 前景层
           // 不代理事件，提升性能
           fglayer = scene.layer('fg', {
                 handleEvent: false,
-                evaluateFPS: true,
-                renderMode: 'repaintAll',
+                bufferSize: 60000,
           })   
     
     const axisZero = [400, 400]
-    const circle = new spritejs.Sprite()
+    const circle = new spritejs.Block()
     
     circle.attr({
       anchor: [0.5, 0.5],
@@ -67,18 +109,6 @@
     bglayer.appendChild(circle)
 
     let groupCache = null
-
-    class MyGroup extends spritejs.Group {
-      // 共用缓存，提高性能
-      get cache() {
-        return groupCache
-      }
-      set cache(context) {
-        if(!groupCache) {
-          groupCache = context
-        }
-      }
-    }
 
     function pointAdd(p1, p2 = [0, 0]){
       return [p1[0] + p2[0], p1[1] + p2[1]].map(Math.round)
@@ -106,6 +136,7 @@
       const anim = new Animator(duration, function(p){
         const pos = pointAdd(fromPoint, [p * dist[0], p * dist[1]])
         const rotate = p * 720
+        // sprite.forceUpdate()
         sprite.attr({
           pos,
           rotate,
@@ -120,17 +151,19 @@
     async function addSprite(){
       _spriteCount++
       spriteCount.innerHTML = _spriteCount
-      const group = new MyGroup()
+      const group = new spritejs.Group()
       group.attr({
         anchor: [0.5, 0.5],
         pos: axisZero,
         size: [60, 60],
+        bgcolor: 'blue',
+        // bgcolor: 'white',
       })
 
-      const center = new spritejs.Sprite()
+      const center = new spritejs.Block()
       center.attr({
         anchor: [0.5, 0.5],
-        pos: [30, 30],
+        pos: [0, 0],
         size: [20, 20],
         borderRadius: 10,
         bgcolor: 'black',
@@ -138,29 +171,30 @@
 
       const top = center.cloneNode()
       top.attr({
-        pos: [30, 10],
+        pos: [0, -20],
       })
       
       const right = center.cloneNode()
       right.attr({
-        pos: [50, 30],
+        pos: [20, 0],
       })
 
       const bottom = center.cloneNode()
       bottom.attr({
-        pos: [30, 50]
+        pos: [0, 20]
       })
 
       const left = center.cloneNode()
       left.attr({
-        pos: [10, 30]
+        pos: [-20, 0]
       })
 
       group.append(center, top, right, bottom, left)
+      group.seal()
 
       fglayer.appendChild(group)
       
-      //noprotect
+      // noprotect
       do{
         await randomAnimate(group)
       }while(1) 
@@ -174,12 +208,6 @@
     })
 
     window.fglayer = fglayer
-
-    //显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
-    //所以所有精灵不运动的时候 fps 也会降下来
-    setInterval(() => {
-      fps.innerHTML = fglayer.fps
-    }, 1000)
   })()
   </script>
 </body>

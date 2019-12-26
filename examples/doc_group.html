@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 100%;
+      padding-bottom: 50%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Group, Path} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 600,
+      // contextType: '2d',
+    });
+    const layer = scene.layer();
+    const arcD = 'M0 0L 50 0A50 50 0 0 1 43.3 25z';
+
+    const group = new Group();
+    group.attr({
+      size: [300, 300],
+      pos: [600, 300],
+      anchor: [0.5, 0.5],
+      bgcolor: '#cec',
+      borderRadius: 150,
+    });
+    layer.append(group);
+
+    for(let i = 0; i < 6; i++) {
+      const arc = new Path();
+      arc.attr({
+        d: arcD,
+        scale: 3,
+        anchor: [0, 0.5],
+        strokeColor: 'red',
+        fillColor: `rgb(${i * 99 % 255}, 0, 0)`,
+        rotate: i * 60,
+      });
+      group.append(arc);
+    }
+
+    group.animate([
+      {rotate: 0},
+      {rotate: 360},
+    ], {
+      duration: 3000,
+      iterations: Infinity,
+    });
+  </script>
+</body>
+</html>

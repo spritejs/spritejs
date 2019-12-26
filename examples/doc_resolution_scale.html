@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 50%;
+      padding-bottom: 30%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 600,
+      height: 600,
+    });
+    const layer = scene.layer();
+
+    for(let i = 0; i < 8; i++) {
+      for(let j = 0; j < 8; j++) {
+        const brick = new Sprite();
+        const bgcolor = (i + j) % 2 ? 'black' : 'white';
+        brick.attr({
+          size: [100, 100],
+          pos: [i * 100 - 50, j * 100 - 50],
+          bgcolor,
+        });
+
+        layer.append(brick);
+      }
+    }
+
+    /* globals dat */
+    const gui = new dat.GUI();
+    const config = {
+      mode: 'scale',
+    };
+    gui.add(config, 'mode', ['scale', 'stickyHeight', 'stickyRight', 'stickyLeft']).onChange((val) => {
+      scene.options.mode = val;
+      scene.resize();
+    });
+  </script>
+</body>
+</html>

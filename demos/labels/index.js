@@ -1,27 +1,45 @@
-(function () {
-  const {Scene, Label} = spritejs;
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]});
-  const fglayer = scene.layer('fglayer');
-  fglayer.canvas.style.backgroundColor = '#3f097a';
+const {Scene, Label, Group} = spritejs;
+const container = document.getElementById('stage');
+const scene = new Scene({
+  container,
+  width: 1200,
+  height: 1200,
+});
 
-  const text1 = new Label('Hello World !\nSpriteJS.org');
+const fglayer = scene.layer('fglayer');
+fglayer.canvas.style.backgroundColor = '#3f097a';
 
-  text1.attr({
-    anchor: [0.5, 0.5],
-    pos: [600, 600],
-    font: 'bold 48px Arial',
-    color: '#ffdc45',
-  });
+const group = new Group();
+group.attr({
+  pos: [600, 540],
+});
 
-  text1.animate([
-    {scale: 1.5, rotate: -30},
-    {scale: 1, rotate: 0},
-    {scale: 1.5, rotate: 30},
-  ], {
-    duration: 3000,
-    iterations: Infinity,
-    direction: 'alternate',
-  });
+fglayer.append(group);
 
-  fglayer.append(text1);
-}());
+const text1 = new Label('Hello World !');
+
+text1.attr({
+  anchor: [0.5, 0.5],
+  font: 'bold 48px Arial',
+  fillColor: '#ffdc45',
+});
+
+const text2 = new Label('SpriteJS.org');
+text2.attr({
+  anchor: [0.5, 0.5],
+  y: 60,
+  font: 'bold 48px Arial',
+  fillColor: '#ffdc45',
+});
+
+group.animate([
+  {scale: 1.5, rotate: -30},
+  {scale: 1, rotate: 0},
+  {scale: 1.5, rotate: 30},
+], {
+  duration: 3000,
+  iterations: Infinity,
+  direction: 'alternate',
+});
+
+group.append(text1, text2);

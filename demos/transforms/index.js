@@ -1,33 +1,38 @@
 (async function () {
-  const {Scene, Label, Sprite, Path, Group} = spritejs;
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]});
+  const {Scene, Sprite, Label, Path, Group} = spritejs;
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 1200,
+    height: 1200,
+  });
 
   class Button extends Label {
     connect(parent, zOrder) {
       super.connect(parent, zOrder);
 
-      this.on('mouseenter', (evt) => {
+      this.addEventListener('mouseenter', (evt) => {
         this.attr({
-          color: '#fee139',
+          fillColor: '#fee139',
           bgcolor: '#32ab61',
         });
       });
 
-      this.on('mousedown', (evt) => {
+      this.addEventListener('mousedown', (evt) => {
         this.attr({
           scale: 0.95,
         });
       });
 
-      this.on('mouseup', (evt) => {
+      this.addEventListener('mouseup', (evt) => {
         this.attr({
           scale: 1,
         });
       });
 
-      this.on('mouseleave', (evt) => {
+      this.addEventListener('mouseleave', (evt) => {
         this.attr({
-          color: '#32ab61',
+          fillColor: '#32ab61',
           bgcolor: '',
         });
       });
@@ -44,7 +49,7 @@
       button.attr({
         pos: [950, 350 + i * 100],
         font: '28px Arial',
-        color: '#32ab61',
+        fillColor: '#32ab61',
         size: [130, 40],
         lineHeight: 40,
         padding: 16,
@@ -65,16 +70,13 @@
 
   const huanhuan = new Group();
   huanhuan.attr({
-    anchor: 0.5,
     pos: [450, 600],
   });
   fglayer.append(huanhuan);
 
-  const robot = new Sprite();
+  const robot = new Sprite('huanhuan.png');
   robot.attr({
-    textures: [
-      'huanhuan.png',
-    ],
+    anchor: 0.5,
     size: [156, 192],
   });
   huanhuan.appendChild(robot);
@@ -83,8 +85,8 @@
 
   const outerFire = new Path();
   outerFire.attr({
-    path: {d: outerFireD},
-    pos: [44, 180],
+    d: outerFireD,
+    pos: [-30, 80],
     scale: 2,
     fillColor: 'rgb(253,88,45)',
     zIndex: -1,
@@ -95,8 +97,8 @@
 
   const innerFire = new Path();
   innerFire.attr({
-    path: {d: innerFireD},
-    pos: [60, 184],
+    d: innerFireD,
+    pos: [-15, 90],
     rotate: 15,
     scale: 1.6,
     fillColor: 'rgb(254,222,9)',
@@ -106,11 +108,11 @@
 
   let animation = null;
 
-  translateBtn.on('click', (evt) => {
+  translateBtn.addEventListener('click', (evt) => {
     if(animation) animation.cancel();
     animation = huanhuan.animate([
-      {transform: {translate: [0, 0]}},
-      {transform: {translate: [0, -100]}},
+      {translate: [0, 0]},
+      {translate: [0, -100]},
     ], {
       duration: 1000,
       iterations: Infinity,
@@ -119,11 +121,11 @@
     });
   });
 
-  rotateBtn.on('click', (evt) => {
+  rotateBtn.addEventListener('click', (evt) => {
     if(animation) animation.cancel();
     animation = huanhuan.animate([
-      {transform: {rotate: 0, translate: [0, 150]}},
-      {transform: {rotate: 360, translate: [0, 150]}},
+      {rotate: 0},
+      {rotate: 360},
     ], {
       duration: 5000,
       iterations: Infinity,
@@ -131,36 +133,36 @@
     });
   });
 
-  scaleBtn.on('click', (evt) => {
+  scaleBtn.addEventListener('click', (evt) => {
     if(animation) animation.cancel();
     animation = huanhuan.animate([
-      {transform: {scale: [1, 1]}},
-      {transform: {scale: [1, 0.5]}},
-      {transform: {scale: [1, 1]}},
-      {transform: {scale: [0, 1]}},
-      {transform: {scale: [-1, 1]}},
-      {transform: {scale: [1, 1]}},
+      {scale: [1, 1]},
+      {scale: [1, 0.5]},
+      {scale: [1, 1]},
+      {scale: [0, 1]},
+      {scale: [-1, 1]},
+      {scale: [1, 1]},
     ], {
       duration: 3000,
       iterations: Infinity,
     });
   });
 
-  skewBtn.on('click', (evt) => {
+  skewBtn.addEventListener('click', (evt) => {
     if(animation) animation.cancel();
     animation = huanhuan.animate([
-      {transform: {skew: [0, 0]}},
-      {transform: {skew: [0, 30]}},
-      {transform: {skew: [0, 0]}},
-      {transform: {skew: [30, 0]}},
-      {transform: {skew: [0, 0]}},
+      {skew: [0, 0]},
+      {skew: [0, 30]},
+      {skew: [0, 0]},
+      {skew: [30, 0]},
+      {skew: [0, 0]},
     ], {
       duration: 5000,
       iterations: Infinity,
     });
   });
 
-  stopBtn.on('click', (evt) => {
+  stopBtn.addEventListener('click', (evt) => {
     if(animation) animation.cancel();
   });
 }());

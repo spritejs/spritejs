@@ -28,7 +28,7 @@
   </style>
 </head>
 <body>
-  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
+  <div>sprites: <span id="spriteCount">1</span></div>
   <div id="paper"></div>
   
   <script src="https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js"></script>
@@ -37,38 +37,20 @@
   
   <script>
   const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
-  const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png'
+  const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
+  const container = document.getElementById('paper');
 
-  ;(async function () {
-    const paper = spritejs.Paper2D('#paper');
-    paper.setResolution(800, 800); // 设置 Paper 的实际分辨率
-  
-    const cacheMap = new Map();
-    window.cacheMap = cacheMap;
+  const paper = new spritejs.Scene({
+    container,
+    width: 800,
+    height: 800,
+  });
 
+  (async function () {
     class Bird extends spritejs.Sprite {
       constructor() {
         super('bird1.png');
       }
-      // // 共用缓存，提高性能
-      // get cache() {
-      //   const key = JSON.stringify(this.textures) + this.attr('scale')
-      //   if(cacheMap.has(key)) {
-      //     return cacheMap.get(key)
-      //   }
-      //   return null
-      // }
-      // set cache(context) {
-      //   if(context == null) {
-      //     // cacheMap.clear()
-      //     return
-      //   }
-      //   const key = JSON.stringify(this.textures) + this.attr('scale')
-
-      //   if(!cacheMap.has(key)) {
-      //     cacheMap.set(key, context)
-      //   }
-      // }
     }
 
     await paper.preload([birdsRes, birdsJsonUrl]);
@@ -78,8 +60,6 @@
       // 不代理事件，提升性能
       fglayer = paper.layer('fg', {
         handleEvent: false,
-        evaluateFPS: true,
-        renderMode: 'repaintAll',
       });
 
     const axisZero = [400, 400];
@@ -136,7 +116,7 @@
       // })
       // await anim.finished
 
-      await sleep(500);
+      // await sleep(500);
     }
 
     let birdCount = 0;
@@ -148,6 +128,7 @@
         anchor: [0.5, 0.5],
         pos: axisZero,
         size: [86, 60],
+        // bgcolor: 'red',
       });
       window.bird = bird;
 
@@ -155,9 +136,11 @@
 
       let idx = 0;
       setInterval(() => {
-        bird.textures = [`bird${++idx % 3 + 1}.png`];
+        // bird.forceUpdate();
+        bird.attributes.texture = `bird${++idx % 3 + 1}.png`;
       }, 100);
 
+      randomAnimate(bird);
       // noprotect
       do {
         await randomAnimate(bird);
@@ -166,25 +149,24 @@
 
     addBird();
 
-    circle.on('click', (evt) => {
+    circle.addEventListener('click', (evt) => {
       addBird();
     });
   
     requestAnimationFrame(function f() {
-      if(birdCount < 600) {
+      if(birdCount < 500) {
         addBird();
         requestAnimationFrame(f);
       }
     });
 
-    // 显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
-    // 所以所有精灵不运动的时候 fps 也会降下来
-    setInterval(() => {
-      fps.innerHTML = fglayer.fps;
-    }, 1000);
     window.fglayer = fglayer;
     window.paper = paper;
   }());
+
+  setInterval(() => {
+    console.log('tick');
+  }, 100);
   </script>
 </body>
 </html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+    const {Scene, Sprite, Group, Arc} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 1200,
+    });
+
+    const textureURL = 'https://p4.ssl.qhimg.com/t012170360e1552ce17.png';
+
+    const layer = scene.layer('fglayer');
+
+    const group = new Group();
+    group.name = 'group';
+    group.attr({
+      pos: [600, 600],
+      filter: 'grayscale(100%)',
+    });
+    layer.append(group);
+
+    const sprite = new Sprite({
+      anchor: 0.5,
+      texture: textureURL,
+      // filter: 'grayscale(0.5)',
+    });
+    group.append(sprite);
+
+    const c = new Arc({
+      radius: 50,
+      fillColor: 'blue',
+      pos: [200, 200],
+    });
+    group.append(c);
+
+    layer.append(group);
+  </script>
+</body>
+</html>

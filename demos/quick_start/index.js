@@ -1,22 +1,27 @@
 (async function () {
-  const {Scene, Sprite, Group} = spritejs;
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]});
-
+  const {Scene, Sprite} = spritejs;
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 1200,
+    height: 1200,
+  });
   await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
   ]);
 
   const bglayer = scene.layer('bg', {
-      handleEvent: false,
-    }),
-    fglayer = scene.layer('fg', {
-      handleEvent: false,
-      renderMode: 'repaintDirty',
-    });
+    handleEvent: false,
+  });
+
+  const fglayer = scene.layer('fg', {
+    handleEvent: false,
+  });
 
   const center = [600, 640];
-  const region = new Group();
+
+  const region = new Sprite();
 
   region.attr({
     anchor: 0.5,
@@ -35,16 +40,17 @@
     scale: 0.4,
   });
   fglayer.append(robot);
+  window.robot = robot;
 
   async function robotMotion() {
     await robot.animate([
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan2.png'},
-      {textures: 'guanguan3.png'},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan2.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
-      {textures: 'guanguan1.png', scale: [0.4, 0.4]},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan2.png'},
+      {texture: 'guanguan3.png'},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan2.png'},
+      {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
+      {texture: 'guanguan1.png', scale: [0.4, 0.4]},
     ], {
       duration: 3000,
       easing: 'step-end',
@@ -61,11 +67,11 @@
     }).finished;
 
     await robot.animate([
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan2.png'},
-      {textures: 'guanguan3.png', scale: [0.4, 0.4]},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan2.png'},
+      {texture: 'guanguan3.png', scale: [0.4, 0.4]},
     ], {
       duration: 2000,
       easing: 'step-end',
@@ -93,11 +99,11 @@
     }).finished;
 
     await robot.animate([
-      {textures: 'guanguan3.png'},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan2.png'},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan3.png'},
+      {texture: 'guanguan3.png'},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan2.png'},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan3.png'},
     ], {
       duration: 2500,
       easing: 'step-end',
@@ -116,11 +122,11 @@
     }).finished;
 
     await robot.animate([
-      {textures: 'guanguan3.png'},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan2.png'},
-      {textures: 'guanguan1.png'},
-      {textures: 'guanguan3.png', scale: [-0.4, 0.4]},
+      {texture: 'guanguan3.png'},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan2.png'},
+      {texture: 'guanguan1.png'},
+      {texture: 'guanguan3.png', scale: [-0.4, 0.4]},
     ], {
       duration: 2500,
       easing: 'step-end',
@@ -152,7 +158,7 @@
     }).finished;
 
     robot.attr({
-      textures: 'guanguan1.png',
+      texture: 'guanguan1.png',
     });
 
     await robot.animate([
@@ -164,7 +170,7 @@
       fill: 'forwards',
     }).finished;
   }
-
+  window.scene = scene;
   // noprotect
   while(1) {
     /* eslint-disable no-await-in-loop */

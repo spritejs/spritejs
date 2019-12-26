@@ -1,88 +1,67 @@
-import {
-  BaseNode,
-  Label,
-  Group,
-  Effects,
-  Easings,
-  Timeline,
-  Path,
-  registerNodeType,
-  isValidNodeType,
-  createNode,
-  createElement,
-  Color,
-
-  use,
-  utils,
-  math,
-
-  querySelector,
-  querySelectorAll,
-  stylesheet,
-} from '@spritejs/core';
-
-import BaseSprite from './basesprite';
-import Sprite from './sprite';
-import Layer from './layer';
-import BaseScene from './scene';
-import Resource from './resource';
-import {shim} from './platform';
-import {_debugger} from './platform/devtools';
-
-class Scene extends BaseScene {
-  constructor(container, options = {}) {
-    super(container, options);
-    if(options.useDocumentCSS) {
-      stylesheet.fromDocumentCSS();
-    }
+import {ENV} from '@mesh.js/core';
+/**
+  ENV: {
+    Container,
+    createCanvas,
+    loadImage,
   }
-}
+ */
+import {requestAnimationFrame, cancelAnimationFrame} from './utils/animation-frame';
+import Node from './node/node';
+import Cloud from './node/cloud';
+import Block from './node/block';
+import Sprite from './node/sprite';
+import Path from './node/path';
+import Rect from './node/rect';
+import Triangle from './node/triangle';
+import Parallel from './node/parallel';
+import Regular from './node/regular';
+import Star from './node/star';
+import Ellipse from './node/ellipse';
+import Arc from './node/arc';
+import Ring from './node/ring';
+import Polyline from './node/polyline';
+import Label from './node/label';
+import Group from './node/group';
+import Layer from './node/layer';
+import LayerWorker from './node/layer-worker';
+import Scene from './node/scene';
+import ownerDocument from './document';
 
-const {setDeprecation} = utils;
+import {parseColor, Gradient} from './utils/color';
+import {sizeToPixel} from './utils/attribute_value';
 
-if(shim) {
-  shim();
-}
-
-registerNodeType('layer', Layer, true);
-registerNodeType('scene', Scene, true);
-
-function Paper2D(...args) {
-  setDeprecation('spritejs.Paper2D', 'Instead use new spritejs.Scene.');
-  return new Scene(...args);
-}
-
-const version = require('../package.json').version;
+const createElement = ownerDocument.createElement;
+const isSpriteNode = ownerDocument.isSpriteNode;
+const registerNode = ownerDocument.registerNode;
 
 export {
-  _debugger,
-  version,
-  math,
-  utils,
-  use,
-
-  querySelector,
-  querySelectorAll,
-  stylesheet,
-
-  BaseNode,
-  BaseSprite,
-  Sprite,
-  Label,
-  Path,
+  Arc,
+  Block,
+  Cloud,
+  Ellipse,
+  Gradient,
   Group,
+  Label,
   Layer,
+  LayerWorker,
+  Node,
+  Parallel,
+  Path,
+  Polyline,
+  Rect,
+  Regular,
+  Ring,
   Scene,
-  Paper2D,
-
-  registerNodeType,
-  isValidNodeType,
-  createNode,
+  Sprite,
+  Star,
+  Triangle,
   createElement,
-  Color,
-
-  Resource,
-  Effects,
-  Easings,
-  Timeline,
+  isSpriteNode,
+  registerNode,
+  parseColor,
+  sizeToPixel,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  ENV,
 };

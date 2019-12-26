@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[102],{551:function(n,e,o){"use strict";o.r(e),e.default='<div id="app">\n  <scene :viewport="[300, 300]" :resolution="[600, 600]">\n    <layer>\n      <group x="20">\n        <my-circle color="orange" radius="100" x="300" y="300"></my-circle>\n      </group>\n    </layer>\n  </scene>\n</div>'}}]);

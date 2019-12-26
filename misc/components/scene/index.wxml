@@ -1,0 +1,12 @@
+<view class="scene-layout"
+  data-layers="{{layers}}"
+  bindtouchstart="onTouchStart"
+  bindtouchmove="onTouchMove"
+  bindtouchend="onTouchEnd"
+  bindtap="onTap"
+  bindlongpress="onLongPress"
+>
+  <block wx:for="{{_layers}}" wx:key="{{item}}">
+    <canvas canvas-id="{{item}}" disable-scroll="true"></canvas>
+  </block>
+</view>

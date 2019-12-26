@@ -1,5 +1,6 @@
 # packConfig
 yarn.lock
+package-lock.json
 
 # Logs
 logs
@@ -34,18 +35,16 @@ node_modules/
 output/
 output.tar.gz
 
-app/
-
-runtime/
-
-frames/
-ffmpeg.sh
-
+# MacOS
 .DS_Store
 
+# SFTP
 sftp-config.json
 
+# VSCode
 .vscode
 jsconfig.json
 esconfig.json
-package-lock.json
+
+dist/proton.js
+dist/proton-renderer.js

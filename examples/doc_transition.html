@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 100%;
+      padding-bottom: 50%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Arc} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 600,
+      // contextType: '2d',
+    });
+    const layer = scene.layer();
+
+    async function createBubble() {
+      const x = 100 + Math.random() * 1000,
+        y = 100 + Math.random() * 400;
+      const r = Math.round(255 * Math.random()),
+        g = Math.round(255 * Math.random()),
+        b = Math.round(255 * Math.random());
+
+      const fillColor = `rgb(${r},${g},${b})`;
+      const bubble = new Arc();
+      bubble.attr({
+        fillColor,
+        radius: 25,
+        x,
+        y,
+      });
+      layer.append(bubble);
+      await bubble.transition(2.0).attr({
+        scale: [2.0, 2.0],
+        opacity: 0,
+      });
+      bubble.remove();
+    }
+
+    setInterval(() => {
+      createBubble();
+    }, 50);
+  </script>
+</body>
+</html>

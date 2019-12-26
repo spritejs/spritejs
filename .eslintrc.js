@@ -1,24 +1,21 @@
 module.exports = {
+  env: {
+    jest: true
+  },
   globals: {
     spritejs: true,
-    axios: true,
-    TWEEN: true,
-    d3: true,
-    Docsify: true,
-    _: true,
-    CodeMirror: true,
-    topojson: true,
-    mapRelation: true,
-    Animator: true,
-    Timeline: true,
-    Proton: true,
-    curvejs: true,
-    dat: true,
+    global: true,
+    Canvas: true,
+    Container: true,
+    importScripts: true,
+    __DEV__: true,
   },
   extends:  "eslint-config-sprite",
   plugins: ['html'],
   rules: {
     "complexity": ["warn", 25],
     'import/prefer-default-export': 'off',
+    "no-unused-vars": 'warn',
+    'no-restricted-globals': 'off',
   },
 }

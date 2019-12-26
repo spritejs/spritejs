@@ -1,27 +1,22 @@
-import merge from 'merge';
-import base from '~/base.config';
-
 export default async () => {
-  const [htmlCode, jsCode, cssCode] = await Promise.all([
-    import('!raw-loader!~/common/index.html'),
+  const [html, javascript, css] = await Promise.all([
+    import('!raw-loader!~/index.html'),
     import('!raw-loader!./index.js'),
-    import('!raw-loader!~/common/style.css'),
+    import('!raw-loader!~/style.css'),
   ]);
 
-  return merge.recursive(true, base, {
-    javascript: {
-      code: jsCode,
-    },
+  return {
+    javascript,
     html: {
-      code: htmlCode,
+      code: html,
     },
     css: {
-      code: cssCode,
+      code: css,
     },
     packages: {
       js: [
-        '//lib.baomitu.com/d3/4.10.2/d3.min.js',
+        '//lib.baomitu.com/d3/4.10.2/d3.js',
       ],
     },
-  });
+  };
 };

@@ -5,15 +5,33 @@ language: node_js
 node_js:
   - '9'
 sudo: required
-before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev librsvg2-dev build-essential g++ && npm i install canvas@2.0.0-alpha.11
+addons:
+  apt:
+     packages:
+        - mesa-utils
+        - xvfb
+        - build-essential
+        - libxi-dev
+        - libgl1-mesa-dri
+        - libglapi-mesa
+        - libosmesa6
+        - libglew-dev
+        - pkg-config
+        - libcairo2-dev
+        - libjpeg8-dev
+        - libpango1.0-dev
+        - libgif-dev
+        - librsvg2-dev
+        - g++
+services:
+  - xvfb
 before_script:
+  - export DISPLAY=:99.0
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - 'npm test'
+  - 'npm run test:build'
 after_success:
   - 'cat ./coverage/lcov.info | coveralls'
   - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
-
-  

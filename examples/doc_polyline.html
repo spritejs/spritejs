@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 100%;
+      padding-bottom: 50%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Polyline} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 600,
+      // contextType: '2d',
+    });
+    const layer = scene.layer();
+
+    const line = new Polyline({
+      pos: [250, 50],
+      points: [0, 0, 100, 100, 200, 0, 300, 100, 400, 0, 500, 100, 600, 0],
+      strokeColor: 'blue',
+      lineWidth: 3,
+    });
+    layer.append(line);
+
+    const line2 = line.cloneNode();
+    line2.attr({
+      smooth: true,
+      strokeColor: 'red',
+    });
+    layer.append(line2);
+
+    const polygon = new Polyline({
+      pos: [250, 350],
+      points: [0, 0, 100, 100, 200, 0, 300, 100, 400, 0, 500, 100, 600, 0],
+      fillColor: '#37c',
+      lineWidth: 3,
+      close: true,
+      smooth: true,
+    });
+    layer.append(polygon);
+  </script>
+</body>
+</html>

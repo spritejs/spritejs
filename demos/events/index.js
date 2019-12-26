@@ -1,12 +1,13 @@
 (async function () {
-  const {Scene, Sprite, Group, Path, Label} = spritejs;
+  const {Scene, Sprite, Label, Group, Path} = spritejs;
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 1200,
+    height: 1200,
+  });
 
-  const scene = new Scene('#paper', {
-      resolution: [1200, 1200],
-      viewport: ['auto', 'auto'],
-    }),
-    fglayer = scene.layer('fglayer');
-
+  const fglayer = scene.layer('fglayer');
   fglayer.canvas.style.backgroundColor = '#F0DBAE';
 
   await scene.preload([
@@ -16,7 +17,6 @@
 
   const huanhuan = new Group();
   huanhuan.attr({
-    anchor: [0.5, 0],
     pos: [600, 600],
     rotate: 30,
   });
@@ -24,6 +24,7 @@
 
   const robot = new Sprite('huanhuan.png');
   robot.attr({
+    anchor: [0.5, 0],
     size: [78, 96],
   });
   huanhuan.append(robot);
@@ -32,8 +33,8 @@
 
   const outerFire = new Path();
   outerFire.attr({
-    path: {d: outerFireD},
-    pos: [22, 90],
+    d: outerFireD,
+    pos: [-12, 90],
     fillColor: 'rgb(253,88,45)',
     zIndex: -1,
   });
@@ -43,8 +44,8 @@
 
   const innerFire = new Path();
   innerFire.attr({
-    path: {d: innerFireD},
-    pos: [30, 90],
+    d: innerFireD,
+    pos: [-5, 90],
     rotate: 15,
     fillColor: 'rgb(254,222,9)',
     zIndex: -1,
@@ -61,16 +62,9 @@
   fglayer.append(keyboardBg);
 
   class KeyButton extends Label {
-    pointCollision(evt) {
-      if(evt.type === 'keydown' || evt.type === 'keyup') {
-        return evt.originalEvent.key === this.text.toLowerCase();
-      }
-      return super.pointCollision(evt);
-    }
-  }
-  KeyButton.defineAttributes({
-    init(attr) {
-      attr.setDefault({
+    constructor(text) {
+      super({
+        text,
         font: '40px "宋体"',
         fillColor: '#333',
         bgcolor: '#FFFDE6',
@@ -80,24 +74,30 @@
         textAlign: 'center',
         lineHeight: 80,
       });
-    },
-  });
+    }
+  }
+
 
   function setKey(key, x, y) {
     const button = new KeyButton(key);
     button.attr({
       pos: [x, y],
     });
-    button.on(['keydown', 'mousedown', 'touchstart'], (evt) => {
-      button.attr({
-        bgcolor: '#E8E6D1',
-        fillColor: '#333',
+    ['keydown', 'mousedown', 'touchstart'].forEach((event) => {
+      button.addEventListener(event, (evt) => {
+        button.attr({
+          bgcolor: '#E8E6D1',
+          fillColor: '#333',
+        });
       });
     });
-    button.on(['keyup', 'mouseup', 'touchend'], (evt) => {
-      button.attr({
-        bgcolor: '#FFFDE6',
-        fillColor: '#333',
+
+    ['keyup', 'mouseup', 'touchend'].forEach((event) => {
+      button.addEventListener(event, (evt) => {
+        button.attr({
+          bgcolor: '#FFFDE6',
+          fillColor: '#333',
+        });
       });
     });
     fglayer.append(button);
@@ -147,21 +147,40 @@
     flapping.play();
   }
 
-  setKey('W', 900, 950)
-    .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, -1000))
-    .on(['keyup', 'mouseup', 'touchend'], stopMove);
-  setKey('A', 800, 1050)
-    .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, -1000))
-    .on(['keyup', 'mouseup', 'touchend'], stopMove);
-  setKey('S', 900, 1050)
-    .on(['keydown', 'mousedown', 'touchstart'], moveY.bind(null, 3000))
-    .on(['keyup', 'mouseup', 'touchend'], stopMove);
-  setKey('D', 1000, 1050)
-    .on(['keydown', 'mousedown', 'touchstart'], moveX.bind(null, 3000))
-    .on(['keyup', 'mouseup', 'touchend'], stopMove);
+  window.scene = scene;
 
-  scene.delegateEvent('keydown', document);
-  scene.delegateEvent('keyup', document);
+  const buttonW = setKey('W', 900, 950);
+  const buttonA = setKey('A', 800, 1050);
+  const buttonS = setKey('S', 900, 1050);
+  const buttonD = setKey('D', 1000, 1050);
+  ['keydown', 'mousedown', 'touchstart'].forEach((event) => {
+    buttonW.addEventListener(event, moveY.bind(null, -1000));
+    buttonA.addEventListener(event, moveX.bind(null, -1000));
+    buttonS.addEventListener(event, moveY.bind(null, 3000));
+    buttonD.addEventListener(event, moveX.bind(null, 3000));
+  });
+  ['keyup', 'mouseup', 'touchend'].forEach((event) => {
+    buttonW.addEventListener(event, stopMove);
+    buttonA.addEventListener(event, stopMove);
+    buttonS.addEventListener(event, stopMove);
+    buttonD.addEventListener(event, stopMove);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    [buttonW, buttonA, buttonS, buttonD].forEach((button) => {
+      if(event.key === button.text.toLowerCase()) {
+        button.dispatchEvent(event);
+      }
+    });
+  });
+
+  document.addEventListener('keyup', (event) => {
+    [buttonW, buttonA, buttonS, buttonD].forEach((button) => {
+      if(event.key === button.text.toLowerCase()) {
+        button.dispatchEvent(event);
+      }
+    });
+  });
 
   /* eslint-disable no-console */
   console.log('press key to move robot');

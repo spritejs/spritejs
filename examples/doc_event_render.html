@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 100%;
+      padding-bottom: 50%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 600,
+    });
+    const layer = scene.layer();
+
+    const s1 = new Sprite({
+      pos: [600, 300],
+      size: [200, 200],
+      anchor: 0.5,
+      bgcolor: 'red',
+    });
+    const s2 = new Sprite({
+      pos: [600, 300],
+      size: [200, 200],
+      anchor: 0.5,
+      bgcolor: 'blue',
+      rotate: 45,
+    });
+
+    s2.addEventListener('beforerender', ({detail}) => {
+      const gl = detail.context;
+      gl.blendFuncSeparate(gl.ONE, gl.ZERO, gl.ZERO, gl.ONE);
+    });
+
+    s2.addEventListener('afterrender', ({detail}) => {
+      const gl = detail.context;
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    });
+
+    layer.append(s1, s2);
+  </script>
+</body>
+</html>

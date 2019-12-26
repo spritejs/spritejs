@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      //background-color: black;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+  const container = document.getElementById('container');
+  const {Scene, Block} = spritejs;
+  const scene = new Scene({
+    container,
+    width: 300,
+    height: 300,
+    // contextType: '2d',
+    // displayRatio: 2,
+  });
+
+  const layer = scene.layer();
+
+  // const ss = new Block();
+  // ss.attr({
+  //   pos: [0, 0],
+  //   size: [300, 300],
+  //   bgcolor: 'rgba(0, 0, 0, 0.1)',
+  // });
+
+  // layer.append(ss);
+
+  const sprite = new Block({
+    size: [100, 100],
+    pos: [150, 150],
+    anchor: 0.5,
+    bgcolor: 'red',
+    opacity: 0.5,
+  });
+
+  const s2 = sprite.cloneNode();
+  s2.attr({
+    rotate: 45,
+    bgcolor: 'blue',
+  });
+
+  layer.append(sprite, s2);
+  </script>
+</body>
+</html>

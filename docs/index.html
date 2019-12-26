@@ -1,59 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>spritejs - A lightweight 2D canvas rendering engine for modern browsers with ES6+.</title>
+  <title>SpriteJS ~ Next - 下一代 SpriteJS</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="A lightweight 2D canvas rendering engine for modern browsers with ES6+.">
+  <meta name="description" content="A graphics system born for visualization.">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <link href="//lib.baomitu.com/docsify/4.6.10/themes/vue.css" rel="stylesheet">
-  <link href="/css/base.css" rel="stylesheet">
-  <link href="/css/demo.css" rel="stylesheet">
-  <link rel="icon" href="//s.ssl.qhres.com/static/4325c916fea4ca87.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://lib.baomitu.com/docsify/4.10.2/themes/vue.css">
+  <style>
+    nav a {
+      margin: 0 10px;
+    }
+    .app-nav {
+      margin-right: 100px;
+    }
+    .markdown-section a {
+      text-decoration: none;
+    }
+    .markdown-section a:hover {
+      text-decoration: underline;
+    }
+    .content {
+      min-width: 320px;
+    }
+    @media only screen and (max-width: 479px) {
+      .app-nav {
+        left: 10px;
+        right: auto;
+        white-space: nowrap;
+      }
+    }
+    @media only screen and (max-width: 319px) {
+      .github-corner {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
   <div id="app"></div>
-  <script src="/js/plugin.js"></script>
   <script>
-    /* global generateApiPlugin */
-    const language = localStorage.getItem('language') || navigator.language;
-    // const language = 'en-US'
+    const language = navigator.language;
+    // const language = 'en';
     window.$docsify = {
-      name: 'spritejs <small>v2</small>',
-      repo: 'https://github.com/spritejs/spritejs',
-      onlyCover: false,
-      executeScript: true,
-      coverpage: language === 'zh-CN' ? 'zh-cn/_coverpage.md' : false,
-      homepage: language === 'zh-CN' ? 'zh-cn/README.md' : 'en/README.md',
+      name: 'SpriteJS Next',
+      repo: 'spritejs/next',
       loadNavbar: true,
       loadSidebar: true,
-      subMaxLevel: 2,
-      auto2top: true,
+      // logo: '/logo.svg',
+      homepage: language === 'zh-CN' ? 'zh-cn/README.md' : 'en/README.md',
       alias: {
         '/zh-cn/.*/_sidebar.md': '/zh-cn/_sidebar.md',
         '/zh-cn/.*/_navbar.md': '/zh-cn/_navbar.md',
         '/en/.*/_sidebar.md': '/en/_sidebar.md',
         '/en/.*/_navbar.md': '/en/_navbar.md',
-        '/api/_navbar.md': language === 'zh-CN' ? '/zh-cn/_navbar.md' : '/en/_navbar.md',
-        '/_navbar.md': language === 'zh-CN' ? '/_navbar.md' : '/en/_navbar.md',
+        '/_sidebar.md': language === 'zh-CN' ? '/zh-cn/_sidebar.md' : '/en/_sidebar.md',
+        '/_navbar.md': language === 'zh-CN' ? '/zh-cn/_navbar.md' : '/en/_navbar.md',
       },
-      plugins: [
-        generateApiPlugin,
-      ],
     };
   </script>
-  <script src="//lib.baomitu.com/axios/0.18.0/axios.min.js"></script>
-  <script src="//lib.baomitu.com/babel-polyfill/7.0.0-beta.44/polyfill.min.js"></script>
-  <script src="//lib.baomitu.com/docsify/4.6.10/docsify.js"></script>
-  <script src="//lib.baomitu.com/docsify/4.6.10/plugins/search.min.js"></script>
-  <script src="/js/external-scripts.js"></script>
-  <script src="//lib.baomitu.com/lodash.js/4.17.10/lodash.min.js"></script>
-  <!-- <script src="https://s5.ssl.qhres.com/!b105d69a/spritejs.min.js"></script> -->
-  <script src="/js/spritejs.js"></script>
-  <!-- <script src="https://cdn.bootcss.com/eruda/1.4.3/eruda.js"></script>
-  <script>eruda.init();</script> -->
+  <script src="https://lib.baomitu.com/docsify/4.10.2/docsify.min.js"></script>
 </body>
-
 </html>

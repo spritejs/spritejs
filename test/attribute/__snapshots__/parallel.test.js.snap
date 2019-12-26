@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`attribute set get get set 1`] = `"M0 0L10 0L10.000000000000002 20L1.2246467991473533e-15 20Z"`;

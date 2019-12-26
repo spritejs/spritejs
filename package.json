@@ -1,113 +1,67 @@
 {
   "name": "spritejs",
-  "version": "2.29.7",
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
-  "description": "A lightweight 2D canvas rendering engine for modern browsers with ES6+.",
+  "version": "3.0.0",
+  "description": "The next generation of spritejs.",
   "main": "dist/spritejs.js",
-  "module": "dist/spritejs.esm.js",
-  "directories": {
-    "example": "example"
-  },
-  "browser": {
-    "./src/platform": "./src/platform/browser",
-    "./lib/platform": "./lib/platform/browser"
-  },
+  "module": "lib/index.js",
   "scripts": {
-    "test": "nyc ava --serial && rm -rf ./coverage && mkdir ./coverage && nyc report --reporter=text-lcov > ./coverage/lcov.info",
-    "lint": "eslint 'src/**/*.js' --fix",
-    "lint-test": "eslint 'test/**/*.js' --fix",
-    "lint-example": "eslint 'example/*.html' --fix",
-    "lint-benchmark": "eslint 'benchmark/*.html' --fix",
-    "lint-doc": "eslint 'docs/src/**/*.js' --fix",
-    "lint-demo": "eslint 'docs/demo/static/code/**/*.js' --fix",
-    "start": "webpack-dev-server --watch-poll",
-    "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
-    "deploy": "npm run build",
+    "test": "jest --coverage",
+    "test:build": "jest --updateSnapshot --coverage",
+    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "start": "webpack-dev-server --env.server=examples --watch-poll",
     "compile": "rm -rf lib/* && babel src -d lib",
-    "build": "npm run compile && rm -rf dist/* && ./script/build.js",
-    "doc": "babel docs/src -d docs/js --watch & webpack-dev-server --watch-poll --env.server=docs",
-    "demo:dev": "webpack --watch & cross-env NODE_ENV=development demosify --serve",
-    "demo": "cross-env NODE_ENV=prodution demosify",
-    "demo:prod": "cross-env NODE_ENV=prodution demosify --prod",
-    "build-doc": "babel docs/src -d docs/js && ./script/build-doc.js",
-    "prepublishOnly": "npm run build-doc && npm run deploy"
+    "doc": "docsify serve ./docs",
+    "build": "rm -rf dist/* && webpack --env.mode=none & webpack --env.mode=none --env.esnext & webpack --env.mode=production & webpack --env.mode=production --env.esnext",
+    "demo:dev": "demosify --serve",
+    "demo:prod": "demosify --prod",
+    "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
+    "prepublishOnly": "npm run compile && npm run build && npm run demo:prod"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/spritejs/spritejs"
-  },
-  "keywords": [
-    "sprite",
-    "canvas",
-    "graphic",
-    "graphics",
-    "SVG",
-    "Path",
-    "d3",
-    "node-canvas",
-    "parser",
-    "HTML5",
-    "object model"
-  ],
+  "keywords": [],
   "author": "akira-cn",
   "license": "MIT",
-  "dependencies": {
-    "@babel/runtime": "^7.7.2",
-    "@spritejs/core": "^2.31.7",
-    "axios": "^0.19.0"
-  },
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.2",
-    "@babel/plugin-external-helpers": "^7.2.0",
-    "@babel/plugin-proposal-class-properties": "^7.7.0",
-    "@babel/plugin-proposal-decorators": "^7.7.0",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/register": "^7.7.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.6.2",
     "@demosify/core": "^0.5.5",
-    "@purtuga/esm-webpack-plugin": "^1.1.1",
-    "ava": "^1.4.1",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
-    "babel-plugin-inline-package-json": "^2.0.0",
+    "babel-plugin-transform-gl-matrix": "^0.6.0",
     "colors": "^1.4.0",
-    "coveralls": "^3.0.7",
-    "cross-env": "^5.2.1",
-    "d3": "^4.13.0",
-    "eslint": "^4.19.1",
+    "coveralls": "^3.0.8",
+    "docsify": "^4.9.4",
+    "eslint": "^5.16.0",
     "eslint-config-sprite": "^1.0.6",
-    "eslint-plugin-html": "^4.0.6",
-    "gifencoder": "^1.1.0",
-    "hamming-distance": "^1.0.0",
-    "imghash": "0.0.3",
-    "merge": "^1.2.1",
-    "nyc": "^14.1.1",
-    "pixelmatch": "^4.0.2",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "eslint-plugin-html": "^5.0.5",
+    "gl": "^4.4.0",
+    "jest": "^24.9.0",
+    "node-canvas-webgl": "^0.2.5",
+    "raw-loader": "^3.1.0",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.4",
+    "webpack-dev-server": "^3.7.1"
   },
-  "ava": {
-    "require": [
-      "@babel/register"
-    ],
-    "babel": {
-      "testOptions": {
-        "babelrc": true
-      }
-    }
+  "dependencies": {
+    "@babel/runtime": "^7.4.5",
+    "@mesh.js/core": "^0.12.8",
+    "color-rgba": "^2.1.1",
+    "css-select": "^2.0.2",
+    "gl-matrix": "^3.1.0",
+    "pasition": "^1.0.2",
+    "sprite-animator": "^1.11.4"
   },
-  "nyc": {
-    "include": [
-      "src/**/*.js"
-    ],
-    "exclude": [
-      "src/animation.js",
-      "src/cross-platform/**/*.js"
+  "jest": {
+    "testRegex": "/test/.*.test.js$",
+    "testEnvironmentOptions": {
+      "pretendToBeVisual": true
+    },
+    "moduleNameMapper": {},
+    "setupFiles": [
+      "./src/platform/jest-jsdom"
     ]
   }
 }

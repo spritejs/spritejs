@@ -1,13 +1,19 @@
 {
-  "presets": [],
-  "plugins": [
+  "presets": [
     [
-      "@babel/plugin-proposal-decorators",
+      "@babel/preset-env",
       {
-        "decoratorsBeforeExport": false
+        "modules": false,
+        "targets": {
+          "chrome": "59"
+        }
       }
-    ],
+    ]
+  ],
+  "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "inline-package-json"
+    ["transform-gl-matrix", {
+      "glMatrixArray": false
+    }]
   ]
 }

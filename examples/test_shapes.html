@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 1200px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      // displayRatio: 2,
+      width: 600,
+      height: 600,
+      mode: 'stickyHeight',
+      // contextType: '2d',
+    });
+
+    const fglayer = scene.layer('fglayer');
+
+    const arc = new spritejs.Arc();
+    arc.attr({
+      pos: [200, 200],
+      radius: 30,
+      fillColor: 'blue',
+      startAngle: 0,
+      endAngle: 180,
+    });
+
+    fglayer.append(arc);
+
+    const polyline = new spritejs.Polyline();
+    polyline.attr({
+      points: [50, 100, 150, 150, 300, 50, 400, 200],
+      smooth: true,
+      lineWidth: 3,
+      strokeColor: 'green',
+    });
+
+    fglayer.append(polyline);
+
+    const triangle = new spritejs.Triangle();
+    triangle.attr({
+      pos: [100, 100],
+      sides: [45, 45],
+      fillColor: 'red',
+    });
+    fglayer.append(triangle);
+
+    const parallel = new spritejs.Parallel();
+    parallel.attr({
+      pos: [300, 100],
+      sides: [45, 45],
+      fillColor: 'red',
+      angle: 45,
+    });
+    fglayer.append(parallel);
+
+    const regular = new spritejs.Regular();
+    regular.attr({
+      pos: [400, 200],
+      edges: 5,
+      fillColor: 'red',
+      radius: 60,
+    });
+    fglayer.append(regular);
+
+    const star = new spritejs.Star();
+    star.attr({
+      pos: [200, 400],
+      angles: 5,
+      fillColor: 'red',
+      innerRadius: 40,
+      outerRadius: 70,
+    });
+    fglayer.append(star);
+
+    const ring = new spritejs.Ring();
+    ring.attr({
+      pos: [100, 100],
+      radius: [90, 80],
+      // fillColor: 'red',
+      strokeColor: 'red',
+      lineWidth: 5,
+      startAngle: 0,
+      endAngle: 120,
+    });
+    fglayer.append(ring);
+  </script>
+</body>
+</html>

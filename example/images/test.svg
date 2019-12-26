@@ -1,9 +1,0 @@
-<svg id="svg1" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0,0 q100,120 120,20 q140,-50 160,0" 
-        stroke="black" 
-        fill="red"
-        stroke-width="1"
-        stroke-linecap="butt"
-        stroke-linejoin="miter"
-        ></path>
-</svg>

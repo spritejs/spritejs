@@ -19,13 +19,16 @@
   <script>
 (function () {
   const {Scene, Sprite} = spritejs;
-  const scene = new Scene('#container', {
-    resolution: [2400, 2400],
+  const container = document.getElementById('container');
+  const scene = new Scene({
+    container,
+    width: 2400,
+    height: 2400,
   });
 
   const fglayer = scene.layer('fglayer', {
-    renderMode: 'repaintDirty',
     handleEvent: false,
+    // contextType: '2d',
   });
 
   // 预加载资源
@@ -40,6 +43,7 @@
     scale: 2,
   });
   fglayer.append(s);
+
   s.animate([
     {x: 400},
     {x: 800},
@@ -48,6 +52,7 @@
     iterations: Infinity,
   });
 
+  window.s = s;
   // const anim = new Animator(5000, (p) => {
   //   s.attr({
   //     x: 400 + p * 400,

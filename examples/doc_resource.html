@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 100%;
+      padding-bottom: 50%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Sprite, Label} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 600,
+      // contextType: '2d',
+    });
+    const layer = scene.layer();
+
+    const robot = new Sprite('https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png');
+    robot.attr({
+      anchor: [0.5, 0.5],
+      pos: [600, 300],
+      scale: 0.5,
+    });
+
+    layer.append(robot);
+
+    const label = new Label(`图片大小： ${robot.contentSize}`);
+    label.attr({
+      anchor: [0.5, 0.5],
+      pos: [600, 100],
+      font: '36px Arial',
+    });
+
+    layer.append(label);
+  </script>
+</body>
+</html>

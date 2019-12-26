@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #201e1e;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background: #201e1e;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+    const {Scene, Sprite, Label, Group, Path} = spritejs;
+    class Button extends Label {
+      connect(parent, zOrder) {
+        super.connect(parent, zOrder);
+
+        this.addEventListener('mouseenter', (evt) => {
+          this.attr({
+            fillColor: '#635d47',
+            bgcolor: '#00e15e',
+          });
+        });
+
+        this.addEventListener('mousedown', (evt) => {
+          this.attr({
+            scale: 0.95,
+          });
+        });
+
+        this.addEventListener('mouseup', (evt) => {
+          this.attr({
+            scale: 1,
+          });
+        });
+
+        this.addEventListener('mouseleave', (evt) => {
+          this.attr({
+            fillColor: '#00e15e',
+            bgcolor: '',
+          });
+        });
+      }
+    }
+
+    (async function () {
+      const container = document.getElementById('stage');
+      const scene = new Scene({
+        container,
+        width: 1600,
+        height: 1200,
+        mode: 'stickyWidth',
+        // contextType: '2d',
+      });
+
+      await scene.preload([
+        'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+        'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+      ]);
+
+      const bglayer = scene.layer('bg'),
+        fglayer = scene.layer('fg', {
+          handleEvent: false,
+          renderMode: 'repaintAll',
+        });
+
+      bglayer.canvas.style.backgroundColor = '#635D47';
+
+      const wall = new Sprite();
+      wall.attr({
+        size: [10, 740],
+        pos: [940, 250],
+        bgcolor: '#CFC441',
+      });
+      fglayer.append(wall);
+
+      const g = new Group();
+      const pos = [100, 350 + 60];
+      g.attr({
+        anchor: [0.5, 0.5],
+        // pos,
+        zIndex: 200,
+      });
+
+      const s = new Sprite('huanhuan.png');
+      s.attr({
+        pos: [400, 300],
+        scale: 0.4,
+        bgcolor: 'red',
+      });
+
+      g.append(s);
+      fglayer.append(g);
+      // fglayer.append(s);
+
+      window.fglayer = fglayer;
+    }());
+  </script>
+</body>
+</html>

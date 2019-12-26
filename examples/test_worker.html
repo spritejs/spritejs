@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      width: 100%;
+      padding-bottom: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      // displayRatio: 2,
+      width: 600,
+      height: 600,
+      mode: 'stickyHeight',
+      // contextType: '2d',
+    });
+
+    const fglayer = scene.layer('fglayer', {worker: true});
+  </script>
+</body>
+</html>

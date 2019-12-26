@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <script src="/js/spritejs.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      #canvas-wrap {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-wrap"></div> 
+    <script>
+      const { Scene, Sprite, Group } = spritejs;
+      let container = document.querySelector('#canvas-wrap')
+      const scene = new Scene({container,displayRatio: window.devicePixelRatio})
+      const layer = scene.layer()
+      let group_inner = new Group()
+      group_inner.attr({bgcolor: '#ff0',pos:[100,100],size:[200,200]})
+      let group_outer = new Group()
+      group_outer.attr({bgcolor: '#eee',pos:[100,100],size:[400,400]})
+      let sprite = new Sprite()
+      sprite.attr({pos:[0,0],bgcolor:'#00f',size:[20,20]})
+      group_outer.append(group_inner)
+      group_inner.append(sprite)
+      layer.append(group_outer)
+    </script>
+  </body>
+</html>

@@ -8,29 +8,26 @@
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
 [![dependency status](https://david-dm.org/spritejs/spritejs.svg)](https://david-dm.org/spritejs/spritejs)
 [![Package Quality](http://npm.packagequality.com/shield/spritejs.svg)](http://packagequality.com/#?package=spritejs)
-[![Code Climate](https://codeclimate.com/github/spritejs/spritejs/badges/gpa.svg)](https://codeclimate.com/github/spritejs/spritejs)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/test_coverage)](https://codeclimate.com/github/spritejs/spritejs/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/maintainability)](https://codeclimate.com/github/spritejs/spritejs/maintainability)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
-SpriteJS is a cross-platform lightweight 2D render object model.
+Spritejs is a cross platform high-performance graphics system, which can rendering graphics on web, node, desktop applications and mini-programs.
+
+Spritejs<sup>Next</sup> is the new version of spritejs. It is renderer agnostic enabling the same api to render in multiple contexts: webgl2, webgl, and canvas2d.
 
 Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 ## Features
 
-- Manipulate the **sprites** element as you do with the DOM elements.
-- Perform fast drawing with smart cache.
+- Manipulate the sprites element as you do with the DOM elements.
+- Rendering by **WebGL2** context.
 - Multiple layers.
-- **Flex Layout**.
-- **Text typesetting**.
-- **CSS Supported**.
-- [Web Animations Api](https://w3c.github.io/web-animations/#the-animation-interface)
-- Controllable event dispatching.
-- Object Oriented Programmed Development with ES6+
-- [Server-side render](#server-side-render). Work with node-canvas.
-- [Sprite-vue](http://vue.spritejs.org). Work with [Vue](https://github.com/vuejs/vue).
-- [Sprite-React](http://react.spritejs.org). Work with [React](https://github.com/vuejs/react).
-- [微信小程序](https://github.com/spritejs/sprite-wxapp)
+- DOM Events.
+- Object Oriented Programmed Development with ES6+.
+- OffscreenCanvas and [Web Worker](https://next.spritejs.org/#/en/guide/worker).
+- Work with [d3](https://github.com/d3/d3).
+- [Server-side rendering](https://next.spritejs.org/#/en/guide/platforms).
+- [Vue](http://vue.spritejs.org).
 
 ## Quick Start
 
@@ -42,7 +39,12 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
-    const paper = new Scene('#container', { viewport: [400, 400] })
+    const container = document.getElementById('container');
+    const paper = new Scene({
+      container,
+      width: 400,
+      height: 400,
+    })
 
     const sprite = new Sprite(imgUrl)
     sprite.attr({
@@ -56,107 +58,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-**With Document CSS** - Just set `useDocumentCSS` option to true, spritejs will auto load style rules from the document.
-
-```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
-<div id="container"></div>
-<style>
-  sprite.myclass {
-    background-color: red;
-    --sprite-x: 0;
-    --sprite-y: 0;
-    width: 400px;
-    height: 400px;
-    border-radius: 200px;
-  }
-</style>
-<script>
-    const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-    const {Scene, Sprite} = spritejs;
-    const paper = new Scene('#container', {
-      viewport: [400, 400],
-      useDocumentCSS: true,
-    })
-
-    const sprite = new Sprite(imgUrl)
-    sprite.className = 'myclass';
-
-    paper.layer().appendChild(sprite)
-</script>
-```
-
-**React JSX** - react.spritejs.org
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Scene} from 'sprite-react';
-
-class Block extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {color: 'green'};
-  }
-
-  handleClick() {
-    this.setState({
-      color: 'blue',
-    });
-  }
-
-  render() {
-    return (
-      <sprite pos={[100, 100]} bgcolor={this.state.color} size={[50, 50]} onClick={this.handleClick.bind(this)}></sprite>
-    );
-  }
-}
-
-
-ReactDOM.render(
-  <Scene>
-    <layer id="fglayer" handleEvent={true}>
-      <group>
-        <sprite pos={[200, 100]} size={[50, 50]} bgcolor="red" onClick={function () { this.attr('bgcolor', 'blue') } }></sprite>
-        <Block/>
-      </group>
-    </layer>
-  </Scene>,
-  document.getElementById('app')
-);
-```
-
-**Vue Component** - vue.spritejs.org
-
-```xml
-<template>
-  <scene id="container" :viewport="[300, 300]">
-    <layer>
-      <sprite
-        :textures="imgUrl"
-        bgcolor="#fff"
-        :pos="[0,0]"
-        :size="[400, 400]"
-        borderRadius="200"
-      />
-    </layer>
-  </scene>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      imgUrl: 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
-    }
-  }
-}
-</script>
-```
-
 <div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/"><font size="36">spritejs.org</font></a></strong> </div>
-
----
 
 ## Usage
 
@@ -212,7 +114,7 @@ A visulization library based on spritejs.
 - [Radar Chart](http://spritejs.org/demo/#/qchart/radar)
 - [Bubble Chart](http://spritejs.org/demo/#/qchart/bubble)
 
-### With Proton
+<!-- ### With Proton
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
 
@@ -226,14 +128,7 @@ A visulization library based on spritejs.
 
 - [Mixed shapes](http://spritejs.org/demo/#/matterjs/mixed_shapes)
 
-### API Doc
-
-- [Sprite](http://spritejs.org/#/api/sprite)
-- [Label](http://spritejs.org/#/api/label)
-- [Path](http://spritejs.org/#/api/path)
-- [Group](http://spritejs.org/#/api/group)
-- [Layer](http://spritejs.org/#/api/layer)
-- [Scene](http://spritejs.org/#/api/scene)
+-->
 
 ### Ecosystem & Extensions
 
@@ -241,13 +136,14 @@ A visulization library based on spritejs.
 | ------------------------------- | ----------------------------------- |
 | [sprite-vue](https://github.com/spritejs/sprite-vue)| SpriteJS for Vue.js. |
 | [sprite-react](https://github.com/spritejs/sprite-react)| Rendering spritejs elements with React. |
-| [sprite-wxapp](https://github.com/spritejs/sprite-wxapp)| SpriteJS for weixin mini-program. |
-| [sprite-extend-echarts](https://github.com/akira-cn/sprite-extend-echarts)| Rendering echarts with spritejs. |
-| [sprite-extend-proton](https://github.com/spritejs/sprite-extend-proton)| Particle renderer for proton-js. |
-| [sprite-extend-matter](https://github.com/spritejs/sprite-extend-matter)| Matter.js renderer for spritejs. |
 | [q-charts](https://github.com/spritejs/q-charts) | A visulization library based on spritejs |
 | [cat-charts-vue](https://github.com/spritejs/cat-charts-vue)| A visulization library based on spritejs , qcharts and Vue. |
 
+## Architecture
+
+Spritejs<sup>Next</sup> provides several kinds of basic sprite elements, which can be operated on the layer like DOM elements.
+
+![架构图](https://s0.ssl.qhres.com/static/fe2ee3b6fd1aa59f.svg)
 
 ### Build
 
@@ -269,59 +165,9 @@ npm run build-doc
 npm test
 ```
 
-  31 passed
+# V2
 
-File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
---------------|----------|----------|----------|----------|----------------|
-All files     |     97.7 |    86.73 |    95.24 |     97.8 |                |
- src          |    97.28 |    86.13 |    92.31 |    97.39 |                |
-  index.js    |      100 |       50 |      100 |      100 |             24 |
-  layer.js    |    96.04 |    83.33 |      100 |    95.92 |    28,42,53,55 |
-  resource.js |    97.73 |       80 |    85.71 |    97.56 |             28 |
-  scene.js    |    97.98 |     89.7 |    90.91 |    98.31 |219,222,267,300 |
-  sprite.js   |    94.12 |    76.19 |      100 |    93.75 |          28,55 |
- src/platform |      100 |    91.43 |      100 |      100 |                |
-  index.js    |      100 |    91.43 |      100 |      100 |      68,82,139 |
-
-
-### Server-side Render
-
-Spritejs (>= 1.15.0) can render sprites' canvas on server-side. Depend on [node-canvas](https://github.com/Automattic/node-canvas).
-
-```bash
-sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev librsvg2-dev libgif-dev build-essential g++
-```
-
-```bash
-npm install canvas@next
-```
-
-```js
-const fs = require('fs')
-
-const {Scene, Label} = require('spritejs')
-const scene = new Scene('#test', 800, 600)
-
-const bglayer = scene.layer('bg', {handleEvent: false})
-
-const text = new Label('Hello Sprite!')
-
-text.attr({
-  anchor: [0.5, 0.5],
-  pos: [400, 300],
-  font: '46px Arial',
-  color: 'blue',
-  bgcolor: 'white',
-  textAlign: 'center',
-})
-
-bglayer.append(text)
-
-;(async function () {
-  const canvas = await scene.snapshot()
-  fs.writeFileSync('snap.png', canvas.toBuffer())
-}())
-```
+[SpriteJS v2.0](https://github.com/spritejs/spritejs/tree/v2)
 
 # Compatibility
 

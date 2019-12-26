@@ -1,6 +1,11 @@
 (async function () {
   const {Scene, Sprite} = spritejs;
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [1200, 1200]});
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 1200,
+    height: 1200,
+  });
 
   await scene.preload([
     'https://p3.ssl.qhimg.com/t010ded517024020e10.png',
@@ -156,13 +161,13 @@
     }).finished;
   }
 
-  await combine()
-
-  ;[body, head].forEach((sprite) => {
-    sprite.on('mouseenter', (evt) => {
+  await combine();
+  window.head = head;
+  [body, head].forEach((sprite) => {
+    sprite.addEventListener('mouseenter', (evt) => {
       stretch();
     });
-    sprite.on('mouseleave', (evt) => {
+    sprite.addEventListener('mouseleave', (evt) => {
       combine();
     });
   });

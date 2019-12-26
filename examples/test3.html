@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #201e1e;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+    #container {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      width: 1600,
+      height: 1200,
+      mode: 'stickyWidth',
+    });
+    const fglayer = scene.layer('fglayer');
+
+    // const gradient = new spritejs.Gradient({
+    //   vector: [0, 0, 100, 100],
+    //   colors: [
+    //     {offset: 0, color: 'rgba(255, 0, 0, 1)'},
+    //     {offset: 1, color: 'rgba(255, 0, 255, 0)'},
+    //   ],
+    // });
+
+    const gradient = new spritejs.Gradient({
+      vector: [0, 0, 100, 100],
+      colors: [{
+        offset: 0,
+        color: 'rgba(255, 0, 0, 0.1)',
+      }, {
+        offset: 1,
+        color: 'rgba(255, 255, 0, 0.1)',
+      }],
+    });
+
+    const sprite = new spritejs.Sprite();
+    sprite.attr({
+      pos: [100, 100],
+      size: [100, 100],
+      // bgcolor: gradient,
+      borderWidth: 10,
+      borderColor: gradient,
+      rotate: 0,
+    });
+
+    fglayer.append(sprite);
+
+    const path = new spritejs.Path();
+    path.attr({
+      pos: [300, 300],
+      d: 'M0 0L100 100L100 0z',
+      lineWidth: 10,
+      strokeColor: 'rgba(255, 0, 0, 0.1)',
+    });
+
+    fglayer.append(path);
+
+    const controller = Math.random() * 340 + 10;
+    const s = new spritejs.Path();
+    s.attr({
+      // pos,
+      // rotate,
+      lineWidth: 16,
+      d: `M10,80 q${controller},-80 350,0`,
+      strokeColor: gradient,
+    });
+    fglayer.append(s);
+  </script>
+</body>
+</html>

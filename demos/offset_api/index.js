@@ -1,6 +1,11 @@
 (async function () {
-  const {Scene, Sprite, Path} = spritejs;
-  const scene = new Scene('#paper', {viewport: ['auto', 'auto'], resolution: [600, 600]});
+  const {Scene, Path, Sprite} = spritejs;
+  const container = document.getElementById('stage');
+  const scene = new Scene({
+    container,
+    width: 600,
+    height: 600,
+  });
   await scene.preload([
     'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
     'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
@@ -20,15 +25,14 @@
   });
   fglayer.append(path);
 
-
-  const s = new Sprite();
+  const s = new Sprite('guanguan3.png');
   s.attr({
     anchor: [0.5, 0.5],
     pos: [150, 180],
     offsetPath: d,
     zIndex: 200,
+    scale: [0.2, 0.2],
   });
-  s.textures = ['guanguan3.png'];
   fglayer.appendChild(s);
 
   // run along path animation

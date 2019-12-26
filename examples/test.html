@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 1200px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const textureURL = 'https://p4.ssl.qhimg.com/t012170360e1552ce17.png';
+
+    const el = new spritejs.Sprite();
+    el.attr({
+      // size: [100, 100],
+      anchor: 0.5,
+      borderWidth: 0,
+      borderColor: 'rgba(0,0,0,1)',
+      bgcolor: 'red',
+      pos: [256, 256],
+      // transform: 'rotate(45deg)',
+      // opacity: 0.2,
+      transformOrigin: [50, 50],
+    });
+
+    const el2 = el.cloneNode();
+    el2.attr({
+      anchor: 0,
+      texture: textureURL,
+      // textureRect: [50, 50, 100, 100],
+      padding: 20,
+      bgcolor: 'red',
+      zIndex: 1000,
+      // borderRadius: 10,
+      // textureRepeat: true,
+    });
+
+    const gradient = new spritejs.Gradient({
+      vector: [0, 0, 100, 100],
+      colors: [
+        {offset: 0, color: 'red'},
+        {offset: 1, color: 'rgba(255, 0, 255, 0.1)'},
+      ],
+    });
+
+    const path = new spritejs.Path();
+    path.d = 'M50 50L50 300L300 300z';
+    // path.d = 'M100 100C0 0 0 0 0 0 67.90 66.047 67.904 66.047 67.904 66.047 100 100 100 100 100 100';
+
+    path.attr({
+      fillColor: 'green',
+      strokeColor: gradient,
+      lineWidth: '3px',
+      pos: [0, 0],
+      // texture: textureURL,
+    });
+
+    path.addEventListener('beforerender', (evt) => {
+      console.log(evt, evt.detail.context.blendColor);
+    });
+
+    path.addEventListener('afterrender', (evt) => {
+      console.log(evt, evt.detail.context.blendColor);
+    });
+
+
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+      mode: 'stickyHeight',
+      // contextType: '2d',
+    });
+
+    // scene.preload([
+    //   'https://p5.ssl.qhimg.com/t01f47a319aebf27174.png',
+    //   'https://s3.ssl.qhres.com/static/a6a7509c33a290a6.json',
+    // ]).then((res) => {
+    //   path.attr({texture: 'guanguan1.png'});
+    // });
+
+    const bglayer = scene.layer('bglayer', {offscreen: true});
+    const fglayer = scene.layer('fglayer');
+
+    const b = new spritejs.Sprite();
+    b.attr({
+      pos: [-50, 0],
+      size: [600, 600],
+      bgcolor: 'blue',
+      border: [10, 'red'],
+      boxSizing: 'border-box',
+    });
+    bglayer.appendChild(b);
+
+    const l = new spritejs.Label();
+    l.attr({
+      text: 'abc',
+      size: [100, 30],
+      x: -100,
+      // pos: [350, 150],
+      bgcolor: '#f4f2e6',
+      textAlign: 'center',
+      padding: 20,
+      verticalAlign: 'top',
+      fillColor: 'blue',
+      borderWidth: 2,
+      borderColor: 'green',
+      borderDash: 5,
+      borderRadius: [50, 50, 0, 0],
+      pointerEvents: 'visibleFill',
+    });
+
+    const p = new spritejs.Polyline();
+
+    p.attr({
+      lineWidth: 2,
+      strokeColor: 'cyan',
+      points: [50, 50, 90, 90, 120, 70, 145, 88, 56, 172],
+      smooth: true,
+    });
+
+    const group = new spritejs.Group();
+
+    // group.appendChild(el);
+    group.appendChild(el2);
+    group.appendChild(path);
+    group.appendChild(l);
+    group.appendChild(p);
+
+    group.attr({
+      transformOrigin: [256, 256],
+    });
+
+    fglayer.appendChild(group);
+
+    function update(t) {
+      group.attr({
+        transform: `rotate(${0.1 * t})`,
+      });
+      // requestAnimationFrame(update);
+    }
+
+    update(0);
+
+    path.addEventListener('click', (e) => {
+      console.log(e);
+      e.stopPropagation();
+    });
+
+    l.addEventListener('mouseenter', (e) => {
+      console.log(e);
+      e.stopPropagation();
+    });
+
+    l.addEventListener('mouseleave', (e) => {
+      console.log(e);
+      e.stopPropagation();
+    });
+
+
+    // group.addEventListener('click', (e) => {
+    //   console.log(e);
+    // }, {capture: true});
+  </script>
+</body>
+</html>

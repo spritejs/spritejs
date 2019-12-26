@@ -28,7 +28,7 @@
   </style>
 </head>
 <body>
-  <div>fps: <span id="fps">--</span> | sprites: <span id="spriteCount">1</span></div>
+  <div>sprites: <span id="spriteCount">1</span></div>
   <div id="paper"></div>
 
   <script src="https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js"></script>
@@ -37,10 +37,10 @@
   
   <script>
   (async function () {
-    const paper = new spritejs.Scene('#paper');
-    paper.setResolution(800, 800); // 设置 Paper 的实际分辨率
+    const container = document.getElementById('paper');
+    const paper = new spritejs.Scene({container, width: 800, height: 800});
+
     const layer = paper.layer('fglayer', {
-      evaluateFPS: true,
       handleEvent: false,
     });
 
@@ -99,16 +99,11 @@
       //   duration: 3000,
       //   iterations: Infinity,
       // })
-      group.useCache = false;
+
       layer.append(group);
       await wait(100);
     }
 
-    // 显示 fps ，注意，因为本框架采用的是非定时渲染，即只有 sprite 有更新时才渲染
-    // 所以所有精灵不运动的时候 fps 也会降下来
-    setInterval(() => {
-      fps.innerHTML = layer.fps;
-    }, 1000);
     window.fglayer = layer;
     window.paper = paper;
 

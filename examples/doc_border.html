@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 50%;
+      padding-bottom: 30%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 600,
+      height: 360,
+      // contextType: '2d',
+    });
+    const layer = scene.layer();
+
+    const box = new Sprite({
+      anchor: [0.5, 0.5],
+      size: [150, 150],
+      pos: [300, 180],
+      bgcolor: 'white',
+      borderWidth: 1,
+      borderRadius: 20,
+    });
+    layer.append(box);
+
+    /* globals dat */
+    const gui = new dat.GUI();
+    const config = {
+      borderWidth: box.attributes.borderWidth,
+      topLeft0: box.attributes.borderTopLeftRadius[0],
+      topLeft1: box.attributes.borderTopLeftRadius[1],
+      topRight0: box.attributes.borderTopRightRadius[0],
+      topRight1: box.attributes.borderTopRightRadius[1],
+      bottomLeft0: box.attributes.borderBottomLeftRadius[0],
+      bottomLeft1: box.attributes.borderBottomLeftRadius[1],
+      bottomRight0: box.attributes.borderBottomRightRadius[0],
+      bottomRight1: box.attributes.borderBottomRightRadius[1],
+    };
+    gui.add(config, 'borderWidth', 0, 20).onChange((val) => {
+      box.attributes.borderWidth = Number(val);
+    });
+
+    const palette = {
+      borderColor: '#000', // CSS string
+    };
+    gui.addColor(palette, 'borderColor').onChange((val) => {
+      box.attributes.borderColor = val;
+    });
+
+    const radiusFolder = gui.addFolder('radius');
+
+    radiusFolder.add(config, 'topLeft0', 0, 200).onChange((val) => {
+      const v = box.attributes.borderTopLeftRadius;
+      box.attributes.borderTopLeftRadius = [val, v[1]];
+    });
+
+    radiusFolder.add(config, 'topLeft1', 0, 200).onChange((val) => {
+      const v = box.attributes.borderTopLeftRadius;
+      box.attributes.borderTopLeftRadius = [v[0], val];
+    });
+
+    radiusFolder.add(config, 'topRight0', 0, 200).onChange((val) => {
+      const v = box.attributes.borderTopRightRadius;
+      box.attributes.borderTopRightRadius = [val, v[1]];
+    });
+
+    radiusFolder.add(config, 'topRight1', 0, 200).onChange((val) => {
+      const v = box.attributes.borderTopRightRadius;
+      box.attributes.borderTopRightRadius = [v[0], val];
+    });
+
+    radiusFolder.add(config, 'bottomLeft0', 0, 200).onChange((val) => {
+      const v = box.attributes.borderBottomLeftRadius;
+      box.attributes.borderBottomLeftRadius = [val, v[1]];
+    });
+
+    radiusFolder.add(config, 'bottomLeft1', 0, 200).onChange((val) => {
+      const v = box.attributes.borderBottomLeftRadius;
+      box.attributes.borderBottomLeftRadius = [v[0], val];
+    });
+
+    radiusFolder.add(config, 'bottomRight0', 0, 200).onChange((val) => {
+      const v = box.attributes.borderBottomRightRadius;
+      box.attributes.borderBottomRightRadius = [val, v[1]];
+    });
+
+    radiusFolder.add(config, 'bottomRight1', 0, 200).onChange((val) => {
+      const v = box.attributes.borderBottomRightRadius;
+      box.attributes.borderBottomRightRadius = [v[0], val];
+    });
+  </script>
+</body>
+</html>

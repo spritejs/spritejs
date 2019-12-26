@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[106],{555:function(n,e,t){"use strict";t.r(e),e.default="/* globals spritevue */\nconst Vue = spritevue.Vue;\n\nnew Vue({\n  el: '#app',\n  data() {\n    return {\n      font: '48px Arial',\n    };\n  },\n  methods: {\n\n  },\n});"}}]);

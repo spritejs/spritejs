@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    #adaptive {
+      width: 50%;
+      padding-bottom: 30%;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="adaptive"></div>
+  <script>
+    const {Scene, Sprite, Gradient, Path} = spritejs;
+    const container = document.getElementById('adaptive');
+    const scene = new Scene({
+      container,
+      width: 600,
+      height: 360,
+    });
+    const layer = scene.layer();
+
+    const gradient = new Gradient({
+      vector: [0, 0, 150, 150],
+      colors: [
+        {offset: 0, color: 'red'},
+        {offset: 1, color: 'green'},
+      ],
+    });
+
+    const box = new Sprite({
+      anchor: [0.5, 0.5],
+      size: [150, 150],
+      pos: [300, 180],
+      bgcolor: gradient,
+    });
+    layer.append(box);
+
+    const cross = new Path('M-5 0L5 0M0 5L0 -5');
+    cross.attr({
+      pos: [300, 180],
+      lineWidth: 2,
+      strokeColor: 'blue',
+    });
+    layer.append(cross);
+
+    box.animate([
+      {rotate: 0},
+      {rotate: 360},
+    ], {
+      iterations: Infinity,
+      duration: 3000,
+    });
+
+    /* globals dat */
+    const gui = new dat.GUI();
+    const config = {
+      anchorX: box.attributes.anchorX,
+      anchorY: box.attributes.anchorY,
+    };
+    gui.add(config, 'anchorX', 0, 1).onChange((val) => {
+      box.attributes.anchorX = val;
+    });
+    gui.add(config, 'anchorY', 0, 1).onChange((val) => {
+      box.attributes.anchorY = val;
+    });
+  </script>
+</body>
+</html>

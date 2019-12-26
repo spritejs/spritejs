@@ -1,13 +1,15 @@
+/* globals d3, topojson */
+const {Scene} = spritejs;
+const container = document.getElementById('stage');
 const width = 1000,
   height = 750;
 
-const paper = new spritejs.Scene('#paper', {
-  viewport: ['auto', 'auto'],
-  resolution: [width, height],
-  stickMode: 'width',
-  stickExtend: true,
+const scene = new Scene({
+  container,
+  width,
+  height,
+  mode: 'stickyWidth',
 });
-
 
 let centered;
 const projection = d3.geoAlbersUsa()
@@ -17,7 +19,7 @@ const projection = d3.geoAlbersUsa()
 const path = d3.geoPath()
   .projection(projection);
 
-const layer = paper.layer('fglayer', {
+const layer = scene.layer('fglayer', {
   handleEvent: true,
 });
 
@@ -32,14 +34,9 @@ d3.json('https://s4.ssl.qhres.com/static/4e8ebcccf5b5ea78.json', (error, us) => 
     .append('path')
     .attr('d', path)
     .attr('strokeColor', '#618F4A')
+    .attr('lineWidth', 1)
     .attr('fillColor', '#70A556')
-    .on('click', (d) => {
-      const paths = d3.event.targetPaths;
-
-      if(paths.length) {
-        clicked(d);
-      }
-    });
+    .on('click', clicked);
 });
 
 function clicked(d) {
@@ -51,6 +48,7 @@ function clicked(d) {
   if(d && centered !== d) {
     centroid = path.centroid(d);
     translate = projection.translate();
+    centered = d;
   }
 
   d3.select(layer).selectAll('path')

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const textureURL = 'https://p4.ssl.qhimg.com/t012170360e1552ce17.png';
+
+    const el = new spritejs.Sprite();
+    el.attr({
+      // size: [100, 100],
+      anchor: 0.5,
+      borderWidth: 0,
+      borderColor: 'rgba(0,0,0,1)',
+      bgcolor: 'red',
+      pos: [0, 0],
+      // transform: 'rotate(45deg)',
+      // opacity: 0.2,
+      transformOrigin: [50, 50],
+    });
+
+    const gradient = new spritejs.Gradient({
+      vector: [0, 0, 100, 100],
+      colors: [
+        {offset: 0, color: 'yellow'},
+        {offset: 1, color: 'red'},
+      ],
+    });
+
+    const el2 = el.cloneNode();
+    el2.attr({
+      anchor: 0,
+      texture: textureURL,
+      // textureRect: [50, 50, 100, 100],
+      size: [100, 100],
+      padding: 20,
+      bgcolor: gradient,
+      zIndex: 1000,
+      // borderRadius: 10,
+      // textureRepeat: true,
+    });
+
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+      // mode: 'stickyHeight',
+      // contextType: '2d',
+    });
+
+    const group = new spritejs.Group();
+    const fglayer = scene.layer();
+    setTimeout(() => {
+      group.append(el2);
+      // el2.remove();
+      console.log(el2);
+      fglayer.appendChild(el2);
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -13,11 +13,11 @@ checks:
   method-complexity:
     enabled: true
     config:
-      threshold: 10
+      threshold: 25
   file-lines:
     enabled: true
     config:
-      threshold: 350
+      threshold: 500
 exclude_patterns:
 - "config/"
 - "db/"
@@ -25,6 +25,8 @@ exclude_patterns:
 - "lib/"
 - "example/"
 - "docs/"
+- "demos/"
+- "misc/"
 - "features/"
 - "**/node_modules/"
 - "script/"
