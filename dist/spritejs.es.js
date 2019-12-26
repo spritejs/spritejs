@@ -32614,7 +32614,7 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
     const canvas = layer.canvas;
 
     if (!layer.offscreen) {
-      this.container.appendChild(canvas);
+      this.container.appendChild(canvas || layer);
     } else {
       this[_offscreenLayerCount]++;
     }

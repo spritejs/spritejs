@@ -37000,7 +37000,7 @@ function (_Group) {
       var canvas = layer.canvas;
 
       if (!layer.offscreen) {
-        this.container.appendChild(canvas);
+        this.container.appendChild(canvas || layer);
       } else {
         this[_offscreenLayerCount]++;
       }

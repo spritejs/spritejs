@@ -282,7 +282,7 @@ export default class Scene extends Group {
     const ret = super.appendChild(layer);
     const canvas = layer.canvas;
     if(!layer.offscreen) {
-      this.container.appendChild(canvas);
+      this.container.appendChild(canvas || layer);
     } else {
       this[_offscreenLayerCount]++;
     }
