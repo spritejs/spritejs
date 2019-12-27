@@ -379,6 +379,18 @@ export default class Node {
     return false;
   }
 
+  removeAllListeners(type, options = {}) {
+    if(typeof options === 'boolean') options = {capture: options};
+    const capture = options.capture;
+
+    const eventListeners = capture ? _captureEventListeners : _eventListeners;
+
+    if(this[eventListeners][type]) {
+      this[eventListeners][type] = [];
+    }
+    return this;
+  }
+
   removeAttribute(key) {
     this.setAttribute(key, null);
   }

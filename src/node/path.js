@@ -61,8 +61,7 @@ export default class Path extends Node {
             miterLimit,
           });
         }
-        const opacity = this.attributes.opacity;
-        mesh.uniforms.u_opacity = opacity;
+        mesh.setOpacity(this.attributes.opacity);
         this[_mesh] = mesh;
       } else if(mesh.path !== path) {
         mesh.contours = path.contours;
@@ -148,7 +147,7 @@ export default class Path extends Node {
       this.updateContours();
     }
     if(key === 'opacity') {
-      if(this[_mesh]) this[_mesh].uniforms.u_opacity = newValue;
+      if(this[_mesh]) this[_mesh].setOpacity(newValue);
     }
     if(this[_mesh] && key === 'fillColor') {
       setFillColor(this[_mesh], {color: newValue});

@@ -20,18 +20,18 @@ export default class Cloud extends Node {
 
     if(!this[_meshCloud] && meshNode.mesh) {
       this[_meshCloud] = new MeshCloud(meshNode.mesh, amount);
-      const {bgcolor, fillColor} = meshNode.attributes;
-      for(let i = 0; i < this[_amount]; i++) {
-        if(bgcolor) {
-          this[_meshCloud].setFillColor(i, bgcolor);
-        } else if(fillColor) {
-          this[_meshCloud].setFillColor(i, fillColor);
-        }
-      }
+      // const {bgcolor, fillColor} = meshNode.attributes;
+      // for(let i = 0; i < this[_amount]; i++) {
+      //   if(bgcolor) {
+      //     this[_meshCloud].setFillColor(i, bgcolor);
+      //   } else if(fillColor) {
+      //     this[_meshCloud].setFillColor(i, fillColor);
+      //   }
+      // }
     }
-    if(this[_meshCloud].amount !== amount) {
-      this[_meshCloud].amount = amount;
-    }
+    // if(this[_meshCloud] && meshNode.mesh !== this[_meshCloud].mesh) {
+    //   this[_meshCloud].mesh = meshNode.mesh;
+    // }
     return this[_meshCloud];
   }
 
@@ -46,8 +46,8 @@ export default class Cloud extends Node {
 
   set amount(value) {
     this[_amount] = value;
+    if(this[_meshCloud]) this[_meshCloud].amount = value;
   }
-
 
   brightness(idx, p) {
     if(this.meshCloud) {
@@ -59,6 +59,14 @@ export default class Cloud extends Node {
   contrast(idx, p) {
     if(this.meshCloud) {
       this.meshCloud.contrast(idx, p);
+      this.forceUpdate();
+    }
+  }
+
+  delete(idx) {
+    if(this.meshCloud) {
+      this.meshCloud.delete(idx);
+      this[_amount]--;
       this.forceUpdate();
     }
   }
@@ -141,6 +149,9 @@ export default class Cloud extends Node {
   scale(idx, [x, y = x], [ox, oy] = [0, 0]) {
     if(this.meshCloud) {
       const {x: x0, y: y0} = this.meshNode.attributes;
+      const t = 1e-5;
+      if(Math.abs(x) < t) x = 1 / x > 0 ? t : -t;
+      if(Math.abs(y) < t) y = 1 / y > 0 ? t : -t;
       this.meshCloud.scale(idx, [x, y], [ox + x0, oy + y0]);
       this.forceUpdate();
     }
@@ -155,6 +166,12 @@ export default class Cloud extends Node {
 
   setFillColor(idx, color) {
     if(this.meshCloud) {
+      if(Array.isArray(color)) {
+        color = [...color];
+        color[0] /= 255;
+        color[1] /= 255;
+        color[2] /= 255;
+      }
       this.meshCloud.setFillColor(idx, color);
       this.forceUpdate();
     }
@@ -175,6 +192,12 @@ export default class Cloud extends Node {
 
   setStrokeColor(idx, color) {
     if(this.meshCloud) {
+      if(Array.isArray(color)) {
+        color = [...color];
+        color[0] /= 255;
+        color[1] /= 255;
+        color[2] /= 255;
+      }
       this.meshCloud.setStrokeColor(idx, color);
       this.forceUpdate();
     }
@@ -212,6 +235,13 @@ export default class Cloud extends Node {
   translate(idx, [x, y]) {
     if(this.meshCloud) {
       this.meshCloud.translate(idx, [x, y]);
+      this.forceUpdate();
+    }
+  }
+
+  updateMesh() {
+    if(this[_meshCloud]) {
+      this[_meshCloud].mesh = this.meshNode.mesh;
       this.forceUpdate();
     }
   }

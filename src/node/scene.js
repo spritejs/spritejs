@@ -452,6 +452,7 @@ export default class Scene extends Group {
       setViewport(options, layer.canvas);
     });
     this.setResolution(options);
+    this.dispatchEvent({type: 'resize'});
   }
 
   /* override */

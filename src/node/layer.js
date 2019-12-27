@@ -57,6 +57,11 @@ export default class Layer extends Group {
     return 1.0;
   }
 
+  get height() {
+    const {height} = this.getResolution();
+    return height / this.displayRatio;
+  }
+
   /* override */
   get layer() {
     return this;
@@ -83,6 +88,11 @@ export default class Layer extends Group {
 
   get timeline() {
     return this[_timeline];
+  }
+
+  get width() {
+    const {width} = this.getResolution();
+    return width / this.displayRatio;
   }
 
   // isPointCollision(x, y) {
