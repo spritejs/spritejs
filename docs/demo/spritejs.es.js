@@ -11605,8 +11605,8 @@ function createText(text, {
   textContext.font = fontEx(fontInfo, ratio);
   textContext.textAlign = 'center';
   textContext.textBaseline = 'middle';
-  const top = canvas.height / 2;
-  const left = canvas.width / 2;
+  const top = canvas.height * 0.57;
+  const left = canvas.width * 0.5;
 
   if (fillColor) {
     if (Array.isArray(fillColor)) fillColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_2__["default"])(fillColor);else if (fillColor.vector) {

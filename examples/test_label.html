@@ -63,14 +63,15 @@
       // contextType: '2d',
     });
 
-    const group = new spritejs.Group();
     const fglayer = scene.layer();
-    setTimeout(() => {
-      group.append(el2);
-      // el2.remove();
-      console.log(el2);
-      fglayer.appendChild(el2);
-    }, 1000);
+    fglayer.appendChild(el2);
+    const l = new spritejs.Label({
+      pos: [200, 200],
+      text: 'green apple, 我是喵呜啊',
+      font: 'italic 32px Arial',
+      bgcolor: 'red',
+    });
+    fglayer.appendChild(l);
   </script>
 </body>
 </html>
