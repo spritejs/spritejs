@@ -1,5 +1,11 @@
 ## Change Logs
 
+#### [2019-12-28] v3.0.6
+
+- Support sprite-vue.
+- Optimized for protonjs.
+- Fixed label vertical position.
+
 #### [2019-12-26] v3.0.0 🚀
 
 - SpriteJS v3.0 released!
