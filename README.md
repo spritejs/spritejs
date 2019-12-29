@@ -68,10 +68,14 @@ In browser:
 <script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
 ```
 
-With NPM:
+With Node.js:
 
 ```bash
 npm install spritejs --save
+```
+
+```js
+import * as spritejs from 'spritejs';
 ```
 
 ## Examples

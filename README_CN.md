@@ -33,6 +33,12 @@ SpriteJS <sup>Next</sup> 是SpriteJS的新版本，在浏览器端支持 webgl2 
 npm install spritejs
 ```
 
+安装完之后可以使用ESModule加载：
+
+```js
+import * as spritejs from 'spritejs';
+```
+
 由于spritejs是跨平台的，如果在node环境中跑，需要自行安装依赖库[node-canvas](https://github.com/Automattic/node-canvas)
 
 ```bash

@@ -24,6 +24,12 @@ With NPM:
 npm install spritejs
 ```
 
+Import as es-module:
+
+```js
+import * as spritejs from 'spritejs';
+```
+
 Spritejs is cross platform. you can run it in a node environment, depend on [node canvas](https://github.com/automatic/node-canvas) or [node canvas webgl](https://github.com/akira-cn/node-canvas-webgl).
 
 ```bash
