@@ -196,5 +196,20 @@
   }, {
     "label": "worker",
     "src": "doc/worker"
+  }, {
+    "label": "block",
+    "src": "protonjs/block"
+  }, {
+    "label": "circle",
+    "src": "protonjs/circle"
+  }, {
+    "label": "behavior",
+    "src": "protonjs/behavior"
+  }, {
+    "label": "background particle",
+    "src": "protonjs/bg_particle"
+  }, {
+    "label": "fire",
+    "src": "protonjs/fire"
   }
 ]

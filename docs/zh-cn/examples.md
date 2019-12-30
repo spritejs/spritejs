@@ -184,29 +184,41 @@
   </li>
   <li class="empty"></li>
   <li class="empty"></li>
-</ul>
+</ul> -->
 
 ## Proton.js
 
 <ul class="demos">
   <li>
-    <a data-nosearch href="/demo/#/proton/behavior">
+    <a data-nosearch href="/demo/#/protonjs/circle">
+      <img src="https://p5.ssl.qhimg.com/t01f5d03896f3df1493.png">
+      <span>circle particle</span>
+    </a>
+  </li>
+  <li>
+    <a data-nosearch href="/demo/#/protonjs/block">
+      <img src="https://p2.ssl.qhimg.com/t01f25d58539e2bf0e1.png">
+      <span>block particle</span>
+    </a>
+  </li>
+  <li>
+    <a data-nosearch href="/demo/#/protonjs/behavior">
       <img src="https://p0.ssl.qhimg.com/t010b2c0041913666e0.jpg">
       <span>custom behavior</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#/proton/fire">
+    <a data-nosearch href="/demo/#/protonjs/fire">
       <img src="https://p4.ssl.qhimg.com/t012debb97e0dca4c86.jpg">
       <span>big fire</span>
     </a>
   </li>
   <li>
-    <a data-nosearch href="/demo/#/proton/position">
+    <a data-nosearch href="/demo/#/protonjs/bg_particle">
       <img src="https://p3.ssl.qhimg.com/t011e0452ffad2d05ce.jpg">
       <span>bg particles</span>
     </a>
   </li>
   <li class="empty"></li>
   <li class="empty"></li>
-</ul> -->
+</ul>

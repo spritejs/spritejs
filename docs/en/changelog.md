@@ -1,5 +1,11 @@
 ## Change Logs
 
+#### [2019-12-28] v3.0.7
+
+- Fixed the bug that the sprite image did not display because the image was not loaded completely when preloading.
+- Fixed the bug taht the cloud texture cannot be updated after meshnode's texture loaded.
+- Add ProtonJS examples.
+
 #### [2019-12-28] v3.0.6
 
 - Support sprite-vue.

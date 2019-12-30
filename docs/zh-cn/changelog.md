@@ -1,5 +1,11 @@
 ## 更新日志
 
+#### [2019-12-30] v3.0.7
+
+- 修复了preload的时候图片未加载完导致sprite图片不显示的bug
+- 修复了cloud元素的texture不能随meshNode更新到bug
+- 增加了粒子系统ProtonJS的例子
+
 #### [2019-12-28] v3.0.6
 
 - 修复sprite-vue支持

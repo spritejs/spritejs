@@ -1,0 +1,13 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#container {
+  width: 600px;
+  height: 600px;
+  background-color: #ccc;
+}
