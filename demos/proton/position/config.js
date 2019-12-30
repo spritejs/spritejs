@@ -22,7 +22,7 @@ export default async () => {
       js: [
         '//lib.baomitu.com/lodash.js/4.17.10/lodash.js',
         '//s4.ssl.qhres.com/!f7da5437/proton.js',
-        '//unpkg.com/sprite-extend-proton/dist/sprite-extend-proton.js',
+        '//unpkg.com/sprite-extend-proton@0.5.0/dist/sprite-extend-proton.js',
       ],
     },
   });
