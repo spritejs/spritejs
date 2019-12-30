@@ -117,10 +117,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(224);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(225);
+/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(226);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
-/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(231);
+/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(232);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
 /* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(234);
@@ -169,7 +169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _node_scene__WEBPACK_IMPORTED_MODULE_20__["default"]; });
 
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(221);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(227);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(228);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Gradient"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseColor", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"]; });
@@ -9302,6 +9302,7 @@ function loadImage(src, {
 
         img.src = src;
       });
+      if (alias) imageCache[alias] = imageCache[src];
     } else if (typeof fetch === 'function') {
       // run in worker
       return fetch(src, {
@@ -24422,9 +24423,11 @@ function applyFilters(mesh, filters) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Cloud; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(78);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(221);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(225);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(78);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
 
 
 
@@ -24434,7 +24437,7 @@ const _amount = Symbol('amount');
 
 const _meshCloud = Symbol('meshCloud');
 
-class Cloud extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class Cloud extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
   constructor(node, amount = 1) {
     super();
     this.meshNode = node;
@@ -24507,6 +24510,10 @@ class Cloud extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
     super.draw(meshes);
 
     if (this.meshCloud) {
+      if (this.meshNode.textureImage) {
+        Object(_utils_texture__WEBPACK_IMPORTED_MODULE_1__["drawTexture"])(this.meshNode, this.meshNode.mesh);
+      }
+
       meshes.push(this.meshCloud);
     }
 
@@ -24702,7 +24709,7 @@ class Cloud extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
   }
 
 }
-_document__WEBPACK_IMPORTED_MODULE_2__["default"].registerNode(Cloud, 'cloud');
+_document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Cloud, 'cloud');
 
 /***/ }),
 /* 225 */
@@ -24710,16 +24717,180 @@ _document__WEBPACK_IMPORTED_MODULE_2__["default"].registerNode(Cloud, 'cloud');
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTexture", function() { return loadTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyTexture", function() { return applyTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTexture", function() { return createTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawTexture", function() { return drawTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadFrames", function() { return loadFrames; });
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
+/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(80);
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+const loadedTextures = {};
+function loadTexture(src, alias) {
+  if (loadedTextures[src]) return loadedTextures[src];
+  const img = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].loadImage(src, {
+    alias,
+    useImageBitmap: false
+  });
+  return img != null ? img : src;
+}
+async function applyTexture(node, image, updateContours) {
+  let textureImage = image;
+
+  if (typeof image === 'string') {
+    textureImage = loadTexture(image);
+  }
+
+  if (typeof textureImage.then === 'function') {
+    textureImage = await textureImage;
+  }
+
+  if (image === node.attributes.texture) {
+    if (textureImage.image) {
+      if (textureImage.sourceRect) {
+        node.attributes.sourceRect = textureImage.sourceRect;
+      }
+
+      node.textureImageRotated = !!textureImage.rotated;
+      textureImage = textureImage.image;
+    }
+
+    const {
+      width,
+      height,
+      textureRect
+    } = node.attributes;
+    const oldImage = node.textureImage;
+    node.textureImage = textureImage;
+
+    if (updateContours && oldImage !== textureImage && !textureRect && (width == null || height == null)) {
+      node.updateContours();
+    }
+
+    node.forceUpdate();
+  }
+
+  return textureImage;
+}
+
+const _textureMap = Symbol('textureMap');
+
+function createTexture(image, renderer) {
+  renderer[_textureMap] = renderer[_textureMap] || new Map();
+
+  if (renderer[_textureMap].has(image)) {
+    return renderer[_textureMap].get(image);
+  }
+
+  const texture = renderer.createTexture(image);
+
+  renderer[_textureMap].set(image, texture);
+
+  return texture;
+}
+
+const _textureContext = Symbol('textureContext');
+
+function drawTexture(node, mesh) {
+  const textureImage = node.textureImage;
+  const textureImageRotated = node.textureImageRotated;
+
+  if (textureImage) {
+    const texture = mesh.texture;
+    const contentRect = node.originalContentRect;
+    let textureRect = node.attributes.textureRect;
+    const textureRepeat = node.attributes.textureRepeat;
+    const sourceRect = node.attributes.sourceRect;
+
+    if (!texture || node[_textureContext] && node[_textureContext] !== node.renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.srcRect, sourceRect)) {
+      const newTexture = createTexture(textureImage, node.renderer);
+
+      if (textureRect) {
+        textureRect[0] += contentRect[0];
+        textureRect[1] += contentRect[1];
+      } else {
+        textureRect = contentRect;
+      }
+
+      mesh.setTexture(newTexture, {
+        rect: textureRect,
+        repeat: textureRepeat,
+        srcRect: sourceRect,
+        rotated: textureImageRotated
+      });
+      node[_textureContext] = node.renderer;
+    }
+  }
+}
+/**
+  u3d-json compatible: https://www.codeandweb.com/texturepacker
+  {
+    frames: {
+      key: {
+        frame: {x, y, w, h},
+        trimmed: ...,
+        rotated: true|false,
+        spriteSourceSize: {x, y, w, h},
+        sourceSize: {w, h}
+      }
+    }
+  }
+  */
+
+async function loadFrames(src, frameData) {
+  if (typeof frameData === 'string') {
+    const response = await fetch(frameData, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'default'
+    });
+    frameData = await response.json();
+  }
+
+  const texture = await loadTexture(src);
+  const frames = frameData.frames;
+  Object.entries(frames).forEach(([key, frame]) => {
+    const {
+      x,
+      y,
+      w,
+      h
+    } = frame.frame;
+    let sourceRect = [x, y, w, h];
+    const rotated = frame.rotated;
+
+    if (rotated) {
+      sourceRect = [sourceRect[0], sourceRect[1], sourceRect[3], sourceRect[2]];
+    }
+
+    loadedTextures[key] = {
+      image: texture,
+      sourceRect,
+      rotated
+    };
+  });
+  return texture;
+}
+
+/***/ }),
+/* 226 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(78);
-/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(226);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(227);
-/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(228);
+/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(228);
+/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(229);
 /* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(223);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(221);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(229);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(230);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(230);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(231);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -24993,7 +25164,7 @@ _defineProperty(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_2__["de
 _document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Block, 'block');
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25001,7 +25172,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(80);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(228);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -25275,7 +25446,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25414,7 +25585,7 @@ function setStrokeColor(mesh, {
 }
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25474,7 +25645,7 @@ function createRadiusBox(figure, [x, y, w, h], radius) {
 }
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25521,7 +25692,7 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 });
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25562,14 +25733,14 @@ function applyRenderEvent(target, mesh) {
 }
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(225);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(225);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(226);
 /* harmony import */ var _attribute_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(233);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
@@ -25660,177 +25831,13 @@ _defineProperty(Sprite, "Attr", _attribute_sprite__WEBPACK_IMPORTED_MODULE_2__["
 _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Sprite, 'sprite');
 
 /***/ }),
-/* 232 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTexture", function() { return loadTexture; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyTexture", function() { return applyTexture; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTexture", function() { return createTexture; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawTexture", function() { return drawTexture; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadFrames", function() { return loadFrames; });
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(80);
-__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
-
-
-const loadedTextures = {};
-function loadTexture(src, alias) {
-  if (loadedTextures[src]) return loadedTextures[src];
-  const img = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].loadImage(src, {
-    alias,
-    useImageBitmap: false
-  });
-  return img != null ? img : src;
-}
-async function applyTexture(node, image, updateContours) {
-  let textureImage = image;
-
-  if (typeof image === 'string') {
-    textureImage = loadTexture(image);
-  }
-
-  if (typeof textureImage.then === 'function') {
-    textureImage = await textureImage;
-  }
-
-  if (image === node.attributes.texture) {
-    if (textureImage.image) {
-      if (textureImage.sourceRect) {
-        node.attributes.sourceRect = textureImage.sourceRect;
-      }
-
-      node.textureImageRotated = !!textureImage.rotated;
-      textureImage = textureImage.image;
-    }
-
-    const {
-      width,
-      height,
-      textureRect
-    } = node.attributes;
-    const oldImage = node.textureImage;
-    node.textureImage = textureImage;
-
-    if (updateContours && oldImage !== textureImage && !textureRect && (width == null || height == null)) {
-      node.updateContours();
-    }
-
-    node.forceUpdate();
-  }
-
-  return textureImage;
-}
-
-const _textureMap = Symbol('textureMap');
-
-function createTexture(image, renderer) {
-  renderer[_textureMap] = renderer[_textureMap] || new Map();
-
-  if (renderer[_textureMap].has(image)) {
-    return renderer[_textureMap].get(image);
-  }
-
-  const texture = renderer.createTexture(image);
-
-  renderer[_textureMap].set(image, texture);
-
-  return texture;
-}
-
-const _textureContext = Symbol('textureContext');
-
-function drawTexture(node, mesh) {
-  const textureImage = node.textureImage;
-  const textureImageRotated = node.textureImageRotated;
-
-  if (textureImage) {
-    const texture = mesh.texture;
-    const contentRect = node.originalContentRect;
-    let textureRect = node.attributes.textureRect;
-    const textureRepeat = node.attributes.textureRepeat;
-    const sourceRect = node.attributes.sourceRect;
-
-    if (!texture || node[_textureContext] && node[_textureContext] !== node.renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.srcRect, sourceRect)) {
-      const newTexture = createTexture(textureImage, node.renderer);
-
-      if (textureRect) {
-        textureRect[0] += contentRect[0];
-        textureRect[1] += contentRect[1];
-      } else {
-        textureRect = contentRect;
-      }
-
-      mesh.setTexture(newTexture, {
-        rect: textureRect,
-        repeat: textureRepeat,
-        srcRect: sourceRect,
-        rotated: textureImageRotated
-      });
-      node[_textureContext] = node.renderer;
-    }
-  }
-}
-/**
-  u3d-json compatible: https://www.codeandweb.com/texturepacker
-  {
-    frames: {
-      key: {
-        frame: {x, y, w, h},
-        trimmed: ...,
-        rotated: true|false,
-        spriteSourceSize: {x, y, w, h},
-        sourceSize: {w, h}
-      }
-    }
-  }
-  */
-
-async function loadFrames(src, frameData) {
-  if (typeof frameData === 'string') {
-    const response = await fetch(frameData, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'default'
-    });
-    frameData = await response.json();
-  }
-
-  const texture = await loadTexture(src);
-  const frames = frameData.frames;
-  Object.entries(frames).forEach(([key, frame]) => {
-    const {
-      x,
-      y,
-      w,
-      h
-    } = frame.frame;
-    let sourceRect = [x, y, w, h];
-    const rotated = frame.rotated;
-
-    if (rotated) {
-      sourceRect = [sourceRect[0], sourceRect[1], sourceRect[3], sourceRect[2]];
-    }
-
-    loadedTextures[key] = {
-      image: texture,
-      sourceRect,
-      rotated
-    };
-  });
-  return texture;
-}
-
-/***/ }),
 /* 233 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -25894,12 +25901,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pasition__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pasition__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(78);
 /* harmony import */ var _attribute_path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(236);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(227);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(232);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(228);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(225);
 /* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(223);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(221);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(229);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(230);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(230);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(231);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -27024,7 +27031,7 @@ return pasition;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Path; });
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(227);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(228);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(80);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
@@ -28479,8 +28486,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Label; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(76);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(232);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(225);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(225);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(226);
 /* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(257);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
@@ -28679,8 +28686,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Label; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(80);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(226);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(228);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(227);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -28866,7 +28873,7 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Group; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(225);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(226);
 /* harmony import */ var _attribute_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(259);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(221);
 /* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(260);
@@ -29208,7 +29215,7 @@ _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Group, 'group');
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Group; });
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
  // const setDefault = Symbol.for('spritejs_setAttributeDefault');
@@ -29231,7 +29238,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "querySelector", function() { return querySelector; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMatched", function() { return isMatched; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compile", function() { return compile; });
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
@@ -32422,7 +32429,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(258);
 /* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(295);
 /* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(222);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(232);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(225);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 

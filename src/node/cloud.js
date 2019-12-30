@@ -1,4 +1,5 @@
 import {MeshCloud} from '@mesh.js/core';
+import {drawTexture} from '../utils/texture';
 import Node from './node';
 import ownerDocument from '../document';
 
@@ -76,6 +77,9 @@ export default class Cloud extends Node {
     super.draw(meshes);
 
     if(this.meshCloud) {
+      if(this.meshNode.textureImage) {
+        drawTexture(this.meshNode, this.meshNode.mesh);
+      }
       meshes.push(this.meshCloud);
     }
 

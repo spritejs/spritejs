@@ -26,11 +26,12 @@
       mode: 'stickyHeight',
       // contextType: '2d',
     });
-    const s = new spritejs.Block();
+    const s = new spritejs.Sprite();
     s.attr({
       pos: [200, 200],
       size: [100, 100],
       bgcolor: 'red',
+      texture: 'https://p5.ssl.qhimg.com/t01c33383c0e168c3c4.png',
     });
 
     const cloud = new spritejs.Cloud(s, 2);
