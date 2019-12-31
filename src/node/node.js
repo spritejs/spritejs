@@ -3,7 +3,8 @@ import Attr from '../attribute/node';
 import Animation from '../animation';
 import ownerDocument from '../document';
 import SpriteEvent from '../event/event';
-import {parseFilterString} from '../utils/filter';
+import {parseFilterString, applyFilters} from '../utils/filter';
+import applyRenderEvent from '../utils/render_event';
 
 const changedAttrs = Symbol.for('spritejs_changedAttrs');
 const attributes = Symbol.for('spritejs_attributes');
@@ -15,6 +16,10 @@ const _eventListeners = Symbol('eventListeners');
 const _captureEventListeners = Symbol('captureEventListeners');
 const _filters = Symbol('filters');
 const _display = Symbol('display');
+
+const _program = Symbol('program');
+const _shaderAttrs = Symbol('shaderAttrs');
+const _uniforms = Symbol('uniforms');
 
 export default class Node {
   static Attr = Attr;
@@ -64,6 +69,10 @@ export default class Node {
     m[4] += x;
     m[5] += y;
     return m;
+  }
+
+  get program() {
+    return this[_program];
   }
 
   /* get parent defined by connect method */
@@ -282,6 +291,33 @@ export default class Node {
   }
 
   draw(meshes = []) {
+    const mesh = this.mesh;
+
+    if(mesh) {
+      applyFilters(mesh, this.filters);
+      meshes.push(mesh);
+      if(this[_program]) {
+        mesh.setProgram(this[_program]);
+        const shaderAttrs = this[_shaderAttrs];
+        if(shaderAttrs) {
+          Object.entries(shaderAttrs).forEach(([key, setter]) => {
+            mesh.setAttribute(key, setter);
+          });
+        }
+        const uniforms = this[_uniforms];
+        if(this[_uniforms]) {
+          const _uniform = {};
+          Object.entries(uniforms).forEach(([key, value]) => {
+            if(typeof value === 'function') {
+              value = value(this, key);
+            }
+            _uniform[key] = value;
+          });
+          mesh.setUniforms(_uniform);
+        }
+      }
+      applyRenderEvent(this, mesh);
+    }
     return meshes;
   }
 
@@ -340,6 +376,21 @@ export default class Node {
     if(this.layer) {
       this.layer.__mouseCapturedTarget = this;
     }
+  }
+
+  // layer.renderer.createProgram(fragmentShader, vertexShader, attributeOptions)
+  setProgram(program) {
+    this[_program] = program;
+  }
+
+  setShaderAttribute(attrName, setter) {
+    this[_shaderAttrs] = this[_shaderAttrs] || {};
+    this[_shaderAttrs][attrName] = setter;
+  }
+
+  setUniforms(uniforms) {
+    this[_uniforms] = this[_uniforms] || {};
+    Object.assign(this[_uniforms], uniforms);
   }
 
   setResolution({width, height}) {

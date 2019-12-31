@@ -114,10 +114,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(106);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return _node_node__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(261);
+/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(262);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(263);
+/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(264);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 /* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(269);
@@ -169,7 +169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _node_scene__WEBPACK_IMPORTED_MODULE_20__["default"]; });
 
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(258);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(265);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(266);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Gradient"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseColor", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"]; });
@@ -8148,6 +8148,35 @@ function () {
       };
     }
   }, {
+    key: "createProgram",
+    value: function createProgram() {
+      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          vertex = _ref3.vertex,
+          fragment = _ref3.fragment,
+          options = _ref3.options;
+
+      if (this[_glRenderer]) {
+        var program = this[_glRenderer].compileSync(fragment, vertex);
+
+        program._attribOpts = options;
+        return program;
+      }
+
+      throw new Error('Context 2D cannot create webgl program.');
+    }
+  }, {
+    key: "useProgram",
+    value: function useProgram(program) {
+      var attributeOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (this[_glRenderer]) {
+        var attrOpts = Object.assign({}, program._attribOpts, attributeOptions);
+        return this[_glRenderer].useProgram(program, attrOpts);
+      }
+
+      throw new Error('Context 2D cannot use webgl program.');
+    }
+  }, {
     key: "deleteTexture",
     value: function deleteTexture(texture) {
       var renderer = this[_glRenderer] || this[_canvasRenderer];
@@ -8168,13 +8197,11 @@ function () {
   }, {
     key: "drawMeshCloud",
     value: function drawMeshCloud(cloud) {
-      var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref3$clear = _ref3.clear,
-          clear = _ref3$clear === void 0 ? false : _ref3$clear,
-          _ref3$program = _ref3.program,
-          program = _ref3$program === void 0 ? null : _ref3$program,
-          _ref3$attributeOption = _ref3.attributeOptions,
-          attributeOptions = _ref3$attributeOption === void 0 ? {} : _ref3$attributeOption;
+      var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref4$clear = _ref4.clear,
+          clear = _ref4$clear === void 0 ? false : _ref4$clear,
+          _ref4$program = _ref4.program,
+          program = _ref4$program === void 0 ? null : _ref4$program;
 
       var renderer = this[_glRenderer] || this[_canvasRenderer]; // if(!this.isWebGL2) throw new Error('Only webgl2 context support drawMeshCloud.');
 
@@ -8199,7 +8226,7 @@ function () {
             hasCloudFilter: hasCloudFilter
           });
         } else if (renderer.program !== program) {
-          renderer.useProgram(program, Object.assign({
+          this.useProgram(program, {
             a_color: {
               type: 'UNSIGNED_BYTE',
               normalize: true
@@ -8212,7 +8239,7 @@ function () {
               type: 'UNSIGNED_BYTE',
               normalize: true
             }
-          }, attributeOptions));
+          });
         }
 
         this[_applyGlobalTransform](this[_globalTransform]);
@@ -8234,19 +8261,17 @@ function () {
   }, {
     key: "drawMeshes",
     value: function drawMeshes(meshes) {
-      var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref4$clear = _ref4.clear,
-          clear = _ref4$clear === void 0 ? false : _ref4$clear,
-          _ref4$program = _ref4.program,
-          program = _ref4$program === void 0 ? null : _ref4$program,
-          _ref4$attributeOption = _ref4.attributeOptions,
-          attributeOptions = _ref4$attributeOption === void 0 ? {} : _ref4$attributeOption;
+      var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref5$clear = _ref5.clear,
+          clear = _ref5$clear === void 0 ? false : _ref5$clear,
+          _ref5$program = _ref5.program,
+          drawProgram = _ref5$program === void 0 ? null : _ref5$program;
 
       // eslint-disable-line complexity
       var renderer = this[_glRenderer] || this[_canvasRenderer];
 
       if (this[_glRenderer]) {
-        var meshData = Object(_utils_compress__WEBPACK_IMPORTED_MODULE_7__["default"])(this, meshes, program == null);
+        var meshData = Object(_utils_compress__WEBPACK_IMPORTED_MODULE_7__["default"])(this, meshes, drawProgram == null);
         var gl = renderer.gl;
         if (clear) gl.clear(gl.COLOR_BUFFER_BIT);
         var hasGlobalTransform = !Object(_utils_transform__WEBPACK_IMPORTED_MODULE_13__["isUnitTransform"])(this[_globalTransform]);
@@ -8260,12 +8285,12 @@ function () {
             var mesh = _step.value;
             // eslint-disable-line no-restricted-syntax
             this._drawCalls++;
+            var program = drawProgram || mesh.program;
 
             if (mesh instanceof _mesh_cloud__WEBPACK_IMPORTED_MODULE_12__["default"]) {
               this.drawMeshCloud(mesh, {
                 clear: clear,
-                program: program,
-                attributeOptions: attributeOptions
+                program: program
               }); // continue; // eslint-disable-line no-continue
             } else {
               if (mesh.beforeRender) mesh.beforeRender(gl, mesh);
@@ -8339,12 +8364,12 @@ function () {
                     hasGlobalTransform: hasGlobalTransform
                   });
                 } else if (renderer.program !== program) {
-                  renderer.useProgram(program, Object.assign({
+                  this.useProgram(program, {
                     a_color: {
                       type: 'UNSIGNED_BYTE',
                       normalize: true
                     }
-                  }, attributeOptions));
+                  });
                 }
 
                 if (mesh.filterCanvas) {
@@ -8474,10 +8499,10 @@ function () {
   }, {
     key: "globalRotate",
     value: function globalRotate(rad) {
-      var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 0],
-          _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref5, 2),
-          ox = _ref6[0],
-          oy = _ref6[1];
+      var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 0],
+          _ref7 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref6, 2),
+          ox = _ref7[0],
+          oy = _ref7[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -8490,10 +8515,10 @@ function () {
     value: function globalScale(x) {
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
 
-      var _ref7 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref7, 2),
-          ox = _ref8[0],
-          oy = _ref8[1];
+      var _ref8 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref9 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref8, 2),
+          ox = _ref9[0],
+          oy = _ref9[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -8506,10 +8531,10 @@ function () {
     value: function globalSkew(x) {
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
 
-      var _ref9 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref9, 2),
-          ox = _ref10[0],
-          oy = _ref10[1];
+      var _ref10 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref11 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref10, 2),
+          ox = _ref11[0],
+          oy = _ref11[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -11908,7 +11933,7 @@ function compress(renderer, meshes) {
 
           lastMesh = temp[temp.length - 1];
 
-          if (!(lastMesh && (lastMesh.filterCanvas || lastMesh.afterRender || mesh.beforeRender || !compareUniform(lastMesh, mesh, temp)))) {
+          if (!(lastMesh && (lastMesh.filterCanvas || lastMesh.afterRender || mesh.beforeRender || lastMesh.program !== mesh.program || !compareUniform(lastMesh, mesh, temp)))) {
             _context.next = 39;
             break;
           }
@@ -11961,21 +11986,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return flattenMeshes; });
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
+var typeMap = {
+  UNSIGNED_BYTE: Uint8Array,
+  UNSIGNED_SHORT: Uint16Array,
+  BYTE: Int8Array,
+  SHORT: Int16Array,
+  FLOAT: Float32Array
+};
+
 function allocateBuffer(meshes, bufferCache) {
+  // eslint-disable-line complexity
   var positionsCount = 0;
   var cellsCount = 0;
   var textureCoordCount = 0;
   var sourceRectCount = 0;
   var colorCount = 0;
+  var count = 0;
+  var program = meshes[0].program;
 
   for (var i = 0; i < meshes.length; i++) {
     var mesh = meshes[i].meshData;
 
     if (mesh) {
+      count += mesh.positions.length;
       var dimension = mesh.positions[0].length;
       positionsCount += mesh.positions.length * dimension;
       cellsCount += mesh.cells.length * 3;
@@ -12018,10 +12058,32 @@ function allocateBuffer(meshes, bufferCache) {
     }
   }
 
+  if (program) {
+    var attribs = Object.entries(program._attribute);
+    var meta = program._attribOpts || {};
+
+    for (var _i = 0; _i < attribs.length; _i++) {
+      var _attribs$_i = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(attribs[_i], 2),
+          key = _attribs$_i[0],
+          opts = _attribs$_i[1];
+
+      if (key !== 'a_color' && key !== 'a_sourceRect' && opts !== 'ignored') {
+        var type = meta[key] ? meta[key].type : 'FLOAT';
+        var TypeArray = typeMap[type];
+        var attribCount = opts.size * count;
+
+        if (!bufferCache[key] || bufferCache[key].length < attribCount) {
+          bufferCache[key] = new TypeArray(attribCount);
+        }
+      }
+    }
+  }
+
   return bufferCache;
 }
 
 function flattenMeshes(meshes, bufferCache) {
+  // eslint-disable-line complexity
   var positions = [];
   var cells = [];
   var textureCoord = [];
@@ -12030,6 +12092,7 @@ function flattenMeshes(meshes, bufferCache) {
   var idx = 0;
   var cidx = 0;
   var uniforms = meshes[0] ? meshes[0].uniforms || {} : {};
+  var program = meshes[0] ? meshes[0].program : null;
 
   if (bufferCache) {
     allocateBuffer(meshes, bufferCache);
@@ -12039,6 +12102,9 @@ function flattenMeshes(meshes, bufferCache) {
     a_color = bufferCache.a_color;
     a_sourceRect = bufferCache.a_sourceRect;
   }
+
+  var hasSourceRect = false;
+  var attributes = {};
 
   for (var i = 0; i < meshes.length; i++) {
     var mesh = meshes[i];
@@ -12100,6 +12166,8 @@ function flattenMeshes(meshes, bufferCache) {
       }
 
       if (mesh.attributes.a_sourceRect) {
+        hasSourceRect = true;
+
         if (bufferCache) {
           var _sourceRect = mesh.attributes.a_sourceRect;
 
@@ -12140,21 +12208,54 @@ function flattenMeshes(meshes, bufferCache) {
         }
       }
 
+      if (program) {
+        var attribs = Object.entries(program._attribute);
+
+        for (var _j5 = 0; _j5 < attribs.length; _j5++) {
+          var _attribs$_j = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(attribs[_j5], 2),
+              name = _attribs$_j[0],
+              opts = _attribs$_j[1];
+
+          if (name !== 'a_color' && name !== 'a_sourceRect' && opts !== 'ignored') {
+            attributes[name] = [];
+
+            if (bufferCache) {
+              attributes[name] = bufferCache[name];
+              var _attr = mesh.attributes[name];
+              var size = _attr[0].length;
+
+              for (var _k2 = 0; _k2 < _attr.length; _k2++) {
+                var _t = _attr[_k2];
+
+                var _o5 = size * (idx + _k2);
+
+                for (var w = 0; w < _t.length; w++) {
+                  attributes[name][_o5 + w] = _t[w];
+                }
+              }
+            } else {
+              var _attributes$name;
+
+              (_attributes$name = attributes[name]).push.apply(_attributes$name, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(mesh.attributes[name]));
+            }
+          }
+        }
+      }
+
       idx += mesh.positions.length;
       cidx += mesh.cells.length;
     }
   }
 
-  var attributes = {
-    a_color: a_color
-  };
-  if (a_sourceRect && a_sourceRect.length > 0) attributes.a_sourceRect = a_sourceRect;
+  attributes.a_color = a_color;
+  if (hasSourceRect && a_sourceRect && a_sourceRect.length > 0) attributes.a_sourceRect = a_sourceRect;
   var ret = {
     positions: positions,
     cells: cells,
     attributes: attributes,
     uniforms: uniforms,
-    cellsCount: cidx * 3
+    cellsCount: cidx * 3,
+    program: program
   };
 
   if (textureCoord && textureCoord.length) {
@@ -15227,6 +15328,10 @@ var _filter = Symbol('filter');
 
 var _opacity = Symbol('opacity');
 
+var _program = Symbol('program');
+
+var _attributes = Symbol('attributes');
+
 function normalizePoints(points, bound) {
   var _bound$ = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(bound[1], 2),
       w = _bound$[0],
@@ -15306,9 +15411,25 @@ function () {
     this[_blend] = null;
     this[_texOptions] = {};
     this.contours = figure.contours;
+    this[_program] = null;
+    this[_attributes] = {};
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Mesh2D, [{
+    key: "setProgram",
+    value: function setProgram(program) {
+      this[_program] = program;
+    }
+  }, {
+    key: "setAttribute",
+    value: function setAttribute(key, setter) {
+      if (setter == null) {
+        delete this[_attributes][key];
+      } else {
+        this[_attributes][key] = setter;
+      }
+    }
+  }, {
     key: "getOpacity",
     value: function getOpacity() {
       return this[_opacity];
@@ -15558,7 +15679,7 @@ function () {
       var noFill = this[_fill] == null || this[_fillColor][3] === 0;
       var noGradient = this[_uniforms].u_radialGradientVector == null;
       var noTexture = this[_uniforms].u_texSampler == null;
-      return this[_opacity] === 0 || noStroke && noFill && noGradient && noTexture && !this.beforeRender && !this.afterRender;
+      return this[_opacity] === 0 || this[_program] == null && noStroke && noFill && noGradient && noTexture && !this.beforeRender && !this.afterRender;
     } // join: 'miter' or 'bevel'
     // cap: 'butt' or 'square'
     // lineDash: null
@@ -16150,6 +16271,11 @@ function () {
       }
     }
   }, {
+    key: "program",
+    get: function get() {
+      return this[_program];
+    }
+  }, {
     key: "blend",
     get: function get() {
       return this[_blend] == null ? 'auto' : this[_blend];
@@ -16323,95 +16449,117 @@ function () {
     get: function get() {
       var _this = this;
 
-      if (this[_mesh]) {
-        return this[_mesh];
-      }
+      if (!this[_mesh]) {
+        if (!this[_fill] && !this[_stroke]) {
+          this.setFill();
+        }
 
-      if (!this[_fill] && !this[_stroke]) {
-        this.setFill();
-      }
+        var contours = this[_contours];
+        var meshes = {};
 
-      var contours = this[_contours];
-      var meshes = {};
+        if (contours && contours.length) {
+          if (this[_fill]) {
+            try {
+              var _mesh2 = _triangulate_contours__WEBPACK_IMPORTED_MODULE_14___default()(contours);
 
-      if (contours && contours.length) {
-        if (this[_fill]) {
-          try {
-            var _mesh2 = _triangulate_contours__WEBPACK_IMPORTED_MODULE_14___default()(contours);
+              _mesh2.positions = _mesh2.positions.map(function (p) {
+                p[1] = _this[_bound][1][1] - p[1];
+                p.push(_this[_opacity]);
+                return p;
+              });
+              _mesh2.attributes = {
+                a_color: Array.from({
+                  length: _mesh2.positions.length
+                }).map(function () {
+                  return _this[_fillColor].map(function (c) {
+                    return Math.round(255 * c);
+                  });
+                }) // a_sourceRect: Array.from({length: mesh.positions.length}).map(() => [0, 0, 0, 0]),
 
-            _mesh2.positions = _mesh2.positions.map(function (p) {
-              p[1] = _this[_bound][1][1] - p[1];
-              p.push(_this[_opacity]);
-              return p;
+              };
+              meshes.fill = _mesh2;
+            } catch (ex) {// ignore this[_fill]
+            }
+          }
+
+          if (this[_stroke]) {
+            var lineDash = this[_stroke].lineDash;
+            var strokeContours = contours;
+
+            if (lineDash) {
+              var lineDashOffset = this[_stroke].lineDashOffset;
+              strokeContours = Object(_utils_contours__WEBPACK_IMPORTED_MODULE_13__["getDashContours"])(contours, lineDash, lineDashOffset);
+            }
+
+            var _meshes = strokeContours.map(function (lines, i) {
+              var closed = lines.length > 1 && gl_matrix__WEBPACK_IMPORTED_MODULE_5__["vec2"].equals(lines[0], lines[lines.length - 1]);
+              return _this[_stroke].build(lines, closed);
             });
-            _mesh2.attributes = {
-              a_color: Array.from({
-                length: _mesh2.positions.length
-              }).map(function () {
-                return _this[_fillColor].map(function (c) {
-                  return Math.round(255 * c);
-                });
-              }) // a_sourceRect: Array.from({length: mesh.positions.length}).map(() => [0, 0, 0, 0]),
 
-            };
-            meshes.fill = _mesh2;
-          } catch (ex) {// ignore this[_fill]
+            _meshes.forEach(function (mesh) {
+              mesh.positions = mesh.positions.map(function (p) {
+                p[1] = _this[_bound][1][1] - p[1];
+                p.push(-_this[_opacity]);
+                return p;
+              });
+              mesh.attributes = {
+                a_color: Array.from({
+                  length: mesh.positions.length
+                }).map(function () {
+                  return _this[_strokeColor].map(function (c) {
+                    return Math.round(255 * c);
+                  });
+                })
+              };
+            });
+
+            meshes.stroke = Object(_utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_8__["default"])(_meshes);
           }
         }
 
-        if (this[_stroke]) {
-          var lineDash = this[_stroke].lineDash;
-          var strokeContours = contours;
+        var mesh = Object(_utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_8__["default"])([meshes.fill, meshes.stroke]);
+        mesh.fillPointCount = meshes.fill ? meshes.fill.positions.length : 0;
+        mesh.enableBlend = this.enableBlend;
+        normalizePoints(mesh.positions, this[_bound]);
 
-          if (lineDash) {
-            var lineDashOffset = this[_stroke].lineDashOffset;
-            strokeContours = Object(_utils_contours__WEBPACK_IMPORTED_MODULE_13__["getDashContours"])(contours, lineDash, lineDashOffset);
-          }
+        if (!this[_uniforms].u_texSampler) {// mesh.textureCoord = mesh.positions.map(() => [0, 0]);
+        } else {
+          this[_applyTexture](mesh, this[_texOptions], false);
+        }
 
-          var _meshes = strokeContours.map(function (lines, i) {
-            var closed = lines.length > 1 && gl_matrix__WEBPACK_IMPORTED_MODULE_5__["vec2"].equals(lines[0], lines[lines.length - 1]);
-            return _this[_stroke].build(lines, closed);
-          });
+        mesh.uniforms = this[_uniforms]; // if(!mesh.uniforms.u_filterFlag) mesh.uniforms.u_filterFlag = 0;
+        // if(!mesh.uniforms.u_radialGradientVector) mesh.uniforms.u_radialGradientVector = [0, 0, 0, 0, 0, 0];
 
-          _meshes.forEach(function (mesh) {
-            mesh.positions = mesh.positions.map(function (p) {
-              p[1] = _this[_bound][1][1] - p[1];
-              p.push(-_this[_opacity]);
-              return p;
-            });
-            mesh.attributes = {
-              a_color: Array.from({
-                length: mesh.positions.length
-              }).map(function () {
-                return _this[_strokeColor].map(function (c) {
-                  return Math.round(255 * c);
-                });
-              })
-            };
-          });
+        this[_mesh] = mesh;
+        var transform = this[_transform];
 
-          meshes.stroke = Object(_utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_8__["default"])(_meshes);
+        if (!Object(_utils_transform__WEBPACK_IMPORTED_MODULE_12__["isUnitTransform"])(transform)) {
+          this[_applyTransform](mesh, transform);
         }
       }
 
-      var mesh = Object(_utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_8__["default"])([meshes.fill, meshes.stroke]);
-      mesh.fillPointCount = meshes.fill ? meshes.fill.positions.length : 0;
-      mesh.enableBlend = this.enableBlend;
-      normalizePoints(mesh.positions, this[_bound]);
+      if (this[_program]) {
+        var attributes = this[_attributes];
+        var positions = this[_mesh].positions;
+        var attribs = Object.entries(this[_program]._attribute);
 
-      if (!this[_uniforms].u_texSampler) {// mesh.textureCoord = mesh.positions.map(() => [0, 0]);
-      } else {
-        this[_applyTexture](mesh, this[_texOptions], false);
-      }
+        for (var i = 0; i < attribs.length; i++) {
+          var _attribs$i = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(attribs[i], 2),
+              name = _attribs$i[0],
+              opts = _attribs$i[1];
 
-      mesh.uniforms = this[_uniforms]; // if(!mesh.uniforms.u_filterFlag) mesh.uniforms.u_filterFlag = 0;
-      // if(!mesh.uniforms.u_radialGradientVector) mesh.uniforms.u_radialGradientVector = [0, 0, 0, 0, 0, 0];
+          if (name !== 'a_color' && name !== 'a_sourceRect' && opts !== 'ignored') {
+            var setter = attributes[name]; // console.log(opts.size);
 
-      this[_mesh] = mesh;
-      var transform = this[_transform];
+            this[_mesh].attributes[name] = [];
 
-      if (!Object(_utils_transform__WEBPACK_IMPORTED_MODULE_12__["isUnitTransform"])(transform)) {
-        this[_applyTransform](mesh, transform);
+            for (var j = 0; j < positions.length; j++) {
+              var p = positions[j];
+
+              this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
+            }
+          }
+        }
       }
 
       return this[_mesh];
@@ -20767,12 +20915,12 @@ process.umask = function() { return 0; };
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Node; });
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(107);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(107);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
@@ -20785,6 +20933,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(258);
 /* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(259);
 /* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(260);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(261);
 
 
 
@@ -20797,6 +20946,7 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 
 
 
@@ -20818,6 +20968,12 @@ var _captureEventListeners = Symbol('captureEventListeners');
 var _filters = Symbol('filters');
 
 var _display = Symbol('display');
+
+var _program = Symbol('program');
+
+var _shaderAttrs = Symbol('shaderAttrs');
+
+var _uniforms = Symbol('uniforms');
 
 var Node =
 /*#__PURE__*/
@@ -21062,7 +21218,51 @@ function () {
   }, {
     key: "draw",
     value: function draw() {
+      var _this3 = this;
+
       var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var mesh = this.mesh;
+
+      if (mesh) {
+        Object(_utils_filter__WEBPACK_IMPORTED_MODULE_11__["applyFilters"])(mesh, this.filters);
+        meshes.push(mesh);
+
+        if (this[_program]) {
+          mesh.setProgram(this[_program]);
+          var shaderAttrs = this[_shaderAttrs];
+
+          if (shaderAttrs) {
+            Object.entries(shaderAttrs).forEach(function (_ref3) {
+              var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref3, 2),
+                  key = _ref4[0],
+                  setter = _ref4[1];
+
+              mesh.setAttribute(key, setter);
+            });
+          }
+
+          var uniforms = this[_uniforms];
+
+          if (this[_uniforms]) {
+            var _uniform = {};
+            Object.entries(uniforms).forEach(function (_ref5) {
+              var _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref5, 2),
+                  key = _ref6[0],
+                  value = _ref6[1];
+
+              if (typeof value === 'function') {
+                value = value(_this3, key);
+              }
+
+              _uniform[key] = value;
+            });
+            mesh.setUniforms(_uniform);
+          }
+        }
+
+        Object(_utils_render_event__WEBPACK_IMPORTED_MODULE_12__["default"])(this, mesh);
+      }
+
       return meshes;
     }
   }, {
@@ -21078,12 +21278,12 @@ function () {
   }, {
     key: "getListeners",
     value: function getListeners(type) {
-      var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref3$capture = _ref3.capture,
-          capture = _ref3$capture === void 0 ? false : _ref3$capture;
+      var _ref7 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref7$capture = _ref7.capture,
+          capture = _ref7$capture === void 0 ? false : _ref7$capture;
 
       var eventListeners = capture ? _captureEventListeners : _eventListeners;
-      return _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(this[eventListeners][type] || []);
+      return _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this[eventListeners][type] || []);
     }
   }, {
     key: "getOffsetPosition",
@@ -21136,12 +21336,30 @@ function () {
       if (this.layer) {
         this.layer.__mouseCapturedTarget = this;
       }
+    } // layer.renderer.createProgram(fragmentShader, vertexShader, attributeOptions)
+
+  }, {
+    key: "setProgram",
+    value: function setProgram(program) {
+      this[_program] = program;
+    }
+  }, {
+    key: "setShaderAttribute",
+    value: function setShaderAttribute(attrName, setter) {
+      this[_shaderAttrs] = this[_shaderAttrs] || {};
+      this[_shaderAttrs][attrName] = setter;
+    }
+  }, {
+    key: "setUniforms",
+    value: function setUniforms(uniforms) {
+      this[_uniforms] = this[_uniforms] || {};
+      Object.assign(this[_uniforms], uniforms);
     }
   }, {
     key: "setResolution",
-    value: function setResolution(_ref4) {
-      var width = _ref4.width,
-          height = _ref4.height;
+    value: function setResolution(_ref8) {
+      var width = _ref8.width,
+          height = _ref8.height;
       var _this$_resolution = this[_resolution],
           w = _this$_resolution.width,
           h = _this$_resolution.height;
@@ -21243,7 +21461,7 @@ function () {
   }, {
     key: "transition",
     value: function transition(sec) {
-      var _ref7;
+      var _ref11;
 
       var easing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'linear';
 
@@ -21253,25 +21471,25 @@ function () {
       easing = easing || 'linear';
       var delay = 0;
 
-      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(sec) === 'object') {
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(sec) === 'object') {
         delay = sec.delay || 0;
         sec = sec.duration;
       }
 
-      return _ref7 = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref7, _animation, null), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref7, "cancel", function cancel() {
+      return _ref11 = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref11, _animation, null), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref11, "cancel", function cancel() {
         var preserveState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         var animation = this[_animation];
 
         if (animation) {
           animation.cancel(preserveState);
         }
-      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref7, "end", function end() {
+      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref11, "end", function end() {
         var animation = this[_animation];
 
         if (animation && (animation.playState === 'running' || animation.playState === 'pending')) {
           animation.finish();
         }
-      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref7, "reverse", function reverse() {
+      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref11, "reverse", function reverse() {
         var animation = this[_animation];
 
         if (animation) {
@@ -21285,17 +21503,17 @@ function () {
         }
 
         return animation.finished;
-      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref7, "attr", function attr(prop, val) {
+      }), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()(_ref11, "attr", function attr(prop, val) {
         this.end();
 
         if (typeof prop === 'string') {
           prop = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5___default()({}, prop, val);
         }
 
-        Object.entries(prop).forEach(function (_ref5) {
-          var _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref5, 2),
-              key = _ref6[0],
-              value = _ref6[1];
+        Object.entries(prop).forEach(function (_ref9) {
+          var _ref10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref9, 2),
+              key = _ref10[0],
+              value = _ref10[1];
 
           if (typeof value === 'function') {
             prop[key] = value(that.attr(key));
@@ -21308,7 +21526,7 @@ function () {
           easing: easing
         });
         return this[_animation].finished;
-      }), _ref7;
+      }), _ref11;
     }
   }, {
     key: "updateContours",
@@ -21358,6 +21576,11 @@ function () {
       m[4] += x;
       m[5] += y;
       return m;
+    }
+  }, {
+    key: "program",
+    get: function get() {
+      return this[_program];
     }
     /* get parent defined by connect method */
 
@@ -27230,6 +27453,47 @@ function applyFilters(mesh, filters) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return applyRenderEvent; });
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+function applyRenderEvent(target, mesh) {
+  if (!mesh) return;
+  var beforeRenderHandlers = target.getListeners('beforerender');
+  var afterRenderHandlers = target.getListeners('afterrender');
+
+  if (beforeRenderHandlers.length && !mesh.beforeRender) {
+    mesh.beforeRender = function (context) {
+      target.dispatchEvent({
+        type: 'beforerender',
+        detail: {
+          context: context
+        }
+      });
+    };
+  } else if (!beforeRenderHandlers.length) {
+    mesh.beforeRender = null;
+  }
+
+  if (afterRenderHandlers.length && !mesh.afterRender) {
+    mesh.afterRender = function (context) {
+      target.dispatchEvent({
+        type: 'afterrender',
+        detail: {
+          context: context
+        }
+      });
+    };
+  } else if (!afterRenderHandlers.length) {
+    mesh.afterRender = null;
+  }
+}
+
+/***/ }),
+/* 262 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Cloud; });
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
@@ -27250,7 +27514,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(117);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(12);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(262);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(263);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(106);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(258);
 
@@ -27620,7 +27884,7 @@ function (_Node) {
 _document__WEBPACK_IMPORTED_MODULE_12__["default"].registerNode(Cloud, 'cloud');
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27860,7 +28124,7 @@ function _loadFrames() {
 }
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27886,13 +28150,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(12);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(106);
-/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(264);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(265);
-/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(266);
+/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(265);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(266);
+/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(267);
 /* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(260);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(258);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(267);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(268);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(268);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(261);
 
 
 
@@ -27953,23 +28217,6 @@ function (_Node) {
     //   return [newX, newY];
     // }
 
-    /* override */
-
-  }, {
-    key: "draw",
-    value: function draw() {
-      var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      // if(!this.isVisible) return meshes;
-      var mesh = this.mesh;
-
-      if (mesh) {
-        Object(_utils_filter__WEBPACK_IMPORTED_MODULE_14__["applyFilters"])(mesh, this.filters);
-        meshes.push(mesh);
-        Object(_utils_render_event__WEBPACK_IMPORTED_MODULE_17__["default"])(this, mesh);
-      }
-
-      return meshes;
-    }
     /* override */
 
   }, {
@@ -28221,7 +28468,7 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Blo
 _document__WEBPACK_IMPORTED_MODULE_15__["default"].registerNode(Block, 'block');
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28241,7 +28488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(108);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(109);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(265);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(266);
 
 
 
@@ -28540,7 +28787,7 @@ function (_Node) {
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28689,7 +28936,7 @@ function setStrokeColor(mesh, _ref4) {
 }
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28773,7 +29020,7 @@ function createRadiusBox(figure, _ref, radius) {
 }
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28831,47 +29078,6 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 });
 
 /***/ }),
-/* 268 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return applyRenderEvent; });
-__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
-function applyRenderEvent(target, mesh) {
-  if (!mesh) return;
-  var beforeRenderHandlers = target.getListeners('beforerender');
-  var afterRenderHandlers = target.getListeners('afterrender');
-
-  if (beforeRenderHandlers.length && !mesh.beforeRender) {
-    mesh.beforeRender = function (context) {
-      target.dispatchEvent({
-        type: 'beforerender',
-        detail: {
-          context: context
-        }
-      });
-    };
-  } else if (!beforeRenderHandlers.length) {
-    mesh.beforeRender = null;
-  }
-
-  if (afterRenderHandlers.length && !mesh.afterRender) {
-    mesh.afterRender = function (context) {
-      target.dispatchEvent({
-        type: 'afterrender',
-        detail: {
-          context: context
-        }
-      });
-    };
-  } else if (!afterRenderHandlers.length) {
-    mesh.afterRender = null;
-  }
-}
-
-/***/ }),
 /* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28894,8 +29100,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(56);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(262);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(263);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(263);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(264);
 /* harmony import */ var _attribute_sprite__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(270);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(258);
 
@@ -29031,7 +29237,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(117);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(264);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(265);
 
 
 
@@ -29134,12 +29340,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pasition__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(pasition__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(106);
 /* harmony import */ var _attribute_path__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(273);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(265);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(262);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(266);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(263);
 /* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(260);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(258);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(267);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(268);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(268);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(261);
 
 
 
@@ -29207,13 +29413,11 @@ function (_Node) {
     /* override */
     value: function draw() {
       var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      this.super(meshes);
       var mesh = this.mesh;
 
       if (mesh) {
-        Object(_utils_filter__WEBPACK_IMPORTED_MODULE_14__["applyFilters"])(mesh, this.filters);
         Object(_utils_texture__WEBPACK_IMPORTED_MODULE_13__["drawTexture"])(this, mesh);
-        Object(_utils_render_event__WEBPACK_IMPORTED_MODULE_17__["default"])(this, mesh);
-        meshes.push(mesh);
       }
 
       return meshes;
@@ -30309,7 +30513,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(117);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(108);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(265);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(266);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(109);
 
 
@@ -32518,8 +32722,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(12);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(104);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(262);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(263);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(263);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(264);
 /* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(295);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(258);
 
@@ -32765,8 +32969,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(109);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(265);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(264);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(266);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(265);
 
 
 
@@ -32990,7 +33194,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(56);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(12);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(263);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(264);
 /* harmony import */ var _attribute_group__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(297);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(258);
 /* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(298);
@@ -33394,7 +33598,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(117);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(264);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(265);
 
 
 
@@ -33432,7 +33636,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compile", function() { return compile; });
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(265);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(266);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(258);
 
 
@@ -36255,7 +36459,10 @@ function (_Group) {
     var opts = Object.assign({}, defaultOptions, options);
     _this[_autoRender] = opts.autoRender;
     delete options.autoRender;
-    _this[_renderer] = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_7__["Renderer"](canvas, opts);
+
+    var _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_7__["Renderer"];
+
+    _this[_renderer] = new _Renderer(canvas, opts);
 
     if (canvas.__gl__) {
       // fix blendFunc for node-canvas-webgl
@@ -36848,7 +37055,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(296);
 /* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(336);
 /* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(259);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(262);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(263);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(258);
 
 

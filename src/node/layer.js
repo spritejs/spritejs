@@ -32,7 +32,8 @@ export default class Layer extends Group {
     const opts = Object.assign({}, defaultOptions, options);
     this[_autoRender] = opts.autoRender;
     delete options.autoRender;
-    this[_renderer] = new Renderer(canvas, opts);
+    const _Renderer = opts.Renderer || Renderer;
+    this[_renderer] = new _Renderer(canvas, opts);
     if(canvas.__gl__) {
       // fix blendFunc for node-canvas-webgl
       const gl = canvas.__gl__;

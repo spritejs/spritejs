@@ -134,20 +134,6 @@ export default class Block extends Node {
   // }
 
   /* override */
-  draw(meshes = []) {
-    // if(!this.isVisible) return meshes;
-
-    const mesh = this.mesh;
-    if(mesh) {
-      applyFilters(mesh, this.filters);
-      meshes.push(mesh);
-      applyRenderEvent(this, mesh);
-    }
-
-    return meshes;
-  }
-
-  /* override */
   onPropertyChange(key, newValue, oldValue) { // eslint-disable-line complexity
     super.onPropertyChange(key, newValue, oldValue);
     if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing' || key === 'width' || key === 'height' || key === 'borderWidth'

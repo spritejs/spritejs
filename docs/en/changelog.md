@@ -1,5 +1,9 @@
 ## Change Logs
 
+#### [2019-12-31] v3.1.0
+
+- Support custom shaders.
+
 #### [2019-12-28] v3.0.7
 
 - Fixed the bug that the sprite image did not display because the image was not loaded completely when preloading.
