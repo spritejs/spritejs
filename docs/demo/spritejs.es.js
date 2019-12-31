@@ -18629,6 +18629,10 @@ class Node {
 
     return m;
   }
+
+  get uniforms() {
+    return this[_uniforms];
+  }
   /* get zOrder defined by connect method */
 
   /* attributes */
@@ -18974,16 +18978,19 @@ class Node {
 
   setProgram(program) {
     this[_program] = program;
+    this.forceUpdate();
   }
 
   setShaderAttribute(attrName, setter) {
     this[_shaderAttrs] = this[_shaderAttrs] || {};
     this[_shaderAttrs][attrName] = setter;
+    this.forceUpdate();
   }
 
   setUniforms(uniforms) {
     this[_uniforms] = this[_uniforms] || {};
     Object.assign(this[_uniforms], uniforms);
+    this.forceUpdate();
   }
 
   setResolution({

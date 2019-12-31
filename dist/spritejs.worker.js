@@ -21221,18 +21221,21 @@ function () {
     key: "setProgram",
     value: function setProgram(program) {
       this[_program] = program;
+      this.forceUpdate();
     }
   }, {
     key: "setShaderAttribute",
     value: function setShaderAttribute(attrName, setter) {
       this[_shaderAttrs] = this[_shaderAttrs] || {};
       this[_shaderAttrs][attrName] = setter;
+      this.forceUpdate();
     }
   }, {
     key: "setUniforms",
     value: function setUniforms(uniforms) {
       this[_uniforms] = this[_uniforms] || {};
       Object.assign(this[_uniforms], uniforms);
+      this.forceUpdate();
     }
   }, {
     key: "setResolution",
@@ -21485,6 +21488,11 @@ function () {
       }
 
       return m;
+    }
+  }, {
+    key: "uniforms",
+    get: function get() {
+      return this[_uniforms];
     }
     /* get zOrder defined by connect method */
 
