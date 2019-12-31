@@ -52,13 +52,15 @@ export default class Path extends Node {
         const lineWidth = this.attributes.lineWidth;
         const strokeColor = this.attributes.strokeColor;
         if(strokeColor && lineWidth > 0) {
-          const {lineCap, lineJoin, miterLimit} = this.attributes;
+          const {lineCap, lineJoin, miterLimit, lineDash, lineDashOffset} = this.attributes;
           setStrokeColor(mesh, {
             color: strokeColor,
             lineWidth,
             lineCap,
             lineJoin,
             miterLimit,
+            lineDash,
+            lineDashOffset,
           });
         }
         mesh.setOpacity(this.attributes.opacity);

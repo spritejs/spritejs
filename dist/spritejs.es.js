@@ -26156,14 +26156,18 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
           const {
             lineCap,
             lineJoin,
-            miterLimit
+            miterLimit,
+            lineDash,
+            lineDashOffset
           } = this.attributes;
           Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setStrokeColor"])(mesh, {
             color: strokeColor,
             lineWidth,
             lineCap,
             lineJoin,
-            miterLimit
+            miterLimit,
+            lineDash,
+            lineDashOffset
           });
         }
 

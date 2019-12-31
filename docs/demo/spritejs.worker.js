@@ -29035,13 +29035,17 @@ function (_Node) {
             var _this$attributes3 = this.attributes,
                 lineCap = _this$attributes3.lineCap,
                 lineJoin = _this$attributes3.lineJoin,
-                miterLimit = _this$attributes3.miterLimit;
+                miterLimit = _this$attributes3.miterLimit,
+                lineDash = _this$attributes3.lineDash,
+                lineDashOffset = _this$attributes3.lineDashOffset;
             Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(mesh, {
               color: strokeColor,
               lineWidth: lineWidth,
               lineCap: lineCap,
               lineJoin: lineJoin,
-              miterLimit: miterLimit
+              miterLimit: miterLimit,
+              lineDash: lineDash,
+              lineDashOffset: lineDashOffset
             });
           }
 

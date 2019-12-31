@@ -18,7 +18,7 @@
 <body>
   <div id="adaptive"></div>
   <script>
-    const {Scene, Polyline} = spritejs;
+    const {Scene, Polyline, Path} = spritejs;
     const container = document.getElementById('adaptive');
     const scene = new Scene({
       container,
@@ -28,10 +28,22 @@
     });
     const layer = scene.layer();
 
+    const p = new Path();
+    p.attr({
+      d: 'M0,0L100,0',
+      lineWidth: 3,
+      strokeColor: 'red',
+      pos: [50, 50],
+      lineDash: 10,
+      lineDashOffset: 0,
+    });
+    layer.append(p);
+
     const line = new Polyline({
       pos: [250, 50],
       points: [0, 0, 100, 100, 200, 0, 300, 100, 400, 0, 500, 100, 600, 0],
       strokeColor: 'blue',
+      lineDash: [5, 10],
       lineWidth: 3,
     });
     layer.append(line);
