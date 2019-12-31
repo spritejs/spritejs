@@ -1,6 +1,6 @@
 ## Change Logs
 
-#### [2019-12-31] v3.1.0
+#### [2019-12-31] v3.1.1
 
 - Support custom shaders.
 

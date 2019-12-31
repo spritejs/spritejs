@@ -25802,7 +25802,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
 
   draw(meshes = []) {
-    this.super(meshes);
+    super.draw(meshes);
     const mesh = this.mesh;
 
     if (mesh) {

@@ -29413,7 +29413,9 @@ function (_Node) {
     /* override */
     value: function draw() {
       var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      this.super(meshes);
+
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Path.prototype), "draw", this).call(this, meshes);
+
       var mesh = this.mesh;
 
       if (mesh) {

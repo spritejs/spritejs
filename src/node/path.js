@@ -106,7 +106,7 @@ export default class Path extends Node {
 
   /* override */
   draw(meshes = []) {
-    this.super(meshes);
+    super.draw(meshes);
     const mesh = this.mesh;
     if(mesh) {
       drawTexture(this, mesh);
