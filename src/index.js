@@ -29,11 +29,13 @@ import Scene from './node/scene';
 import ownerDocument from './document';
 
 import {parseColor, Gradient} from './utils/color';
-import {sizeToPixel} from './utils/attribute_value';
+import {sizeToPixel, toArray, toString, toNumber} from './utils/attribute_value';
 
 const createElement = ownerDocument.createElement;
 const isSpriteNode = ownerDocument.isSpriteNode;
 const registerNode = ownerDocument.registerNode;
+
+const helpers = {parseColor, sizeToPixel, toArray, toString, toNumber};
 
 export {
   Arc,
@@ -56,12 +58,14 @@ export {
   Sprite,
   Star,
   Triangle,
+
+  helpers,
+
   createElement,
   isSpriteNode,
   registerNode,
-  parseColor,
-  sizeToPixel,
   requestAnimationFrame,
   cancelAnimationFrame,
+
   ENV,
 };

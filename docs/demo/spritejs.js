@@ -100,6 +100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNode", function() { return registerNode; });
@@ -172,11 +173,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(266);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Gradient"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseColor", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"]; });
-
 /* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(109);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sizeToPixel", function() { return _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["sizeToPixel"]; });
-
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -214,6 +211,13 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 var createElement = _document__WEBPACK_IMPORTED_MODULE_21__["default"].createElement;
 var isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].isSpriteNode;
 var registerNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].registerNode;
+var helpers = {
+  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"],
+  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["sizeToPixel"],
+  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toArray"],
+  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toString"],
+  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toNumber"]
+};
 
 
 /***/ }),

@@ -27368,7 +27368,401 @@ function applyRenderEvent(target, mesh) {
 }
 
 /***/ }),
-/* 262 */,
+/* 262 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Cloud; });
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(113);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(12);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(263);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(106);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(258);
+
+
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+
+var _amount = Symbol('amount');
+
+var _meshCloud = Symbol('meshCloud');
+
+var Cloud =
+/*#__PURE__*/
+function (_Node) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(Cloud, _Node);
+
+  function Cloud(node) {
+    var _this;
+
+    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Cloud);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Cloud).call(this));
+    _this.meshNode = node;
+    node.connect(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this));
+    _this[_amount] = amount;
+    _this[_meshCloud] = null;
+    return _this;
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Cloud, [{
+    key: "brightness",
+    value: function brightness(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.brightness(idx, p);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "contrast",
+    value: function contrast(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.contrast(idx, p);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "delete",
+    value: function _delete(idx) {
+      if (this.meshCloud) {
+        this.meshCloud.delete(idx);
+        this[_amount]--;
+        this.forceUpdate();
+      }
+    }
+    /* override */
+
+  }, {
+    key: "draw",
+    value: function draw() {
+      var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Cloud.prototype), "draw", this).call(this, meshes);
+
+      if (this.meshCloud) {
+        if (this.meshNode.textureImage) {
+          Object(_utils_texture__WEBPACK_IMPORTED_MODULE_10__["drawTexture"])(this.meshNode, this.meshNode.mesh);
+        }
+
+        meshes.push(this.meshCloud);
+      }
+
+      return meshes;
+    }
+  }, {
+    key: "getTransform",
+    value: function getTransform(idx) {
+      if (this.meshCloud) return this.meshCloud.getTransform(idx);
+    }
+  }, {
+    key: "grayscale",
+    value: function grayscale(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.grayscale(idx, p);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "hueRotate",
+    value: function hueRotate(idx, deg) {
+      if (this.meshCloud) {
+        this.meshCloud.hueRotate(idx, deg);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "invert",
+    value: function invert(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.invert(idx, p);
+        this.forceUpdate();
+      }
+    }
+    /* override */
+
+  }, {
+    key: "isPointCollision",
+    value: function isPointCollision(x, y) {
+      if (!this.meshCloud) return false;
+      var pointerEvents = this.attributes.pointerEvents;
+      if (pointerEvents === 'none') return false;
+      if (pointerEvents !== 'all' && !this.isVisible) return false;
+      var which = 'both';
+      if (pointerEvents === 'visibleFill') which = 'fill';
+      if (pointerEvents === 'visibleStroke') which = 'stroke';
+
+      for (var i = 0; i < this[_amount]; i++) {
+        if (!this.meshCloud.isPointCollision(i, [x, y], which)) return false;
+      }
+
+      return true;
+    }
+  }, {
+    key: "opacity",
+    value: function opacity(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.opacity(idx, p);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "rotate",
+    value: function rotate(idx, ang) {
+      var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref, 2),
+          ox = _ref2[0],
+          oy = _ref2[1];
+
+      var rad = Math.PI * ang / 180;
+
+      if (this.meshCloud) {
+        var _this$meshNode$attrib = this.meshNode.attributes,
+            x0 = _this$meshNode$attrib.x,
+            y0 = _this$meshNode$attrib.y;
+        this.meshCloud.rotate(idx, rad, [ox + x0, oy + y0]);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "saturate",
+    value: function saturate(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.saturate(idx, p);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "scale",
+    value: function scale(idx, _ref3) {
+      var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref3, 2),
+          x = _ref4[0],
+          _ref4$ = _ref4[1],
+          y = _ref4$ === void 0 ? x : _ref4$;
+
+      var _ref5 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref5, 2),
+          ox = _ref6[0],
+          oy = _ref6[1];
+
+      if (this.meshCloud) {
+        var _this$meshNode$attrib2 = this.meshNode.attributes,
+            x0 = _this$meshNode$attrib2.x,
+            y0 = _this$meshNode$attrib2.y;
+        var t = 1e-5;
+        if (Math.abs(x) < t) x = 1 / x > 0 ? t : -t;
+        if (Math.abs(y) < t) y = 1 / y > 0 ? t : -t;
+        this.meshCloud.scale(idx, [x, y], [ox + x0, oy + y0]);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "setColorTransform",
+    value: function setColorTransform(idx, m) {
+      if (this.meshCloud) {
+        this.meshCloud.setColorTransform(idx, m);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "setFillColor",
+    value: function setFillColor(idx, color) {
+      if (this.meshCloud) {
+        if (Array.isArray(color)) {
+          color = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(color);
+          color[0] /= 255;
+          color[1] /= 255;
+          color[2] /= 255;
+        }
+
+        this.meshCloud.setFillColor(idx, color);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "sepia",
+    value: function sepia(idx, p) {
+      if (this.meshCloud) {
+        this.meshCloud.sepia(idx, p);
+        this.forceUpdate();
+      }
+    }
+    /* override */
+
+  }, {
+    key: "setResolution",
+    value: function setResolution(_ref7) {
+      var width = _ref7.width,
+          height = _ref7.height;
+
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Cloud.prototype), "setResolution", this).call(this, {
+        width: width,
+        height: height
+      });
+
+      this.meshNode.setResolution({
+        width: width,
+        height: height
+      });
+    }
+  }, {
+    key: "setStrokeColor",
+    value: function setStrokeColor(idx, color) {
+      if (this.meshCloud) {
+        if (Array.isArray(color)) {
+          color = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(color);
+          color[0] /= 255;
+          color[1] /= 255;
+          color[2] /= 255;
+        }
+
+        this.meshCloud.setStrokeColor(idx, color);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "setTransform",
+    value: function setTransform(idx, m) {
+      if (this.meshCloud) {
+        this.meshCloud.setTransform(idx, m);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "skew",
+    value: function skew(idx, _ref8) {
+      var _ref9 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref8, 2),
+          x = _ref9[0],
+          _ref9$ = _ref9[1],
+          y = _ref9$ === void 0 ? x : _ref9$;
+
+      var _ref10 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref11 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref10, 2),
+          ox = _ref11[0],
+          oy = _ref11[1];
+
+      if (this.meshCloud) {
+        var _this$meshNode$attrib3 = this.meshNode.attributes,
+            x0 = _this$meshNode$attrib3.x,
+            y0 = _this$meshNode$attrib3.y;
+        this.meshCloud.skew(idx, [x, y], [ox + x0, oy + y0]);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "transform",
+    value: function transform(idx, m) {
+      if (this.meshCloud) {
+        this.meshCloud.transform(idx, m);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "transformColor",
+    value: function transformColor(idx, m) {
+      if (this.meshCloud) {
+        this.meshCloud.transformColor(idx, m);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "translate",
+    value: function translate(idx, _ref12) {
+      var _ref13 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref12, 2),
+          x = _ref13[0],
+          y = _ref13[1];
+
+      if (this.meshCloud) {
+        this.meshCloud.translate(idx, [x, y]);
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "updateMesh",
+    value: function updateMesh() {
+      if (this[_meshCloud]) {
+        this[_meshCloud].mesh = this.meshNode.mesh;
+        this.forceUpdate();
+      }
+    }
+  }, {
+    key: "meshCloud",
+    get: function get() {
+      var meshNode = this.meshNode;
+      var amount = this[_amount];
+
+      if (!this[_meshCloud] && meshNode.mesh) {
+        this[_meshCloud] = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["MeshCloud"](meshNode.mesh, amount); // const {bgcolor, fillColor} = meshNode.attributes;
+        // for(let i = 0; i < this[_amount]; i++) {
+        //   if(bgcolor) {
+        //     this[_meshCloud].setFillColor(i, bgcolor);
+        //   } else if(fillColor) {
+        //     this[_meshCloud].setFillColor(i, fillColor);
+        //   }
+        // }
+      } // if(this[_meshCloud] && meshNode.mesh !== this[_meshCloud].mesh) {
+      //   this[_meshCloud].mesh = meshNode.mesh;
+      // }
+
+
+      return this[_meshCloud];
+    }
+    /* override */
+
+  }, {
+    key: "isVisible",
+    get: function get() {
+      return !!this.meshNode && this.meshNode.isVisible;
+    }
+  }, {
+    key: "amount",
+    get: function get() {
+      return this[_amount];
+    },
+    set: function set(value) {
+      this[_amount] = value;
+      if (this[_meshCloud]) this[_meshCloud].amount = value;
+    }
+  }]);
+
+  return Cloud;
+}(_node__WEBPACK_IMPORTED_MODULE_11__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_12__["default"].registerNode(Cloud, 'cloud');
+
+/***/ }),
 /* 263 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30366,18 +30760,1168 @@ function (_Path) {
 
 
 /***/ }),
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
+/* 276 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Triangle; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(277);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(258);
+/* harmony import */ var _attribute_triangle__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(280);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Triangle =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Triangle, _Polyline);
+
+  function Triangle() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Triangle);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Triangle).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Triangle, [{
+    key: "isVisible",
+    get: function get() {
+      var sides = this.attributes.sides;
+      return sides[0] > 0 && sides[1] > 0 && _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Triangle.prototype), "isVisible", this);
+    }
+  }]);
+
+  return Triangle;
+}(_polyline__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(Triangle, "Attr", _attribute_triangle__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_8__["default"].registerNode(Triangle, 'triangle');
+
+/***/ }),
+/* 277 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Polyline; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(271);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(258);
+/* harmony import */ var _attribute_polyline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(278);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Polyline =
+/*#__PURE__*/
+function (_Path) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Polyline, _Path);
+
+  function Polyline() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Polyline);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Polyline).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Polyline, [{
+    key: "isVisible",
+
+    /* override */
+    get: function get() {
+      var points = this.attributes.points;
+      return points.length > 0 && _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Polyline.prototype), "isVisible", this);
+    }
+  }]);
+
+  return Polyline;
+}(_path__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(Polyline, "Attr", _attribute_polyline__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_8__["default"].registerNode(Polyline, 'polyline');
+
+/***/ }),
+/* 278 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Polyline; });
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(273);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(109);
+/* harmony import */ var _utils_smooth_curve__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(279);
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+var declareAlias = Symbol.for('spritejs_declareAlias');
+
+function getPath(attr) {
+  var points = attr.points,
+      smooth = attr.smooth,
+      close = attr.close;
+  var p = [];
+
+  for (var i = 0; i < points.length; i += 2) {
+    p.push([points[i], points[i + 1]]);
+  }
+
+  var d = '';
+
+  if (smooth) {
+    // if(close) {
+    //   p.push([...p[0]]);
+    // }
+    d = Object(_utils_smooth_curve__WEBPACK_IMPORTED_MODULE_8__["makeSmoothCurveLine"])(p);
+  } else if (p.length) {
+    d = "M".concat(p.map(function (v) {
+      return v.join(' ');
+    }).join('L'));
+  }
+
+  if (d && close) {
+    d += 'Z';
+  }
+
+  return d;
+}
+
+var Polyline =
+/*#__PURE__*/
+function (_Path) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Polyline, _Path);
+
+  function Polyline(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, Polyline);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Polyline).call(this, subject));
+
+    _this[setDefault]({
+      points: [],
+      smooth: false,
+      closeType: 'none' // none | normal
+
+      /* close */
+
+    });
+
+    _this[declareAlias]('close');
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(Polyline, [{
+    key: "d",
+    get: function get() {
+      return this[getAttribute]('d');
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "close",
+    get: function get() {
+      return this.closeType !== 'none';
+    },
+    set: function set(value) {
+      value = value ? 'normal' : 'none';
+      this.closeType = value;
+    }
+  }, {
+    key: "closeType",
+    get: function get() {
+      return this[getAttribute]('closeType');
+    },
+    set: function set(value) {
+      if (value != null && value !== 'none' && value !== 'normal') throw new TypeError('Invalid closeType type.');
+
+      if (this[setAttribute]('closeType', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "smooth",
+    get: function get() {
+      return this[getAttribute]('smooth');
+    },
+    set: function set(value) {
+      if (this[setAttribute]('smooth', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "points",
+    get: function get() {
+      return this[getAttribute]('points');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toArray"])(value);
+
+      if (Array.isArray(value)) {
+        value = value.reduce(function (a, b) {
+          if (Array.isArray(b)) {
+            return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(a), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(b.map(function (v) {
+              return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(v);
+            })));
+          }
+
+          return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(a), [Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(b)]);
+        }, []);
+      }
+
+      if (this[setAttribute]('points', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }]);
+
+  return Polyline;
+}(_path__WEBPACK_IMPORTED_MODULE_6__["default"]);
+
+
+
+/***/ }),
+/* 279 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeSmoothCurveLine", function() { return makeSmoothCurveLine; });
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+/* istanbul ignore file */
+
+/**
+ * 使用 贝塞尔曲线 模拟绘制平滑曲线
+ * @param {*} points 绘制点
+ */
+function makeSmoothCurveLine(points) {
+  /**
+   * 获取 模拟贝塞尔曲线关键控制点
+   * @param {*} i
+   * @param {*} a
+   * @param {*} b
+   */
+  function getCtrlPoint(i) {
+    var a = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.168;
+    var b = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.168;
+    var x0;
+    var y0;
+    var x1;
+    var y1;
+
+    if (points[i].x === points[i + 1].x || points[i].y === points[i + 1].y) {
+      a = 0;
+      b = 0;
+    }
+
+    if (i < 1) {
+      x0 = points[0].x + (points[1].x - points[0].x) * a;
+      y0 = points[0].y + (points[1].y - points[0].y) * a;
+    } else {
+      x0 = points[i].x + (points[i + 1].x - points[i - 1].x) * a;
+      y0 = points[i].y + (points[i + 1].y - points[i - 1].y) * a;
+    }
+
+    if (i > points.length - 3) {
+      var last = points.length - 1;
+      x1 = points[last].x - (points[last].x - points[last - 1].x) * b;
+      y1 = points[last].y - (points[last].y - points[last - 1].y) * b;
+    } else {
+      x1 = points[i + 1].x - (points[i + 2].x - points[i].x) * b;
+      y1 = points[i + 1].y - (points[i + 2].y - points[i].y) * b;
+    }
+
+    return [{
+      x: x0,
+      y: y0
+    }, {
+      x: x1,
+      y: y1
+    }];
+  }
+
+  points = points.map(function (_ref) {
+    var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref, 2),
+        x = _ref2[0],
+        y = _ref2[1];
+
+    return {
+      x: x,
+      y: y
+    };
+  });
+  var d = '';
+  points.forEach(function (point, i) {
+    if (i === 0) {
+      d += "M".concat(point.x, " ").concat(point.y);
+    } else {
+      var _getCtrlPoint = getCtrlPoint(i - 1),
+          _getCtrlPoint2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_getCtrlPoint, 2),
+          A = _getCtrlPoint2[0],
+          B = _getCtrlPoint2[1];
+
+      d += "C".concat([A.x, A.y, B.x, B.y, point.x, point.y].join(' '));
+    }
+  });
+  return d;
+}
+
+/***/ }),
+/* 280 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Triangle; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(281);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(278);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(109);
+
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+
+function getPoints(attr) {
+  var _attr$sides = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7___default()(attr.sides, 2),
+      a = _attr$sides[0],
+      b = _attr$sides[1];
+
+  var angle = attr.angle % 360;
+  if (angle < 0) angle += 360;
+  angle = Math.PI * angle / 180;
+  return [0, 0, a, 0, b * Math.cos(angle), b * Math.sin(angle)];
+}
+
+var Triangle =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Triangle, _Polyline);
+
+  function Triangle(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Triangle);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Triangle).call(this, subject));
+
+    _this[setDefault]({
+      sides: [0, 0],
+      angle: 60,
+      closeType: 'normal'
+    });
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Triangle, [{
+    key: "points",
+    get: function get() {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Triangle.prototype), "points", this);
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "sides",
+    get: function get() {
+      return this[getAttribute]('sides');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__["toArray"])(value, true);
+      if (value != null && !Array.isArray(value)) value = [value, value];
+
+      if (this[setAttribute]('sides', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Triangle.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "angle",
+    get: function get() {
+      return this[getAttribute]('angle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__["toNumber"])(value);
+
+      if (this[setAttribute]('angle', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Triangle.prototype), "points", points, this, true);
+      }
+    }
+  }]);
+
+  return Triangle;
+}(_polyline__WEBPACK_IMPORTED_MODULE_8__["default"]);
+
+
+
+/***/ }),
+/* 281 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var superPropBase = __webpack_require__(116);
+
+var defineProperty = __webpack_require__(56);
+
+function set(target, property, value, receiver) {
+  if (typeof Reflect !== "undefined" && Reflect.set) {
+    set = Reflect.set;
+  } else {
+    set = function set(target, property, value, receiver) {
+      var base = superPropBase(target, property);
+      var desc;
+
+      if (base) {
+        desc = Object.getOwnPropertyDescriptor(base, property);
+
+        if (desc.set) {
+          desc.set.call(receiver, value);
+          return true;
+        } else if (!desc.writable) {
+          return false;
+        }
+      }
+
+      desc = Object.getOwnPropertyDescriptor(receiver, property);
+
+      if (desc) {
+        if (!desc.writable) {
+          return false;
+        }
+
+        desc.value = value;
+        Object.defineProperty(receiver, property, desc);
+      } else {
+        defineProperty(receiver, property, value);
+      }
+
+      return true;
+    };
+  }
+
+  return set(target, property, value, receiver);
+}
+
+function _set(target, property, value, receiver, isStrict) {
+  var s = set(target, property, value, receiver || target);
+
+  if (!s && isStrict) {
+    throw new Error('failed to set property');
+  }
+
+  return value;
+}
+
+module.exports = _set;
+
+/***/ }),
+/* 282 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Parallel; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(277);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(258);
+/* harmony import */ var _attribute_parallel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(283);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Parallel =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Parallel, _Polyline);
+
+  function Parallel() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Parallel);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Parallel).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Parallel, [{
+    key: "isVisible",
+
+    /* override */
+    get: function get() {
+      var sides = this.attributes.sides;
+      return sides[0] > 0 && sides[1] > 0 && _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Parallel.prototype), "isVisible", this);
+    }
+  }]);
+
+  return Parallel;
+}(_polyline__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(Parallel, "Attr", _attribute_parallel__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_8__["default"].registerNode(Parallel, 'parallel');
+
+/***/ }),
+/* 283 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Parallel; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(281);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(278);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(109);
+
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+// 平行四边形
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+
+function getPoints(attr) {
+  var _attr$sides = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_7___default()(attr.sides, 2),
+      a = _attr$sides[0],
+      b = _attr$sides[1];
+
+  var angle = attr.angle % 360;
+  if (angle < 0) angle += 360;
+  angle = Math.PI * angle / 180;
+  var x1 = b * Math.cos(angle);
+  var y1 = b * Math.sin(angle);
+  return [0, 0, a, 0, x1 + a, y1, x1, y1];
+}
+
+var Parallel =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Parallel, _Polyline);
+
+  function Parallel(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Parallel);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Parallel).call(this, subject));
+
+    _this[setDefault]({
+      sides: [0, 0],
+      angle: 90,
+      closeType: 'normal'
+    });
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Parallel, [{
+    key: "points",
+    get: function get() {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Parallel.prototype), "points", this);
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "sides",
+    get: function get() {
+      return this[getAttribute]('sides');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__["toArray"])(value, true);
+      if (value != null && !Array.isArray(value)) value = [value, value];
+
+      if (this[setAttribute]('sides', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Parallel.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "angle",
+    get: function get() {
+      return this[getAttribute]('angle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_9__["toNumber"])(value);
+
+      if (this[setAttribute]('angle', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Parallel.prototype), "points", points, this, true);
+      }
+    }
+  }]);
+
+  return Parallel;
+}(_polyline__WEBPACK_IMPORTED_MODULE_8__["default"]);
+
+
+
+/***/ }),
+/* 284 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Regular; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(277);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(258);
+/* harmony import */ var _attribute_regular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(285);
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Regular =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default()(Regular, _Polyline);
+
+  function Regular() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Regular);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default()(Regular).apply(this, arguments));
+  }
+
+  return Regular;
+}(_polyline__WEBPACK_IMPORTED_MODULE_5__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(Regular, "Attr", _attribute_regular__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Regular, 'regular');
+
+/***/ }),
+/* 285 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Regular; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(281);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(278);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(109);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+// 正多边形
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+
+function getPoints(attr) {
+  var edges = attr.edges,
+      radius = attr.radius,
+      offsetAngle = attr.offsetAngle;
+  var offset = Math.PI * offsetAngle / 180 - 0.5 * Math.PI;
+  if (edges < 3 || radius <= 0) return [];
+  var points = [];
+
+  for (var i = 0; i < edges; i++) {
+    var angle = i * 2 * Math.PI / edges + offset;
+    var x = radius * Math.cos(angle);
+    var y = radius * Math.sin(angle);
+    points.push(x, y);
+  }
+
+  return points;
+}
+
+var Regular =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Regular, _Polyline);
+
+  function Regular(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Regular);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Regular).call(this, subject));
+
+    _this[setDefault]({
+      edges: 3,
+      radius: 0,
+      offsetAngle: 0,
+      closeType: 'normal'
+    });
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Regular, [{
+    key: "points",
+    get: function get() {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Regular.prototype), "points", this);
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "edges",
+    get: function get() {
+      return this[getAttribute]('edges');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('edges', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Regular.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "radius",
+    get: function get() {
+      return this[getAttribute]('radius');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('radius', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Regular.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "offsetAngle",
+    get: function get() {
+      return this[getAttribute]('offsetAngle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('offsetAngle', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Regular.prototype), "points", points, this, true);
+      }
+    }
+  }]);
+
+  return Regular;
+}(_polyline__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+
+/***/ }),
+/* 286 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Star; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(277);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(258);
+/* harmony import */ var _attribute_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(287);
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Star =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default()(Star, _Polyline);
+
+  function Star() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Star);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default()(Star).apply(this, arguments));
+  }
+
+  return Star;
+}(_polyline__WEBPACK_IMPORTED_MODULE_5__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(Star, "Attr", _attribute_star__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Star, 'star');
+
+/***/ }),
+/* 287 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Star; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(281);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(278);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(109);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+// 多角星
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+
+function getPoints(attr) {
+  var angles = attr.angles,
+      innerRadius = attr.innerRadius,
+      outerRadius = attr.outerRadius,
+      offsetAngle = attr.offsetAngle;
+  var offset = Math.PI * offsetAngle / 180 - 0.5 * Math.PI;
+  if (angles < 3 || innerRadius <= 0 || outerRadius <= 0) return [];
+  var points = [];
+
+  for (var i = 0; i < angles * 2; i++) {
+    var angle = i * Math.PI / angles + offset;
+    var radius = i % 2 ? innerRadius : outerRadius;
+    var x = radius * Math.cos(angle);
+    var y = radius * Math.sin(angle);
+    points.push(x, y);
+  }
+
+  return points;
+}
+
+var Star =
+/*#__PURE__*/
+function (_Polyline) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Star, _Polyline);
+
+  function Star(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Star);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star).call(this, subject));
+
+    _this[setDefault]({
+      angles: 5,
+      innerRadius: 0,
+      outerRadius: 0,
+
+      /* radius */
+      offsetAngle: 0,
+      closeType: 'normal'
+    });
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Star, [{
+    key: "points",
+    get: function get() {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star.prototype), "points", this);
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "angles",
+    get: function get() {
+      return this[getAttribute]('angles');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('angles', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "innerRadius",
+    get: function get() {
+      return this[getAttribute]('innerRadius');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('innerRadius', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "outerRadius",
+    get: function get() {
+      return this[getAttribute]('outerRadius');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('outerRadius', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star.prototype), "points", points, this, true);
+      }
+    }
+  }, {
+    key: "radius",
+    get: function get() {
+      return [this.innerRadius, this.outerRadius];
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toArray"])(value, true);
+      if (!Array.isArray(value)) value = [value, value];
+      this.innerRadius = value[0];
+      this.outerRadius = value[1];
+    }
+  }, {
+    key: "offsetAngle",
+    get: function get() {
+      return this[getAttribute]('offsetAngle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      if (this[setAttribute]('offsetAngle', value)) {
+        var points = getPoints(this);
+
+        _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Star.prototype), "points", points, this, true);
+      }
+    }
+  }]);
+
+  return Star;
+}(_polyline__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+
+/***/ }),
 /* 288 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30655,10 +32199,390 @@ function (_Path) {
 
 
 /***/ }),
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
+/* 290 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Arc; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(288);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(258);
+/* harmony import */ var _attribute_arc__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(291);
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Arc =
+/*#__PURE__*/
+function (_Ellipse) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3___default()(Arc, _Ellipse);
+
+  function Arc() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Arc);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default()(Arc).apply(this, arguments));
+  }
+
+  return Arc;
+}(_ellipse__WEBPACK_IMPORTED_MODULE_5__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(Arc, "Attr", _attribute_arc__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Arc, 'arc');
+
+/***/ }),
+/* 291 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Arc; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(281);
+/* harmony import */ var _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(289);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(109);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+var Arc =
+/*#__PURE__*/
+function (_Ellipse) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Arc, _Ellipse);
+
+  function Arc() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Arc);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Arc).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Arc, [{
+    key: "radius",
+    get: function get() {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Arc.prototype), "radiusX", this);
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_8__["toNumber"])(value);
+
+      _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Arc.prototype), "radiusX", value, this, true);
+
+      _babel_runtime_helpers_set__WEBPACK_IMPORTED_MODULE_3___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Arc.prototype), "radiusY", value, this, true);
+    }
+  }]);
+
+  return Arc;
+}(_ellipse__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+
+
+/***/ }),
+/* 292 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ring; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(56);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(271);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(258);
+/* harmony import */ var _attribute_ring__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(293);
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+var Ring =
+/*#__PURE__*/
+function (_Path) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Ring, _Path);
+
+  function Ring() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Ring);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Ring).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Ring, [{
+    key: "isVisible",
+
+    /* override */
+    get: function get() {
+      var _this$attributes = this.attributes,
+          innerRadius = _this$attributes.innerRadius,
+          outerRadius = _this$attributes.outerRadius,
+          startAngle = _this$attributes.startAngle,
+          endAngle = _this$attributes.endAngle;
+      return (innerRadius > 0 || outerRadius > 0) && startAngle !== endAngle && _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Ring.prototype), "isVisible", this);
+    }
+  }]);
+
+  return Ring;
+}(_path__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(Ring, "Attr", _attribute_ring__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_8__["default"].registerNode(Ring, 'ring');
+
+/***/ }),
+/* 293 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ring; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(112);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(273);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(109);
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var getAttribute = Symbol.for('spritejs_getAttribute');
+var declareAlias = Symbol.for('spritejs_declareAlias');
+
+function getPath(attr) {
+  var innerRadius = attr.innerRadius,
+      outerRadius = attr.outerRadius,
+      startAngle = attr.startAngle,
+      endAngle = attr.endAngle;
+  var f = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_5__["Figure2D"]();
+  startAngle = Math.PI * startAngle / 180;
+  endAngle = Math.PI * endAngle / 180;
+
+  if (innerRadius > outerRadius) {
+    var _ref = [outerRadius, innerRadius];
+    innerRadius = _ref[0];
+    outerRadius = _ref[1];
+  }
+
+  if (innerRadius <= 0) {
+    f.moveTo(0, 0);
+  }
+
+  f.arc(0, 0, outerRadius, startAngle, endAngle, false);
+
+  if (innerRadius > 0) {
+    var PI2 = Math.PI * 2;
+
+    if (endAngle < startAngle) {
+      endAngle = startAngle + PI2 + (endAngle - startAngle) % PI2;
+    }
+
+    if (endAngle - startAngle >= PI2) {
+      endAngle = startAngle + PI2 - 1e-6;
+    }
+
+    f.arc(0, 0, innerRadius, endAngle, startAngle, true);
+  }
+
+  f.closePath();
+  var path = f.path;
+  var ret = path.reduce(function (a, b) {
+    return a + b.join(' ');
+  }, '');
+  return ret;
+}
+
+var Ring =
+/*#__PURE__*/
+function (_Path) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default()(Ring, _Path);
+
+  function Ring(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Ring);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Ring).call(this, subject));
+
+    _this[setDefault]({
+      innerRadius: 0,
+      outerRadius: 0,
+
+      /* radius */
+      startAngle: 0,
+      endAngle: 360
+      /* angle */
+
+    });
+
+    _this[declareAlias]('radius', 'angle');
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Ring, [{
+    key: "d",
+    get: function get() {
+      return this[getAttribute]('d');
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "innerRadius",
+    get: function get() {
+      return this[getAttribute]('innerRadius');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(value);
+
+      if (this[setAttribute]('innerRadius', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "outerRadius",
+    get: function get() {
+      return this[getAttribute]('outerRadius');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(value);
+
+      if (this[setAttribute]('outerRadius', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "radius",
+    get: function get() {
+      return [this.innerRadius, this.outerRadius];
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toArray"])(value, true);
+      if (!Array.isArray(value)) value = [value, value];
+      this.innerRadius = value[0];
+      this.outerRadius = value[1];
+    }
+  }, {
+    key: "startAngle",
+    get: function get() {
+      return this[getAttribute]('startAngle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(value);
+
+      if (this[setAttribute]('startAngle', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "endAngle",
+    get: function get() {
+      return this[getAttribute]('endAngle');
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(value);
+
+      if (this[setAttribute]('endAngle', value)) {
+        var d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "angle",
+    get: function get() {
+      return [this.startAngle, this.endAngle];
+    },
+    set: function set(value) {
+      value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toArray"])(value);
+      if (!Array.isArray(value)) value = [value, value];
+      this.startAngle = value[0];
+      this.endAngle = value[1];
+    }
+  }]);
+
+  return Ring;
+}(_path__WEBPACK_IMPORTED_MODULE_6__["default"]);
+
+
+
+/***/ }),
 /* 294 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34709,45 +36633,80 @@ _document__WEBPACK_IMPORTED_MODULE_11__["default"].registerNode(Layer, 'layer');
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNode", function() { return registerNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layerCreated", function() { return layerCreated; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Renderer", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Renderer"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ENV", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"]; });
 
 /* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(106);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return _node_node__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(264);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(262);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(269);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(264);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(271);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _node_path__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(269);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
-/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(274);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return _node_rect__WEBPACK_IMPORTED_MODULE_5__["default"]; });
+/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(271);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _node_path__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(288);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ellipse", function() { return _node_ellipse__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(274);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return _node_rect__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(294);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _node_label__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _node_triangle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(276);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Triangle", function() { return _node_triangle__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(296);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _node_group__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+/* harmony import */ var _node_parallel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(282);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Parallel", function() { return _node_parallel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(330);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+/* harmony import */ var _node_regular__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(284);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Regular", function() { return _node_regular__WEBPACK_IMPORTED_MODULE_9__["default"]; });
 
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(266);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_10__["Gradient"]; });
+/* harmony import */ var _node_star__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(286);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Star", function() { return _node_star__WEBPACK_IMPORTED_MODULE_10__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseColor", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_10__["parseColor"]; });
+/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(288);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ellipse", function() { return _node_ellipse__WEBPACK_IMPORTED_MODULE_11__["default"]; });
 
+/* harmony import */ var _node_arc__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(290);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Arc", function() { return _node_arc__WEBPACK_IMPORTED_MODULE_12__["default"]; });
+
+/* harmony import */ var _node_ring__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(292);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ring", function() { return _node_ring__WEBPACK_IMPORTED_MODULE_13__["default"]; });
+
+/* harmony import */ var _node_polyline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(277);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polyline", function() { return _node_polyline__WEBPACK_IMPORTED_MODULE_14__["default"]; });
+
+/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(294);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _node_label__WEBPACK_IMPORTED_MODULE_15__["default"]; });
+
+/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(296);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _node_group__WEBPACK_IMPORTED_MODULE_16__["default"]; });
+
+/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(330);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"]; });
+
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(258);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(266);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_19__["Gradient"]; });
+
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(109);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
+/**
+  ENV: {
+    Container,
+    createCanvas,
+    loadImage,
+  }
+ */
 
 
 
@@ -34758,12 +36717,33 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+var helpers = {
+  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_19__["parseColor"],
+  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["sizeToPixel"],
+  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toArray"],
+  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toString"],
+  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toNumber"]
+};
+var createElement = _document__WEBPACK_IMPORTED_MODULE_18__["default"].createElement;
+var isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].isSpriteNode;
+var registerNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].registerNode;
 var layerCreated = new Promise(function (resolve) {
   var layer = null;
   self.addEventListener('message', function (evt) {
     if (evt.data.type === 'create') {
       var options = evt.data.options;
-      layer = new _node_layer__WEBPACK_IMPORTED_MODULE_9__["default"](options);
+      layer = new _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"](options);
       resolve(layer);
     } else if (layer && evt.data.type === 'event') {
       layer.dispatchPointerEvent(evt.data.event);
