@@ -19682,6 +19682,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(32);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(color_rgba__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(76);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(80);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -19690,15 +19691,19 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
+
+function parseValue(v) {
+  if (typeof v === 'string') {
+    v = v.trim();
+    if (/%$/.test(v)) return parseFloat(v) / 100;
+    if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v);
+    return color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(v);
+  }
+
+  return v;
+}
+
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default = function (from, to, p, s, e) {
-  if (typeof from === 'string' && from.indexOf('rgba') === 0) {
-    from = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(from);
-  }
-
-  if (typeof to === 'string' && to.indexOf('rgba') === 0) {
-    to = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(to);
-  }
-
   if (Array.isArray(from) && Array.isArray(to)) {
     return from.map((v, i) => {
       return v + (p - s) / (e - s) * (to[i] - v);
@@ -19719,14 +19724,15 @@ sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default = function (from
 class Animation extends sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Animator"] {
   constructor(sprite, frames, timing) {
     const initAttrs = sprite.attr();
+    Object.entries(initAttrs).forEach(([key, value]) => {
+      initAttrs[key] = parseValue(value);
+    });
     frames = frames.map((_ref) => {
       let frame = _extends({}, _ref);
 
       const ret = {};
-      const node = sprite.cloneNode();
-      node.attr(frame);
-      Object.keys(frame).forEach(key => {
-        ret[key] = node.attributes[key];
+      Object.entries(frame).forEach(([key, value]) => {
+        ret[key] = parseValue(value);
       });
       return ret;
     });

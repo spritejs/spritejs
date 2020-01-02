@@ -1,16 +1,19 @@
 import {Animator, Effects} from 'sprite-animator';
 import rgba from 'color-rgba';
 import {requestAnimationFrame, cancelAnimationFrame} from '../utils/animation-frame';
+import {sizeToPixel} from '../utils/attribute_value';
+
+function parseValue(v) {
+  if(typeof v === 'string') {
+    v = v.trim();
+    if(/%$/.test(v)) return parseFloat(v) / 100;
+    if(/^\d+/.test(v)) return sizeToPixel(v);
+    return rgba(v);
+  }
+  return v;
+}
 
 Effects.default = function (from, to, p, s, e) {
-  if(typeof from === 'string' && from.indexOf('rgba') === 0) {
-    from = rgba(from);
-  }
-
-  if(typeof to === 'string' && to.indexOf('rgba') === 0) {
-    to = rgba(to);
-  }
-
   if(Array.isArray(from) && Array.isArray(to)) {
     return from.map((v, i) => {
       return v + (p - s) / (e - s) * (to[i] - v);
@@ -30,15 +33,19 @@ Effects.default = function (from, to, p, s, e) {
 export default class Animation extends Animator {
   constructor(sprite, frames, timing) {
     const initAttrs = sprite.attr();
+
+    Object.entries(initAttrs).forEach(([key, value]) => {
+      initAttrs[key] = parseValue(value);
+    });
+
     frames = frames.map(({...frame}) => {
       const ret = {};
-      const node = sprite.cloneNode();
-      node.attr(frame);
-      Object.keys(frame).forEach((key) => {
-        ret[key] = node.attributes[key];
+      Object.entries(frame).forEach(([key, value]) => {
+        ret[key] = parseValue(value);
       });
       return ret;
     });
+
     super(initAttrs, frames, timing);
     this.target = sprite;
     this.setter = function (frame, target) { target.attr(frame) };
