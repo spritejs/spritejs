@@ -22455,7 +22455,8 @@ function parseValue(v) {
     v = v.trim();
     if (/%$/.test(v)) return parseFloat(v) / 100;
     if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_11__["sizeToPixel"])(v);
-    return color_rgba__WEBPACK_IMPORTED_MODULE_9___default()(v);
+    var c = color_rgba__WEBPACK_IMPORTED_MODULE_9___default()(v);
+    return c.length > 0 ? c : v;
   }
 
   return v;

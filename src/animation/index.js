@@ -8,7 +8,8 @@ function parseValue(v) {
     v = v.trim();
     if(/%$/.test(v)) return parseFloat(v) / 100;
     if(/^\d+/.test(v)) return sizeToPixel(v);
-    return rgba(v);
+    const c = rgba(v);
+    return c.length > 0 ? c : v;
   }
   return v;
 }

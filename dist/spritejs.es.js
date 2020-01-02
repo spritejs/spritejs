@@ -19822,7 +19822,8 @@ function parseValue(v) {
     v = v.trim();
     if (/%$/.test(v)) return parseFloat(v) / 100;
     if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v);
-    return color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(v);
+    const c = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(v);
+    return c.length > 0 ? c : v;
   }
 
   return v;
