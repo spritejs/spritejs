@@ -86,14 +86,13 @@ import * as spritejs from 'spritejs';
 - [Sprites](http://spritejs.org/demo/#basic_sprites)
 - [Path & Group](http://spritejs.org/demo/#path_groups)
 - [Labels](http://spritejs.org/demo/#labels)
-- [Buttons](http://spritejs.org/demo/#buttons)
+- [Button](http://spritejs.org/demo/#button)
 - [Transforms](http://spritejs.org/demo/#transforms)
 - [Events](http://spritejs.org/demo/#events)
 - [Filters](http://spritejs.org/demo/#filters)
 - [Animations](http://spritejs.org/demo/#animations)
 - [SVG Paths](http://spritejs.org/demo/#svg_path)
 - [Offset API](http://spritejs.org/demo/#offset_api)
-- [OBB Hit](http://spritejs.org/demo/#obb)
 
 ### With D3
 
