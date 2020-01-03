@@ -65,8 +65,8 @@ Component({
         displayRatio = windowWidth / 750;
       }
       const scene = new Scene({
-        width: rect.width,
-        height: rect.height,
+        width: rect.width / displayRatio,
+        height: rect.height / displayRatio,
         extra: this,
         displayRatio,
       });
