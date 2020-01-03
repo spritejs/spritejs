@@ -46,6 +46,7 @@
   * [提升性能](/zh-cn/guide/performance)
   * [快照](/zh-cn/guide/snapshot)
   * [多线程](/zh-cn/guide/worker)
+  * [3D渲染](/zh-cn/guide/3d)
   * [与d3一同使用](/zh-cn/guide/d3)
   * [跨平台](/zh-cn/guide/platforms)
 

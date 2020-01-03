@@ -211,5 +211,14 @@
   }, {
     "label": "fire",
     "src": "protonjs/fire"
+  }, {
+    "label": "basic",
+    "src": "3d/basic"
+  }, {
+    "label": "fox",
+    "src": "3d/fox"
+  }, {
+    "label": "wireframe",
+    "src": "3d/wireframe"
   }
 ]
