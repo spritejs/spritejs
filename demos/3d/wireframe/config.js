@@ -15,7 +15,7 @@ export default async () => {
     },
     packages: {
       js: [
-        'http://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js',
+        '//unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js',
       ],
     },
   };
