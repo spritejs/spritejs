@@ -71,7 +71,11 @@
       font: 'italic 32px Arial',
       bgcolor: 'red',
     });
+    console.log(l.contentSize);
     fglayer.appendChild(l);
+    fglayer.prepareRender.then(() => {
+      console.log(l.contentSize);
+    });
   </script>
 </body>
 </html>

@@ -28831,38 +28831,36 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
   updateText() {
     if (!this[_textImageTask]) {
-      this[_textImageTask] = new Promise(resolve => {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__["requestAnimationFrame"])(() => {
-          this[_textImageTask] = null;
-          const {
-            text,
+      this[_textImageTask] = Promise.resolve().then(() => {
+        this[_textImageTask] = null;
+        const {
+          text,
+          font,
+          fillColor,
+          strokeColor,
+          strokeWidth
+        } = this.attributes;
+
+        if (_mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createText) {
+          this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createText(text, {
+            font,
+            fillColor,
+            strokeColor,
+            strokeWidth,
+            parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["parseFont"]
+          });
+        } else {
+          this[_textImage] = Object(_mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["createText"])(text, {
             font,
             fillColor,
             strokeColor,
             strokeWidth
-          } = this.attributes;
+          });
+        }
 
-          if (_mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createText) {
-            this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createText(text, {
-              font,
-              fillColor,
-              strokeColor,
-              strokeWidth,
-              parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["parseFont"]
-            });
-          } else {
-            this[_textImage] = Object(_mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["createText"])(text, {
-              font,
-              fillColor,
-              strokeColor,
-              strokeWidth
-            });
-          }
-
-          this.updateContours();
-          this.forceUpdate();
-          resolve(this[_textImage]);
-        });
+        this.updateContours();
+        this.forceUpdate();
+        return this[_textImage];
       });
     }
   }
@@ -32196,6 +32194,8 @@ const _renderer = Symbol('renderer');
 
 const _timeline = Symbol('timeline');
 
+const _prepareRender = Symbol('prepareRender');
+
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   constructor(options = {}) {
     super();
@@ -32267,8 +32267,10 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   get offscreen() {
     return !!this.options.offscreen || this.canvas._offscreen;
   }
-  /* prepareRender */
 
+  get prepareRender() {
+    return this[_prepareRender] ? this[_prepareRender] : Promise.resolve();
+  }
   /* override */
 
 
@@ -32326,7 +32328,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
 
   forceUpdate() {
-    if (!this.prepareRender) {
+    if (!this[_prepareRender]) {
       if (this.parent && this.parent.hasOffscreenCanvas) {
         this.parent.forceUpdate();
         let _resolve = null;
@@ -32334,7 +32336,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
           _resolve = resolve;
         });
         prepareRender._resolve = _resolve;
-        this.prepareRender = prepareRender;
+        this[_prepareRender] = prepareRender;
       } else {
         let _resolve = null;
         let _requestID = null;
@@ -32350,7 +32352,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         });
         prepareRender._resolve = _resolve;
         prepareRender._requestID = _requestID;
-        this.prepareRender = prepareRender;
+        this[_prepareRender] = prepareRender;
       }
     }
   }
@@ -32376,14 +32378,14 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       if (this.canvas.draw) this.canvas.draw();
     }
 
-    if (this.prepareRender) {
-      if (this.prepareRender._requestID) {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this.prepareRender._requestID);
+    if (this[_prepareRender]) {
+      if (this[_prepareRender]._requestID) {
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
       }
 
-      this.prepareRender._resolve();
+      this[_prepareRender]._resolve();
 
-      delete this.prepareRender;
+      delete this[_prepareRender];
     }
   }
   /* override */

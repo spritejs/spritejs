@@ -13,6 +13,8 @@ const _autoRender = Symbol('autoRender');
 const _renderer = Symbol('renderer');
 const _timeline = Symbol('timeline');
 
+const _prepareRender = Symbol('prepareRender');
+
 export default class Layer extends Group {
   constructor(options = {}) {
     super();
@@ -72,7 +74,9 @@ export default class Layer extends Group {
     return !!this.options.offscreen || this.canvas._offscreen;
   }
 
-  /* prepareRender */
+  get prepareRender() {
+    return this[_prepareRender] ? this[_prepareRender] : Promise.resolve();
+  }
 
   /* override */
   get renderer() {
@@ -118,7 +122,7 @@ export default class Layer extends Group {
 
   /* override */
   forceUpdate() {
-    if(!this.prepareRender) {
+    if(!this[_prepareRender]) {
       if(this.parent && this.parent.hasOffscreenCanvas) {
         this.parent.forceUpdate();
         let _resolve = null;
@@ -126,7 +130,7 @@ export default class Layer extends Group {
           _resolve = resolve;
         });
         prepareRender._resolve = _resolve;
-        this.prepareRender = prepareRender;
+        this[_prepareRender] = prepareRender;
       } else {
         let _resolve = null;
         let _requestID = null;
@@ -144,7 +148,7 @@ export default class Layer extends Group {
         prepareRender._resolve = _resolve;
         prepareRender._requestID = _requestID;
 
-        this.prepareRender = prepareRender;
+        this[_prepareRender] = prepareRender;
       }
     }
   }
@@ -164,12 +168,12 @@ export default class Layer extends Group {
       this.renderer.drawMeshes(meshes);
       if(this.canvas.draw) this.canvas.draw();
     }
-    if(this.prepareRender) {
-      if(this.prepareRender._requestID) {
-        cancelAnimationFrame(this.prepareRender._requestID);
+    if(this[_prepareRender]) {
+      if(this[_prepareRender]._requestID) {
+        cancelAnimationFrame(this[_prepareRender]._requestID);
       }
-      this.prepareRender._resolve();
-      delete this.prepareRender;
+      this[_prepareRender]._resolve();
+      delete this[_prepareRender];
     }
   }
 

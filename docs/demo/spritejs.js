@@ -32909,39 +32909,37 @@ function (_Block) {
       var _this = this;
 
       if (!this[_textImageTask]) {
-        this[_textImageTask] = new Promise(function (resolve) {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(function () {
-            _this[_textImageTask] = null;
-            var _this$attributes3 = _this.attributes,
-                text = _this$attributes3.text,
-                font = _this$attributes3.font,
-                fillColor = _this$attributes3.fillColor,
-                strokeColor = _this$attributes3.strokeColor,
-                strokeWidth = _this$attributes3.strokeWidth;
+        this[_textImageTask] = Promise.resolve().then(function () {
+          _this[_textImageTask] = null;
+          var _this$attributes3 = _this.attributes,
+              text = _this$attributes3.text,
+              font = _this$attributes3.font,
+              fillColor = _this$attributes3.fillColor,
+              strokeColor = _this$attributes3.strokeColor,
+              strokeWidth = _this$attributes3.strokeWidth;
 
-            if (_mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createText) {
-              _this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createText(text, {
-                font: font,
-                fillColor: fillColor,
-                strokeColor: strokeColor,
-                strokeWidth: strokeWidth,
-                parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["parseFont"]
-              });
-            } else {
-              _this[_textImage] = Object(_mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["createText"])(text, {
-                font: font,
-                fillColor: fillColor,
-                strokeColor: strokeColor,
-                strokeWidth: strokeWidth
-              });
-            }
+          if (_mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createText) {
+            _this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createText(text, {
+              font: font,
+              fillColor: fillColor,
+              strokeColor: strokeColor,
+              strokeWidth: strokeWidth,
+              parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["parseFont"]
+            });
+          } else {
+            _this[_textImage] = Object(_mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["createText"])(text, {
+              font: font,
+              fillColor: fillColor,
+              strokeColor: strokeColor,
+              strokeWidth: strokeWidth
+            });
+          }
 
-            _this.updateContours();
+          _this.updateContours();
 
-            _this.forceUpdate();
+          _this.forceUpdate();
 
-            resolve(_this[_textImage]);
-          });
+          return _this[_textImage];
         });
       }
     }
@@ -36460,6 +36458,8 @@ var _renderer = Symbol('renderer');
 
 var _timeline = Symbol('timeline');
 
+var _prepareRender = Symbol('prepareRender');
+
 var Layer =
 /*#__PURE__*/
 function (_Group) {
@@ -36549,7 +36549,7 @@ function (_Group) {
     value: function forceUpdate() {
       var _this2 = this;
 
-      if (!this.prepareRender) {
+      if (!this[_prepareRender]) {
         if (this.parent && this.parent.hasOffscreenCanvas) {
           this.parent.forceUpdate();
           var _resolve = null;
@@ -36557,26 +36557,26 @@ function (_Group) {
             _resolve = resolve;
           });
           prepareRender._resolve = _resolve;
-          this.prepareRender = prepareRender;
+          this[_prepareRender] = prepareRender;
         } else {
           var _resolve2 = null;
           var _requestID = null;
 
-          var _prepareRender = new Promise(function (resolve) {
+          var _prepareRender2 = new Promise(function (resolve) {
             _resolve2 = resolve;
 
             if (_this2[_autoRender]) {
               _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(function () {
-                delete _prepareRender._requestID;
+                delete _prepareRender2._requestID;
 
                 _this2.render();
               });
             }
           });
 
-          _prepareRender._resolve = _resolve2;
-          _prepareRender._requestID = _requestID;
-          this.prepareRender = _prepareRender;
+          _prepareRender2._resolve = _resolve2;
+          _prepareRender2._requestID = _requestID;
+          this[_prepareRender] = _prepareRender2;
         }
       }
     }
@@ -36606,14 +36606,14 @@ function (_Group) {
         if (this.canvas.draw) this.canvas.draw();
       }
 
-      if (this.prepareRender) {
-        if (this.prepareRender._requestID) {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["cancelAnimationFrame"])(this.prepareRender._requestID);
+      if (this[_prepareRender]) {
+        if (this[_prepareRender]._requestID) {
+          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
         }
 
-        this.prepareRender._resolve();
+        this[_prepareRender]._resolve();
 
-        delete this.prepareRender;
+        delete this[_prepareRender];
       }
     }
     /* override */
@@ -36730,8 +36730,11 @@ function (_Group) {
     get: function get() {
       return !!this.options.offscreen || this.canvas._offscreen;
     }
-    /* prepareRender */
-
+  }, {
+    key: "prepareRender",
+    get: function get() {
+      return this[_prepareRender] ? this[_prepareRender] : Promise.resolve();
+    }
     /* override */
 
   }, {

@@ -124,19 +124,17 @@ export default class Label extends Block {
 
   updateText() {
     if(!this[_textImageTask]) {
-      this[_textImageTask] = new Promise((resolve) => {
-        requestAnimationFrame(() => {
-          this[_textImageTask] = null;
-          const {text, font, fillColor, strokeColor, strokeWidth} = this.attributes;
-          if(ENV.createText) {
-            this[_textImage] = ENV.createText(text, {font, fillColor, strokeColor, strokeWidth, parseFont});
-          } else {
-            this[_textImage] = createText(text, {font, fillColor, strokeColor, strokeWidth});
-          }
-          this.updateContours();
-          this.forceUpdate();
-          resolve(this[_textImage]);
-        });
+      this[_textImageTask] = Promise.resolve().then(() => {
+        this[_textImageTask] = null;
+        const {text, font, fillColor, strokeColor, strokeWidth} = this.attributes;
+        if(ENV.createText) {
+          this[_textImage] = ENV.createText(text, {font, fillColor, strokeColor, strokeWidth, parseFont});
+        } else {
+          this[_textImage] = createText(text, {font, fillColor, strokeColor, strokeWidth});
+        }
+        this.updateContours();
+        this.forceUpdate();
+        return this[_textImage];
       });
     }
   }
