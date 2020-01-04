@@ -11541,7 +11541,7 @@ function createText(text, {
   strokeColor,
   strokeWidth
 }) {
-  const key = [text, font, String(fillColor), String(strokeColor)].join('###');
+  const key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
   let textCanvas = cacheMap[key];
   if (textCanvas) return textCanvas; // cannot use offscreen canvas because use offscreen canvas as texture will fail in early versions of Chrome.
 
@@ -28686,7 +28686,7 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
 
   onPropertyChange(key, newValue, oldValue) {
-    if (key === 'text' || key === 'fontSize' || key === 'fontFamily' || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight' || key === 'fontStretch' || key === 'lineHeight' || key === 'strokeColor' || key === 'fillColor') {
+    if (key === 'text' || key === 'fontSize' || key === 'fontFamily' || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight' || key === 'fontStretch' || key === 'lineHeight' || key === 'strokeColor' || key === 'fillColor' || key === 'strokeWidth') {
       this.updateText();
     } else {
       if (key === 'textAlign' || key === 'verticalAlign') {

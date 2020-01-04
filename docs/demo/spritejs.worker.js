@@ -13500,7 +13500,7 @@ function createText(text, _ref) {
       fillColor = _ref.fillColor,
       strokeColor = _ref.strokeColor,
       strokeWidth = _ref.strokeWidth;
-  var key = [text, font, String(fillColor), String(strokeColor)].join('###');
+  var key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
   var textCanvas = cacheMap[key];
   if (textCanvas) return textCanvas; // cannot use offscreen canvas because use offscreen canvas as texture will fail in early versions of Chrome.
 
@@ -32759,7 +32759,7 @@ function (_Block) {
   }, {
     key: "onPropertyChange",
     value: function onPropertyChange(key, newValue, oldValue) {
-      if (key === 'text' || key === 'fontSize' || key === 'fontFamily' || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight' || key === 'fontStretch' || key === 'lineHeight' || key === 'strokeColor' || key === 'fillColor') {
+      if (key === 'text' || key === 'fontSize' || key === 'fontFamily' || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight' || key === 'fontStretch' || key === 'lineHeight' || key === 'strokeColor' || key === 'fillColor' || key === 'strokeWidth') {
         this.updateText();
       } else {
         if (key === 'textAlign' || key === 'verticalAlign') {

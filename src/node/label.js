@@ -106,7 +106,8 @@ export default class Label extends Block {
     if(key === 'text' || key === 'fontSize' || key === 'fontFamily'
       || key === 'fontStyle' || key === 'fontVariant' || key === 'fontWeight'
       || key === 'fontStretch' || key === 'lineHeight'
-      || key === 'strokeColor' || key === 'fillColor') {
+      || key === 'strokeColor' || key === 'fillColor'
+      || key === 'strokeWidth') {
       this.updateText();
     } else {
       if(key === 'textAlign' || key === 'verticalAlign') {
