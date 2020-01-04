@@ -1,16 +1,22 @@
 "use strict";
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var _spritejs = spritejs,
     Scene = _spritejs.Scene,
     Sprite = _spritejs.Sprite;
 
-(function _callee() {
+_asyncToGenerator(
+/*#__PURE__*/
+regeneratorRuntime.mark(function _callee() {
   var birdsJsonUrl, birdsRes, scene, layer, bird, createRandomBlock, blocks, i;
-  return regeneratorRuntime.async(function _callee$(_context) {
+  return regeneratorRuntime.wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          createRandomBlock = function _ref() {
+          createRandomBlock = function _ref2() {
             var block = new Sprite();
             var x = Math.round(1540 * Math.random());
             var y = Math.round(600 * Math.random());
@@ -34,7 +40,7 @@ var _spritejs = spritejs,
           });
           layer = scene.layer('fglayer');
           _context.next = 7;
-          return regeneratorRuntime.awrap(scene.preload([birdsRes, birdsJsonUrl]));
+          return scene.preload([birdsRes, birdsJsonUrl]);
 
         case 7:
           bird = new Sprite('bird1.png');
@@ -87,5 +93,5 @@ var _spritejs = spritejs,
           return _context.stop();
       }
     }
-  });
-})();
+  }, _callee);
+}))();
