@@ -36592,6 +36592,19 @@ function (_Group) {
       }
     }
   }, {
+    key: "_prepareRenderFinished",
+    value: function _prepareRenderFinished() {
+      if (this[_prepareRender]) {
+        if (this[_prepareRender]._requestID) {
+          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+        }
+
+        this[_prepareRender]._resolve();
+
+        delete this[_prepareRender];
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -36606,15 +36619,7 @@ function (_Group) {
         if (this.canvas.draw) this.canvas.draw();
       }
 
-      if (this[_prepareRender]) {
-        if (this[_prepareRender]._requestID) {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
-        }
-
-        this[_prepareRender]._resolve();
-
-        delete this[_prepareRender];
-      }
+      this._prepareRenderFinished();
     }
     /* override */
 

@@ -32242,6 +32242,18 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     }
   }
 
+  _prepareRenderFinished() {
+    if (this[_prepareRender]) {
+      if (this[_prepareRender]._requestID) {
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+      }
+
+      this[_prepareRender]._resolve();
+
+      delete this[_prepareRender];
+    }
+  }
+
   render({
     clear = true
   } = {}) {
@@ -32253,15 +32265,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       if (this.canvas.draw) this.canvas.draw();
     }
 
-    if (this[_prepareRender]) {
-      if (this[_prepareRender]._requestID) {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
-      }
-
-      this[_prepareRender]._resolve();
-
-      delete this[_prepareRender];
-    }
+    this._prepareRenderFinished();
   }
   /* override */
 

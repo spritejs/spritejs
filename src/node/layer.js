@@ -161,13 +161,7 @@ export default class Layer extends Group {
     }
   }
 
-  render({clear = true} = {}) {
-    if(clear) this[_renderer].clear();
-    const meshes = this.draw();
-    if(meshes && meshes.length) {
-      this.renderer.drawMeshes(meshes);
-      if(this.canvas.draw) this.canvas.draw();
-    }
+  _prepareRenderFinished() {
     if(this[_prepareRender]) {
       if(this[_prepareRender]._requestID) {
         cancelAnimationFrame(this[_prepareRender]._requestID);
@@ -175,6 +169,16 @@ export default class Layer extends Group {
       this[_prepareRender]._resolve();
       delete this[_prepareRender];
     }
+  }
+
+  render({clear = true} = {}) {
+    if(clear) this[_renderer].clear();
+    const meshes = this.draw();
+    if(meshes && meshes.length) {
+      this.renderer.drawMeshes(meshes);
+      if(this.canvas.draw) this.canvas.draw();
+    }
+    this._prepareRenderFinished();
   }
 
   /* override */
