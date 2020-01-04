@@ -39,7 +39,7 @@ npm install canvas@next
 In browser with CDN:
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
+<script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script>
 ```
 
 ## Architecture
