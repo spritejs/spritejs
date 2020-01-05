@@ -58,10 +58,6 @@ children的别名
 
 元素内容大小。
 
-##### _readonly_ hasBackground
-
-是否有填充背景，borderColor 不为 undefined 返回 true。
-
 ##### _readonly_ hasBorder
 
 是否有设定边框，borderWidth > 0 且 borderColor 不为 undefined 返回 true。

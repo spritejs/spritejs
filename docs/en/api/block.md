@@ -75,10 +75,6 @@ Element's content box size, equal to `content + padding`.
 
 Element's content size.
 
-##### _readonly_ hasBackground
-
-If there is a background.
-
 ##### _readonly_ hasBorder
 
 If there is a border.
