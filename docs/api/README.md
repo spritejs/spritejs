@@ -29,7 +29,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 ## Quick Start
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -51,7 +51,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 With Document CSS
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 <div id="container"></div>
 <style>
   sprite.myclass {
@@ -125,7 +125,7 @@ ReactDOM.render(
 In browser:
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 ```
 
 With NPM:

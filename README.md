@@ -37,7 +37,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 **SpriteJS** - v2.spritejs.org
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 <div id="container"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
@@ -59,7 +59,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 **With Document CSS** - Just set `useDocumentCSS` option to true, spritejs will auto load style rules from the document.
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 <div id="container"></div>
 <style>
   sprite.myclass {
@@ -163,7 +163,7 @@ export default {
 In browser:
 
 ```html
-<script src="https://unpkg.com/spritejs/dist/spritejs.min.js"></script>
+<script src="https://unpkg.com/spritejs@2/dist/spritejs.min.js"></script>
 ```
 
 With NPM:
