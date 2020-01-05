@@ -16,7 +16,7 @@ scene.layer('fglayer', {worker: './worker.js'});
 
 ```js
 // worker.js
-importScripts('https://unpkg.com/@spritejs/next/dist/spritejs.worker.js');
+importScripts('https://unpkg.com/spritejs@3/dist/spritejs.worker.js');
 
 const textureURL = 'https://p4.ssl.qhimg.com/t012170360e1552ce17.png';
 
