@@ -25081,10 +25081,6 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
     return [width, height];
   }
 
-  get hasBackground() {
-    return !!this.attributes.bgcolor;
-  }
-
   get hasBorder() {
     const borderWidth = this.attributes.borderWidth;
     return borderWidth > 0;
@@ -25108,12 +25104,9 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
         mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](box, this.getResolution());
         mesh.box = box;
         const fillColor = this.attributes.bgcolor;
-
-        if (this.hasBackground) {
-          Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setFillColor"])(mesh, {
-            color: fillColor
-          });
-        }
+        Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setFillColor"])(mesh, {
+          color: fillColor
+        });
 
         if (this.hasBorder) {
           const {
@@ -25316,7 +25309,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
       borderBottomLeftRadius: [0, 0],
 
       /* borderRadius */
-      bgcolor: undefined,
+      bgcolor: 'rgba(0,0,0,0)',
       paddingTop: 0,
       paddingRight: 0,
       paddingBottom: 0,
@@ -28663,8 +28656,11 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
             paddingLeft,
             paddingTop
           } = this.attributes;
-          x += paddingLeft;
-          y += paddingTop;
+          const {
+            borderWidth
+          } = this.attributes;
+          x += paddingLeft + borderWidth;
+          y += paddingTop + borderWidth;
           const {
             anchorX,
             anchorY
@@ -29018,11 +29014,6 @@ class Group extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
   /* override */
   // get isVisible() {
   //   return this.attributes.opacity > 0 && this[_children].length > 0;
-  // }
-
-  /* override */
-  // get hasBackground() {
-  //   return this[_children].length > 0;
   // }
 
   /* override */

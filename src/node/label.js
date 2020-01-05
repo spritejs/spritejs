@@ -81,9 +81,10 @@ export default class Label extends Block {
             y = (h - height) / 2;
           }
           const {paddingLeft, paddingTop} = this.attributes;
+          const {borderWidth} = this.attributes;
 
-          x += paddingLeft;
-          y += paddingTop;
+          x += paddingLeft + borderWidth;
+          y += paddingTop + borderWidth;
 
           const {anchorX, anchorY} = this.attributes;
 

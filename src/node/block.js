@@ -46,10 +46,6 @@ export default class Block extends Node {
     return [width, height];
   }
 
-  get hasBackground() {
-    return !!this.attributes.bgcolor;
-  }
-
   get hasBorder() {
     const borderWidth = this.attributes.borderWidth;
     return borderWidth > 0;
@@ -70,9 +66,7 @@ export default class Block extends Node {
         mesh = new Mesh2D(box, this.getResolution());
         mesh.box = box;
         const fillColor = this.attributes.bgcolor;
-        if(this.hasBackground) {
-          setFillColor(mesh, {color: fillColor});
-        }
+        setFillColor(mesh, {color: fillColor});
         if(this.hasBorder) {
           const {borderColor, borderWidth, borderDash, borderDashOffset} = this.attributes;
           setStrokeColor(mesh,

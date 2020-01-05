@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 1200px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+      mode: 'stickyHeight',
+      // contextType: '2d',
+    });
+
+    const fglayer = scene.layer('fglayer');
+
+    const b = new spritejs.Label('abc');
+    b.attr({
+      font: '48px Arial',
+      // bgcolor: 'blue',
+      border: [10, 'red'],
+      // boxSizing: 'border-box',
+    });
+    fglayer.appendChild(b);
+
+    const trans = b.transition(2.0);
+    trans.attr({
+      bgcolor: 'red',
+    });
+  </script>
+</body>
+</html>

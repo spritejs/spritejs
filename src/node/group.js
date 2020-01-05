@@ -65,11 +65,6 @@ export default class Group extends Block {
   // }
 
   /* override */
-  // get hasBackground() {
-  //   return this[_children].length > 0;
-  // }
-
-  /* override */
   cloneNode(deep = false) {
     const node = super.cloneNode();
     if(deep) {

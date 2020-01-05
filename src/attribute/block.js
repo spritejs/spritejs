@@ -28,7 +28,7 @@ export default class Block extends Node {
       borderBottomRightRadius: [0, 0],
       borderBottomLeftRadius: [0, 0],
       /* borderRadius */
-      bgcolor: undefined,
+      bgcolor: 'rgba(0,0,0,0)',
       paddingTop: 0,
       paddingRight: 0,
       paddingBottom: 0,

@@ -28251,11 +28251,6 @@ function (_Node) {
       return [width, height];
     }
   }, {
-    key: "hasBackground",
-    get: function get() {
-      return !!this.attributes.bgcolor;
-    }
-  }, {
     key: "hasBorder",
     get: function get() {
       var borderWidth = this.attributes.borderWidth;
@@ -28287,12 +28282,9 @@ function (_Node) {
           mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Mesh2D"](box, this.getResolution());
           mesh.box = box;
           var fillColor = this.attributes.bgcolor;
-
-          if (this.hasBackground) {
-            Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(mesh, {
-              color: fillColor
-            });
-          }
+          Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(mesh, {
+            color: fillColor
+          });
 
           if (this.hasBorder) {
             var _this$attributes6 = this.attributes,
@@ -28444,7 +28436,7 @@ function (_Node) {
       borderBottomLeftRadius: [0, 0],
 
       /* borderRadius */
-      bgcolor: undefined,
+      bgcolor: 'rgba(0,0,0,0)',
       paddingTop: 0,
       paddingRight: 0,
       paddingBottom: 0,
@@ -32736,8 +32728,9 @@ function (_Block) {
             var _this$attributes = this.attributes,
                 paddingLeft = _this$attributes.paddingLeft,
                 paddingTop = _this$attributes.paddingTop;
-            x += paddingLeft;
-            y += paddingTop;
+            var borderWidth = this.attributes.borderWidth;
+            x += paddingLeft + borderWidth;
+            y += paddingTop + borderWidth;
             var _this$attributes2 = this.attributes,
                 anchorX = _this$attributes2.anchorX,
                 anchorY = _this$attributes2.anchorY;
@@ -33186,11 +33179,6 @@ function (_Block) {
     /* override */
     // get isVisible() {
     //   return this.attributes.opacity > 0 && this[_children].length > 0;
-    // }
-
-    /* override */
-    // get hasBackground() {
-    //   return this[_children].length > 0;
     // }
 
     /* override */
