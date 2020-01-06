@@ -28,7 +28,7 @@ import LayerWorker from './node/layer-worker';
 import Scene from './node/scene';
 import ownerDocument from './document';
 
-import {parseColor, Gradient} from './utils/color';
+import {parseColor, Gradient, Color} from './utils/color';
 import {sizeToPixel, toArray, toString, toNumber} from './utils/attribute_value';
 
 const createElement = ownerDocument.createElement;
@@ -41,6 +41,7 @@ export {
   Arc,
   Block,
   Cloud,
+  Color,
   Ellipse,
   Gradient,
   Group,

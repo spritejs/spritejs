@@ -1,6 +1,6 @@
 import rgba from 'color-rgba';
 
-class Gradient {
+export class Gradient {
   constructor({vector, colors}) {
     if(!Array.isArray(vector) || (vector.length !== 4 && vector.length !== 6 && vector.length !== 3)) {
       throw new TypeError('Invalid gradient');
@@ -31,8 +31,6 @@ export function parseColor(color) {
   if(!ret || !ret.length) throw new TypeError('Invalid color value.');
   return `rgba(${ret.join()})`;
 }
-
-export {Gradient};
 
 function applyMeshGradient(mesh, type, color) {
   const vectorOffset = mesh.boundingBox[0];
@@ -87,4 +85,74 @@ export function setStrokeColor(mesh,
     lineDash,
     lineDashOffset,
   });
+}
+
+export class Color extends Array {
+  constructor(r = 0, g = 0, b = 0, a = 0) {
+    if(typeof r === 'string') [r, g, b, a] = rgba(r);
+    super(r / 255, g / 255, b / 255, a);
+    return this;
+  }
+
+  get r() {
+    return Math.round(this[0] * 255);
+  }
+
+  set r(v) {
+    this[0] = v / 255;
+  }
+
+  get g() {
+    return Math.round(this[1] * 255);
+  }
+
+  set g(v) {
+    this[1] = v / 255;
+  }
+
+  get b() {
+    return Math.round(this[2] * 255);
+  }
+
+  set b(v) {
+    this[2] = v / 255;
+  }
+
+  get a() {
+    return this[3];
+  }
+
+  set a(v) {
+    this[3] = v;
+  }
+
+  get hex() {
+    const r = `0${this.r.toString(16)}`.slice(-2);
+    const g = `0${this.g.toString(16)}`.slice(-2);
+    const b = `0${this.b.toString(16)}`.slice(-2);
+    let a;
+    if(this.a < 1) {
+      a = Math.round(this[3] * 255);
+      a = `0${a.toString(16)}`.slice(-2);
+    }
+    return `#${r}${g}${b}${a || ''}`;
+  }
+
+  get rgba() {
+    return `rgba(${this.r},${this.g},${this.b},${this.a})`;
+  }
+
+  fromColor(color) {
+    if(typeof color === 'string') {
+      color = rgba(color);
+      color[0] /= 255;
+      color[1] /= 255;
+      color[2] /= 255;
+    }
+    this[0] = color[0];
+    this[1] = color[1];
+    this[2] = color[2];
+    this[3] = color[3];
+    return this;
+  }
 }

@@ -25554,15 +25554,15 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return Gradient; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTransparent", function() { return isTransparent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseColor", function() { return parseColor; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return Gradient; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setFillColor", function() { return setFillColor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setStrokeColor", function() { return setStrokeColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return Color; });
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(32);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(color_rgba__WEBPACK_IMPORTED_MODULE_0__);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
 
 
 class Gradient {
@@ -25594,7 +25594,6 @@ class Gradient {
   }
 
 }
-
 function isTransparent(color) {
   if (color instanceof Gradient) return false;
   if (color == null) return true;
@@ -25609,7 +25608,6 @@ function parseColor(color) {
   if (!ret || !ret.length) throw new TypeError('Invalid color value.');
   return `rgba(${ret.join()})`;
 }
-
 
 function applyMeshGradient(mesh, type, color) {
   const vectorOffset = mesh.boundingBox[0];
@@ -25685,6 +25683,79 @@ function setStrokeColor(mesh, {
     lineDash,
     lineDashOffset
   });
+}
+class Color extends Array {
+  constructor(r = 0, g = 0, b = 0, a = 0) {
+    if (typeof r === 'string') [r, g, b, a] = color_rgba__WEBPACK_IMPORTED_MODULE_0___default()(r);
+    super(r / 255, g / 255, b / 255, a);
+    return this;
+  }
+
+  get r() {
+    return Math.round(this[0] * 255);
+  }
+
+  set r(v) {
+    this[0] = v / 255;
+  }
+
+  get g() {
+    return Math.round(this[1] * 255);
+  }
+
+  set g(v) {
+    this[1] = v / 255;
+  }
+
+  get b() {
+    return Math.round(this[2] * 255);
+  }
+
+  set b(v) {
+    this[2] = v / 255;
+  }
+
+  get a() {
+    return this[3];
+  }
+
+  set a(v) {
+    this[3] = v;
+  }
+
+  get hex() {
+    const r = `0${this.r.toString(16)}`.slice(-2);
+    const g = `0${this.g.toString(16)}`.slice(-2);
+    const b = `0${this.b.toString(16)}`.slice(-2);
+    let a;
+
+    if (this.a < 1) {
+      a = Math.round(this[3] * 255);
+      a = `0${a.toString(16)}`.slice(-2);
+    }
+
+    return `#${r}${g}${b}${a || ''}`;
+  }
+
+  get rgba() {
+    return `rgba(${this.r},${this.g},${this.b},${this.a})`;
+  }
+
+  fromColor(color) {
+    if (typeof color === 'string') {
+      color = color_rgba__WEBPACK_IMPORTED_MODULE_0___default()(color);
+      color[0] /= 255;
+      color[1] /= 255;
+      color[2] /= 255;
+    }
+
+    this[0] = color[0];
+    this[1] = color[1];
+    this[2] = color[2];
+    this[3] = color[3];
+    return this;
+  }
+
 }
 
 /***/ }),
