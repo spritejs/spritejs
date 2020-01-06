@@ -1,5 +1,4 @@
 import {ENV, createText, parseFont} from '@mesh.js/core';
-import {requestAnimationFrame} from '../utils/animation-frame';
 import {createTexture} from '../utils/texture';
 import Block from './block';
 import Attr from '../attribute/label';
@@ -72,14 +71,16 @@ export default class Label extends Block {
             x = w - width;
           }
 
-          let y;
+          const fontHeight = this.attributes.fontSize;
+          const lineHeight = this.attributes.lineHeight;
+
+          let y = 0; // middle
           if(verticalAlign === 'top') {
-            y = 0;
+            y = (fontHeight - lineHeight) / 2;
           } else if(verticalAlign === 'bottom') {
-            y = h - height;
-          } else {
-            y = (h - height) / 2;
+            y = (lineHeight - fontHeight) / 2;
           }
+
           const {paddingLeft, paddingTop} = this.attributes;
           const {borderWidth} = this.attributes;
 

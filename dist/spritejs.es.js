@@ -11698,7 +11698,7 @@ function createText(text, {
   textContext.font = fontEx(fontInfo, ratio);
   textContext.textAlign = 'center';
   textContext.textBaseline = 'middle';
-  const top = canvas.height * 0.57;
+  const top = canvas.height * 0.5 + fontInfo.pxHeight * 0.13;
   const left = canvas.width * 0.5;
 
   if (fillColor) {
@@ -28674,15 +28674,13 @@ class Ring extends _path__WEBPACK_IMPORTED_MODULE_1__["default"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Label; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(76);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(226);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(227);
-/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(257);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(221);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(226);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
+/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(257);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 
 
@@ -28698,7 +28696,7 @@ const _textureContext = Symbol('textureContext');
 
 const _updateTextureRect = Symbol('updateTextureRect');
 
-class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
+class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
   constructor(attrs = {}) {
     if (typeof attrs === 'string') attrs = {
       text: attrs
@@ -28748,7 +28746,7 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
         let texture = mesh.texture;
 
         if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || texture.image !== textImage.image) {
-          texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_2__["createTexture"])(textImage.image, this.renderer);
+          texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_1__["createTexture"])(textImage.image, this.renderer);
           this[_updateTextureRect] = true;
         } else {
           texture = mesh.uniforms.u_texSampler;
@@ -28767,14 +28765,14 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
             x = w - width;
           }
 
-          let y;
+          const fontHeight = this.attributes.fontSize;
+          const lineHeight = this.attributes.lineHeight;
+          let y = 0; // middle
 
           if (verticalAlign === 'top') {
-            y = 0;
+            y = (fontHeight - lineHeight) / 2;
           } else if (verticalAlign === 'bottom') {
-            y = h - height;
-          } else {
-            y = (h - height) / 2;
+            y = (lineHeight - fontHeight) / 2;
           }
 
           const {
@@ -28863,9 +28861,9 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
 }
 
-_defineProperty(Label, "Attr", _attribute_label__WEBPACK_IMPORTED_MODULE_4__["default"]);
+_defineProperty(Label, "Attr", _attribute_label__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-_document__WEBPACK_IMPORTED_MODULE_5__["default"].registerNode(Label, 'label');
+_document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Label, 'label');
 
 /***/ }),
 /* 257 */

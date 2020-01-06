@@ -13533,7 +13533,7 @@ function createText(text, _ref) {
   textContext.font = fontEx(fontInfo, ratio);
   textContext.textAlign = 'center';
   textContext.textBaseline = 'middle';
-  var top = canvas.height * 0.57;
+  var top = canvas.height * 0.5 + fontInfo.pxHeight * 0.13;
   var left = canvas.width * 0.5;
 
   if (fillColor) {
@@ -32624,11 +32624,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(56);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(12);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(104);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(263);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(264);
-/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(295);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(258);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(263);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(264);
+/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(295);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(258);
 
 
 
@@ -32639,7 +32638,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
 
 
 
@@ -32689,7 +32687,7 @@ function (_Block) {
           var texture = mesh.texture;
 
           if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || texture.image !== textImage.image) {
-            texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_10__["createTexture"])(textImage.image, this.renderer);
+            texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_9__["createTexture"])(textImage.image, this.renderer);
             this[_updateTextureRect] = true;
           } else {
             texture = mesh.uniforms.u_texSampler;
@@ -32715,14 +32713,14 @@ function (_Block) {
               x = w - width;
             }
 
-            var y;
+            var fontHeight = this.attributes.fontSize;
+            var lineHeight = this.attributes.lineHeight;
+            var y = 0; // middle
 
             if (verticalAlign === 'top') {
-              y = 0;
+              y = (fontHeight - lineHeight) / 2;
             } else if (verticalAlign === 'bottom') {
-              y = h - height;
-            } else {
-              y = (h - height) / 2;
+              y = (lineHeight - fontHeight) / 2;
             }
 
             var _this$attributes = this.attributes,
@@ -32845,12 +32843,12 @@ function (_Block) {
   }]);
 
   return Label;
-}(_block__WEBPACK_IMPORTED_MODULE_11__["default"]);
+}(_block__WEBPACK_IMPORTED_MODULE_10__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Label, "Attr", _attribute_label__WEBPACK_IMPORTED_MODULE_12__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(Label, "Attr", _attribute_label__WEBPACK_IMPORTED_MODULE_11__["default"]);
 
 
-_document__WEBPACK_IMPORTED_MODULE_13__["default"].registerNode(Label, 'label');
+_document__WEBPACK_IMPORTED_MODULE_12__["default"].registerNode(Label, 'label');
 
 /***/ }),
 /* 295 */

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+  const {Scene, Label} = spritejs;
+  const container = document.getElementById('container');
+  const scene = new Scene({
+    container,
+    width: 600,
+    height: 600,
+  });
+
+  const button = new Label('Press');
+  button.attr({
+    anchor: 0.5,
+    pos: [200, 300],
+    size: [200, 300],
+    font: '64px Arial',
+    textAlign: 'center',
+    lineHeight: 100,
+    border: [6, '#333'],
+    borderRadius: 20,
+    fillColor: '#000',
+  });
+
+  scene.layer().append(button);
+
+  const transition = button.transition(0.5);
+  button.addEventListener('mouseenter', (evt) => {
+    transition.attr({
+      bgcolor: '#666',
+      fillColor: '#fff',
+    });
+  });
+
+  button.addEventListener('mouseleave', (evt) => {
+    transition.reverse();
+  });
+
+  button.addEventListener('mousedown', (evt) => {
+    button.attr({scale: 0.9});
+  });
+
+  button.addEventListener('mouseup', (evt) => {
+    button.attr({scale: 1.0});
+  });
+  </script>
+</body>
+</html>
