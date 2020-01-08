@@ -19013,7 +19013,7 @@ class Node {
       this.forceUpdate();
     }
 
-    if (this.mesh) this.mesh.setResolution({
+    if (this.mesh && this.mesh.setResolution) this.mesh.setResolution({
       width,
       height
     });

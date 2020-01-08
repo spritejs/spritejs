@@ -407,7 +407,7 @@ export default class Node {
       this.updateContours();
       this.forceUpdate();
     }
-    if(this.mesh) this.mesh.setResolution({width, height});
+    if(this.mesh && this.mesh.setResolution) this.mesh.setResolution({width, height});
   }
 
   show() {
