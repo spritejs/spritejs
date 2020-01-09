@@ -13533,7 +13533,7 @@ function createText(text, _ref) {
   textContext.font = fontEx(fontInfo, ratio);
   textContext.textAlign = 'center';
   textContext.textBaseline = 'middle';
-  var top = canvas.height * 0.5 + fontInfo.pxHeight * 0.13;
+  var top = canvas.height * 0.5 + fontInfo.pxHeight * 0.1;
   var left = canvas.width * 0.5;
 
   if (fillColor) {
@@ -33131,7 +33131,7 @@ function (_Block) {
     _this[setDefault]({
       text: '',
       fontSize: 16,
-      fontFamily: 'sans-serif',
+      fontFamily: 'Helvetica,Arial,sans-serif',
       fontStyle: 'normal',
       fontVariant: 'normal',
       fontWeight: 'normal',

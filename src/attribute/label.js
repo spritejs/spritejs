@@ -14,7 +14,7 @@ export default class Label extends Block {
     this[setDefault]({
       text: '',
       fontSize: 16,
-      fontFamily: 'sans-serif',
+      fontFamily: 'Helvetica,Arial,sans-serif',
       fontStyle: 'normal',
       fontVariant: 'normal',
       fontWeight: 'normal',

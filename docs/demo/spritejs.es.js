@@ -11700,7 +11700,7 @@ function createText(text, {
   textContext.font = fontEx(fontInfo, ratio);
   textContext.textAlign = 'center';
   textContext.textBaseline = 'middle';
-  const top = canvas.height * 0.5 + fontInfo.pxHeight * 0.13;
+  const top = canvas.height * 0.5 + fontInfo.pxHeight * 0.1;
   const left = canvas.width * 0.5;
 
   if (fillColor) {
@@ -28975,7 +28975,7 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
     this[setDefault]({
       text: '',
       fontSize: 16,
-      fontFamily: 'sans-serif',
+      fontFamily: 'Helvetica,Arial,sans-serif',
       fontStyle: 'normal',
       fontVariant: 'normal',
       fontWeight: 'normal',
