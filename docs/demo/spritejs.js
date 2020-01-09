@@ -28989,6 +28989,17 @@ function (_Array) {
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_6___default()(this, Color);
 
+    if (Array.isArray(r)) {
+      var _r = r;
+
+      var _r2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_r, 4);
+
+      r = _r2[0];
+      g = _r2[1];
+      b = _r2[2];
+      a = _r2[3];
+    }
+
     if (typeof r === 'string') {
       var _rgba = color_rgba__WEBPACK_IMPORTED_MODULE_8___default()(r);
 
@@ -28998,9 +29009,12 @@ function (_Array) {
       g = _rgba2[1];
       b = _rgba2[2];
       a = _rgba2[3];
+      r /= 255;
+      g /= 255;
+      b /= 255;
     }
 
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default()(Color).call(this, r / 255, g / 255, b / 255, a));
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_2___default()(Color).call(this, r, g, b, a));
     return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_1___default()(_this, _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3___default()(_this));
   }
 

@@ -89,8 +89,16 @@ export function setStrokeColor(mesh,
 
 export class Color extends Array {
   constructor(r = 0, g = 0, b = 0, a = 0) {
-    if(typeof r === 'string') [r, g, b, a] = rgba(r);
-    super(r / 255, g / 255, b / 255, a);
+    if(Array.isArray(r)) {
+      [r, g, b, a] = r;
+    }
+    if(typeof r === 'string') {
+      [r, g, b, a] = rgba(r);
+      r /= 255;
+      g /= 255;
+      b /= 255;
+    }
+    super(r, g, b, a);
     return this;
   }
 
