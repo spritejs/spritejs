@@ -23,11 +23,11 @@ describe('attribute set get', () => {
   });
 
   test('fontFamily', () => {
-    expect(attr.fontFamily).toBe('sans-serif');
+    expect(attr.fontFamily).toBe('Helvetica,Arial,sans-serif');
     attr.fontFamily = 'Arial';
     expect(attr.fontFamily).toBe('Arial');
     attr.fontFamily = null;
-    expect(attr.fontFamily).toBe('sans-serif');
+    expect(attr.fontFamily).toBe('Helvetica,Arial,sans-serif');
   });
 
   test('fontStyle', () => {
@@ -115,7 +115,7 @@ describe('attribute set get', () => {
   });
 
   test('font', () => {
-    expect(attr.font).toBe('normal normal normal normal 16px/16px sans-serif');
+    expect(attr.font).toBe('normal normal normal normal 16px/16px Helvetica,Arial,sans-serif');
     attr.fontFamily = 'Arial';
     attr.fontWeight = 'bold';
     attr.fontSize = '1.5rem';
@@ -127,6 +127,6 @@ describe('attribute set get', () => {
     expect(attr.lineHeight).toBe(18);
     expect(attr.fontFamily).toBe('"楷体"');
     attr.font = null;
-    expect(attr.font).toBe('normal normal normal normal 16px/16px sans-serif');
+    expect(attr.font).toBe('normal normal normal normal 16px/16px Helvetica,Arial,sans-serif');
   });
 });
