@@ -27852,7 +27852,7 @@ function _applyTexture() {
               textureImage = loadTexture(image);
             }
 
-            if (!(typeof textureImage.then === 'function')) {
+            if (!(textureImage && typeof textureImage.then === 'function')) {
               _context.next = 6;
               break;
             }
@@ -27865,7 +27865,7 @@ function _applyTexture() {
 
           case 6:
             if (image === node.attributes.texture) {
-              if (textureImage.image) {
+              if (textureImage && textureImage.image) {
                 if (textureImage.sourceRect) {
                   node.attributes.sourceRect = textureImage.sourceRect;
                 }
@@ -27918,9 +27918,9 @@ var _textureContext = Symbol('textureContext');
 function drawTexture(node, mesh) {
   var textureImage = node.textureImage;
   var textureImageRotated = node.textureImageRotated;
+  var texture = mesh.texture;
 
   if (textureImage) {
-    var texture = mesh.texture;
     var contentRect = node.originalContentRect;
     var textureRect = node.attributes.textureRect;
     var textureRepeat = node.attributes.textureRepeat;
@@ -27944,6 +27944,8 @@ function drawTexture(node, mesh) {
       });
       node[_textureContext] = node.renderer;
     }
+  } else if (texture) {
+    mesh.setTexture(null);
   }
 }
 /**

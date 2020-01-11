@@ -25004,12 +25004,12 @@ async function applyTexture(node, image, updateContours) {
     textureImage = loadTexture(image);
   }
 
-  if (typeof textureImage.then === 'function') {
+  if (textureImage && typeof textureImage.then === 'function') {
     textureImage = await textureImage;
   }
 
   if (image === node.attributes.texture) {
-    if (textureImage.image) {
+    if (textureImage && textureImage.image) {
       if (textureImage.sourceRect) {
         node.attributes.sourceRect = textureImage.sourceRect;
       }
@@ -25057,9 +25057,9 @@ const _textureContext = Symbol('textureContext');
 function drawTexture(node, mesh) {
   const textureImage = node.textureImage;
   const textureImageRotated = node.textureImageRotated;
+  const texture = mesh.texture;
 
   if (textureImage) {
-    const texture = mesh.texture;
     const contentRect = node.originalContentRect;
     let textureRect = node.attributes.textureRect;
     const textureRepeat = node.attributes.textureRepeat;
@@ -25083,6 +25083,8 @@ function drawTexture(node, mesh) {
       });
       node[_textureContext] = node.renderer;
     }
+  } else if (texture) {
+    mesh.setTexture(null);
   }
 }
 /**
