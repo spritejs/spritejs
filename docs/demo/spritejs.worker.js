@@ -7941,6 +7941,12 @@ function () {
     if (contextType === 'webgl' || contextType === 'webgl2') {
       if (contextType === 'webgl2') this[_options].webgl2 = true;
       var renderer = new gl_renderer__WEBPACK_IMPORTED_MODULE_4__["default"](canvas, this[_options]);
+
+      if (contextType === 'webgl2' && !renderer.isWebGL2) {
+        // webgl2 may disabled by browser settings
+        opts.contextType = 'webgl';
+      }
+
       Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_15__["createShaders"])(renderer);
       Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_15__["applyShader"])(renderer);
       Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_15__["createCloudShaders"])(renderer);
@@ -8764,7 +8770,9 @@ function () {
 
     if (this.options.webgl2) {
       gl = canvas.getContext('webgl2', this.options);
-    } else {
+    }
+
+    if (gl == null) {
       gl = Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["setupWebGL"])(canvas, this.options);
       this.aia_ext = gl.getExtension('ANGLE_instanced_arrays');
     }
