@@ -4,10 +4,8 @@ import Node from './node';
 import Attr from '../attribute/path';
 import {setFillColor, setStrokeColor} from '../utils/color';
 import {applyTexture, drawTexture} from '../utils/texture';
-import {applyFilters} from '../utils/filter';
 import ownerDocument from '../document';
 import getBoundingBox from '../utils/bounding_box';
-import applyRenderEvent from '../utils/render_event';
 
 const _mesh = Symbol('mesh');
 

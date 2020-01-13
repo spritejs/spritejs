@@ -19831,12 +19831,17 @@ function parseValue(v) {
   if (typeof v === 'string') {
     v = v.trim();
     if (/%$/.test(v)) return parseFloat(v) / 100;
-    if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v);
-    const c = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(v);
-    return c.length > 0 ? c : v;
+    if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v); // const c = rgba(v);
+    // return c.length > 0 ? c : v;
   }
 
   return v;
+}
+
+function colorEffect(from, to, p, s, e) {
+  if (typeof from === 'string') from = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(from);
+  if (typeof to === 'string') to = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(to);
+  return sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default(from, to, p, s, e);
 }
 
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default = function (from, to, p, s, e) {
@@ -19857,6 +19862,10 @@ sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default = function (from
   return from;
 };
 
+sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].fillColor = colorEffect;
+sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].strokeColor = colorEffect;
+sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].bgcolor = colorEffect;
+sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].borderColor = colorEffect;
 class Animation extends sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Animator"] {
   constructor(sprite, frames, timing) {
     const initAttrs = sprite.attr();
@@ -26183,15 +26192,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attribute_path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(236);
 /* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(229);
 /* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(226);
-/* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(223);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(221);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(231);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(224);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(221);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(231);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 
 
@@ -26339,7 +26344,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
   getBoundingClientRect() {
     let boundingBox = null;
     if (this.mesh) boundingBox = this.mesh.boundingBox;
-    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_8__["default"])(boundingBox, this.renderMatrix);
+    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__["default"])(boundingBox, this.renderMatrix);
   }
 
   getPathLength() {
@@ -26427,7 +26432,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
 _defineProperty(Path, "Attr", _attribute_path__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-_document__WEBPACK_IMPORTED_MODULE_7__["default"].registerNode(Path, 'path');
+_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Path, 'path');
 
 /***/ }),
 /* 235 */

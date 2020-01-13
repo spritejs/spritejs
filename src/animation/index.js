@@ -8,10 +8,16 @@ function parseValue(v) {
     v = v.trim();
     if(/%$/.test(v)) return parseFloat(v) / 100;
     if(/^\d+/.test(v)) return sizeToPixel(v);
-    const c = rgba(v);
-    return c.length > 0 ? c : v;
+    // const c = rgba(v);
+    // return c.length > 0 ? c : v;
   }
   return v;
+}
+
+function colorEffect(from, to, p, s, e) {
+  if(typeof from === 'string') from = rgba(from);
+  if(typeof to === 'string') to = rgba(to);
+  return Effects.default(from, to, p, s, e);
 }
 
 Effects.default = function (from, to, p, s, e) {
@@ -30,6 +36,11 @@ Effects.default = function (from, to, p, s, e) {
   }
   return from;
 };
+
+Effects.fillColor = colorEffect;
+Effects.strokeColor = colorEffect;
+Effects.bgcolor = colorEffect;
+Effects.borderColor = colorEffect;
 
 export default class Animation extends Animator {
   constructor(sprite, frames, timing) {
