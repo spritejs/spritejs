@@ -215,6 +215,15 @@
     "label": "basic",
     "src": "3d/basic"
   }, {
+    "label": "camera",
+    "src": "3d/camera"
+  }, {
+    "label": "geometry",
+    "src": "3d/geometry"
+  }, {
+    "label": "geometry2",
+    "src": "3d/geometry2"
+  }, {
     "label": "fox",
     "src": "3d/fox"
   }, {

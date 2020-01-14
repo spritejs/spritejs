@@ -52,7 +52,7 @@
 
 * 3D扩展
   * 起步
-    * [简介](/zh-cn/ext3d/index#简介)
+    * [简介](/zh-cn/ext3d/index)
     * [安装](/zh-cn/ext3d/index#安装)
     * [坐标和相机](/zh-cn/ext3d/index#坐标和相机)
     * [绘制几何体](/zh-cn/ext3d/index#绘制几何体)
