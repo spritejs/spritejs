@@ -17,7 +17,7 @@ layer.camera.lookAt([0, 1.5, 0]);
 
 const texture = layer.createTexture('https://p3.ssl.qhimg.com/t01d6c6c93fdddf1e42.jpg');
 const program = layer.createProgram({
-  ...shaders.BASE_TEXTURE,
+  ...shaders.NORMAL_TEXTURE,
   texture,
 });
 

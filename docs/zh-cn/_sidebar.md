@@ -50,6 +50,26 @@
   * [与d3一同使用](/zh-cn/guide/d3)
   * [跨平台](/zh-cn/guide/platforms)
 
+* 3D扩展
+  * 起步
+    * [简介](/zh-cn/ext3d/index#简介)
+    * [安装](/zh-cn/ext3d/index#安装)
+    * [坐标和相机](/zh-cn/ext3d/index#坐标和相机)
+    * [绘制几何体](/zh-cn/ext3d/index#绘制几何体)
+    * [绘制模型](/zh-cn/ext3d/index#绘制模型)
+    * [设置光照](/zh-cn/ext3d/index#光照)
+    * [与元素交互](/zh-cn/ext3d/index#与元素交互)
+  * 进阶
+    * [渲染模式](/zh-cn/ext3d/mode)
+    * [模型](/zh-cn/ext3d/model)
+    * [几何体](/zh-cn/ext3d/geometry)
+    * [着色器](/zh-cn/ext3d/shader)
+    * [光线](/zh-cn/ext3d/light)
+    * [阴影](/zh-cn/ext3d/shadow)
+    * [渲染对象](/zh-cn/ext3d/render-target)
+    * [后处理通道](/zh-cn/ext3d/post)
+    * [通用GPU](/zh-cn/ext3d/gpgpu)
+
 * API速查
   * [Arc](/zh-cn/api/arc)
   * [Block](/zh-cn/api/block)
@@ -71,6 +91,22 @@
   * [Sprite](/zh-cn/api/sprite)
   * [Star](/zh-cn/api/star)
   * [Triangle](/zh-cn/api/triangle)
+  * 3D扩展
+    * [Camera](/zh-cn/api/ext3d/camera)
+    * [Cube](/zh-cn/api/ext3d/cube)
+    * [Cylinder](/zh-cn/api/ext3d/cylinder)
+    * [Geometry](/zh-cn/api/ext3d/geometry)
+    * [GPGPU](/zh-cn/api/ext3d/gpgpu)
+    * [Group3d](/zh-cn/api/ext3d/group3d)
+    * [Layer3d](/zh-cn/api/ext3d/layer3d)
+    * [Mesh3d](/zh-cn/api/ext3d/mesh3d)
+    * [Node3d](/zh-cn/api/ext3d/node3d)
+    * [Plane](/zh-cn/api/ext3d/plane)
+    * [RenderTarget](/zh-cn/api/ext3d/render-target)
+    * [Shadow](/zh-cn/api/ext3d/shadow)
+    * [Sphere](/zh-cn/api/ext3d/sphere)
+    * [TextureLoader](/zh-cn/api/ext3d/texture-loader)
+    * [shaders](/zh-cn/api/ext3d/shaders)
 
 * 生态
   * [旧版 2.x](http://v2.spritejs.org)

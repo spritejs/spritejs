@@ -18,7 +18,7 @@ layer.camera.attributes.pos = [5, 3, 6];
 layer.camera.lookAt([0, 0, 0]);
 
 const program = layer.createProgram({
-  ...shaders.BASE_GEOMETRY,
+  ...shaders.NORMAL_GEOMETRY,
   cullFace: null,
   uniforms: {
     lighting: {value: [0.3, 0.8, 0.6, 0.1]},
