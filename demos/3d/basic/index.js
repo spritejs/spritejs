@@ -6,6 +6,9 @@ const scene = new Scene({
   displayRatio: 2,
 });
 const layer = scene.layer3d('fglayer', {
+  directionalLight: [1, 0, 0, 0.5],
+  pointLightColor: `hsl(${Math.floor(360 * Math.random())}, 50%, 50%)`,
+  pointLightPosition: [5, 3, 6],
   camera: {
     fov: 35,
   },
