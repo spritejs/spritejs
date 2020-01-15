@@ -1,4 +1,4 @@
-import {ENV, createText, parseFont} from '@mesh.js/core';
+import {ENV, parseFont} from '@mesh.js/core';
 import {createTexture} from '../utils/texture';
 import Block from './block';
 import Attr from '../attribute/label';

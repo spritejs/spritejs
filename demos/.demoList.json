@@ -224,14 +224,26 @@
     "label": "geometry2",
     "src": "3d/geometry2"
   }, {
+    "label": "geometry3",
+    "src": "3d/geometry3"
+  }, {
     "label": "model",
     "src": "3d/model"
+  }, {
+    "label": "model2",
+    "src": "3d/model2"
   }, {
     "label": "model and texture",
     "src": "3d/model_texture"
   }, {
     "label": "light",
     "src": "3d/light"
+  }, {
+    "label": "shader",
+    "src": "3d/shader"
+  }, {
+    "label": "particles",
+    "src": "3d/particles"
   }, {
     "label": "fox",
     "src": "3d/fox"
