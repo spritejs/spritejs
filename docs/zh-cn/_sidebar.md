@@ -63,7 +63,6 @@
     * [着色器](/zh-cn/ext3d/shader)
     * [渲染模式](/zh-cn/ext3d/mode)
     * [模型](/zh-cn/ext3d/model)
-    * [几何体](/zh-cn/ext3d/geometry)
     * [文字](/zh-cn/ext3d/text)
     * [分组](/zh-cn/ext3d/group)
     * [光线](/zh-cn/ext3d/light)

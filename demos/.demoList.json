@@ -245,6 +245,12 @@
     "label": "particles",
     "src": "3d/particles"
   }, {
+    "label": "instancing",
+    "src": "3d/instancing"
+  }, {
+    "label": "text",
+    "src": "3d/text"
+  }, {
     "label": "fox",
     "src": "3d/fox"
   }, {
