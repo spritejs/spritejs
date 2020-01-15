@@ -184,7 +184,7 @@ function Paper2D(...args) {
   return new Scene(...args);
 }
 
-const version = "2.29.8";
+const version = "2.29.9";
 
 
 /***/ }),
@@ -17751,7 +17751,7 @@ let order = 0;
 /* harmony default export */ __webpack_exports__["default"] = ({
   add(rules, fromDoc = false) {
     Object.entries(rules).forEach(([rule, attributes]) => {
-      const selectors = cssWhat(rule);
+      const selectors = cssWhat.parse(rule);
 
       for (let i = 0; i < selectors.length; i++) {
         const selector = selectors[i];

@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.29.8";
+var version = "2.29.9";
 
 
 /***/ }),
@@ -19628,7 +19628,7 @@ var order = 0;
           rule = _ref6[0],
           attributes = _ref6[1];
 
-      var selectors = cssWhat(rule);
+      var selectors = cssWhat.parse(rule);
 
       for (var i = 0; i < selectors.length; i++) {
         var selector = selectors[i];

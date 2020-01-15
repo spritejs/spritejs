@@ -166,7 +166,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
 
 Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('layer', _layer__WEBPACK_IMPORTED_MODULE_3__["default"], true);
 Object(_spritejs_core__WEBPACK_IMPORTED_MODULE_0__["registerNodeType"])('scene', _scene__WEBPACK_IMPORTED_MODULE_4__["default"], true);
-var version = "2.29.8";
+var version = "2.29.9";
 
 
 /***/ }),

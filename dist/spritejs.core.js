@@ -146,7 +146,7 @@ if (_platform__WEBPACK_IMPORTED_MODULE_6__["shim"]) {
   Object(_platform__WEBPACK_IMPORTED_MODULE_6__["shim"])();
 }
 
-var version = "2.29.8";
+var version = "2.29.9";
 
 
 /***/ }),
