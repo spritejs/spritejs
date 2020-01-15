@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "3.1.19",
+  "version": "3.1.20",
   "description": "The next generation of spritejs.",
   "main": "dist/spritejs.js",
   "module": "lib/index.js",
@@ -33,7 +33,7 @@
     "babel-plugin-transform-gl-matrix": "^0.6.0",
     "colors": "^1.4.0",
     "coveralls": "^3.0.8",
-    "docsify": "^4.9.4",
+    "docsify": "^4.10.2",
     "eslint": "^5.16.0",
     "eslint-config-sprite": "^1.0.6",
     "eslint-plugin-html": "^5.0.5",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@mesh.js/core": "^0.14.7",
+    "@mesh.js/core": "^0.14.8",
     "color-rgba": "^2.1.1",
     "css-select": "^2.0.2",
     "gl-matrix": "^3.1.0",

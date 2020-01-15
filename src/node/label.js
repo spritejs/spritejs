@@ -130,11 +130,7 @@ export default class Label extends Block {
       this[_textImageTask] = Promise.resolve().then(() => {
         this[_textImageTask] = null;
         const {text, font, fillColor, strokeColor, strokeWidth} = this.attributes;
-        if(ENV.createText) {
-          this[_textImage] = ENV.createText(text, {font, fillColor, strokeColor, strokeWidth, parseFont});
-        } else {
-          this[_textImage] = createText(text, {font, fillColor, strokeColor, strokeWidth});
-        }
+        this[_textImage] = ENV.createText(text, {font, fillColor, strokeColor, strokeWidth, parseFont});
         this.updateContours();
         this.forceUpdate();
         return this[_textImage];
