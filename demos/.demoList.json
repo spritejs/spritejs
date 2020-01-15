@@ -224,6 +224,15 @@
     "label": "geometry2",
     "src": "3d/geometry2"
   }, {
+    "label": "model",
+    "src": "3d/model"
+  }, {
+    "label": "model and texture",
+    "src": "3d/model_texture"
+  }, {
+    "label": "light",
+    "src": "3d/light"
+  }, {
     "label": "fox",
     "src": "3d/fox"
   }, {
