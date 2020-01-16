@@ -68,7 +68,7 @@
     * [摄像机](/zh-cn/ext3d/camera)
     * [阴影](/zh-cn/ext3d/shadow)
     * [渲染对象](/zh-cn/ext3d/render-target)
-    * [后处理通道](/zh-cn/ext3d/post)
+    * [后期处理通道](/zh-cn/ext3d/post)
     * [通用GPU](/zh-cn/ext3d/gpgpu)
 
 * API速查

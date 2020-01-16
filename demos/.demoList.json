@@ -233,6 +233,9 @@
     "label": "geometry3",
     "src": "3d/geometry3"
   }, {
+    "label": "gpgpu",
+    "src": "3d/gpgpu"
+  }, {
     "label": "group",
     "src": "3d/group"
   }, {
@@ -259,6 +262,12 @@
   }, {
     "label": "particles",
     "src": "3d/particles"
+  }, {
+    "label": "post",
+    "src": "3d/post"
+  }, {
+    "label": "render target",
+    "src": "3d/render_target"
   }, {
     "label": "shader",
     "src": "3d/shader"
