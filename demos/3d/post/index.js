@@ -601,7 +601,7 @@ layer.bindTime(pass);
 
 // requestAnimationFrame(update);
 
-layer.ticker(() => {
+layer.tick(() => {
   // Perform all of the fluid simulation renders
   // No need to clear during sim, saving a number of GL calls.
   layer.autoClear = false;
