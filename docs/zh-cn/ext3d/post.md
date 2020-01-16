@@ -610,7 +610,7 @@ layer.bindTime(pass);
 
 // requestAnimationFrame(update);
 
-layer.postRender = function () {
+layer.tick(() => {
   // Perform all of the fluid simulation renders
   // No need to clear during sim, saving a number of GL calls.
   renderer.autoClear = false;
@@ -710,7 +710,7 @@ layer.postRender = function () {
 
   mesh.attributes.rotateY -= 0.15;
   mesh.attributes.rotateX -= 0.3;
-};
+});
 ```
 
 <iframe src="/demo/#/3d/post" height="750"></iframe>
