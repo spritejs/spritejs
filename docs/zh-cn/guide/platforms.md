@@ -2,12 +2,14 @@
 
 spritejs通过[node-canvas](https://github.com/Automattic/node-canvas)支持服务端渲染，也就是说我们可以在node环境下使用spritejs，将绘制好的图形保存成png，或者将动画保存成gif。
 
+💡由于Node版不经过打包，而package.json中配置的是打包后的web端版本，所以Node版使用只能`require('spritejs/lib/index)`这样用。
+
 将静态输出保存成png
 
 ```js
 const fs = require('fs')
 
-const {Scene, Label} = require('spritejs')
+const {Scene, Label} = require('spritejs/lib/index')
 const scene = new Scene('#test', 800, 600)
 
 const bglayer = scene.layer('bg', {handleEvent: false})
@@ -36,7 +38,7 @@ bglayer.append(text)
 ```js
 const fs = require('fs')
 
-const {Scene, Label} = require('../../lib')
+const {Scene, Label} = require('spritejs/lib/index')
 const scene = new Scene('#test', 800, 600)
 
 const bglayer = scene.layer('bg', {handleEvent: true})
