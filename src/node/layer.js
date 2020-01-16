@@ -14,6 +14,7 @@ const _renderer = Symbol('renderer');
 const _timeline = Symbol('timeline');
 
 const _prepareRender = Symbol('prepareRender');
+const _tick = Symbol('tick');
 
 export default class Layer extends Group {
   constructor(options = {}) {
@@ -47,6 +48,7 @@ export default class Layer extends Group {
     this.canvas = canvas;
     this[_timeline] = new Timeline();
     this.__mouseCapturedTarget = null;
+    this[_tick] = false;
   }
 
   get autoRender() {
@@ -137,7 +139,7 @@ export default class Layer extends Group {
         const prepareRender = new Promise((resolve) => {
           _resolve = resolve;
 
-          if(this[_autoRender]) {
+          if(this[_autoRender] && !this[_tick]) {
             _requestID = requestAnimationFrame(() => {
               delete prepareRender._requestID;
               this.render();
@@ -211,12 +213,13 @@ export default class Layer extends Group {
   }
 
   tick(handler, options = {}) {
-    this[_autoRender] = false;
+    this[_tick] = true;
+    this._prepareRenderFinished();
     const t = this.timeline.fork(options);
     const layer = this;
     requestAnimationFrame(function update() {
       handler(t.currentTime);
-      layer.render();
+      if(layer[_autoRender]) layer.render();
       requestAnimationFrame(update);
     });
   }

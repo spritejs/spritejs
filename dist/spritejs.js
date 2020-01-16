@@ -36667,6 +36667,8 @@ var _timeline = Symbol('timeline');
 
 var _prepareRender = Symbol('prepareRender');
 
+var _tick = Symbol('tick');
+
 var Layer =
 /*#__PURE__*/
 function (_Group) {
@@ -36721,6 +36723,7 @@ function (_Group) {
     _this.canvas = canvas;
     _this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_8__["Timeline"]();
     _this.__mouseCapturedTarget = null;
+    _this[_tick] = false;
     return _this;
   }
 
@@ -36772,7 +36775,7 @@ function (_Group) {
           var _prepareRender2 = new Promise(function (resolve) {
             _resolve2 = resolve;
 
-            if (_this2[_autoRender]) {
+            if (_this2[_autoRender] && !_this2[_tick]) {
               _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(function () {
                 delete _prepareRender2._requestID;
 
@@ -36884,12 +36887,15 @@ function (_Group) {
     key: "tick",
     value: function tick(handler) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      this[_autoRender] = false;
+      this[_tick] = true;
+
+      this._prepareRenderFinished();
+
       var t = this.timeline.fork(options);
       var layer = this;
       Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(function update() {
         handler(t.currentTime);
-        layer.render();
+        if (layer[_autoRender]) layer.render();
         Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(update);
       });
     }
@@ -37562,7 +37568,7 @@ function (_Group) {
     value: function forceUpdate() {
       var _this2 = this;
 
-      if (!this._requestID) {
+      if (this.hasOffscreenCanvas && !this._requestID) {
         this._requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["requestAnimationFrame"])(function () {
           delete _this2._requestID;
 

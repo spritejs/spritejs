@@ -54,7 +54,6 @@ const scene = new Scene({
   displayRatio: 2,
 });
 const layer = scene.layer3d('fglayer', {
-  autoRender: false,
   camera: {
     fov: 35,
   },

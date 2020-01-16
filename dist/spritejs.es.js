@@ -32257,6 +32257,8 @@ const _timeline = Symbol('timeline');
 
 const _prepareRender = Symbol('prepareRender');
 
+const _tick = Symbol('tick');
+
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   constructor(options = {}) {
     super();
@@ -32298,6 +32300,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     this.canvas = canvas;
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
+    this[_tick] = false;
   }
 
   get autoRender() {
@@ -32404,7 +32407,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         const prepareRender = new Promise(resolve => {
           _resolve = resolve;
 
-          if (this[_autoRender]) {
+          if (this[_autoRender] && !this[_tick]) {
             _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(() => {
               delete prepareRender._requestID;
               this.render();
@@ -32504,12 +32507,15 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   }
 
   tick(handler, options = {}) {
-    this[_autoRender] = false;
+    this[_tick] = true;
+
+    this._prepareRenderFinished();
+
     const t = this.timeline.fork(options);
     const layer = this;
     Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(function update() {
       handler(t.currentTime);
-      layer.render();
+      if (layer[_autoRender]) layer.render();
       Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(update);
     });
   }
@@ -33059,7 +33065,7 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
 
 
   forceUpdate() {
-    if (!this._requestID) {
+    if (this.hasOffscreenCanvas && !this._requestID) {
       this._requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__["requestAnimationFrame"])(() => {
         delete this._requestID;
         this.render();

@@ -297,7 +297,7 @@ export default class Scene extends Group {
 
   /* override */
   forceUpdate() {
-    if(!this._requestID) {
+    if(this.hasOffscreenCanvas && !this._requestID) {
       this._requestID = requestAnimationFrame(() => {
         delete this._requestID;
         this.render();
