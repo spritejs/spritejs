@@ -10,9 +10,9 @@
   }
 </style>
 
-## Node3d <sub>_extends_</sub> [Node](zh-cn/api/node)
+## Group3d <sub>_extends_</sub> [Node3d](zh-cn/api/ext3d/node3d)
 
-Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
+Group3d结合了Group和Node3d。
 
 ### Attributes
 
@@ -39,6 +39,20 @@ Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
 
 ### Properties
 
+##### _readonly_ childNodes
+
+children的别名
+
+##### _readonly_ children
+
+子元素
+
+##### _readonly_ meshes
+
+当前元素和它的子孙元素的Mesh对象列表。
+
+#### _继承自Node3d_
+
 ##### _readonly_ body
 
 当前元素的Mesh或Transform对象。
@@ -58,10 +72,6 @@ localMatrix的别名。
 ##### _readonly_ mesh
 
 当前元素的Mesh对象，如果没有，返回null
-
-##### _readonly_ meshes
-
-当前元素和它的子孙元素的Mesh对象列表。
 
 ##### _readonly_ modelViewMatrix
 
@@ -131,11 +141,69 @@ renderMatrix的别名。
 
 ### Methods
 
-##### _override_ connect(parent, zOrder)
+##### append(...els)
+
+批量添加元素到group中。
+
+##### appendChild(el)
+
+将一个元素添加到group中。
+
+##### _override_ cloneNode(deep = false)
+
+Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
+
+##### getElementById(id)
+
+返回指定id的子元素。
+
+##### getElementsByClassName(className)
+
+返回指定className的子元素列表
+
+##### getElementsByName(name)
+
+返回指定name的子元素列表。
+
+##### getElementsByTagName(name)
+
+返回指定类型的子元素列表。
+
+##### insertBefore(el, ref)
+
+将指定元素插入到ref元素之前，如果ref为null，则将el添加到group末尾，如果ref不为null且不是group的子元素，抛出异常。
+
+##### querySelctor(selector)
+
+根据选择器返回指定的子元素。
+
+##### querySelectorAll(selector)
+
+根据选择器返回所有匹配的子元素列表。
+
+##### replaceChild(el, ref)
+
+将ref元素用新的el元素替代。如果ref元素不在当前group中，则抛出异常。
+
+##### removeAllChildren()
+
+将group的所有子元素移除。
+
+##### removeChild(el)
+
+将指定元素移出group。
+
+##### setResolution({width, height})
+
+设置元素的上下文分辨率。
+
+#### _继承自Node3d_
+
+##### connect(parent, zOrder)
 
 当元素被添加到对象树上时，该函数被调用，parent和zOrder被赋给元素。
 
-##### _override_ disconnect()
+##### disconnect()
 
 当元素从对象树上移除时，该函数被调用，parent和zOrder属性被移除。
 
@@ -143,7 +211,7 @@ renderMatrix的别名。
 
 让元素转向到对应的坐标所在的方向。
 
-##### _override_ onPropertyChange(key, newValue, oldValue)
+##### onPropertyChange(key, newValue, oldValue)
 
 当元素属性值被改变时，执行的动作。
 
