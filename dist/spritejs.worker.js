@@ -36754,6 +36754,19 @@ function (_Group) {
       }
     }
   }, {
+    key: "tick",
+    value: function tick(handler) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      this[_autoRender] = false;
+      var t = this.timeline.fork(options);
+      var layer = this;
+      Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(function update() {
+        handler(t.currentTime);
+        layer.render();
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_9__["requestAnimationFrame"])(update);
+      });
+    }
+  }, {
     key: "toGlobalPos",
     value: function toGlobalPos(x, y) {
       var _this$getResolution3 = this.getResolution(),

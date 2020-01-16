@@ -65,7 +65,7 @@
     * [模型](/zh-cn/ext3d/model)
     * [文字](/zh-cn/ext3d/text)
     * [分组](/zh-cn/ext3d/group)
-    * [光线](/zh-cn/ext3d/light)
+    * [摄像机](/zh-cn/ext3d/camera)
     * [阴影](/zh-cn/ext3d/shadow)
     * [渲染对象](/zh-cn/ext3d/render-target)
     * [后处理通道](/zh-cn/ext3d/post)

@@ -32503,6 +32503,17 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     }
   }
 
+  tick(handler, options = {}) {
+    this[_autoRender] = false;
+    const t = this.timeline.fork(options);
+    const layer = this;
+    Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(function update() {
+      handler(t.currentTime);
+      layer.render();
+      Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(update);
+    });
+  }
+
   toGlobalPos(x, y) {
     const {
       width,

@@ -210,6 +210,17 @@ export default class Layer extends Group {
     }
   }
 
+  tick(handler, options = {}) {
+    this[_autoRender] = false;
+    const t = this.timeline.fork(options);
+    const layer = this;
+    requestAnimationFrame(function update() {
+      handler(t.currentTime);
+      layer.render();
+      requestAnimationFrame(update);
+    });
+  }
+
   toGlobalPos(x, y) {
     const {width, height} = this.getResolution();
     const offset = this.renderOffset;

@@ -1,8 +1,8 @@
 export default async () => {
   const [html, javascript, css] = await Promise.all([
-    import('!raw-loader!./index.html'),
+    import('!raw-loader!../index.html'),
     import('!raw-loader!./index.js'),
-    import('!raw-loader!./style.css'),
+    import('!raw-loader!../style.css'),
   ]);
 
   return {

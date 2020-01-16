@@ -218,6 +218,12 @@
     "label": "camera",
     "src": "3d/camera"
   }, {
+    "label": "camera2",
+    "src": "3d/camera2"
+  }, {
+    "label": "fox",
+    "src": "3d/fox"
+  }, {
     "label": "geometry",
     "src": "3d/geometry"
   }, {
@@ -226,6 +232,21 @@
   }, {
     "label": "geometry3",
     "src": "3d/geometry3"
+  }, {
+    "label": "group",
+    "src": "3d/group"
+  }, {
+    "label": "group2",
+    "src": "3d/group2"
+  }, {
+    "label": "group3",
+    "src": "3d/group3"
+  }, {
+    "label": "instancing",
+    "src": "3d/instancing"
+  }, {
+    "label": "light",
+    "src": "3d/light"
   }, {
     "label": "model",
     "src": "3d/model"
@@ -236,23 +257,17 @@
     "label": "model and texture",
     "src": "3d/model_texture"
   }, {
-    "label": "light",
-    "src": "3d/light"
+    "label": "particles",
+    "src": "3d/particles"
   }, {
     "label": "shader",
     "src": "3d/shader"
   }, {
-    "label": "particles",
-    "src": "3d/particles"
-  }, {
-    "label": "instancing",
-    "src": "3d/instancing"
+    "label": "shadow",
+    "src": "3d/shadow"
   }, {
     "label": "text",
     "src": "3d/text"
-  }, {
-    "label": "fox",
-    "src": "3d/fox"
   }, {
     "label": "wireframe",
     "src": "3d/wireframe"
