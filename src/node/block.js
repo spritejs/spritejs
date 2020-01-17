@@ -3,10 +3,8 @@ import Node from './node';
 import Attr from '../attribute/block';
 import {setFillColor, setStrokeColor} from '../utils/color';
 import {createRadiusBox} from '../utils/border_radius';
-import {applyFilters} from '../utils/filter';
 import ownerDocument from '../document';
 import getBoundingBox from '../utils/bounding_box';
-import applyRenderEvent from '../utils/render_event';
 
 const _mesh = Symbol('mesh');
 

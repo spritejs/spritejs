@@ -14,28 +14,33 @@
 
 Group3d结合了Group和Node3d。
 
+### constructor(attrs)
+
+构造函数
+
 ### Attributes
 
 | 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| x | | number | 0 | 元素 X 轴坐标 |
-| y | | number | 0 | 元素 Y 轴坐标 |
-| z | | number | 0 | 元素 Z 轴坐标 |
-| pos | | Array | [0, 0, 0] | [x, y, z] 简写 |
-| rotateX | | number | 0 | 绕 X 轴旋转 |
-| rotateY | | number | 0 | 绕 Y 轴旋转 |
-| rotateZ | | number | 0 | 绕 Z 轴旋转 |
-| rotate | | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | | number | 1 | 绕 X 轴旋转 |
-| scaleY | | number | 1 | 绕 Y 轴旋转 |
-| scaleZ | | number | 1 | 绕 Z 轴旋转 |
-| scale | | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
-| raycast | | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
-| id | | string | '' | 设定元素的ID |
-| name | | string | '' | 设定元素的name |
-| className | | string | '' | 设定元素的className |
-| display | | string | '' | 设定元素的可见性 |
-| pointerEvents | | string | visible | 同CSS的pointerEvents |
+| x | Node3d | number | 0 | 元素 X 轴坐标 |
+| y | Node3d | number | 0 | 元素 Y 轴坐标 |
+| z | Node3d | number | 0 | 元素 Z 轴坐标 |
+| pos | Node3d | Array | [0, 0, 0] | [x, y, z] 简写 |
+| rotateX | Node3d | number | 0 | 绕 X 轴旋转 |
+| rotateY | Node3d | number | 0 | 绕 Y 轴旋转 |
+| rotateZ | Node3d | number | 0 | 绕 Z 轴旋转 |
+| rotate | Node3d | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
+| scaleX | Node3d | number | 1 | 绕 X 轴旋转 |
+| scaleY | Node3d | number | 1 | 绕 Y 轴旋转 |
+| scaleZ | Node3d | number | 1 | 绕 Z 轴旋转 |
+| scale | Node3d | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
+| raycast | Node3d | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
+| visibility | Node3d | enum | enum{visible,hidden} | 元素是否可见 |
+| id | Node | string | '' | 设定元素的ID |
+| name | Node | string | '' | 设定元素的name |
+| className | Node | string | '' | 设定元素的className |
+| display | Node | string | '' | 设定元素的可见性 |
+| pointerEvents | Node | string | visible | 同CSS的pointerEvents |
 
 ### Properties
 
@@ -199,11 +204,11 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 #### _继承自Node3d_
 
-##### connect(parent, zOrder)
+##### _override_ connect(parent, zOrder)
 
 当元素被添加到对象树上时，该函数被调用，parent和zOrder被赋给元素。
 
-##### disconnect()
+##### _override_ disconnect()
 
 当元素从对象树上移除时，该函数被调用，parent和zOrder属性被移除。
 
@@ -211,7 +216,7 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 让元素转向到对应的坐标所在的方向。
 
-##### onPropertyChange(key, newValue, oldValue)
+##### _override_ onPropertyChange(key, newValue, oldValue)
 
 当元素属性值被改变时，执行的动作。
 

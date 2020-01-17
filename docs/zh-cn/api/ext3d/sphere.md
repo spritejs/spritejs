@@ -10,21 +10,30 @@
   }
 </style>
 
-## Mesh3d <sub>_extends_</sub> [Group3d](zh-cn/api/ext3d/group3d)
-
-Mesh3d定义一个3D模型元素。
+## Sphere <sub>_extends_</sub> [Mesh3d](zh-cn/api/ext3d/mesh3d)
 
 ### constructor(program, attrs)
 
 构造函数
 
+Sphere是球体元素。
+
 ### Attributes
 
 | 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| mode | | string | TRIANGLES | 设置绘制模式 |
-| colors | | Color | #80808080 | 每个顶点的颜色 |
-| colorDivisor | | number | 3 | 每个color值赋给几个顶点 |
+| radius | | number | 0.5 | 球体半径 |
+| radiusBottom | | number | 0.5 | 底部半径 |
+| height | | number | 1 | 元素的高度 |
+| widthSegments | | number | 32 |  |
+| heightSegments | | number | 16 |  |
+| phiStart | | number | 0 | |
+| phiLength | | number | Math.PI * 2 | |
+| thetaStart | | number | 0 | |
+| thetaLength | | number | Math.PI | |
+| mode | Mesh3d | string | TRIANGLES | 设置绘制模式 |
+| colors | Mesh3d | Color | #80808080 | 每个顶点的颜色 |
+| colorDivisor | Mesh3d | number | 3 | 每个color值赋给几个顶点 |
 | x | Node3d | number | 0 | 元素 X 轴坐标 |
 | y | Node3d | number | 0 | 元素 Y 轴坐标 |
 | z | Node3d | number | 0 | 元素 Z 轴坐标 |
@@ -46,6 +55,8 @@ Mesh3d定义一个3D模型元素。
 | pointerEvents | Node | string | visible | 同CSS的pointerEvents |
 
 ### Properties
+
+#### _继承自Mesh3d_
 
 ##### _readonly_ geometry
 
@@ -163,27 +174,29 @@ renderMatrix的别名。
 
 ### Methods
 
-##### _override_ addEventListener(type, listener, options = {})
-
-注册事件监听器。
-
-##### _override_ cloneNode(deep = false)
-
-Copy一个元素，如果deep为true，同时Copy它的子元素。
-
 ##### _override_ onPropertyChange(key, newValue, oldValue)
 
 当元素属性值被改变时，执行的动作。
 
-##### remesh()
+##### _override_ remesh()
 
 重新创建Mesh对象。
+
+#### _继承自Mesh3d_
+
+##### addEventListener(type, listener, options = {})
+
+注册事件监听器。
+
+##### cloneNode(deep = false)
+
+Copy一个元素，如果deep为true，同时Copy它的子元素。
 
 ##### removeAllListeners(type)
 
 移除某类型的所有事件监听器。
 
-##### _override_ removeEventListener(type, listener, options)
+##### removeEventListener(type, listener, options)
 
 移除事件监听器。
 

@@ -28190,10 +28190,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(264);
 /* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(265);
 /* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(269);
-/* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(259);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(257);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(270);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(260);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(257);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(270);
 
 
 
@@ -28205,8 +28203,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
-
 
 
 
@@ -28246,7 +28242,7 @@ function (_Node) {
         }
       }
 
-      return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__["default"])(boundingBox, this.renderMatrix);
+      return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_15__["default"])(boundingBox, this.renderMatrix);
     } // transformPoint(x, y) {
     //   const m = mat2d.invert(this.renderMatrix);
     //   const newX = x * m[0] + y * m[2] + m[4];
@@ -28494,7 +28490,7 @@ function (_Node) {
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_11__["default"]);
 
 
-_document__WEBPACK_IMPORTED_MODULE_15__["default"].registerNode(Block, 'block');
+_document__WEBPACK_IMPORTED_MODULE_14__["default"].registerNode(Block, 'block');
 
 /***/ }),
 /* 264 */

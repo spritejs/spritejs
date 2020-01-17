@@ -25016,15 +25016,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
 /* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(228);
 /* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(229);
-/* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(222);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(220);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(230);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(223);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(220);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(230);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 
 
@@ -25183,7 +25179,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
       }
     }
 
-    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__["default"])(boundingBox, this.renderMatrix);
+    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__["default"])(boundingBox, this.renderMatrix);
   } // transformPoint(x, y) {
   //   const m = mat2d.invert(this.renderMatrix);
   //   const newX = x * m[0] + y * m[2] + m[4];
@@ -25268,7 +25264,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
 _defineProperty(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
-_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Block, 'block');
+_document__WEBPACK_IMPORTED_MODULE_5__["default"].registerNode(Block, 'block');
 
 /***/ }),
 /* 227 */

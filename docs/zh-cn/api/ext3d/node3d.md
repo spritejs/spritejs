@@ -14,6 +14,10 @@
 
 Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
 
+### constructor(attrs)
+
+构造函数
+
 ### Attributes
 
 | 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
@@ -31,11 +35,12 @@ Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
 | scaleZ | | number | 1 | 绕 Z 轴旋转 |
 | scale | | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
 | raycast | | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
-| id | | string | '' | 设定元素的ID |
-| name | | string | '' | 设定元素的name |
-| className | | string | '' | 设定元素的className |
-| display | | string | '' | 设定元素的可见性 |
-| pointerEvents | | string | visible | 同CSS的pointerEvents |
+| visibility | | enum | enum{visible,hidden} | 元素是否可见 |
+| id | Node | string | '' | 设定元素的ID |
+| name | Node | string | '' | 设定元素的name |
+| className | Node | string | '' | 设定元素的className |
+| display | Node | string | '' | 设定元素的可见性 |
+| pointerEvents | Node | string | visible | 同CSS的pointerEvents |
 
 ### Properties
 

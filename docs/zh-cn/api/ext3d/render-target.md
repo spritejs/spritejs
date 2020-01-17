@@ -10,21 +10,37 @@
   }
 </style>
 
-## Mesh3d <sub>_extends_</sub> [Group3d](zh-cn/api/ext3d/group3d)
+## RenderTarget <sub>_extends_</sub> [Group3d](zh-cn/api/ext3d/group3d)
 
-Mesh3d定义一个3D模型元素。
+RenderTarget定义一个用于执行绘制操作到FrameBuffer的对象。
 
-### constructor(program, attrs)
+### constructror(gl, attrs)
 
-构造函数
+一些配置项如下：
+
+- width = gl.canvas.width,
+- height = gl.canvas.height,
+- target = gl.FRAMEBUFFER,
+- color = 1, // number of color attachments
+- depth = true,
+- stencil = false,
+- depthTexture = false, // note - stencil breaks
+- wrapS = gl.CLAMP_TO_EDGE,
+- wrapT = gl.CLAMP_TO_EDGE,
+- minFilter = gl.LINEAR,
+- magFilter = minFilter,
+- type = gl.UNSIGNED_BYTE,
+- format = gl.RGBA,
+- internalFormat = format,
+- unpackAlignment,
+- premultiplyAlpha,
+- camera: cameraOptions,
+- buffer = false,
 
 ### Attributes
 
 | 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| mode | | string | TRIANGLES | 设置绘制模式 |
-| colors | | Color | #80808080 | 每个顶点的颜色 |
-| colorDivisor | | number | 3 | 每个color值赋给几个顶点 |
 | x | Node3d | number | 0 | 元素 X 轴坐标 |
 | y | Node3d | number | 0 | 元素 Y 轴坐标 |
 | z | Node3d | number | 0 | 元素 Z 轴坐标 |
@@ -47,21 +63,9 @@ Mesh3d定义一个3D模型元素。
 
 ### Properties
 
-##### _readonly_ geometry
+##### _readonly_ texture
 
-获取元素的几何体对象。
-
-##### _readonly_ meshes
-
-当前元素和它的子孙元素的Mesh对象列表。
-
-##### _readonly_ model
-
-获取几何数据。
-
-##### _readonly_ program
-
-获取GLProgram。
+获取RenderTarget渲染后的纹理数据。
 
 #### _继承自Group3d_
 
@@ -72,6 +76,10 @@ children的别名
 ##### _readonly_ children
 
 子元素
+
+##### _readonly_ meshes
+
+当前元素和它的子孙元素的Mesh对象列表。
 
 #### _继承自Node3d_
 
@@ -163,41 +171,13 @@ renderMatrix的别名。
 
 ### Methods
 
-##### _override_ addEventListener(type, listener, options = {})
+##### renderBy(layer, {root = this, ...options} = {})
 
-注册事件监听器。
+让RenderTarget实例被layer渲染。
 
-##### _override_ cloneNode(deep = false)
+##### swap()
 
-Copy一个元素，如果deep为true，同时Copy它的子元素。
-
-##### _override_ onPropertyChange(key, newValue, oldValue)
-
-当元素属性值被改变时，执行的动作。
-
-##### remesh()
-
-重新创建Mesh对象。
-
-##### removeAllListeners(type)
-
-移除某类型的所有事件监听器。
-
-##### _override_ removeEventListener(type, listener, options)
-
-移除事件监听器。
-
-##### setGeometry(model = this[_model])
-
-设置或更新几何信息。
-
-##### setProgram(program)
-
-设置或更新GLProgram。
-
-##### updateMesh()
-
-设置或更新Mesh信息。
+如果设置了buffer，swap交换buffer与target。
 
 #### _继承自Group3d_
 
@@ -208,6 +188,10 @@ Copy一个元素，如果deep为true，同时Copy它的子元素。
 ##### appendChild(el)
 
 将一个元素添加到group中。
+
+##### _override_ cloneNode(deep = false)
+
+Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 ##### getElementById(id)
 
@@ -255,17 +239,21 @@ Copy一个元素，如果deep为true，同时Copy它的子元素。
 
 #### _继承自Node3d_
 
-##### _override_ connect(parent, zOrder)
+##### connect(parent, zOrder)
 
 当元素被添加到对象树上时，该函数被调用，parent和zOrder被赋给元素。
 
-##### _override_ disconnect()
+##### disconnect()
 
 当元素从对象树上移除时，该函数被调用，parent和zOrder属性被移除。
 
 ##### lookAt([x, y, z])
 
 让元素转向到对应的坐标所在的方向。
+
+##### onPropertyChange(key, newValue, oldValue)
+
+当元素属性值被改变时，执行的动作。
 
 ##### setBody(body, update = true) 
 
@@ -288,6 +276,10 @@ Copy一个元素，如果deep为true，同时Copy它的子元素。
 ##### activateAnimations() {
 
 激活元素上正在执行的所有动画。
+
+##### addEventListener(type, listener, options = {})
+
+注册事件监听器。
 
 ##### animate(frames, timing)
 
@@ -360,6 +352,10 @@ Copy整个元素。
 ##### removeAttribute(key)
 
 移除元素属性值，恢复为默认值。
+
+##### removeEventListener(type, listener, options)
+
+移除事件监听器。
 
 ##### transition(sec, easing = 'linear')
 
