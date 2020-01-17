@@ -49,6 +49,10 @@
   {
     "label": "cloud",
     "src": "benchmark/cloud"
+  },
+  {
+    "label": "3d meshes",
+    "src": "benchmark/meshes3d"
   },  {
     "label": "bar graph",
     "src": "d3/bar"
@@ -221,6 +225,9 @@
     "label": "camera2",
     "src": "3d/camera2"
   }, {
+    "label": "cube map",
+    "src": "3d/cubemap"
+  }, {
     "label": "fox",
     "src": "3d/fox"
   }, {
@@ -263,6 +270,9 @@
     "label": "particles",
     "src": "3d/particles"
   }, {
+    "label": "pbr",
+    "src": "3d/pbr"
+  }, {
     "label": "post",
     "src": "3d/post"
   }, {
@@ -275,8 +285,14 @@
     "label": "shadow",
     "src": "3d/shadow"
   }, {
+    "label": "skydome",
+    "src": "3d/skydome"
+  }, {
     "label": "text",
     "src": "3d/text"
+  }, {
+    "label": "video",
+    "src": "3d/video"
   }, {
     "label": "wireframe",
     "src": "3d/wireframe"
