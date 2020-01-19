@@ -1,21 +1,21 @@
-# 3D 扩展
+# 3D Extension
 
-SpriteJS<sup>Next</sup>可以通过[3D扩展库](https://github.com/spritejs/sprite-extend-3d)来渲染3D元素。
+SpriteJS<sup>Next</sup>can render 3D elements through [3D extension library](https://github.com/spritejs/sprite-extend-3d).
 
-## 安装
+## Installion
 
-加载3D渲染库的方式非常简单，你可以直接通过CND加载
+The way to load the 3D extension library is very simple. You can load it directly through CND.
 
 ```html
 <script src="https://unpkg.com/spritejs@3/dist/spritejs.es.min.js"></script>
 <script src="https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js"></script>
 ```
 
-只要确保`sprite-extend-3d.js`加载在`spritejs`的JS之后即可。
+Just make sure that 'sprite-extend-3d.js' is loaded after' spritejs'.
 
-💡考虑到最佳性能，`sprite-extend-3d.js`默认适配`chrome59`及以上浏览器，所以你只要用spritejs的ES编译版本即可。如果你希望支持较早的浏览器，`sprite-extend-3d.js`仍可支持早期版本，不过你需要在项目中修改babel配置，重新编译适配旧浏览器的版本。
+Considering the best performance, the `sprite-extend-3d.js` adapts to chrome 59 and above. If you want to support older browsers, you need to modify the Babel configuration in the project and recompile and adapt to the old browser version.
 
-加载之后，可以通过`spritejs.ext3d`来访问3D的API，并且可以通过`scene.layer3d(layerID)`来创建3D的渲染层。
+When loaded, you can use `spritejs.ext3d` to access the 3D API, and you can use `scene.layer3d(layerid)` to create a 3D rendering layer.
 
 ```js
 const {Scene} = spritejs;
@@ -40,43 +40,43 @@ const cube = new Cube(program, {
 });
 layer.append(cube);
 
-layer.setOrbit(); // 开启旋转控制
+layer.setOrbit();
 ```
 
 <iframe src="/demo/#/3d/basic" height="500"></iframe>
 
-当然，你也可以通过模块方式加载`sprite-extend-3d`：
+Of course, you can also load it through modules.
 
 ```js
 import {Scene} from 'spritejs';
 import {Cube, shaders} from 'sprite-extend-3d';
 ```
 
-## 坐标和相机
+## Coordinate and Camera
 
-与2D的layer不同，layer3d采用WebGL坐标系，画布中心点的位置是[0,0,0]，水平向右是x轴，垂直向上是y轴，垂直于屏幕向外的是z轴。
+Different from 2D layer, layer3d uses webgl coordinate system. The position of canvas center point is [0,0,0], X axis is horizontally to the right, Y axis is vertically upward, and Z axis is vertically outward from the screen.
 
 ![](https://p2.ssl.qhimg.com/t017063e6041bdc4b0f.png)
 
-元素是否显示出来，显示在什么位置，与透视相机有关。
+Whether the element is displayed and where it is displayed depends on the perspective camera.
 
-一个layer对应一个默认的透视相机，创建layer的时候可以初始化它，在后续渲染的时候也可以修改它的属性。上面的例子中，我们把相机放在坐标`[3, 3, 5]`的位置。
+A layer corresponds to a default perspective camera. When creating a layer, you can initialize it and modify its properties in subsequent rendering. In the above example, we put the camera at the coordinate `[3, 3, 5]`.
 
-透视相机有一些参数，如下：
+The perspective camera has some parameters as follows:
 
-- near: 相机可以拍摄到的最近距离，默认为 0.1
-- far: 相机可以拍摄到的最远距离，默认为 100
-- fov: 视野宽度，默认是45度
-- aspect: 宽高比，默认是1:1，但是如果preserveAspect配置不为false，layer会根据resolution来设置相机的宽高比
-- preserveAspect: 默认为true，根据画布宽高比来保持相机宽高比，这样元素就不会被拉伸或压缩
+- near: The near clipping distance, default is 0.1.
+- far: The far clipping distance, default is 100.
+- fov: The field of view, default is 45 degree.
+- aspect: The aspect ratio, which is 1:1 by default, is set by the layer according to the resolution if the preserveAspect configuration is not set to false.
+- preserveAspect: The default value is `true`. The camera aspect ratio is maintained according to the canvas aspect ratio, so that the elements are not stretched or compressed.
 
-默认情况下，相机的方向是朝着z轴负向无穷远处，而相机有一个方法叫lookAt，传入一个坐标，可以让相机朝向该位置拍摄。
+By default, the direction of the camera is toward the z-axis negative infinity, and the camera has a method called `lookAt`, which can let the camera shoot towards the position by passing in a coordinate.
 
 <iframe src="/demo/#/3d/camera" height="500"></iframe>
 
-## 绘制几何体
+## Geometry elements
 
-在3D的layer中，只要有顶点坐标就可以非常方便地绘制几何体。
+In 3D layer, it is very convenient to draw geometry by vertex coordinates.
 
 ```js
 const {Scene} = spritejs;
@@ -149,13 +149,13 @@ sprite.animate([
 layer.setOrbit();
 ```
 
-上面的代码中，我们传入一组顶点坐标，绘制了一个正四面体。
+In this example, we create a set of vertex coordinates and drew a tetrahedron.
 
 <iframe src="/demo/#/3d/geometry2" height="650"></iframe>
 
-## 绘制模型
+## Models
 
-SpriteJS<sup>Next</sup>的3D扩展支持ThreeJS的json数据模型，因此只需要将模型以model参数传给Mesh3D对象即可。
+The 3D extension supports the JSON data model.
 
 ```js
 const {Scene} = spritejs;
@@ -181,11 +181,11 @@ layer.append(macow);
 layer.setOrbit({target: [0, 0.7, 0]});
 ```
 
-注意上面的代码里`layer.loadModel`是个异步方法，但是我们并不用等到model数据真正加载下来，可以直接把model（此时是一个promise）赋给Mesh3d元素，等数据加载完毕后，元素就会被渲染出来。
+Note that `layer.loadModel` is an asynchronous method, but we don't need to wait until the model data is actually loaded. We can directly assign the model (at this time, it is a promise) to the mesh3d element. After the data is loaded, the element will be rerendered.
 
 <iframe src="/demo/#/3d/model" height="650"></iframe>
 
-有了模型，我们可以把纹理加上：
+With the model, we can add the texture.
 
 ```js
 const {Scene} = spritejs;
@@ -217,11 +217,11 @@ layer.setOrbit({target: [0, 0.7, 0]});
 
 <iframe src="/demo/#/3d/model_texture" height="650"></iframe>
 
-我们只要通过`layer.createTexture`创建texture对象，并将该对象赋给program（同时要将programe的shader类型改为NORMAL_TEXTURE），这样元素的纹理就能显示出来。注意createTexture方法也是一个异步方法，但我们同样不用等待图片加载完毕再创建元素。
+We only need to create a texture object through `layer.createTexture` and assign the object to the program. Note that the createTexture method is also an asynchronous method, but we also don't need to wait for the image to load before creating the element.
 
-## 光照
+## Lights
 
-SpriteJS<sup>Next</sup>默认支持几种常见的光源，我们可以设置环境光（ambientColor），方向光（directionalLight）和点光源（pointLight）。
+Several common light sources are supported by default. We can set ambient color, directional light and point light.
 
 ```js
 /* globals dat */
@@ -236,8 +236,8 @@ const layer = scene.layer3d('fglayer', {
   pointLightColor: 'blue',
   pointLightPosition: [5, 3, 6],
   camera: {
-    fov: 35, // 相机的视野
-    pos: [3, 3, 5], // 相机的位置
+    fov: 35,
+    pos: [3, 3, 5],
   },
 });
 
@@ -279,23 +279,23 @@ initGui();
 
 <iframe src="/demo/#/3d/light" height="650"></iframe>
 
-## 与元素交互
+## Interact
 
-SpriteJS<sup>Next</sup>的3D扩展中，与元素交互也非常简单，在前面的例子我们已经见过。
+In 3D extension, it is very simple to interact with elements, as we have seen in the previous example.
 
-一种交互是通过鼠标或触屏旋转角度和缩放，只需要一条语句：
+One kind of interaction is to rotate the angle and zoom through the mouse or touch screen, only one statement is required:
 
 ```js
 layer.setOrbit({target: [x, y, z]});
 ```
 
-另一种交互是让元素支持点击事件，也只需要一条语句：
+Another interaction is make the element to support click events, also one statement is required:
 
 ```js
 layer.setRaycast();
 ```
 
-有了这条语句之后，我们就可以在元素上像2D那样注册鼠标或触屏事件了。
+With this statement, we can register mouse or touch screen events on elements like we did in 2D mode.
 
 ```js
 layer.addEventListener('click', (evt) => {

@@ -10,39 +10,68 @@
   }
 </style>
 
-## Group3d <sub>_extends_</sub> [Node3d](zh-cn/api/ext3d/node3d)
+## Cube <sub>_extends_</sub> [Mesh3d](zh-cn/api/ext3d/mesh3d)
 
-Group3d结合了Group和Node3d。
+Cube是立方体元素。
 
-### constructor(attrs)
+### constructor(program, attrs)
 
 构造函数
 
 ### Attributes
 
-| 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
+| Attribute Name | Inherits | Type | Default | Instruction |
 | --- | --- | --- | --- | --- |
-| x | Node3d | number | 0 | 元素 X 轴坐标 |
-| y | Node3d | number | 0 | 元素 Y 轴坐标 |
-| z | Node3d | number | 0 | 元素 Z 轴坐标 |
-| pos | Node3d | Array | [0, 0, 0] | [x, y, z] 简写 |
-| rotateX | Node3d | number | 0 | 绕 X 轴旋转 |
-| rotateY | Node3d | number | 0 | 绕 Y 轴旋转 |
-| rotateZ | Node3d | number | 0 | 绕 Z 轴旋转 |
-| rotate | Node3d | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | Node3d | number | 1 | X 轴拉伸 |
-| scaleY | Node3d | number | 1 | Y 轴拉伸 |
-| scaleZ | Node3d | number | 1 | Z 轴拉伸 |
-| scale | Node3d | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
-| raycast | Node3d | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
-| visibility | Node3d | enum | enum{visible,hidden} | 元素是否可见 |
-| id | Node | string | '' | 设定元素的ID |
-| name | Node | string | '' | 设定元素的name |
-| className | Node | string | '' | 设定元素的className |
-| display | Node | string | '' | 设定元素的可见性 |
-| pointerEvents | Node | string | visible | 同CSS的pointerEvents |
+| width | | number | 1 | 元素的宽度 |
+| height | | number | 1 | 元素的高度 |
+| depth | | number | 1 | 元素的厚度 |
+| widthSegments | | number | 1 |  |
+| heightSegments | | number | 1 |  |
+| depthSegments | | number | 1 |  |
+| mode | Mesh3d | string | TRIANGLES | 设置绘制模式 |
+| colors | Mesh3d | Color | #80808080 | 每个顶点的颜色 |
+| colorDivisor | Mesh3d | number | 3 | 每个color值赋给几个顶点 |
+| x | Node3d | number | 0 |  |
+| y | Node3d | number | 0 |  |
+| z | Node3d | number | 0 |  |
+| pos | Node3d | Array | [0, 0, 0] | Short hand of [x, y, z] |
+| rotateX | Node3d | number | 0 |  |
+| rotateY | Node3d | number | 0 |  |
+| rotateZ | Node3d | number | 0 |  |
+| rotate | Node3d | Array | [0, 0, 0] | Short hand of [rotateX, rotateY, rotateZ] |
+| scaleX | Node3d | number | 1 |  |
+| scaleY | Node3d | number | 1 |  |
+| scaleZ | Node3d | number | 1 |  |
+| scale | Node3d | Array | [1, 1, 1] | Short hand of [scaleX, scaleY, scaleZ] |
+| raycast | Node3d | string | undefined | Collision detection mode. `boundings` or `sphere` |
+| visibility | Node3d | enum | enum{visible,hidden} |  |
+| id | Node | string | '' |  |
+| name | Node | string | '' |  |
+| className | Node | string | '' |  |
+| display | Node | string | '' |  |
+| pointerEvents | Node | string | visible |  |
 
 ### Properties
+
+#### _继承自Mesh3d_
+
+##### _readonly_ geometry
+
+获取元素的几何体对象。
+
+##### _readonly_ meshes
+
+当前元素和它的子孙元素的Mesh对象列表。
+
+##### _readonly_ model
+
+获取几何数据。
+
+##### _readonly_ program
+
+获取GLProgram。
+
+#### _继承自Group3d_
 
 ##### _readonly_ childNodes
 
@@ -51,10 +80,6 @@ children的别名
 ##### _readonly_ children
 
 子元素
-
-##### _readonly_ meshes
-
-当前元素和它的子孙元素的Mesh对象列表。
 
 #### _继承自Node3d_
 
@@ -146,6 +171,46 @@ renderMatrix的别名。
 
 ### Methods
 
+##### _override_ onPropertyChange(key, newValue, oldValue)
+
+当元素属性值被改变时，执行的动作。
+
+##### _override_ remesh()
+
+重新创建Mesh对象。
+
+#### _继承自Mesh3d_
+
+##### addEventListener(type, listener, options = {})
+
+注册事件监听器。
+
+##### cloneNode(deep = false)
+
+Copy一个元素，如果deep为true，同时Copy它的子元素。
+
+##### removeAllListeners(type)
+
+移除某类型的所有事件监听器。
+
+##### removeEventListener(type, listener, options)
+
+移除事件监听器。
+
+##### setGeometry(model = this[_model])
+
+设置或更新几何信息。
+
+##### setProgram(program)
+
+设置或更新GLProgram。
+
+##### updateMesh()
+
+设置或更新Mesh信息。
+
+#### _继承自Group3d_
+
 ##### append(...els)
 
 批量添加元素到group中。
@@ -153,10 +218,6 @@ renderMatrix的别名。
 ##### appendChild(el)
 
 将一个元素添加到group中。
-
-##### _override_ cloneNode(deep = false)
-
-Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 ##### getElementById(id)
 
@@ -216,10 +277,6 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 让元素转向到对应的坐标所在的方向。
 
-##### _override_ onPropertyChange(key, newValue, oldValue)
-
-当元素属性值被改变时，执行的动作。
-
 ##### setBody(body, update = true) 
 
 设置元素的Mesh对象。
@@ -241,10 +298,6 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 ##### activateAnimations() {
 
 激活元素上正在执行的所有动画。
-
-##### addEventListener(type, listener, options = {})
-
-注册事件监听器。
 
 ##### animate(frames, timing)
 
@@ -317,10 +370,6 @@ Copy整个元素。
 ##### removeAttribute(key)
 
 移除元素属性值，恢复为默认值。
-
-##### removeEventListener(type, listener, options)
-
-移除事件监听器。
 
 ##### transition(sec, easing = 'linear')
 

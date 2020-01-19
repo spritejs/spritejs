@@ -10,9 +10,9 @@
   }
 </style>
 
-## Group3d <sub>_extends_</sub> [Node3d](zh-cn/api/ext3d/node3d)
+## Node3d <sub>_extends_</sub> [Node](zh-cn/api/node)
 
-Group3d结合了Group和Node3d。
+Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
 
 ### constructor(attrs)
 
@@ -20,22 +20,22 @@ Group3d结合了Group和Node3d。
 
 ### Attributes
 
-| 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
+| Attribute Name | Inherits | Type | Default | Instruction |
 | --- | --- | --- | --- | --- |
-| x | Node3d | number | 0 | 元素 X 轴坐标 |
-| y | Node3d | number | 0 | 元素 Y 轴坐标 |
-| z | Node3d | number | 0 | 元素 Z 轴坐标 |
-| pos | Node3d | Array | [0, 0, 0] | [x, y, z] 简写 |
-| rotateX | Node3d | number | 0 | 绕 X 轴旋转 |
-| rotateY | Node3d | number | 0 | 绕 Y 轴旋转 |
-| rotateZ | Node3d | number | 0 | 绕 Z 轴旋转 |
-| rotate | Node3d | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | Node3d | number | 1 | X 轴拉伸 |
-| scaleY | Node3d | number | 1 | Y 轴拉伸 |
-| scaleZ | Node3d | number | 1 | Z 轴拉伸 |
-| scale | Node3d | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
-| raycast | Node3d | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
-| visibility | Node3d | enum | enum{visible,hidden} | 元素是否可见 |
+| x | | number | 0 | 元素 X 轴坐标 |
+| y | | number | 0 | 元素 Y 轴坐标 |
+| z | | number | 0 | 元素 Z 轴坐标 |
+| pos | | Array | [0, 0, 0] | [x, y, z] 简写 |
+| rotateX | | number | 0 | 绕 X 轴旋转 |
+| rotateY | | number | 0 | 绕 Y 轴旋转 |
+| rotateZ | | number | 0 | 绕 Z 轴旋转 |
+| rotate | | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
+| scaleX | | number | 1 | 绕 X 轴旋转 |
+| scaleY | | number | 1 | 绕 Y 轴旋转 |
+| scaleZ | | number | 1 | 绕 Z 轴旋转 |
+| scale | | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
+| raycast | | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
+| visibility | | enum | enum{visible,hidden} | 元素是否可见 |
 | id | Node | string | '' | 设定元素的ID |
 | name | Node | string | '' | 设定元素的name |
 | className | Node | string | '' | 设定元素的className |
@@ -43,20 +43,6 @@ Group3d结合了Group和Node3d。
 | pointerEvents | Node | string | visible | 同CSS的pointerEvents |
 
 ### Properties
-
-##### _readonly_ childNodes
-
-children的别名
-
-##### _readonly_ children
-
-子元素
-
-##### _readonly_ meshes
-
-当前元素和它的子孙元素的Mesh对象列表。
-
-#### _继承自Node3d_
 
 ##### _readonly_ body
 
@@ -77,6 +63,10 @@ localMatrix的别名。
 ##### _readonly_ mesh
 
 当前元素的Mesh对象，如果没有，返回null
+
+##### _readonly_ meshes
+
+当前元素和它的子孙元素的Mesh对象列表。
 
 ##### _readonly_ modelViewMatrix
 
@@ -145,64 +135,6 @@ renderMatrix的别名。
 相当于 element.attributes.zIndex
 
 ### Methods
-
-##### append(...els)
-
-批量添加元素到group中。
-
-##### appendChild(el)
-
-将一个元素添加到group中。
-
-##### _override_ cloneNode(deep = false)
-
-Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
-
-##### getElementById(id)
-
-返回指定id的子元素。
-
-##### getElementsByClassName(className)
-
-返回指定className的子元素列表
-
-##### getElementsByName(name)
-
-返回指定name的子元素列表。
-
-##### getElementsByTagName(name)
-
-返回指定类型的子元素列表。
-
-##### insertBefore(el, ref)
-
-将指定元素插入到ref元素之前，如果ref为null，则将el添加到group末尾，如果ref不为null且不是group的子元素，抛出异常。
-
-##### querySelctor(selector)
-
-根据选择器返回指定的子元素。
-
-##### querySelectorAll(selector)
-
-根据选择器返回所有匹配的子元素列表。
-
-##### replaceChild(el, ref)
-
-将ref元素用新的el元素替代。如果ref元素不在当前group中，则抛出异常。
-
-##### removeAllChildren()
-
-将group的所有子元素移除。
-
-##### removeChild(el)
-
-将指定元素移出group。
-
-##### setResolution({width, height})
-
-设置元素的上下文分辨率。
-
-#### _继承自Node3d_
 
 ##### _override_ connect(parent, zOrder)
 

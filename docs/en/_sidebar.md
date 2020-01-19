@@ -36,6 +36,7 @@
     * [Event](/en/event#Event)
 
 * More Topics
+  * [3D extension](/en/guide/3d)
   * [Engin and memory](/en/guide/engine_memory)
   * [Screen adaptation](/en/guide/resolution)
   * [Preload resources](/en/guide/resource)
@@ -48,6 +49,30 @@
   * [Worker](/en/guide/worker)
   * [with D3](/en/guide/d3)
   * [Cross platform](/en/guide/platforms)
+
+* 3D extension
+  * Getting started
+    * [Introduction](/en/ext3d/index)
+    * [Installation](/en/ext3d/index#installation)
+    * [Coordinate and Camera](/en/ext3d/index#coordinate-and-camera)
+    * [Geometry elements](/en/ext3d/index#geometry-elements)
+    * [Models](/en/ext3d/index#models)
+    * [Lights](/en/ext3d/index#lights)
+    * [Interact](/en/ext3d/index#interact)
+
+  <!--
+  * Advanced
+    * [着色器](/en/ext3d/shader)
+    * [渲染模式](/en/ext3d/mode)
+    * [模型](/en/ext3d/model)
+    * [文字](/en/ext3d/text)
+    * [分组](/en/ext3d/group)
+    * [摄像机](/en/ext3d/camera)
+    * [阴影](/en/ext3d/shadow)
+    * [渲染对象](/en/ext3d/render-target)
+    * [后期处理通道](/en/ext3d/post)
+    * [通用GPU](/en/ext3d/gpgpu)
+  -->
 
 * API
   * [Arc](/en/api/arc)
@@ -70,6 +95,22 @@
   * [Sprite](/en/api/sprite)
   * [Star](/en/api/star)
   * [Triangle](/en/api/triangle)
+  * 3D extension
+    * [Camera](/en/api/ext3d/camera)
+    * [Cube](/en/api/ext3d/cube)
+    * [Cylinder](/en/api/ext3d/cylinder)
+    * [Geometry](/en/api/ext3d/geometry)
+    * [GPGPU](/en/api/ext3d/gpgpu)
+    * [Group3d](/en/api/ext3d/group3d)
+    * [Layer3d](/en/api/ext3d/layer3d)
+    * [Mesh3d](/en/api/ext3d/mesh3d)
+    * [Node3d](/en/api/ext3d/node3d)
+    * [Plane](/en/api/ext3d/plane)
+    * [RenderTarget](/en/api/ext3d/render-target)
+    * [Shadow](/en/api/ext3d/shadow)
+    * [Sphere](/en/api/ext3d/sphere)
+    * [TextureLoader](/en/api/ext3d/texture-loader)
+    * [shaders](/en/api/ext3d/shaders)
 
 * Ecosystem
   * [2.x](http://v2.spritejs.org)

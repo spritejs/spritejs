@@ -10,13 +10,32 @@
   }
 </style>
 
-## Group3d <sub>_extends_</sub> [Node3d](zh-cn/api/ext3d/node3d)
+## RenderTarget <sub>_extends_</sub> [Group3d](zh-cn/api/ext3d/group3d)
 
-Group3d结合了Group和Node3d。
+RenderTarget定义一个用于执行绘制操作到FrameBuffer的对象。
 
-### constructor(attrs)
+### constructror(gl, attrs)
 
-构造函数
+一些配置项如下：
+
+- width = gl.canvas.width,
+- height = gl.canvas.height,
+- target = gl.FRAMEBUFFER,
+- color = 1, // number of color attachments
+- depth = true,
+- stencil = false,
+- depthTexture = false, // note - stencil breaks
+- wrapS = gl.CLAMP_TO_EDGE,
+- wrapT = gl.CLAMP_TO_EDGE,
+- minFilter = gl.LINEAR,
+- magFilter = minFilter,
+- type = gl.UNSIGNED_BYTE,
+- format = gl.RGBA,
+- internalFormat = format,
+- unpackAlignment,
+- premultiplyAlpha,
+- camera: cameraOptions,
+- buffer = false,
 
 ### Attributes
 
@@ -30,9 +49,9 @@ Group3d结合了Group和Node3d。
 | rotateY | Node3d | number | 0 | 绕 Y 轴旋转 |
 | rotateZ | Node3d | number | 0 | 绕 Z 轴旋转 |
 | rotate | Node3d | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | Node3d | number | 1 | X 轴拉伸 |
-| scaleY | Node3d | number | 1 | Y 轴拉伸 |
-| scaleZ | Node3d | number | 1 | Z 轴拉伸 |
+| scaleX | Node3d | number | 1 | 绕 X 轴旋转 |
+| scaleY | Node3d | number | 1 | 绕 Y 轴旋转 |
+| scaleZ | Node3d | number | 1 | 绕 Z 轴旋转 |
 | scale | Node3d | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
 | raycast | Node3d | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
 | visibility | Node3d | enum | enum{visible,hidden} | 元素是否可见 |
@@ -43,6 +62,12 @@ Group3d结合了Group和Node3d。
 | pointerEvents | Node | string | visible | 同CSS的pointerEvents |
 
 ### Properties
+
+##### _readonly_ texture
+
+获取RenderTarget渲染后的纹理数据。
+
+#### _继承自Group3d_
 
 ##### _readonly_ childNodes
 
@@ -146,6 +171,16 @@ renderMatrix的别名。
 
 ### Methods
 
+##### renderBy(layer, {root = this, ...options} = {})
+
+让RenderTarget实例被layer渲染。
+
+##### swap()
+
+如果设置了buffer，swap交换buffer与target。
+
+#### _继承自Group3d_
+
 ##### append(...els)
 
 批量添加元素到group中。
@@ -204,11 +239,11 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 #### _继承自Node3d_
 
-##### _override_ connect(parent, zOrder)
+##### connect(parent, zOrder)
 
 当元素被添加到对象树上时，该函数被调用，parent和zOrder被赋给元素。
 
-##### _override_ disconnect()
+##### disconnect()
 
 当元素从对象树上移除时，该函数被调用，parent和zOrder属性被移除。
 
@@ -216,7 +251,7 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 让元素转向到对应的坐标所在的方向。
 
-##### _override_ onPropertyChange(key, newValue, oldValue)
+##### onPropertyChange(key, newValue, oldValue)
 
 当元素属性值被改变时，执行的动作。
 

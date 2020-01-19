@@ -33,9 +33,9 @@ Mesh3d定义一个3D模型元素。
 | rotateY | Node3d | number | 0 | 绕 Y 轴旋转 |
 | rotateZ | Node3d | number | 0 | 绕 Z 轴旋转 |
 | rotate | Node3d | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | Node3d | number | 1 | 绕 X 轴旋转 |
-| scaleY | Node3d | number | 1 | 绕 Y 轴旋转 |
-| scaleZ | Node3d | number | 1 | 绕 Z 轴旋转 |
+| scaleX | Node3d | number | 1 | X 轴拉伸 |
+| scaleY | Node3d | number | 1 | Y 轴拉伸 |
+| scaleZ | Node3d | number | 1 | Z 轴拉伸 |
 | scale | Node3d | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
 | raycast | Node3d | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
 | visibility | Node3d | enum | enum{visible,hidden} | 元素是否可见 |

@@ -30,9 +30,9 @@ Node3d是所有 SpriteJS <sup>Next</sup> 3D扩展元素的公共基类。
 | rotateY | | number | 0 | 绕 Y 轴旋转 |
 | rotateZ | | number | 0 | 绕 Z 轴旋转 |
 | rotate | | Array | [0, 0, 0] | [rotateX, rotateY, rotateZ] 简写 |
-| scaleX | | number | 1 | 绕 X 轴旋转 |
-| scaleY | | number | 1 | 绕 Y 轴旋转 |
-| scaleZ | | number | 1 | 绕 Z 轴旋转 |
+| scaleX | Node3d | number | 1 | X 轴拉伸 |
+| scaleY | Node3d | number | 1 | Y 轴拉伸 |
+| scaleZ | Node3d | number | 1 | Z 轴拉伸 |
 | scale | | Array | [1, 1, 1] | [scaleX, scaleY, scaleZ] 简写 |
 | raycast | | string | undefined | 碰撞检测的模式，默认检测bounds，如果设为sphere则进行球形检测 |
 | visibility | | enum | enum{visible,hidden} | 元素是否可见 |
