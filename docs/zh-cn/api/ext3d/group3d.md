@@ -254,10 +254,6 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 读取或批量设置属性。
 
-##### cloneNode()
-
-Copy整个元素。
-
 ##### deactivateAnimations()
 
 停止元素上正在执行的所有动画。

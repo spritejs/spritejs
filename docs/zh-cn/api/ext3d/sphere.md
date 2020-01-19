@@ -12,18 +12,17 @@
 
 ## Sphere <sub>_extends_</sub> [Mesh3d](zh-cn/api/ext3d/mesh3d)
 
+Sphere是球体元素。
+
 ### constructor(program, attrs)
 
 构造函数
-
-Sphere是球体元素。
 
 ### Attributes
 
 | 属性名 | 继承 | 属性类型 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
 | radius | | number | 0.5 | 球体半径 |
-| radiusBottom | | number | 0.5 | 底部半径 |
 | height | | number | 1 | 元素的高度 |
 | widthSegments | | number | 32 |  |
 | heightSegments | | number | 16 |  |

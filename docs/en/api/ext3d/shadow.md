@@ -1,14 +1,14 @@
 ## Shadow
 
-继承Ogl的Shadow。
+Inherit from OGL's shadow.
 
 ### Methods
 
 ##### add(node, opts = {})
 
-将元素添加到阴影层用于显示阴影
+Add elements to shadow layers to create shadows.
 
-opts参数如下：
+opts as follows:
 
 - receive = true,
 - cast = true,

@@ -1,7 +1,7 @@
 ## Geometry
 
-创建共享几何体。
+Create shared geometry object.
 
 ### constructor(gl, model)
 
-根据model生成几何体对象。
+Generate geometry objects from the model.

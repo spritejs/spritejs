@@ -259,7 +259,7 @@ Moves the specified element out of the group.
 
 Set the context resolution of the element.
 
-#### _继承自Node3d_
+#### _From Node3d_
 
 ##### _override_ connect(parent, zOrder)
 
