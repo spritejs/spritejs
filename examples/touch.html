@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html, body {
+      overflow: hidden;
+    }
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('container');
+    const scene = new Scene({container});
+    const s = new Sprite({
+      id: 'block1',
+      width: 100,
+      height: 100,
+      bgcolor: 'red',
+    });
+    const s2 = s.cloneNode();
+    s2.attr({
+      id: 'block2',
+      y: 200,
+      bgcolor: 'blue',
+    });
+    const layer = scene.layer();
+    s.addEventListener('touchmove', (e) => {
+      console.log(e.target.id);
+    });
+    s.addEventListener('touchend', (e) => {
+      console.log('touchend', e.target.id);
+    });
+    layer.addEventListener('touchmove', (e) => {
+      console.log(e.target.id);
+    });
+    s2.addEventListener('touchend', (e) => {
+      console.log('touchend', e.target.id);
+    });
+    layer.append(s, s2);
+  </script>
+</body>
+</html>

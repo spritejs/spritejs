@@ -59,6 +59,7 @@ function drawImage(layer, offscreenLayer) {
   layer.renderer.drawImage(offscreenLayer.canvas, -left / displayRatio, -top / displayRatio, width / displayRatio, height / displayRatio);
 }
 
+const touchEventCapturedTargets = {};
 function delegateEvents(scene) {
   const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel',
     'touchstart', 'touchend', 'touchmove', 'touchcancel',
@@ -85,15 +86,29 @@ function delegateEvents(scene) {
       const pointerEvents = createPointerEvents(event, {offsetLeft: left, offsetTop: top, displayRatio});
       pointerEvents.forEach((evt) => {
         // evt.scene = scene;
-        for(let i = layers.length - 1; i >= 0; i--) {
-          const layer = layers[i];
-          if(layer.options.handleEvent !== false) {
-            const ret = layer.dispatchPointerEvent(evt);
-            if(ret && evt.target !== layer) break;
+        const id = evt.identifier;
+        if(evt.type === 'touchmove' || evt.type === 'touchend') {
+          const capturedTarget = touchEventCapturedTargets[id];
+          if(capturedTarget) capturedTarget.dispatchEvent(event);
+          if(evt.type === 'touchend') delete touchEventCapturedTargets[id];
+        } else {
+          for(let i = layers.length - 1; i >= 0; i--) {
+            const layer = layers[i];
+            if(layer.options.handleEvent !== false) {
+              const ret = layer.dispatchPointerEvent(evt);
+              if(ret && evt.target !== layer) break;
+            }
+          }
+          if(evt.target === layers[0]) {
+            // trigger event on top layer
+            evt.target = layers[layers.length - 1];
           }
         }
+        const target = evt.target;
+        if(evt.type === 'touchstart') {
+          touchEventCapturedTargets[id] = evt.target; // set captured event target
+        }
         if(evt.type === 'mousemove') {
-          const target = evt.target;
           const enteredTargets = scene[_enteredTargets];
           let enterSet;
 
