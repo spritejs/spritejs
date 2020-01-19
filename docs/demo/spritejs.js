@@ -224,7 +224,7 @@ function Paper2D() {
   return _babel_runtime_helpers_construct__WEBPACK_IMPORTED_MODULE_0___default()(Scene, args);
 }
 
-var version = "2.29.7";
+var version = "2.29.9";
 
 
 /***/ }),
@@ -9341,6 +9341,13 @@ var LabelSpriteAttr = _decorate(null, function (_initialize, _BaseSprite$Attr) {
       }
     }, {
       kind: "field",
+      decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(parseFloat), _utils__WEBPACK_IMPORTED_MODULE_11__["attr"]],
+      key: "strokeWidth",
+      value: function value() {
+        return 1;
+      }
+    }, {
+      kind: "field",
       decorators: [Object(_utils__WEBPACK_IMPORTED_MODULE_11__["parseValue"])(_utils__WEBPACK_IMPORTED_MODULE_11__["parseColorString"]), _utils__WEBPACK_IMPORTED_MODULE_11__["attr"], Object(_utils__WEBPACK_IMPORTED_MODULE_11__["inherit"])('')],
       key: "color",
       value: function value() {
@@ -9572,6 +9579,7 @@ var Label = _decorate(null, function (_initialize2, _BaseSprite) {
         var textAlign = this.attr('textAlign'),
             flexible = this.attr('flexible'),
             font = flexible ? this.flexibleFont : this.attr('font'),
+            strokeWidth = this.attr('strokeWidth'),
             lineHeight = this.attr('lineHeight');
         var text = this.text;
 
@@ -9610,6 +9618,7 @@ var Label = _decorate(null, function (_initialize2, _BaseSprite) {
             drawingContext.fillStyle = fillColor;
           }
 
+          drawingContext.lineWidth = strokeWidth;
           var top = 0;
           var width = this.contentSize[0];
           var letterSpacing = this.attr('letterSpacing'),
@@ -19619,7 +19628,7 @@ var order = 0;
           rule = _ref6[0],
           attributes = _ref6[1];
 
-      var selectors = cssWhat(rule);
+      var selectors = cssWhat.parse(rule);
 
       for (var i = 0; i < selectors.length; i++) {
         var selector = selectors[i];
