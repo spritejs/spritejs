@@ -265,7 +265,7 @@
   <li>
     <a data-nosearch href="/demo/#/3d/model_texture">
       <img src="https://p1.ssl.qhimg.com/d/inn/11c5f3186290/model.png">
-      <span>Model</span>
+      <span>Model & Texture</span>
     </a>
   </li>
   <li>
@@ -289,7 +289,7 @@
   <li>
     <a data-nosearch href="/demo/#/3d/shadow">
       <img src="https://p1.ssl.qhimg.com/d/inn/929c7387cf4c/shadow.png">
-      <span>Video</span>
+      <span>Shadow</span>
     </a>
   </li>
   <li>

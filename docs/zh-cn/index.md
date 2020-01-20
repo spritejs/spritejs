@@ -56,6 +56,25 @@ sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-
 npm install canvas@next
 ```
 
+## 3D 扩展
+
+SpriteJS<sup>Next</sup> 通过[3D扩展库](https://github.com/spritejs/sprite-extend-3d)加载并渲染3D模型。
+
+可以通过CDN加载扩展库：
+
+```html
+<script src="https://unpkg.com/spritejs@3/dist/spritejs.es.min.js"></script>
+<script src="https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js"></script>
+```
+
+或通过NPM加载：
+
+
+```js
+import {Scene} from 'spritejs';
+import {Cube, shaders} from 'sprite-extend-3d';
+```
+
 ## 架构
 
 SpriteJS <sup>Next</sup> 提供若干类基础精灵元素，可以像操作DOM元素一样在图层上操作它们。

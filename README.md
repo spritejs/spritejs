@@ -78,6 +78,23 @@ npm install spritejs --save
 import * as spritejs from 'spritejs';
 ```
 
+## 3D
+
+SpriteJS<sup>Next</sup> can render 3D elements through [3D extension library](https://github.com/spritejs/sprite-extend-3d).
+
+```html
+<script src="https://unpkg.com/spritejs@3/dist/spritejs.es.min.js"></script>
+<script src="https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js"></script>
+```
+
+Or from NPM
+
+
+```js
+import {Scene} from 'spritejs';
+import {Cube, shaders} from 'sprite-extend-3d';
+```
+
 ## Examples
 
 ### Basic
@@ -102,6 +119,22 @@ Compatible with [d3.js](https://github.com/d3/d3).
 - [Hierarchy](http://spritejs.org/demo/#/d3/hierarchy)
 - [Map](http://spritejs.org/demo/#/d3/map)
 - [Force Links](http://spritejs.org/demo/#/d3/links)
+
+### 3D Extension
+
+- [3D Cube](http://spritejs.org/demo/#/3d/basic)
+- [Camera](http://spritejs.org/demo/#/3d/camera2)
+- [Cube Map](http://spritejs.org/demo/#/3d/cubemap)
+- [Physically Based Rendering](http://spritejs.org/demo/#/3d/pbr)
+- [Geometry](http://spritejs.org/demo/#/3d/geometry)
+- [Geometry Model](http://spritejs.org/demo/#/3d/geometry3)
+- [Model & Texture](http://spritejs.org/demo/#/3d/model_texture)
+- [Groups](http://spritejs.org/demo/#/3d/group3)
+- [Skydom](http://spritejs.org/demo/#/3d/skydom)
+- [Video](http://spritejs.org/demo/#/3d/video)
+- [Shadow](http://spritejs.org/demo/#/3d/shadow)
+- [Post channel](http://spritejs.org/demo/#/3d/post)
+- [GPGPU](http://spritejs.org/demo/#/3d/gpgpu)
 
 ### [Q-Charts](https://github.com/spritejs/q-charts)
 

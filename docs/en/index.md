@@ -42,6 +42,23 @@ In browser with CDN:
 <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script>
 ```
 
+## 3D
+
+SpriteJS<sup>Next</sup> can render 3D elements through [3D extension library](https://github.com/spritejs/sprite-extend-3d).
+
+```html
+<script src="https://unpkg.com/spritejs@3/dist/spritejs.es.min.js"></script>
+<script src="https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.js"></script>
+```
+
+Or from NPM
+
+
+```js
+import {Scene} from 'spritejs';
+import {Cube, shaders} from 'sprite-extend-3d';
+```
+
 ## Architecture
 
 Spritejs<sup>Next</sup> provides several kinds of basic sprite elements, which can be operated on the layer like DOM elements.
