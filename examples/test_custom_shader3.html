@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="/js/spritejs.js"></script>
+  <script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
   <style>
     #container {
       position: absolute;
@@ -39,7 +39,8 @@
         vec2 st = gl_FragCoord.xy / u_resolution;
         float d = (st.x - st.y) / sqrt(2.0);
         d = fract(d * 50.0);
-        d = smoothstep(0.4, 0.5, 1.0 - d);
+        d = 1.0 - abs(d);
+        d = smoothstep(0.3, 0.4, d) - smoothstep(0.8, 0.9, d);
         gl_FragColor = d * vColor;
       }
     `;
