@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const vertex = `
+      attribute vec3 a_vertexPosition;
+      attribute vec4 a_color;
+      varying vec4 vColor;
+
+      void main() {
+        gl_PointSize = 1.0;
+        gl_Position = vec4(a_vertexPosition.xy, 1.0, 1.0);
+        vColor = a_color;
+      }
+    `;
+
+    const fragment = `
+      precision mediump float;
+      uniform vec4 u_color;
+      uniform vec2 u_resolution;
+      varying vec4 vColor;
+
+      void main() {
+        vec2 st = gl_FragCoord.xy / u_resolution;
+        float d = (st.x - st.y) / sqrt(2.0);
+        d = fract(d * 50.0);
+        d = smoothstep(0.4, 0.5, 1.0 - d);
+        gl_FragColor = d * vColor;
+      }
+    `;
+
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      width: 600,
+      height: 600,
+    });
+
+    const fglayer = scene.layer('fglayer');
+    const program = fglayer.renderer.createProgram({vertex, fragment});
+    
+    const s = new spritejs.Ellipse();
+    s.attr({
+      radius: [100, 50],
+      pos: [300, 300],
+      fillColor: 'blue',
+    });
+    s.setProgram(program);
+    const {width, height} = fglayer.getResolution();
+    s.setUniforms({
+      u_resolution: [width, height],
+    });
+    fglayer.append(s);
+  </script>
+</body>
+</html>
