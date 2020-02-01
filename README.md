@@ -226,6 +226,16 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
+## Credits and Acknowledgements
+
+- [svg-path-contours](https://github.com/mattdesl/svg-path-contours) Approximates an SVG path into a discrete list of 2D contours (polylines). 
+
+- [extrude-polyline](https://github.com/mattdesl/extrude-polyline) Extrudes a 2D polyline with a given line thickness and the desired join/cap types. 
+
+- [triangulate-contours](https://github.com/mattdesl/triangulate-contours) Triangulates a series of contours using Tess2.js. 
+
+- [OGL](https://github.com/oframe/ogl) OGL is a small, effective WebGL library aimed at developers who like minimal layers of abstraction, and are comfortable creating their own shaders.
+
 ## License
 
 [MIT](LICENSE)
