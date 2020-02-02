@@ -35,7 +35,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 
 ```html
 <script src="https://unpkg.com/spritejs@3/dist/spritejs.min.js"></script>
-<div id="container"></div>
+<div id="container" style="width:400px;height:400px"></div>
 <script>
     const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
