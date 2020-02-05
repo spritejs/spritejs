@@ -1,5 +1,10 @@
 ## Change Logs
 
+#### [2020-02-05] v3.1.1
+
+- Custom shader.
+- Post processing channel.
+
 #### [2019-12-31] v3.1.1
 
 - Support custom shaders.
