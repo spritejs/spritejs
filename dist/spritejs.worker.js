@@ -33752,7 +33752,7 @@ function (_Block) {
         }
       }
 
-      ref.disconnect();
+      ref.disconnect(this);
       return el;
     }
   }, {
@@ -33778,7 +33778,7 @@ function (_Block) {
           this[_ordered].splice(_idx, 1);
         }
 
-        el.disconnect();
+        el.disconnect(this);
         return el;
       }
 
@@ -36799,6 +36799,7 @@ function (_Group) {
 
     _this.options = options;
     _this.id = options.id;
+    _this[_pass] = [];
 
     _this.setResolution(canvas);
 
@@ -36806,7 +36807,6 @@ function (_Group) {
     _this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_8__["Timeline"]();
     _this.__mouseCapturedTarget = null;
     _this[_tick] = false;
-    _this[_pass] = [];
     return _this;
   }
 

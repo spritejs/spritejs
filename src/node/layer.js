@@ -47,12 +47,12 @@ export default class Layer extends Group {
     }
     this.options = options;
     this.id = options.id;
+    this[_pass] = [];
     this.setResolution(canvas);
     this.canvas = canvas;
     this[_timeline] = new Timeline();
     this.__mouseCapturedTarget = null;
     this[_tick] = false;
-    this[_pass] = [];
   }
 
   get autoRender() {

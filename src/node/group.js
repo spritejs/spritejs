@@ -173,7 +173,7 @@ export default class Group extends Block {
         this[_ordered][idx] = el;
       }
     }
-    ref.disconnect();
+    ref.disconnect(this);
     return el;
   }
 
@@ -192,7 +192,7 @@ export default class Group extends Block {
         const _idx = this[_ordered].indexOf(el);
         this[_ordered].splice(_idx, 1);
       }
-      el.disconnect();
+      el.disconnect(this);
       return el;
     }
     return null;

@@ -29542,7 +29542,7 @@ class Group extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
       }
     }
 
-    ref.disconnect();
+    ref.disconnect(this);
     return el;
   }
 
@@ -29566,7 +29566,7 @@ class Group extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this[_ordered].splice(_idx, 1);
       }
 
-      el.disconnect();
+      el.disconnect(this);
       return el;
     }
 
@@ -32497,12 +32497,12 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
     this.options = options;
     this.id = options.id;
+    this[_pass] = [];
     this.setResolution(canvas);
     this.canvas = canvas;
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
     this[_tick] = false;
-    this[_pass] = [];
   }
 
   get autoRender() {
