@@ -216,6 +216,15 @@
     "label": "fire",
     "src": "protonjs/fire"
   }, {
+    "label": "fill color",
+    "src": "shader_and_pass/fill_color"
+  }, {
+    "label": "custom shader",
+    "src": "shader_and_pass/custom_shader"
+  }, {
+    "label": "pass",
+    "src": "shader_and_pass/pass"
+  }, {
     "label": "basic",
     "src": "3d/basic"
   }, {

@@ -7970,6 +7970,22 @@ const defaultOpts = {
   // antialias: false,
   bufferSize: 1500
 };
+const defaultPassVertex = `attribute vec3 a_vertexPosition;
+attribute vec3 a_vertexTextureCoord;
+varying vec3 vTextureCoord;
+void main() {
+  gl_PointSize = 1.0;
+  gl_Position = vec4(a_vertexPosition.xy, 1.0, 1.0);    
+  vTextureCoord = a_vertexTextureCoord;              
+}
+`;
+const defaultPassFragment = `precision mediump float;
+varying vec3 vTextureCoord;
+uniform sampler2D u_texSampler;
+void main() {
+  gl_FragColor = texture2D(u_texSampler, vTextureCoord.xy);
+}
+`;
 
 const _glRenderer = Symbol('glRenderer');
 
@@ -7983,6 +7999,21 @@ const _applyGlobalTransform = Symbol('applyGlobalTransform');
 
 const _canvas = Symbol('canvas');
 
+function draw(renderer) {
+  const gl = renderer.gl;
+  const fbo = renderer.fbo;
+
+  if (fbo) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  }
+
+  renderer._draw();
+
+  if (fbo) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  }
+}
+
 function drawFilterContext(renderer, filterContext, width, height) {
   const filterTexture = renderer.createTexture(filterContext.canvas);
   const contours = [[[0, 0], [width, 0], [width, height], [0, height], [0, 0]]];
@@ -7994,10 +8025,7 @@ function drawFilterContext(renderer, filterContext, width, height) {
     height
   });
   filterMesh.setTexture(filterTexture);
-  renderer.setMeshData([filterMesh.meshData]);
-
-  renderer._draw();
-
+  draw(renderer);
   filterTexture.delete();
   filterContext.clearRect(0, 0, width, height);
   delete filterContext._filter;
@@ -8163,6 +8191,18 @@ class Renderer {
     throw new Error('Context 2D cannot create webgl program.');
   }
 
+  createPassProgram({
+    vertex = defaultPassVertex,
+    fragment = defaultPassFragment,
+    options
+  } = {}) {
+    return this.createProgram({
+      vertex,
+      fragment,
+      options
+    });
+  }
+
   useProgram(program, attributeOptions = {}) {
     if (this[_glRenderer]) {
       const attrOpts = Object.assign({}, program._attribOpts, attributeOptions);
@@ -8233,9 +8273,7 @@ class Renderer {
 
       renderer.setMeshData([cloud.meshData]);
       if (cloud.beforeRender) cloud.beforeRender(gl, cloud);
-
-      renderer._draw();
-
+      draw(renderer);
       if (cloud.afterRender) cloud.afterRender(gl, cloud);
     } else {
       renderer.setTransform(this[_globalTransform]);
@@ -8254,6 +8292,7 @@ class Renderer {
     const renderer = this[_glRenderer] || this[_canvasRenderer];
 
     if (this[_glRenderer]) {
+      const oldFBO = renderer.fbo;
       const meshData = Object(_utils_compress__WEBPACK_IMPORTED_MODULE_3__["default"])(this, meshes, drawProgram == null);
       const gl = renderer.gl;
       if (clear) gl.clear(gl.COLOR_BUFFER_BIT);
@@ -8271,17 +8310,35 @@ class Renderer {
             program
           }); // continue; // eslint-disable-line no-continue
         } else {
+          const {
+            width,
+            height
+          } = this.canvas;
           if (mesh.beforeRender) mesh.beforeRender(gl, mesh);
+
+          if (mesh.pass.length) {
+            if (!this.fbo || this.fbo.width !== width || this.fbo.height !== height) {
+              this.fbo = {
+                width,
+                height,
+                target: renderer.createFBO(),
+                buffer: renderer.createFBO(),
+
+                swap() {
+                  [this.target, this.buffer] = [this.buffer, this.target];
+                }
+
+              };
+            }
+
+            renderer.bindFBO(this.fbo.target);
+          }
 
           if (!program && mesh.filterCanvas) {
             // 有一些滤镜用shader不好实现：blur、drop-shadow、url
             Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_10__["applyShader"])(renderer, {
               hasTexture: true
             });
-            const {
-              width,
-              height
-            } = this.canvas;
             let filterContext = this.filterContext;
 
             if (!filterContext) {
@@ -8351,8 +8408,26 @@ class Renderer {
             this[_applyGlobalTransform](this[_globalTransform]);
 
             renderer.setMeshData([mesh]);
+            draw(renderer);
+          }
 
-            renderer._draw();
+          if (mesh.pass.length) {
+            const len = mesh.pass.length;
+            mesh.pass.forEach((pass, idx) => {
+              pass.blend = mesh.enableBlend;
+              pass.setTexture(renderer.fbo.texture);
+              if (idx === len - 1) renderer.bindFBO(oldFBO);else {
+                this.fbo.swap();
+                renderer.bindFBO(this.fbo.target);
+              }
+              if (pass.program) renderer.useProgram(pass.program);else {
+                this.defaultPassProgram = this.defaultPassProgram || this.createPassProgram();
+                renderer.useProgram(this.defaultPassProgram);
+              }
+              renderer.setMeshData([pass.meshData]);
+              gl.clear(gl.COLOR_BUFFER_BIT);
+              draw(renderer);
+            });
           }
 
           if (mesh.afterRender) mesh.afterRender(gl, mesh);
@@ -8626,7 +8701,8 @@ class Renderer {
           if (!samplerMap[name]) {
             samplerMap[name] = idx;
             gl.uniform1i(uniform, idx);
-          }
+          } // gl.bindTexture(gl.TEXTURE_2D, null);
+
 
           if (that.options.autoUpdate) that.update();
         },
@@ -9110,13 +9186,23 @@ class Renderer {
     return this.compile(frag, vert);
   }
 
-  createTexture(img) {
+  createTexture(img = null) {
     const gl = this.gl;
     gl.activeTexture(gl.TEXTURE15);
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img); // gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
+    const {
+      width,
+      height
+    } = this.canvas;
+
+    if (img) {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    } else {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    } // gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
+
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // Prevents s-coordinate wrapping (repeating).
@@ -9124,7 +9210,11 @@ class Renderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // Prevents t-coordinate wrapping (repeating).
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    texture._img = img;
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    texture._img = img || {
+      width,
+      height
+    };
 
     texture.delete = () => {
       this.deleteTexture(texture);
@@ -9152,6 +9242,62 @@ class Renderer {
     return this.createTexture(img);
   }
 
+  createFBO({
+    color = 1,
+    blend = false,
+    depth = this.options.depth !== false,
+    stencil = !!this.options.stencil
+  } = {}) {
+    const gl = this.gl;
+    const buffer = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, buffer);
+    const textures = [];
+
+    for (let i = 0; i < color; i++) {
+      const texture = this.createTexture();
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0 + i, gl.TEXTURE_2D, texture, 0
+      /* level */
+      );
+      textures.push(texture);
+    }
+
+    buffer.textures = textures;
+    buffer.texture = textures[0];
+    buffer.blend = blend;
+    const {
+      width,
+      height
+    } = this.canvas; // Render buffers
+
+    if (depth && !stencil) {
+      buffer.depthBuffer = gl.createRenderbuffer();
+      gl.bindRenderbuffer(gl.RENDERBUFFER, buffer.depthBuffer);
+      gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, buffer.depthBuffer);
+    }
+
+    if (stencil && !depth) {
+      buffer.stencilBuffer = gl.createRenderbuffer();
+      gl.bindRenderbuffer(gl.RENDERBUFFER, buffer.stencilBuffer);
+      gl.renderbufferStorage(gl.RENDERBUFFER, gl.STENCIL_INDEX8, width, height);
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.STENCIL_ATTACHMENT, gl.RENDERBUFFER, buffer.stencilBuffer);
+    }
+
+    if (depth && stencil) {
+      buffer.depthStencilBuffer = gl.createRenderbuffer();
+      gl.bindRenderbuffer(gl.RENDERBUFFER, buffer.depthStencilBuffer);
+      gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, buffer.depthStencilBuffer);
+    }
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return buffer;
+  }
+
+  bindFBO(fbo = null) {
+    this.fbo = fbo;
+  }
+
   render({
     clearBuffer = true
   } = {}) {
@@ -9164,10 +9310,18 @@ class Renderer {
       this.useProgram(program);
     }
 
+    if (this.fbo) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+    }
+
     if (clearBuffer) gl.clear(gl.COLOR_BUFFER_BIT);
     const lastFrameID = this[_renderFrameID];
 
     this._draw();
+
+    if (this.fbo) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
 
     if (this[_renderFrameID] === lastFrameID) {
       this[_renderFrameID] = null;
@@ -10250,6 +10404,7 @@ function packData(temp, enableBlend) {
     meshData.packIndex = temp[0].packIndex;
     meshData.packLength = temp.length;
     meshData.beforeRender = temp[0].beforeRender;
+    meshData.pass = temp[0].pass;
     meshData.afterRender = temp[temp.length - 1].afterRender;
     temp.length = 0;
     return meshData;
@@ -10287,7 +10442,7 @@ function* compress(renderer, meshes, ignoreTrasnparent = false) {
         } else if (size) {
           const lastMesh = temp[temp.length - 1];
 
-          if (lastMesh && (lastMesh.filterCanvas || lastMesh.afterRender || mesh.beforeRender || lastMesh.program !== mesh.program || !compareUniform(lastMesh, mesh, temp))) {
+          if (lastMesh && (lastMesh.filterCanvas || lastMesh.afterRender || mesh.beforeRender || lastMesh.pass.length || mesh.pass.length || lastMesh.program !== mesh.program || !compareUniform(lastMesh, mesh, temp))) {
             yield packData(temp, enableBlend);
             size = 0;
             enableBlend = false;
@@ -13172,6 +13327,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(46);
 /* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_svg_path_contours__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _utils_parse_color__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(31);
+/* harmony import */ var _figure2d__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(40);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -13179,6 +13335,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -13230,6 +13387,8 @@ const _opacity = Symbol('opacity');
 const _program = Symbol('program');
 
 const _attributes = Symbol('attributes');
+
+const _pass = Symbol('pass');
 
 function normalizePoints(points, bound) {
   const [w, h] = bound[1];
@@ -13291,6 +13450,7 @@ class Mesh2D {
     this.contours = figure.contours;
     this[_program] = null;
     this[_attributes] = {};
+    this[_pass] = [];
   }
 
   get width() {
@@ -13498,6 +13658,10 @@ class Mesh2D {
 
   get uniforms() {
     return this[_uniforms];
+  }
+
+  get pass() {
+    return this[_pass];
   } // {stroke, fill}
 
 
@@ -13761,6 +13925,15 @@ class Mesh2D {
             type: 'stroke'
           }));
         }
+      }
+
+      if (this[_pass].length) {
+        this[_pass].forEach(pass => {
+          pass.setResolution({
+            width,
+            height
+          });
+        });
       }
     }
   }
@@ -14194,6 +14367,23 @@ class Mesh2D {
 
   isPointInStroke(x, y) {
     return this.isPointCollision(x, y, 'stroke');
+  }
+
+  addPass(program, uniforms = {}) {
+    const {
+      width,
+      height
+    } = this;
+    const figure = new _figure2d__WEBPACK_IMPORTED_MODULE_12__["default"]();
+    figure.rect(0, 0, width, height);
+    const mesh = new Mesh2D(figure, {
+      width,
+      height
+    });
+    mesh.setUniforms(uniforms);
+    mesh.setProgram(program);
+
+    this[_pass].push(mesh);
   }
 
 }
@@ -18770,8 +18960,10 @@ class Node {
     this.forceUpdate();
     this.dispatchEvent({
       type: 'append',
-      parent,
-      zOrder
+      detail: {
+        parent,
+        zOrder
+      }
     });
   }
 
@@ -18797,8 +18989,10 @@ class Node {
     this.deactivateAnimations();
     this.dispatchEvent({
       type: 'remove',
-      parent,
-      zOrder
+      detail: {
+        parent,
+        zOrder
+      }
     });
     if (parent) parent.forceUpdate();
   }
@@ -19004,6 +19198,13 @@ class Node {
       };
       this.updateContours();
       this.forceUpdate();
+      this.dispatchEvent({
+        type: 'resolutionchange',
+        detail: {
+          width,
+          height
+        }
+      });
     }
 
     if (this.mesh && this.mesh.setResolution) this.mesh.setResolution({
@@ -32255,6 +32456,10 @@ const _prepareRender = Symbol('prepareRender');
 
 const _tick = Symbol('tick');
 
+const _pass = Symbol('pass');
+
+const _fbo = Symbol('fbo');
+
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   constructor(options = {}) {
     super();
@@ -32297,6 +32502,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
     this[_tick] = false;
+    this[_pass] = [];
   }
 
   get autoRender() {
@@ -32326,6 +32532,10 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
   get offscreen() {
     return !!this.options.offscreen || this.canvas._offscreen;
+  }
+
+  get pass() {
+    return this[_pass];
   }
 
   get prepareRender() {
@@ -32363,6 +32573,37 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   //   return true;
   // }
 
+
+  addPass({
+    vertex,
+    fragment,
+    options,
+    uniforms
+  } = {}) {
+    if (this.renderer.glRenderer) {
+      const {
+        width,
+        height
+      } = this.getResolution();
+      const program = this.renderer.createPassProgram({
+        vertex,
+        fragment,
+        options
+      });
+      const figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Figure2D"]();
+      figure.rect(0, 0, width, height);
+      const mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](figure, {
+        width,
+        height
+      });
+      mesh.setUniforms(uniforms);
+      mesh.setProgram(program);
+
+      this[_pass].push(mesh);
+
+      this.forceUpdate();
+    }
+  }
   /* override */
 
 
@@ -32416,6 +32657,31 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       }
     }
   }
+
+  getFBO() {
+    const renderer = this.renderer.glRenderer;
+    const {
+      width,
+      height
+    } = this.getResolution();
+
+    if (renderer && (!this[_fbo] || this[_fbo].width !== width || this[_fbo].height !== height)) {
+      this[_fbo] = {
+        width,
+        height,
+        target: renderer.createFBO(),
+        buffer: renderer.createFBO(),
+
+        swap() {
+          [this.target, this.buffer] = [this.buffer, this.target];
+        }
+
+      };
+      return this[_fbo];
+    }
+
+    return this[_fbo] ? this[_fbo] : null;
+  }
   /* override */
 
 
@@ -32442,12 +32708,36 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   render({
     clear = true
   } = {}) {
+    const fbo = this[_pass].length ? this.getFBO() : null;
+
+    if (fbo) {
+      this.renderer.glRenderer.bindFBO(fbo.target);
+    }
+
     if (clear) this[_renderer].clear();
     const meshes = this.draw();
 
     if (meshes && meshes.length) {
       this.renderer.drawMeshes(meshes);
       if (this.canvas.draw) this.canvas.draw();
+    }
+
+    if (fbo) {
+      const renderer = this.renderer.glRenderer;
+      const len = this[_pass].length;
+
+      this[_pass].forEach((pass, idx) => {
+        pass.blend = true;
+        pass.setTexture(fbo.target.texture);
+        if (idx === len - 1) renderer.bindFBO(null);else {
+          fbo.swap();
+          renderer.bindFBO(fbo.target);
+        }
+
+        this[_renderer].clear();
+
+        this.renderer.drawMeshes([pass]);
+      });
     }
 
     this._prepareRenderFinished();
@@ -32485,11 +32775,16 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       }
 
       this.attributes.size = [width, height];
-      this.dispatchEvent({
-        type: 'resolutionchange',
-        width,
-        height
-      });
+
+      if (this[_pass].length) {
+        this[_pass].forEach(pass => {
+          pass.setResolution({
+            width,
+            height
+          });
+        });
+      } // this.dispatchEvent({type: 'resolutionchange', width, height});
+
     }
 
     const [left, top] = this.renderOffset;
@@ -32510,7 +32805,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     const t = this.timeline.fork(options);
     const layer = this;
     Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(function update() {
-      handler(t.currentTime);
+      if (handler) handler(t.currentTime);
       if (layer[_autoRender]) layer.render();
       Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(update);
     });

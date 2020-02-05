@@ -1,4 +1,4 @@
-import {Renderer, ENV} from '@mesh.js/core';
+import {Renderer, ENV, Figure2D, Mesh2D} from '@mesh.js/core';
 import {Timeline} from 'sprite-animator';
 import {requestAnimationFrame, cancelAnimationFrame} from '../utils/animation-frame';
 import Group from './group';
@@ -15,6 +15,9 @@ const _timeline = Symbol('timeline');
 
 const _prepareRender = Symbol('prepareRender');
 const _tick = Symbol('tick');
+
+const _pass = Symbol('pass');
+const _fbo = Symbol('fbo');
 
 export default class Layer extends Group {
   constructor(options = {}) {
@@ -49,6 +52,7 @@ export default class Layer extends Group {
     this[_timeline] = new Timeline();
     this.__mouseCapturedTarget = null;
     this[_tick] = false;
+    this[_pass] = [];
   }
 
   get autoRender() {
@@ -74,6 +78,10 @@ export default class Layer extends Group {
 
   get offscreen() {
     return !!this.options.offscreen || this.canvas._offscreen;
+  }
+
+  get pass() {
+    return this[_pass];
   }
 
   get prepareRender() {
@@ -105,6 +113,20 @@ export default class Layer extends Group {
   // isPointCollision(x, y) {
   //   return true;
   // }
+
+  addPass({vertex, fragment, options, uniforms} = {}) {
+    if(this.renderer.glRenderer) {
+      const {width, height} = this.getResolution();
+      const program = this.renderer.createPassProgram({vertex, fragment, options});
+      const figure = new Figure2D();
+      figure.rect(0, 0, width, height);
+      const mesh = new Mesh2D(figure, {width, height});
+      mesh.setUniforms(uniforms);
+      mesh.setProgram(program);
+      this[_pass].push(mesh);
+      this.forceUpdate();
+    }
+  }
 
   /* override */
   dispatchPointerEvent(event) {
@@ -155,6 +177,24 @@ export default class Layer extends Group {
     }
   }
 
+  getFBO() {
+    const renderer = this.renderer.glRenderer;
+    const {width, height} = this.getResolution();
+    if(renderer && (!this[_fbo] || this[_fbo].width !== width || this[_fbo].height !== height)) {
+      this[_fbo] = {
+        width,
+        height,
+        target: renderer.createFBO(),
+        buffer: renderer.createFBO(),
+        swap() {
+          [this.target, this.buffer] = [this.buffer, this.target];
+        },
+      };
+      return this[_fbo];
+    }
+    return this[_fbo] ? this[_fbo] : null;
+  }
+
   /* override */
   onPropertyChange(key, newValue, oldValue) {
     super.onPropertyChange(key, newValue, oldValue);
@@ -174,11 +214,30 @@ export default class Layer extends Group {
   }
 
   render({clear = true} = {}) {
+    const fbo = this[_pass].length ? this.getFBO() : null;
+    if(fbo) {
+      this.renderer.glRenderer.bindFBO(fbo.target);
+    }
     if(clear) this[_renderer].clear();
     const meshes = this.draw();
     if(meshes && meshes.length) {
       this.renderer.drawMeshes(meshes);
       if(this.canvas.draw) this.canvas.draw();
+    }
+    if(fbo) {
+      const renderer = this.renderer.glRenderer;
+      const len = this[_pass].length;
+      this[_pass].forEach((pass, idx) => {
+        pass.blend = true;
+        pass.setTexture(fbo.target.texture);
+        if(idx === len - 1) renderer.bindFBO(null);
+        else {
+          fbo.swap();
+          renderer.bindFBO(fbo.target);
+        }
+        this[_renderer].clear();
+        this.renderer.drawMeshes([pass]);
+      });
     }
     this._prepareRenderFinished();
   }
@@ -201,7 +260,12 @@ export default class Layer extends Group {
         renderer.glRenderer.gl.viewport(0, 0, width, height);
       }
       this.attributes.size = [width, height];
-      this.dispatchEvent({type: 'resolutionchange', width, height});
+      if(this[_pass].length) {
+        this[_pass].forEach((pass) => {
+          pass.setResolution({width, height});
+        });
+      }
+      // this.dispatchEvent({type: 'resolutionchange', width, height});
     }
     const [left, top] = this.renderOffset;
     const displayRatio = this.displayRatio;
@@ -218,7 +282,7 @@ export default class Layer extends Group {
     const t = this.timeline.fork(options);
     const layer = this;
     requestAnimationFrame(function update() {
-      handler(t.currentTime);
+      if(handler) handler(t.currentTime);
       if(layer[_autoRender]) layer.render();
       requestAnimationFrame(update);
     });

@@ -221,7 +221,7 @@ export default class Node {
     if(parent.timeline) this.activateAnimations();
     this.setResolution(parent.getResolution());
     this.forceUpdate();
-    this.dispatchEvent({type: 'append', parent, zOrder});
+    this.dispatchEvent({type: 'append', detail: {parent, zOrder}});
   }
 
   deactivateAnimations() {
@@ -239,7 +239,7 @@ export default class Node {
     delete this.parent;
     delete this.zOrder;
     this.deactivateAnimations();
-    this.dispatchEvent({type: 'remove', parent, zOrder});
+    this.dispatchEvent({type: 'remove', detail: {parent, zOrder}});
     if(parent) parent.forceUpdate();
   }
 
@@ -406,6 +406,7 @@ export default class Node {
       this[_resolution] = {width, height};
       this.updateContours();
       this.forceUpdate();
+      this.dispatchEvent({type: 'resolutionchange', detail: {width, height}});
     }
     if(this.mesh && this.mesh.setResolution) this.mesh.setResolution({width, height});
   }

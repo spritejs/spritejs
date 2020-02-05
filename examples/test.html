@@ -90,7 +90,7 @@
     //   path.attr({texture: 'guanguan1.png'});
     // });
 
-    const bglayer = scene.layer('bglayer', {offscreen: true});
+    const bglayer = scene.layer('bglayer', {offscreen: false});
     const fglayer = scene.layer('fglayer');
 
     const b = new spritejs.Sprite();
@@ -102,6 +102,10 @@
       boxSizing: 'border-box',
     });
     bglayer.appendChild(b);
+
+    b.addEventListener('resolutionchange', (e) => {
+      console.log(e);
+    });
 
     const l = new spritejs.Label();
     l.attr({
