@@ -288,6 +288,9 @@
     "label": "render target",
     "src": "3d/render_target"
   }, {
+    "label": "skinning",
+    "src": "3d/skinning"
+  }, {
     "label": "shader",
     "src": "3d/shader"
   }, {
