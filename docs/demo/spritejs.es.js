@@ -11313,7 +11313,7 @@ function brightness(p) {
   return [p, 0, 0, 0, 0, 0, p, 0, 0, 0, 0, 0, p, 0, 0, 0, 0, 0, 1, 0];
 }
 function saturate(p) {
-  p = Object(_math__WEBPACK_IMPORTED_MODULE_0__["clamp"])(0, 1, p);
+  // p = clamp(0, 1, p);
   const r = 0.212 * (1 - p);
   const g = 0.714 * (1 - p);
   const b = 0.074 * (1 - p);
