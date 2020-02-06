@@ -7897,6 +7897,7 @@ function drawFilterContext(renderer, filterContext, width, height) {
     height: height
   });
   filterMesh.setTexture(filterTexture);
+  renderer.setMeshData([filterMesh.meshData]);
   draw(renderer);
   filterTexture.delete();
   filterContext.clearRect(0, 0, width, height);
