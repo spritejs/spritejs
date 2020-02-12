@@ -222,6 +222,9 @@
     "label": "custom shader",
     "src": "shader_and_pass/custom_shader"
   }, {
+    "label": "mask",
+    "src": "shader_and_pass/mask"
+  }, {
     "label": "pass",
     "src": "shader_and_pass/pass"
   }, {
