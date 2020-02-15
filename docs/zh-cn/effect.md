@@ -1,4 +1,4 @@
-## 过度 Transition
+## 过渡 Transition
 
 如果我们要给元素增加一些简单的效果，可以通过transition来完成，只要在设置和改变元素的属性前调用transition方法，传入时间和可选的easing参数即可。transition的easing支持css3的easing。
 

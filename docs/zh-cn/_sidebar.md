@@ -28,7 +28,7 @@
       * [圆弧和椭圆弧](/zh-cn/path#圆弧和椭圆弧)
       * [圆环](/zh-cn/path#圆环)
   * 效果
-    * [过渡 transition](/zh-cn/effect#过度-transition)
+    * [过渡 transition](/zh-cn/effect#过渡-transition)
     * [动画 animate](/zh-cn/effect#动画-animate)
     * [滤镜 filter](/zh-cn/effect#滤镜-filter)
     * [渐变 gradient](/zh-cn/effect#渐变-gradient)
