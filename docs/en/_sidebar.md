@@ -7,7 +7,7 @@
   * [Basic](/en/index#Basic)
   * [Examples](/en/examples)
 
-* Totorials
+* Tutorials
   * Coordinate
     * [Resolution](/en/resolution#Resolution)
   * Element
