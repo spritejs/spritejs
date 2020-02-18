@@ -11069,7 +11069,7 @@ const _hasCloudFilter = Symbol('cloudFilter');
     return this[_mesh].isPointCollision(...p, type);
   }
 
-  isPointInPath(idx, [x, y]) {
+  isPointInFill(idx, [x, y]) {
     return this.isPointCollision(idx, [x, y], 'fill');
   }
 
@@ -14235,7 +14235,7 @@ class Mesh2D {
     return false;
   }
 
-  isPointInPath(x, y) {
+  isPointInFill(x, y) {
     return this.isPointCollision(x, y, 'fill');
   }
 

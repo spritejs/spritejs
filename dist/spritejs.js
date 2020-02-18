@@ -12979,8 +12979,8 @@ function () {
       return (_this$_mesh = this[_mesh]).isPointCollision.apply(_this$_mesh, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(p).concat([type]));
     }
   }, {
-    key: "isPointInPath",
-    value: function isPointInPath(idx, _ref15) {
+    key: "isPointInFill",
+    value: function isPointInFill(idx, _ref15) {
       var _ref16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref15, 2),
           x = _ref16[0],
           y = _ref16[1];
@@ -16412,8 +16412,8 @@ function () {
       return false;
     }
   }, {
-    key: "isPointInPath",
-    value: function isPointInPath(x, y) {
+    key: "isPointInFill",
+    value: function isPointInFill(x, y) {
       return this.isPointCollision(x, y, 'fill');
     }
   }, {
