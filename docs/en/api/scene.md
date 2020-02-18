@@ -205,7 +205,7 @@ Set the context resolution of the element.
 
 ##### snapshot({offscreen = false} = {})
 
-Take a snapshot of the current time.
+Take a snapshot of the current scene.
 
 #### _From Group_
 

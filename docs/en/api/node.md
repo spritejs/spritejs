@@ -159,7 +159,7 @@ Get the event listeners.
 
 ##### getOffsetPosition(x, y)
 
-Transform the specified [x, y] coordinates relative to the layer to the coordinates of to the current element, with the anchor as the origin [0, 0].
+Transform the specified [x, y] coordinates relative to the layer of the coordinates of the current element, with the anchor as the origin [0, 0].
 
 ##### getResolution()
 
