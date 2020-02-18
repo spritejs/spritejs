@@ -1718,6 +1718,10 @@ declare namespace spritejs {
     get isVisible(): boolean;
   }
 
+  interface WorkerOptions {
+    worker: true,
+  }
+
   /**
    * Scene manages one or more layers.
    */
@@ -1782,7 +1786,13 @@ declare namespace spritejs {
      * @param id 
      * @param options 
      */
-    layer(id?: string, options?: Record<string, any>): Layer|LayerWorker;
+    layer(id: string, options: WorkerOptions): LayerWorker;    
+    /**
+     * Create and get the corresponding layer.
+     * @param id 
+     * @param options 
+     */
+    layer(id?: string, options?: Record<string, any>): Layer;
     /**
      * Load resources asynchronously.
      * @param resources 
@@ -1910,12 +1920,12 @@ declare namespace spritejs {
    * requestAnimation polyfill.
    * @param callback 
    */
-  export function requestAnimationFrame(callback: Function): number|Symbol;
+  export function requestAnimationFrame(callback: Function): any;
   /**
    * cancelAnimationFrame polyfill.
    * @param id 
    */
-  export function cancelAnimationFrame(id: number|Symbol): void;
+  export function cancelAnimationFrame(id: any): void;
 
   namespace ENV {
     /**
