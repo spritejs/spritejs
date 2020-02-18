@@ -206,7 +206,7 @@ declare namespace spritejs {
      * @param program 
      * @param attributeOptions 
      */
-    useProgram(program: WebGLProgram, attributeOptions?: Record<string, any>);
+    useProgram(program: WebGLProgram, attributeOptions?: Record<string, any>): WebGLProgram;
     /**
      * Delete texture.
      * @param texture 
