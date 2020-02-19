@@ -408,7 +408,7 @@ declare namespace spritejs {
      * @param length 
      * @returns the point at a given distance along the path.
      */
-    getPointAtLength(length: number): number;
+    getPointAtLength(length: number): Array<number>;
     /**
      * The total length of the path.
      * @returns the total length of the path.
@@ -1190,6 +1190,8 @@ declare namespace spritejs {
    * Label draws a piece of text.
    */
   export class Label extends Block {
+    constructor(text: string);
+    constructor(attrs?: Record<string, any>);
     /**
      * Element's content size.
      */
@@ -1220,6 +1222,7 @@ declare namespace spritejs {
    */
   export class Layer extends Group {
     constructor(options?: Record<string, any>);
+    canvas: HTMLCanvasElement|OffscreenCanvas;
     /**
      * Whether to render automatically depends on the parameters when creating a layer.
      */
@@ -1451,13 +1454,13 @@ declare namespace spritejs {
      * Get attribute by key.
      * @param key 
      */
-    attr(key: number): any;
+    attr(key: string): any;
     /**
      * Set attribute by key and value.
      * @param key 
      * @param value 
      */
-    attr(key: number, value: any): this;
+    attr(key: string, value: any): this;
     /**
      * Set attributes.
      * @param key 
@@ -1669,7 +1672,7 @@ declare namespace spritejs {
      * Get the original coordinates of the point where the specified length is located.
      * @param len 
      */
-    getPointAtLength(len: number): number;
+    getPointAtLength(len: number): Array<number>;
     /**
      * The action when an element attribute value is changed.
      * @param key 
@@ -1834,6 +1837,8 @@ declare namespace spritejs {
    * Sprite elements can be used to draw pictures.
    */
   export class Sprite extends Block {
+    constructor(texture: string);
+    constructor(attrs?: Record<string, any>);
     /**
      * Element's content size.
      */
