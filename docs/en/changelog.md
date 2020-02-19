@@ -1,6 +1,10 @@
 ## Change Logs
 
-#### [2020-02-05] v3.1.1
+#### [2020-02-19] v3.2.5
+
+- Add typings，for typescript.
+
+#### [2020-02-05] v3.2.0
 
 - Custom shader.
 - Post processing channel.
