@@ -1381,6 +1381,11 @@ declare namespace spritejs {
      * Group sort children by zIndex and zOrder.
      */
     readonly zOrder?: number;
+    readonly nodeType?: number;
+    readonly nodeName?: string;
+    readonly tagName?: string;
+    readonly ownerDocument?: Record<string, any>;
+    readonly namespaceURI?: string;
     /**
      * Get a list of ancestor elements for the current element.
      */
