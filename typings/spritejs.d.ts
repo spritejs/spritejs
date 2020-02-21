@@ -1794,13 +1794,19 @@ declare namespace spritejs {
      * @param id 
      * @param options 
      */
-    layer(id: string, options: WorkerOptions): LayerWorker;    
+    layer(id: string, options: WorkerOptions): LayerWorker;
     /**
      * Create and get the corresponding layer.
      * @param id 
      * @param options 
      */
     layer(id?: string, options?: Record<string, any>): Layer;
+    /**
+     * Create a 3d layer from sprite-extend-3d.
+     * @param id 
+     * @param options 
+     */
+    layer3d(id: string, options: Record<string, any>): Layer;  
     /**
      * Load resources asynchronously.
      * @param resources 
