@@ -8159,7 +8159,8 @@ class Renderer {
       const img = _utils_env__WEBPACK_IMPORTED_MODULE_9__["default"].createText(text, {
         font,
         fillColor,
-        strokeColor
+        strokeColor,
+        strokeWidth
       });
       return {
         image: this.createTexture(img.image),
@@ -8172,6 +8173,7 @@ class Renderer {
         font,
         fillColor,
         strokeColor,
+        strokeWidth,
         text
       }
     };
@@ -9799,7 +9801,7 @@ function createText(text, {
   }
 
   if (strokeColor) {
-    textContext.lineWidth = strokeWidth;
+    textContext.lineWidth = strokeWidth * ratio;
     if (Array.isArray(strokeColor)) strokeColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_2__["default"])(strokeColor);else if (strokeColor.vector) {
       let gradient;
       const {
@@ -10221,6 +10223,7 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
       }
 
       if (drawTexture) {
+        context.save();
         context.clip();
         let {
           image,
@@ -10236,24 +10239,39 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
             font,
             fillColor,
             strokeColor,
+            strokeWidth,
             text
           } = image;
           if (!fillColor && !strokeColor) fillColor = '#000';
+          if (Array.isArray(fillColor)) fillColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_1__["default"])(fillColor);
+          if (Array.isArray(strokeColor)) strokeColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_1__["default"])(strokeColor);
           context.font = font;
           const {
             width
           } = context.measureText(text);
           const fontInfo = Object(_parse_font__WEBPACK_IMPORTED_MODULE_2__["default"])(font);
-          const height = fontInfo.pxLineHeight;
+          const height = Math.max(fontInfo.pxLineHeight, fontInfo.pxHeight * 1.13);
           context.textAlign = 'center';
-          context.textBaseline = 'middle';
-          if (fillColor) context.fillStyle = fillColor;
-          if (strokeColor) context.strokeStyle = strokeColor;
+          context.textBaseline = 'middle'; // text ignore rect scale
+
           const rect = options.rect;
-          const top = rect[0] + height / 2;
-          const left = rect[1] + width / 2;
-          context.scale(rect[2] / width, rect[3] / height);
-          context.fillText(text, left, top);
+          const top = rect[0] + height * 0.5 + fontInfo.pxHeight * 0.06;
+          const left = rect[1] + width * 0.5;
+
+          if (rect[2] != null) {
+            context.scale(rect[2] / width, rect[3] / height);
+          }
+
+          if (fillColor) {
+            context.fillStyle = fillColor;
+            context.fillText(text, left, top);
+          }
+
+          if (strokeColor) {
+            context.lineWidth = strokeWidth;
+            context.strokeStyle = strokeColor;
+            context.strokeText(text, left, top);
+          }
         } else {
           let rect = options.rect;
           const srcRect = options.srcRect;
@@ -10271,7 +10289,6 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
           }
 
           if (options.rotated) {
-            context.save();
             context.translate(0, rect ? rect[2] : image.width);
             context.rotate(-0.5 * Math.PI);
           }
@@ -10283,11 +10300,9 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
           } else {
             context.drawImage(image, 0, 0);
           }
-
-          if (options.rotated) {
-            context.restore();
-          }
         }
+
+        context.restore();
       }
 
       if (stroke) {

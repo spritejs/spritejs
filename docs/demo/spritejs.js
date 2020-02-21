@@ -8150,7 +8150,8 @@ function () {
         var img = _utils_env__WEBPACK_IMPORTED_MODULE_13__["default"].createText(text, {
           font: font,
           fillColor: fillColor,
-          strokeColor: strokeColor
+          strokeColor: strokeColor,
+          strokeWidth: strokeWidth
         });
         return {
           image: this.createTexture(img.image),
@@ -8163,6 +8164,7 @@ function () {
           font: font,
           fillColor: fillColor,
           strokeColor: strokeColor,
+          strokeWidth: strokeWidth,
           text: text
         }
       };
@@ -11493,7 +11495,7 @@ function createText(text, _ref) {
   }
 
   if (strokeColor) {
-    textContext.lineWidth = strokeWidth;
+    textContext.lineWidth = strokeWidth * ratio;
     if (Array.isArray(strokeColor)) strokeColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_3__["default"])(strokeColor);else if (strokeColor.vector) {
       var _gradient;
 
@@ -11923,6 +11925,7 @@ function drawMesh2D(mesh, context) {
       }
 
       if (drawTexture) {
+        context.save();
         context.clip();
         var _mesh$texture = mesh.texture,
             image = _mesh$texture.image,
@@ -11937,24 +11940,39 @@ function drawMesh2D(mesh, context) {
               font = _image.font,
               fillColor = _image.fillColor,
               strokeColor = _image.strokeColor,
+              strokeWidth = _image.strokeWidth,
               text = _image.text;
           if (!fillColor && !strokeColor) fillColor = '#000';
+          if (Array.isArray(fillColor)) fillColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_2__["default"])(fillColor);
+          if (Array.isArray(strokeColor)) strokeColor = Object(_vector_to_rgba__WEBPACK_IMPORTED_MODULE_2__["default"])(strokeColor);
           context.font = font;
 
           var _context$measureText = context.measureText(text),
               width = _context$measureText.width;
 
           var fontInfo = Object(_parse_font__WEBPACK_IMPORTED_MODULE_3__["default"])(font);
-          var height = fontInfo.pxLineHeight;
+          var height = Math.max(fontInfo.pxLineHeight, fontInfo.pxHeight * 1.13);
           context.textAlign = 'center';
-          context.textBaseline = 'middle';
-          if (fillColor) context.fillStyle = fillColor;
-          if (strokeColor) context.strokeStyle = strokeColor;
+          context.textBaseline = 'middle'; // text ignore rect scale
+
           var rect = options.rect;
-          var top = rect[0] + height / 2;
-          var left = rect[1] + width / 2;
-          context.scale(rect[2] / width, rect[3] / height);
-          context.fillText(text, left, top);
+          var top = rect[0] + height * 0.5 + fontInfo.pxHeight * 0.06;
+          var left = rect[1] + width * 0.5;
+
+          if (rect[2] != null) {
+            context.scale(rect[2] / width, rect[3] / height);
+          }
+
+          if (fillColor) {
+            context.fillStyle = fillColor;
+            context.fillText(text, left, top);
+          }
+
+          if (strokeColor) {
+            context.lineWidth = strokeWidth;
+            context.strokeStyle = strokeColor;
+            context.strokeText(text, left, top);
+          }
         } else {
           var _rect = options.rect;
           var srcRect = options.srcRect;
@@ -11972,7 +11990,6 @@ function drawMesh2D(mesh, context) {
           }
 
           if (options.rotated) {
-            context.save();
             context.translate(0, _rect ? _rect[2] : image.width);
             context.rotate(-0.5 * Math.PI);
           }
@@ -11984,11 +12001,9 @@ function drawMesh2D(mesh, context) {
           } else {
             context.drawImage(image, 0, 0);
           }
-
-          if (options.rotated) {
-            context.restore();
-          }
         }
+
+        context.restore();
       }
 
       if (stroke) {

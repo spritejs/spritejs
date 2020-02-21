@@ -110,12 +110,12 @@ declare namespace spritejs {
      * @param effects The effect function maps.
      * @returns All effect function maps.
      */
-    applyEffects(effects: Record<string, Function>):Record<string, Function>;
+    applyEffects(effects: Record<string, Function>): Record<string, Function>;
     /**
      * Cancel the animation.
      * @param preserveState Whether the frame state is preserved when the animation is canceled.
      */
-    cancel(preserveState?: boolean):void;
+    cancel(preserveState?: boolean): void;
     /**
      * Finish the animation.
      */
@@ -1307,7 +1307,7 @@ declare namespace spritejs {
      * @param handler 
      * @param options 
      */
-    tick(handler: Function, options?: Record<string, any>): void;
+    tick(handler: (t?: number) => void, options?: Record<string, any>): void;
     /**
      * Convert the layer coordinates to DOM event coordinates.
      * @param x 
@@ -1444,7 +1444,7 @@ declare namespace spritejs {
      * @param listener 
      * @param options 
      */
-    addEventListener(type: string, listener: Function, options?: EventOptions): this;
+    addEventListener(type: string, listener: (event?: Event) => void, options?: EventOptions): this;
     /**
      * Perform the animations.
      * @param frames 
@@ -1522,7 +1522,7 @@ declare namespace spritejs {
      * @param type 
      * @param options 
      */
-    getListeners(type: string, options?: EventOptions): Array<Function>; 
+    getListeners(type: string, options?: EventOptions): Array<(event?: Event) =>void>; 
     /**
      * Transform the specified [x, y] coordinates relative of the layer to the coordinates
      * of the current element, with the anchor as the origin [0, 0].
@@ -1605,7 +1605,7 @@ declare namespace spritejs {
      * @param listener 
      * @param options 
      */
-    removeEventListener(type: string, listener: Function, options?: EventOptions): this;
+    removeEventListener(type: string, listener: (event?: Event) => void, options?: EventOptions): this;
     /**
      * Create a transition animation.
      * @param sec 
@@ -1936,7 +1936,7 @@ declare namespace spritejs {
    * requestAnimation polyfill.
    * @param callback 
    */
-  export function requestAnimationFrame(callback: Function): any;
+  export function requestAnimationFrame(callback: (t?: number) => void): any;
   /**
    * cancelAnimationFrame polyfill.
    * @param id 
@@ -1947,7 +1947,7 @@ declare namespace spritejs {
     /**
      * Container polyfill.
      */
-    export const Container: Function|null;
+    export const Container: any;
     /**
      * createCanvas polyfill.
      */
@@ -1956,5 +1956,9 @@ declare namespace spritejs {
      * loadImage polyfill.
      */
     export const loadImage: Function|null;
+    /**
+     * createText polyfill.
+     */
+    export const createText: Function|null;
   }
 }

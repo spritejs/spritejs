@@ -134,6 +134,6 @@ export function polyfill({ENV}) {
     if(/italic|oblique/.test(font)) {
       width += height * Math.tan(15 * Math.PI / 180);
     }
-    return {image: {font, fillColor, strokeColor, text}, rect: [0, 0, width, height]};
+    return {image: {font, fillColor, strokeColor, strokeWidth, text}, rect: [0, 0, width, height]};
   };
 }
