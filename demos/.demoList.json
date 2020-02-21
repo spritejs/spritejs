@@ -216,11 +216,14 @@
     "label": "fire",
     "src": "protonjs/fire"
   }, {
-    "label": "fill color",
-    "src": "shader_and_pass/fill_color"
+    "label": "conic gradient",
+    "src": "shader_and_pass/conic_gradient"
   }, {
     "label": "custom shader",
     "src": "shader_and_pass/custom_shader"
+  }, {
+    "label": "fill color",
+    "src": "shader_and_pass/fill_color"
   }, {
     "label": "mask",
     "src": "shader_and_pass/mask"
