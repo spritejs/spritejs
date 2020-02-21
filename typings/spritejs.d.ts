@@ -144,7 +144,7 @@ declare namespace spritejs {
     args: Array<string|number>;
   }
 
-  interface Renderer {
+  interface Renderer2d {
     /**
      * The canvas instance.
      */
@@ -269,9 +269,23 @@ declare namespace spritejs {
      */
     get bubbles(): boolean;
     /**
+     * Event detail.
+     */
+    get detail(): any;
+    /**
      * Cancel bubbling.
      */
     cancelBubble: boolean;
+    /**
+     * Event target.
+     */
+    target: Node;
+    layerX: number;
+    layerY: number;
+    originalX: number;
+    originalY: number;
+    x: number;
+    y: number;
     /**
      * Reset original event object.
      * @param originalEvent 
@@ -1056,6 +1070,28 @@ declare namespace spritejs {
     get isVisible(): boolean;
   }
 
+  export class Color {
+    /**
+     * constructor(r = 0, g = 0, b = 0, a = 0)
+     * @param r 
+     * @param g 
+     * @param b 
+     * @param a 
+     */
+    constructor(r: number, g: number, b: number, a: number);
+    get r(): number;
+    set r(v: number);
+    get g(): number;
+    set g(v: number);
+    get b(): number;
+    set b(v: number);
+    get a(): number;
+    set a(v: number);
+    get hex(): string;
+    get rgba(): string;
+    fromColor(color: any): this;
+  }
+
   /**
    * Create a gradient object.
    */
@@ -1254,7 +1290,7 @@ declare namespace spritejs {
     /**
      * Get the rendered object in the current paint context.
      */
-    get renderer(): Renderer;
+    get renderer(): any;
     /**
      * The coordinate offset of the layer from the scene's container.
      */
@@ -1307,7 +1343,7 @@ declare namespace spritejs {
      * @param handler 
      * @param options 
      */
-    tick(handler: (t?: number) => void, options?: Record<string, any>): void;
+    tick(handler: (t: number) => void, options?: Record<string, any>): void;
     /**
      * Convert the layer coordinates to DOM event coordinates.
      * @param x 
@@ -1417,7 +1453,7 @@ declare namespace spritejs {
     /**
      * Get the rendered object in the current paint context.
      */
-    get renderer(): Renderer;
+    get renderer(): any;
     /**
      * Get the transform matrix of the current element relative to the canvas coordinate system.
      */
@@ -1444,7 +1480,7 @@ declare namespace spritejs {
      * @param listener 
      * @param options 
      */
-    addEventListener(type: string, listener: (event?: Event) => void, options?: EventOptions): this;
+    addEventListener(type: string, listener: (event: Event) => void, options?: EventOptions): this;
     /**
      * Perform the animations.
      * @param frames 
@@ -1522,7 +1558,7 @@ declare namespace spritejs {
      * @param type 
      * @param options 
      */
-    getListeners(type: string, options?: EventOptions): Array<(event?: Event) =>void>; 
+    getListeners(type: string, options: EventOptions): Array<(event: Event) =>void>; 
     /**
      * Transform the specified [x, y] coordinates relative of the layer to the coordinates
      * of the current element, with the anchor as the origin [0, 0].
@@ -1605,7 +1641,7 @@ declare namespace spritejs {
      * @param listener 
      * @param options 
      */
-    removeEventListener(type: string, listener: (event?: Event) => void, options?: EventOptions): this;
+    removeEventListener(type: string, listener: (event: Event) => void, options?: EventOptions): this;
     /**
      * Create a transition animation.
      * @param sec 
@@ -1936,7 +1972,7 @@ declare namespace spritejs {
    * requestAnimation polyfill.
    * @param callback 
    */
-  export function requestAnimationFrame(callback: (t?: number) => void): any;
+  export function requestAnimationFrame(callback: (t: number) => void): any;
   /**
    * cancelAnimationFrame polyfill.
    * @param id 

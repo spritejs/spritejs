@@ -492,9 +492,9 @@ exteriorSettings.tRMO = layer.createTexture('https://p4.ssl.qhimg.com/t01e6ab8f9
 exteriorSettings.tNormal = layer.createTexture('https://p2.ssl.qhimg.com/t01054657131a653495.jpg');
 exteriorSettings.tEmissive = layer.createTexture('https://p4.ssl.qhimg.com/t0147f665303463c792.jpg');
 exteriorSettings.tOpacity = layer.createTexture('https://p0.ssl.qhimg.com/t01270f1648f01de88b.jpg');
-exteriorSettings.tLUT = layer.createTexture('https://p4.ssl.qhimg.com/t01ffbc99d05ec5cf42.png', {generateMipmaps: false});
-exteriorSettings.tEnvDiffuse = layer.createTexture('https://p2.ssl.qhimg.com/t01d2cc0b6444aa8dc8.png', {generateMipmaps: false});
-exteriorSettings.tEnvSpecular = layer.createTexture('https://p2.ssl.qhimg.com/t01d9c7c70595fe78bc.png', {generateMipmaps: false});
+exteriorSettings.tLUT = layer.createTexture({image: 'https://p4.ssl.qhimg.com/t01ffbc99d05ec5cf42.png', generateMipmaps: false});
+exteriorSettings.tEnvDiffuse = layer.createTexture({image: 'https://p2.ssl.qhimg.com/t01d2cc0b6444aa8dc8.png', generateMipmaps: false});
+exteriorSettings.tEnvSpecular = layer.createTexture({image: 'https://p2.ssl.qhimg.com/t01d9c7c70595fe78bc.png', generateMipmaps: false});
 
 interiorSettings.tBaseColor = layer.createTexture('https://p0.ssl.qhimg.com/t01b2fd692b4109c0d2.jpg');
 interiorSettings.tRMO = layer.createTexture('https://p5.ssl.qhimg.com/t01cccf025509f73235.jpg');
@@ -639,7 +639,7 @@ function loadShadow() {
       }
   `;
 
-  const texture = layer.createTexture('assets/pbr/car-shadow.jpg');
+  const texture = layer.createTexture('https://p3.ssl.qhimg.com/t01fc3a601396e48edb.jpg');
   const program = layer.createProgram({
     vertex: shadowVertex,
     fragment: shadowFragment,

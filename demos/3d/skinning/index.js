@@ -167,7 +167,7 @@ layer.camera.attributes.pos = [6, 2, 6];
   });
   layer.append(plan);
 
-  const animation = skin.addAnimationFrames(animationData);
+  const animation = skin.addAnimation(animationData);
 
   layer.append(skin);
   layer.setOrbit();
