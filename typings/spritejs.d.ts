@@ -1404,6 +1404,7 @@ declare namespace spritejs {
    * Node is the common base class for all SpriteJS elements.
    */
   export class Node {
+    static Attr: any;
     constructor(attrs?: Attrs);
     /**
      * The attribute object of the current element.
