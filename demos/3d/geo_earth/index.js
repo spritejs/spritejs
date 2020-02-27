@@ -44,7 +44,6 @@ layer.camera.lookAt([0, 0, 0]);
   const s = new Sphere(program);
   s.attr({
     radius: 1,
-    // rotateY: -90, // 要转过90度
     colors: '#7cf',
   });
 
