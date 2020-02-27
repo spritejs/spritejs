@@ -246,6 +246,9 @@
     "label": "fox",
     "src": "3d/fox"
   }, {
+    "label": "geo earth",
+    "src": "3d/geo_earth"
+  }, {
     "label": "geometry",
     "src": "3d/geometry"
   }, {
