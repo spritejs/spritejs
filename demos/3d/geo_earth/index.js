@@ -19,9 +19,11 @@ layer.camera.lookAt([0, 0, 0]);
   const data = await (await fetch('https://s0.ssl.qhres.com/static/6a08177cb2f066a5.json')).json();
   const countries = topojson.feature(data, data.objects.countries);
 
-  const projection = d3.geoEqualEarth();
+  // 默认宽高 960 X 500，默认 translate 是 480 X 250
+  const projection = d3.geoEquirectangular();
+  projection.scale(projection.scale() * 2).translate([960, 500]);
 
-  const canvas = new OffscreenCanvas(1024, 512);
+  const canvas = new OffscreenCanvas(1920, 1000);
   const context = canvas.getContext('2d');
   const path = d3.geoPath(projection).context(context);
 
@@ -49,8 +51,8 @@ layer.camera.lookAt([0, 0, 0]);
 
   function get_coordinate(latitude, longitude, radius = 1) {
     const [a, b] = projection([longitude, latitude]);
-    const u = a / 1024;
-    const v = b / 512;
+    const u = a / 1920;
+    const v = b / 1000;
     const pLength = Math.PI * 2;
     const tLength = Math.PI;
     const x = -radius * Math.cos(u * pLength) * Math.sin(v * tLength);
