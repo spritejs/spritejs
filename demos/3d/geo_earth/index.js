@@ -20,7 +20,7 @@ layer.camera.lookAt([0, 0, 0]);
   const countries = topojson.feature(data, data.objects.countries);
 
   // 默认宽高 960 X 500，默认 translate 是 480 X 250
-  const projection = d3.geoEquirectangular();
+  const projection = d3.geoEquirectangular().scale(159); // scale 159 让地图充满整个 texture
   projection.scale(projection.scale() * 2).translate([960, 500]);
 
   const canvas = new OffscreenCanvas(1920, 1000);
