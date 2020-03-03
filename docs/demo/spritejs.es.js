@@ -11320,9 +11320,9 @@ function multiply(a, b) {
 
 function grayscale(p) {
   p = Object(_math__WEBPACK_IMPORTED_MODULE_0__["clamp"])(0, 1, p);
-  const r = 0.212 * p;
-  const g = 0.714 * p;
-  const b = 0.074 * p;
+  const r = 0.2126 * p;
+  const g = 0.7152 * p;
+  const b = 0.0722 * p;
   return [r + 1 - p, g, b, 0, 0, r, g + 1 - p, b, 0, 0, r, g, b + 1 - p, 0, 0, 0, 0, 0, 1, 0];
 }
 function brightness(p) {
@@ -11330,9 +11330,9 @@ function brightness(p) {
 }
 function saturate(p) {
   // p = clamp(0, 1, p);
-  const r = 0.212 * (1 - p);
-  const g = 0.714 * (1 - p);
-  const b = 0.074 * (1 - p);
+  const r = 0.2126 * (1 - p);
+  const g = 0.7152 * (1 - p);
+  const b = 0.0722 * (1 - p);
   return [r + p, g, b, 0, 0, r, g + p, b, 0, 0, r, g, b + p, 0, 0, 0, 0, 0, 1, 0];
 }
 function contrast(p) {
@@ -11353,9 +11353,9 @@ function hueRotate(deg) {
   const rotation = deg / 180 * Math.PI;
   const cos = Math.cos(rotation),
         sin = Math.sin(rotation),
-        lumR = 0.213,
-        lumG = 0.715,
-        lumB = 0.072;
+        lumR = 0.2126,
+        lumG = 0.7152,
+        lumB = 0.0722;
   return [lumR + cos * (1 - lumR) + sin * -lumR, lumG + cos * -lumG + sin * -lumG, lumB + cos * -lumB + sin * (1 - lumB), 0, 0, lumR + cos * -lumR + sin * 0.143, lumG + cos * (1 - lumG) + sin * 0.140, lumB + cos * -lumB + sin * -0.283, 0, 0, lumR + cos * -lumR + sin * -(1 - lumR), lumG + cos * -lumG + sin * lumG, lumB + cos * (1 - lumB) + sin * lumB, 0, 0, 0, 0, 0, 1, 0];
 }
 
