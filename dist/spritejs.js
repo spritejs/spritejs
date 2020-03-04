@@ -31528,6 +31528,7 @@ var declareAlias = Symbol.for('spritejs_declareAlias');
 function getPath(attr) {
   var points = attr.points,
       smooth = attr.smooth,
+      smoothRange = attr.smoothRange,
       close = attr.close;
   var p = [];
 
@@ -31541,7 +31542,7 @@ function getPath(attr) {
     // if(close) {
     //   p.push([...p[0]]);
     // }
-    d = Object(_utils_smooth_curve__WEBPACK_IMPORTED_MODULE_8__["makeSmoothCurveLine"])(p);
+    d = Object(_utils_smooth_curve__WEBPACK_IMPORTED_MODULE_8__["makeSmoothCurveLine"])(p, smoothRange);
   } else if (p.length) {
     d = "M".concat(p.map(function (v) {
       return v.join(' ');
@@ -31570,6 +31571,7 @@ function (_Path) {
     _this[setDefault]({
       points: [],
       smooth: false,
+      smoothRange: [0],
       closeType: 'none' // none | normal
 
       /* close */
@@ -31620,6 +31622,21 @@ function (_Path) {
       if (this[setAttribute]('smooth', value)) {
         var d = getPath(this);
         this[setAttribute]('d', d);
+      }
+    }
+  }, {
+    key: "smoothRange",
+    get: function get() {
+      return this[getAttribute]('smoothRange');
+    },
+    set: function set(value) {
+      if (value && !Array.isArray(value)) value = [value];
+
+      if (this[setAttribute]('smoothRange', value)) {
+        if (this.smooth) {
+          var d = getPath(this);
+          this[setAttribute]('d', d);
+        }
       }
     }
   }, {
@@ -31674,6 +31691,8 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
  * @param {*} points 绘制点
  */
 function makeSmoothCurveLine(points) {
+  var smoothRange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0];
+
   /**
    * 获取 模拟贝塞尔曲线关键控制点
    * @param {*} i
@@ -31730,16 +31749,25 @@ function makeSmoothCurveLine(points) {
     };
   });
   var d = '';
+  var j = 0;
   points.forEach(function (point, i) {
     if (i === 0) {
       d += "M".concat(point.x, " ").concat(point.y);
     } else {
-      var _getCtrlPoint = getCtrlPoint(i - 1),
-          _getCtrlPoint2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_getCtrlPoint, 2),
-          A = _getCtrlPoint2[0],
-          B = _getCtrlPoint2[1];
+      while (i > smoothRange[j]) {
+        j++;
+      }
 
-      d += "C".concat([A.x, A.y, B.x, B.y, point.x, point.y].join(' '));
+      if (j % 2) {
+        var _getCtrlPoint = getCtrlPoint(i - 1),
+            _getCtrlPoint2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_getCtrlPoint, 2),
+            A = _getCtrlPoint2[0],
+            B = _getCtrlPoint2[1];
+
+        d += "C".concat([A.x, A.y, B.x, B.y, point.x, point.y].join(' '));
+      } else {
+        d += "L".concat(point.x, " ").concat(point.y);
+      }
     }
   });
   return d;

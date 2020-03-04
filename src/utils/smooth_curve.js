@@ -3,7 +3,7 @@
  * 使用 贝塞尔曲线 模拟绘制平滑曲线
  * @param {*} points 绘制点
  */
-export function makeSmoothCurveLine(points) {
+export function makeSmoothCurveLine(points, smoothRange = [0]) {
   /**
    * 获取 模拟贝塞尔曲线关键控制点
    * @param {*} i
@@ -44,12 +44,22 @@ export function makeSmoothCurveLine(points) {
   points = points.map(([x, y]) => ({x, y}));
 
   let d = '';
+
+  let j = 0;
+
   points.forEach((point, i) => {
     if(i === 0) {
       d += `M${point.x} ${point.y}`;
     } else {
-      const [A, B] = getCtrlPoint(i - 1);
-      d += `C${[A.x, A.y, B.x, B.y, point.x, point.y].join(' ')}`;
+      while(i > smoothRange[j]) {
+        j++;
+      }
+      if(j % 2) {
+        const [A, B] = getCtrlPoint(i - 1);
+        d += `C${[A.x, A.y, B.x, B.y, point.x, point.y].join(' ')}`;
+      } else {
+        d += `L${point.x} ${point.y}`;
+      }
     }
   });
   return d;

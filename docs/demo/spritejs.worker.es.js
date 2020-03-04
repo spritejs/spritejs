@@ -27747,6 +27747,7 @@ function getPath(attr) {
   const {
     points,
     smooth,
+    smoothRange,
     close
   } = attr;
   const p = [];
@@ -27761,7 +27762,7 @@ function getPath(attr) {
     // if(close) {
     //   p.push([...p[0]]);
     // }
-    d = Object(_utils_smooth_curve__WEBPACK_IMPORTED_MODULE_2__["makeSmoothCurveLine"])(p);
+    d = Object(_utils_smooth_curve__WEBPACK_IMPORTED_MODULE_2__["makeSmoothCurveLine"])(p, smoothRange);
   } else if (p.length) {
     d = `M${p.map(v => v.join(' ')).join('L')}`;
   }
@@ -27779,6 +27780,7 @@ class Polyline extends _path__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this[setDefault]({
       points: [],
       smooth: false,
+      smoothRange: [0],
       closeType: 'none' // none | normal
 
       /* close */
@@ -27828,6 +27830,21 @@ class Polyline extends _path__WEBPACK_IMPORTED_MODULE_0__["default"] {
     }
   }
 
+  get smoothRange() {
+    return this[getAttribute]('smoothRange');
+  }
+
+  set smoothRange(value) {
+    if (value && !Array.isArray(value)) value = [value];
+
+    if (this[setAttribute]('smoothRange', value)) {
+      if (this.smooth) {
+        const d = getPath(this);
+        this[setAttribute]('d', d);
+      }
+    }
+  }
+
   get points() {
     return this[getAttribute]('points');
   }
@@ -27868,7 +27885,7 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
  * 使用 贝塞尔曲线 模拟绘制平滑曲线
  * @param {*} points 绘制点
  */
-function makeSmoothCurveLine(points) {
+function makeSmoothCurveLine(points, smoothRange = [0]) {
   /**
    * 获取 模拟贝塞尔曲线关键控制点
    * @param {*} i
@@ -27917,12 +27934,21 @@ function makeSmoothCurveLine(points) {
     y
   }));
   let d = '';
+  let j = 0;
   points.forEach((point, i) => {
     if (i === 0) {
       d += `M${point.x} ${point.y}`;
     } else {
-      const [A, B] = getCtrlPoint(i - 1);
-      d += `C${[A.x, A.y, B.x, B.y, point.x, point.y].join(' ')}`;
+      while (i > smoothRange[j]) {
+        j++;
+      }
+
+      if (j % 2) {
+        const [A, B] = getCtrlPoint(i - 1);
+        d += `C${[A.x, A.y, B.x, B.y, point.x, point.y].join(' ')}`;
+      } else {
+        d += `L${point.x} ${point.y}`;
+      }
     }
   });
   return d;

@@ -9,7 +9,7 @@ const declareAlias = Symbol.for('spritejs_declareAlias');
 
 
 function getPath(attr) {
-  const {points, smooth, close} = attr;
+  const {points, smooth, smoothRange, close} = attr;
   const p = [];
   for(let i = 0; i < points.length; i += 2) {
     p.push([points[i], points[i + 1]]);
@@ -19,7 +19,7 @@ function getPath(attr) {
     // if(close) {
     //   p.push([...p[0]]);
     // }
-    d = makeSmoothCurveLine(p);
+    d = makeSmoothCurveLine(p, smoothRange);
   } else if(p.length) {
     d = `M${p.map(v => v.join(' ')).join('L')}`;
   }
@@ -36,6 +36,7 @@ export default class Polyline extends Path {
     this[setDefault]({
       points: [],
       smooth: false,
+      smoothRange: [0],
       closeType: 'none', // none | normal
       /* close */
     });
@@ -79,6 +80,20 @@ export default class Polyline extends Path {
     if(this[setAttribute]('smooth', value)) {
       const d = getPath(this);
       this[setAttribute]('d', d);
+    }
+  }
+
+  get smoothRange() {
+    return this[getAttribute]('smoothRange');
+  }
+
+  set smoothRange(value) {
+    if(value && !Array.isArray(value)) value = [value];
+    if(this[setAttribute]('smoothRange', value)) {
+      if(this.smooth) {
+        const d = getPath(this);
+        this[setAttribute]('d', d);
+      }
     }
   }
 
