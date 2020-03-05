@@ -25266,7 +25266,8 @@ function createTexture(image, renderer) {
 const _textureContext = Symbol('textureContext');
 
 function drawTexture(node, mesh) {
-  const textureImage = node.textureImage;
+  const textureImage = node.textureImage instanceof String // for wechat miniprogram
+  ? String(node.textureImage) : node.textureImage;
   const textureImageRotated = node.textureImageRotated;
   const texture = mesh.texture;
 

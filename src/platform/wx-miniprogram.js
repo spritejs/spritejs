@@ -123,6 +123,27 @@ export function polyfill({ENV}) {
   ENV.Container = Container;
   ENV.createCanvas = createCanvas;
 
+  const imageCache = {};
+  ENV.loadImage = function (src, {alias}) {
+    if(imageCache[src]) return imageCache[src];
+    // console.log(wx.getImageInfo);
+    return new Promise((resolve, reject) => {
+      wx.getImageInfo({
+        src,
+        success(res) {
+          imageCache[src] = {image: new String(src)}; // eslint-disable-line no-new-wrappers
+          imageCache[src].image.width = res.width;
+          imageCache[src].image.height = res.height;
+          if(alias) imageCache[alias] = imageCache[src];
+          resolve(imageCache[src]);
+        },
+        fail(err) {
+          reject(err);
+        },
+      });
+    });
+  };
+
   let textContext = null;
   ENV.createText = (text, {font, fillColor, strokeColor, strokeWidth, parseFont}) => {
     if(!textContext) textContext = wx.createCanvasContext('textCanvas');
