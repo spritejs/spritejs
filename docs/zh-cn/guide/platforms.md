@@ -1,6 +1,14 @@
 ## 服务端渲染
 
-SpriteJS <sup>Next</sup> 通过[node-canvas](https://github.com/Automattic/node-canvas)支持服务端渲染，也就是说我们可以在node环境下使用spritejs，将绘制好的图形保存成png，或者将动画保存成gif。
+SpriteJS <sup>Next</sup> 通过[node-canvas-webgl](https://github.com/akira-cn/node-canvas-webgl)支持服务端渲染，也就是说我们可以在node环境下使用spritejs，将绘制好的图形保存成png，或者将动画保存成gif。
+
+要使用服务端渲染，要先安装 node-canvas-webgl
+
+```bash
+npm install node-canvas-webgl
+```
+
+然后加载lib目录下的polyfill后即可正常使用了。
 
 ```js
 const fs = require('fs');

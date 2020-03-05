@@ -1,6 +1,14 @@
 ## Server Side Rendering
 
-SpriteJS<sup>Next</sup> supports server-side rendering through [node canvas](https://github.com/Automattic/node-canvas), that is to say, we can use SpriteJS in node environment then save the drawn figure as PNG, or save the animation as GIF.
+SpriteJS<sup>Next</sup> supports server-side rendering through [node-canvas-webgl](https://github.com/akira-cn/node-canvas-webgl), that is to say, we can use SpriteJS in node environment then save the drawn figure as PNG, or save the animation as GIF.
+
+To use server-side rendering, install node-canvas-webgl first.
+
+```bash
+npm install node-canvas-webgl
+```
+
+Then load the polyfill in the lib directory to use it normally.
 
 ```js
 const fs = require('fs');
