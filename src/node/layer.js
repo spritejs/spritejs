@@ -71,6 +71,13 @@ export default class Layer extends Group {
     return height / this.displayRatio;
   }
 
+  get gl() {
+    if(this.renderer.glRenderer) {
+      return this.renderer.glRenderer.gl;
+    }
+    return null;
+  }
+
   /* override */
   get layer() {
     return this;

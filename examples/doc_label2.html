@@ -25,16 +25,14 @@
       width: 1200,
       height: 600,
       displayRatio: 2,
-      // contextType: '2d',
+      contextType: '2d',
     });
     const layer = scene.layer();
-
-    layer.gl.clearColor(1, 1, 1, 1);
 
     const text1 = new Label('SpriteJS.org');
     text1.attr({
       pos: [100, 40],
-      fillColor: '#ffdc45',
+      fillColor: '#ffdc4530',
       font: 'oblique small-caps bold 56px Arial',
       border: [2.5, '#ccc'],
       // bgcolor: 'rgba(255, 0, 0, 0.5)',

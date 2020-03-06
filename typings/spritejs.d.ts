@@ -1275,6 +1275,7 @@ declare namespace spritejs {
      * Get the layer object in the current paint context.
      */
     get layer(): this;
+    get gl(): WebGLRenderingContext|WebGL2RenderingContext|null;
     /**
      * If the canvas of the layer is offscreen, this property is true.
      */
