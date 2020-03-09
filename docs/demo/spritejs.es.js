@@ -32486,7 +32486,9 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 const defaultOptions = {
   antialias: true,
-  autoRender: true
+  autoRender: true,
+  alpha: true // for wx-miniprogram
+
 };
 
 const _autoRender = Symbol('autoRender');

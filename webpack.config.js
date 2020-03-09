@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 
@@ -19,12 +20,18 @@ module.exports = function (env = {}) {
     }));
   }
 
+  if(env.module) {
+    plugins.push(new EsmWebpackPlugin());
+  }
+
   plugins.push(new webpack.DefinePlugin({
     __DEV__: env.mode === 'development',
   }));
 
   let filename = '[name]';
   if(env.esnext) filename += '.es';
+  if(env.module) filename += 'm';
+
   if(env.mode === 'production') filename += '.min';
   filename += '.js';
 
@@ -41,7 +48,7 @@ module.exports = function (env = {}) {
       filename,
       publicPath: '/js/',
       library: ['spritejs'],
-      libraryTarget: 'umd',
+      libraryTarget: env.module ? 'var' : 'umd',
       // libraryExport: 'default',
       globalObject: 'this',
     },

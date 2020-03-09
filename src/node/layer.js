@@ -7,6 +7,7 @@ import ownerDocument from '../document';
 const defaultOptions = {
   antialias: true,
   autoRender: true,
+  alpha: true, // for wx-miniprogram
 };
 
 const _autoRender = Symbol('autoRender');

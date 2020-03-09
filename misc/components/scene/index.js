@@ -1,5 +1,5 @@
-const {Scene, ENV} = require('../../lib/spritejs');
-const {polyfill} = require('../../lib/wx-miniprogram.js');
+const {Scene, ENV} = require('../../utils/spritejs');
+const {polyfill} = require('../../utils/wx-miniprogram.js');
 polyfill({ENV});
 
 /* globals Component,wx */
@@ -11,9 +11,13 @@ Component({
       observer(newVal) {
         const salt = Math.random().toString(16).slice(2, 14);
         this.setData({
-          _layers: newVal.split(',').map(v => `${v.trim()}:${salt}`),
+          _layers: newVal.split(',').map(v => `${v.trim()}-${salt}`),
         });
       },
+    },
+    contextType: {
+      type: String,
+      value: 'webgl',
     },
     pixelUnit: {
       type: String,
@@ -69,6 +73,7 @@ Component({
         width: rect.width / displayRatio,
         height: rect.height / displayRatio,
         extra: this,
+        contextType: this.data.contextType,
         displayRatio,
       });
 
@@ -79,9 +84,19 @@ Component({
           wx.createSelectorQuery().in(this).select(`#${layer}`).fields({node: true, size: true})
             .exec((res) => {
               const canvas = res[0].node;
-              args[layer.replace(/-[0-9a-f]+$/ig, '')] = scene.layer(layer, {canvas});
+              const _layer = scene.layer(layer, {canvas});
+              args[layer.replace(/-[0-9a-f]+$/ig, '')] = _layer;
+              // 修复真机context.canvas不存在的问题
+              const renderer = _layer.renderer;
+              if(renderer.canvasRenderer && !renderer.canvasRenderer.context.canvas) {
+                renderer.canvasRenderer.context.canvas = canvas;
+              } else if(renderer.glRenderer && !renderer.glRenderer.gl.canvas) {
+                renderer.glRenderer.gl.canvas = canvas;
+              }
               ENV.canvas = canvas;
-              if(i === last) resolve({args});
+              if(i === last) {
+                resolve({args});
+              }
             });
         });
       }).then(({args}) => {

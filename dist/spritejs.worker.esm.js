@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["spritejs"] = factory();
-	else
-		root["spritejs"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+var spritejs =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -91,138 +82,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 295);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNode", function() { return registerNode; });
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ENV", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"]; });
-
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(75);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "requestAnimationFrame", function() { return _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__["requestAnimationFrame"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cancelAnimationFrame", function() { return _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__["cancelAnimationFrame"]; });
-
-/* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(77);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return _node_node__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(224);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(226);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_4__["default"]; });
-
-/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(231);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_5__["default"]; });
-
-/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(233);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _node_path__WEBPACK_IMPORTED_MODULE_6__["default"]; });
-
-/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(236);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return _node_rect__WEBPACK_IMPORTED_MODULE_7__["default"]; });
-
-/* harmony import */ var _node_triangle__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(238);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Triangle", function() { return _node_triangle__WEBPACK_IMPORTED_MODULE_8__["default"]; });
-
-/* harmony import */ var _node_parallel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(243);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Parallel", function() { return _node_parallel__WEBPACK_IMPORTED_MODULE_9__["default"]; });
-
-/* harmony import */ var _node_regular__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(245);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Regular", function() { return _node_regular__WEBPACK_IMPORTED_MODULE_10__["default"]; });
-
-/* harmony import */ var _node_star__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(247);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Star", function() { return _node_star__WEBPACK_IMPORTED_MODULE_11__["default"]; });
-
-/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(249);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ellipse", function() { return _node_ellipse__WEBPACK_IMPORTED_MODULE_12__["default"]; });
-
-/* harmony import */ var _node_arc__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(251);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Arc", function() { return _node_arc__WEBPACK_IMPORTED_MODULE_13__["default"]; });
-
-/* harmony import */ var _node_ring__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(253);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ring", function() { return _node_ring__WEBPACK_IMPORTED_MODULE_14__["default"]; });
-
-/* harmony import */ var _node_polyline__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(239);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polyline", function() { return _node_polyline__WEBPACK_IMPORTED_MODULE_15__["default"]; });
-
-/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(255);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _node_label__WEBPACK_IMPORTED_MODULE_16__["default"]; });
-
-/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(257);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _node_group__WEBPACK_IMPORTED_MODULE_17__["default"]; });
-
-/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(291);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_18__["default"]; });
-
-/* harmony import */ var _node_layer_worker__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(292);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LayerWorker", function() { return _node_layer_worker__WEBPACK_IMPORTED_MODULE_19__["default"]; });
-
-/* harmony import */ var _node_scene__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(293);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _node_scene__WEBPACK_IMPORTED_MODULE_20__["default"]; });
-
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(220);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(228);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Color"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Gradient"]; });
-
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(79);
-__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
-
-/**
-  ENV: {
-    Container,
-    createCanvas,
-    loadImage,
-  }
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const createElement = _document__WEBPACK_IMPORTED_MODULE_21__["default"].createElement;
-const isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].isSpriteNode;
-const registerNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].registerNode;
-const helpers = {
-  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"],
-  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["sizeToPixel"],
-  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toArray"],
-  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toString"],
-  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toNumber"]
-};
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32894,892 +32758,194 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
 
 /***/ }),
-/* 292 */
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNode", function() { return registerNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layerCreated", function() { return layerCreated; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ENV", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"]; });
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+/* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(77);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return _node_node__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(224);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(226);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
+/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(231);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
+/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(233);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _node_path__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-const _inited = Symbol('inited');
+/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(236);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return _node_rect__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-let LayerWorker = null; // eslint-disable-line import/no-mutable-exports
+/* harmony import */ var _node_triangle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(238);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Triangle", function() { return _node_triangle__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-if (typeof Worker === 'function') {
-  LayerWorker = class extends Worker {
-    constructor(options) {
-      if (options.worker === true) {
-        options.worker = `./${options.id}.worker.js`;
-      }
+/* harmony import */ var _node_parallel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(243);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Parallel", function() { return _node_parallel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-      super(options.worker);
-      this.options = options;
+/* harmony import */ var _node_regular__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(245);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Regular", function() { return _node_regular__WEBPACK_IMPORTED_MODULE_9__["default"]; });
 
-      if (!options.canvas) {
-        const {
-          width,
-          height
-        } = this.getResolution();
-        const canvas = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createCanvas(width, height, {
-          offscreen: false
-        });
-        if (canvas.style) canvas.style.position = 'absolute';
-        if (canvas.dataset) canvas.dataset.layerId = options.id;
-        options.canvas = canvas;
-      }
+/* harmony import */ var _node_star__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(247);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Star", function() { return _node_star__WEBPACK_IMPORTED_MODULE_10__["default"]; });
 
-      this.canvas = options.canvas;
-    }
+/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(249);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ellipse", function() { return _node_ellipse__WEBPACK_IMPORTED_MODULE_11__["default"]; });
 
-    get id() {
-      return this.options.id;
-    }
+/* harmony import */ var _node_arc__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(251);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Arc", function() { return _node_arc__WEBPACK_IMPORTED_MODULE_12__["default"]; });
 
-    setResolution({
-      width,
-      height
-    }) {
-      if (!this[_inited]) {
-        this.canvas.width = width;
-        this.canvas.height = height;
-        const options = this.options;
-        const offscreenCanvas = options.canvas.transferControlToOffscreen();
+/* harmony import */ var _node_ring__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(253);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ring", function() { return _node_ring__WEBPACK_IMPORTED_MODULE_13__["default"]; });
 
-        const opts = _objectSpread({}, options);
+/* harmony import */ var _node_polyline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(239);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polyline", function() { return _node_polyline__WEBPACK_IMPORTED_MODULE_14__["default"]; });
 
-        delete opts.container;
-        opts.canvas = offscreenCanvas;
-        this.postMessage({
-          type: 'create',
-          options: opts
-        }, [offscreenCanvas]);
-        this[_inited] = true;
-      } else {
-        this.postMessage({
-          type: 'resolution_change',
-          width,
-          height
-        }); // throw new Error('Cannot change resolution of layer-worker.');
-      }
-    }
+/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(255);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _node_label__WEBPACK_IMPORTED_MODULE_15__["default"]; });
 
-    getResolution() {
-      if (this.canvas) {
-        const {
-          width,
-          height
-        } = this.canvas;
-        return {
-          width,
-          height
-        };
-      }
+/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(257);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _node_group__WEBPACK_IMPORTED_MODULE_16__["default"]; });
 
-      return {
-        width: 300,
-        height: 150
-      };
-    }
+/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(291);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"]; });
 
-    remove() {
-      if (this.parent && this.parent.removeChild) {
-        this.parent.removeChild(this);
-        return true;
-      }
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(220);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(228);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_19__["Gradient"]; });
 
-      return false;
-    }
-
-    connect(parent, zOrder) {
-      Object.defineProperty(this, 'parent', {
-        value: parent,
-        writable: false,
-        configurable: true
-      });
-      Object.defineProperty(this, 'zOrder', {
-        value: zOrder,
-        writable: false,
-        configurable: true
-      });
-    }
-
-    disconnect() {
-      delete this.parent;
-      delete this.zOrder;
-    }
-
-    dispatchPointerEvent(event) {
-      this.postMessage({
-        type: 'event',
-        event: {
-          cancelBubble: event.cancelBubble,
-          bubbles: event.bubbles,
-          detail: event.detail,
-          identifier: event.identifier,
-          layerX: event.layerX,
-          layerY: event.layerY,
-          originalX: event.originalX,
-          originalY: event.originalY,
-          type: event.type,
-          x: event.x,
-          y: event.y
-        }
-      });
-    }
-
-  };
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (LayerWorker);
-
-/***/ }),
-/* 293 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Scene; });
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(75);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(77);
-/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(291);
-/* harmony import */ var _layer_worker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(292);
-/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(257);
-/* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(294);
-/* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(221);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(225);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(220);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(79);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
-
-
-
-
-
-
-
-
-
-
-const _enteredTargets = Symbol('enteredTargets');
-
-function wrapLayer(layer) {
-  // append dom element
-  layer.id = layer.id || `_layer${Math.random().toString(36).slice(2, 12)}`;
-
-  if (!layer.dataset) {
-    layer.dataset = {};
+/**
+  ENV: {
+    Container,
+    createCanvas,
+    loadImage,
   }
+ */
 
-  layer.dataset.layerId = layer.id; // fixed layer replacer
 
-  layer.connect = (parent, zOrder) => {
-    layer.parent = parent;
-    Object.defineProperty(layer, 'zOrder', {
-      value: zOrder,
-      writable: false,
-      configurable: true
-    });
-  };
 
-  layer.disconnect = parent => {
-    delete layer.zOrder;
-  };
 
-  layer.canvas = layer;
 
-  layer.getResolution = () => {
-    return {
-      width: 0,
-      height: 0
-    };
-  };
 
-  layer.setResolution = () => false;
 
-  layer.options = {
-    handleEvent: false
-  };
-  return layer;
-}
 
-function getRefCanvas(scene, layer) {
-  const children = scene.children;
-  let ref = null;
 
-  for (let i = 0; i < children.length; i++) {
-    const child = children[i];
 
-    if (layer === child || ref != null) {
-      ref = child;
-    }
 
-    if (ref && ref !== layer && !ref.offscreen) {
-      return ref.canvas;
-    }
-  }
 
-  return null;
-}
 
-function drawImage(layer, offscreenLayer) {
-  const [left, top] = layer.renderOffset;
-  const {
-    width,
-    height
-  } = layer.getResolution();
-  const displayRatio = layer.displayRatio;
-  layer.renderer.drawImage(offscreenLayer.canvas, -left / displayRatio, -top / displayRatio, width / displayRatio, height / displayRatio);
-}
 
-const touchEventCapturedTargets = {};
 
-function delegateEvents(scene) {
-  const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap'];
-  const container = scene.container;
-  const {
-    left,
-    top,
-    displayRatio
-  } = scene.options;
-  container.addEventListener('mouseleave', event => {
-    const enteredTargets = scene[_enteredTargets];
 
-    if (enteredTargets.size) {
-      const leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_7__["default"]('mouseleave');
-      leaveEvent.setOriginalEvent(event);
-      [...enteredTargets].forEach(target => {
-        target.dispatchEvent(leaveEvent);
+
+
+
+
+
+const helpers = {
+  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_19__["parseColor"],
+  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["sizeToPixel"],
+  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toArray"],
+  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toString"],
+  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toNumber"]
+};
+const createElement = _document__WEBPACK_IMPORTED_MODULE_18__["default"].createElement;
+const isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].isSpriteNode;
+const registerNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].registerNode;
+const layerCreated = new Promise(resolve => {
+  let layer = null;
+  self.addEventListener('message', evt => {
+    if (evt.data.type === 'create') {
+      const options = evt.data.options;
+      layer = new _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"](options);
+      resolve(layer);
+    } else if (layer && evt.data.type === 'event') {
+      layer.dispatchPointerEvent(evt.data.event);
+    } else if (evt.data.type === 'resolution_change') {
+      const {
+        width,
+        height
+      } = evt.data;
+      layer.setResolution({
+        width,
+        height
       });
-
-      scene[_enteredTargets].clear();
     }
-  }, {
-    passive: true
   });
-  events.forEach(eventType => {
-    container.addEventListener(eventType, event => {
-      const layers = scene.orderedChildren;
-      const pointerEvents = Object(_event_pointer_events__WEBPACK_IMPORTED_MODULE_6__["default"])(event, {
-        offsetLeft: left,
-        offsetTop: top,
-        displayRatio
-      });
-      pointerEvents.forEach(evt => {
-        // evt.scene = scene;
-        const id = evt.identifier;
+});
 
-        if (evt.type === 'touchmove' || evt.type === 'touchend') {
-          const capturedTarget = touchEventCapturedTargets[id];
-          if (capturedTarget) capturedTarget.dispatchEvent(event);
-          if (evt.type === 'touchend') delete touchEventCapturedTargets[id];
-        } else {
-          for (let i = layers.length - 1; i >= 0; i--) {
-            const layer = layers[i];
-
-            if (layer.options.handleEvent !== false) {
-              const ret = layer.dispatchPointerEvent(evt);
-              if (ret && evt.target !== layer) break;
-            }
-          }
-
-          if (evt.target === layers[0]) {
-            // trigger event on top layer
-            evt.target = layers[layers.length - 1];
-          }
-        }
-
-        const target = evt.target;
-
-        if (evt.type === 'touchstart') {
-          touchEventCapturedTargets[id] = evt.target; // set captured event target
-        }
-
-        if (evt.type === 'mousemove') {
-          const enteredTargets = scene[_enteredTargets];
-          let enterSet;
-
-          if (target) {
-            const ancestors = target.ancestors || [];
-            enterSet = new Set([target, ...ancestors]);
-          } else {
-            enterSet = new Set();
-          }
-
-          const entries = Object.entries(event);
-
-          if (!enteredTargets.has(target)) {
-            if (target) {
-              const enterEvent = new _event_event__WEBPACK_IMPORTED_MODULE_7__["default"]('mouseenter');
-              enterEvent.setOriginalEvent(event);
-              entries.forEach(([key, value]) => {
-                enterEvent[key] = value;
-              });
-              enteredTargets.add(target);
-              target.dispatchEvent(enterEvent);
-              const ancestors = target.ancestors;
-
-              if (ancestors) {
-                ancestors.forEach(ancestor => {
-                  if (ancestor instanceof _node__WEBPACK_IMPORTED_MODULE_2__["default"] && !enteredTargets.has(ancestor)) {
-                    enteredTargets.add(ancestor);
-                    ancestor.dispatchEvent(enterEvent);
-                  }
-                });
-              }
-            }
-          }
-
-          const leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_7__["default"]('mouseleave');
-          leaveEvent.setOriginalEvent(event);
-          entries.forEach(([key, value]) => {
-            leaveEvent[key] = value;
-          });
-          [...enteredTargets].forEach(target => {
-            if (!enterSet.has(target)) {
-              enteredTargets.delete(target);
-              target.dispatchEvent(leaveEvent);
-            }
-          });
-        }
-      });
-    }, {
-      passive: true
-    });
-  });
-}
-
-function setViewport(options, canvas) {
-  if (canvas && canvas.style) {
-    let {
-      width,
-      height,
-      mode,
-      container
-    } = options;
-    const {
-      clientWidth,
-      clientHeight
-    } = container;
-    width = width || clientWidth;
-    height = height || clientHeight;
-
-    if (mode === 'static') {
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      canvas.style.top = '50%';
-      canvas.style.left = '50%';
-      canvas.style.transform = 'translate(-50%, -50%)';
-      canvas.style.webkitTransform = 'translate(-50%, -50%)';
-    } else {
-      canvas.style.top = '0';
-      canvas.style.left = '0';
-      canvas.style.width = `${clientWidth}px`;
-      canvas.style.height = `${clientHeight}px`;
-      canvas.style.transform = '';
-      canvas.style.webkitTransform = '';
-    }
-  }
-}
-
-const _offscreenLayerCount = Symbol('offscreenLayerCount');
-
-class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
-  /**
-    width
-    height
-    mode: 'static', 'scale', 'stickyWidth', 'stickyHeight', 'stickyTop', 'stickyBottom', 'stickyLeft', 'stickyRight'
-   */
-  constructor(options = {}) {
-    super();
-
-    if (!options.container) {
-      if (typeof _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].Container === 'function') {
-        options.container = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].Container(options.width || 300, options.height || 150);
-      } else {
-        throw new Error('No container specified.');
-      }
-    }
-
-    this.container = options.container;
-
-    if (this.container.style) {
-      if (!this.container.style.overflow) {
-        this.container.style.overflow = 'hidden';
-      }
-
-      if (!this.container.style.position) {
-        this.container.style.position = 'relative';
-      }
-    }
-
-    this.options = options;
-    options.displayRatio = options.displayRatio || 1.0;
-    options.mode = options.mode || 'scale';
-    options.left = 0;
-    options.top = 0;
-    options.autoResize = options.autoResize || true;
-
-    if (options.autoResize) {
-      if (global.addEventListener) {
-        const that = this;
-        global.addEventListener('resize', function listener() {
-          if (typeof document !== 'undefined' && document.contains(that.container)) {
-            that.resize();
-          } else {
-            global.removeEventListener('resize', listener);
-          }
-        });
-      }
-    }
-
-    this[_enteredTargets] = new Set();
-    this.setResolution(options);
-    delegateEvents(this);
-    this[_offscreenLayerCount] = 0;
-  }
-
-  get hasOffscreenCanvas() {
-    return this[_offscreenLayerCount] > 0;
-  }
-
-  set displayRatio(value) {
-    const oldValue = this.options.displayRatio;
-
-    if (oldValue !== value) {
-      this.options.displayRatio = value;
-      this.resize();
-    }
-  }
-
-  get displayRatio() {
-    return this.options.displayRatio;
-  }
-
-  set height(value) {
-    const oldValue = this.options.height;
-
-    if (oldValue !== value) {
-      this.options.height = value;
-      this.resize();
-    }
-  }
-
-  get height() {
-    return this.options.height;
-  }
-
-  set mode(value) {
-    const oldValue = this.options.mode;
-
-    if (oldValue !== value) {
-      this.options.mode = value;
-      this.resize();
-    }
-  }
-
-  get mode() {
-    return this.options.mode;
-  }
-
-  set width(value) {
-    const oldValue = this.options.width;
-
-    if (oldValue !== value) {
-      this.options.width = value;
-      this.resize();
-    }
-  }
-
-  get width() {
-    return this.options.width;
-  }
-  /* override */
-
-
-  appendChild(layer) {
-    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"])) {
-      wrapLayer(layer);
-    }
-
-    const ret = super.appendChild(layer);
-    const canvas = layer.canvas;
-
-    if (!layer.offscreen) {
-      this.container.appendChild(canvas);
-    } else {
-      this[_offscreenLayerCount]++;
-    }
-
-    setViewport(this.options, canvas);
-    layer.setResolution(this.getResolution());
-    return ret;
-  }
-  /* override */
-
-
-  forceUpdate() {
-    if (this.hasOffscreenCanvas && !this._requestID) {
-      this._requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_1__["requestAnimationFrame"])(() => {
-        delete this._requestID;
-        this.render();
-      });
-    }
-  }
-  /* override */
-
-
-  insertBefore(layer, ref) {
-    if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"])) {
-      wrapLayer(layer);
-    }
-
-    const ret = super.insertBefore(layer, ref);
-    const canvas = layer.canvas;
-
-    if (!layer.offscreen) {
-      const refChild = getRefCanvas(this, layer);
-      this.container.insertBefore(canvas, refChild);
-    }
-
-    setViewport(this.options, canvas);
-    layer.setResolution(this.getResolution());
-    return ret;
-  }
-
-  layer(id = 'default', options = {}) {
-    options = Object.assign({}, this.options, options);
-    options.id = id;
-    const layers = this.orderedChildren;
-
-    for (let i = 0; i < layers.length; i++) {
-      if (layers[i].id === id) return layers[i];
-    }
-
-    const worker = options.worker;
-    let layer;
-
-    if (worker) {
-      layer = new _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"](options);
-    } else {
-      layer = new _layer__WEBPACK_IMPORTED_MODULE_3__["default"](options); // layer.id = id;
-    }
-
-    this.appendChild(layer);
-    return layer;
-  }
-
-  async preload(...resources) {
-    const ret = [],
-          tasks = [];
-
-    for (let i = 0; i < resources.length; i++) {
-      const res = resources[i];
-      let task;
-
-      if (typeof res === 'string') {
-        task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_8__["loadTexture"])(res);
-      } else if (Array.isArray(res)) {
-        task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_8__["loadFrames"])(...res);
-      } else {
-        const {
-          id,
-          src
-        } = res;
-        task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_8__["loadTexture"])(src, id);
-      }
-      /* istanbul ignore if  */
-
-
-      if (!(task instanceof Promise)) {
-        task = Promise.resolve(task);
-      }
-
-      tasks.push(task.then(r => {
-        ret.push(r);
-        const preloadEvent = new _event_event__WEBPACK_IMPORTED_MODULE_7__["default"]({
-          type: 'preload',
-          detail: {
-            current: r,
-            loaded: ret,
-            resources
-          }
-        });
-        this.dispatchEvent(preloadEvent);
-      }));
-    }
-
-    await Promise.all(tasks);
-    return ret;
-  }
-  /* override */
-
-
-  removeChild(layer) {
-    const ret = super.removeChild(layer);
-
-    if (ret) {
-      const canvas = layer.canvas;
-      if (canvas.remove) canvas.remove();
-      if (layer.offscreen) this[_offscreenLayerCount]--;
-    }
-
-    return ret;
-  } // for offscreen mode rendering
-
-
-  render() {
-    const layers = this.orderedChildren;
-    let hostLayer = null;
-    const offscreens = [];
-
-    for (let i = 0; i < layers.length; i++) {
-      const layer = layers[i];
-      const hasOffscreens = offscreens.length > 0;
-
-      if (layer instanceof _layer__WEBPACK_IMPORTED_MODULE_3__["default"] && !layer.offscreen) {
-        if (!layer.autoRender) {
-          if (hasOffscreens) {
-            console.warn('Some offscreen canvas will not be rendered.');
-            offscreens.length = 0;
-          }
-        } else {
-          hostLayer = layer;
-
-          if (hasOffscreens) {
-            layer.renderer.clear();
-
-            for (let j = 0; j < offscreens.length; j++) {
-              const ol = offscreens[j];
-              ol.render();
-              drawImage(layer, ol);
-            }
-
-            offscreens.length = 0;
-            layer.render({
-              clear: false
-            });
-          } else if (layer.prepareRender) {
-            layer.render();
-          }
-        }
-      } else if (layer.offscreen) {
-        if (hostLayer) {
-          if (layer.prepareRender) layer.render();
-          drawImage(hostLayer, layer);
-        } else {
-          offscreens.push(layer);
-        }
-      } else if (layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_4__["default"] && hasOffscreens) {
-        console.warn('Some offscreen canvas will not be rendered.');
-        offscreens.length = 0;
-      }
-    }
-  }
-  /* override */
-
-
-  replaceChild(layer, ref) {
-    const ret = super.replaceChild(layer, ref);
-    if (ref.canvas.remove) ref.canvas.remove();
-    if (ref.offscreen) this[_offscreenLayerCount]--;
-    const canvas = layer.canvas;
-
-    if (!layer.offscreen) {
-      const refChild = getRefCanvas(this, layer);
-      this.container.insertBefore(canvas, refChild);
-    }
-
-    setViewport(this.options, canvas);
-    layer.setResolution(this.getResolution());
-    return ret;
-  }
-
-  resize() {
-    const options = this.options;
-    this.children.forEach(layer => {
-      setViewport(options, layer.canvas);
-    });
-    this.setResolution(options);
-    this.dispatchEvent({
-      type: 'resize'
-    });
-  }
-  /* override */
-
-
-  setResolution({
-    width,
-    height
-  } = {}) {
-    const container = this.container;
-    const {
-      clientWidth,
-      clientHeight
-    } = container;
-
-    if (width == null || height == null) {
-      width = width == null ? clientWidth : width;
-      height = height == null ? clientHeight : height;
-    }
-
-    const {
-      mode,
-      displayRatio
-    } = this.options;
-    width *= displayRatio;
-    height *= displayRatio;
-    this.options.left = 0;
-    this.options.top = 0;
-
-    if (mode === 'stickyHeight' || mode === 'stickyLeft' || mode === 'stickyRight') {
-      const w = width;
-      width = clientWidth * height / clientHeight;
-      if (mode === 'stickyHeight') this.options.left = 0.5 * (width - w);
-      if (mode === 'stickyRight') this.options.left = width - w;
-    } else if (mode === 'stickyWidth' || mode === 'stickyTop' || mode === 'stickyBottom') {
-      const h = height;
-      height = clientHeight * width / clientWidth;
-      if (mode === 'stickyWidth') this.options.top = 0.5 * (height - h);
-      if (mode === 'stickyBottom') this.options.top = height - h;
-    }
-
-    super.setResolution({
-      width,
-      height
-    });
-  }
-
-  snapshot({
-    offscreen = false
-  } = {}) {
-    const _canvas = offscreen ? 'snapshotOffScreenCanvas' : 'snapshotCanvas';
-
-    const {
-      width,
-      height
-    } = this.getResolution();
-    this[_canvas] = this[_canvas] || _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createCanvas(width, height, {
-      offscreen
-    });
-
-    const context = this[_canvas].getContext('2d');
-
-    const layers = this.orderedChildren;
-    context.clearRect(0, 0, width, height);
-
-    for (let i = 0; i < layers.length; i++) {
-      const layer = layers[i];
-      if (layer.render) layer.render();
-      const canvas = layer.canvas;
-
-      if (canvas && canvas !== layer) {
-        context.drawImage(canvas, 0, 0, width, height);
-      }
-    }
-
-    return this[_canvas];
-  }
-
-}
-_document__WEBPACK_IMPORTED_MODULE_9__["default"].registerNode(Scene, 'scene');
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(22)))
-
-/***/ }),
-/* 294 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return createPointerEvents; });
-/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(221);
-__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
-
-
-function createPointerEvents(originalEvent, {
-  offsetTop = 0,
-  offsetLeft = 0,
-  displayRatio = 1
-} = {}) {
-  let x, y;
-  const originalCoordinates = [];
-  const {
-    left,
-    top,
-    width: viewportWidth,
-    height: viewportHeight
-  } = originalEvent.target.getBoundingClientRect();
-  const resolutionWidth = originalEvent.target.width;
-  const resolutionHeight = originalEvent.target.height;
-  const pointers = originalEvent.changedTouches || [originalEvent];
-
-  for (let i = 0; i < pointers.length; i++) {
-    const pointer = pointers[i];
-    const identifier = pointer.identifier;
-    const {
-      clientX,
-      clientY
-    } = pointer;
-
-    if (clientX != null && clientY != null) {
-      originalCoordinates.push({
-        x: Math.round((clientX | 0) - left),
-        y: Math.round((clientY | 0) - top),
-        identifier
-      });
-    }
-  }
-
-  if (originalCoordinates.length <= 0) originalCoordinates.push({
-    x,
-    y
-  });
-  const ret = [];
-  originalCoordinates.forEach(originalCoordinate => {
-    if (originalCoordinate.x != null && originalCoordinate.y != null) {
-      x = (originalCoordinate.x * resolutionWidth / viewportWidth - offsetLeft) / displayRatio;
-      y = (originalCoordinate.y * resolutionHeight / viewportHeight - offsetTop) / displayRatio;
-    }
-
-    const event = new _event__WEBPACK_IMPORTED_MODULE_0__["default"](originalEvent);
-    Object.defineProperties(event, {
-      layerX: {
-        value: x
-      },
-      layerY: {
-        value: y
-      },
-      originalX: {
-        value: originalCoordinate.x
-      },
-      originalY: {
-        value: originalCoordinate.y
-      },
-      x: {
-        value: x
-      },
-      y: {
-        value: y
-      },
-      identifier: {
-        value: originalCoordinate.identifier
-      }
-    });
-    ret.push(event);
-  });
-  return ret;
-}
 
 /***/ })
 /******/ ]);
-});
+
+
+const _spritejs$Arc = spritejs['Arc'];
+const _spritejs$Block = spritejs['Block'];
+const _spritejs$Cloud = spritejs['Cloud'];
+const _spritejs$Ellipse = spritejs['Ellipse'];
+const _spritejs$Gradient = spritejs['Gradient'];
+const _spritejs$Group = spritejs['Group'];
+const _spritejs$Label = spritejs['Label'];
+const _spritejs$Layer = spritejs['Layer'];
+const _spritejs$Node = spritejs['Node'];
+const _spritejs$Parallel = spritejs['Parallel'];
+const _spritejs$Path = spritejs['Path'];
+const _spritejs$Polyline = spritejs['Polyline'];
+const _spritejs$Rect = spritejs['Rect'];
+const _spritejs$Regular = spritejs['Regular'];
+const _spritejs$Ring = spritejs['Ring'];
+const _spritejs$Sprite = spritejs['Sprite'];
+const _spritejs$Star = spritejs['Star'];
+const _spritejs$Triangle = spritejs['Triangle'];
+const _spritejs$createElement = spritejs['createElement'];
+const _spritejs$isSpriteNode = spritejs['isSpriteNode'];
+const _spritejs$registerNode = spritejs['registerNode'];
+const _spritejs$helpers = spritejs['helpers'];
+const _spritejs$layerCreated = spritejs['layerCreated'];
+const _spritejs$ENV = spritejs['ENV'];
+
+export {
+    _spritejs$Arc as Arc,
+    _spritejs$Block as Block,
+    _spritejs$Cloud as Cloud,
+    _spritejs$Ellipse as Ellipse,
+    _spritejs$Gradient as Gradient,
+    _spritejs$Group as Group,
+    _spritejs$Label as Label,
+    _spritejs$Layer as Layer,
+    _spritejs$Node as Node,
+    _spritejs$Parallel as Parallel,
+    _spritejs$Path as Path,
+    _spritejs$Polyline as Polyline,
+    _spritejs$Rect as Rect,
+    _spritejs$Regular as Regular,
+    _spritejs$Ring as Ring,
+    _spritejs$Sprite as Sprite,
+    _spritejs$Star as Star,
+    _spritejs$Triangle as Triangle,
+    _spritejs$createElement as createElement,
+    _spritejs$isSpriteNode as isSpriteNode,
+    _spritejs$registerNode as registerNode,
+    _spritejs$helpers as helpers,
+    _spritejs$layerCreated as layerCreated,
+    _spritejs$ENV as ENV
+}

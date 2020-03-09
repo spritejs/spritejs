@@ -7,6 +7,6 @@
   bindlongpress="onLongPress"
 >
   <block wx:for="{{_layers}}" wx:key="{{item}}">
-    <canvas canvas-id="{{item}}" type="webgl" disable-scroll="true" id="{{item}}"></canvas>
+    <canvas canvas-id="{{item}}" type="{{contextType}}" disable-scroll="true" id="{{item}}"></canvas>
   </block>
 </view>

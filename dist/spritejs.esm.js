@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["spritejs"] = factory();
-	else
-		root["spritejs"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+var spritejs =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -33782,4 +33773,64 @@ function createPointerEvents(originalEvent, {
 
 /***/ })
 /******/ ]);
-});
+
+
+const _spritejs$Arc = spritejs['Arc'];
+const _spritejs$Block = spritejs['Block'];
+const _spritejs$Cloud = spritejs['Cloud'];
+const _spritejs$Color = spritejs['Color'];
+const _spritejs$Ellipse = spritejs['Ellipse'];
+const _spritejs$Gradient = spritejs['Gradient'];
+const _spritejs$Group = spritejs['Group'];
+const _spritejs$Label = spritejs['Label'];
+const _spritejs$Layer = spritejs['Layer'];
+const _spritejs$LayerWorker = spritejs['LayerWorker'];
+const _spritejs$Node = spritejs['Node'];
+const _spritejs$Parallel = spritejs['Parallel'];
+const _spritejs$Path = spritejs['Path'];
+const _spritejs$Polyline = spritejs['Polyline'];
+const _spritejs$Rect = spritejs['Rect'];
+const _spritejs$Regular = spritejs['Regular'];
+const _spritejs$Ring = spritejs['Ring'];
+const _spritejs$Scene = spritejs['Scene'];
+const _spritejs$Sprite = spritejs['Sprite'];
+const _spritejs$Star = spritejs['Star'];
+const _spritejs$Triangle = spritejs['Triangle'];
+const _spritejs$helpers = spritejs['helpers'];
+const _spritejs$createElement = spritejs['createElement'];
+const _spritejs$isSpriteNode = spritejs['isSpriteNode'];
+const _spritejs$registerNode = spritejs['registerNode'];
+const _spritejs$requestAnimationFrame = spritejs['requestAnimationFrame'];
+const _spritejs$cancelAnimationFrame = spritejs['cancelAnimationFrame'];
+const _spritejs$ENV = spritejs['ENV'];
+
+export {
+    _spritejs$Arc as Arc,
+    _spritejs$Block as Block,
+    _spritejs$Cloud as Cloud,
+    _spritejs$Color as Color,
+    _spritejs$Ellipse as Ellipse,
+    _spritejs$Gradient as Gradient,
+    _spritejs$Group as Group,
+    _spritejs$Label as Label,
+    _spritejs$Layer as Layer,
+    _spritejs$LayerWorker as LayerWorker,
+    _spritejs$Node as Node,
+    _spritejs$Parallel as Parallel,
+    _spritejs$Path as Path,
+    _spritejs$Polyline as Polyline,
+    _spritejs$Rect as Rect,
+    _spritejs$Regular as Regular,
+    _spritejs$Ring as Ring,
+    _spritejs$Scene as Scene,
+    _spritejs$Sprite as Sprite,
+    _spritejs$Star as Star,
+    _spritejs$Triangle as Triangle,
+    _spritejs$helpers as helpers,
+    _spritejs$createElement as createElement,
+    _spritejs$isSpriteNode as isSpriteNode,
+    _spritejs$registerNode as registerNode,
+    _spritejs$requestAnimationFrame as requestAnimationFrame,
+    _spritejs$cancelAnimationFrame as cancelAnimationFrame,
+    _spritejs$ENV as ENV
+}
