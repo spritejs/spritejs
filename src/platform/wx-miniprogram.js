@@ -127,6 +127,17 @@ export function polyfill({ENV}) {
   ENV.loadImage = function (src, {alias}) {
     if(imageCache[src]) return imageCache[src];
     // console.log(wx.getImageInfo);
+    if(ENV.canvas) {
+      return new Promise((resolve) => {
+        const image = ENV.canvas.createImage();
+        image.src = src;
+        image.onload = function () {
+          imageCache[src] = image;
+          if(alias) imageCache[alias] = imageCache[src];
+          resolve(imageCache[src]);
+        };
+      });
+    }
     return new Promise((resolve, reject) => {
       wx.getImageInfo({
         src,

@@ -55,8 +55,8 @@ Component({
     },
   },
   ready() {
-    this.getBoundingClientRect = wx.createSelectorQuery().in(this)
-      .select('.scene-layout').boundingClientRect();
+    const query = wx.createSelectorQuery().in(this);
+    this.getBoundingClientRect = query.select('.scene-layout').boundingClientRect();
     this.getBoundingClientRect.exec(([rect]) => {
       let displayRatio = 1;
       const pixelUnit = this.data.pixelUnit;
@@ -64,19 +64,33 @@ Component({
         const {windowWidth} = wx.getSystemInfoSync();
         displayRatio = windowWidth / 750;
       }
+
       const scene = new Scene({
         width: rect.width / displayRatio,
         height: rect.height / displayRatio,
         extra: this,
         displayRatio,
       });
-      const args = {};
-      this.data._layers.forEach((layer) => {
-        args[layer.replace(/:[0-9a-f]+$/ig, '')] = scene.layer(layer, this);
+
+      new Promise((resolve) => {
+        const args = {scene};
+        const last = this.data._layers.length - 1;
+        this.data._layers.forEach((layer, i) => {
+          wx.createSelectorQuery().in(this).select(`#${layer}`).fields({node: true, size: true})
+            .exec((res) => {
+              const canvas = res[0].node;
+              args[layer.replace(/-[0-9a-f]+$/ig, '')] = scene.layer(layer, {canvas});
+              ENV.canvas = canvas;
+              if(i === last) resolve({args});
+            });
+        });
+      }).then(({args}) => {
+        this.scene = scene;
+        this.container = scene.container;
+        this.triggerEvent('SceneCreated', args);
+      }).catch((err) => {
+        console.error(err);
       });
-      this.scene = scene;
-      this.container = scene.container;
-      this.triggerEvent('SceneCreated', args);
     });
   },
 });
