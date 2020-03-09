@@ -41,7 +41,7 @@
     "eslint-plugin-html": "^5.0.5",
     "gl": "^4.4.0",
     "jest": "^24.9.0",
-    "node-canvas-webgl": "^0.2.5",
+    "node-canvas-webgl": "^0.2.6",
     "raw-loader": "^3.1.0",
     "request": "^2.88.0",
     "webpack": "^4.33.0",
