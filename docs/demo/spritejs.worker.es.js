@@ -19037,6 +19037,10 @@ class Node {
     if (key === 'filter') {
       this[_filters] = Object(_utils_filter__WEBPACK_IMPORTED_MODULE_5__["parseFilterString"])(newValue);
     }
+
+    if (key === 'zIndex' && this.parent) {
+      this.parent.reorder();
+    }
   }
 
   setAttribute(key, value) {
@@ -25453,10 +25457,6 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
         lineDash: borderDash,
         lineDashOffset: borderDashOffset
       });
-    }
-
-    if (key === 'zIndex' && this.parent) {
-      this.parent.reorder();
     }
   }
   /* override */

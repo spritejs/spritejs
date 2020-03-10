@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+    });
+
+    const fglayer = scene.layer();
+    const el = new spritejs.Polyline();
+    el.attr({
+      points: [0, 0, 0, 50],
+      fillColor: 'red',
+      strokeColor: 'red',
+      lineWidth: 10,
+      pos: [200, 200],
+      zIndex: 0,
+    });
+
+    const el2 = el.cloneNode();
+    el2.attr({
+      strokeColor: 'blue',
+      rotate: 90,
+      translate: [20, -20],
+      zIndex: 0,
+    });
+    fglayer.append(el, el2);
+
+    el.addEventListener('mouseenter', () => {
+      console.log(11);
+      el.attr({
+        zIndex: 10,
+      });
+    });
+  </script>
+</body>
+</html>

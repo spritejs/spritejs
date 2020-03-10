@@ -162,9 +162,6 @@ export default class Block extends Node {
       setStrokeColor(this[_mesh],
         {color: borderColor, lineWidth: borderWidth, lineDash: borderDash, lineDashOffset: borderDashOffset});
     }
-    if(key === 'zIndex' && this.parent) {
-      this.parent.reorder();
-    }
   }
 
   /* override */

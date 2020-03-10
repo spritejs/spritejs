@@ -22145,6 +22145,10 @@ function () {
       if (key === 'filter') {
         this[_filters] = Object(_utils_filter__WEBPACK_IMPORTED_MODULE_11__["parseFilterString"])(newValue);
       }
+
+      if (key === 'zIndex' && this.parent) {
+        this.parent.reorder();
+      }
     }
   }, {
     key: "setAttribute",
@@ -29132,10 +29136,6 @@ function (_Node) {
           lineDash: borderDash,
           lineDashOffset: borderDashOffset
         });
-      }
-
-      if (key === 'zIndex' && this.parent) {
-        this.parent.reorder();
       }
     }
     /* override */

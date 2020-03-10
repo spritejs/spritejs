@@ -367,6 +367,9 @@ export default class Node {
     if(key === 'filter') {
       this[_filters] = parseFilterString(newValue);
     }
+    if(key === 'zIndex' && this.parent) {
+      this.parent.reorder();
+    }
   }
 
   setAttribute(key, value) {
