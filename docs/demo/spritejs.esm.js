@@ -32646,7 +32646,10 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       this[_pass].push(mesh);
 
       this.forceUpdate();
+      return mesh;
     }
+
+    return null;
   }
   /* override */
 

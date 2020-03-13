@@ -37753,7 +37753,10 @@ function (_Group) {
         this[_pass].push(mesh);
 
         this.forceUpdate();
+        return mesh;
       }
+
+      return null;
     }
     /* override */
 

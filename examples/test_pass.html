@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pass</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #stage {
+      position: absolute;
+      width: 960px;
+      height: 540px;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+    const {Scene, Sprite} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      displayRatio: 2,
+    });
+
+    const layer = scene.layer('fglayer');
+
+    const s = new Sprite('https://p1.ssl.qhimg.com/t01ea011242c0a2ea2c.jpg');
+    layer.append(s);
+
+    const fragment = `precision mediump float;
+      varying vec3 vTextureCoord;
+      uniform sampler2D u_texSampler;
+      uniform vec2 u_mousePos;
+      uniform float u_aspect;
+
+      void main() {
+        vec2 st = vTextureCoord.xy;
+        st.y = 1.0 - st.y;
+        st.x *= u_aspect;
+        vec2 pos = u_mousePos;
+        pos.x *= u_aspect;
+        float d = distance(st, pos);
+        vec4 color = texture2D(u_texSampler, vTextureCoord.xy);
+        color.a *= mix(0.1, 1.0, (1.0 - smoothstep(0.0, 0.2, d)));
+        color.rgb *= 1.0 - step(0.2, d);
+        gl_FragColor = color;
+      }
+    `;
+
+    const {width, height} = layer.getResolution();
+    const dpr = layer.displayRatio;
+    const aspect = width / height;
+
+    layer.addPass({fragment,
+      uniforms: {
+        u_mousePos: [0.1, 0.1],
+        u_aspect: aspect,
+      }});
+
+    layer.addEventListener('mousemove', (e) => {
+      // const {width, height} = layer.getResolution();
+      const x = dpr * e.x / width,
+        y = dpr * e.y / height;
+      layer.pass[0].setUniforms({
+        u_mousePos: [x, y],
+      });
+    });
+
+    layer.tick();
+  </script>
+</body>
+</html>

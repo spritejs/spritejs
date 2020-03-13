@@ -133,7 +133,9 @@ export default class Layer extends Group {
       mesh.setProgram(program);
       this[_pass].push(mesh);
       this.forceUpdate();
+      return mesh;
     }
+    return null;
   }
 
   /* override */

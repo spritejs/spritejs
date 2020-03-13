@@ -231,6 +231,9 @@
     "label": "pass",
     "src": "shader_and_pass/pass"
   }, {
+    "label": "pass wave",
+    "src": "shader_and_pass/pass_wave"
+  }, {
     "label": "basic",
     "src": "3d/basic"
   }, {
