@@ -9469,7 +9469,13 @@ function loadImage(src, {
   if (!imageCache[src]) {
     if (typeof Image === 'function') {
       const img = new Image();
-      img.crossOrigin = 'anonymous';
+
+      if (typeof src === 'string' && !(typeof location === 'object' && /^file:/.test(location.href)) // eslint-disable-line no-restricted-globals
+      && !/^data:/.test(src)) {
+        // base64 dont need crossOrigin - fix early webkit cross domain bug
+        img.crossOrigin = 'anonymous';
+      }
+
       imageCache[src] = new Promise(resolve => {
         img.onload = function () {
           if (useImageBitmap && typeof createImageBitmap === 'function') {
