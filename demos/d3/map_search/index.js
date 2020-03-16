@@ -280,6 +280,7 @@ const {Scene} = spritejs;
         mapTransform(layer, matrix);
       });
 
+      mapTransform(layer, [1, 0, 0, 1, 0, 0]);
       await animator.animate();
       await sleep(10);
       await this.load(subId);
@@ -312,6 +313,10 @@ const {Scene} = spritejs;
           mapTransform(layer, m);
         });
 
+        mapTransform(layer, [
+          matrix[0], 0, 0,
+          matrix[3], matrix[4], matrix[5],
+        ]);
         await animator.animate();
       }
 
