@@ -44,7 +44,7 @@ const {Scene} = spritejs;
         return Promise.resolve(cached);
       }
 
-      const mapPath = `https://spritejs.org/res/mapData/${mapId}.json`;
+      const mapPath = `/assets/mapdata/${mapId}.json`;
       return new Promise((resolve, reject) => {
         d3.json(mapPath, (err, data) => {
           if(err) {
