@@ -1344,7 +1344,7 @@ declare namespace spritejs {
      * @param handler 
      * @param options 
      */
-    tick(handler: (t: number) => void, options?: Record<string, any>): any;
+    tick(handler: (t: number, p: number) => void, options?: Record<string, any>): any;
     /**
      * Convert the layer coordinates to DOM event coordinates.
      * @param x 
