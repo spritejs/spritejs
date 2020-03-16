@@ -71,6 +71,9 @@
   }, {
     "label": "map search",
     "src": "d3/map_search"
+  },  {
+    "label": "github contribution",
+    "src": "d3/github_contrib"
   }, {
     "label": "basic",
     "src": "doc/basic"
