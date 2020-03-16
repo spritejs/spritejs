@@ -32887,7 +32887,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         const ret = handler(t.currentTime, p);
 
         if (layer[_autoRender] && !layer[_tickRender]) {
-          layer[_tickRender] = Promise.resolve(() => {
+          layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
           });

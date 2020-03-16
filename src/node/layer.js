@@ -302,7 +302,7 @@ export default class Layer extends Group {
         const p = Math.min(1.0, t.currentTime / duration);
         const ret = handler(t.currentTime, p);
         if(layer[_autoRender] && !layer[_tickRender]) {
-          layer[_tickRender] = Promise.resolve(() => {
+          layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
           });
