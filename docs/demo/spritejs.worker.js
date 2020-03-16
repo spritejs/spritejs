@@ -37906,11 +37906,11 @@ function (_Group) {
             layer[_tickRender] = Promise.resolve().then(function () {
               layer.render();
               delete layer[_tickRender];
-            });
-          }
 
-          if (handler && ret !== false && p < 1.0) {
-            update();
+              if (handler && ret !== false && p < 1.0) {
+                update();
+              }
+            });
           }
         };
 

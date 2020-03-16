@@ -32881,11 +32881,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
           layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
-          });
-        }
 
-        if (handler && ret !== false && p < 1.0) {
-          update();
+            if (handler && ret !== false && p < 1.0) {
+              update();
+            }
+          });
         }
       };
 
