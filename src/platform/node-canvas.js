@@ -4,7 +4,15 @@ import {createCanvas, loadImage} from 'node-canvas-webgl';
 
 export function polyfill({ENV}) {
   ENV.createCanvas = createCanvas;
-  ENV.loadImage = loadImage;
+  const imageCache = {};
+  ENV.loadImage = function (src, {alias}) {
+    if(imageCache[src]) return imageCache[src];
+    return loadImage(src).then((img) => {
+      imageCache[src] = img;
+      if(alias) imageCache[alias] = img;
+      return img;
+    });
+  };
   ENV.Container = class extends EventEmitter {
     constructor(width = 800, height = 600) {
       super();
