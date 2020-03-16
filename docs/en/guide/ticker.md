@@ -133,3 +133,18 @@ const app = clay.application.create(fglayer.canvas, {
 ```
 
 <iframe src="/demo/#/doc/ticker_claygl" height="450"></iframe>
+
+### layer.tick
+
+Besides to using 'requestanimationframe' directly, we can use `layer.tick` to run a ticker.
+
+```js
+layer.tick((t, p) => {
+  // do something...
+}, {duration, playbackRate});
+
+` ` ` `
+
+It is convenient to use `layer.tick`. If other third-party frameworks render before spritejs rendering, you can keep `{autorender: true}` and no need to call 'layer.render()' manually.
+
+In addition, `layer.tick` also supports setting the duration and the playbackrate options.

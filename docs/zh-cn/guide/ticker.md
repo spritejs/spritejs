@@ -133,3 +133,17 @@ const app = clay.application.create(fglayer.canvas, {
 ```
 
 <iframe src="/demo/#/doc/ticker_claygl" height="450"></iframe>
+
+### layer.tick
+
+除了直接用`requestAnimationFrame`之外，我们可以用`layer.tick`来执行时钟。
+
+```js
+layer.tick((t, p) => {
+  // do something...
+}, {duration, playbackRate});
+```
+
+使用`layer.tick`比较方便，如果是其他第三方框架先渲染，SpriteJS最后渲染，可以不用设置`{autoRender: false}`，也不用手动调用`layer.render()`。
+
+另外`layer.tick`还支持设置duration以及playbackRate参数。

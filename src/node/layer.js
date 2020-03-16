@@ -15,7 +15,7 @@ const _renderer = Symbol('renderer');
 const _timeline = Symbol('timeline');
 
 const _prepareRender = Symbol('prepareRender');
-const _tick = Symbol('tick');
+const _tickRender = Symbol('tickRender');
 
 const _pass = Symbol('pass');
 const _fbo = Symbol('fbo');
@@ -53,7 +53,6 @@ export default class Layer extends Group {
     this.canvas = canvas;
     this[_timeline] = new Timeline();
     this.__mouseCapturedTarget = null;
-    this[_tick] = false;
   }
 
   get autoRender() {
@@ -171,7 +170,7 @@ export default class Layer extends Group {
         const prepareRender = new Promise((resolve) => {
           _resolve = resolve;
 
-          if(this[_autoRender] && !this[_tick]) {
+          if(this[_autoRender]) {
             _requestID = requestAnimationFrame(() => {
               delete prepareRender._requestID;
               this.render();
@@ -286,16 +285,47 @@ export default class Layer extends Group {
     }
   }
 
-  tick(handler, options = {}) {
-    this[_tick] = true;
-    this._prepareRenderFinished();
-    const t = this.timeline.fork(options);
+  /**
+   * tick(handler, {originTime = 0, playbackRate = 1.0, duration = Infinity})
+   * @param {*} handler
+   * @param {*} options
+   */
+  tick(handler, {duration = Infinity, ...timelineOptions} = {}) {
+    // this._prepareRenderFinished();
+    const t = this.timeline.fork(timelineOptions);
     const layer = this;
-    requestAnimationFrame(function update() {
-      if(handler) handler(t.currentTime);
-      if(layer[_autoRender]) layer.render();
-      requestAnimationFrame(update);
-    });
+
+    const update = () => {
+      let _resolve = null;
+      let _requestID = null;
+      const _update = () => {
+        const p = Math.min(1.0, t.currentTime / duration);
+        const ret = handler(t.currentTime, p);
+        if(layer[_autoRender] && !layer[_tickRender]) {
+          layer[_tickRender] = Promise.resolve(() => {
+            layer.render();
+            delete layer[_tickRender];
+          });
+        }
+        if(handler && ret !== false && p < 1.0) {
+          update();
+        }
+      };
+      if(!this[_prepareRender]) {
+        const prepareRender = new Promise((resolve) => {
+          _resolve = resolve;
+          _requestID = requestAnimationFrame(_update);
+        });
+        prepareRender._resolve = _resolve;
+        prepareRender._requestID = _requestID;
+
+        this[_prepareRender] = prepareRender;
+      } else {
+        requestAnimationFrame(_update);
+      }
+    };
+
+    update();
   }
 
   toGlobalPos(x, y) {

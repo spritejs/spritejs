@@ -32485,6 +32485,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(220);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -32505,7 +32509,7 @@ const _timeline = Symbol('timeline');
 
 const _prepareRender = Symbol('prepareRender');
 
-const _tick = Symbol('tick');
+const _tickRender = Symbol('tickRender');
 
 const _pass = Symbol('pass');
 
@@ -32553,7 +32557,6 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     this.canvas = canvas;
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
-    this[_tick] = false;
   }
 
   get autoRender() {
@@ -32706,7 +32709,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         const prepareRender = new Promise(resolve => {
           _resolve = resolve;
 
-          if (this[_autoRender] && !this[_tick]) {
+          if (this[_autoRender]) {
             _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(() => {
               delete prepareRender._requestID;
               this.render();
@@ -32858,19 +32861,57 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       this.forceUpdate();
     }
   }
+  /**
+   * tick(handler, {originTime = 0, playbackRate = 1.0, duration = Infinity})
+   * @param {*} handler
+   * @param {*} options
+   */
 
-  tick(handler, options = {}) {
-    this[_tick] = true;
 
-    this._prepareRenderFinished();
+  tick(handler, _ref = {}) {
+    let {
+      duration = Infinity
+    } = _ref,
+        timelineOptions = _objectWithoutProperties(_ref, ["duration"]);
 
-    const t = this.timeline.fork(options);
+    // this._prepareRenderFinished();
+    const t = this.timeline.fork(timelineOptions);
     const layer = this;
-    Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(function update() {
-      if (handler) handler(t.currentTime);
-      if (layer[_autoRender]) layer.render();
-      Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(update);
-    });
+
+    const update = () => {
+      let _resolve = null;
+      let _requestID = null;
+
+      const _update = () => {
+        const p = Math.min(1.0, t.currentTime / duration);
+        const ret = handler(t.currentTime, p);
+
+        if (layer[_autoRender] && !layer[_tickRender]) {
+          layer[_tickRender] = Promise.resolve(() => {
+            layer.render();
+            delete layer[_tickRender];
+          });
+        }
+
+        if (handler && ret !== false && p < 1.0) {
+          update();
+        }
+      };
+
+      if (!this[_prepareRender]) {
+        const prepareRender = new Promise(resolve => {
+          _resolve = resolve;
+          _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(_update);
+        });
+        prepareRender._resolve = _resolve;
+        prepareRender._requestID = _requestID;
+        this[_prepareRender] = prepareRender;
+      } else {
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(_update);
+      }
+    };
+
+    update();
   }
 
   toGlobalPos(x, y) {
@@ -33538,6 +33579,8 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
     const ret = super.removeChild(layer);
 
     if (ret) {
+      layer._prepareRenderFinished();
+
       const canvas = layer.canvas;
       if (canvas.remove) canvas.remove();
       if (layer.offscreen) this[_offscreenLayerCount]--;
