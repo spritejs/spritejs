@@ -1,5 +1,5 @@
 /* globals d3 */
-const {Scene} = spritejs;
+const {Scene, Sprite} = spritejs;
 const container = document.getElementById('stage');
 const scene = new Scene({
   container,
@@ -9,7 +9,7 @@ const scene = new Scene({
 
 const dataset = [125, 121, 127, 193, 309];
 
-const linear = d3.scaleLinear()
+const scale = d3.scaleLinear()
   .domain([100, d3.max(dataset)])
   .range([0, 500]);
 
@@ -35,18 +35,30 @@ const chart = s.selectAll('sprite')
 chart.transition()
   .duration(2000)
   .attr('width', (d, i) => {
-    return linear(d);
+    return scale(d);
   })
   .attr('bgcolor', (d, i) => {
     return colors[i];
   });
 
-// s.append('axis')
-//   .attr('ticks', [100, 200, 300, 400])
-//   .attr('axisScales', [linear])
-//   .attr('direction', 'bottom')
-//   .attr('pos', [450, 700])
-//   .attr('color', '#666');
+const axis = d3.axisBottom(scale).tickValues([100, 200, 300, 400]);
+const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+d3.select(svg)
+  .attr('width', 600)
+  .attr('height', 60)
+  .append('g')
+  .attr('transform', 'translate(30, 0)')
+  .call(axis);
+svg.children[0].setAttribute('font-size', 20);
+const blob = new Blob([svg.outerHTML], {type: 'image/svg+xml'});
+const textureURL = URL.createObjectURL(blob);
+const axisNode = new Sprite(textureURL);
+axisNode.attr({
+  x: 420,
+  y: 680,
+});
+fglayer.append(axisNode);
 
 chart.on('click', (data) => {
   /* eslint-disable no-console */
