@@ -1,5 +1,5 @@
 /* globals d3 */
-const {Scene, Sprite} = spritejs;
+const {Scene, SpriteSvg} = spritejs;
 const container = document.getElementById('stage');
 const scene = new Scene({
   container,
@@ -41,23 +41,39 @@ chart.transition()
     return colors[i];
   });
 
+// const axis = d3.axisBottom(scale).tickValues([100, 200, 300, 400]);
+// const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+// svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+// d3.select(svg)
+//   .attr('width', 600)
+//   .attr('height', 60)
+//   .append('g')
+//   .attr('transform', 'translate(30, 0)')
+//   .call(axis);
+// svg.children[0].setAttribute('font-size', 20);
+// const blob = new Blob([svg.outerHTML], {type: 'image/svg+xml'});
+// const textureURL = URL.createObjectURL(blob);
+// const axisNode = new Sprite(textureURL);
+// axisNode.attr({
+//   x: 420,
+//   y: 680,
+// });
+// fglayer.append(axisNode);
+
+// 3.4 之后增加了 SpriteSvg 元素
 const axis = d3.axisBottom(scale).tickValues([100, 200, 300, 400]);
-const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-d3.select(svg)
+const axisNode = new SpriteSvg({
+  x: 420,
+  y: 680,
+});
+d3.select(axisNode.svg)
   .attr('width', 600)
   .attr('height', 60)
   .append('g')
   .attr('transform', 'translate(30, 0)')
   .call(axis);
-svg.children[0].setAttribute('font-size', 20);
-const blob = new Blob([svg.outerHTML], {type: 'image/svg+xml'});
-const textureURL = URL.createObjectURL(blob);
-const axisNode = new Sprite(textureURL);
-axisNode.attr({
-  x: 420,
-  y: 680,
-});
+
+axisNode.svg.children[0].setAttribute('font-size', 20);
 fglayer.append(axisNode);
 
 chart.on('click', (data) => {

@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 295);
+/******/ 	return __webpack_require__(__webpack_require__.s = 297);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -13779,13 +13779,11 @@ class Mesh2D {
       }
     }
 
-    if (!mesh.attributes.a_sourceRect || !compareRect(this[_texOptions].srcRect, options.srcRect)) {
-      if (srcRect) {
-        const sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
-        mesh.attributes.a_sourceRect = mesh.positions.map(() => [...sRect]);
-      } else {
-        mesh.attributes.a_sourceRect = mesh.positions.map(() => [0, 0, 0, 0]);
-      }
+    if (srcRect) {
+      const sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
+      mesh.attributes.a_sourceRect = mesh.positions.map(() => [...sRect]);
+    } else {
+      mesh.attributes.a_sourceRect = mesh.positions.map(() => [0, 0, 0, 0]);
     }
   }
 
@@ -18770,7 +18768,7 @@ class Node {
 
       if (children) {
         children.forEach(child => {
-          child.activateAnimations();
+          if (child.activateAnimations) child.activateAnimations();
         });
       }
     }
@@ -18869,7 +18867,7 @@ class Node {
 
     if (children) {
       children.forEach(child => {
-        child.deactivateAnimations();
+        if (child.deactivateAnimations) child.deactivateAnimations();
       });
     }
   }
@@ -19036,7 +19034,7 @@ class Node {
   }
 
   onPropertyChange(key, newValue, oldValue) {
-    if (key !== 'id' && key !== 'name' && key !== 'className') {
+    if (key !== 'id' && key !== 'name' && key !== 'className' && key !== 'pointerEvents' && key !== 'passEvents') {
       this.forceUpdate();
     }
 
@@ -19332,7 +19330,8 @@ const _lastChangedAttr = Symbol('lastChangedAttr');
 const _offsetFigure = Symbol('offsetFigure');
 
 function setTransform(attr, type, value) {
-  const changed = attr[setAttribute](type, value);
+  const oldValue = attr[_attr][type];
+  const changed = attr[setAttribute](type, value, false);
 
   if (changed || attr[_lastChangedAttr] !== type) {
     const transformMap = attr[_transforms];
@@ -19360,6 +19359,8 @@ function setTransform(attr, type, value) {
     }
 
     attr[_transformMatrix] = null;
+
+    attr[_subject].onPropertyChange(type, value, oldValue, attr);
   }
 }
 
@@ -19490,7 +19491,7 @@ class Node {
     this[_alias].push(...alias);
   }
 
-  [setAttribute](key, value) {
+  [setAttribute](key, value, notice = true) {
     const oldValue = this[_attr][key];
     const subject = this[_subject];
     if (value == null) value = this[_default][key];
@@ -19502,7 +19503,7 @@ class Node {
       this[_changedAttrs].add(key);
 
       this[_lastChangedAttr] = key;
-      subject.onPropertyChange(key, value, oldValue, this);
+      if (notice) subject.onPropertyChange(key, value, oldValue, this);
       return true;
     }
 
@@ -19661,7 +19662,7 @@ class Node {
 
   set translate(value) {
     value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__["toArray"])(value, true);
-    if (value && !Array.isArray(value)) value = [value, value];
+    if (value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'translate', value);
   }
 
@@ -19671,7 +19672,7 @@ class Node {
 
   set scale(value) {
     value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__["toArray"])(value, true);
-    if (value && !Array.isArray(value)) value = [value, value];
+    if (value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'scale', value);
   }
 
@@ -19681,7 +19682,7 @@ class Node {
 
   set skew(value) {
     value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__["toArray"])(value, true);
-    if (value && !Array.isArray(value)) value = [value, value];
+    if (value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'skew', value);
   }
 
@@ -25355,7 +25356,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this[_mesh] = mesh;
       } else if (mesh.box !== box) {
         mesh.contours = box.contours;
-        mesh.path = box;
+        mesh.box = box;
       }
 
       mesh.setTransform(...this.renderMatrix);
@@ -32820,7 +32821,9 @@ _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
 /* 292 */,
 /* 293 */,
 /* 294 */,
-/* 295 */
+/* 295 */,
+/* 296 */,
+/* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

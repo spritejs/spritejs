@@ -43,7 +43,8 @@ const _lastChangedAttr = Symbol('lastChangedAttr');
 const _offsetFigure = Symbol('offsetFigure');
 
 function setTransform(attr, type, value) {
-  const changed = attr[setAttribute](type, value);
+  const oldValue = attr[_attr][type];
+  const changed = attr[setAttribute](type, value, false);
   if(changed || attr[_lastChangedAttr] !== type) {
     const transformMap = attr[_transforms];
     if(transformMap.has(type)) {
@@ -63,6 +64,7 @@ function setTransform(attr, type, value) {
       transformMap.set(type, value);
     }
     attr[_transformMatrix] = null;
+    attr[_subject].onPropertyChange(type, value, oldValue, attr);
   }
 }
 
@@ -185,7 +187,7 @@ export default class Node {
     this[_alias].push(...alias);
   }
 
-  [setAttribute](key, value) {
+  [setAttribute](key, value, notice = true) {
     const oldValue = this[_attr][key];
     const subject = this[_subject];
     if(value == null) value = this[_default][key];
@@ -194,7 +196,7 @@ export default class Node {
       if(this[_changedAttrs].has(key)) this[_changedAttrs].delete(key);
       this[_changedAttrs].add(key);
       this[_lastChangedAttr] = key;
-      subject.onPropertyChange(key, value, oldValue, this);
+      if(notice) subject.onPropertyChange(key, value, oldValue, this);
       return true;
     }
     return false;
@@ -341,7 +343,7 @@ export default class Node {
 
   set translate(value) {
     value = toArray(value, true);
-    if(value && !Array.isArray(value)) value = [value, value];
+    if(value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'translate', value);
   }
 
@@ -351,7 +353,7 @@ export default class Node {
 
   set scale(value) {
     value = toArray(value, true);
-    if(value && !Array.isArray(value)) value = [value, value];
+    if(value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'scale', value);
   }
 
@@ -361,7 +363,7 @@ export default class Node {
 
   set skew(value) {
     value = toArray(value, true);
-    if(value && !Array.isArray(value)) value = [value, value];
+    if(value != null && !Array.isArray(value)) value = [value, value];
     setTransform(this, 'skew', value);
   }
 

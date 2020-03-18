@@ -74,7 +74,7 @@ export default class Block extends Node {
         this[_mesh] = mesh;
       } else if(mesh.box !== box) {
         mesh.contours = box.contours;
-        mesh.path = box;
+        mesh.box = box;
       }
       mesh.setTransform(...this.renderMatrix);
       return mesh;

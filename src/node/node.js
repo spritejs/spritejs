@@ -153,7 +153,7 @@ export default class Node {
       const children = this.children;
       if(children) {
         children.forEach((child) => {
-          child.activateAnimations();
+          if(child.activateAnimations) child.activateAnimations();
         });
       }
     }
@@ -229,7 +229,7 @@ export default class Node {
     const children = this.children;
     if(children) {
       children.forEach((child) => {
-        child.deactivateAnimations();
+        if(child.deactivateAnimations) child.deactivateAnimations();
       });
     }
   }
@@ -361,7 +361,7 @@ export default class Node {
   }
 
   onPropertyChange(key, newValue, oldValue) {
-    if(key !== 'id' && key !== 'name' && key !== 'className') {
+    if(key !== 'id' && key !== 'name' && key !== 'className' && key !== 'pointerEvents' && key !== 'passEvents') {
       this.forceUpdate();
     }
     if(key === 'filter') {

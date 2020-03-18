@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 340);
+/******/ 	return __webpack_require__(__webpack_require__.s = 342);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -16441,17 +16441,15 @@ function () {
         }
       }
 
-      if (!mesh.attributes.a_sourceRect || !compareRect(this[_texOptions].srcRect, options.srcRect)) {
-        if (srcRect) {
-          var sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
-          mesh.attributes.a_sourceRect = mesh.positions.map(function () {
-            return [].concat(sRect);
-          });
-        } else {
-          mesh.attributes.a_sourceRect = mesh.positions.map(function () {
-            return [0, 0, 0, 0];
-          });
-        }
+      if (srcRect) {
+        var sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
+        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+          return [].concat(sRect);
+        });
+      } else {
+        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+          return [0, 0, 0, 0];
+        });
       }
     }
   }, {
@@ -21867,7 +21865,7 @@ function () {
 
         if (children) {
           children.forEach(function (child) {
-            child.activateAnimations();
+            if (child.activateAnimations) child.activateAnimations();
           });
         }
       }
@@ -21981,7 +21979,7 @@ function () {
 
       if (children) {
         children.forEach(function (child) {
-          child.deactivateAnimations();
+          if (child.deactivateAnimations) child.deactivateAnimations();
         });
       }
     }
@@ -22169,7 +22167,7 @@ function () {
   }, {
     key: "onPropertyChange",
     value: function onPropertyChange(key, newValue, oldValue) {
-      if (key !== 'id' && key !== 'name' && key !== 'className') {
+      if (key !== 'id' && key !== 'name' && key !== 'className' && key !== 'pointerEvents' && key !== 'passEvents') {
         this.forceUpdate();
       }
 
@@ -22651,7 +22649,9 @@ var _lastChangedAttr = Symbol('lastChangedAttr');
 var _offsetFigure = Symbol('offsetFigure');
 
 function setTransform(attr, type, value) {
-  var changed = attr[_setAttribute](type, value);
+  var oldValue = attr[_attr][type];
+
+  var changed = attr[_setAttribute](type, value, false);
 
   if (changed || attr[_lastChangedAttr] !== type) {
     var transformMap = attr[_transforms];
@@ -22679,6 +22679,8 @@ function setTransform(attr, type, value) {
     }
 
     attr[_transformMatrix] = null;
+
+    attr[_subject].onPropertyChange(type, value, oldValue, attr);
   }
 }
 
@@ -22830,6 +22832,7 @@ function () {
   }, {
     key: _setAttribute,
     value: function value(key, _value2) {
+      var notice = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var oldValue = this[_attr][key];
       var subject = this[_subject];
       if (_value2 == null) _value2 = this[_default][key];
@@ -22841,7 +22844,7 @@ function () {
         this[_changedAttrs].add(key);
 
         this[_lastChangedAttr] = key;
-        subject.onPropertyChange(key, _value2, oldValue, this);
+        if (notice) subject.onPropertyChange(key, _value2, oldValue, this);
         return true;
       }
 
@@ -23031,7 +23034,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'translate', value);
     }
   }, {
@@ -23041,7 +23044,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'scale', value);
     }
   }, {
@@ -23051,7 +23054,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'skew', value);
     }
   }, {
@@ -29297,7 +29300,7 @@ function (_Node) {
           this[_mesh] = mesh;
         } else if (mesh.box !== box) {
           mesh.contours = box.contours;
-          mesh.path = box;
+          mesh.box = box;
         }
 
         (_mesh2 = mesh).setTransform.apply(_mesh2, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this.renderMatrix));
@@ -38102,7 +38105,9 @@ module.exports = _objectWithoutPropertiesLoose;
 /* 337 */,
 /* 338 */,
 /* 339 */,
-/* 340 */
+/* 340 */,
+/* 341 */,
+/* 342 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -163,19 +163,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(334);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_18__["default"]; });
 
-/* harmony import */ var _node_layer_worker__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(337);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LayerWorker", function() { return _node_layer_worker__WEBPACK_IMPORTED_MODULE_19__["default"]; });
+/* harmony import */ var _node_spritesvg__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(337);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSvg", function() { return _node_spritesvg__WEBPACK_IMPORTED_MODULE_19__["default"]; });
 
-/* harmony import */ var _node_scene__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(338);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _node_scene__WEBPACK_IMPORTED_MODULE_20__["default"]; });
+/* harmony import */ var _node_layer_worker__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(339);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LayerWorker", function() { return _node_layer_worker__WEBPACK_IMPORTED_MODULE_20__["default"]; });
 
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(259);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(267);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Color"]; });
+/* harmony import */ var _node_scene__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(340);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _node_scene__WEBPACK_IMPORTED_MODULE_21__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_22__["Gradient"]; });
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(259);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(267);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_23__["Color"]; });
 
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(110);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_23__["Gradient"]; });
+
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(110);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -210,15 +213,16 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
 
-var createElement = _document__WEBPACK_IMPORTED_MODULE_21__["default"].createElement;
-var isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].isSpriteNode;
-var registerNode = _document__WEBPACK_IMPORTED_MODULE_21__["default"].registerNode;
+
+var createElement = _document__WEBPACK_IMPORTED_MODULE_22__["default"].createElement;
+var isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_22__["default"].isSpriteNode;
+var registerNode = _document__WEBPACK_IMPORTED_MODULE_22__["default"].registerNode;
 var helpers = {
-  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_22__["parseColor"],
-  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["sizeToPixel"],
-  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toArray"],
-  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toString"],
-  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_23__["toNumber"]
+  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_23__["parseColor"],
+  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["sizeToPixel"],
+  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["toArray"],
+  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["toString"],
+  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["toNumber"]
 };
 
 
@@ -16568,17 +16572,15 @@ function () {
         }
       }
 
-      if (!mesh.attributes.a_sourceRect || !compareRect(this[_texOptions].srcRect, options.srcRect)) {
-        if (srcRect) {
-          var sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
-          mesh.attributes.a_sourceRect = mesh.positions.map(function () {
-            return [].concat(sRect);
-          });
-        } else {
-          mesh.attributes.a_sourceRect = mesh.positions.map(function () {
-            return [0, 0, 0, 0];
-          });
-        }
+      if (srcRect) {
+        var sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
+        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+          return [].concat(sRect);
+        });
+      } else {
+        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+          return [0, 0, 0, 0];
+        });
       }
     }
   }, {
@@ -21994,7 +21996,7 @@ function () {
 
         if (children) {
           children.forEach(function (child) {
-            child.activateAnimations();
+            if (child.activateAnimations) child.activateAnimations();
           });
         }
       }
@@ -22108,7 +22110,7 @@ function () {
 
       if (children) {
         children.forEach(function (child) {
-          child.deactivateAnimations();
+          if (child.deactivateAnimations) child.deactivateAnimations();
         });
       }
     }
@@ -22296,7 +22298,7 @@ function () {
   }, {
     key: "onPropertyChange",
     value: function onPropertyChange(key, newValue, oldValue) {
-      if (key !== 'id' && key !== 'name' && key !== 'className') {
+      if (key !== 'id' && key !== 'name' && key !== 'className' && key !== 'pointerEvents' && key !== 'passEvents') {
         this.forceUpdate();
       }
 
@@ -22778,7 +22780,9 @@ var _lastChangedAttr = Symbol('lastChangedAttr');
 var _offsetFigure = Symbol('offsetFigure');
 
 function setTransform(attr, type, value) {
-  var changed = attr[_setAttribute](type, value);
+  var oldValue = attr[_attr][type];
+
+  var changed = attr[_setAttribute](type, value, false);
 
   if (changed || attr[_lastChangedAttr] !== type) {
     var transformMap = attr[_transforms];
@@ -22806,6 +22810,8 @@ function setTransform(attr, type, value) {
     }
 
     attr[_transformMatrix] = null;
+
+    attr[_subject].onPropertyChange(type, value, oldValue, attr);
   }
 }
 
@@ -22957,6 +22963,7 @@ function () {
   }, {
     key: _setAttribute,
     value: function value(key, _value2) {
+      var notice = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var oldValue = this[_attr][key];
       var subject = this[_subject];
       if (_value2 == null) _value2 = this[_default][key];
@@ -22968,7 +22975,7 @@ function () {
         this[_changedAttrs].add(key);
 
         this[_lastChangedAttr] = key;
-        subject.onPropertyChange(key, _value2, oldValue, this);
+        if (notice) subject.onPropertyChange(key, _value2, oldValue, this);
         return true;
       }
 
@@ -23158,7 +23165,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'translate', value);
     }
   }, {
@@ -23168,7 +23175,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'scale', value);
     }
   }, {
@@ -23178,7 +23185,7 @@ function () {
     },
     set: function set(value) {
       value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_6__["toArray"])(value, true);
-      if (value && !Array.isArray(value)) value = [value, value];
+      if (value != null && !Array.isArray(value)) value = [value, value];
       setTransform(this, 'skew', value);
     }
   }, {
@@ -29424,7 +29431,7 @@ function (_Node) {
           this[_mesh] = mesh;
         } else if (mesh.box !== box) {
           mesh.contours = box.contours;
-          mesh.path = box;
+          mesh.box = box;
         }
 
         (_mesh2 = mesh).setTransform.apply(_mesh2, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this.renderMatrix));
@@ -38231,6 +38238,459 @@ module.exports = _objectWithoutPropertiesLoose;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(335);
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(113);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(114);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(116);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(118);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(58);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(273);
+/* harmony import */ var _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(338);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(259);
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(302);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(110);
+
+
+
+
+
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+
+
+
+ // This class only avaliable for browser
+
+var namespace = 'http://www.w3.org/2000/svg';
+var setAttribute = Symbol.for('spritejs_setAttribute');
+
+var _root = Symbol('root');
+
+function updateTexture(svgNode) {
+  var flexible = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var root = svgNode[_root];
+
+  if (root && root.children[0]) {
+    if (flexible && svgNode.attributes.flexible) {
+      var svg = svgNode.svg;
+
+      if (!svg.hasAttribute('data-original-width')) {
+        var w = svg.getAttribute('width');
+        w = w ? Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_14__["sizeToPixel"])(w) : 300;
+        var h = svg.getAttribute('height');
+        h = h ? Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_14__["sizeToPixel"])(h) : 150;
+
+        if (!svg.hasAttribute('viewBox')) {
+          svg.setAttribute('viewBox', "0 0 ".concat(Math.round(w), " ").concat(Math.round(h))); // svg.setAttribute('width', '100%');
+          // svg.setAttribute('height', '100%');
+        }
+
+        svg.setAttribute('data-original-width', w);
+        svg.setAttribute('data-original-height', h);
+      }
+
+      var width = svgNode.attributes.width || Number(svg.getAttribute('data-original-width'));
+      var height = svgNode.attributes.height || Number(svg.getAttribute('data-original-height')); // let {width, height} = svgNode.getBoundingClientRect();
+      // width = width || w;
+      // height = height || h;
+
+      var scale = svgNode.attributes.scale[0];
+      var displayRatio = svgNode.layer ? svgNode.layer.displayRatio : 1;
+      width *= scale * displayRatio;
+      height *= scale * displayRatio;
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+
+      if (width && height && svgNode.textureImage) {
+        var imgWidth = svgNode.textureImage.width;
+        var imgHeight = svgNode.textureImage.height;
+        var boxSize = svgNode.clientSize;
+        svgNode.attributes.textureRect = [0, 0, Math.round(boxSize[0] * imgWidth / width), Math.round(boxSize[1] * imgHeight / height)];
+      }
+    } else {
+      // TODO 用 Promise 减少绘制次数
+      var svgText = root.innerHTML;
+      var blob = new Blob([svgText], {
+        type: 'image/svg+xml'
+      });
+      var textureURL = URL.createObjectURL(blob);
+      var img = new Image();
+
+      img.onload = function () {
+        if (img.width && img.height) {
+          svgNode.attributes[setAttribute]('texture', img);
+
+          if (svgNode.attributes.flexible) {
+            svgNode.attributes.textureRect = null;
+          }
+        } else {
+          svgNode.attributes[setAttribute]('texture', null);
+        }
+      };
+
+      img.src = textureURL;
+    }
+  }
+}
+
+var SpriteSvg =
+/*#__PURE__*/
+function (_Sprite) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(SpriteSvg, _Sprite);
+
+  function SpriteSvg() {
+    var _this;
+
+    var attrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, SpriteSvg);
+
+    if (typeof attrs === 'string') attrs = {
+      svgText: attrs
+    };
+
+    var _attrs2 = attrs,
+        svgText = _attrs2.svgText,
+        _attrs = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1___default()(_attrs2, ["svgText"]);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(SpriteSvg).call(this, _attrs));
+    _this[_root] = document.createElement('div');
+
+    if (svgText) {
+      _this[_root].innerHTML = svgText;
+      var svg = _this[_root].children[0];
+      if (svg) svg.setAttribute('xmlns', namespace);else {
+        // not svg text
+        fetch(svgText).then(function (res) {
+          return res.text();
+        }).then(function (text) {
+          _this[_root].innerHTML = text;
+          if (!_this.observer || _this.attributes.flexible) updateTexture(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this));
+        });
+        svgText = null;
+      }
+    }
+
+    if (!svgText) {
+      var _svg = document.createElementNS(namespace, 'svg');
+
+      _svg.setAttribute('xmlns', namespace);
+
+      _this[_root].appendChild(_svg);
+    }
+
+    updateTexture(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this));
+
+    if (typeof MutationObserver === 'function') {
+      var observer = new MutationObserver(function (mutationsList) {
+        updateTexture(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this), false);
+      });
+      observer.observe(_this[_root], {
+        attributes: true,
+        subtree: true,
+        characterData: true,
+        childList: true
+      });
+      _this.observer = observer;
+    }
+
+    return _this;
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(SpriteSvg, [{
+    key: "setResolution",
+
+    /* override */
+    value: function setResolution(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(SpriteSvg.prototype), "setResolution", this).call(this, {
+        width: width,
+        height: height
+      });
+
+      updateTexture(this);
+    }
+    /* override */
+
+  }, {
+    key: "dispatchPointerEvent",
+    value: function dispatchPointerEvent(event) {
+      // 派发事件给 svg 元素，但是目前只支持派发给 svg 根元素，不支持派发给子元素
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(SpriteSvg.prototype), "dispatchPointerEvent", this).call(this, event);
+
+      if (ret && this.attributes.passEvents && typeof MouseEvent === 'function') {
+        var x = event.x,
+            y = event.y;
+
+        var _this$getOffsetPositi = this.getOffsetPosition(x, y),
+            _this$getOffsetPositi2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_this$getOffsetPositi, 2),
+            offsetX = _this$getOffsetPositi2[0],
+            offsetY = _this$getOffsetPositi2[1];
+
+        var originalEvent = event.originalEvent;
+        var anchor = this.attributes.anchor;
+        var cz = this.clientSize;
+        offsetX = (offsetX + anchor[0] * cz[0]) / 2;
+        offsetY = (offsetY + anchor[1] * cz[1]) / 2;
+        var type = event.type;
+
+        if (type === originalEvent.type) {
+          var newEvent = null;
+
+          if (originalEvent instanceof MouseEvent) {
+            newEvent = new MouseEvent(type, {
+              screenX: offsetX,
+              screenY: offsetY,
+              clientX: offsetX,
+              clientY: offsetY,
+              bubbles: originalEvent.bubbles,
+              button: originalEvent.button,
+              buttons: originalEvent.buttons,
+              cancelBubble: originalEvent.cancelBubble,
+              cancelable: originalEvent.cancelable,
+              currentTarget: originalEvent.currentTarget,
+              fromElement: originalEvent.fromElement,
+              relatedTarget: originalEvent.relatedTarget,
+              returnValue: originalEvent.returnValue,
+              srcElement: originalEvent.srcElement,
+              target: originalEvent.target,
+              toElement: originalEvent.toElement,
+              // view: originalEvent.view,
+              which: originalEvent.witch
+            });
+          } else if (originalEvent instanceof TouchEvent) {
+            var originalTouch = null;
+            var pointers = originalEvent.changedTouches || [originalEvent];
+
+            for (var i = 0; i < pointers.length; i++) {
+              var pointer = pointers[i];
+
+              if (event.identifier === pointer.identifier) {
+                originalTouch = pointer;
+                break;
+              }
+            }
+
+            if (originalTouch) {
+              var newTouch = new Touch({
+                identifier: originalTouch.identifier,
+                target: originalTouch.target,
+                clientX: offsetX,
+                clientY: offsetY,
+                screenX: offsetX,
+                screenY: offsetY,
+                pageX: offsetX,
+                pageY: offsetY,
+                radiusX: originalTouch.radiusX,
+                radiusY: originalTouch.radiusY,
+                rotationAngle: originalTouch.rotationAngle,
+                force: originalTouch.force
+              });
+              newEvent = new TouchEvent(type, {
+                cancelable: originalEvent.cancelable,
+                bubbles: originalEvent.bubbles,
+                composed: originalEvent.composed,
+                touches: [newTouch],
+                targetTouches: [newTouch],
+                changedTouches: [newTouch]
+              });
+            }
+          } else {
+            newEvent = originalEvent;
+          }
+
+          if (newEvent) this.svg.dispatchEvent(newEvent);
+        }
+      }
+
+      return ret;
+    }
+  }, {
+    key: "getElementById",
+    value: function getElementById(id) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelector"])("#".concat(id), this);
+    }
+  }, {
+    key: "getElementsByClassName",
+    value: function getElementsByClassName(className) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelectorAll"])(".".concat(className), this);
+    }
+  }, {
+    key: "getElementsByName",
+    value: function getElementsByName(name) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelectorAll"])("[name=\"".concat(name, "\"]"), this);
+    }
+  }, {
+    key: "getElementsByTagName",
+    value: function getElementsByTagName(tagName) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelectorAll"])(tagName, this);
+    }
+  }, {
+    key: "querySelector",
+    value: function querySelector(selector) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelector"])(selector, this);
+    }
+  }, {
+    key: "querySelectorAll",
+    value: function querySelectorAll(selector) {
+      return Object(_selector__WEBPACK_IMPORTED_MODULE_13__["querySelectorAll"])(selector, this);
+    }
+    /* override */
+
+  }, {
+    key: "onPropertyChange",
+    value: function onPropertyChange(key, newValue, oldValue) {
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(SpriteSvg.prototype), "onPropertyChange", this).call(this, key, newValue, oldValue);
+
+      if (key === 'flexible') {
+        updateTexture(this);
+      }
+
+      if (this.attributes.flexible && (key === 'width' || key === 'height' || key === 'scale' || key === 'transform')) {
+        updateTexture(this);
+      }
+    }
+  }, {
+    key: "children",
+    get: function get() {
+      return [this.svg];
+    }
+  }, {
+    key: "childNodes",
+    get: function get() {
+      return [this.svg];
+    }
+  }, {
+    key: "svg",
+    get: function get() {
+      if (this[_root]) {
+        return this[_root].children[0];
+      }
+
+      return null;
+    }
+  }]);
+
+  return SpriteSvg;
+}(_sprite__WEBPACK_IMPORTED_MODULE_10__["default"]);
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_9___default()(SpriteSvg, "Attr", _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_11__["default"]);
+
+
+_document__WEBPACK_IMPORTED_MODULE_12__["default"].registerNode(SpriteSvg, 'spritesvg');
+
+/***/ }),
+/* 338 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(113);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(118);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(274);
+
+
+
+
+
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+var getAttribute = Symbol.for('spritejs_getAttribute');
+var setAttribute = Symbol.for('spritejs_setAttribute');
+var setDefault = Symbol.for('spritejs_setAttributeDefault');
+
+var SpriteSvg =
+/*#__PURE__*/
+function (_Sprite) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default()(SpriteSvg, _Sprite);
+
+  function SpriteSvg(subject) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, SpriteSvg);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(SpriteSvg).call(this, subject));
+
+    _this[setDefault]({
+      passEvents: false,
+      flexible: false
+    });
+
+    return _this;
+  } // readonly
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(SpriteSvg, [{
+    key: "texture",
+    get: function get() {
+      return this[getAttribute]('texture');
+    },
+    set: function set(value) {} // eslint-disable-line no-empty-function
+
+  }, {
+    key: "passEvents",
+    get: function get() {
+      return this[getAttribute]('passEvents');
+    },
+    set: function set(value) {
+      return this[setAttribute]('passEvents', value);
+    }
+  }, {
+    key: "flexible",
+    get: function get() {
+      return this[getAttribute]('flexible');
+    },
+    set: function set(value) {
+      return this[setAttribute]('flexible', value);
+    }
+  }]);
+
+  return SpriteSvg;
+}(_sprite__WEBPACK_IMPORTED_MODULE_5__["default"]);
+
+
+
+/***/ }),
+/* 339 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
@@ -38412,7 +38872,7 @@ if (typeof Worker === 'function') {
 /* harmony default export */ __webpack_exports__["default"] = (LayerWorker);
 
 /***/ }),
-/* 338 */
+/* 340 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38444,9 +38904,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(105);
 /* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(107);
 /* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(334);
-/* harmony import */ var _layer_worker__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(337);
+/* harmony import */ var _layer_worker__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(339);
 /* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(300);
-/* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(339);
+/* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(341);
 /* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(260);
 /* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(264);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(259);
@@ -39190,7 +39650,7 @@ _document__WEBPACK_IMPORTED_MODULE_20__["default"].registerNode(Scene, 'scene');
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(50)))
 
 /***/ }),
-/* 339 */
+/* 341 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

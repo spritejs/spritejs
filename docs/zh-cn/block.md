@@ -335,3 +335,104 @@ group.animate([
 ```
 
 <iframe src="/demo/#/doc/group" height="450"></iframe>
+
+## SpriteSvg
+
+SpriteSvg 元素继承自 Sprite 元素，可以给定一个 Svg 图片。
+
+SpriteSvg 元素可以和 D3 配合，方便地渲染坐标轴。
+
+```js
+/* globals d3 */
+const {Scene, SpriteSvg} = spritejs;
+const container = document.getElementById('stage');
+const scene = new Scene({
+  container,
+  width: 1200,
+  height: 1200,
+});
+
+const dataset = [125, 121, 127, 193, 309];
+
+const scale = d3.scaleLinear()
+  .domain([100, d3.max(dataset)])
+  .range([0, 500]);
+
+const colors = ['#fe645b', '#feb050', '#c2af87', '#81b848', '#55abf8'];
+
+const fglayer = scene.layer('fglayer');
+const s = d3.select(fglayer);
+
+document.querySelector('#stage canvas').style.backgroundColor = '#eee';
+
+const chart = s.selectAll('sprite')
+  .data(dataset)
+  .enter()
+  .append('sprite')
+  .attr('x', 450)
+  .attr('y', (d, i) => {
+    return 200 + i * 95;
+  })
+  .attr('width', 0)
+  .attr('height', 80)
+  .attr('bgcolor', '#ccc');
+
+chart.transition()
+  .duration(2000)
+  .attr('width', (d, i) => {
+    return scale(d);
+  })
+  .attr('bgcolor', (d, i) => {
+    return colors[i];
+  });
+
+const axis = d3.axisBottom(scale).tickValues([100, 200, 300, 400]);
+const axisNode = new SpriteSvg({
+  x: 420,
+  y: 680,
+});
+d3.select(axisNode.svg)
+  .attr('width', 600)
+  .attr('height', 60)
+  .append('g')
+  .attr('transform', 'translate(30, 0)')
+  .call(axis);
+
+axisNode.svg.children[0].setAttribute('font-size', 20);
+fglayer.append(axisNode);
+
+chart.on('click', (data) => {
+  /* eslint-disable no-console */
+  console.log(data, d3.event);
+  /* eslint-enable no-console */
+});
+```
+
+<iframe src="/demo/#/d3/bar" height="450"></iframe>
+
+此外，我们可以将SpriteSvg元素的`flexible`属性设为`true`，让SVG自适应元素大小。
+
+```js
+const container = document.getElementById('container');
+const scene = new spritejs.Scene({
+  container,
+  displayRatio: 2,
+  width: 1200,
+  height: 600,
+  mode: 'stickyHeight',
+});
+
+const svgURL = 'https://s1.ssl.qhres.com/static/9bd74da7f533f462.svg';
+
+
+const fglayer = scene.layer('fglayer');
+const root = new spritejs.SpriteSvg(svgURL);
+root.attr({
+  x: 100,
+  y: 100,
+  flexible: true,
+  scale: 0.5,
+});
+
+fglayer.append(root);
+```

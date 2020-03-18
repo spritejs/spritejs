@@ -24,6 +24,7 @@ import Polyline from './node/polyline';
 import Label from './node/label';
 import Group from './node/group';
 import Layer from './node/layer';
+import SpriteSvg from './node/spritesvg';
 import LayerWorker from './node/layer-worker';
 import Scene from './node/scene';
 import ownerDocument from './document';
@@ -58,6 +59,7 @@ export {
   Scene,
   Sprite,
   Star,
+  SpriteSvg,
   Triangle,
 
   helpers,

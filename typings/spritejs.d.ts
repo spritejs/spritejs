@@ -1906,6 +1906,61 @@ declare namespace spritejs {
     onPropertyChange(key: string, newValue: any, oldValue: any): void;
   }
 
+  export class SpriteSvg extends Sprite {
+    constructor(svgText: string);
+    constructor(attrs?: Record<string, any>);
+    get children(): Array<any>;
+    get childNodes(): Array<any>;
+    get svg(): HTMLOrSVGElement;
+    /**
+     * Set the resolution of the mesh.
+     * @param resolution {width, height}
+     */
+    setResolution(resolution: Resolution): void;
+    /**
+     * Dispatch a mouse or touch event.
+     * @param event 
+     */
+    dispatchPointerEvent(event: Event): void;
+    /**
+     * Returns the child element of the specified ID.
+     * @param id 
+     */
+    getElementById(id: string): Node|null;
+    /**
+     * Returns the list of child elements for the specified className.
+     * @param className 
+     */
+    getElementsByClassName(className: string): Array<Node>;
+    /**
+     * Returns a list of child elements for the specified name.
+     * @param name 
+     */
+    getElementsByName(name: string): Array<Node>;
+    /**
+     * Returns a list of child elements of the specified type.
+     * @param tagName 
+     */
+    getElementsByTagName(tagName: string): Array<Node>;
+    /**
+     * Returns the specified child element based on the selector.
+     * @param selector 
+     */
+    querySelector(selector: string): Node|null;
+    /**
+     * Returns a list of all matching child elements based on the selector.
+     * @param selector 
+     */
+    querySelectorAll(selector: string): Array<Node>;
+    /**
+     * The element's attribute value change.
+     * @param key 
+     * @param newValue 
+     * @param oldValue 
+     */
+    onPropertyChange(key: string, newValue: any, oldValue: any): void;
+  }
+
   /**
    * The Star element draws a polygonal star.
    */
