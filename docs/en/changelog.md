@@ -1,5 +1,13 @@
 ## Change Logs
 
+#### [2020-03-18] v3.4.0
+
+- Add SpriteSvg element.
+
+#### [2020-03-04] v3.3.0
+
+- Add smoothRange attribute to polyline.
+
 #### [2020-02-19] v3.2.5
 
 - Add typings，for typescript.

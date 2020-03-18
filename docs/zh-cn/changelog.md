@@ -1,5 +1,13 @@
 ## 更新日志
 
+#### [2020-03-18] v3.4.0
+
+- 增加了SpriteSvg元素
+
+#### [2020-03-04] v3.3.0
+
+- Polyline增加了smoothRange属性
+
 #### [2020-02-19] v3.2.5
 
 - 添加了typings，以支持typescript
