@@ -408,7 +408,7 @@ chart.on('click', (data) => {
 });
 ```
 
-<iframe src="/demo/#/d3/bar" height="450"></iframe>
+<iframe src="/demo/#/d3/bar" height="550"></iframe>
 
 此外，我们可以将SpriteSvg元素的`flexible`属性设为`true`，让SVG自适应元素大小。
 

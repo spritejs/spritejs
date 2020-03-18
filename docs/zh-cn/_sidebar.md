@@ -19,7 +19,7 @@
       * [精灵 Sprite](/zh-cn/block#精灵-Sprite)
       * [文字 Label](/zh-cn/block#文字-Label)
       * [分组 Group](/zh-cn/block#分组-Group)
-      * [SVG SpriteSvg](/zh-cn/block#SpriteSvg)
+      * [SVG](/zh-cn/block#SpriteSvg)
     * [路径元素](/zh-cn/path)
       * [路径 Path](/zh-cn/path#路径-Path)
       * [矩形](/zh-cn/path#矩形)
