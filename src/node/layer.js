@@ -3,6 +3,7 @@ import {Timeline} from 'sprite-animator';
 import {requestAnimationFrame, cancelAnimationFrame} from '../utils/animation-frame';
 import Group from './group';
 import ownerDocument from '../document';
+import {deleteTexture} from '../utils/texture';
 
 const defaultOptions = {
   antialias: true,
@@ -135,6 +136,11 @@ export default class Layer extends Group {
       return mesh;
     }
     return null;
+  }
+
+  // delete unused texture to release memory.
+  deleteTexture(image) {
+    return deleteTexture(image, this.renderer);
   }
 
   /* override */

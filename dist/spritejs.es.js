@@ -25206,6 +25206,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTexture", function() { return loadTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyTexture", function() { return applyTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTexture", function() { return createTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteTexture", function() { return deleteTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawTexture", function() { return drawTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadFrames", function() { return loadFrames; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
@@ -25273,9 +25274,25 @@ function createTexture(image, renderer) {
 
   const texture = renderer.createTexture(image);
 
-  renderer[_textureMap].set(image, texture);
+  if (!/^blob:/.test(image.src)) {
+    // no cache blobs
+    renderer[_textureMap].set(image, texture);
+  }
 
   return texture;
+}
+function deleteTexture(image, renderer) {
+  if (renderer[_textureMap].has(image)) {
+    const texture = renderer[_textureMap].get(image);
+
+    renderer.deleteTexture(texture);
+
+    renderer[_textureMap].delete(image);
+
+    return true;
+  }
+
+  return false;
 }
 
 const _textureContext = Symbol('textureContext');
@@ -25291,9 +25308,10 @@ function drawTexture(node, mesh) {
     let textureRect = node.attributes.textureRect;
     const textureRepeat = node.attributes.textureRepeat;
     const sourceRect = node.attributes.sourceRect;
+    const renderer = node.renderer;
 
-    if (!texture || node[_textureContext] && node[_textureContext] !== node.renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.srcRect, sourceRect)) {
-      const newTexture = createTexture(textureImage, node.renderer);
+    if (!texture || node[_textureContext] && node[_textureContext] !== renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.srcRect, sourceRect)) {
+      const newTexture = createTexture(textureImage, renderer);
 
       if (textureRect) {
         textureRect[0] += contentRect[0];
@@ -25302,13 +25320,24 @@ function drawTexture(node, mesh) {
         textureRect = contentRect;
       }
 
+      let oldTexture = null;
+
+      if (texture && !renderer[_textureMap].has(texture.image)) {
+        oldTexture = mesh.uniforms.u_texSampler;
+      }
+
       mesh.setTexture(newTexture, {
         rect: textureRect,
         repeat: textureRepeat,
         srcRect: sourceRect,
         rotated: textureImageRotated
-      });
-      node[_textureContext] = node.renderer;
+      }); // delete uncached texture
+
+      if (oldTexture && oldTexture.delete) {
+        oldTexture.delete();
+      }
+
+      node[_textureContext] = renderer;
     }
   } else if (texture) {
     mesh.setTexture(null);
@@ -32488,11 +32517,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(75);
 /* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(257);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(220);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(225);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -32673,6 +32704,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     }
 
     return null;
+  } // delete unused texture to release memory.
+
+
+  deleteTexture(image) {
+    return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_5__["deleteTexture"])(image, this.renderer);
   }
   /* override */
 
@@ -32979,6 +33015,8 @@ const setAttribute = Symbol.for('spritejs_setAttribute');
 
 const _root = Symbol('root');
 
+const _updateTextureTask = Symbol('task');
+
 function updateTexture(svgNode, flexible = true) {
   const root = svgNode[_root];
 
@@ -33019,28 +33057,30 @@ function updateTexture(svgNode, flexible = true) {
         const boxSize = svgNode.clientSize;
         svgNode.attributes.textureRect = [0, 0, Math.round(boxSize[0] * imgWidth / width), Math.round(boxSize[1] * imgHeight / height)];
       }
-    } else {
-      // TODO 用 Promise 减少绘制次数
-      const svgText = root.innerHTML;
-      const blob = new Blob([svgText], {
-        type: 'image/svg+xml'
-      });
-      const textureURL = URL.createObjectURL(blob);
-      const img = new Image();
+    } else if (!svgNode[_updateTextureTask]) {
+      svgNode[_updateTextureTask] = Promise.resolve().then(() => {
+        delete svgNode[_updateTextureTask];
+        const svgText = root.innerHTML;
+        const blob = new Blob([svgText], {
+          type: 'image/svg+xml'
+        });
+        const textureURL = URL.createObjectURL(blob);
+        const img = new Image();
 
-      img.onload = function () {
-        if (img.width && img.height) {
-          svgNode.attributes[setAttribute]('texture', img);
+        img.onload = function () {
+          if (img.width && img.height) {
+            svgNode.attributes[setAttribute]('texture', img);
 
-          if (svgNode.attributes.flexible) {
-            svgNode.attributes.textureRect = null;
+            if (svgNode.attributes.flexible) {
+              svgNode.attributes.textureRect = null;
+            }
+          } else {
+            svgNode.attributes[setAttribute]('texture', null);
           }
-        } else {
-          svgNode.attributes[setAttribute]('texture', null);
-        }
-      };
+        };
 
-      img.src = textureURL;
+        img.src = textureURL;
+      });
     }
   }
 }

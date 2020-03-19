@@ -48,8 +48,21 @@ export function createTexture(image, renderer) {
     return renderer[_textureMap].get(image);
   }
   const texture = renderer.createTexture(image);
-  renderer[_textureMap].set(image, texture);
+  if(!/^blob:/.test(image.src)) {
+    // no cache blobs
+    renderer[_textureMap].set(image, texture);
+  }
   return texture;
+}
+
+export function deleteTexture(image, renderer) {
+  if(renderer[_textureMap].has(image)) {
+    const texture = renderer[_textureMap].get(image);
+    renderer.deleteTexture(texture);
+    renderer[_textureMap].delete(image);
+    return true;
+  }
+  return false;
 }
 
 const _textureContext = Symbol('textureContext');
@@ -63,20 +76,24 @@ export function drawTexture(node, mesh) {
     let textureRect = node.attributes.textureRect;
     const textureRepeat = node.attributes.textureRepeat;
     const sourceRect = node.attributes.sourceRect;
+    const renderer = node.renderer;
 
     if(!texture
-      || node[_textureContext] && node[_textureContext] !== node.renderer
+      || node[_textureContext] && node[_textureContext] !== renderer
       || texture.image !== textureImage
       || texture.options.repeat !== textureRepeat
       || !compareValue(texture.options.rect, textureRect)
       || !compareValue(texture.options.srcRect, sourceRect)) {
-      const newTexture = createTexture(textureImage, node.renderer);
-
+      const newTexture = createTexture(textureImage, renderer);
       if(textureRect) {
         textureRect[0] += contentRect[0];
         textureRect[1] += contentRect[1];
       } else {
         textureRect = contentRect;
+      }
+      let oldTexture = null;
+      if(texture && !renderer[_textureMap].has(texture.image)) {
+        oldTexture = mesh.uniforms.u_texSampler;
       }
       mesh.setTexture(newTexture, {
         rect: textureRect,
@@ -84,7 +101,11 @@ export function drawTexture(node, mesh) {
         srcRect: sourceRect,
         rotated: textureImageRotated,
       });
-      node[_textureContext] = node.renderer;
+      // delete uncached texture
+      if(oldTexture && oldTexture.delete) {
+        oldTexture.delete();
+      }
+      node[_textureContext] = renderer;
     }
   } else if(texture) {
     mesh.setTexture(null);

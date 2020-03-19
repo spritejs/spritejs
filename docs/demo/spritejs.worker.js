@@ -28798,6 +28798,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTexture", function() { return loadTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyTexture", function() { return applyTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTexture", function() { return createTexture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteTexture", function() { return deleteTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawTexture", function() { return drawTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadFrames", function() { return loadFrames; });
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
@@ -28901,9 +28902,25 @@ function createTexture(image, renderer) {
 
   var texture = renderer.createTexture(image);
 
-  renderer[_textureMap].set(image, texture);
+  if (!/^blob:/.test(image.src)) {
+    // no cache blobs
+    renderer[_textureMap].set(image, texture);
+  }
 
   return texture;
+}
+function deleteTexture(image, renderer) {
+  if (renderer[_textureMap].has(image)) {
+    var texture = renderer[_textureMap].get(image);
+
+    renderer.deleteTexture(texture);
+
+    renderer[_textureMap].delete(image);
+
+    return true;
+  }
+
+  return false;
 }
 
 var _textureContext = Symbol('textureContext');
@@ -28919,9 +28936,10 @@ function drawTexture(node, mesh) {
     var textureRect = node.attributes.textureRect;
     var textureRepeat = node.attributes.textureRepeat;
     var sourceRect = node.attributes.sourceRect;
+    var renderer = node.renderer;
 
-    if (!texture || node[_textureContext] && node[_textureContext] !== node.renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.srcRect, sourceRect)) {
-      var newTexture = createTexture(textureImage, node.renderer);
+    if (!texture || node[_textureContext] && node[_textureContext] !== renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.srcRect, sourceRect)) {
+      var newTexture = createTexture(textureImage, renderer);
 
       if (textureRect) {
         textureRect[0] += contentRect[0];
@@ -28930,13 +28948,24 @@ function drawTexture(node, mesh) {
         textureRect = contentRect;
       }
 
+      var oldTexture = null;
+
+      if (texture && !renderer[_textureMap].has(texture.image)) {
+        oldTexture = mesh.uniforms.u_texSampler;
+      }
+
       mesh.setTexture(newTexture, {
         rect: textureRect,
         repeat: textureRepeat,
         srcRect: sourceRect,
         rotated: textureImageRotated
-      });
-      node[_textureContext] = node.renderer;
+      }); // delete uncached texture
+
+      if (oldTexture && oldTexture.delete) {
+        oldTexture.delete();
+      }
+
+      node[_textureContext] = renderer;
     }
   } else if (texture) {
     mesh.setTexture(null);
@@ -37533,6 +37562,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(105);
 /* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(300);
 /* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(259);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(264);
 
 
 
@@ -37543,6 +37573,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
 
 
 
@@ -37666,6 +37697,12 @@ function (_Group) {
       }
 
       return null;
+    } // delete unused texture to release memory.
+
+  }, {
+    key: "deleteTexture",
+    value: function deleteTexture(image) {
+      return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_13__["deleteTexture"])(image, this.renderer);
     }
     /* override */
 

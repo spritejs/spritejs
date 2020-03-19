@@ -10,6 +10,8 @@ const namespace = 'http://www.w3.org/2000/svg';
 const setAttribute = Symbol.for('spritejs_setAttribute');
 const _root = Symbol('root');
 
+const _updateTextureTask = Symbol('task');
+
 function updateTexture(svgNode, flexible = true) {
   const root = svgNode[_root];
   if(root && root.children[0]) {
@@ -51,23 +53,25 @@ function updateTexture(svgNode, flexible = true) {
         const boxSize = svgNode.clientSize;
         svgNode.attributes.textureRect = [0, 0, Math.round(boxSize[0] * imgWidth / width), Math.round(boxSize[1] * imgHeight / height)];
       }
-    } else {
-      // TODO 用 Promise 减少绘制次数
-      const svgText = root.innerHTML;
-      const blob = new Blob([svgText], {type: 'image/svg+xml'});
-      const textureURL = URL.createObjectURL(blob);
-      const img = new Image();
-      img.onload = function () {
-        if(img.width && img.height) {
-          svgNode.attributes[setAttribute]('texture', img);
-          if(svgNode.attributes.flexible) {
-            svgNode.attributes.textureRect = null;
+    } else if(!svgNode[_updateTextureTask]) {
+      svgNode[_updateTextureTask] = Promise.resolve().then(() => {
+        delete svgNode[_updateTextureTask];
+        const svgText = root.innerHTML;
+        const blob = new Blob([svgText], {type: 'image/svg+xml'});
+        const textureURL = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = function () {
+          if(img.width && img.height) {
+            svgNode.attributes[setAttribute]('texture', img);
+            if(svgNode.attributes.flexible) {
+              svgNode.attributes.textureRect = null;
+            }
+          } else {
+            svgNode.attributes[setAttribute]('texture', null);
           }
-        } else {
-          svgNode.attributes[setAttribute]('texture', null);
-        }
-      };
-      img.src = textureURL;
+        };
+        img.src = textureURL;
+      });
     }
   }
 }

@@ -1309,6 +1309,7 @@ declare namespace spritejs {
      * @param options 
      */
     addPass(options: Record<string, any>): void;
+    deleteTexture(image:any): boolean;
     /**
      * Dispatch a mouse or touch event.
      * @param event 
