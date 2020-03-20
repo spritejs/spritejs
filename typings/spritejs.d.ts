@@ -614,6 +614,8 @@ declare namespace spritejs {
      * The mesh data for rendering.
      */
     readonly meshData: any;
+    readonly program: WebGLProgram;
+    readonly uniforms: Record<string, any>;
     /**
      * The number of meshes drawn.
      */
@@ -655,6 +657,16 @@ declare namespace spritejs {
      * @param color 
      */
     setStrokeColor(idx: number, color: any): void;
+    /**
+     * Use a custom WebGLProgram when drawing the mesh.
+     * @param program 
+     */
+    setProgram(program: WebGLProgram|null): void;
+    /**
+     * Set the uniforms to the program before rendering.
+     * @param uniforms 
+     */
+    setUniforms(uniforms: Record<string, any>): this;
     /**
      * Get the rgba color of specified mesh.
      * @param idx 
@@ -1473,6 +1485,7 @@ declare namespace spritejs {
     set name(value: string);
     get zIndex(): number;
     set zIndex(value: number);
+    get shaderAttrs(): Record<string, any>;
     /**
      * Activate all animations in progress on the element.
      */

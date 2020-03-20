@@ -8235,9 +8235,11 @@ class Renderer {
 
   drawMeshCloud(cloud, {
     clear = false,
-    program = null
+    program: drawProgram = null
   } = {}) {
     const renderer = this[_glRenderer] || this[_canvasRenderer]; // if(!this.isWebGL2) throw new Error('Only webgl2 context support drawMeshCloud.');
+
+    const program = drawProgram || cloud.program;
 
     if (this[_glRenderer]) {
       const gl = renderer.gl;
@@ -11178,6 +11180,14 @@ const _hasCloudFilter = Symbol('cloudFilter');
     return meshData;
   }
 
+  setProgram(program) {
+    this[_mesh].setProgram(program);
+  }
+
+  get program() {
+    return this[_mesh].program;
+  }
+
   transform(idx, m) {
     const transform = this.getTransform(idx);
     m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, transform);
@@ -13785,10 +13795,22 @@ class Mesh2D {
 
           this[_mesh].attributes[name] = [];
 
-          for (let j = 0; j < positions.length; j++) {
-            const p = positions[j];
+          if (name === 'uv' && !setter) {
+            const bounds = bound_points__WEBPACK_IMPORTED_MODULE_1___default()(positions);
+            const [w, h] = [bounds[1][0] - bounds[0][0], bounds[1][1] - bounds[0][1]];
 
-            this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
+            for (let j = 0; j < positions.length; j++) {
+              const p = positions[j];
+              const uv = [(p[0] - bounds[0][0]) / w, (p[1] - bounds[0][1]) / h];
+
+              this[_mesh].attributes[name].push(uv);
+            }
+          } else {
+            for (let j = 0; j < positions.length; j++) {
+              const p = positions[j];
+
+              this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
+            }
           }
         }
       }
@@ -18881,6 +18903,10 @@ class Node {
 
   get mesh() {
     return null;
+  }
+
+  get shaderAttrs() {
+    return this[_shaderAttrs] || {};
   }
 
   activateAnimations() {
@@ -24996,6 +25022,31 @@ class Cloud extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
     super.draw(meshes);
 
     if (this.meshCloud) {
+      if (this.program) {
+        this.meshCloud.setProgram(this.program);
+        const shaderAttrs = this.shaderAttrs;
+
+        if (shaderAttrs) {
+          Object.entries(shaderAttrs).forEach(([key, setter]) => {
+            this.meshCloud.mesh.setAttribute(key, setter);
+          });
+        }
+
+        const uniforms = this.uniforms;
+
+        if (this.uniforms) {
+          const _uniform = {};
+          Object.entries(uniforms).forEach(([key, value]) => {
+            if (typeof value === 'function') {
+              value = value(this, key);
+            }
+
+            _uniform[key] = value;
+          });
+          this.meshCloud.mesh.setUniforms(_uniform);
+        }
+      }
+
       if (this.meshNode.textureImage) {
         Object(_utils_texture__WEBPACK_IMPORTED_MODULE_1__["drawTexture"])(this.meshNode, this.meshNode.mesh);
       }

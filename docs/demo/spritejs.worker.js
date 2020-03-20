@@ -8112,9 +8112,11 @@ function () {
           _ref5$clear = _ref5.clear,
           clear = _ref5$clear === void 0 ? false : _ref5$clear,
           _ref5$program = _ref5.program,
-          program = _ref5$program === void 0 ? null : _ref5$program;
+          drawProgram = _ref5$program === void 0 ? null : _ref5$program;
 
       var renderer = this[_glRenderer] || this[_canvasRenderer]; // if(!this.isWebGL2) throw new Error('Only webgl2 context support drawMeshCloud.');
+
+      var program = drawProgram || cloud.program;
 
       if (this[_glRenderer]) {
         var gl = renderer.gl;
@@ -13548,6 +13550,11 @@ function () {
       this[_count]--;
     }
   }, {
+    key: "setProgram",
+    value: function setProgram(program) {
+      this[_mesh].setProgram(program);
+    }
+  }, {
     key: "transform",
     value: function transform(idx, m) {
       var transform = this.getTransform(idx);
@@ -13797,6 +13804,11 @@ function () {
       }
 
       return meshData;
+    }
+  }, {
+    key: "program",
+    get: function get() {
+      return this[_mesh].program;
     }
   }]);
 
@@ -17403,10 +17415,23 @@ function () {
 
             this[_mesh].attributes[name] = [];
 
-            for (var j = 0; j < positions.length; j++) {
-              var p = positions[j];
+            if (name === 'uv' && !setter) {
+              var bounds = bound_points__WEBPACK_IMPORTED_MODULE_6___default()(positions);
+              var w = bounds[1][0] - bounds[0][0],
+                  h = bounds[1][1] - bounds[0][1];
 
-              this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
+              for (var j = 0; j < positions.length; j++) {
+                var p = positions[j];
+                var uv = [(p[0] - bounds[0][0]) / w, (p[1] - bounds[0][1]) / h];
+
+                this[_mesh].attributes[name].push(uv);
+              }
+            } else {
+              for (var _j = 0; _j < positions.length; _j++) {
+                var _p = positions[_j];
+
+                this[_mesh].attributes[name].push(setter ? setter(_p, i, positions) : Array(opts.size).fill(0));
+              }
             }
           }
         }
@@ -22520,6 +22545,11 @@ function () {
     key: "mesh",
     get: function get() {
       return null;
+    }
+  }, {
+    key: "shaderAttrs",
+    get: function get() {
+      return this[_shaderAttrs] || {};
     }
   }]);
 
@@ -28494,11 +28524,46 @@ function (_Node) {
   }, {
     key: "draw",
     value: function draw() {
+      var _this2 = this;
+
       var meshes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
       _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Cloud.prototype), "draw", this).call(this, meshes);
 
       if (this.meshCloud) {
+        if (this.program) {
+          this.meshCloud.setProgram(this.program);
+          var shaderAttrs = this.shaderAttrs;
+
+          if (shaderAttrs) {
+            Object.entries(shaderAttrs).forEach(function (_ref) {
+              var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref, 2),
+                  key = _ref2[0],
+                  setter = _ref2[1];
+
+              _this2.meshCloud.mesh.setAttribute(key, setter);
+            });
+          }
+
+          var uniforms = this.uniforms;
+
+          if (this.uniforms) {
+            var _uniform = {};
+            Object.entries(uniforms).forEach(function (_ref3) {
+              var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref3, 2),
+                  key = _ref4[0],
+                  value = _ref4[1];
+
+              if (typeof value === 'function') {
+                value = value(_this2, key);
+              }
+
+              _uniform[key] = value;
+            });
+            this.meshCloud.mesh.setUniforms(_uniform);
+          }
+        }
+
         if (this.meshNode.textureImage) {
           Object(_utils_texture__WEBPACK_IMPORTED_MODULE_10__["drawTexture"])(this.meshNode, this.meshNode.mesh);
         }
@@ -28567,10 +28632,10 @@ function (_Node) {
   }, {
     key: "rotate",
     value: function rotate(idx, ang) {
-      var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref, 2),
-          ox = _ref2[0],
-          oy = _ref2[1];
+      var _ref5 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref5, 2),
+          ox = _ref6[0],
+          oy = _ref6[1];
 
       var rad = Math.PI * ang / 180;
 
@@ -28592,16 +28657,16 @@ function (_Node) {
     }
   }, {
     key: "scale",
-    value: function scale(idx, _ref3) {
-      var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref3, 2),
-          x = _ref4[0],
-          _ref4$ = _ref4[1],
-          y = _ref4$ === void 0 ? x : _ref4$;
+    value: function scale(idx, _ref7) {
+      var _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref7, 2),
+          x = _ref8[0],
+          _ref8$ = _ref8[1],
+          y = _ref8$ === void 0 ? x : _ref8$;
 
-      var _ref5 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref5, 2),
-          ox = _ref6[0],
-          oy = _ref6[1];
+      var _ref9 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref9, 2),
+          ox = _ref10[0],
+          oy = _ref10[1];
 
       if (this.meshCloud) {
         var _this$meshNode$attrib2 = this.meshNode.attributes,
@@ -28649,9 +28714,9 @@ function (_Node) {
 
   }, {
     key: "setResolution",
-    value: function setResolution(_ref7) {
-      var width = _ref7.width,
-          height = _ref7.height;
+    value: function setResolution(_ref11) {
+      var width = _ref11.width,
+          height = _ref11.height;
 
       _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Cloud.prototype), "setResolution", this).call(this, {
         width: width,
@@ -28688,16 +28753,16 @@ function (_Node) {
     }
   }, {
     key: "skew",
-    value: function skew(idx, _ref8) {
-      var _ref9 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref8, 2),
-          x = _ref9[0],
-          _ref9$ = _ref9[1],
-          y = _ref9$ === void 0 ? x : _ref9$;
+    value: function skew(idx, _ref12) {
+      var _ref13 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref12, 2),
+          x = _ref13[0],
+          _ref13$ = _ref13[1],
+          y = _ref13$ === void 0 ? x : _ref13$;
 
-      var _ref10 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref11 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref10, 2),
-          ox = _ref11[0],
-          oy = _ref11[1];
+      var _ref14 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref15 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref14, 2),
+          ox = _ref15[0],
+          oy = _ref15[1];
 
       if (this.meshCloud) {
         var _this$meshNode$attrib3 = this.meshNode.attributes,
@@ -28725,10 +28790,10 @@ function (_Node) {
     }
   }, {
     key: "translate",
-    value: function translate(idx, _ref12) {
-      var _ref13 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref12, 2),
-          x = _ref13[0],
-          y = _ref13[1];
+    value: function translate(idx, _ref16) {
+      var _ref17 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref16, 2),
+          x = _ref17[0],
+          y = _ref17[1];
 
       if (this.meshCloud) {
         this.meshCloud.translate(idx, [x, y]);

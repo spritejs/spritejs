@@ -51,6 +51,10 @@
     "src": "benchmark/cloud"
   },
   {
+    "label": "cloud x 50000",
+    "src": "benchmark/cloud_spots"
+  },
+  {
     "label": "3d meshes",
     "src": "benchmark/meshes3d"
   },  {

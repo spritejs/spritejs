@@ -139,6 +139,10 @@ export default class Node {
     return null;
   }
 
+  get shaderAttrs() {
+    return this[_shaderAttrs] || {};
+  }
+
   activateAnimations() {
     const layer = this.layer;
     if(layer) {

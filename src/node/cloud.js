@@ -77,6 +77,26 @@ export default class Cloud extends Node {
     super.draw(meshes);
 
     if(this.meshCloud) {
+      if(this.program) {
+        this.meshCloud.setProgram(this.program);
+        const shaderAttrs = this.shaderAttrs;
+        if(shaderAttrs) {
+          Object.entries(shaderAttrs).forEach(([key, setter]) => {
+            this.meshCloud.mesh.setAttribute(key, setter);
+          });
+        }
+        const uniforms = this.uniforms;
+        if(this.uniforms) {
+          const _uniform = {};
+          Object.entries(uniforms).forEach(([key, value]) => {
+            if(typeof value === 'function') {
+              value = value(this, key);
+            }
+            _uniform[key] = value;
+          });
+          this.meshCloud.mesh.setUniforms(_uniform);
+        }
+      }
       if(this.meshNode.textureImage) {
         drawTexture(this.meshNode, this.meshNode.mesh);
       }
