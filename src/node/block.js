@@ -92,7 +92,7 @@ export default class Block extends Node {
   }
 
   get originalClientRect() {
-    if(this.clientBox) {
+    if(this.mesh) {
       const boundingBox = this.mesh.boundingBox;
       return [boundingBox[0][0], boundingBox[0][1], boundingBox[1][0] - boundingBox[0][0], boundingBox[1][1] - boundingBox[0][1]];
     }

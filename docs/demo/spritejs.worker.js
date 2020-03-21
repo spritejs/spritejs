@@ -29425,7 +29425,7 @@ function (_Node) {
   }, {
     key: "originalClientRect",
     get: function get() {
-      if (this.clientBox) {
+      if (this.mesh) {
         var boundingBox = this.mesh.boundingBox;
         return [boundingBox[0][0], boundingBox[0][1], boundingBox[1][0] - boundingBox[0][0], boundingBox[1][1] - boundingBox[0][1]];
       }

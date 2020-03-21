@@ -25452,7 +25452,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
   }
 
   get originalClientRect() {
-    if (this.clientBox) {
+    if (this.mesh) {
       const boundingBox = this.mesh.boundingBox;
       return [boundingBox[0][0], boundingBox[0][1], boundingBox[1][0] - boundingBox[0][0], boundingBox[1][1] - boundingBox[0][1]];
     }
