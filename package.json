@@ -18,6 +18,7 @@
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "prepublishOnly": "npm run compile && npm run build && npm run demo:prod"
   },
+  "homepage": "https://spritejs.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/spritejs/spritejs"
