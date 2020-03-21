@@ -18,7 +18,18 @@
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
     "prepublishOnly": "npm run compile && npm run build && npm run demo:prod"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spritejs/spritejs"
+  },
+  "keywords": [
+    "webgl",
+    "webgl2",
+    "3d",
+    "2d",
+    "rendering",
+    "canvas"
+  ],
   "author": "akira-cn",
   "license": "MIT",
   "devDependencies": {
