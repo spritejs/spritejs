@@ -9753,11 +9753,8 @@ function createText(text, {
 }) {
   const key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
   let textCanvas = cacheMap[key];
-  if (textCanvas) return textCanvas; // cannot use offscreen canvas because use offscreen canvas as texture will fail in early versions of Chrome.
-
-  textCanvas = createCanvas(1, 1, {
-    offscreen: false
-  });
+  if (textCanvas) return textCanvas;
+  textCanvas = createCanvas(1, 1);
   const textContext = textCanvas.getContext('2d');
   textContext.save();
   textContext.font = font;
@@ -9845,10 +9842,21 @@ function createText(text, {
     rect: [0, 0, w, h]
   };
   return cacheMap[key];
+} // Fixed: use offscreen canvas as texture will fail in early chrome.
+
+
+let isEarlyChrome = false;
+
+if (typeof navigator === 'object' && typeof navigator.userAgent === 'string') {
+  const matched = navigator.userAgent.toLowerCase().match(/chrome\/(\d+)/);
+
+  if (matched) {
+    isEarlyChrome = Number(matched[1]) < 70;
+  }
 }
 
 function createCanvas(width, height, options = {}) {
-  const offscreen = options.offscreen !== false;
+  const offscreen = options.offscreen || !isEarlyChrome && options.offscreen !== false;
   let canvas;
 
   if (typeof global.createCanvas === 'function') {
