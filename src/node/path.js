@@ -61,11 +61,15 @@ export default class Path extends Node {
             lineDashOffset,
           });
         }
-        mesh.setOpacity(this.attributes.opacity);
+        // mesh.setOpacity(this.attributes.opacity);
         this[_mesh] = mesh;
       } else if(mesh.path !== path) {
         mesh.contours = path.contours;
         mesh.path = path;
+      }
+      const opacity = this.opacity;
+      if(mesh.getOpacity() !== opacity) {
+        mesh.setOpacity(opacity);
       }
       mesh.setTransform(...this.renderMatrix);
       return mesh;
@@ -144,9 +148,9 @@ export default class Path extends Node {
     if(key === 'd' || key === 'normalize') {
       this.updateContours();
     }
-    if(key === 'opacity') {
-      if(this[_mesh]) this[_mesh].setOpacity(newValue);
-    }
+    // if(key === 'opacity') {
+    //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+    // }
     if(this[_mesh] && key === 'fillColor') {
       setFillColor(this[_mesh], {color: newValue});
     }

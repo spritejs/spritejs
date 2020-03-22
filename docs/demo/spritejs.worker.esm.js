@@ -18702,6 +18702,16 @@ class Node {
     return m;
   }
 
+  get opacity() {
+    let opacity = this.attributes.opacity;
+
+    if (this.parent && this.parent.opacity != null) {
+      opacity *= this.parent.opacity;
+    }
+
+    return opacity;
+  }
+
   get program() {
     return this[_program];
   }
@@ -25429,13 +25439,19 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
             lineDash: borderDash,
             lineDashOffset: borderDashOffset
           });
-        }
+        } // mesh.setOpacity(this.attributes.opacity);
 
-        mesh.setOpacity(this.attributes.opacity);
+
         this[_mesh] = mesh;
       } else if (mesh.box !== box) {
         mesh.contours = box.contours;
         mesh.box = box;
+      }
+
+      const opacity = this.opacity;
+
+      if (mesh.getOpacity() !== opacity) {
+        mesh.setOpacity(opacity);
       }
 
       mesh.setTransform(...this.renderMatrix);
@@ -25504,11 +25520,10 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     if (key === 'anchorX' || key === 'anchorY' || key === 'boxSizing' || key === 'width' || key === 'height' || key === 'borderWidth' || key === 'paddingLeft' || key === 'paddingRight' || key === 'paddingTop' || key === 'paddingBottom' || /^border(TopLeft|TopRight|BottomRight|BottomLeft)Radius$/.test(key)) {
       this.updateContours();
-    }
-
-    if (key === 'opacity') {
-      if (this[_mesh]) this[_mesh].setOpacity(newValue);
-    } // if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing') {
+    } // if(key === 'opacity') {
+    //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+    // }
+    // if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing') {
     //   if(this[_mesh]) {
     //     const bgcolor = this.attributes.bgcolor;
     //     if(bgcolor && bgcolor.vector) {
@@ -26436,13 +26451,19 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
             lineDash,
             lineDashOffset
           });
-        }
+        } // mesh.setOpacity(this.attributes.opacity);
 
-        mesh.setOpacity(this.attributes.opacity);
+
         this[_mesh] = mesh;
       } else if (mesh.path !== path) {
         mesh.contours = path.contours;
         mesh.path = path;
+      }
+
+      const opacity = this.opacity;
+
+      if (mesh.getOpacity() !== opacity) {
+        mesh.setOpacity(opacity);
       }
 
       mesh.setTransform(...this.renderMatrix);
@@ -26532,11 +26553,10 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
     if (key === 'd' || key === 'normalize') {
       this.updateContours();
-    }
+    } // if(key === 'opacity') {
+    //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+    // }
 
-    if (key === 'opacity') {
-      if (this[_mesh]) this[_mesh].setOpacity(newValue);
-    }
 
     if (this[_mesh] && key === 'fillColor') {
       Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setFillColor"])(this[_mesh], {
@@ -29445,7 +29465,7 @@ class Group extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
     this.__cacheRenderMatrix = this.renderMatrix;
     super.draw(meshes);
 
-    if (!this[_sealed]) {
+    if (!this[_sealed] && this.attributes.display !== 'none') {
       const children = this.orderedChildren;
 
       for (let i = 0; i < children.length; i++) {

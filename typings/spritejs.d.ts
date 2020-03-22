@@ -1461,6 +1461,7 @@ declare namespace spritejs {
      * Get the transform matrix of the current element relative to the parent element.
      */
     get localMatrix(): Array<number>;
+    get opacity(): number;
     /**
      * Get custom WebGLProgram.
      */

@@ -70,11 +70,15 @@ export default class Block extends Node {
           setStrokeColor(mesh,
             {color: borderColor, lineWidth: borderWidth, lineDash: borderDash, lineDashOffset: borderDashOffset});
         }
-        mesh.setOpacity(this.attributes.opacity);
+        // mesh.setOpacity(this.attributes.opacity);
         this[_mesh] = mesh;
       } else if(mesh.box !== box) {
         mesh.contours = box.contours;
         mesh.box = box;
+      }
+      const opacity = this.opacity;
+      if(mesh.getOpacity() !== opacity) {
+        mesh.setOpacity(opacity);
       }
       mesh.setTransform(...this.renderMatrix);
       return mesh;
@@ -133,9 +137,9 @@ export default class Block extends Node {
       || /^border(TopLeft|TopRight|BottomRight|BottomLeft)Radius$/.test(key)) {
       this.updateContours();
     }
-    if(key === 'opacity') {
-      if(this[_mesh]) this[_mesh].setOpacity(newValue);
-    }
+    // if(key === 'opacity') {
+    //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+    // }
     // if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing') {
     //   if(this[_mesh]) {
     //     const bgcolor = this.attributes.bgcolor;

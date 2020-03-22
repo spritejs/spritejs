@@ -90,7 +90,7 @@ export default class Group extends Block {
   draw(meshes = []) {
     this.__cacheRenderMatrix = this.renderMatrix;
     super.draw(meshes);
-    if(!this[_sealed]) {
+    if(!this[_sealed] && this.attributes.display !== 'none') {
       const children = this.orderedChildren;
       for(let i = 0; i < children.length; i++) {
         const child = children[i];

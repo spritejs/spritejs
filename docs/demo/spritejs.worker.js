@@ -22534,6 +22534,17 @@ function () {
       return m;
     }
   }, {
+    key: "opacity",
+    get: function get() {
+      var opacity = this.attributes.opacity;
+
+      if (this.parent && this.parent.opacity != null) {
+        opacity *= this.parent.opacity;
+      }
+
+      return opacity;
+    }
+  }, {
     key: "program",
     get: function get() {
       return this[_program];
@@ -29267,11 +29278,10 @@ function (_Node) {
 
       if (key === 'anchorX' || key === 'anchorY' || key === 'boxSizing' || key === 'width' || key === 'height' || key === 'borderWidth' || key === 'paddingLeft' || key === 'paddingRight' || key === 'paddingTop' || key === 'paddingBottom' || /^border(TopLeft|TopRight|BottomRight|BottomLeft)Radius$/.test(key)) {
         this.updateContours();
-      }
-
-      if (key === 'opacity') {
-        if (this[_mesh]) this[_mesh].setOpacity(newValue);
-      } // if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing') {
+      } // if(key === 'opacity') {
+      //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+      // }
+      // if(key === 'anchorX' || key === 'anchorY' || key === 'boxSizing') {
       //   if(this[_mesh]) {
       //     const bgcolor = this.attributes.bgcolor;
       //     if(bgcolor && bgcolor.vector) {
@@ -29429,13 +29439,19 @@ function (_Node) {
               lineDash: borderDash,
               lineDashOffset: borderDashOffset
             });
-          }
+          } // mesh.setOpacity(this.attributes.opacity);
 
-          mesh.setOpacity(this.attributes.opacity);
+
           this[_mesh] = mesh;
         } else if (mesh.box !== box) {
           mesh.contours = box.contours;
           mesh.box = box;
+        }
+
+        var opacity = this.opacity;
+
+        if (mesh.getOpacity() !== opacity) {
+          mesh.setOpacity(opacity);
         }
 
         (_mesh2 = mesh).setTransform.apply(_mesh2, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this.renderMatrix));
@@ -30714,11 +30730,10 @@ function (_Node) {
 
       if (key === 'd' || key === 'normalize') {
         this.updateContours();
-      }
+      } // if(key === 'opacity') {
+      //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
+      // }
 
-      if (key === 'opacity') {
-        if (this[_mesh]) this[_mesh].setOpacity(newValue);
-      }
 
       if (this[_mesh] && key === 'fillColor') {
         Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(this[_mesh], {
@@ -30814,13 +30829,19 @@ function (_Node) {
               lineDash: lineDash,
               lineDashOffset: lineDashOffset
             });
-          }
+          } // mesh.setOpacity(this.attributes.opacity);
 
-          mesh.setOpacity(this.attributes.opacity);
+
           this[_mesh] = mesh;
         } else if (mesh.path !== path) {
           mesh.contours = path.contours;
           mesh.path = path;
+        }
+
+        var opacity = this.opacity;
+
+        if (mesh.getOpacity() !== opacity) {
+          mesh.setOpacity(opacity);
         }
 
         (_mesh2 = mesh).setTransform.apply(_mesh2, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(this.renderMatrix));
@@ -34594,7 +34615,7 @@ function (_Block) {
 
       _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Group.prototype), "draw", this).call(this, meshes);
 
-      if (!this[_sealed]) {
+      if (!this[_sealed] && this.attributes.display !== 'none') {
         var children = this.orderedChildren;
 
         for (var i = 0; i < children.length; i++) {

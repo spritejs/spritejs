@@ -71,6 +71,14 @@ export default class Node {
     return m;
   }
 
+  get opacity() {
+    let opacity = this.attributes.opacity;
+    if(this.parent && this.parent.opacity != null) {
+      opacity *= this.parent.opacity;
+    }
+    return opacity;
+  }
+
   get program() {
     return this[_program];
   }
