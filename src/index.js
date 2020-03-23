@@ -58,8 +58,8 @@ export {
   Ring,
   Scene,
   Sprite,
-  Star,
   SpriteSvg,
+  Star,
   Triangle,
 
   helpers,

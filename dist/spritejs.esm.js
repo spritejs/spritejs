@@ -34332,8 +34332,8 @@ const _spritejs$Regular = spritejs['Regular'];
 const _spritejs$Ring = spritejs['Ring'];
 const _spritejs$Scene = spritejs['Scene'];
 const _spritejs$Sprite = spritejs['Sprite'];
-const _spritejs$Star = spritejs['Star'];
 const _spritejs$SpriteSvg = spritejs['SpriteSvg'];
+const _spritejs$Star = spritejs['Star'];
 const _spritejs$Triangle = spritejs['Triangle'];
 const _spritejs$helpers = spritejs['helpers'];
 const _spritejs$createElement = spritejs['createElement'];
@@ -34363,8 +34363,8 @@ export {
     _spritejs$Ring as Ring,
     _spritejs$Scene as Scene,
     _spritejs$Sprite as Sprite,
-    _spritejs$Star as Star,
     _spritejs$SpriteSvg as SpriteSvg,
+    _spritejs$Star as Star,
     _spritejs$Triangle as Triangle,
     _spritejs$helpers as helpers,
     _spritejs$createElement as createElement,

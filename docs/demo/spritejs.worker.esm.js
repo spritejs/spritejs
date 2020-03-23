@@ -32924,8 +32924,372 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
 
 /***/ }),
-/* 292 */,
-/* 293 */,
+/* 292 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(231);
+/* harmony import */ var _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(293);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(220);
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(259);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(79);
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+ // This class only avaliable for browser
+
+const namespace = 'http://www.w3.org/2000/svg';
+const setAttribute = Symbol.for('spritejs_setAttribute');
+
+const _root = Symbol('root');
+
+const _updateTextureTask = Symbol('task');
+
+function updateTexture(svgNode, flexible = true) {
+  const root = svgNode[_root];
+
+  if (root && root.children[0]) {
+    if (flexible && svgNode.attributes.flexible) {
+      const svg = svgNode.svg;
+
+      if (!svg.hasAttribute('data-original-width')) {
+        let w = svg.getAttribute('width');
+        w = w ? Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_4__["sizeToPixel"])(w) : 300;
+        let h = svg.getAttribute('height');
+        h = h ? Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_4__["sizeToPixel"])(h) : 150;
+
+        if (!svg.hasAttribute('viewBox')) {
+          svg.setAttribute('viewBox', `0 0 ${Math.round(w)} ${Math.round(h)}`); // svg.setAttribute('width', '100%');
+          // svg.setAttribute('height', '100%');
+        }
+
+        svg.setAttribute('data-original-width', w);
+        svg.setAttribute('data-original-height', h);
+      }
+
+      let width = svgNode.attributes.width || Number(svg.getAttribute('data-original-width'));
+      let height = svgNode.attributes.height || Number(svg.getAttribute('data-original-height')); // let {width, height} = svgNode.getBoundingClientRect();
+      // width = width || w;
+      // height = height || h;
+
+      const scale = svgNode.attributes.scale[0];
+      const displayRatio = svgNode.layer ? svgNode.layer.displayRatio : 1;
+      width *= scale * displayRatio;
+      height *= scale * displayRatio;
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+
+      if (width && height && svgNode.textureImage) {
+        const imgWidth = svgNode.textureImage.width;
+        const imgHeight = svgNode.textureImage.height;
+        const boxSize = svgNode.clientSize;
+        svgNode.attributes.textureRect = [0, 0, Math.round(boxSize[0] * imgWidth / width), Math.round(boxSize[1] * imgHeight / height)];
+      }
+    } else if (!svgNode[_updateTextureTask]) {
+      svgNode[_updateTextureTask] = Promise.resolve().then(() => {
+        delete svgNode[_updateTextureTask];
+        const svgText = root.innerHTML;
+        const blob = new Blob([svgText], {
+          type: 'image/svg+xml'
+        });
+        const textureURL = URL.createObjectURL(blob);
+        const img = new Image();
+
+        img.onload = function () {
+          if (img.width && img.height) {
+            svgNode.attributes[setAttribute]('texture', img);
+
+            if (svgNode.attributes.flexible) {
+              svgNode.attributes.textureRect = null;
+            }
+          } else {
+            svgNode.attributes[setAttribute]('texture', null);
+          }
+        };
+
+        img.src = textureURL;
+      });
+    }
+  }
+}
+
+class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(attrs = {}) {
+    if (typeof attrs === 'string') attrs = {
+      svgText: attrs
+    };
+
+    let {
+      svgText
+    } = attrs,
+        _attrs = _objectWithoutProperties(attrs, ["svgText"]);
+
+    super(_attrs);
+    this[_root] = document.createElement('div');
+
+    if (svgText) {
+      this[_root].innerHTML = svgText;
+      const svg = this[_root].children[0];
+      if (svg) svg.setAttribute('xmlns', namespace);else {
+        // not svg text
+        fetch(svgText).then(res => {
+          return res.text();
+        }).then(text => {
+          this[_root].innerHTML = text;
+          if (!this.observer || this.attributes.flexible) updateTexture(this);
+        });
+        svgText = null;
+      }
+    }
+
+    if (!svgText) {
+      const svg = document.createElementNS(namespace, 'svg');
+      svg.setAttribute('xmlns', namespace);
+
+      this[_root].appendChild(svg);
+    }
+
+    updateTexture(this);
+
+    if (typeof MutationObserver === 'function') {
+      const observer = new MutationObserver(mutationsList => {
+        updateTexture(this, false);
+      });
+      observer.observe(this[_root], {
+        attributes: true,
+        subtree: true,
+        characterData: true,
+        childList: true
+      });
+      this.observer = observer;
+    }
+  }
+
+  get children() {
+    return [this.svg];
+  }
+
+  get childNodes() {
+    return [this.svg];
+  }
+
+  get svg() {
+    if (this[_root]) {
+      return this[_root].children[0];
+    }
+
+    return null;
+  }
+  /* override */
+
+
+  setResolution({
+    width,
+    height
+  }) {
+    super.setResolution({
+      width,
+      height
+    });
+    updateTexture(this);
+  }
+  /* override */
+
+
+  dispatchPointerEvent(event) {
+    // 派发事件给 svg 元素，但是目前只支持派发给 svg 根元素，不支持派发给子元素
+    const ret = super.dispatchPointerEvent(event);
+
+    if (ret && this.attributes.passEvents && typeof MouseEvent === 'function') {
+      const {
+        x,
+        y
+      } = event;
+      let [offsetX, offsetY] = this.getOffsetPosition(x, y);
+      const originalEvent = event.originalEvent;
+      const anchor = this.attributes.anchor;
+      const cz = this.clientSize;
+      offsetX = (offsetX + anchor[0] * cz[0]) / 2;
+      offsetY = (offsetY + anchor[1] * cz[1]) / 2;
+      const type = event.type;
+
+      if (type === originalEvent.type) {
+        let newEvent = null;
+
+        if (originalEvent instanceof MouseEvent) {
+          newEvent = new MouseEvent(type, {
+            screenX: offsetX,
+            screenY: offsetY,
+            clientX: offsetX,
+            clientY: offsetY,
+            bubbles: originalEvent.bubbles,
+            button: originalEvent.button,
+            buttons: originalEvent.buttons,
+            cancelBubble: originalEvent.cancelBubble,
+            cancelable: originalEvent.cancelable,
+            currentTarget: originalEvent.currentTarget,
+            fromElement: originalEvent.fromElement,
+            relatedTarget: originalEvent.relatedTarget,
+            returnValue: originalEvent.returnValue,
+            srcElement: originalEvent.srcElement,
+            target: originalEvent.target,
+            toElement: originalEvent.toElement,
+            // view: originalEvent.view,
+            which: originalEvent.witch
+          });
+        } else if (originalEvent instanceof TouchEvent) {
+          let originalTouch = null;
+          const pointers = originalEvent.changedTouches || [originalEvent];
+
+          for (let i = 0; i < pointers.length; i++) {
+            const pointer = pointers[i];
+
+            if (event.identifier === pointer.identifier) {
+              originalTouch = pointer;
+              break;
+            }
+          }
+
+          if (originalTouch) {
+            const newTouch = new Touch({
+              identifier: originalTouch.identifier,
+              target: originalTouch.target,
+              clientX: offsetX,
+              clientY: offsetY,
+              screenX: offsetX,
+              screenY: offsetY,
+              pageX: offsetX,
+              pageY: offsetY,
+              radiusX: originalTouch.radiusX,
+              radiusY: originalTouch.radiusY,
+              rotationAngle: originalTouch.rotationAngle,
+              force: originalTouch.force
+            });
+            newEvent = new TouchEvent(type, {
+              cancelable: originalEvent.cancelable,
+              bubbles: originalEvent.bubbles,
+              composed: originalEvent.composed,
+              touches: [newTouch],
+              targetTouches: [newTouch],
+              changedTouches: [newTouch]
+            });
+          }
+        } else {
+          newEvent = originalEvent;
+        }
+
+        if (newEvent) this.svg.dispatchEvent(newEvent);
+      }
+    }
+
+    return ret;
+  }
+
+  getElementById(id) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelector"])(`#${id}`, this);
+  }
+
+  getElementsByClassName(className) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelectorAll"])(`.${className}`, this);
+  }
+
+  getElementsByName(name) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelectorAll"])(`[name="${name}"]`, this);
+  }
+
+  getElementsByTagName(tagName) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelectorAll"])(tagName, this);
+  }
+
+  querySelector(selector) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelector"])(selector, this);
+  }
+
+  querySelectorAll(selector) {
+    return Object(_selector__WEBPACK_IMPORTED_MODULE_3__["querySelectorAll"])(selector, this);
+  }
+  /* override */
+
+
+  onPropertyChange(key, newValue, oldValue) {
+    super.onPropertyChange(key, newValue, oldValue);
+
+    if (key === 'flexible') {
+      updateTexture(this);
+    }
+
+    if (this.attributes.flexible && (key === 'width' || key === 'height' || key === 'scale' || key === 'transform')) {
+      updateTexture(this);
+    }
+  }
+
+}
+
+_defineProperty(SpriteSvg, "Attr", _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+_document__WEBPACK_IMPORTED_MODULE_2__["default"].registerNode(SpriteSvg, 'spritesvg');
+
+/***/ }),
+/* 293 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+const getAttribute = Symbol.for('spritejs_getAttribute');
+const setAttribute = Symbol.for('spritejs_setAttribute');
+const setDefault = Symbol.for('spritejs_setAttributeDefault');
+class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(subject) {
+    super(subject);
+    this[setDefault]({
+      passEvents: false,
+      flexible: false
+    });
+  } // readonly
+
+
+  get texture() {
+    return this[getAttribute]('texture');
+  }
+
+  set texture(value) {} // eslint-disable-line no-empty-function
+
+
+  get passEvents() {
+    return this[getAttribute]('passEvents');
+  }
+
+  set passEvents(value) {
+    return this[setAttribute]('passEvents', value);
+  }
+
+  get flexible() {
+    return this[getAttribute]('flexible');
+  }
+
+  set flexible(value) {
+    return this[setAttribute]('flexible', value);
+  }
+
+}
+
+/***/ }),
 /* 294 */,
 /* 295 */,
 /* 296 */,
@@ -32934,10 +33298,10 @@ _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNode", function() { return registerNode; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layerCreated", function() { return layerCreated; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ENV", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"]; });
@@ -32993,11 +33357,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(291);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"]; });
 
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(220);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(228);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_19__["Gradient"]; });
+/* harmony import */ var _node_spritesvg__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(292);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSvg", function() { return _node_spritesvg__WEBPACK_IMPORTED_MODULE_18__["default"]; });
 
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(79);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(220);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(228);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_20__["Gradient"]; });
+
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(79);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -33029,16 +33396,17 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
 
+
 const helpers = {
-  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_19__["parseColor"],
-  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["sizeToPixel"],
-  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toArray"],
-  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toString"],
-  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_20__["toNumber"]
+  parseColor: _utils_color__WEBPACK_IMPORTED_MODULE_20__["parseColor"],
+  sizeToPixel: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__["sizeToPixel"],
+  toArray: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__["toArray"],
+  toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__["toString"],
+  toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__["toNumber"]
 };
-const createElement = _document__WEBPACK_IMPORTED_MODULE_18__["default"].createElement;
-const isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].isSpriteNode;
-const registerNode = _document__WEBPACK_IMPORTED_MODULE_18__["default"].registerNode;
+const createElement = _document__WEBPACK_IMPORTED_MODULE_19__["default"].createElement;
+const isSpriteNode = _document__WEBPACK_IMPORTED_MODULE_19__["default"].isSpriteNode;
+const registerNode = _document__WEBPACK_IMPORTED_MODULE_19__["default"].registerNode;
 const layerCreated = new Promise(resolve => {
   let layer = null;
   self.addEventListener('message', evt => {
@@ -33082,12 +33450,13 @@ const _spritejs$Rect = spritejs['Rect'];
 const _spritejs$Regular = spritejs['Regular'];
 const _spritejs$Ring = spritejs['Ring'];
 const _spritejs$Sprite = spritejs['Sprite'];
+const _spritejs$SpriteSvg = spritejs['SpriteSvg'];
 const _spritejs$Star = spritejs['Star'];
 const _spritejs$Triangle = spritejs['Triangle'];
+const _spritejs$helpers = spritejs['helpers'];
 const _spritejs$createElement = spritejs['createElement'];
 const _spritejs$isSpriteNode = spritejs['isSpriteNode'];
 const _spritejs$registerNode = spritejs['registerNode'];
-const _spritejs$helpers = spritejs['helpers'];
 const _spritejs$layerCreated = spritejs['layerCreated'];
 const _spritejs$ENV = spritejs['ENV'];
 
@@ -33108,12 +33477,13 @@ export {
     _spritejs$Regular as Regular,
     _spritejs$Ring as Ring,
     _spritejs$Sprite as Sprite,
+    _spritejs$SpriteSvg as SpriteSvg,
     _spritejs$Star as Star,
     _spritejs$Triangle as Triangle,
+    _spritejs$helpers as helpers,
     _spritejs$createElement as createElement,
     _spritejs$isSpriteNode as isSpriteNode,
     _spritejs$registerNode as registerNode,
-    _spritejs$helpers as helpers,
     _spritejs$layerCreated as layerCreated,
     _spritejs$ENV as ENV
 }

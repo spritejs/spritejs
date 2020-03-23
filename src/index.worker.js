@@ -23,6 +23,7 @@ import Polyline from './node/polyline';
 import Label from './node/label';
 import Group from './node/group';
 import Layer from './node/layer';
+import SpriteSvg from './node/spritesvg';
 import ownerDocument from './document';
 
 import {parseColor, Gradient} from './utils/color';
@@ -68,14 +69,15 @@ export {
   Regular,
   Ring,
   Sprite,
+  SpriteSvg,
   Star,
   Triangle,
+
+  helpers,
 
   createElement,
   isSpriteNode,
   registerNode,
-
-  helpers,
 
   layerCreated,
 
