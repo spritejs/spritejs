@@ -8134,6 +8134,10 @@ class Renderer {
           a_strokeCloudColor: {
             type: 'UNSIGNED_BYTE',
             normalize: true
+          },
+          a_frameIndex: {
+            type: 'UNSIGNED_BYTE',
+            normalize: false
           }
         });
       }
@@ -10646,20 +10650,6 @@ const _mesh = Symbol('mesh');
 
 const _count = Symbol('count');
 
-const _transform0 = Symbol('transform');
-
-const _transform1 = Symbol('transform');
-
-const _color0 = Symbol('color');
-
-const _color1 = Symbol('color');
-
-const _color2 = Symbol('color');
-
-const _color3 = Symbol('color');
-
-const _color4 = Symbol('color');
-
 const _blend = Symbol('blend');
 
 const _filters = Symbol('filter');
@@ -10668,32 +10658,48 @@ const _textures = Symbol('textures');
 
 const _textureOptions = Symbol('textureOptions');
 
-const _frameIndex = Symbol('frameIndex');
-
-const _fillColor = Symbol('fillColor');
-
-const _strokeColor = Symbol('strokeColor');
-
 const _hasCloudColor = Symbol('cloudColor');
 
 const _hasCloudFilter = Symbol('cloudFilter');
 
+const _buffer = Symbol('buffer');
+
+function createBuffer(buffer) {
+  const transform0 = new Float32Array(4 * buffer);
+  const transform1 = new Float32Array(4 * buffer);
+  const color0 = new Float32Array(4 * buffer);
+  const color1 = new Float32Array(4 * buffer);
+  const color2 = new Float32Array(4 * buffer);
+  const color3 = new Float32Array(4 * buffer);
+  const color4 = new Float32Array(4 * buffer);
+  const frameIndex = new Uint8Array(buffer);
+  const fillColor = new Uint8Array(4 * buffer);
+  const strokeColor = new Uint8Array(4 * buffer);
+  return {
+    bufferSize: buffer,
+    transform0,
+    transform1,
+    color0,
+    color1,
+    color2,
+    color3,
+    color4,
+    frameIndex,
+    fillColor,
+    strokeColor
+  };
+}
+
 /* harmony default export */ __webpack_exports__["default"] = (class {
-  constructor(mesh, amount = 1) {
+  constructor(mesh, amount = 1, {
+    buffer = 1000
+  } = {}) {
+    buffer = Math.max(buffer, amount);
     this[_count] = amount;
     this[_mesh] = mesh;
-    this[_transform0] = [];
-    this[_transform1] = [];
-    this[_color0] = [];
-    this[_color1] = [];
-    this[_color2] = [];
-    this[_color3] = [];
-    this[_color4] = [];
+    this[_buffer] = createBuffer(buffer);
     this[_textures] = [];
-    this[_frameIndex] = [];
     this[_filters] = [];
-    this[_fillColor] = [];
-    this[_strokeColor] = [];
     this[_hasCloudColor] = false;
     this[_hasCloudFilter] = false;
     this[_blend] = false;
@@ -10703,20 +10709,24 @@ const _hasCloudFilter = Symbol('cloudFilter');
     } = mesh;
 
     for (let i = 0; i < amount; i++) {
-      this[_transform0].push([1, 0, 0, width]);
+      this[_buffer].transform0.set([1, 0, 0, width], i * 4);
 
-      this[_transform1].push([1, 0, 0, height]);
+      this[_buffer].transform1.set([1, 0, 0, height], i * 4);
 
-      this[_frameIndex].push([-1]);
+      this[_buffer].frameIndex.set([-1], i);
 
       this[_filters].push([]);
 
-      this[_fillColor].push([0, 0, 0, 0]);
+      this[_buffer].fillColor.set([0, 0, 0, 0], i * 4);
 
-      this[_strokeColor].push([0, 0, 0, 0]);
+      this[_buffer].strokeColor.set([0, 0, 0, 0], i * 4);
 
       this.setColorTransform(i, null);
     }
+  }
+
+  get bufferSize() {
+    return this[_buffer].bufferSize;
   }
 
   get mesh() {
@@ -10752,21 +10762,30 @@ const _hasCloudFilter = Symbol('cloudFilter');
   }
 
   setColorTransform(idx, m) {
+    if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+    idx *= 4;
+    const {
+      color0,
+      color1,
+      color2,
+      color3,
+      color4
+    } = this[_buffer];
+
     if (m != null) {
-      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-      this[_color0][idx] = [m[0], m[5], m[10], m[15]];
-      this[_color1][idx] = [m[1], m[6], m[11], m[16]];
-      this[_color2][idx] = [m[2], m[7], m[12], m[17]];
-      this[_color3][idx] = [m[3], m[8], m[13], m[18]];
-      this[_color4][idx] = [m[4], m[9], m[14], m[19]];
+      color0.set([m[0], m[5], m[10], m[15]], idx);
+      color1.set([m[1], m[6], m[11], m[16]], idx);
+      color2.set([m[2], m[7], m[12], m[17]], idx);
+      color3.set([m[3], m[8], m[13], m[18]], idx);
+      color4.set([m[4], m[9], m[14], m[19]], idx);
       this[_blend] = this[_blend] || m[18] < 1.0;
       this[_hasCloudFilter] = true;
     } else {
-      this[_color0][idx] = [1, 0, 0, 0];
-      this[_color1][idx] = [0, 1, 0, 0];
-      this[_color2][idx] = [0, 0, 1, 0];
-      this[_color3][idx] = [0, 0, 0, 1];
-      this[_color4][idx] = [0, 0, 0, 0];
+      color0.set([1, 0, 0, 0], idx);
+      color1.set([0, 1, 0, 0], idx);
+      color2.set([0, 0, 1, 0], idx);
+      color3.set([0, 0, 0, 1], idx);
+      color4.set([0, 0, 0, 0], idx);
     }
 
     return this;
@@ -10774,7 +10793,15 @@ const _hasCloudFilter = Symbol('cloudFilter');
 
   getColorTransform(idx) {
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-    return [this[_color0][idx][0], this[_color1][idx][0], this[_color2][idx][0], this[_color3][idx][0], this[_color4][idx][0], this[_color0][idx][1], this[_color1][idx][1], this[_color2][idx][1], this[_color3][idx][1], this[_color4][idx][1], this[_color0][idx][2], this[_color1][idx][2], this[_color2][idx][2], this[_color3][idx][2], this[_color4][idx][2], this[_color0][idx][3], this[_color1][idx][3], this[_color2][idx][3], this[_color3][idx][3], this[_color4][idx][3]];
+    idx *= 4;
+    const {
+      color0,
+      color1,
+      color2,
+      color3,
+      color4
+    } = this[_buffer];
+    return [color0[idx], color1[idx], color2[idx], color3[idx], color4[idx], color0[idx + 1], color1[idx + 1], color2[idx + 1], color3[idx + 1], color4[idx + 1], color0[idx + 2], color1[idx + 2], color2[idx + 2], color3[idx + 2], color4[idx + 2], color0[idx + 3], color1[idx + 3], color2[idx + 3], color3[idx + 3], color4[idx + 3]];
   }
 
   transformColor(idx, m) {
@@ -10785,25 +10812,35 @@ const _hasCloudFilter = Symbol('cloudFilter');
   }
 
   setFillColor(idx, color) {
+    if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
     if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_3__["default"])(color);
     if (color[3] > 0.0) this[_hasCloudColor] = true;
-    this[_fillColor][idx] = color.map(c => Math.round(255 * c));
+
+    this[_buffer].fillColor.set(color.map(c => Math.round(255 * c)), 4 * idx);
   }
 
   setStrokeColor(idx, color) {
+    if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
     if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_3__["default"])(color);
     if (color[3] > 0.0) this[_hasCloudColor] = true;
-    this[_strokeColor][idx] = color.map(c => Math.round(255 * c));
+
+    this[_buffer].strokeColor.set(color.map(c => Math.round(255 * c)), 4 * idx);
   }
 
   getCloudRGBA(idx) {
-    const fillColor = [...this[_fillColor][idx]];
-    const strokeColor = [...this[_strokeColor][idx]];
-    fillColor[3] /= 255;
-    strokeColor[3] /= 255;
+    if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+    idx *= 4;
+    const {
+      fillColor,
+      strokeColor
+    } = this[_buffer];
+    const _fillColor = [fillColor[idx], fillColor[idx + 1], fillColor[idx + 2], fillColor[idx + 3]];
+    const _strokeColor = [strokeColor[idx], strokeColor[idx + 1], strokeColor[idx + 2], strokeColor[idx + 3]];
+    _fillColor[3] /= 255;
+    _strokeColor[3] /= 255;
     return {
-      fill: `rgba(${fillColor.join()})`,
-      stroke: `rgba(${strokeColor.join()})`
+      fill: `rgba(${_fillColor.join()})`,
+      stroke: `rgba(${_strokeColor.join()})`
     };
   }
 
@@ -10857,24 +10894,30 @@ const _hasCloudFilter = Symbol('cloudFilter');
 
   setTransform(idx, m) {
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+    idx *= 4;
     if (m == null) m = [1, 0, 0, 1, 0, 0];
-    this[_transform0][idx][0] = m[0];
-    this[_transform0][idx][1] = m[1];
-    this[_transform0][idx][2] = m[2];
-    this[_transform1][idx][0] = m[3];
-    this[_transform1][idx][1] = m[4];
-    this[_transform1][idx][2] = m[5];
+    const {
+      transform0,
+      transform1
+    } = this[_buffer];
+    transform0.set([m[0], m[1], m[2]], idx);
+    transform1.set([m[3], m[4], m[5]], idx);
     return this;
   }
 
   getTransform(idx) {
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-    const m = [...this[_transform0][idx].slice(0, 3), ...this[_transform1][idx].slice(0, 3)];
+    idx *= 4;
+    const {
+      transform0,
+      transform1
+    } = this[_buffer];
+    const m = [transform0[idx], transform0[idx + 1], transform0[idx + 2], transform1[idx], transform1[idx + 1], transform1[idx + 2]];
     return m;
   }
 
   getTextureFrame(idx) {
-    return this[_textures][this[_frameIndex][idx]];
+    return this[_textures][this[_buffer].frameIndex[idx]];
   }
 
   setTextureFrames(frames = [], options = {}) {
@@ -10895,7 +10938,7 @@ const _hasCloudFilter = Symbol('cloudFilter');
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
     const len = this[_textures].length;
     if (len <= 0) throw new Error('No frames');
-    this[_frameIndex][idx] = frameIndex % len;
+    this[_buffer].frameIndex[idx] = frameIndex % len;
   }
 
   get amount() {
@@ -10903,73 +10946,13 @@ const _hasCloudFilter = Symbol('cloudFilter');
   }
 
   set amount(value) {
-    const amount = this[_count];
-    if (value === amount) return;
-
-    if (value < amount) {
-      this[_transform0].length = value;
-      this[_transform1].length = value;
-      this[_frameIndex].length = value;
-      this[_filters].length = value;
-      this[_fillColor].length = value;
-      this[_strokeColor].length = value;
-      this[_color0].length = value;
-      this[_color1].length = value;
-      this[_color2].length = value;
-      this[_color3].length = value;
-      this[_color4].length = value;
-    } else {
-      const {
-        width,
-        height
-      } = this[_mesh];
-
-      for (let i = amount; i < value; i++) {
-        this[_transform0].push([1, 0, 0, width]);
-
-        this[_transform1].push([1, 0, 0, height]);
-
-        this[_frameIndex].push([-1]);
-
-        this[_filters].push([]);
-
-        this[_fillColor].push([0, 0, 0, 0]);
-
-        this[_strokeColor].push([0, 0, 0, 0]);
-
-        this.setColorTransform(i, null);
-      }
+    if (value > this[_buffer].bufferSize) {
+      throw new Error('Buffer out of range.');
     }
 
+    const amount = this[_count];
+    if (value === amount) return;
     this[_count] = value;
-  }
-
-  delete(idx) {
-    if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-
-    this[_transform0].splice(idx, 1);
-
-    this[_transform1].splice(idx, 1);
-
-    this[_frameIndex].splice(idx, 1);
-
-    this[_filters].splice(idx, 1);
-
-    this[_fillColor].splice(idx, 1);
-
-    this[_strokeColor].splice(idx, 1);
-
-    this[_color0].splice(idx, 1);
-
-    this[_color1].splice(idx, 1);
-
-    this[_color2].splice(idx, 1);
-
-    this[_color3].splice(idx, 1);
-
-    this[_color4].splice(idx, 1);
-
-    this[_count]--;
   }
 
   get meshData() {
@@ -10997,50 +10980,63 @@ const _hasCloudFilter = Symbol('cloudFilter');
       });
     }
 
+    const {
+      transform0,
+      transform1,
+      color0,
+      color1,
+      color2,
+      color3,
+      color4,
+      fillColor,
+      strokeColor,
+      frameIndex
+    } = this[_buffer];
+
     if (this[_mesh].uniforms.u_texSampler) {
       meshData.attributes.a_frameIndex = {
-        data: this[_frameIndex],
+        data: frameIndex,
         divisor: 1
       };
     } // console.log(this[_mesh].meshData)
 
 
     meshData.attributes.a_transform0 = {
-      data: this[_transform0],
+      data: transform0,
       divisor: 1
     };
     meshData.attributes.a_transform1 = {
-      data: this[_transform1],
+      data: transform1,
       divisor: 1
     };
     meshData.attributes.a_colorCloud0 = {
-      data: this[_color0],
+      data: color0,
       divisor: 1
     };
     meshData.attributes.a_colorCloud1 = {
-      data: this[_color1],
+      data: color1,
       divisor: 1
     };
     meshData.attributes.a_colorCloud2 = {
-      data: this[_color2],
+      data: color2,
       divisor: 1
     };
     meshData.attributes.a_colorCloud3 = {
-      data: this[_color3],
+      data: color3,
       divisor: 1
     };
     meshData.attributes.a_colorCloud4 = {
-      data: this[_color4],
+      data: color4,
       divisor: 1
     };
 
     if (this.hasCloudColor) {
       meshData.attributes.a_fillCloudColor = {
-        data: this[_fillColor],
+        data: fillColor,
         divisor: 1
       };
       meshData.attributes.a_strokeCloudColor = {
-        data: this[_strokeColor],
+        data: strokeColor,
         divisor: 1
       };
     }
@@ -18325,6 +18321,10 @@ function applyCloudShader(renderer, {
       a_strokeCloudColor: {
         type: 'UNSIGNED_BYTE',
         normalize: true
+      },
+      a_frameIndex: {
+        type: 'UNSIGNED_BYTE',
+        normalize: false
       }
     });
   }

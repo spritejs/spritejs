@@ -86,7 +86,7 @@ const program = layer.renderer.createProgram({vertex, fragment});
 
 const count = 50000;
 
-const cloud = new spritejs.Cloud(s, count);
+const cloud = new spritejs.Cloud(s, count, {buffer: count});
 cloud.setProgram(program);
 
 cloud.setUniforms({

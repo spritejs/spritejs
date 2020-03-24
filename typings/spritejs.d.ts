@@ -742,11 +742,6 @@ declare namespace spritejs {
     getTextureFrame(idx: number): Array<any>;
     setTextureFrames(frames: Array<any>, options?: Record<string, any>): void;
     setFrameIndex(idx: number, frameIndex: number): void;
-    /**
-     * Delete the specified mesh data.
-     * @param idx
-     */
-    delete(idx: number): void;
     transform(idx:number, m: Array<number>): this;
     translate(idx:number, xy: Array<number>): this;
     rotate(idx:number, rad: number, origin?: Array<number>): this;

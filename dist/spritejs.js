@@ -8282,6 +8282,10 @@ function () {
             a_strokeCloudColor: {
               type: 'UNSIGNED_BYTE',
               normalize: true
+            },
+            a_frameIndex: {
+              type: 'UNSIGNED_BYTE',
+              normalize: false
             }
           });
         }
@@ -13419,10 +13423,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _default; });
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(61);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
@@ -13452,20 +13456,6 @@ var _mesh = Symbol('mesh');
 
 var _count = Symbol('count');
 
-var _transform0 = Symbol('transform');
-
-var _transform1 = Symbol('transform');
-
-var _color0 = Symbol('color');
-
-var _color1 = Symbol('color');
-
-var _color2 = Symbol('color');
-
-var _color3 = Symbol('color');
-
-var _color4 = Symbol('color');
-
 var _blend = Symbol('blend');
 
 var _filters = Symbol('filter');
@@ -13474,15 +13464,37 @@ var _textures = Symbol('textures');
 
 var _textureOptions = Symbol('textureOptions');
 
-var _frameIndex = Symbol('frameIndex');
-
-var _fillColor = Symbol('fillColor');
-
-var _strokeColor = Symbol('strokeColor');
-
 var _hasCloudColor = Symbol('cloudColor');
 
 var _hasCloudFilter = Symbol('cloudFilter');
+
+var _buffer = Symbol('buffer');
+
+function createBuffer(buffer) {
+  var transform0 = new Float32Array(4 * buffer);
+  var transform1 = new Float32Array(4 * buffer);
+  var color0 = new Float32Array(4 * buffer);
+  var color1 = new Float32Array(4 * buffer);
+  var color2 = new Float32Array(4 * buffer);
+  var color3 = new Float32Array(4 * buffer);
+  var color4 = new Float32Array(4 * buffer);
+  var frameIndex = new Uint8Array(buffer);
+  var fillColor = new Uint8Array(4 * buffer);
+  var strokeColor = new Uint8Array(4 * buffer);
+  return {
+    bufferSize: buffer,
+    transform0: transform0,
+    transform1: transform1,
+    color0: color0,
+    color1: color1,
+    color2: color2,
+    color3: color3,
+    color4: color4,
+    frameIndex: frameIndex,
+    fillColor: fillColor,
+    strokeColor: strokeColor
+  };
+}
 
 var _default =
 /*#__PURE__*/
@@ -13490,22 +13502,18 @@ function () {
   function _default(mesh) {
     var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
+    var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+        _ref$buffer = _ref.buffer,
+        buffer = _ref$buffer === void 0 ? 1000 : _ref$buffer;
+
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, _default);
 
+    buffer = Math.max(buffer, amount);
     this[_count] = amount;
     this[_mesh] = mesh;
-    this[_transform0] = [];
-    this[_transform1] = [];
-    this[_color0] = [];
-    this[_color1] = [];
-    this[_color2] = [];
-    this[_color3] = [];
-    this[_color4] = [];
+    this[_buffer] = createBuffer(buffer);
     this[_textures] = [];
-    this[_frameIndex] = [];
     this[_filters] = [];
-    this[_fillColor] = [];
-    this[_strokeColor] = [];
     this[_hasCloudColor] = false;
     this[_hasCloudFilter] = false;
     this[_blend] = false;
@@ -13513,17 +13521,17 @@ function () {
         height = mesh.height;
 
     for (var i = 0; i < amount; i++) {
-      this[_transform0].push([1, 0, 0, width]);
+      this[_buffer].transform0.set([1, 0, 0, width], i * 4);
 
-      this[_transform1].push([1, 0, 0, height]);
+      this[_buffer].transform1.set([1, 0, 0, height], i * 4);
 
-      this[_frameIndex].push([-1]);
+      this[_buffer].frameIndex.set([-1], i);
 
       this[_filters].push([]);
 
-      this[_fillColor].push([0, 0, 0, 0]);
+      this[_buffer].fillColor.set([0, 0, 0, 0], i * 4);
 
-      this[_strokeColor].push([0, 0, 0, 0]);
+      this[_buffer].strokeColor.set([0, 0, 0, 0], i * 4);
 
       this.setColorTransform(i, null);
     }
@@ -13542,21 +13550,29 @@ function () {
   }, {
     key: "setColorTransform",
     value: function setColorTransform(idx, m) {
+      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+      idx *= 4;
+      var _this$_buffer = this[_buffer],
+          color0 = _this$_buffer.color0,
+          color1 = _this$_buffer.color1,
+          color2 = _this$_buffer.color2,
+          color3 = _this$_buffer.color3,
+          color4 = _this$_buffer.color4;
+
       if (m != null) {
-        if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-        this[_color0][idx] = [m[0], m[5], m[10], m[15]];
-        this[_color1][idx] = [m[1], m[6], m[11], m[16]];
-        this[_color2][idx] = [m[2], m[7], m[12], m[17]];
-        this[_color3][idx] = [m[3], m[8], m[13], m[18]];
-        this[_color4][idx] = [m[4], m[9], m[14], m[19]];
+        color0.set([m[0], m[5], m[10], m[15]], idx);
+        color1.set([m[1], m[6], m[11], m[16]], idx);
+        color2.set([m[2], m[7], m[12], m[17]], idx);
+        color3.set([m[3], m[8], m[13], m[18]], idx);
+        color4.set([m[4], m[9], m[14], m[19]], idx);
         this[_blend] = this[_blend] || m[18] < 1.0;
         this[_hasCloudFilter] = true;
       } else {
-        this[_color0][idx] = [1, 0, 0, 0];
-        this[_color1][idx] = [0, 1, 0, 0];
-        this[_color2][idx] = [0, 0, 1, 0];
-        this[_color3][idx] = [0, 0, 0, 1];
-        this[_color4][idx] = [0, 0, 0, 0];
+        color0.set([1, 0, 0, 0], idx);
+        color1.set([0, 1, 0, 0], idx);
+        color2.set([0, 0, 1, 0], idx);
+        color3.set([0, 0, 0, 1], idx);
+        color4.set([0, 0, 0, 0], idx);
       }
 
       return this;
@@ -13565,7 +13581,14 @@ function () {
     key: "getColorTransform",
     value: function getColorTransform(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-      return [this[_color0][idx][0], this[_color1][idx][0], this[_color2][idx][0], this[_color3][idx][0], this[_color4][idx][0], this[_color0][idx][1], this[_color1][idx][1], this[_color2][idx][1], this[_color3][idx][1], this[_color4][idx][1], this[_color0][idx][2], this[_color1][idx][2], this[_color2][idx][2], this[_color3][idx][2], this[_color4][idx][2], this[_color0][idx][3], this[_color1][idx][3], this[_color2][idx][3], this[_color3][idx][3], this[_color4][idx][3]];
+      idx *= 4;
+      var _this$_buffer2 = this[_buffer],
+          color0 = _this$_buffer2.color0,
+          color1 = _this$_buffer2.color1,
+          color2 = _this$_buffer2.color2,
+          color3 = _this$_buffer2.color3,
+          color4 = _this$_buffer2.color4;
+      return [color0[idx], color1[idx], color2[idx], color3[idx], color4[idx], color0[idx + 1], color1[idx + 1], color2[idx + 1], color3[idx + 1], color4[idx + 1], color0[idx + 2], color1[idx + 2], color2[idx + 2], color3[idx + 2], color4[idx + 2], color0[idx + 3], color1[idx + 3], color2[idx + 3], color3[idx + 3], color4[idx + 3]];
     }
   }, {
     key: "transformColor",
@@ -13578,33 +13601,40 @@ function () {
   }, {
     key: "setFillColor",
     value: function setFillColor(idx, color) {
+      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_8__["default"])(color);
       if (color[3] > 0.0) this[_hasCloudColor] = true;
-      this[_fillColor][idx] = color.map(function (c) {
+
+      this[_buffer].fillColor.set(color.map(function (c) {
         return Math.round(255 * c);
-      });
+      }), 4 * idx);
     }
   }, {
     key: "setStrokeColor",
     value: function setStrokeColor(idx, color) {
+      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_8__["default"])(color);
       if (color[3] > 0.0) this[_hasCloudColor] = true;
-      this[_strokeColor][idx] = color.map(function (c) {
+
+      this[_buffer].strokeColor.set(color.map(function (c) {
         return Math.round(255 * c);
-      });
+      }), 4 * idx);
     }
   }, {
     key: "getCloudRGBA",
     value: function getCloudRGBA(idx) {
-      var fillColor = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(this[_fillColor][idx]);
-
-      var strokeColor = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(this[_strokeColor][idx]);
-
-      fillColor[3] /= 255;
-      strokeColor[3] /= 255;
+      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+      idx *= 4;
+      var _this$_buffer3 = this[_buffer],
+          fillColor = _this$_buffer3.fillColor,
+          strokeColor = _this$_buffer3.strokeColor;
+      var _fillColor = [fillColor[idx], fillColor[idx + 1], fillColor[idx + 2], fillColor[idx + 3]];
+      var _strokeColor = [strokeColor[idx], strokeColor[idx + 1], strokeColor[idx + 2], strokeColor[idx + 3]];
+      _fillColor[3] /= 255;
+      _strokeColor[3] /= 255;
       return {
-        fill: "rgba(".concat(fillColor.join(), ")"),
-        stroke: "rgba(".concat(strokeColor.join(), ")")
+        fill: "rgba(".concat(_fillColor.join(), ")"),
+        stroke: "rgba(".concat(_strokeColor.join(), ")")
       };
     }
   }, {
@@ -13667,26 +13697,30 @@ function () {
     key: "setTransform",
     value: function setTransform(idx, m) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+      idx *= 4;
       if (m == null) m = [1, 0, 0, 1, 0, 0];
-      this[_transform0][idx][0] = m[0];
-      this[_transform0][idx][1] = m[1];
-      this[_transform0][idx][2] = m[2];
-      this[_transform1][idx][0] = m[3];
-      this[_transform1][idx][1] = m[4];
-      this[_transform1][idx][2] = m[5];
+      var _this$_buffer4 = this[_buffer],
+          transform0 = _this$_buffer4.transform0,
+          transform1 = _this$_buffer4.transform1;
+      transform0.set([m[0], m[1], m[2]], idx);
+      transform1.set([m[3], m[4], m[5]], idx);
       return this;
     }
   }, {
     key: "getTransform",
     value: function getTransform(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-      var m = [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(this[_transform0][idx].slice(0, 3)), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(this[_transform1][idx].slice(0, 3)));
+      idx *= 4;
+      var _this$_buffer5 = this[_buffer],
+          transform0 = _this$_buffer5.transform0,
+          transform1 = _this$_buffer5.transform1;
+      var m = [transform0[idx], transform0[idx + 1], transform0[idx + 2], transform1[idx], transform1[idx + 1], transform1[idx + 2]];
       return m;
     }
   }, {
     key: "getTextureFrame",
     value: function getTextureFrame(idx) {
-      return this[_textures][this[_frameIndex][idx]];
+      return this[_textures][this[_buffer].frameIndex[idx]];
     }
   }, {
     key: "setTextureFrames",
@@ -13712,36 +13746,7 @@ function () {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       var len = this[_textures].length;
       if (len <= 0) throw new Error('No frames');
-      this[_frameIndex][idx] = frameIndex % len;
-    }
-  }, {
-    key: "delete",
-    value: function _delete(idx) {
-      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-
-      this[_transform0].splice(idx, 1);
-
-      this[_transform1].splice(idx, 1);
-
-      this[_frameIndex].splice(idx, 1);
-
-      this[_filters].splice(idx, 1);
-
-      this[_fillColor].splice(idx, 1);
-
-      this[_strokeColor].splice(idx, 1);
-
-      this[_color0].splice(idx, 1);
-
-      this[_color1].splice(idx, 1);
-
-      this[_color2].splice(idx, 1);
-
-      this[_color3].splice(idx, 1);
-
-      this[_color4].splice(idx, 1);
-
-      this[_count]--;
+      this[_buffer].frameIndex[idx] = frameIndex % len;
     }
   }, {
     key: "setProgram",
@@ -13758,10 +13763,10 @@ function () {
     }
   }, {
     key: "translate",
-    value: function translate(idx, _ref) {
-      var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref, 2),
-          x = _ref2[0],
-          y = _ref2[1];
+    value: function translate(idx, _ref2) {
+      var _ref3 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref2, 2),
+          x = _ref3[0],
+          y = _ref3[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [x, y]);
@@ -13770,10 +13775,10 @@ function () {
   }, {
     key: "rotate",
     value: function rotate(idx, rad) {
-      var _ref3 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref3, 2),
-          ox = _ref4[0],
-          oy = _ref4[1];
+      var _ref4 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref4, 2),
+          ox = _ref5[0],
+          oy = _ref5[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -13783,16 +13788,16 @@ function () {
     }
   }, {
     key: "scale",
-    value: function scale(idx, _ref5) {
-      var _ref6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref5, 2),
-          x = _ref6[0],
-          _ref6$ = _ref6[1],
-          y = _ref6$ === void 0 ? x : _ref6$;
+    value: function scale(idx, _ref6) {
+      var _ref7 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref6, 2),
+          x = _ref7[0],
+          _ref7$ = _ref7[1],
+          y = _ref7$ === void 0 ? x : _ref7$;
 
-      var _ref7 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref7, 2),
-          ox = _ref8[0],
-          oy = _ref8[1];
+      var _ref8 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref9 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref8, 2),
+          ox = _ref9[0],
+          oy = _ref9[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -13802,16 +13807,16 @@ function () {
     }
   }, {
     key: "skew",
-    value: function skew(idx, _ref9) {
-      var _ref10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref9, 2),
-          x = _ref10[0],
-          _ref10$ = _ref10[1],
-          y = _ref10$ === void 0 ? x : _ref10$;
+    value: function skew(idx, _ref10) {
+      var _ref11 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref10, 2),
+          x = _ref11[0],
+          _ref11$ = _ref11[1],
+          y = _ref11$ === void 0 ? x : _ref11$;
 
-      var _ref11 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref11, 2),
-          ox = _ref12[0],
-          oy = _ref12[1];
+      var _ref12 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref13 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref12, 2),
+          ox = _ref13[0],
+          oy = _ref13[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
@@ -13821,35 +13826,40 @@ function () {
     }
   }, {
     key: "isPointCollision",
-    value: function isPointCollision(idx, _ref13) {
+    value: function isPointCollision(idx, _ref14) {
       var _this$_mesh;
 
-      var _ref14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref13, 2),
-          x = _ref14[0],
-          y = _ref14[1];
+      var _ref15 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref14, 2),
+          x = _ref15[0],
+          y = _ref15[1];
 
       var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'both';
       var m = this.getTransform(idx);
       var p = Object(_utils_math__WEBPACK_IMPORTED_MODULE_7__["transformPoint"])([x, y], gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m));
-      return (_this$_mesh = this[_mesh]).isPointCollision.apply(_this$_mesh, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(p).concat([type]));
+      return (_this$_mesh = this[_mesh]).isPointCollision.apply(_this$_mesh, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(p).concat([type]));
     }
   }, {
     key: "isPointInFill",
-    value: function isPointInFill(idx, _ref15) {
-      var _ref16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref15, 2),
-          x = _ref16[0],
-          y = _ref16[1];
+    value: function isPointInFill(idx, _ref16) {
+      var _ref17 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref16, 2),
+          x = _ref17[0],
+          y = _ref17[1];
 
       return this.isPointCollision(idx, [x, y], 'fill');
     }
   }, {
     key: "isPointInStroke",
-    value: function isPointInStroke(idx, _ref17) {
-      var _ref18 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_ref17, 2),
-          x = _ref18[0],
-          y = _ref18[1];
+    value: function isPointInStroke(idx, _ref18) {
+      var _ref19 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_ref18, 2),
+          x = _ref19[0],
+          y = _ref19[1];
 
       return this.isPointCollision(idx, [x, y], 'stroke');
+    }
+  }, {
+    key: "bufferSize",
+    get: function get() {
+      return this[_buffer].bufferSize;
     }
   }, {
     key: "mesh",
@@ -13884,43 +13894,12 @@ function () {
       return this[_count];
     },
     set: function set(value) {
-      var amount = this[_count];
-      if (value === amount) return;
-
-      if (value < amount) {
-        this[_transform0].length = value;
-        this[_transform1].length = value;
-        this[_frameIndex].length = value;
-        this[_filters].length = value;
-        this[_fillColor].length = value;
-        this[_strokeColor].length = value;
-        this[_color0].length = value;
-        this[_color1].length = value;
-        this[_color2].length = value;
-        this[_color3].length = value;
-        this[_color4].length = value;
-      } else {
-        var _this$_mesh2 = this[_mesh],
-            _width = _this$_mesh2.width,
-            _height = _this$_mesh2.height;
-
-        for (var i = amount; i < value; i++) {
-          this[_transform0].push([1, 0, 0, _width]);
-
-          this[_transform1].push([1, 0, 0, _height]);
-
-          this[_frameIndex].push([-1]);
-
-          this[_filters].push([]);
-
-          this[_fillColor].push([0, 0, 0, 0]);
-
-          this[_strokeColor].push([0, 0, 0, 0]);
-
-          this.setColorTransform(i, null);
-        }
+      if (value > this[_buffer].bufferSize) {
+        throw new Error('Buffer out of range.');
       }
 
+      var amount = this[_count];
+      if (value === amount) return;
       this[_count] = value;
     }
   }, {
@@ -13949,50 +13928,62 @@ function () {
         });
       }
 
+      var _this$_buffer6 = this[_buffer],
+          transform0 = _this$_buffer6.transform0,
+          transform1 = _this$_buffer6.transform1,
+          color0 = _this$_buffer6.color0,
+          color1 = _this$_buffer6.color1,
+          color2 = _this$_buffer6.color2,
+          color3 = _this$_buffer6.color3,
+          color4 = _this$_buffer6.color4,
+          fillColor = _this$_buffer6.fillColor,
+          strokeColor = _this$_buffer6.strokeColor,
+          frameIndex = _this$_buffer6.frameIndex;
+
       if (this[_mesh].uniforms.u_texSampler) {
         meshData.attributes.a_frameIndex = {
-          data: this[_frameIndex],
+          data: frameIndex,
           divisor: 1
         };
       } // console.log(this[_mesh].meshData)
 
 
       meshData.attributes.a_transform0 = {
-        data: this[_transform0],
+        data: transform0,
         divisor: 1
       };
       meshData.attributes.a_transform1 = {
-        data: this[_transform1],
+        data: transform1,
         divisor: 1
       };
       meshData.attributes.a_colorCloud0 = {
-        data: this[_color0],
+        data: color0,
         divisor: 1
       };
       meshData.attributes.a_colorCloud1 = {
-        data: this[_color1],
+        data: color1,
         divisor: 1
       };
       meshData.attributes.a_colorCloud2 = {
-        data: this[_color2],
+        data: color2,
         divisor: 1
       };
       meshData.attributes.a_colorCloud3 = {
-        data: this[_color3],
+        data: color3,
         divisor: 1
       };
       meshData.attributes.a_colorCloud4 = {
-        data: this[_color4],
+        data: color4,
         divisor: 1
       };
 
       if (this.hasCloudColor) {
         meshData.attributes.a_fillCloudColor = {
-          data: this[_fillColor],
+          data: fillColor,
           divisor: 1
         };
         meshData.attributes.a_strokeCloudColor = {
-          data: this[_strokeColor],
+          data: strokeColor,
           divisor: 1
         };
       }
@@ -21698,6 +21689,10 @@ function applyCloudShader(renderer) {
       a_strokeCloudColor: {
         type: 'UNSIGNED_BYTE',
         normalize: true
+      },
+      a_frameIndex: {
+        type: 'UNSIGNED_BYTE',
+        normalize: false
       }
     });
   }
