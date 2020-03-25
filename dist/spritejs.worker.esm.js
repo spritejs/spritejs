@@ -10664,7 +10664,7 @@ const _hasCloudFilter = Symbol('cloudFilter');
 
 const _buffer = Symbol('buffer');
 
-function createBuffer(buffer) {
+function createBuffer(buffer, oldBuffer = null) {
   const transform0 = new Float32Array(4 * buffer);
   const transform1 = new Float32Array(4 * buffer);
   const color0 = new Float32Array(4 * buffer);
@@ -10675,6 +10675,20 @@ function createBuffer(buffer) {
   const frameIndex = new Uint8Array(buffer);
   const fillColor = new Uint8Array(4 * buffer);
   const strokeColor = new Uint8Array(4 * buffer);
+
+  if (oldBuffer) {
+    transform0.set(oldBuffer.transform0, 0);
+    transform1.set(oldBuffer.transform1, 0);
+    color0.set(oldBuffer.color0, 0);
+    color1.set(oldBuffer.color1, 0);
+    color2.set(oldBuffer.color2, 0);
+    color3.set(oldBuffer.color3, 0);
+    color4.set(oldBuffer.color4, 0);
+    frameIndex.set(oldBuffer.frameIndex, 0);
+    fillColor.set(oldBuffer.fillColor, 0);
+    strokeColor.set(oldBuffer.strokeColor, 0);
+  }
+
   return {
     bufferSize: buffer,
     transform0,
@@ -10703,19 +10717,23 @@ function createBuffer(buffer) {
     this[_hasCloudColor] = false;
     this[_hasCloudFilter] = false;
     this[_blend] = false;
+    this.initBuffer();
+  }
+
+  initBuffer(offset = 0) {
+    const amount = this[_count];
+    const mesh = this[_mesh];
     const {
       width,
       height
     } = mesh;
 
-    for (let i = 0; i < amount; i++) {
+    for (let i = offset; i < amount; i++) {
       this[_buffer].transform0.set([1, 0, 0, width], i * 4);
 
       this[_buffer].transform1.set([1, 0, 0, height], i * 4);
 
       this[_buffer].frameIndex.set([-1], i);
-
-      this[_filters].push([]);
 
       this[_buffer].fillColor.set([0, 0, 0, 0], i * 4);
 
@@ -10749,8 +10767,13 @@ function createBuffer(buffer) {
     return this[_hasCloudFilter];
   }
 
+  _getFilter(idx) {
+    this[_filters][idx] = this[_filters][idx] || [];
+    return this[_filters][idx];
+  }
+
   getFilter(idx) {
-    return this[_filters][idx].join(' ');
+    return this._getFilter(idx).join(' ');
   }
 
   get enableBlend() {
@@ -10847,49 +10870,49 @@ function createBuffer(buffer) {
   grayscale(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["grayscale"])(p));
 
-    this[_filters][idx].push(`grayscale(${100 * p}%)`);
+    this._getFilter(idx).push(`grayscale(${100 * p}%)`);
   }
 
   brightness(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["brightness"])(p));
 
-    this[_filters][idx].push(`brightness(${100 * p}%)`);
+    this._getFilter(idx).push(`brightness(${100 * p}%)`);
   }
 
   saturate(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["saturate"])(p));
 
-    this[_filters][idx].push(`saturate(${100 * p}%)`);
+    this._getFilter(idx).push(`saturate(${100 * p}%)`);
   }
 
   contrast(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["contrast"])(p));
 
-    this[_filters][idx].push(`contrast(${100 * p}%)`);
+    this._getFilter(idx).push(`contrast(${100 * p}%)`);
   }
 
   invert(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["invert"])(p));
 
-    this[_filters][idx].push(`invert(${100 * p}%)`);
+    this._getFilter(idx).push(`invert(${100 * p}%)`);
   }
 
   sepia(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["sepia"])(p));
 
-    this[_filters][idx].push(`sepia(${100 * p}%)`);
+    this._getFilter(idx).push(`sepia(${100 * p}%)`);
   }
 
   opacity(idx, p) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["opacity"])(p));
 
-    this[_filters][idx].push(`opacity(${100 * p}%)`);
+    this._getFilter(idx).push(`opacity(${100 * p}%)`);
   }
 
   hueRotate(idx, deg) {
     this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_1__["hueRotate"])(deg));
 
-    this[_filters][idx].push(`hue-rotate(${deg}deg)`);
+    this._getFilter(idx).push(`hue-rotate(${deg}deg)`);
   }
 
   setTransform(idx, m) {
@@ -10946,13 +10969,18 @@ function createBuffer(buffer) {
   }
 
   set amount(value) {
-    if (value > this[_buffer].bufferSize) {
-      throw new Error('Buffer out of range.');
-    }
-
     const amount = this[_count];
     if (value === amount) return;
+
+    if (value > this[_buffer].bufferSize) {
+      this[_buffer] = createBuffer(Math.max(value, this[_buffer].bufferSize + 1000), this[_buffer]);
+    }
+
     this[_count] = value;
+
+    if (value > amount) {
+      this.initBuffer(amount);
+    }
   }
 
   get meshData() {

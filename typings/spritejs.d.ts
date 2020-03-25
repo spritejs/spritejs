@@ -639,6 +639,7 @@ declare namespace spritejs {
      * @param m 
      */
     setColorTransform(idx: number, m: Array<number>): this;
+    initBuffer(offset: number): void;
     /**
      * Get the color filter matrix.
      * @param idx

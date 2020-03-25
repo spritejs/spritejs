@@ -13471,6 +13471,7 @@ var _hasCloudFilter = Symbol('cloudFilter');
 var _buffer = Symbol('buffer');
 
 function createBuffer(buffer) {
+  var oldBuffer = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var transform0 = new Float32Array(4 * buffer);
   var transform1 = new Float32Array(4 * buffer);
   var color0 = new Float32Array(4 * buffer);
@@ -13481,6 +13482,20 @@ function createBuffer(buffer) {
   var frameIndex = new Uint8Array(buffer);
   var fillColor = new Uint8Array(4 * buffer);
   var strokeColor = new Uint8Array(4 * buffer);
+
+  if (oldBuffer) {
+    transform0.set(oldBuffer.transform0, 0);
+    transform1.set(oldBuffer.transform1, 0);
+    color0.set(oldBuffer.color0, 0);
+    color1.set(oldBuffer.color1, 0);
+    color2.set(oldBuffer.color2, 0);
+    color3.set(oldBuffer.color3, 0);
+    color4.set(oldBuffer.color4, 0);
+    frameIndex.set(oldBuffer.frameIndex, 0);
+    fillColor.set(oldBuffer.fillColor, 0);
+    strokeColor.set(oldBuffer.strokeColor, 0);
+  }
+
   return {
     bufferSize: buffer,
     transform0: transform0,
@@ -13517,30 +13532,42 @@ function () {
     this[_hasCloudColor] = false;
     this[_hasCloudFilter] = false;
     this[_blend] = false;
-    var width = mesh.width,
-        height = mesh.height;
-
-    for (var i = 0; i < amount; i++) {
-      this[_buffer].transform0.set([1, 0, 0, width], i * 4);
-
-      this[_buffer].transform1.set([1, 0, 0, height], i * 4);
-
-      this[_buffer].frameIndex.set([-1], i);
-
-      this[_filters].push([]);
-
-      this[_buffer].fillColor.set([0, 0, 0, 0], i * 4);
-
-      this[_buffer].strokeColor.set([0, 0, 0, 0], i * 4);
-
-      this.setColorTransform(i, null);
-    }
+    this.initBuffer();
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default()(_default, [{
+    key: "initBuffer",
+    value: function initBuffer() {
+      var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var amount = this[_count];
+      var mesh = this[_mesh];
+      var width = mesh.width,
+          height = mesh.height;
+
+      for (var i = offset; i < amount; i++) {
+        this[_buffer].transform0.set([1, 0, 0, width], i * 4);
+
+        this[_buffer].transform1.set([1, 0, 0, height], i * 4);
+
+        this[_buffer].frameIndex.set([-1], i);
+
+        this[_buffer].fillColor.set([0, 0, 0, 0], i * 4);
+
+        this[_buffer].strokeColor.set([0, 0, 0, 0], i * 4);
+
+        this.setColorTransform(i, null);
+      }
+    }
+  }, {
+    key: "_getFilter",
+    value: function _getFilter(idx) {
+      this[_filters][idx] = this[_filters][idx] || [];
+      return this[_filters][idx];
+    }
+  }, {
     key: "getFilter",
     value: function getFilter(idx) {
-      return this[_filters][idx].join(' ');
+      return this._getFilter(idx).join(' ');
     }
   }, {
     key: "canIgnore",
@@ -13642,56 +13669,56 @@ function () {
     value: function grayscale(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["grayscale"])(p));
 
-      this[_filters][idx].push("grayscale(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("grayscale(".concat(100 * p, "%)"));
     }
   }, {
     key: "brightness",
     value: function brightness(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["brightness"])(p));
 
-      this[_filters][idx].push("brightness(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("brightness(".concat(100 * p, "%)"));
     }
   }, {
     key: "saturate",
     value: function saturate(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["saturate"])(p));
 
-      this[_filters][idx].push("saturate(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("saturate(".concat(100 * p, "%)"));
     }
   }, {
     key: "contrast",
     value: function contrast(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["contrast"])(p));
 
-      this[_filters][idx].push("contrast(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("contrast(".concat(100 * p, "%)"));
     }
   }, {
     key: "invert",
     value: function invert(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["invert"])(p));
 
-      this[_filters][idx].push("invert(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("invert(".concat(100 * p, "%)"));
     }
   }, {
     key: "sepia",
     value: function sepia(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["sepia"])(p));
 
-      this[_filters][idx].push("sepia(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("sepia(".concat(100 * p, "%)"));
     }
   }, {
     key: "opacity",
     value: function opacity(idx, p) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["opacity"])(p));
 
-      this[_filters][idx].push("opacity(".concat(100 * p, "%)"));
+      this._getFilter(idx).push("opacity(".concat(100 * p, "%)"));
     }
   }, {
     key: "hueRotate",
     value: function hueRotate(idx, deg) {
       this.transformColor(idx, Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["hueRotate"])(deg));
 
-      this[_filters][idx].push("hue-rotate(".concat(deg, "deg)"));
+      this._getFilter(idx).push("hue-rotate(".concat(deg, "deg)"));
     }
   }, {
     key: "setTransform",
@@ -13894,13 +13921,18 @@ function () {
       return this[_count];
     },
     set: function set(value) {
-      if (value > this[_buffer].bufferSize) {
-        throw new Error('Buffer out of range.');
-      }
-
       var amount = this[_count];
       if (value === amount) return;
+
+      if (value > this[_buffer].bufferSize) {
+        this[_buffer] = createBuffer(Math.max(value, this[_buffer].bufferSize + 1000), this[_buffer]);
+      }
+
       this[_count] = value;
+
+      if (value > amount) {
+        this.initBuffer(amount);
+      }
     }
   }, {
     key: "meshData",
