@@ -628,6 +628,7 @@ declare namespace spritejs {
      * Whether the mesh can ignore when rendering.
      */
     canIgnore(): boolean;
+    delete(idx: number): void;
     /**
      * Get filter string.
      * @param idx 
@@ -1012,7 +1013,7 @@ declare namespace spritejs {
      * @param idx 
      * @param p 
      */
-    opacity(idx: number, p: number): this;
+    setOpacity(idx: number, p: number): this;
     rotate(idx:number, rad: number, origin?: Array<number>): this;
     /**
      * Saturates the drawing. A value of 0 means completely un-saturated. A value of 1 

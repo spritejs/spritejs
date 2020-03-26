@@ -13575,16 +13575,54 @@ function () {
       return this[_mesh].canIgnore();
     }
   }, {
-    key: "setColorTransform",
-    value: function setColorTransform(idx, m) {
+    key: "delete",
+    value: function _delete(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-      idx *= 4;
       var _this$_buffer = this[_buffer],
+          transform0 = _this$_buffer.transform0,
+          transform1 = _this$_buffer.transform1,
           color0 = _this$_buffer.color0,
           color1 = _this$_buffer.color1,
           color2 = _this$_buffer.color2,
           color3 = _this$_buffer.color3,
-          color4 = _this$_buffer.color4;
+          color4 = _this$_buffer.color4,
+          frameIndex = _this$_buffer.frameIndex,
+          fillColor = _this$_buffer.fillColor,
+          strokeColor = _this$_buffer.strokeColor;
+      transform0.set(transform0.subarray(4 * (idx + 1)), 4 * idx);
+      transform1.set(transform1.subarray(4 * (idx + 1)), 4 * idx);
+      color0.set(color0.subarray(4 * (idx + 1)), 4 * idx);
+      color1.set(color1.subarray(4 * (idx + 1)), 4 * idx);
+      color2.set(color2.subarray(4 * (idx + 1)), 4 * idx);
+      color3.set(color3.subarray(4 * (idx + 1)), 4 * idx);
+      color4.set(color4.subarray(4 * (idx + 1)), 4 * idx);
+      frameIndex.set(frameIndex.subarray(idx + 1), idx);
+      fillColor.set(fillColor.subarray(4 * (idx + 1)), 4 * idx);
+      strokeColor.set(strokeColor.subarray(4 * (idx + 1)), 4 * idx);
+
+      for (var i in this[_filters]) {
+        // eslint-disable-line no-restricted-syntax
+        if (i === idx) {
+          delete this[_filters][i];
+        } else if (i > idx) {
+          this[_filters][i - 1] = this[_filters][i];
+          delete this[_filters][i];
+        }
+      }
+
+      this[_count]--;
+    }
+  }, {
+    key: "setColorTransform",
+    value: function setColorTransform(idx, m) {
+      if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
+      idx *= 4;
+      var _this$_buffer2 = this[_buffer],
+          color0 = _this$_buffer2.color0,
+          color1 = _this$_buffer2.color1,
+          color2 = _this$_buffer2.color2,
+          color3 = _this$_buffer2.color3,
+          color4 = _this$_buffer2.color4;
 
       if (m != null) {
         color0.set([m[0], m[5], m[10], m[15]], idx);
@@ -13609,12 +13647,12 @@ function () {
     value: function getColorTransform(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       idx *= 4;
-      var _this$_buffer2 = this[_buffer],
-          color0 = _this$_buffer2.color0,
-          color1 = _this$_buffer2.color1,
-          color2 = _this$_buffer2.color2,
-          color3 = _this$_buffer2.color3,
-          color4 = _this$_buffer2.color4;
+      var _this$_buffer3 = this[_buffer],
+          color0 = _this$_buffer3.color0,
+          color1 = _this$_buffer3.color1,
+          color2 = _this$_buffer3.color2,
+          color3 = _this$_buffer3.color3,
+          color4 = _this$_buffer3.color4;
       return [color0[idx], color1[idx], color2[idx], color3[idx], color4[idx], color0[idx + 1], color1[idx + 1], color2[idx + 1], color3[idx + 1], color4[idx + 1], color0[idx + 2], color1[idx + 2], color2[idx + 2], color3[idx + 2], color4[idx + 2], color0[idx + 3], color1[idx + 3], color2[idx + 3], color3[idx + 3], color4[idx + 3]];
     }
   }, {
@@ -13652,9 +13690,9 @@ function () {
     value: function getCloudRGBA(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       idx *= 4;
-      var _this$_buffer3 = this[_buffer],
-          fillColor = _this$_buffer3.fillColor,
-          strokeColor = _this$_buffer3.strokeColor;
+      var _this$_buffer4 = this[_buffer],
+          fillColor = _this$_buffer4.fillColor,
+          strokeColor = _this$_buffer4.strokeColor;
       var _fillColor = [fillColor[idx], fillColor[idx + 1], fillColor[idx + 2], fillColor[idx + 3]];
       var _strokeColor = [strokeColor[idx], strokeColor[idx + 1], strokeColor[idx + 2], strokeColor[idx + 3]];
       _fillColor[3] /= 255;
@@ -13726,9 +13764,9 @@ function () {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       idx *= 4;
       if (m == null) m = [1, 0, 0, 1, 0, 0];
-      var _this$_buffer4 = this[_buffer],
-          transform0 = _this$_buffer4.transform0,
-          transform1 = _this$_buffer4.transform1;
+      var _this$_buffer5 = this[_buffer],
+          transform0 = _this$_buffer5.transform0,
+          transform1 = _this$_buffer5.transform1;
       transform0.set([m[0], m[1], m[2]], idx);
       transform1.set([m[3], m[4], m[5]], idx);
       return this;
@@ -13738,9 +13776,9 @@ function () {
     value: function getTransform(idx) {
       if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
       idx *= 4;
-      var _this$_buffer5 = this[_buffer],
-          transform0 = _this$_buffer5.transform0,
-          transform1 = _this$_buffer5.transform1;
+      var _this$_buffer6 = this[_buffer],
+          transform0 = _this$_buffer6.transform0,
+          transform1 = _this$_buffer6.transform1;
       var m = [transform0[idx], transform0[idx + 1], transform0[idx + 2], transform1[idx], transform1[idx + 1], transform1[idx + 2]];
       return m;
     }
@@ -13960,17 +13998,17 @@ function () {
         });
       }
 
-      var _this$_buffer6 = this[_buffer],
-          transform0 = _this$_buffer6.transform0,
-          transform1 = _this$_buffer6.transform1,
-          color0 = _this$_buffer6.color0,
-          color1 = _this$_buffer6.color1,
-          color2 = _this$_buffer6.color2,
-          color3 = _this$_buffer6.color3,
-          color4 = _this$_buffer6.color4,
-          fillColor = _this$_buffer6.fillColor,
-          strokeColor = _this$_buffer6.strokeColor,
-          frameIndex = _this$_buffer6.frameIndex;
+      var _this$_buffer7 = this[_buffer],
+          transform0 = _this$_buffer7.transform0,
+          transform1 = _this$_buffer7.transform1,
+          color0 = _this$_buffer7.color0,
+          color1 = _this$_buffer7.color1,
+          color2 = _this$_buffer7.color2,
+          color3 = _this$_buffer7.color3,
+          color4 = _this$_buffer7.color4,
+          fillColor = _this$_buffer7.fillColor,
+          strokeColor = _this$_buffer7.strokeColor,
+          frameIndex = _this$_buffer7.frameIndex;
 
       if (this[_mesh].uniforms.u_texSampler) {
         meshData.attributes.a_frameIndex = {
@@ -28832,8 +28870,8 @@ function (_Node) {
       return true;
     }
   }, {
-    key: "opacity",
-    value: function opacity(idx, p) {
+    key: "setOpacity",
+    value: function setOpacity(idx, p) {
       if (this.meshCloud) {
         this.meshCloud.opacity(idx, p);
         this.forceUpdate();

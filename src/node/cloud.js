@@ -147,7 +147,7 @@ export default class Cloud extends Node {
     return true;
   }
 
-  opacity(idx, p) {
+  setOpacity(idx, p) {
     if(this.meshCloud) {
       this.meshCloud.opacity(idx, p);
       this.forceUpdate();

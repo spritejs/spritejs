@@ -123,7 +123,7 @@ Cloud是一个特殊的元素，它可以将其他元素的mesh作为模型同�
 
 设置第idx次绘制的元素的反色。
 
-##### opacity(idx, p)
+##### setOpacity(idx, p)
 
 设置第idx次绘制的元素的透明度。
 

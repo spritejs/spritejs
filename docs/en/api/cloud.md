@@ -123,7 +123,7 @@ Determine whether the event coordinates intersect the element.
 
 Set the inverse color of the element drawn the IDX time.
 
-##### opacity(idx, p)
+##### setOpacity(idx, p)
 
 Set the transparency of the element drawn the IDX time.
 
