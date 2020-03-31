@@ -32944,6 +32944,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         }
       };
 
+      if (this[_prepareRender] && this[_prepareRender]._type !== 'ticker') {
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+        delete this[_prepareRender];
+      }
+
       if (!this[_prepareRender]) {
         const prepareRender = new Promise(resolve => {
           _resolve = resolve;
@@ -32951,6 +32956,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         });
         prepareRender._resolve = _resolve;
         prepareRender._requestID = _requestID;
+        prepareRender._type = 'ticker';
         this[_prepareRender] = prepareRender;
       } else {
         Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(_update);
