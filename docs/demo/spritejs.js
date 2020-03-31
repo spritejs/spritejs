@@ -39451,7 +39451,7 @@ function (_Group) {
     options.mode = options.mode || 'scale';
     options.left = 0;
     options.top = 0;
-    options.autoResize = options.autoResize || true;
+    options.autoResize = options.autoResize !== false;
 
     if (options.autoResize) {
       if (global.addEventListener) {
