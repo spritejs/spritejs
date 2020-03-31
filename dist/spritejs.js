@@ -38277,6 +38277,11 @@ function (_Group) {
           }
         };
 
+        if (_this4[_prepareRender] && _this4[_prepareRender]._type !== 'ticker') {
+          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["cancelAnimationFrame"])(_this4[_prepareRender]._requestID);
+          delete _this4[_prepareRender];
+        }
+
         if (!_this4[_prepareRender]) {
           var prepareRender = new Promise(function (resolve) {
             _resolve = resolve;
@@ -38284,6 +38289,7 @@ function (_Group) {
           });
           prepareRender._resolve = _resolve;
           prepareRender._requestID = _requestID;
+          prepareRender._type = 'ticker';
           _this4[_prepareRender] = prepareRender;
         } else {
           Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["requestAnimationFrame"])(_update);

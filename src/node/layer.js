@@ -317,6 +317,12 @@ export default class Layer extends Group {
           });
         }
       };
+
+      if(this[_prepareRender] && this[_prepareRender]._type !== 'ticker') {
+        cancelAnimationFrame(this[_prepareRender]._requestID);
+        delete this[_prepareRender];
+      }
+
       if(!this[_prepareRender]) {
         const prepareRender = new Promise((resolve) => {
           _resolve = resolve;
@@ -324,6 +330,7 @@ export default class Layer extends Group {
         });
         prepareRender._resolve = _resolve;
         prepareRender._requestID = _requestID;
+        prepareRender._type = 'ticker';
 
         this[_prepareRender] = prepareRender;
       } else {
