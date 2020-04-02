@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "3.4.13",
+  "version": "3.4.14",
   "description": "A cross platform high-performance graphics system.",
   "main": "dist/spritejs.js",
   "typings": "typings/spritejs.d.ts",
@@ -67,7 +67,7 @@
     "css-select": "^2.0.2",
     "gl-matrix": "^3.1.0",
     "pasition": "^1.0.2",
-    "sprite-animator": "^1.11.4"
+    "sprite-animator": "^1.11.5"
   },
   "jest": {
     "testRegex": "/test/.*.test.js$",

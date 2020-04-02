@@ -6,8 +6,8 @@ import {sizeToPixel} from '../utils/attribute_value';
 function parseValue(v) {
   if(typeof v === 'string') {
     v = v.trim();
-    if(/%$/.test(v)) return parseFloat(v) / 100;
-    if(/^\d+/.test(v)) return sizeToPixel(v);
+    if(/^[0-9.]+%$/.test(v)) return parseFloat(v) / 100;
+    if(/^([\d.]+)(px|pt|pc|in|cm|mm|em|ex|rem|q|vw|vh|vmax|vmin)$/.test(v)) return sizeToPixel(v);
     // const c = rgba(v);
     // return c.length > 0 ? c : v;
   }
@@ -17,6 +17,10 @@ function parseValue(v) {
 function colorEffect(from, to, p, s, e) {
   if(typeof from === 'string') from = rgba(from);
   if(typeof to === 'string') to = rgba(to);
+  return Effects.default(from, to, p, s, e);
+}
+
+function stringEffect(from, to, p, s, e) {
   return Effects.default(from, to, p, s, e);
 }
 
@@ -41,19 +45,20 @@ Effects.fillColor = colorEffect;
 Effects.strokeColor = colorEffect;
 Effects.bgcolor = colorEffect;
 Effects.borderColor = colorEffect;
+Effects.text = stringEffect;
 
 export default class Animation extends Animator {
   constructor(sprite, frames, timing) {
     const initAttrs = sprite.attr();
 
     Object.entries(initAttrs).forEach(([key, value]) => {
-      initAttrs[key] = parseValue(value);
+      initAttrs[key] = Effects[key] ? value : parseValue(value);
     });
 
     frames = frames.map(({...frame}) => {
       const ret = {};
       Object.entries(frame).forEach(([key, value]) => {
-        ret[key] = parseValue(value);
+        ret[key] = Effects[key] ? value : parseValue(value);
       });
       return ret;
     });

@@ -20017,8 +20017,8 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 function parseValue(v) {
   if (typeof v === 'string') {
     v = v.trim();
-    if (/%$/.test(v)) return parseFloat(v) / 100;
-    if (/^\d+/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v); // const c = rgba(v);
+    if (/^[0-9.]+%$/.test(v)) return parseFloat(v) / 100;
+    if (/^([\d.]+)(px|pt|pc|in|cm|mm|em|ex|rem|q|vw|vh|vmax|vmin)$/.test(v)) return Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__["sizeToPixel"])(v); // const c = rgba(v);
     // return c.length > 0 ? c : v;
   }
 
@@ -20028,6 +20028,10 @@ function parseValue(v) {
 function colorEffect(from, to, p, s, e) {
   if (typeof from === 'string') from = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(from);
   if (typeof to === 'string') to = color_rgba__WEBPACK_IMPORTED_MODULE_1___default()(to);
+  return sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default(from, to, p, s, e);
+}
+
+function stringEffect(from, to, p, s, e) {
   return sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].default(from, to, p, s, e);
 }
 
@@ -20053,18 +20057,19 @@ sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].fillColor = colorEffect;
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].strokeColor = colorEffect;
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].bgcolor = colorEffect;
 sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].borderColor = colorEffect;
+sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"].text = stringEffect;
 class Animation extends sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Animator"] {
   constructor(sprite, frames, timing) {
     const initAttrs = sprite.attr();
     Object.entries(initAttrs).forEach(([key, value]) => {
-      initAttrs[key] = parseValue(value);
+      initAttrs[key] = sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"][key] ? value : parseValue(value);
     });
     frames = frames.map((_ref) => {
       let frame = _extends({}, _ref);
 
       const ret = {};
       Object.entries(frame).forEach(([key, value]) => {
-        ret[key] = parseValue(value);
+        ret[key] = sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Effects"][key] ? value : parseValue(value);
       });
       return ret;
     });
@@ -21036,7 +21041,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 /* 99 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.6.9' };
+var core = module.exports = { version: '2.6.11' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -23680,6 +23685,11 @@ var _class = function () {
       return this[_timing];
     }
   }, {
+    key: 'effects',
+    get: function get() {
+      return this[_effects];
+    }
+  }, {
     key: 'baseTimeline',
     set: function set(timeline) {
       this[_timing].timeline = timeline;
@@ -24555,7 +24565,7 @@ function getCurrentFrame(timing, keyframes, effects, p) {
 
   if (!effect) {
     // timing.effect 会覆盖掉 Effects 和 animator.applyEffects 中定义的 effects
-    effects = (0, _assign2.default)({}, effects, _effect2.default);
+    effects = (0, _assign2.default)({}, _effect2.default, effects);
   }
 
   var ret = {};

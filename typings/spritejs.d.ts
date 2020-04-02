@@ -71,6 +71,7 @@ declare namespace spritejs {
    * Web animation for sprite nodes.
    */
   interface Animation {
+    readonly effects: Record<string, any>;
     /**
      * The finished promise resolved when the animation's playstate is finished.
      */
