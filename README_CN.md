@@ -23,7 +23,7 @@ SpriteJS <sup>Next</sup> 是SpriteJS的新版本，在浏览器端支持 webgl2 
 - [服务端渲染](https://next.spritejs.org/#/zh-cn/guide/platforms)
 - [Vue](http://vue.spritejs.org)
 
-更多特性，访问 [spritejs.org](https://spritejs.org)
+更多特性，访问 [spritejs.com](https://spritejs.com)
 
 ## 安装和使用
 
