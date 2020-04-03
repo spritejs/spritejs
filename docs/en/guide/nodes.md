@@ -66,10 +66,10 @@ button.addEventListener('click', () => {
 
 ## Register element type
 
-After creating new sprite type, we must call `spritejs.registerNodeType` to give the new sprite we created a unique name. In this way, elements of this type can be created through `spritejs.createElement` method. Some third party frameworks such as D3 and Vue also need to use `spritejs.createElement` to create specified elements.
+After creating new sprite type, we must call `spritejs.registerNode` to give the new sprite we created a unique name. In this way, elements of this type can be created through `spritejs.createElement` method. Some third party frameworks such as D3 and Vue also need to use `spritejs.createElement` to create specified elements.
 
 ```js
-spritejs.registerNodeType('button', Button);
+spritejs.registerNode(Button, 'button');
 
 const button = spritejs.createElement('button');
 ```
