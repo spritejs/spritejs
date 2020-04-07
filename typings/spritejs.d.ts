@@ -1906,6 +1906,7 @@ declare namespace spritejs {
      * Element's content size.
      */
     get contentSize(): Array<number>;
+    get textureImageReady(): Promise<any>;
     /**
      * Get a list of element related geometric meshes for rendering.
      * @param meshes 

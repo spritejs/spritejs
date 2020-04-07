@@ -44,6 +44,12 @@
       // textureRepeat: true,
     });
 
+    el2.textureImageReady.then(() => {
+      console.log(el2.contentSize);
+    });
+
+    console.log(el2.contentSize);
+
     const gradient = new spritejs.Gradient({
       vector: [0, 0, 100, 100],
       colors: [
@@ -92,6 +98,10 @@
 
     const bglayer = scene.layer('bglayer', {offscreen: false});
     const fglayer = scene.layer('fglayer');
+
+    fglayer.prepareRender.then(() => {
+      console.log(111, el2.contentSize);
+    });
 
     const b = new spritejs.Sprite();
     b.attr({

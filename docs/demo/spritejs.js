@@ -30599,6 +30599,8 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
 
+var _textureTask = Symbol('textureTask');
+
 var Sprite =
 /*#__PURE__*/
 function (_Block) {
@@ -30642,7 +30644,7 @@ function (_Block) {
       _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Sprite.prototype), "onPropertyChange", this).call(this, key, newValue, oldValue);
 
       if (key === 'texture') {
-        Object(_utils_texture__WEBPACK_IMPORTED_MODULE_8__["applyTexture"])(this, newValue, true); // this.setTexture(newValue);
+        this[_textureTask] = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_8__["applyTexture"])(this, newValue, true); // this.setTexture(newValue);
       }
 
       if (key === 'textureRect') {
@@ -30688,6 +30690,11 @@ function (_Block) {
       }
 
       return [w, h];
+    }
+  }, {
+    key: "textureImageReady",
+    get: function get() {
+      return this[_textureTask] || Promise.resolve();
     }
   }]);
 

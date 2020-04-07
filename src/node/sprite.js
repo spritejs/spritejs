@@ -3,6 +3,8 @@ import Block from './block';
 import Attr from '../attribute/sprite';
 import ownerDocument from '../document';
 
+const _textureTask = Symbol('textureTask');
+
 export default class Sprite extends Block {
   static Attr = Attr;
 
@@ -35,6 +37,10 @@ export default class Sprite extends Block {
     return [w, h];
   }
 
+  get textureImageReady() {
+    return this[_textureTask] || Promise.resolve();
+  }
+
   /* override */
   draw(meshes = []) {
     super.draw(meshes);
@@ -50,7 +56,7 @@ export default class Sprite extends Block {
   onPropertyChange(key, newValue, oldValue) {
     super.onPropertyChange(key, newValue, oldValue);
     if(key === 'texture') {
-      applyTexture(this, newValue, true);
+      this[_textureTask] = applyTexture(this, newValue, true);
       // this.setTexture(newValue);
     }
     if(key === 'textureRect') {

@@ -26298,6 +26298,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
+const _textureTask = Symbol('textureTask');
+
 class Sprite extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
   constructor(attrs = {}) {
     if (typeof attrs === 'string') attrs = {
@@ -26336,6 +26339,10 @@ class Sprite extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     return [w, h];
   }
+
+  get textureImageReady() {
+    return this[_textureTask] || Promise.resolve();
+  }
   /* override */
 
 
@@ -26356,7 +26363,7 @@ class Sprite extends _block__WEBPACK_IMPORTED_MODULE_1__["default"] {
     super.onPropertyChange(key, newValue, oldValue);
 
     if (key === 'texture') {
-      Object(_utils_texture__WEBPACK_IMPORTED_MODULE_0__["applyTexture"])(this, newValue, true); // this.setTexture(newValue);
+      this[_textureTask] = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_0__["applyTexture"])(this, newValue, true); // this.setTexture(newValue);
     }
 
     if (key === 'textureRect') {
