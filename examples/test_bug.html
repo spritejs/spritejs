@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 960px;
+      height: 540px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+  const {Scene, Path, Rect} = spritejs;
+  const scene = new Scene({
+    container: document.querySelector('#container'),
+    width: 960,
+    height: 540,
+    displayRatio: 2,
+  });
+  const layer = scene.layer();
+  // const rect = new Path({
+  //   x: 100,
+  //   y: 100,
+  //   d: 'M100 100L200 100L200 200L100 200Z',
+  //   fillColor: 'red',
+  // });
+  // layer.appendChild(rect);
+  const rect = new Rect({
+    height: 100,
+    width: 100,
+    x: 100,
+    y: 100,
+    fillColor: 'red',
+  });
+  layer.appendChild(rect);
+
+    // const container = document.getElementById('container');
+    // const scene = new spritejs.Scene({
+    //   container,
+    //   displayRatio: 2,
+    //   width: 600,
+    //   height: 600,
+    //   // contextType: '2d',
+    // });
+
+    // const fglayer = scene.layer();
+
+    // const s = new spritejs.Sprite({
+    //   width: 100,
+    //   x: 100,
+    //   y: 100,
+    //   bgcolor: 'blue',
+    //   height: 100,
+    // });
+    // fglayer.append(s);
+  </script>
+</body>
+</html>

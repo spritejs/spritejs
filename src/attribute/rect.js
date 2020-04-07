@@ -8,8 +8,8 @@ const declareAlias = Symbol.for('spritejs_declareAlias');
 
 
 function getPath(attr) {
-  const {x, y, width, height} = attr;
-  return `M${x} ${y}L${x + width} ${y}L${x + width} ${y + height}L${x} ${y + height}Z`;
+  const {width, height} = attr;
+  return `M${0} ${0}L${width} ${0}L${width} ${height}L${0} ${height}Z`;
 }
 
 export default class Rect extends Path {
