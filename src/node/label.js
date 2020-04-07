@@ -40,6 +40,10 @@ export default class Label extends Block {
     this.attributes.text = value;
   }
 
+  get textImageReady() {
+    return this[_textImageTask] || Promise.resolve();
+  }
+
   /* override */
   draw(meshes) {
     super.draw(meshes);

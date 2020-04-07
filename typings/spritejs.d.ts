@@ -1242,6 +1242,7 @@ declare namespace spritejs {
      * Element's content size.
      */
     get contentSize(): Array<number>;
+    get textImageReady(): Promise<any>;
     get text(): string;
     set text(value: string);
     /**

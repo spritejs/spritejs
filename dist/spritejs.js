@@ -34443,6 +34443,11 @@ function (_Block) {
     set: function set(value) {
       this.attributes.text = value;
     }
+  }, {
+    key: "textImageReady",
+    get: function get() {
+      return this[_textImageTask] || Promise.resolve();
+    }
   }]);
 
   return Label;
