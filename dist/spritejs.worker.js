@@ -16502,7 +16502,7 @@ function () {
                 y = _ref8[1],
                 z = _ref8[2];
 
-            if (z > 0) {
+            if (1 / z > 0) {
               var _transformPoint = transformPoint([x, y], m, w, h, true);
 
               var _transformPoint2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_transformPoint, 2);
@@ -16550,7 +16550,7 @@ function () {
                 y = _ref13[1],
                 z = _ref13[2];
 
-            if (z > 0) {
+            if (1 / z > 0) {
               // fillTag
               if (options.rotated) {
                 var _transformPoint5 = transformPoint([x, y], _m, w, h, true);

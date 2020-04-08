@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #stage {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+    const {Scene, Label, Group} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      width: 600,
+      height: 600,
+      displayRatio: 2,
+    });
+
+    const fglayer = scene.layer('fglayer');
+    // fglayer.canvas.style.backgroundColor = '#3f097a';
+
+    const group = new Group();
+    group.attr({
+      pos: [600, 540],
+    });
+
+    fglayer.append(group);
+
+    const text1 = new Label('中国/美国');
+    text1.attr({
+      pos: [100, 40],
+      fillColor: '#fff',
+      font: '30px "宋体"',
+      padding: [10, 10],
+      bgcolor: 'red',
+      scale: 1,
+      // border: [2.5, '#ccc'],
+    });
+
+    fglayer.append(text1);
+  </script>
+</body>
+</html>
