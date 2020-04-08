@@ -1245,6 +1245,8 @@ declare namespace spritejs {
     get textImageReady(): Promise<any>;
     get text(): string;
     set text(value: string);
+    get textContent(): string;
+    set textContent(value: string);
     /**
      * Get a list of element related geometric meshes for rendering.
      * @param meshes 

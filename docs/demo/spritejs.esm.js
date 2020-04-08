@@ -29247,6 +29247,14 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
     this.attributes.text = value;
   }
 
+  get textContent() {
+    return this.attributes.text;
+  }
+
+  set textContent(value) {
+    this.attributes.text = value;
+  }
+
   get textImageReady() {
     return this[_textImageTask] || Promise.resolve();
   }
