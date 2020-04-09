@@ -28,7 +28,7 @@
       container,
       width: 600,
       height: 600,
-      displayRatio: 2,
+      // displayRatio: 2,
     });
 
     const fglayer = scene.layer('fglayer');
@@ -41,13 +41,13 @@
 
     fglayer.append(group);
 
-    const text1 = new Label('中国/美国');
+    const text1 = new Label('monitor-service');
     text1.attr({
       pos: [100, 40],
       fillColor: '#fff',
-      font: '30px "宋体"',
+      fontSize: '12px',
       padding: [10, 10],
-      bgcolor: 'red',
+      bgcolor: '#02a4db',
       scale: 1,
       // border: [2.5, '#ccc'],
     });
