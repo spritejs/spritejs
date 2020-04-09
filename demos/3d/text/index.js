@@ -27,6 +27,7 @@ const program = layer.createProgram({
 const label = new Plane(program, {
   width: 1,
   height: texture.image.height / texture.image.width,
+  colors: 'transparent',
 });
 label.animate([
   {rotateY: 0},
