@@ -15,6 +15,7 @@ The path element draws an SVG path.
 | d | | string | '' | SVG Path |
 | normalize | | boolean | false | If the `normalize` attribute of path is set to `true`, the center of the path graph will be drawn as the anchor of the element, otherwise, the coordinate will be drawn according to the actual path. |
 | fillColor | | color | undefined | |
+| fillRule | | enum: {nonzero, evenodd} | nonezero | |
 | strokeColor | | color | undefined | |
 | lineWidth | | number | 1 | |
 | lineJoin | | enum: {miter, bevel} | miter | |

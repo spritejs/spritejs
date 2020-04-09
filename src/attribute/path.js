@@ -13,6 +13,7 @@ export default class Path extends Node {
       d: '',
       normalize: false,
       fillColor: undefined,
+      fillRule: 'nonzero',
       strokeColor: undefined,
       lineWidth: 1,
       lineJoin: 'miter', // 'miter' or 'bevel'
@@ -49,6 +50,15 @@ export default class Path extends Node {
 
   set fillColor(value) {
     this[setAttribute]('fillColor', parseColor(value));
+  }
+
+  get fillRule() {
+    return this[getAttribute]('fillRule');
+  }
+
+  set fillRule(value) {
+    if(value != null && value !== 'nonzero' && value !== 'evenodd') throw new TypeError('Invalid fill rule.');
+    this[setAttribute]('fillRule', value);
   }
 
   get strokeColor() {

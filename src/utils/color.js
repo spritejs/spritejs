@@ -62,10 +62,10 @@ function applyMeshGradient(mesh, type, color) {
   }
 }
 
-export function setFillColor(mesh, {color: fillColor}) {
+export function setFillColor(mesh, {color: fillColor, rule = 'nonzero'}) {
   applyMeshGradient(mesh, 'fill', fillColor);
   if(!fillColor.vector) {
-    mesh.setFill({color: fillColor});
+    mesh.setFill({color: fillColor, rule});
   }
   return mesh;
 }

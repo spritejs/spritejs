@@ -44,8 +44,9 @@ export default class Path extends Node {
         mesh = new Mesh2D(this.path, this.getResolution());
         mesh.path = path;
         const fillColor = this.attributes.fillColor;
+        const fillRule = this.attributes.fillRule;
         if(fillColor) {
-          setFillColor(mesh, {color: fillColor});
+          setFillColor(mesh, {color: fillColor, rule: fillRule});
         }
         const lineWidth = this.attributes.lineWidth;
         const strokeColor = this.attributes.strokeColor;
@@ -151,8 +152,9 @@ export default class Path extends Node {
     // if(key === 'opacity') {
     //   if(this[_mesh]) this[_mesh].setOpacity(this.opacity);
     // }
-    if(this[_mesh] && key === 'fillColor') {
-      setFillColor(this[_mesh], {color: newValue});
+    if(this[_mesh] && (key === 'fillColor' || key === 'fillRule')) {
+      const {fillColor, fillRule} = this.attributes;
+      setFillColor(this[_mesh], {color: fillColor, rule: fillRule});
     }
     if(this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin'
       || key === 'lineDash' || key === 'lineDashOffset')) {

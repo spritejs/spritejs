@@ -18,6 +18,9 @@
     "label": "transforms",
     "src": "transforms"
   }, {
+    "label": "evenodd",
+    "src": "evenodd"
+  }, {
     "label": "events",
     "src": "events"
   }, {

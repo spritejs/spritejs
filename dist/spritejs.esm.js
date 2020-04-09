@@ -10234,7 +10234,7 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
       }
 
       if (fill) {
-        context.fill();
+        context.fill(mesh.fillRule);
       }
 
       if (drawTexture) {
@@ -13652,6 +13652,14 @@ class Mesh2D {
     return [0, 0];
   }
 
+  get fillRule() {
+    if (this[_fill]) {
+      return this[_fill].rule;
+    }
+
+    return 'nonzero';
+  }
+
   get lineWidth() {
     if (this[_stroke]) {
       return this[_stroke].thickness;
@@ -13774,7 +13782,7 @@ class Mesh2D {
       if (contours && contours.length) {
         if (this[_fill]) {
           try {
-            const mesh = _triangulate_contours__WEBPACK_IMPORTED_MODULE_9___default()(contours);
+            const mesh = _triangulate_contours__WEBPACK_IMPORTED_MODULE_9___default()(contours, this[_fill]);
             mesh.positions = mesh.positions.map(p => {
               p[1] = this[_bound][1][1] - p[1];
               p.push(this[_opacity]);
@@ -14081,16 +14089,12 @@ class Mesh2D {
   }
 
   setFill({
-    delaunay = true,
-    clean = true,
-    randomization = 0,
+    rule = 'nonzero',
     color = [0, 0, 0, 0]
   } = {}) {
     this[_mesh] = null;
     this[_fill] = {
-      delaunay,
-      clean,
-      randomization
+      rule
     };
     if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_11__["default"])(color);
     this[_fillColor] = color;
@@ -14895,11 +14899,12 @@ module.exports = function (contours, opt) {
     return c.reduce(function (a, b) {
       return a.concat(b);
     });
-  }); // Tesselate
+  });
+  const windingRule = opt.rule === 'evenodd' ? Tess2.WINDING_ODD : Tess2.WINDING_NONZERO; // Tesselate
 
   var res = Tess2.tesselate(xtend({
     contours: contours,
-    windingRule: Tess2.WINDING_ODD,
+    windingRule,
     elementType: Tess2.POLYGONS,
     polySize: 3,
     vertexSize: 2
@@ -26173,13 +26178,15 @@ function applyMeshGradient(mesh, type, color) {
 }
 
 function setFillColor(mesh, {
-  color: fillColor
+  color: fillColor,
+  rule = 'nonzero'
 }) {
   applyMeshGradient(mesh, 'fill', fillColor);
 
   if (!fillColor.vector) {
     mesh.setFill({
-      color: fillColor
+      color: fillColor,
+      rule
     });
   }
 
@@ -26638,10 +26645,12 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
         mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](this.path, this.getResolution());
         mesh.path = path;
         const fillColor = this.attributes.fillColor;
+        const fillRule = this.attributes.fillRule;
 
         if (fillColor) {
           Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setFillColor"])(mesh, {
-            color: fillColor
+            color: fillColor,
+            rule: fillRule
           });
         }
 
@@ -26772,9 +26781,14 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
     // }
 
 
-    if (this[_mesh] && key === 'fillColor') {
+    if (this[_mesh] && (key === 'fillColor' || key === 'fillRule')) {
+      const {
+        fillColor,
+        fillRule
+      } = this.attributes;
       Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setFillColor"])(this[_mesh], {
-        color: newValue
+        color: fillColor,
+        rule: fillRule
       });
     }
 
@@ -27727,6 +27741,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
       d: '',
       normalize: false,
       fillColor: undefined,
+      fillRule: 'nonzero',
       strokeColor: undefined,
       lineWidth: 1,
       lineJoin: 'miter',
@@ -27765,6 +27780,15 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   set fillColor(value) {
     this[setAttribute]('fillColor', Object(_utils_color__WEBPACK_IMPORTED_MODULE_1__["parseColor"])(value));
+  }
+
+  get fillRule() {
+    return this[getAttribute]('fillRule');
+  }
+
+  set fillRule(value) {
+    if (value != null && value !== 'nonzero' && value !== 'evenodd') throw new TypeError('Invalid fill rule.');
+    this[setAttribute]('fillRule', value);
   }
 
   get strokeColor() {

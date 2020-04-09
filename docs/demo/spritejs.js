@@ -12761,7 +12761,7 @@ function drawMesh2D(mesh, context) {
       }
 
       if (fill) {
-        context.fill();
+        context.fill(mesh.fillRule);
       }
 
       if (drawTexture) {
@@ -16817,20 +16817,14 @@ function () {
     key: "setFill",
     value: function setFill() {
       var _ref18 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          _ref18$delaunay = _ref18.delaunay,
-          delaunay = _ref18$delaunay === void 0 ? true : _ref18$delaunay,
-          _ref18$clean = _ref18.clean,
-          clean = _ref18$clean === void 0 ? true : _ref18$clean,
-          _ref18$randomization = _ref18.randomization,
-          randomization = _ref18$randomization === void 0 ? 0 : _ref18$randomization,
+          _ref18$rule = _ref18.rule,
+          rule = _ref18$rule === void 0 ? 'nonzero' : _ref18$rule,
           _ref18$color = _ref18.color,
           color = _ref18$color === void 0 ? [0, 0, 0, 0] : _ref18$color;
 
       this[_mesh] = null;
       this[_fill] = {
-        delaunay: delaunay,
-        clean: clean,
-        randomization: randomization
+        rule: rule
       };
       if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_16__["default"])(color);
       this[_fillColor] = color;
@@ -17436,6 +17430,15 @@ function () {
       return [0, 0];
     }
   }, {
+    key: "fillRule",
+    get: function get() {
+      if (this[_fill]) {
+        return this[_fill].rule;
+      }
+
+      return 'nonzero';
+    }
+  }, {
     key: "lineWidth",
     get: function get() {
       if (this[_stroke]) {
@@ -17578,7 +17581,7 @@ function () {
         if (contours && contours.length) {
           if (this[_fill]) {
             try {
-              var _mesh2 = _triangulate_contours__WEBPACK_IMPORTED_MODULE_14___default()(contours);
+              var _mesh2 = _triangulate_contours__WEBPACK_IMPORTED_MODULE_14___default()(contours, this[_fill]);
 
               _mesh2.positions = _mesh2.positions.map(function (p) {
                 p[1] = _this[_bound][1][1] - p[1];
@@ -18121,11 +18124,12 @@ module.exports = function (contours, opt) {
     return c.reduce(function (a, b) {
       return a.concat(b);
     });
-  }); // Tesselate
+  });
+  var windingRule = opt.rule === 'evenodd' ? Tess2.WINDING_ODD : Tess2.WINDING_NONZERO; // Tesselate
 
   var res = Tess2.tesselate(xtend({
     contours: contours,
-    windingRule: Tess2.WINDING_ODD,
+    windingRule: windingRule,
     elementType: Tess2.POLYGONS,
     polySize: 3,
     vertexSize: 2
@@ -30166,12 +30170,15 @@ function applyMeshGradient(mesh, type, color) {
 }
 
 function setFillColor(mesh, _ref3) {
-  var fillColor = _ref3.color;
+  var fillColor = _ref3.color,
+      _ref3$rule = _ref3.rule,
+      rule = _ref3$rule === void 0 ? 'nonzero' : _ref3$rule;
   applyMeshGradient(mesh, 'fill', fillColor);
 
   if (!fillColor.vector) {
     mesh.setFill({
-      color: fillColor
+      color: fillColor,
+      rule: rule
     });
   }
 
@@ -30949,24 +30956,28 @@ function (_Node) {
       // }
 
 
-      if (this[_mesh] && key === 'fillColor') {
+      if (this[_mesh] && (key === 'fillColor' || key === 'fillRule')) {
+        var _this$attributes = this.attributes,
+            fillColor = _this$attributes.fillColor,
+            fillRule = _this$attributes.fillRule;
         Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(this[_mesh], {
-          color: newValue
+          color: fillColor,
+          rule: fillRule
         });
       }
 
       if (this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin' || key === 'lineDash' || key === 'lineDashOffset')) {
-        var _this$attributes = this.attributes,
-            strokeColor = _this$attributes.strokeColor,
-            lineWidth = _this$attributes.lineWidth;
+        var _this$attributes2 = this.attributes,
+            strokeColor = _this$attributes2.strokeColor,
+            lineWidth = _this$attributes2.lineWidth;
 
         if (strokeColor && lineWidth > 0) {
-          var _this$attributes2 = this.attributes,
-              lineCap = _this$attributes2.lineCap,
-              lineJoin = _this$attributes2.lineJoin,
-              lineDash = _this$attributes2.lineDash,
-              lineDashOffset = _this$attributes2.lineDashOffset,
-              miterLimit = _this$attributes2.miterLimit;
+          var _this$attributes3 = this.attributes,
+              lineCap = _this$attributes3.lineCap,
+              lineJoin = _this$attributes3.lineJoin,
+              lineDash = _this$attributes3.lineDash,
+              lineDashOffset = _this$attributes3.lineDashOffset,
+              miterLimit = _this$attributes3.miterLimit;
           Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(this[_mesh], {
             color: strokeColor,
             lineCap: lineCap,
@@ -31017,10 +31028,12 @@ function (_Node) {
           mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Mesh2D"](this.path, this.getResolution());
           mesh.path = path;
           var fillColor = this.attributes.fillColor;
+          var fillRule = this.attributes.fillRule;
 
           if (fillColor) {
             Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(mesh, {
-              color: fillColor
+              color: fillColor,
+              rule: fillRule
             });
           }
 
@@ -31028,12 +31041,12 @@ function (_Node) {
           var strokeColor = this.attributes.strokeColor;
 
           if (strokeColor && lineWidth > 0) {
-            var _this$attributes3 = this.attributes,
-                lineCap = _this$attributes3.lineCap,
-                lineJoin = _this$attributes3.lineJoin,
-                miterLimit = _this$attributes3.miterLimit,
-                lineDash = _this$attributes3.lineDash,
-                lineDashOffset = _this$attributes3.lineDashOffset;
+            var _this$attributes4 = this.attributes,
+                lineCap = _this$attributes4.lineCap,
+                lineJoin = _this$attributes4.lineJoin,
+                miterLimit = _this$attributes4.miterLimit,
+                lineDash = _this$attributes4.lineDash,
+                lineDashOffset = _this$attributes4.lineDashOffset;
             Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(mesh, {
               color: strokeColor,
               lineWidth: lineWidth,
@@ -32039,6 +32052,7 @@ function (_Node) {
       d: '',
       normalize: false,
       fillColor: undefined,
+      fillRule: 'nonzero',
       strokeColor: undefined,
       lineWidth: 1,
       lineJoin: 'miter',
@@ -32080,6 +32094,15 @@ function (_Node) {
     },
     set: function set(value) {
       this[setAttribute]('fillColor', Object(_utils_color__WEBPACK_IMPORTED_MODULE_6__["parseColor"])(value));
+    }
+  }, {
+    key: "fillRule",
+    get: function get() {
+      return this[getAttribute]('fillRule');
+    },
+    set: function set(value) {
+      if (value != null && value !== 'nonzero' && value !== 'evenodd') throw new TypeError('Invalid fill rule.');
+      this[setAttribute]('fillRule', value);
     }
   }, {
     key: "strokeColor",

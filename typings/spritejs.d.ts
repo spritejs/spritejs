@@ -320,6 +320,7 @@ declare namespace spritejs {
      * The center point of the mesh.
      */
     readonly boundingCenter: Array<any>;
+    readonly fillRule: string;
     /**
      * Stroke lineWidth.
      */

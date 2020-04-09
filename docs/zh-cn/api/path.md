@@ -15,6 +15,7 @@ Path 元素绘制一段SVG路径。
 | d | | string | '' | SVG-Path 路径 |
 | normalize | | boolean | false | 是否标准化，如果为 true，那么绘制的时候会默认以图形的中心点作为锚点 |
 | fillColor | | color | undefined | 填充颜色 |
+| fillRule | | enum: {nonzero, evenodd} | nonezero | 填充规则 |
 | strokeColor | | color | undefined | 描边颜色 |
 | lineWidth | | number | 1 | 描边宽度 |
 | lineJoin | | enum: {miter, bevel} | miter | 连线接头样式 |
