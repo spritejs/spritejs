@@ -97,11 +97,18 @@ function delegateEvents(scene) {
             if(layer.options.handleEvent !== false) {
               const ret = layer.dispatchPointerEvent(evt);
               if(ret && evt.target !== layer) break;
+              else evt.cancelBubble = false; // prepare passing to next layer
             }
           }
           if(evt.target === layers[0]) {
             // trigger event on top layer
-            evt.target = layers[layers.length - 1];
+            for(let i = layers.length - 1; i >= 0; i--) {
+              const layer = layers[i];
+              if(layer.options.handleEvent !== false) {
+                evt.target = layer;
+                break;
+              }
+            }
           }
         }
         const target = evt.target;

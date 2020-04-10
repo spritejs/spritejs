@@ -39354,13 +39354,20 @@ function delegateEvents(scene) {
 
             if (layer.options.handleEvent !== false) {
               var ret = layer.dispatchPointerEvent(evt);
-              if (ret && evt.target !== layer) break;
+              if (ret && evt.target !== layer) break;else evt.cancelBubble = false; // prepare passing to next layer
             }
           }
 
           if (evt.target === layers[0]) {
             // trigger event on top layer
-            evt.target = layers[layers.length - 1];
+            for (var _i = layers.length - 1; _i >= 0; _i--) {
+              var _layer = layers[_i];
+
+              if (_layer.options.handleEvent !== false) {
+                evt.target = _layer;
+                break;
+              }
+            }
           }
         }
 

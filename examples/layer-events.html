@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <script src="//lib.baomitu.com/dat-gui/0.7.2/dat.gui.min.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background: #ccc;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+    const {Scene, Sprite, Group} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      width: 1200,
+      height: 1200,
+    });
+
+    const bglayer = scene.layer('bglayer');
+    const fglayer = scene.layer('fglayer');
+    
+    fglayer.addEventListener('click', (e) => {
+      console.log(111);
+      e.stopPropagation();
+    });
+
+    bglayer.addEventListener('click', () => {
+      console.log(333);
+    });
+  </script>
+</body>
+</html>
