@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #201e1e;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+    #container {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      width: 800,
+      height: 800,
+    });
+    const fglayer = scene.layer('fglayer');
+
+    const block = new spritejs.Block({
+      bgcolor: 'red',
+      x: 100,
+      y: 100,
+      size: [200, 200],
+    });
+
+    fglayer.append(block);
+
+    fglayer.addEventListener('mousemove', (evt) => {
+      block.attr({
+        x: evt.x,
+        y: evt.y,
+      });
+    });
+  </script>
+</body>
+</html>

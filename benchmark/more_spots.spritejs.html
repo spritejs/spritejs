@@ -92,7 +92,7 @@
           c1.setColorTransform(i, null);
           c1.translate(i, pos);
           c1.scale(i, [scale, scale], pos);
-          c1.opacity(i, 1 - scale);
+          c1.setOpacity(i, 1 - scale);
         }
         requestAnimationFrame(render);
       }
