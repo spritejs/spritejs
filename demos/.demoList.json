@@ -286,6 +286,9 @@
     "label": "instancing",
     "src": "3d/instancing"
   }, {
+    "label": "interleaved array",
+    "src": "3d/interleaved"
+  }, {
     "label": "light",
     "src": "3d/light"
   }, {
