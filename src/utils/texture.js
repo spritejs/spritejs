@@ -56,7 +56,7 @@ export function createTexture(image, renderer) {
 }
 
 export function deleteTexture(image, renderer) {
-  if(renderer[_textureMap].has(image)) {
+  if(renderer[_textureMap] && renderer[_textureMap].has(image)) {
     const texture = renderer[_textureMap].get(image);
     renderer.deleteTexture(texture);
     renderer[_textureMap].delete(image);

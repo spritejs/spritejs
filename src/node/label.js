@@ -1,5 +1,5 @@
 import {ENV, parseFont} from '@mesh.js/core';
-import {createTexture} from '../utils/texture';
+import {createTexture, deleteTexture} from '../utils/texture';
 import Block from './block';
 import Attr from '../attribute/label';
 import ownerDocument from '../document';
@@ -64,7 +64,9 @@ export default class Label extends Block {
 
         if(!texture
           || this[_textureContext] && this[_textureContext] !== this.renderer
-          || texture.image !== textImage.image) {
+          || textImage.needsUpdate) {
+          textImage.needsUpdate = false;
+          deleteTexture(textImage.image, this.renderer);
           texture = createTexture(textImage.image, this.renderer);
           this[_updateTextureRect] = true;
         } else {
@@ -147,6 +149,7 @@ export default class Label extends Block {
         this[_textCanvas] = this[_textCanvas] || ENV.createCanvas(1, 1);
         this[_textImage] = ENV.createText(text, {
           font, fillColor, strokeColor, strokeWidth, parseFont, ratio, textCanvas: this[_textCanvas]});
+        this[_textImage].needsUpdate = true;
         this.updateContours();
         this.forceUpdate();
         return this[_textImage];

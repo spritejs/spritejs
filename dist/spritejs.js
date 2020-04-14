@@ -29254,7 +29254,7 @@ function createTexture(image, renderer) {
   return texture;
 }
 function deleteTexture(image, renderer) {
-  if (renderer[_textureMap].has(image)) {
+  if (renderer[_textureMap] && renderer[_textureMap].has(image)) {
     var texture = renderer[_textureMap].get(image);
 
     renderer.deleteTexture(texture);
@@ -34343,7 +34343,9 @@ function (_Block) {
         if (textImage) {
           var texture = mesh.texture;
 
-          if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || texture.image !== textImage.image) {
+          if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || textImage.needsUpdate) {
+            textImage.needsUpdate = false;
+            Object(_utils_texture__WEBPACK_IMPORTED_MODULE_9__["deleteTexture"])(textImage.image, this.renderer);
             texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_9__["createTexture"])(textImage.image, this.renderer);
             this[_updateTextureRect] = true;
           } else {
@@ -34451,6 +34453,7 @@ function (_Block) {
             ratio: ratio,
             textCanvas: _this[_textCanvas]
           });
+          _this[_textImage].needsUpdate = true;
 
           _this.updateContours();
 

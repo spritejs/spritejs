@@ -25307,7 +25307,7 @@ function createTexture(image, renderer) {
   return texture;
 }
 function deleteTexture(image, renderer) {
-  if (renderer[_textureMap].has(image)) {
+  if (renderer[_textureMap] && renderer[_textureMap].has(image)) {
     const texture = renderer[_textureMap].get(image);
 
     renderer.deleteTexture(texture);
@@ -29181,7 +29181,9 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
       if (textImage) {
         let texture = mesh.texture;
 
-        if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || texture.image !== textImage.image) {
+        if (!texture || this[_textureContext] && this[_textureContext] !== this.renderer || textImage.needsUpdate) {
+          textImage.needsUpdate = false;
+          Object(_utils_texture__WEBPACK_IMPORTED_MODULE_1__["deleteTexture"])(textImage.image, this.renderer);
           texture = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_1__["createTexture"])(textImage.image, this.renderer);
           this[_updateTextureRect] = true;
         } else {
@@ -29281,6 +29283,7 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
           ratio,
           textCanvas: this[_textCanvas]
         });
+        this[_textImage].needsUpdate = true;
         this.updateContours();
         this.forceUpdate();
         return this[_textImage];
