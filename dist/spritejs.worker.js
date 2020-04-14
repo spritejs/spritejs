@@ -12113,11 +12113,21 @@ function createText(text, _ref) {
       strokeColor = _ref.strokeColor,
       strokeWidth = _ref.strokeWidth,
       _ref$ratio = _ref.ratio,
-      ratio = _ref$ratio === void 0 ? 1 : _ref$ratio;
+      ratio = _ref$ratio === void 0 ? 1 : _ref$ratio,
+      textCanvas = _ref.textCanvas,
+      _ref$cachable = _ref.cachable,
+      cachable = _ref$cachable === void 0 ? false : _ref$cachable;
   var key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
-  var textCanvas = cacheMap[key];
-  if (textCanvas) return textCanvas;
-  textCanvas = createCanvas(1, 1);
+
+  if (cachable) {
+    var cachedCanvas = cacheMap[key];
+    if (cachedCanvas) return cachedCanvas;
+  }
+
+  if (!textCanvas) {
+    textCanvas = createCanvas(1, 1);
+  }
+
   var textContext = textCanvas.getContext('2d');
   textContext.save();
   textContext.font = font;
@@ -12199,11 +12209,16 @@ function createText(text, _ref) {
   }
 
   textContext.restore();
-  cacheMap[key] = {
+  var ret = {
     image: textCanvas,
     rect: [0, 0, w, h]
   };
-  return cacheMap[key];
+
+  if (cachable) {
+    cacheMap[key] = ret;
+  }
+
+  return ret;
 } // Fixed: use offscreen canvas as texture will fail in early chrome.
 
 
@@ -34161,6 +34176,8 @@ var _textureContext = Symbol('textureContext');
 
 var _updateTextureRect = Symbol('updateTextureRect');
 
+var _textCanvas = Symbol('textCanvas');
+
 var Label =
 /*#__PURE__*/
 function (_Block) {
@@ -34292,13 +34309,15 @@ function (_Block) {
               strokeColor = _this$attributes3.strokeColor,
               strokeWidth = _this$attributes3.strokeWidth;
           var ratio = _this.layer ? _this.layer.displayRatio : 1;
+          _this[_textCanvas] = _this[_textCanvas] || _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createCanvas(1, 1);
           _this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createText(text, {
             font: font,
             fillColor: fillColor,
             strokeColor: strokeColor,
             strokeWidth: strokeWidth,
             parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["parseFont"],
-            ratio: ratio
+            ratio: ratio,
+            textCanvas: _this[_textCanvas]
           });
 
           _this.updateContours();

@@ -9,6 +9,7 @@ const _textImageTask = Symbol('textImageTask');
 const _textureContext = Symbol('textureContext');
 
 const _updateTextureRect = Symbol('updateTextureRect');
+const _textCanvas = Symbol('textCanvas');
 
 export default class Label extends Block {
   static Attr = Attr;
@@ -143,7 +144,9 @@ export default class Label extends Block {
         this[_textImageTask] = null;
         const {text, font, fillColor, strokeColor, strokeWidth} = this.attributes;
         const ratio = this.layer ? this.layer.displayRatio : 1;
-        this[_textImage] = ENV.createText(text, {font, fillColor, strokeColor, strokeWidth, parseFont, ratio});
+        this[_textCanvas] = this[_textCanvas] || ENV.createCanvas(1, 1);
+        this[_textImage] = ENV.createText(text, {
+          font, fillColor, strokeColor, strokeWidth, parseFont, ratio, textCanvas: this[_textCanvas]});
         this.updateContours();
         this.forceUpdate();
         return this[_textImage];

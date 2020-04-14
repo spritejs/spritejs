@@ -9623,12 +9623,21 @@ function createText(text, {
   fillColor,
   strokeColor,
   strokeWidth,
-  ratio = 1
+  ratio = 1,
+  textCanvas,
+  cachable = false
 }) {
   const key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
-  let textCanvas = cacheMap[key];
-  if (textCanvas) return textCanvas;
-  textCanvas = createCanvas(1, 1);
+
+  if (cachable) {
+    const cachedCanvas = cacheMap[key];
+    if (cachedCanvas) return cachedCanvas;
+  }
+
+  if (!textCanvas) {
+    textCanvas = createCanvas(1, 1);
+  }
+
   const textContext = textCanvas.getContext('2d');
   textContext.save();
   textContext.font = font;
@@ -9710,11 +9719,16 @@ function createText(text, {
   }
 
   textContext.restore();
-  cacheMap[key] = {
+  const ret = {
     image: textCanvas,
     rect: [0, 0, w, h]
   };
-  return cacheMap[key];
+
+  if (cachable) {
+    cacheMap[key] = ret;
+  }
+
+  return ret;
 } // Fixed: use offscreen canvas as texture will fail in early chrome.
 
 
@@ -29112,6 +29126,8 @@ const _textureContext = Symbol('textureContext');
 
 const _updateTextureRect = Symbol('updateTextureRect');
 
+const _textCanvas = Symbol('textCanvas');
+
 class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
   constructor(attrs = {}) {
     if (typeof attrs === 'string') attrs = {
@@ -29263,13 +29279,15 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
           strokeWidth
         } = this.attributes;
         const ratio = this.layer ? this.layer.displayRatio : 1;
+        this[_textCanvas] = this[_textCanvas] || _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createCanvas(1, 1);
         this[_textImage] = _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"].createText(text, {
           font,
           fillColor,
           strokeColor,
           strokeWidth,
           parseFont: _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["parseFont"],
-          ratio
+          ratio,
+          textCanvas: this[_textCanvas]
         });
         this.updateContours();
         this.forceUpdate();
