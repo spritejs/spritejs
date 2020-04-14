@@ -12248,9 +12248,10 @@ function createText(text, _ref) {
       textCanvas = _ref.textCanvas,
       _ref$cachable = _ref.cachable,
       cachable = _ref$cachable === void 0 ? false : _ref$cachable;
-  var key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
+  var key;
 
   if (cachable) {
+    key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
     var cachedCanvas = cacheMap[key];
     if (cachedCanvas) return cachedCanvas;
   }

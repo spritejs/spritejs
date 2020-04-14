@@ -9758,9 +9758,10 @@ function createText(text, {
   textCanvas,
   cachable = false
 }) {
-  const key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
+  let key;
 
   if (cachable) {
+    key = [text, font, String(fillColor), String(strokeColor), String(strokeWidth)].join('###');
     const cachedCanvas = cacheMap[key];
     if (cachedCanvas) return cachedCanvas;
   }
