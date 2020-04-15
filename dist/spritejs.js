@@ -22355,6 +22355,15 @@ function () {
       });
     }
   }, {
+    key: "contains",
+    value: function contains(node) {
+      while (node && this !== node) {
+        node = node.parent;
+      }
+
+      return !!node;
+    }
+  }, {
     key: "deactivateAnimations",
     value: function deactivateAnimations() {
       this[_animations].forEach(function (animation) {
@@ -22524,6 +22533,16 @@ function () {
 
       var eventListeners = capture ? _captureEventListeners : _eventListeners;
       return _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this[eventListeners][type] || []);
+    }
+  }, {
+    key: "getNodeNearBy",
+    value: function getNodeNearBy() {
+      var distance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      if (!this.parent) return null;
+      if (distance === 0) return this;
+      var children = this.parent.children;
+      var idx = children.indexOf(this);
+      return children[idx + distance];
     }
   }, {
     key: "getOffsetPosition",
@@ -22841,6 +22860,21 @@ function () {
       }
 
       return opacity;
+    }
+  }, {
+    key: "parentNode",
+    get: function get() {
+      return this.parent;
+    }
+  }, {
+    key: "nextSibling",
+    get: function get() {
+      return this.getNodeNearBy(1);
+    }
+  }, {
+    key: "previousSibling",
+    get: function get() {
+      return this.getNodeNearBy(-1);
     }
   }, {
     key: "program",
@@ -39628,7 +39662,7 @@ function (_Group) {
     }
 
     _this.options = options;
-    options.displayRatio = options.displayRatio || (typeof window !== 'undefined' && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
+    options.displayRatio = options.displayRatio || 1.0;
     options.mode = options.mode || 'scale';
     options.left = 0;
     options.top = 0;

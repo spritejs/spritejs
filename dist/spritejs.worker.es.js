@@ -18869,6 +18869,18 @@ class Node {
     return opacity;
   }
 
+  get parentNode() {
+    return this.parent;
+  }
+
+  get nextSibling() {
+    return this.getNodeNearBy(1);
+  }
+
+  get previousSibling() {
+    return this.getNodeNearBy(-1);
+  }
+
   get program() {
     return this[_program];
   }
@@ -19052,6 +19064,14 @@ class Node {
     });
   }
 
+  contains(node) {
+    while (node && this !== node) {
+      node = node.parent;
+    }
+
+    return !!node;
+  }
+
   deactivateAnimations() {
     this[_animations].forEach(animation => animation.cancel());
 
@@ -19201,6 +19221,14 @@ class Node {
   } = {}) {
     const eventListeners = capture ? _captureEventListeners : _eventListeners;
     return [...(this[eventListeners][type] || [])];
+  }
+
+  getNodeNearBy(distance = 1) {
+    if (!this.parent) return null;
+    if (distance === 0) return this;
+    const children = this.parent.children;
+    const idx = children.indexOf(this);
+    return children[idx + distance];
   }
 
   getOffsetPosition(x, y) {

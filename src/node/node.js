@@ -79,6 +79,18 @@ export default class Node {
     return opacity;
   }
 
+  get parentNode() {
+    return this.parent;
+  }
+
+  get nextSibling() {
+    return this.getNodeNearBy(1);
+  }
+
+  get previousSibling() {
+    return this.getNodeNearBy(-1);
+  }
+
   get program() {
     return this[_program];
   }
@@ -236,6 +248,13 @@ export default class Node {
     this.dispatchEvent({type: 'append', detail: {parent, zOrder}});
   }
 
+  contains(node) {
+    while(node && this !== node) {
+      node = node.parent;
+    }
+    return !!node;
+  }
+
   deactivateAnimations() {
     this[_animations].forEach(animation => animation.cancel());
     const children = this.children;
@@ -348,6 +367,14 @@ export default class Node {
   getListeners(type, {capture = false} = {}) {
     const eventListeners = capture ? _captureEventListeners : _eventListeners;
     return [...(this[eventListeners][type] || [])];
+  }
+
+  getNodeNearBy(distance = 1) {
+    if(!this.parent) return null;
+    if(distance === 0) return this;
+    const children = this.parent.children;
+    const idx = children.indexOf(this);
+    return children[idx + distance];
   }
 
   getOffsetPosition(x, y) {

@@ -19000,6 +19000,18 @@ class Node {
     return opacity;
   }
 
+  get parentNode() {
+    return this.parent;
+  }
+
+  get nextSibling() {
+    return this.getNodeNearBy(1);
+  }
+
+  get previousSibling() {
+    return this.getNodeNearBy(-1);
+  }
+
   get program() {
     return this[_program];
   }
@@ -19183,6 +19195,14 @@ class Node {
     });
   }
 
+  contains(node) {
+    while (node && this !== node) {
+      node = node.parent;
+    }
+
+    return !!node;
+  }
+
   deactivateAnimations() {
     this[_animations].forEach(animation => animation.cancel());
 
@@ -19332,6 +19352,14 @@ class Node {
   } = {}) {
     const eventListeners = capture ? _captureEventListeners : _eventListeners;
     return [...(this[eventListeners][type] || [])];
+  }
+
+  getNodeNearBy(distance = 1) {
+    if (!this.parent) return null;
+    if (distance === 0) return this;
+    const children = this.parent.children;
+    const idx = children.indexOf(this);
+    return children[idx + distance];
   }
 
   getOffsetPosition(x, y) {
@@ -34092,7 +34120,7 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
     }
 
     this.options = options;
-    options.displayRatio = options.displayRatio || (typeof window !== 'undefined' && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
+    options.displayRatio = options.displayRatio || 1.0;
     options.mode = options.mode || 'scale';
     options.left = 0;
     options.top = 0;

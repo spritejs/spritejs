@@ -1430,6 +1430,7 @@ declare namespace spritejs {
      * The parent of the node.
      */
     readonly parent?: Node;
+    readonly parentNode?: Node;
     /**
      * Group sort children by zIndex and zOrder.
      */
@@ -1463,6 +1464,8 @@ declare namespace spritejs {
      * Get the transform matrix of the current element relative to the parent element.
      */
     get localMatrix(): Array<number>;
+    get nextSibling(): Node|undefined;
+    get previousSibling(): Node|undefined;
     get opacity(): number;
     /**
      * Get custom WebGLProgram.
@@ -1538,6 +1541,7 @@ declare namespace spritejs {
      * @param zOrder 
      */
     connect(parent: Node, zOrder: number): void;
+    contains(node: Node): boolean;
     /**
      * Stops all animations in progress on the element.
      */
@@ -1577,7 +1581,8 @@ declare namespace spritejs {
      * @param type 
      * @param options 
      */
-    getListeners(type: string, options: EventOptions): Array<(event: Event) =>void>; 
+    getListeners(type: string, options: EventOptions): Array<(event: Event) =>void>;
+    getNodeNearBy(distance: number): Node|undefined;
     /**
      * Transform the specified [x, y] coordinates relative of the layer to the coordinates
      * of the current element, with the anchor as the origin [0, 0].
