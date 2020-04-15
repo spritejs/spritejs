@@ -16,8 +16,8 @@ export default class Path extends Node {
       fillRule: 'nonzero',
       strokeColor: undefined,
       lineWidth: 1,
-      lineJoin: 'miter', // 'miter' or 'bevel'
-      lineCap: 'butt', // 'butt' or 'square'
+      lineJoin: 'miter', // 'miter' or 'bevel' or 'round'
+      lineCap: 'butt', // 'butt' or 'square' or 'round'
       lineDash: undefined,
       lineDashOffset: 0,
       miterLimit: 10,
@@ -82,7 +82,7 @@ export default class Path extends Node {
   }
 
   set lineJoin(value) {
-    if(value != null && value !== 'miter' && value !== 'bevel') throw new TypeError('Invalid lineJoin type.');
+    if(value != null && value !== 'miter' && value !== 'bevel' && value !== 'round') throw new TypeError('Invalid lineJoin type.');
     this[setAttribute]('lineJoin', value);
   }
 
@@ -91,7 +91,7 @@ export default class Path extends Node {
   }
 
   set lineCap(value) {
-    if(value != null && value !== 'butt' && value !== 'square') throw new TypeError('Invalid lineCap type.');
+    if(value != null && value !== 'butt' && value !== 'square' && value !== 'round') throw new TypeError('Invalid lineCap type.');
     this[setAttribute]('lineCap', value);
   }
 

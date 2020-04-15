@@ -28,13 +28,16 @@
     const fglayer = scene.layer();
     const el = new spritejs.Polyline();
     el.attr({
-      points: [0, 0, 0, 50],
-      fillColor: 'red',
+      points: [0, 0, 0, 50, 100, 100],
+      // fillColor: 'red',
       strokeColor: 'red',
       lineWidth: 10,
       pos: [200, 200],
       zIndex: 0,
+      lineCap: 'round',
+      lineJoin: 'round',
     });
+    fglayer.append(el);
 
     const el2 = el.cloneNode();
     el2.attr({
@@ -43,7 +46,7 @@
       translate: [20, -20],
       zIndex: 0,
     });
-    fglayer.append(el, el2);
+    fglayer.append(el2);
 
     el.addEventListener('mouseenter', () => {
       console.log(11);
