@@ -71,7 +71,7 @@ export function setFillColor(mesh, {color: fillColor, rule = 'nonzero'}) {
 }
 
 export function setStrokeColor(mesh,
-  {color: strokeColor, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit}) {
+  {color: strokeColor, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, roundSegments}) {
   applyMeshGradient(mesh, 'stroke', strokeColor);
   if(strokeColor.vector) {
     strokeColor = [0, 0, 0, 1];
@@ -84,6 +84,7 @@ export function setStrokeColor(mesh,
     miterLimit,
     lineDash,
     lineDashOffset,
+    roundSegments,
   });
 }
 

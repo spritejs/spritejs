@@ -18,6 +18,7 @@ export default class Path extends Node {
       lineWidth: 1,
       lineJoin: 'miter', // 'miter' or 'bevel' or 'round'
       lineCap: 'butt', // 'butt' or 'square' or 'round'
+      roundSegments: 20, // default roundSegment if lineJoin or lineCap is round
       lineDash: undefined,
       lineDashOffset: 0,
       miterLimit: 10,
@@ -119,6 +120,14 @@ export default class Path extends Node {
 
   set miterLimit(value) {
     this[setAttribute]('miterLimit', toNumber(value));
+  }
+
+  get roundSegments() {
+    return this[getAttribute]('roundSegments');
+  }
+
+  set roundSegments(value) {
+    this[setAttribute]('roundSegments', value);
   }
 
   get texture() {

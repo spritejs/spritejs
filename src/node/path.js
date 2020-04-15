@@ -51,7 +51,7 @@ export default class Path extends Node {
         const lineWidth = this.attributes.lineWidth;
         const strokeColor = this.attributes.strokeColor;
         if(strokeColor && lineWidth > 0) {
-          const {lineCap, lineJoin, miterLimit, lineDash, lineDashOffset} = this.attributes;
+          const {lineCap, lineJoin, miterLimit, lineDash, lineDashOffset, roundSegments} = this.attributes;
           setStrokeColor(mesh, {
             color: strokeColor,
             lineWidth,
@@ -60,6 +60,7 @@ export default class Path extends Node {
             miterLimit,
             lineDash,
             lineDashOffset,
+            roundSegments,
           });
         }
         // mesh.setOpacity(this.attributes.opacity);
@@ -157,11 +158,12 @@ export default class Path extends Node {
       setFillColor(this[_mesh], {color: fillColor, rule: fillRule});
     }
     if(this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin'
-      || key === 'lineDash' || key === 'lineDashOffset')) {
+      || key === 'lineDash' || key === 'lineDashOffset' || key === 'roundSegments')) {
       const {strokeColor, lineWidth} = this.attributes;
       if(strokeColor && lineWidth > 0) {
-        const {lineCap, lineJoin, lineDash, lineDashOffset, miterLimit} = this.attributes;
-        setStrokeColor(this[_mesh], {color: strokeColor, lineCap, lineJoin, lineWidth, lineDash, lineDashOffset, miterLimit});
+        const {lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, roundSegments} = this.attributes;
+        setStrokeColor(this[_mesh], {
+          color: strokeColor, lineCap, lineJoin, lineWidth, lineDash, lineDashOffset, miterLimit, roundSegments});
       }
     }
     if(key === 'texture') {

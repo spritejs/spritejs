@@ -13958,14 +13958,16 @@ class Mesh2D {
     miterLimit = 10,
     color = [0, 0, 0, 0],
     lineDash = null,
-    lineDashOffset = 0
+    lineDashOffset = 0,
+    roundSegments = 20
   } = {}) {
     this[_mesh] = null;
     this[_stroke] = Object(_extrude_polyline__WEBPACK_IMPORTED_MODULE_2__["default"])({
       thickness,
       cap,
       join,
-      miterLimit
+      miterLimit,
+      roundSegments
     });
     if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_11__["default"])(color);
     this[_strokeColor] = color;
@@ -26143,7 +26145,8 @@ function setStrokeColor(mesh, {
   lineJoin,
   lineDash,
   lineDashOffset,
-  miterLimit
+  miterLimit,
+  roundSegments
 }) {
   applyMeshGradient(mesh, 'stroke', strokeColor);
 
@@ -26158,7 +26161,8 @@ function setStrokeColor(mesh, {
     join: lineJoin,
     miterLimit,
     lineDash,
-    lineDashOffset
+    lineDashOffset,
+    roundSegments
   });
 }
 class Color extends Array {
@@ -26607,7 +26611,8 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
             lineJoin,
             miterLimit,
             lineDash,
-            lineDashOffset
+            lineDashOffset,
+            roundSegments
           } = this.attributes;
           Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setStrokeColor"])(mesh, {
             color: strokeColor,
@@ -26616,7 +26621,8 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
             lineJoin,
             miterLimit,
             lineDash,
-            lineDashOffset
+            lineDashOffset,
+            roundSegments
           });
         } // mesh.setOpacity(this.attributes.opacity);
 
@@ -26736,7 +26742,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
       });
     }
 
-    if (this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin' || key === 'lineDash' || key === 'lineDashOffset')) {
+    if (this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin' || key === 'lineDash' || key === 'lineDashOffset' || key === 'roundSegments')) {
       const {
         strokeColor,
         lineWidth
@@ -26748,7 +26754,8 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
           lineJoin,
           lineDash,
           lineDashOffset,
-          miterLimit
+          miterLimit,
+          roundSegments
         } = this.attributes;
         Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setStrokeColor"])(this[_mesh], {
           color: strokeColor,
@@ -26757,7 +26764,8 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
           lineWidth,
           lineDash,
           lineDashOffset,
-          miterLimit
+          miterLimit,
+          roundSegments
         });
       }
     }
@@ -27692,6 +27700,8 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
       // 'miter' or 'bevel' or 'round'
       lineCap: 'butt',
       // 'butt' or 'square' or 'round'
+      roundSegments: 20,
+      // default roundSegment if lineJoin or lineCap is round
       lineDash: undefined,
       lineDashOffset: 0,
       miterLimit: 10,
@@ -27793,6 +27803,14 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   set miterLimit(value) {
     this[setAttribute]('miterLimit', Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__["toNumber"])(value));
+  }
+
+  get roundSegments() {
+    return this[getAttribute]('roundSegments');
+  }
+
+  set roundSegments(value) {
+    this[setAttribute]('roundSegments', value);
   }
 
   get texture() {

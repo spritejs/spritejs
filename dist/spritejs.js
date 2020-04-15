@@ -16816,14 +16816,17 @@ function () {
           _ref17$lineDash = _ref17.lineDash,
           lineDash = _ref17$lineDash === void 0 ? null : _ref17$lineDash,
           _ref17$lineDashOffset = _ref17.lineDashOffset,
-          lineDashOffset = _ref17$lineDashOffset === void 0 ? 0 : _ref17$lineDashOffset;
+          lineDashOffset = _ref17$lineDashOffset === void 0 ? 0 : _ref17$lineDashOffset,
+          _ref17$roundSegments = _ref17.roundSegments,
+          roundSegments = _ref17$roundSegments === void 0 ? 20 : _ref17$roundSegments;
 
       this[_mesh] = null;
       this[_stroke] = Object(_extrude_polyline__WEBPACK_IMPORTED_MODULE_7__["default"])({
         thickness: thickness,
         cap: cap,
         join: join,
-        miterLimit: miterLimit
+        miterLimit: miterLimit,
+        roundSegments: roundSegments
       });
       if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_16__["default"])(color);
       this[_strokeColor] = color;
@@ -30285,7 +30288,8 @@ function setStrokeColor(mesh, _ref4) {
       lineJoin = _ref4.lineJoin,
       lineDash = _ref4.lineDash,
       lineDashOffset = _ref4.lineDashOffset,
-      miterLimit = _ref4.miterLimit;
+      miterLimit = _ref4.miterLimit,
+      roundSegments = _ref4.roundSegments;
   applyMeshGradient(mesh, 'stroke', strokeColor);
 
   if (strokeColor.vector) {
@@ -30299,7 +30303,8 @@ function setStrokeColor(mesh, _ref4) {
     join: lineJoin,
     miterLimit: miterLimit,
     lineDash: lineDash,
-    lineDashOffset: lineDashOffset
+    lineDashOffset: lineDashOffset,
+    roundSegments: roundSegments
   });
 }
 var Color =
@@ -31060,7 +31065,7 @@ function (_Node) {
         });
       }
 
-      if (this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin' || key === 'lineDash' || key === 'lineDashOffset')) {
+      if (this[_mesh] && (key === 'strokeColor' || key === 'lineWidth' || key === 'lineCap' || key === 'lineJoin' || key === 'lineDash' || key === 'lineDashOffset' || key === 'roundSegments')) {
         var _this$attributes2 = this.attributes,
             strokeColor = _this$attributes2.strokeColor,
             lineWidth = _this$attributes2.lineWidth;
@@ -31071,7 +31076,8 @@ function (_Node) {
               lineJoin = _this$attributes3.lineJoin,
               lineDash = _this$attributes3.lineDash,
               lineDashOffset = _this$attributes3.lineDashOffset,
-              miterLimit = _this$attributes3.miterLimit;
+              miterLimit = _this$attributes3.miterLimit,
+              roundSegments = _this$attributes3.roundSegments;
           Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(this[_mesh], {
             color: strokeColor,
             lineCap: lineCap,
@@ -31079,7 +31085,8 @@ function (_Node) {
             lineWidth: lineWidth,
             lineDash: lineDash,
             lineDashOffset: lineDashOffset,
-            miterLimit: miterLimit
+            miterLimit: miterLimit,
+            roundSegments: roundSegments
           });
         }
       }
@@ -31140,7 +31147,8 @@ function (_Node) {
                 lineJoin = _this$attributes4.lineJoin,
                 miterLimit = _this$attributes4.miterLimit,
                 lineDash = _this$attributes4.lineDash,
-                lineDashOffset = _this$attributes4.lineDashOffset;
+                lineDashOffset = _this$attributes4.lineDashOffset,
+                roundSegments = _this$attributes4.roundSegments;
             Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(mesh, {
               color: strokeColor,
               lineWidth: lineWidth,
@@ -31148,7 +31156,8 @@ function (_Node) {
               lineJoin: lineJoin,
               miterLimit: miterLimit,
               lineDash: lineDash,
-              lineDashOffset: lineDashOffset
+              lineDashOffset: lineDashOffset,
+              roundSegments: roundSegments
             });
           } // mesh.setOpacity(this.attributes.opacity);
 
@@ -32153,6 +32162,8 @@ function (_Node) {
       // 'miter' or 'bevel' or 'round'
       lineCap: 'butt',
       // 'butt' or 'square' or 'round'
+      roundSegments: 20,
+      // default roundSegment if lineJoin or lineCap is round
       lineDash: undefined,
       lineDashOffset: 0,
       miterLimit: 10,
@@ -32257,6 +32268,14 @@ function (_Node) {
     },
     set: function set(value) {
       this[setAttribute]('miterLimit', Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_7__["toNumber"])(value));
+    }
+  }, {
+    key: "roundSegments",
+    get: function get() {
+      return this[getAttribute]('roundSegments');
+    },
+    set: function set(value) {
+      this[setAttribute]('roundSegments', value);
     }
   }, {
     key: "texture",
