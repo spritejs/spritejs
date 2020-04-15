@@ -39295,37 +39295,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(50);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(53);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(115);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(116);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(117);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(118);
-/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(120);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(18);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(14);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(12);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(108);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(110);
-/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(336);
-/* harmony import */ var _layer_worker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(341);
-/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(302);
-/* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(343);
-/* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(262);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(266);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(261);
-
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(115);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(116);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(117);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(118);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(120);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(14);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(12);
+/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(108);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(110);
+/* harmony import */ var _layer__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(336);
+/* harmony import */ var _layer_worker__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(341);
+/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(302);
+/* harmony import */ var _event_pointer_events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(343);
+/* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(262);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(266);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(261);
 
 
 
@@ -39415,7 +39412,7 @@ function getRefCanvas(scene, layer) {
 }
 
 function drawImage(layer, offscreenLayer) {
-  var _layer$renderOffset = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11___default()(layer.renderOffset, 2),
+  var _layer$renderOffset = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10___default()(layer.renderOffset, 2),
       left = _layer$renderOffset[0],
       top = _layer$renderOffset[1];
 
@@ -39440,10 +39437,10 @@ function delegateEvents(scene) {
     var enteredTargets = scene[_enteredTargets];
 
     if (enteredTargets.size) {
-      var leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_19__["default"]('mouseleave');
+      var leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_18__["default"]('mouseleave');
       leaveEvent.setOriginalEvent(event);
 
-      _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10___default()(enteredTargets).forEach(function (target) {
+      _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9___default()(enteredTargets).forEach(function (target) {
         target.dispatchEvent(leaveEvent);
       });
 
@@ -39455,7 +39452,7 @@ function delegateEvents(scene) {
   events.forEach(function (eventType) {
     container.addEventListener(eventType, function (event) {
       var layers = scene.orderedChildren;
-      var pointerEvents = Object(_event_pointer_events__WEBPACK_IMPORTED_MODULE_18__["default"])(event, {
+      var pointerEvents = Object(_event_pointer_events__WEBPACK_IMPORTED_MODULE_17__["default"])(event, {
         offsetLeft: left,
         offsetTop: top,
         displayRatio: displayRatio
@@ -39503,7 +39500,7 @@ function delegateEvents(scene) {
 
           if (target) {
             var ancestors = target.ancestors || [];
-            enterSet = new Set([target].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10___default()(ancestors)));
+            enterSet = new Set([target].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9___default()(ancestors)));
           } else {
             enterSet = new Set();
           }
@@ -39512,10 +39509,10 @@ function delegateEvents(scene) {
 
           if (!enteredTargets.has(target)) {
             if (target) {
-              var enterEvent = new _event_event__WEBPACK_IMPORTED_MODULE_19__["default"]('mouseenter');
+              var enterEvent = new _event_event__WEBPACK_IMPORTED_MODULE_18__["default"]('mouseenter');
               enterEvent.setOriginalEvent(event);
               entries.forEach(function (_ref) {
-                var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11___default()(_ref, 2),
+                var _ref2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10___default()(_ref, 2),
                     key = _ref2[0],
                     value = _ref2[1];
 
@@ -39527,7 +39524,7 @@ function delegateEvents(scene) {
 
               if (_ancestors) {
                 _ancestors.forEach(function (ancestor) {
-                  if (ancestor instanceof _node__WEBPACK_IMPORTED_MODULE_14__["default"] && !enteredTargets.has(ancestor)) {
+                  if (ancestor instanceof _node__WEBPACK_IMPORTED_MODULE_13__["default"] && !enteredTargets.has(ancestor)) {
                     enteredTargets.add(ancestor);
                     ancestor.dispatchEvent(enterEvent);
                   }
@@ -39536,17 +39533,17 @@ function delegateEvents(scene) {
             }
           }
 
-          var leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_19__["default"]('mouseleave');
+          var leaveEvent = new _event_event__WEBPACK_IMPORTED_MODULE_18__["default"]('mouseleave');
           leaveEvent.setOriginalEvent(event);
           entries.forEach(function (_ref3) {
-            var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_11___default()(_ref3, 2),
+            var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_10___default()(_ref3, 2),
                 key = _ref4[0],
                 value = _ref4[1];
 
             leaveEvent[key] = value;
           });
 
-          _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10___default()(enteredTargets).forEach(function (target) {
+          _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9___default()(enteredTargets).forEach(function (target) {
             if (!enterSet.has(target)) {
               enteredTargets.delete(target);
               target.dispatchEvent(leaveEvent);
@@ -39594,7 +39591,7 @@ var _offscreenLayerCount = Symbol('offscreenLayerCount');
 var Scene =
 /*#__PURE__*/
 function (_Group) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_9___default()(Scene, _Group);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(Scene, _Group);
 
   /**
     width
@@ -39606,13 +39603,13 @@ function (_Group) {
 
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, Scene);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Scene);
 
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene).call(this));
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene).call(this));
 
     if (!options.container) {
-      if (typeof _mesh_js_core__WEBPACK_IMPORTED_MODULE_12__["ENV"].Container === 'function') {
-        options.container = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_12__["ENV"].Container(options.width || 300, options.height || 150);
+      if (typeof _mesh_js_core__WEBPACK_IMPORTED_MODULE_11__["ENV"].Container === 'function') {
+        options.container = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_11__["ENV"].Container(options.width || 300, options.height || 150);
       } else {
         throw new Error('No container specified.');
       }
@@ -39631,7 +39628,7 @@ function (_Group) {
     }
 
     _this.options = options;
-    options.displayRatio = options.displayRatio || ((typeof window === "undefined" ? "undefined" : _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2___default()(window)) && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
+    options.displayRatio = options.displayRatio || (typeof window !== 'undefined' && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
     options.mode = options.mode || 'scale';
     options.left = 0;
     options.top = 0;
@@ -39639,7 +39636,7 @@ function (_Group) {
 
     if (options.autoResize) {
       if (global.addEventListener) {
-        var that = _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this);
+        var that = _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this);
 
         global.addEventListener('resize', function listener() {
           if (typeof document !== 'undefined' && document.contains(that.container)) {
@@ -39655,21 +39652,21 @@ function (_Group) {
 
     _this.setResolution(options);
 
-    delegateEvents(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_6___default()(_this));
+    delegateEvents(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this));
     _this[_offscreenLayerCount] = 0;
     return _this;
   }
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default()(Scene, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Scene, [{
     key: "appendChild",
 
     /* override */
     value: function appendChild(layer) {
-      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_15__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_16__["default"])) {
+      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"])) {
         wrapLayer(layer);
       }
 
-      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene.prototype), "appendChild", this).call(this, layer);
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "appendChild", this).call(this, layer);
 
       var canvas = layer.canvas;
 
@@ -39691,7 +39688,7 @@ function (_Group) {
       var _this2 = this;
 
       if (this.hasOffscreenCanvas && !this._requestID) {
-        this._requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_13__["requestAnimationFrame"])(function () {
+        this._requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["requestAnimationFrame"])(function () {
           delete _this2._requestID;
 
           _this2.render();
@@ -39703,11 +39700,11 @@ function (_Group) {
   }, {
     key: "insertBefore",
     value: function insertBefore(layer, ref) {
-      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_15__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_16__["default"])) {
+      if (!(layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"]) && !(layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"])) {
         wrapLayer(layer);
       }
 
-      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene.prototype), "insertBefore", this).call(this, layer, ref);
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "insertBefore", this).call(this, layer, ref);
 
       var canvas = layer.canvas;
 
@@ -39737,9 +39734,9 @@ function (_Group) {
       var layer;
 
       if (worker) {
-        layer = new _layer_worker__WEBPACK_IMPORTED_MODULE_16__["default"](options);
+        layer = new _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"](options);
       } else {
-        layer = new _layer__WEBPACK_IMPORTED_MODULE_15__["default"](options); // layer.id = id;
+        layer = new _layer__WEBPACK_IMPORTED_MODULE_14__["default"](options); // layer.id = id;
       }
 
       this.appendChild(layer);
@@ -39780,12 +39777,12 @@ function (_Group) {
                   task = void 0;
 
                   if (typeof res === 'string') {
-                    task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_20__["loadTexture"])(res);
+                    task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_19__["loadTexture"])(res);
                   } else if (Array.isArray(res)) {
-                    task = _utils_texture__WEBPACK_IMPORTED_MODULE_20__["loadFrames"].apply(void 0, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_10___default()(res));
+                    task = _utils_texture__WEBPACK_IMPORTED_MODULE_19__["loadFrames"].apply(void 0, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_9___default()(res));
                   } else {
                     id = res.id, src = res.src;
-                    task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_20__["loadTexture"])(src, id);
+                    task = Object(_utils_texture__WEBPACK_IMPORTED_MODULE_19__["loadTexture"])(src, id);
                   }
                   /* istanbul ignore if  */
 
@@ -39796,7 +39793,7 @@ function (_Group) {
 
                   tasks.push(task.then(function (r) {
                     ret.push(r);
-                    var preloadEvent = new _event_event__WEBPACK_IMPORTED_MODULE_19__["default"]({
+                    var preloadEvent = new _event_event__WEBPACK_IMPORTED_MODULE_18__["default"]({
                       type: 'preload',
                       detail: {
                         current: r,
@@ -39834,7 +39831,7 @@ function (_Group) {
   }, {
     key: "removeChild",
     value: function removeChild(layer) {
-      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene.prototype), "removeChild", this).call(this, layer);
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "removeChild", this).call(this, layer);
 
       if (ret) {
         layer._prepareRenderFinished();
@@ -39858,7 +39855,7 @@ function (_Group) {
         var layer = layers[i];
         var hasOffscreens = offscreens.length > 0;
 
-        if (layer instanceof _layer__WEBPACK_IMPORTED_MODULE_15__["default"] && !layer.offscreen) {
+        if (layer instanceof _layer__WEBPACK_IMPORTED_MODULE_14__["default"] && !layer.offscreen) {
           if (!layer.autoRender) {
             if (hasOffscreens) {
               console.warn('Some offscreen canvas will not be rendered.');
@@ -39891,7 +39888,7 @@ function (_Group) {
           } else {
             offscreens.push(layer);
           }
-        } else if (layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_16__["default"] && hasOffscreens) {
+        } else if (layer instanceof _layer_worker__WEBPACK_IMPORTED_MODULE_15__["default"] && hasOffscreens) {
           console.warn('Some offscreen canvas will not be rendered.');
           offscreens.length = 0;
         }
@@ -39902,7 +39899,7 @@ function (_Group) {
   }, {
     key: "replaceChild",
     value: function replaceChild(layer, ref) {
-      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene.prototype), "replaceChild", this).call(this, layer, ref);
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "replaceChild", this).call(this, layer, ref);
 
       if (ref.canvas.remove) ref.canvas.remove();
       if (ref.offscreen) this[_offscreenLayerCount]--;
@@ -39967,7 +39964,7 @@ function (_Group) {
         if (mode === 'stickyBottom') this.options.top = height - h;
       }
 
-      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_8___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Scene.prototype), "setResolution", this).call(this, {
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_7___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(Scene.prototype), "setResolution", this).call(this, {
         width: width,
         height: height
       });
@@ -39985,7 +39982,7 @@ function (_Group) {
           width = _this$getResolution.width,
           height = _this$getResolution.height;
 
-      this[_canvas] = this[_canvas] || _mesh_js_core__WEBPACK_IMPORTED_MODULE_12__["ENV"].createCanvas(width, height, {
+      this[_canvas] = this[_canvas] || _mesh_js_core__WEBPACK_IMPORTED_MODULE_11__["ENV"].createCanvas(width, height, {
         offscreen: offscreen
       });
 
@@ -40066,10 +40063,10 @@ function (_Group) {
   }]);
 
   return Scene;
-}(_group__WEBPACK_IMPORTED_MODULE_17__["default"]);
+}(_group__WEBPACK_IMPORTED_MODULE_16__["default"]);
 
 
-_document__WEBPACK_IMPORTED_MODULE_21__["default"].registerNode(Scene, 'scene');
+_document__WEBPACK_IMPORTED_MODULE_20__["default"].registerNode(Scene, 'scene');
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(52)))
 
 /***/ }),

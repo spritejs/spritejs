@@ -221,7 +221,7 @@ export default class Scene extends Group {
     }
 
     this.options = options;
-    options.displayRatio = options.displayRatio || (typeof window && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
+    options.displayRatio = options.displayRatio || (typeof window !== 'undefined' && window.devicePixelRatio ? window.devicePixelRatio : 1.0);
     options.mode = options.mode || 'scale';
 
     options.left = 0;
