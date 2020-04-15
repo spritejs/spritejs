@@ -5,7 +5,59 @@ declare namespace spritejs {
   /**
    * Sprite Node's Attributes.
    */
-  type Attrs = Record<string, any>;
+  type Attrs = {
+    anchor: [number, number],
+    anchorX: number,
+    anchorY: number,
+    bgcolor: string,
+    border: [number, string],
+    borderBottomLeftRadius: [number, number],
+    borderBottomRightRadius: [number, number],
+    borderColor: string,
+    borderDash: number,
+    borderDashOffset: number,
+    borderRadius: [number, number, number, number, number, number, number, number],
+    borderTopLeftRadius: [number, number],
+    borderTopRightRadius: [number, number],
+    borderWidth: number,
+    boxSizing: 'content-box' | 'border-box',
+    class: string,
+    height: number,
+    padding: [number, number, number, number],
+    paddingBottom: number,
+    paddingLeft: number,
+    paddingRight: number,
+    paddingTop: number,
+    pos: [number, number],
+    size: [number, number],
+    sourceRect: Array<any>,
+    texture: string,
+    textureRect: [number, number, number],
+    textureRepeat: boolean,
+    width: number,
+    id: string,
+    name: string,
+    className: string,
+    /* class */
+    x: number,
+    y: number,
+    /* pos */
+    transformOrigin: [number, number],
+    transform: string,
+    translate: [number, number],
+    rotate: number,
+    scale: [number, number],
+    skew: [number, number],
+    opacity: number,
+    zIndex: number,
+    offsetPath: string,
+    offsetDistance: number,
+    offsetRotate: 'auto' | 'reverse' | number,
+    pointerEvents: 'none' | 'visible' | 'visibleFill' | 'visibleStroke' | 'all', // none | visible | visibleFill | visibleStroke | all
+    filter: 'none' | string,
+    display: '' | string,
+    [x: string]: any,
+  };
 
   /**
    * Animation playstate.
@@ -863,7 +915,9 @@ declare namespace spritejs {
   /**
    * Arc element can draw an arc, sector or circle.
    */
-  export class Arc extends Ellipse {}
+  export class Arc extends Ellipse {
+    static Attr: any;
+  }
 
   /**
    * Block is the base class of all block elements.
@@ -1075,6 +1129,7 @@ declare namespace spritejs {
    * The ellipse element can draw an elliptical arc, sector or ellipse.
    */
   export class Ellipse extends Path {
+    static Attr: any;
     /**
      * Whether the element is visible.
      */
@@ -1421,7 +1476,7 @@ declare namespace spritejs {
    */
   export class Node {
     static Attr: any;
-    constructor(attrs?: Attrs);
+    constructor(attrs?: Record<string, any>);
     /**
      * The attribute object of the current element.
      */
