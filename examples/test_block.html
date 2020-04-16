@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const container = document.getElementById('container');
+    const {Scene, Block} = spritejs;
+    const scene = new Scene({
+      container,
+      width: 600,
+      height: 600,
+    });
+    const layer = scene.layer();
+    const block = new Block({
+      pos: [100, 100],
+      size: [100, 100],
+      bgcolor: 'red',
+      rotate: 45,
+      translate: [100, 0],
+    });
+    layer.append(block);
+  </script>
+</body>
+</html>

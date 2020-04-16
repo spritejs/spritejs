@@ -16215,10 +16215,10 @@ function getPoint(x0, y0, a, b, theta) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Mesh2D; });
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(61);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(61);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23);
@@ -16251,7 +16251,7 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 
 
@@ -16436,24 +16436,33 @@ function () {
   }, {
     key: _applyTransform,
     value: function value(mesh, m) {
-      var positions = mesh.positions;
+      var positions = mesh.positions,
+          p = mesh.position0;
 
       var _this$_bound$ = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(this[_bound][1], 2),
           w = _this$_bound$[0],
           h = _this$_bound$[1];
 
       for (var i = 0; i < positions.length; i++) {
-        var point = positions[i];
-        transformPoint(point, m, w, h, true);
+        var point = p[i];
+        var position = positions[i];
+        var x = (point[0] + 1) * 0.5 * w;
+        var y = (1 - point[1]) * 0.5 * h;
+        position[0] = x * m[0] + y * m[2] + m[4];
+        position[1] = h - (x * m[1] + y * m[3] + m[5]);
+        position[0] = 2 * position[0] / w - 1;
+        position[1] = 2 * position[1] / h - 1;
       }
 
-      normalizePoints(positions, this[_bound]);
+      this._updateMatrix = false;
     }
   }, {
     key: _applyGradientTransform,
-    value: function value(m) {
+    value: function value() {
       var h = this[_bound][1][1];
-      var vector = this[_uniforms].u_radialGradientVector;
+      var m = this[_transform];
+
+      var vector = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(this._radialGradientVector);
 
       if (vector) {
         var _vector2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(vector, 5),
@@ -16473,7 +16482,7 @@ function () {
     }
   }, {
     key: _applyTexture,
-    value: function value(mesh, options, transformed) {
+    value: function value(mesh, options) {
       function compareRect(r1, r2) {
         if (r1 == null && r2 == null) return true;
         if (r1 == null || r2 == null) return false;
@@ -16485,7 +16494,6 @@ function () {
       var _texture$_img = texture._img,
           imgWidth = _texture$_img.width,
           imgHeight = _texture$_img.height;
-      var transform = this[_transform];
       var srcRect = options.srcRect;
       var rect = options.rect || [0, 0];
 
@@ -16501,26 +16509,26 @@ function () {
           h = _this$_bound$2[1];
 
       if (options.hidden) {
-        mesh.textureCoord = mesh.positions.map(function () {
+        mesh.textureCoord = mesh.position0.map(function () {
           return [-1, -1, -1];
         });
       } else if (!mesh.textureCoord || !compareRect(this[_texOptions].rect, options.rect) || this[_texOptions].hidden !== options.hidden || this[_texOptions].rotated !== options.rotated) {
-        if (transformed && !Object(_utils_transform__WEBPACK_IMPORTED_MODULE_12__["isUnitTransform"])(transform)) {
-          var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), transform);
-          var m2 = null;
+        var m = null;
 
-          if (options.rotated) {
-            m2 = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].rotate(Array.of(0, 0, 0, 0, 0, 0), gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].fromValues(1, 0, 0, 1, 0, 0), 0.5 * Math.PI);
-            m2 = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m2, [0, -rect[2]]);
-          }
+        if (options.rotated) {
+          m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].rotate(Array.of(0, 0, 0, 0, 0, 0), gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].fromValues(1, 0, 0, 1, 0, 0), 0.5 * Math.PI);
+          m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [0, -rect[2]]);
+        }
 
-          mesh.textureCoord = mesh.positions.map(function (_ref7) {
-            var _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref7, 3),
-                x = _ref8[0],
-                y = _ref8[1],
-                z = _ref8[2];
+        mesh.textureCoord = mesh.position0.map(function (_ref7) {
+          var _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref7, 3),
+              x = _ref8[0],
+              y = _ref8[1],
+              z = _ref8[2];
 
-            if (1 / z > 0) {
+          if (1 / z > 0) {
+            // fillTag
+            if (options.rotated) {
               var _transformPoint = transformPoint([x, y], m, w, h, true);
 
               var _transformPoint2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_transformPoint, 2);
@@ -16530,79 +16538,28 @@ function () {
               var _ref9 = [x / w, y / h];
               x = _ref9[0];
               y = _ref9[1];
-
-              if (options.rotated) {
-                var _ref10 = [2 * x - 1, 2 * y - 1];
-                x = _ref10[0];
-                y = _ref10[1];
-
-                var _transformPoint3 = transformPoint([x, y], m2, w, h, true);
-
-                var _transformPoint4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_transformPoint3, 2);
-
-                x = _transformPoint4[0];
-                y = _transformPoint4[1];
-                var _ref11 = [x / w, y / h];
-                x = _ref11[0];
-                y = _ref11[1];
-              }
-
-              var texCoord = getTexCoord([x, y], [rect[0] / rect[2], rect[1] / rect[3], rect[2] / w, rect[3] / h], options);
-              if (options.repeat) texCoord[2] = 1;
-              return texCoord;
+            } else {
+              var _ref10 = [0.5 * (x + 1), 0.5 * (y + 1)];
+              x = _ref10[0];
+              y = _ref10[1];
             }
 
-            return [-1, -1, -1];
-          });
-        } else {
-          var _m = null;
-
-          if (options.rotated) {
-            _m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].rotate(Array.of(0, 0, 0, 0, 0, 0), gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].fromValues(1, 0, 0, 1, 0, 0), 0.5 * Math.PI);
-            _m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), _m, [0, -rect[2]]);
+            var texCoord = getTexCoord([x, y], [rect[0] / rect[2], rect[1] / rect[3], rect[2] / w, rect[3] / h], options);
+            if (options.repeat) texCoord[2] = 1;
+            return texCoord;
           }
 
-          mesh.textureCoord = mesh.positions.map(function (_ref12) {
-            var _ref13 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref12, 3),
-                x = _ref13[0],
-                y = _ref13[1],
-                z = _ref13[2];
-
-            if (1 / z > 0) {
-              // fillTag
-              if (options.rotated) {
-                var _transformPoint5 = transformPoint([x, y], _m, w, h, true);
-
-                var _transformPoint6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_transformPoint5, 2);
-
-                x = _transformPoint6[0];
-                y = _transformPoint6[1];
-                var _ref14 = [x / w, y / h];
-                x = _ref14[0];
-                y = _ref14[1];
-              } else {
-                var _ref15 = [0.5 * (x + 1), 0.5 * (y + 1)];
-                x = _ref15[0];
-                y = _ref15[1];
-              }
-
-              var texCoord = getTexCoord([x, y], [rect[0] / rect[2], rect[1] / rect[3], rect[2] / w, rect[3] / h], options);
-              if (options.repeat) texCoord[2] = 1;
-              return texCoord;
-            }
-
-            return [-1, -1, -1];
-          });
-        }
+          return [-1, -1, -1];
+        });
       }
 
       if (srcRect) {
         var sRect = [srcRect[0] / imgWidth, srcRect[1] / imgHeight, srcRect[2] / imgWidth, srcRect[3] / imgHeight];
-        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+        mesh.attributes.a_sourceRect = mesh.position0.map(function () {
           return [].concat(sRect);
         });
       } else {
-        mesh.attributes.a_sourceRect = mesh.positions.map(function () {
+        mesh.attributes.a_sourceRect = mesh.position0.map(function () {
           return [0, 0, 0, 0];
         });
       }
@@ -16624,9 +16581,9 @@ function () {
     }
   }, {
     key: "setResolution",
-    value: function setResolution(_ref16) {
-      var width = _ref16.width,
-          height = _ref16.height;
+    value: function setResolution(_ref11) {
+      var width = _ref11.width,
+          height = _ref11.height;
 
       if (this[_bound][1][0] !== width || this[_bound][1][1] !== height) {
         this[_mesh] = null;
@@ -16671,23 +16628,23 @@ function () {
   }, {
     key: "setStroke",
     value: function setStroke() {
-      var _ref17 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          _ref17$thickness = _ref17.thickness,
-          thickness = _ref17$thickness === void 0 ? 1 : _ref17$thickness,
-          _ref17$cap = _ref17.cap,
-          cap = _ref17$cap === void 0 ? 'butt' : _ref17$cap,
-          _ref17$join = _ref17.join,
-          join = _ref17$join === void 0 ? 'miter' : _ref17$join,
-          _ref17$miterLimit = _ref17.miterLimit,
-          miterLimit = _ref17$miterLimit === void 0 ? 10 : _ref17$miterLimit,
-          _ref17$color = _ref17.color,
-          color = _ref17$color === void 0 ? [0, 0, 0, 0] : _ref17$color,
-          _ref17$lineDash = _ref17.lineDash,
-          lineDash = _ref17$lineDash === void 0 ? null : _ref17$lineDash,
-          _ref17$lineDashOffset = _ref17.lineDashOffset,
-          lineDashOffset = _ref17$lineDashOffset === void 0 ? 0 : _ref17$lineDashOffset,
-          _ref17$roundSegments = _ref17.roundSegments,
-          roundSegments = _ref17$roundSegments === void 0 ? 20 : _ref17$roundSegments;
+      var _ref12 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref12$thickness = _ref12.thickness,
+          thickness = _ref12$thickness === void 0 ? 1 : _ref12$thickness,
+          _ref12$cap = _ref12.cap,
+          cap = _ref12$cap === void 0 ? 'butt' : _ref12$cap,
+          _ref12$join = _ref12.join,
+          join = _ref12$join === void 0 ? 'miter' : _ref12$join,
+          _ref12$miterLimit = _ref12.miterLimit,
+          miterLimit = _ref12$miterLimit === void 0 ? 10 : _ref12$miterLimit,
+          _ref12$color = _ref12.color,
+          color = _ref12$color === void 0 ? [0, 0, 0, 0] : _ref12$color,
+          _ref12$lineDash = _ref12.lineDash,
+          lineDash = _ref12$lineDash === void 0 ? null : _ref12$lineDash,
+          _ref12$lineDashOffset = _ref12.lineDashOffset,
+          lineDashOffset = _ref12$lineDashOffset === void 0 ? 0 : _ref12$lineDashOffset,
+          _ref12$roundSegments = _ref12.roundSegments,
+          roundSegments = _ref12$roundSegments === void 0 ? 20 : _ref12$roundSegments;
 
       this[_mesh] = null;
       this[_stroke] = Object(_extrude_polyline__WEBPACK_IMPORTED_MODULE_7__["default"])({
@@ -16706,11 +16663,11 @@ function () {
   }, {
     key: "setFill",
     value: function setFill() {
-      var _ref18 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          _ref18$rule = _ref18.rule,
-          rule = _ref18$rule === void 0 ? 'nonzero' : _ref18$rule,
-          _ref18$color = _ref18.color,
-          color = _ref18$color === void 0 ? [0, 0, 0, 0] : _ref18$color;
+      var _ref13 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref13$rule = _ref13.rule,
+          rule = _ref13$rule === void 0 ? 'nonzero' : _ref13$rule,
+          _ref13$color = _ref13.color,
+          color = _ref13$color === void 0 ? [0, 0, 0, 0] : _ref13$color;
 
       this[_mesh] = null;
       this[_fill] = {
@@ -16760,7 +16717,7 @@ function () {
       });
 
       if (this[_mesh]) {
-        this[_applyTexture](this[_mesh], options, true);
+        this[_applyTexture](this[_mesh], options);
       }
 
       this[_texOptions] = options;
@@ -16769,11 +16726,11 @@ function () {
   }, {
     key: "setCircularGradient",
     value: function setCircularGradient() {
-      var _ref19 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          vector = _ref19.vector,
-          gradientColors = _ref19.colors,
-          _ref19$type = _ref19.type,
-          type = _ref19$type === void 0 ? 'fill' : _ref19$type;
+      var _ref14 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          vector = _ref14.vector,
+          gradientColors = _ref14.colors,
+          _ref14$type = _ref14.type,
+          type = _ref14$type === void 0 ? 'fill' : _ref14$type;
 
       if (vector.length !== 3) throw new TypeError('Invalid linearGradient.');
       this.setGradient({
@@ -16785,11 +16742,11 @@ function () {
   }, {
     key: "setLinearGradient",
     value: function setLinearGradient() {
-      var _ref20 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          vector = _ref20.vector,
-          gradientColors = _ref20.colors,
-          _ref20$type = _ref20.type,
-          type = _ref20$type === void 0 ? 'fill' : _ref20$type;
+      var _ref15 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          vector = _ref15.vector,
+          gradientColors = _ref15.colors,
+          _ref15$type = _ref15.type,
+          type = _ref15$type === void 0 ? 'fill' : _ref15$type;
 
       if (vector.length !== 4) throw new TypeError('Invalid linearGradient.');
       this.setGradient({
@@ -16801,11 +16758,11 @@ function () {
   }, {
     key: "setRadialGradient",
     value: function setRadialGradient() {
-      var _ref21 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          vector = _ref21.vector,
-          gradientColors = _ref21.colors,
-          _ref21$type = _ref21.type,
-          type = _ref21$type === void 0 ? 'fill' : _ref21$type;
+      var _ref16 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          vector = _ref16.vector,
+          gradientColors = _ref16.colors,
+          _ref16$type = _ref16.type,
+          type = _ref16$type === void 0 ? 'fill' : _ref16$type;
 
       if (vector.length !== 6) throw new TypeError('Invalid radialGradient.');
       this.setGradient({
@@ -16822,15 +16779,15 @@ function () {
   }, {
     key: "setGradient",
     value: function setGradient() {
-      var _ref22 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          vector = _ref22.vector,
-          gradientColors = _ref22.colors,
-          _ref22$type = _ref22.type,
-          type = _ref22$type === void 0 ? 'fill' : _ref22$type;
+      var _ref17 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          vector = _ref17.vector,
+          gradientColors = _ref17.colors,
+          _ref17$type = _ref17.type,
+          type = _ref17$type === void 0 ? 'fill' : _ref17$type;
 
-      gradientColors = gradientColors.map(function (_ref23) {
-        var offset = _ref23.offset,
-            color = _ref23.color;
+      gradientColors = gradientColors.map(function (_ref18) {
+        var offset = _ref18.offset,
+            color = _ref18.color;
         if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_16__["default"])(color);
         return {
           offset: offset,
@@ -16846,10 +16803,10 @@ function () {
         return a.offset - b.offset;
       });
       var colorSteps = [];
-      gradientColors.forEach(function (_ref24) {
-        var offset = _ref24.offset,
-            color = _ref24.color;
-        colorSteps.push.apply(colorSteps, [offset].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(color)));
+      gradientColors.forEach(function (_ref19) {
+        var offset = _ref19.offset,
+            color = _ref19.color;
+        colorSteps.push.apply(colorSteps, [offset].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(color)));
       });
 
       var _vector;
@@ -16858,7 +16815,7 @@ function () {
         // linear gradient;
         _vector = [vector[0], vector[1], 0, vector[2], vector[3], 0];
       } else {
-        _vector = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(vector);
+        _vector = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(vector);
       }
 
       var _this$_bound$3 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(this[_bound][1], 2),
@@ -16868,11 +16825,11 @@ function () {
       _vector[4] = h - _vector[4];
       if (colorSteps.length < 40) colorSteps.push(-1);
       if (colorSteps.length > 40) throw new Error('Too many colors, should be less than 8 colors');
-      this[_uniforms].u_radialGradientVector = _vector;
+      this._radialGradientVector = _vector;
       this[_uniforms].u_colorSteps = colorSteps;
       if (type === 'fill') this[_uniforms].u_gradientType = 1;else this[_uniforms].u_gradientType = 0;
 
-      this[_applyGradientTransform](this[_transform]);
+      this[_applyGradientTransform]();
 
       return this;
     }
@@ -16886,11 +16843,11 @@ function () {
   }, {
     key: "setTransform",
     value: function setTransform() {
+      var transform = this[_transform];
+
       for (var _len = arguments.length, m = new Array(_len), _key = 0; _key < _len; _key++) {
         m[_key] = arguments[_key];
       }
-
-      var transform = this[_transform];
 
       if (!gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].equals(m, transform)) {
         this[_transform] = m;
@@ -16898,19 +16855,18 @@ function () {
 
         if (acc > 1.5 || acc < 0.67) {
           this.accurate(this.transformScale);
-        }
+        } // if(this[_mesh] || this[_uniforms].u_radialGradientVector) {
+        //   m = mat2d(m) * mat2d.invert(transform);
+        // }
+        // if(this[_mesh]) {
+        //   this[_applyTransform](this[_mesh], m);
+        // }
+        // if(this[_uniforms].u_radialGradientVector) {
+        //   this[_applyGradientTransform]();
+        // }
 
-        if (this[_mesh] || this[_uniforms].u_radialGradientVector) {
-          m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), transform));
-        }
 
-        if (this[_mesh]) {
-          this[_applyTransform](this[_mesh], m);
-        }
-
-        if (this[_uniforms].u_radialGradientVector) {
-          this[_applyGradientTransform](m);
-        }
+        this._updateMatrix = true;
       }
 
       return this;
@@ -16924,15 +16880,16 @@ function () {
         m[_key2] = arguments[_key2];
       }
 
-      this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, transform);
+      this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
       var acc = this.transformScale / this.contours.scale;
 
       if (acc > 1.5 || acc < 0.67) {
         this.accurate(this.transformScale);
-      }
+      } // if(this[_mesh]) this[_applyTransform](this[_mesh], m);
+      // if(this[_uniforms].u_radialGradientVector) this[_applyGradientTransform]();
 
-      if (this[_mesh]) this[_applyTransform](this[_mesh], m);
-      if (this[_uniforms].u_radialGradientVector) this[_applyGradientTransform](m);
+
+      this._updateMatrix = true;
       return this;
     }
   }, {
@@ -16940,53 +16897,53 @@ function () {
     value: function translate(x, y) {
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [x, y]);
-      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(m));
+      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(m));
     }
   }, {
     key: "rotate",
     value: function rotate(rad) {
-      var _ref25 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 0],
-          _ref26 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref25, 2),
-          ox = _ref26[0],
-          oy = _ref26[1];
+      var _ref20 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 0],
+          _ref21 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref20, 2),
+          ox = _ref21[0],
+          oy = _ref21[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].rotate(Array.of(0, 0, 0, 0, 0, 0), m, rad);
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
-      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(m));
+      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(m));
     }
   }, {
     key: "scale",
     value: function scale(x) {
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
 
-      var _ref27 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref28 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref27, 2),
-          ox = _ref28[0],
-          oy = _ref28[1];
+      var _ref22 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref23 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref22, 2),
+          ox = _ref23[0],
+          oy = _ref23[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].scale(Array.of(0, 0, 0, 0, 0, 0), m, [x, y]);
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
-      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(m));
+      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(m));
     }
   }, {
     key: "skew",
     value: function skew(x) {
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
 
-      var _ref29 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
-          _ref30 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref29, 2),
-          ox = _ref30[0],
-          oy = _ref30[1];
+      var _ref24 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0],
+          _ref25 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref24, 2),
+          ox = _ref25[0],
+          oy = _ref25[1];
 
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].create();
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].fromValues(1, Math.tan(y), Math.tan(x), 1, 0, 0));
       m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
-      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(m));
+      return this.transform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(m));
     }
   }, {
     key: "clearFilter",
@@ -17032,7 +16989,7 @@ function () {
         transform = m;
       }
 
-      this.setColorTransform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(transform));
+      this.setColorTransform.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(transform));
       return this;
     }
   }, {
@@ -17049,7 +17006,7 @@ function () {
 
       this[_filter].push("brightness(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["brightness"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["brightness"])(p)));
     }
   }, {
     key: "contrast",
@@ -17058,7 +17015,7 @@ function () {
 
       this[_filter].push("contrast(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["contrast"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["contrast"])(p)));
     }
   }, {
     key: "dropShadow",
@@ -17078,7 +17035,7 @@ function () {
 
       this[_filter].push("grayscale(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["grayscale"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["grayscale"])(p)));
     } // https://github.com/phoboslab/WebGLImageFilter/blob/master/webgl-image-filter.js#L371
 
   }, {
@@ -17088,7 +17045,7 @@ function () {
 
       this[_filter].push("hue-rotate(".concat(deg, "deg)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["hueRotate"])(deg)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["hueRotate"])(deg)));
     }
   }, {
     key: "invert",
@@ -17097,7 +17054,7 @@ function () {
 
       this[_filter].push("invert(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["invert"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["invert"])(p)));
     }
   }, {
     key: "opacity",
@@ -17106,7 +17063,7 @@ function () {
 
       this[_filter].push("opacity(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["opacity"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["opacity"])(p)));
     }
   }, {
     key: "saturate",
@@ -17115,7 +17072,7 @@ function () {
 
       this[_filter].push("saturate(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["saturate"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["saturate"])(p)));
     }
   }, {
     key: "sepia",
@@ -17124,7 +17081,7 @@ function () {
 
       this[_filter].push("sepia(".concat(100 * p, "%)"));
 
-      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["sepia"])(p)));
+      return this.transformColor.apply(this, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_11__["sepia"])(p)));
     }
   }, {
     key: "url",
@@ -17152,18 +17109,18 @@ function () {
       var positions = meshData.positions,
           cells = meshData.cells;
 
-      function projectionOn(_ref31, _ref32, _ref33) {
-        var _ref34 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref31, 2),
-            x0 = _ref34[0],
-            y0 = _ref34[1];
+      function projectionOn(_ref26, _ref27, _ref28) {
+        var _ref29 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref26, 2),
+            x0 = _ref29[0],
+            y0 = _ref29[1];
 
-        var _ref35 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref32, 2),
-            x1 = _ref35[0],
-            y1 = _ref35[1];
+        var _ref30 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref27, 2),
+            x1 = _ref30[0],
+            y1 = _ref30[1];
 
-        var _ref36 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref33, 2),
-            x2 = _ref36[0],
-            y2 = _ref36[1];
+        var _ref31 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref28, 2),
+            x2 = _ref31[0],
+            y2 = _ref31[1];
 
         var v2x = x2 - x1;
         var v2y = y2 - y1;
@@ -17288,19 +17245,18 @@ function () {
       var meshData = this.meshData;
 
       if (meshData) {
-        var positions = meshData.positions;
-        var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), this[_transform]);
+        var positions = meshData.position0;
 
         var _this$_bound$5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(this[_bound][1], 2),
             w = _this$_bound$5[0],
             h = _this$_bound$5[1];
 
-        positions = positions.map(function (_ref37) {
-          var _ref38 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref37, 2),
-              x = _ref38[0],
-              y = _ref38[1];
+        positions = positions.map(function (_ref32) {
+          var _ref33 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref32, 2),
+              x = _ref33[0],
+              y = _ref33[1];
 
-          return transformPoint([x, y], m, w, h, false);
+          return Object(_utils_positions__WEBPACK_IMPORTED_MODULE_10__["denormalize"])([x, y], w, h);
         });
         if (positions.length) meshData.boundingBox = bound_points__WEBPACK_IMPORTED_MODULE_6___default()(positions);else return [[0, 0], [0, 0]];
         return meshData.boundingBox;
@@ -17460,6 +17416,7 @@ function () {
     get: function get() {
       var _this = this;
 
+      // eslint-disable-line complexity
       if (!this[_mesh]) {
         if (!this[_fill] && !this[_stroke]) {
           this.setFill();
@@ -17532,21 +17489,37 @@ function () {
         mesh.fillPointCount = meshes.fill ? meshes.fill.positions.length : 0;
         mesh.enableBlend = this.enableBlend;
         normalizePoints(mesh.positions, this[_bound]);
-
-        if (!this[_uniforms].u_texSampler) {// mesh.textureCoord = mesh.positions.map(() => [0, 0]);
-        } else {
-          this[_applyTexture](mesh, this[_texOptions], false);
-        }
-
         mesh.uniforms = this[_uniforms]; // if(!mesh.uniforms.u_filterFlag) mesh.uniforms.u_filterFlag = 0;
         // if(!mesh.uniforms.u_radialGradientVector) mesh.uniforms.u_radialGradientVector = [0, 0, 0, 0, 0, 0];
 
         this[_mesh] = mesh;
+        mesh.position0 = mesh.positions.map(function (_ref34) {
+          var _ref35 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref34, 3),
+              x = _ref35[0],
+              y = _ref35[1],
+              z = _ref35[2];
+
+          return [x, y, z];
+        });
+
+        if (!this[_uniforms].u_texSampler) {// mesh.textureCoord = mesh.positions.map(() => [0, 0]);
+        } else {
+          this[_applyTexture](mesh, this[_texOptions]);
+        }
+
         var transform = this[_transform];
 
         if (!Object(_utils_transform__WEBPACK_IMPORTED_MODULE_12__["isUnitTransform"])(transform)) {
           this[_applyTransform](mesh, transform);
         }
+      }
+
+      if (this._updateMatrix) {
+        this[_mesh].matrix = this[_transform];
+
+        this[_applyTransform](this[_mesh], this[_transform]);
+
+        if (this[_uniforms].u_radialGradientVector) this[_applyGradientTransform]();
       }
 
       if (this[_program]) {
