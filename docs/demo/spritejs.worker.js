@@ -13708,7 +13708,7 @@ function () {
     key: "transform",
     value: function transform(idx, m) {
       var transform = this.getTransform(idx);
-      m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, transform);
+      m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
       this.setTransform(idx, m);
       return this;
     }

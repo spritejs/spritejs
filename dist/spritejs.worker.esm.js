@@ -11135,7 +11135,7 @@ function createBuffer(buffer, oldBuffer = null) {
 
   transform(idx, m) {
     const transform = this.getTransform(idx);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, transform);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
     this.setTransform(idx, m);
     return this;
   }
