@@ -39532,11 +39532,10 @@ function setViewport(options, canvas) {
 
     if (mode === 'static') {
       canvas.style.width = "".concat(width, "px");
-      canvas.style.height = "".concat(height, "px");
-      canvas.style.top = '50%';
-      canvas.style.left = '50%';
-      canvas.style.transform = 'translate(-50%, -50%)';
-      canvas.style.webkitTransform = 'translate(-50%, -50%)';
+      canvas.style.height = "".concat(height, "px"); // canvas.style.top = '50%';
+      // canvas.style.left = '50%';
+      // canvas.style.transform = 'translate(-50%, -50%)';
+      // canvas.style.webkitTransform = 'translate(-50%, -50%)';
     } else {
       canvas.style.top = '0';
       canvas.style.left = '0';
