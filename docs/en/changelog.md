@@ -1,5 +1,10 @@
 ## Change Logs
 
+#### [2020-04-20] v3.6.0
+
+- Upgrade mesh.js to 1.x.
+- Optimize performance.
+
 #### [2020-03-18] v3.4.0
 
 - Add SpriteSvg element.
