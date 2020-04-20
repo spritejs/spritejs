@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="https://unpkg.com/spritejs/dist/spritejs.js"></script>
+  <script src="/js/spritejs.js"></script>
   <style>
     #container {
       position: absolute;
@@ -21,10 +21,13 @@
       attribute vec3 a_vertexPosition;
       attribute vec4 a_color;
       varying vec4 vColor;
+      uniform mat3 viewMatrix;
+      uniform mat3 projectionMatrix;
 
       void main() {
         gl_PointSize = 1.0;
-        gl_Position = vec4(a_vertexPosition.xy, 1.0, 1.0);
+        vec3 pos = projectionMatrix * viewMatrix * vec3(a_vertexPosition.xy, 1.0);
+        gl_Position = vec4(pos.xy, 1.0, 1.0);
         vColor = a_color;
       }
     `;
@@ -62,10 +65,6 @@
       fillColor: 'blue',
     });
     s.setProgram(program);
-    const {width, height} = fglayer.getResolution();
-    s.setUniforms({
-      u_resolution: [width, height],
-    });
     fglayer.append(s);
   </script>
 </body>

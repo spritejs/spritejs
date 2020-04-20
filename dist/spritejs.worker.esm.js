@@ -7837,9 +7837,13 @@ const defaultOpts = {
 const defaultPassVertex = `attribute vec3 a_vertexPosition;
 attribute vec3 a_vertexTextureCoord;
 varying vec3 vTextureCoord;
+uniform mat3 viewMatrix;
+uniform mat3 projectionMatrix;
+
 void main() {
   gl_PointSize = 1.0;
-  gl_Position = vec4(a_vertexPosition.xy, 1.0, 1.0);    
+  vec3 pos = projectionMatrix * viewMatrix * vec3(a_vertexPosition.xy, 1.0);
+  gl_Position = vec4(pos.xy, 1.0, 1.0);    
   vTextureCoord = a_vertexTextureCoord;              
 }
 `;
@@ -7884,9 +7888,6 @@ function drawFilterContext(renderer, filterContext, width, height) {
   contours.closed = true;
   const filterMesh = new _mesh2d__WEBPACK_IMPORTED_MODULE_6__["default"]({
     contours
-  }, {
-    width,
-    height
   });
   filterMesh.setTexture(filterTexture);
   renderer.setMeshData([filterMesh.meshData]);
@@ -7956,7 +7957,8 @@ class Renderer {
       this[_canvasRenderer] = new _canvas_renderer__WEBPACK_IMPORTED_MODULE_2__["default"](canvas, this[_options]);
     }
 
-    this[_globalTransform] = [1, 0, 0, 1, 0, 0];
+    this[_globalTransform] = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    this.updateResolution();
   }
 
   get canvas() {
@@ -7980,10 +7982,15 @@ class Renderer {
   }
 
   get globalTransformMatrix() {
+    const m = this[_globalTransform];
+    return [m[0], m[1], m[3], m[4], m[6], m[7]];
+  }
+
+  get viewMatrix() {
     return this[_globalTransform];
   }
 
-  [_applyGlobalTransform](m) {
+  [_applyGlobalTransform]() {
     const renderer = this[_glRenderer] || this[_canvasRenderer];
 
     if (this[_glRenderer]) {
@@ -7991,9 +7998,26 @@ class Renderer {
         width,
         height
       } = this.canvas;
-      renderer.uniforms.u_globalTransform = [...m.slice(0, 3), width, ...m.slice(3), height];
-    } else {
-      renderer.setTransform(m);
+      renderer.uniforms.viewMatrix = this.viewMatrix;
+      renderer.uniforms.projectionMatrix = this.projectionMatrix;
+      renderer.uniforms.u_resolution = [width, height];
+    }
+  }
+
+  updateResolution() {
+    const {
+      width,
+      height
+    } = this.canvas;
+    const m1 = [// translation
+    1, 0, 0, 0, 1, 0, -width / 2, -height / 2, 1];
+    const m2 = [// scale
+    2 / width, 0, 0, 0, -2 / height, 0, 0, 0, 1];
+    const m3 = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].multiply(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m2, m1);
+    this.projectionMatrix = m3;
+
+    if (this[_glRenderer]) {
+      this[_glRenderer].gl.viewport(0, 0, width, height);
     }
   }
 
@@ -8110,14 +8134,12 @@ class Renderer {
         const hasTexture = !!mesh.uniforms.u_texSampler;
         const hasFilter = !!mesh.uniforms.u_filterFlag;
         const hasGradient = !!mesh.uniforms.u_radialGradientVector;
-        const hasGlobalTransform = !Object(_utils_transform__WEBPACK_IMPORTED_MODULE_8__["isUnitTransform"])(this[_globalTransform]);
         const hasCloudColor = cloud.hasCloudColor;
         const hasCloudFilter = cloud.hasCloudFilter;
         Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_10__["applyCloudShader"])(renderer, {
           hasTexture,
           hasFilter,
           hasGradient,
-          hasGlobalTransform,
           hasCloudColor,
           hasCloudFilter
         });
@@ -8142,14 +8164,14 @@ class Renderer {
         });
       }
 
-      this[_applyGlobalTransform](this[_globalTransform]);
+      this[_applyGlobalTransform]();
 
       renderer.setMeshData([cloud.meshData]);
       if (cloud.beforeRender) cloud.beforeRender(gl, cloud);
       draw(renderer);
       if (cloud.afterRender) cloud.afterRender(gl, cloud);
     } else {
-      renderer.setTransform(this[_globalTransform]);
+      renderer.setTransform(this.globalTransformMatrix);
       renderer.drawMeshCloud(cloud, {
         clear,
         hook: false
@@ -8169,7 +8191,7 @@ class Renderer {
       const meshData = Object(_utils_compress__WEBPACK_IMPORTED_MODULE_3__["default"])(this, meshes, drawProgram == null);
       const gl = renderer.gl;
       if (clear) gl.clear(gl.COLOR_BUFFER_BIT);
-      const hasGlobalTransform = !Object(_utils_transform__WEBPACK_IMPORTED_MODULE_8__["isUnitTransform"])(this[_globalTransform]);
+      const hasGlobalTransform = !Object(_utils_transform__WEBPACK_IMPORTED_MODULE_8__["isUnitTransform"])(this.globalTransformMatrix);
       this._drawCalls = 0;
 
       for (const mesh of meshData) {
@@ -8228,7 +8250,7 @@ class Renderer {
             if ((!previousMesh || !previousMesh.filterCanvas || previousMesh.filter !== currentFilter) && (!nextMesh || !nextMesh.filterCanvas || nextMesh.filter !== currentFilter)) {
               if (hasGlobalTransform) {
                 filterContext.save();
-                filterContext.transform(...this[_globalTransform]);
+                filterContext.transform(...this.globalTransformMatrix);
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["drawMesh2D"])(originalMesh, filterContext, false);
                 filterContext.restore();
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["applyFilter"])(filterContext, currentFilter);
@@ -8236,11 +8258,13 @@ class Renderer {
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["drawMesh2D"])(originalMesh, filterContext, true);
               }
 
+              this[_applyGlobalTransform]();
+
               drawFilterContext(renderer, filterContext, width, height);
             } else {
               if (hasGlobalTransform) {
                 filterContext.save();
-                filterContext.transform(...this[_globalTransform]);
+                filterContext.transform(...this.globalTransformMatrix);
               }
 
               Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["drawMesh2D"])(originalMesh, filterContext, false);
@@ -8251,6 +8275,9 @@ class Renderer {
 
               if (!nextMesh || !nextMesh.filterCanvas || originalMesh.filter !== nextMesh.filter) {
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["applyFilter"])(filterContext, currentFilter);
+
+                this[_applyGlobalTransform]();
+
                 drawFilterContext(renderer, filterContext, width, height);
               }
             }
@@ -8262,8 +8289,7 @@ class Renderer {
               Object(_utils_shader_creator__WEBPACK_IMPORTED_MODULE_10__["applyShader"])(renderer, {
                 hasTexture,
                 hasFilter,
-                hasGradient,
-                hasGlobalTransform
+                hasGradient
               });
             } else if (renderer.program !== program) {
               this.useProgram(program, {
@@ -8278,7 +8304,7 @@ class Renderer {
               console.warn('User program ignored some filter effects.');
             }
 
-            this[_applyGlobalTransform](this[_globalTransform]);
+            this[_applyGlobalTransform]();
 
             renderer.setMeshData([mesh]);
             draw(renderer);
@@ -8307,7 +8333,7 @@ class Renderer {
         }
       }
     } else {
-      renderer.setTransform(this[_globalTransform]);
+      renderer.setTransform(this.globalTransformMatrix);
       renderer.drawMeshes(meshes, {
         clear
       });
@@ -8360,60 +8386,49 @@ class Renderer {
   }
 
   setGlobalTransform(...m) {
-    const transform = this[_globalTransform];
-
-    if (!gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].equals(m, transform)) {
-      this[_globalTransform] = m;
-      m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), transform));
-
-      this[_applyGlobalTransform](m);
-    }
-
+    this[_globalTransform] = [m[0], m[1], 0, m[2], m[3], 0, m[4], m[5], 1];
     return this;
   }
 
   globalTransform(...m) {
     const transform = this[_globalTransform];
-    this[_globalTransform] = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, transform);
-
-    this[_applyGlobalTransform](m);
-
+    this[_globalTransform] = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].multiply(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), transform, m);
     return this;
   }
 
   globalTranslate(x, y) {
-    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].create();
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [x, y]);
+    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].create();
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [x, y]);
     return this.globalTransform(...m);
   }
 
   globalRotate(rad, [ox, oy] = [0, 0]) {
-    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].create();
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].rotate(Array.of(0, 0, 0, 0, 0, 0), m, rad);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
+    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].create();
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [ox, oy]);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].rotate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, rad);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
     return this.globalTransform(...m);
   }
 
   globalScale(x, y = x, [ox, oy] = [0, 0]) {
-    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].create();
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].scale(Array.of(0, 0, 0, 0, 0, 0), m, [x, y]);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
+    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].create();
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [ox, oy]);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].scale(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [x, y]);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
     return this.globalTransform(...m);
   }
 
   globalSkew(x, y = x, [ox, oy] = [0, 0]) {
-    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].create();
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [ox, oy]);
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].fromValues(1, Math.tan(y), Math.tan(x), 1, 0, 0));
-    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].translate(Array.of(0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
+    let m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].create();
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [ox, oy]);
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].multiply(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].fromValues(1, Math.tan(y), Math.tan(x), 1, 0, 0));
+    m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].translate(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, [-ox, -oy]);
     return this.globalTransform(...m);
   }
 
   transformPoint(x, y, matrix) {
-    let m = this[_globalTransform];
-    if (matrix) m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), m, matrix);
+    let m = this.globalTransformMatrix;
+    if (matrix) m = gl_matrix__WEBPACK_IMPORTED_MODULE_1__["mat3"].multiply(Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0), m, matrix);
     const newX = x * m[0] + y * m[2] + m[4];
     const newY = x * m[1] + y * m[3] + m[5];
     return [newX, newY];
@@ -9532,7 +9547,7 @@ class CanvasRenderer {
       let filter = mesh.filter;
       if (cloudFilter) filter = filter ? `${filter} ${cloudFilter}` : cloudFilter;
 
-      if (filter && this.filterBuffer !== false) {
+      if (filter && !this.filterBuffer && this.filterBuffer !== false) {
         const canvas = _utils_env__WEBPACK_IMPORTED_MODULE_0__["default"].createCanvas(width, height);
 
         if (canvas) {
@@ -10680,8 +10695,8 @@ const _hasCloudFilter = Symbol('cloudFilter');
 const _buffer = Symbol('buffer');
 
 function createBuffer(buffer, oldBuffer = null) {
-  const transform0 = new Float32Array(4 * buffer);
-  const transform1 = new Float32Array(4 * buffer);
+  const transform0 = new Float32Array(3 * buffer);
+  const transform1 = new Float32Array(3 * buffer);
   const color0 = new Float32Array(4 * buffer);
   const color1 = new Float32Array(4 * buffer);
   const color2 = new Float32Array(4 * buffer);
@@ -10737,16 +10752,11 @@ function createBuffer(buffer, oldBuffer = null) {
 
   initBuffer(offset = 0) {
     const amount = this[_count];
-    const mesh = this[_mesh];
-    const {
-      width,
-      height
-    } = mesh;
 
     for (let i = offset; i < amount; i++) {
-      this[_buffer].transform0.set([1, 0, 0, width], i * 4);
+      this[_buffer].transform0.set([1, 0, 0], i * 3);
 
-      this[_buffer].transform1.set([1, 0, 0, height], i * 4);
+      this[_buffer].transform1.set([0, 1, 0], i * 3);
 
       this[_buffer].frameIndex.set([-1], i);
 
@@ -10813,8 +10823,8 @@ function createBuffer(buffer, oldBuffer = null) {
       fillColor,
       strokeColor
     } = this[_buffer];
-    transform0.set(transform0.subarray(4 * (idx + 1)), 4 * idx);
-    transform1.set(transform1.subarray(4 * (idx + 1)), 4 * idx);
+    transform0.set(transform0.subarray(3 * (idx + 1)), 3 * idx);
+    transform1.set(transform1.subarray(3 * (idx + 1)), 3 * idx);
     color0.set(color0.subarray(4 * (idx + 1)), 4 * idx);
     color1.set(color1.subarray(4 * (idx + 1)), 4 * idx);
     color2.set(color2.subarray(4 * (idx + 1)), 4 * idx);
@@ -10970,25 +10980,25 @@ function createBuffer(buffer, oldBuffer = null) {
 
   setTransform(idx, m) {
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-    idx *= 4;
+    idx *= 3;
     if (m == null) m = [1, 0, 0, 1, 0, 0];
     const {
       transform0,
       transform1
     } = this[_buffer];
-    transform0.set([m[0], m[1], m[2]], idx);
-    transform1.set([m[3], m[4], m[5]], idx);
+    transform0.set([m[0], m[2], m[4]], idx);
+    transform1.set([m[1], m[3], m[5]], idx);
     return this;
   }
 
   getTransform(idx) {
     if (idx >= this[_count] || idx < 0) throw new Error('Out of range.');
-    idx *= 4;
+    idx *= 3;
     const {
       transform0,
       transform1
     } = this[_buffer];
-    const m = [transform0[idx], transform0[idx + 1], transform0[idx + 2], transform1[idx], transform1[idx + 1], transform1[idx + 2]];
+    const m = [transform0[idx], transform1[idx], transform0[idx + 1], transform1[idx + 1], transform0[idx + 2], transform1[idx + 2]];
     return m;
   }
 
@@ -13289,24 +13299,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _extrude_polyline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(57);
 /* harmony import */ var _utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(28);
 /* harmony import */ var _utils_vector_to_rgba__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(24);
-/* harmony import */ var _utils_positions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(54);
-/* harmony import */ var _utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(30);
-/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(65);
-/* harmony import */ var _utils_contours__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(53);
-/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(66);
-/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_triangulate_contours__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(46);
-/* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_svg_path_contours__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _utils_parse_color__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(31);
-/* harmony import */ var _figure2d__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(40);
+/* harmony import */ var _utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
+/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(65);
+/* harmony import */ var _utils_contours__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(53);
+/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(66);
+/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_triangulate_contours__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(46);
+/* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_svg_path_contours__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _utils_parse_color__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(31);
+/* harmony import */ var _figure2d__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(40);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
 
@@ -13329,8 +13335,6 @@ const _stroke = Symbol('stroke');
 
 const _fill = Symbol('fill');
 
-const _bound = Symbol('bound');
-
 const _strokeColor = Symbol('strokeColor');
 
 const _fillColor = Symbol('fillColor');
@@ -13349,6 +13353,8 @@ const _applyTransform = Symbol('applyTransform');
 
 const _applyGradientTransform = Symbol('applyGradientTransform');
 
+const _applyProgram = Symbol('applyProgram');
+
 const _gradient = Symbol('gradient');
 
 const _filter = Symbol('filter');
@@ -13359,17 +13365,15 @@ const _program = Symbol('program');
 
 const _attributes = Symbol('attributes');
 
-const _pass = Symbol('pass');
+const _pass = Symbol('pass'); // function normalizePoints(points, bound) {
+//   const [w, h] = bound[1];
+//   for(let i = 0; i < points.length; i++) {
+//     const point = points[i];
+//     point[0] = 2 * point[0] / w - 1;
+//     point[1] = 1 - 2 * point[1] / h;
+//   }
+// }
 
-function normalizePoints(points, bound) {
-  const [w, h] = bound[1];
-
-  for (let i = 0; i < points.length; i++) {
-    const point = points[i];
-    point[0] = 2 * point[0] / w - 1;
-    point[1] = 1 - 2 * point[1] / h;
-  }
-}
 
 function getTexCoord([x, y], [ox, oy, w, h], {
   scale,
@@ -13377,7 +13381,7 @@ function getTexCoord([x, y], [ox, oy, w, h], {
 }) {
   if (!scale) {
     x /= w;
-    y = 1 - (1 - y) / h;
+    y = 1 - y / h;
     x -= ox;
     y += oy;
   }
@@ -13386,7 +13390,7 @@ function getTexCoord([x, y], [ox, oy, w, h], {
 }
 
 function accurate(path, scale, simplify) {
-  const contours = _svg_path_contours__WEBPACK_IMPORTED_MODULE_10___default()(path, scale, simplify);
+  const contours = _svg_path_contours__WEBPACK_IMPORTED_MODULE_9___default()(path, scale, simplify);
   contours.path = path;
   contours.simplify = simplify;
   contours.scale = scale;
@@ -13394,16 +13398,9 @@ function accurate(path, scale, simplify) {
 }
 
 class Mesh2D {
-  constructor(figure, {
-    width,
-    height
-  } = {
-    width: 300,
-    height: 150
-  }) {
+  constructor(figure) {
     this[_stroke] = null;
     this[_fill] = null;
-    this[_bound] = [[0, 0], [width, height]];
     this[_transform] = [1, 0, 0, 1, 0, 0];
     this[_opacity] = 1.0;
     this[_uniforms] = {};
@@ -13416,14 +13413,6 @@ class Mesh2D {
     this[_pass] = [];
   }
 
-  get width() {
-    return this[_bound][1][0];
-  }
-
-  get height() {
-    return this[_bound][1][1];
-  }
-
   get contours() {
     return this[_contours];
   }
@@ -13434,13 +13423,17 @@ class Mesh2D {
     const scale = contours.scale;
     const acc = this.transformScale / scale;
 
-    if (acc > 1.5 || acc < 0.67) {
+    if (acc > 1.5) {
       this.accurate(this.transformScale);
     }
   }
 
   setProgram(program) {
     this[_program] = program;
+
+    if (this[_mesh]) {
+      this[_applyProgram](program);
+    }
   }
 
   get program() {
@@ -13472,11 +13465,11 @@ class Mesh2D {
   }
 
   getPointAtLength(length) {
-    return Object(_utils_contours__WEBPACK_IMPORTED_MODULE_8__["getPointAtLength"])(this[_contours], length);
+    return Object(_utils_contours__WEBPACK_IMPORTED_MODULE_7__["getPointAtLength"])(this[_contours], length);
   }
 
   getTotalLength() {
-    return Object(_utils_contours__WEBPACK_IMPORTED_MODULE_8__["getTotalLength"])(this[_contours]);
+    return Object(_utils_contours__WEBPACK_IMPORTED_MODULE_7__["getTotalLength"])(this[_contours]);
   }
 
   get blend() {
@@ -13493,11 +13486,7 @@ class Mesh2D {
     const meshData = this.meshData;
 
     if (meshData) {
-      const positions = meshData.position0; // const [w, h] = this[_bound][1];
-      // positions = positions.map(([x, y]) => {
-      //   return denormalize([x, y], w, h);
-      // });
-
+      const positions = meshData.position0;
       if (positions.length) meshData.boundingBox = bound_points__WEBPACK_IMPORTED_MODULE_1___default()(positions);else return [[0, 0], [0, 0]];
       return meshData.boundingBox;
     }
@@ -13630,6 +13619,40 @@ class Mesh2D {
 
   get pass() {
     return this[_pass];
+  }
+
+  [_applyProgram](program) {
+    const attributes = this[_attributes];
+    const positions = this[_mesh].position0;
+    const attribs = Object.entries(program._attribute);
+
+    for (let i = 0; i < attribs.length; i++) {
+      const [name, opts] = attribs[i];
+
+      if (name !== 'a_color' && name !== 'a_sourceRect' && opts !== 'ignored') {
+        const setter = attributes[name]; // console.log(opts.size);
+
+        this[_mesh].attributes[name] = [];
+
+        if (name === 'uv' && !setter) {
+          const bounds = this[_mesh].boundingBox || bound_points__WEBPACK_IMPORTED_MODULE_1___default()(positions);
+          const [w, h] = [bounds[1][0] - bounds[0][0], bounds[1][1] - bounds[0][1]];
+
+          for (let j = 0; j < positions.length; j++) {
+            const p = positions[j];
+            const uv = [(p[0] - bounds[0][0]) / w, (p[1] - bounds[0][1]) / h];
+
+            this[_mesh].attributes[name].push(uv);
+          }
+        } else {
+          for (let j = 0; j < positions.length; j++) {
+            const p = positions[j];
+
+            this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
+          }
+        }
+      }
+    }
   } // {stroke, fill}
 
 
@@ -13638,7 +13661,7 @@ class Mesh2D {
     if (this._updateMatrix) {
       const acc = this.transformScale / this.contours.scale;
 
-      if (acc > 1.5 || acc < 0.67) {
+      if (acc > 1.5) {
         this.accurate(this.transformScale);
       }
     }
@@ -13654,9 +13677,8 @@ class Mesh2D {
       if (contours && contours.length) {
         if (this[_fill]) {
           try {
-            const mesh = _triangulate_contours__WEBPACK_IMPORTED_MODULE_9___default()(contours, this[_fill]);
+            const mesh = _triangulate_contours__WEBPACK_IMPORTED_MODULE_8___default()(contours, this[_fill]);
             mesh.positions = mesh.positions.map(p => {
-              // p[1] = this[_bound][1][1] - p[1];
               p.push(this[_opacity]);
               return p;
             });
@@ -13677,7 +13699,7 @@ class Mesh2D {
 
           if (lineDash) {
             const lineDashOffset = this[_stroke].lineDashOffset;
-            strokeContours = Object(_utils_contours__WEBPACK_IMPORTED_MODULE_8__["getDashContours"])(contours, lineDash, lineDashOffset);
+            strokeContours = Object(_utils_contours__WEBPACK_IMPORTED_MODULE_7__["getDashContours"])(contours, lineDash, lineDashOffset);
           }
 
           const _meshes = strokeContours.map((lines, i) => {
@@ -13687,7 +13709,6 @@ class Mesh2D {
 
           _meshes.forEach(mesh => {
             mesh.positions = mesh.positions.map(p => {
-              // p[1] = this[_bound][1][1] - p[1];
               p.push(-this[_opacity]);
               return p;
             });
@@ -13706,7 +13727,6 @@ class Mesh2D {
       mesh.fillPointCount = meshes.fill ? meshes.fill.positions.length : 0;
       mesh.enableBlend = this.enableBlend;
       mesh.position0 = mesh.positions.map(([x, y, z]) => [x, y, z]);
-      normalizePoints(mesh.positions, this[_bound]);
       mesh.uniforms = this[_uniforms]; // if(!mesh.uniforms.u_filterFlag) mesh.uniforms.u_filterFlag = 0;
       // if(!mesh.uniforms.u_radialGradientVector) mesh.uniforms.u_radialGradientVector = [0, 0, 0, 0, 0, 0];
 
@@ -13719,9 +13739,13 @@ class Mesh2D {
 
       const transform = this[_transform];
 
-      if (!Object(_utils_transform__WEBPACK_IMPORTED_MODULE_7__["isUnitTransform"])(transform)) {
+      if (!Object(_utils_transform__WEBPACK_IMPORTED_MODULE_6__["isUnitTransform"])(transform)) {
         this[_applyTransform](mesh, transform);
+
+        if (this[_uniforms].u_radialGradientVector) this[_applyGradientTransform]();
       }
+
+      if (this[_program]) this[_applyProgram](this[_program]);
     }
 
     if (this._updateMatrix) {
@@ -13732,40 +13756,6 @@ class Mesh2D {
       if (this[_uniforms].u_radialGradientVector) this[_applyGradientTransform]();
     }
 
-    if (this[_program]) {
-      const attributes = this[_attributes];
-      const positions = this[_mesh].positions;
-      const attribs = Object.entries(this[_program]._attribute);
-
-      for (let i = 0; i < attribs.length; i++) {
-        const [name, opts] = attribs[i];
-
-        if (name !== 'a_color' && name !== 'a_sourceRect' && opts !== 'ignored') {
-          const setter = attributes[name]; // console.log(opts.size);
-
-          this[_mesh].attributes[name] = [];
-
-          if (name === 'uv' && !setter) {
-            const bounds = bound_points__WEBPACK_IMPORTED_MODULE_1___default()(positions);
-            const [w, h] = [bounds[1][0] - bounds[0][0], bounds[1][1] - bounds[0][1]];
-
-            for (let j = 0; j < positions.length; j++) {
-              const p = positions[j];
-              const uv = [(p[0] - bounds[0][0]) / w, (p[1] - bounds[0][1]) / h];
-
-              this[_mesh].attributes[name].push(uv);
-            }
-          } else {
-            for (let j = 0; j < positions.length; j++) {
-              const p = positions[j];
-
-              this[_mesh].attributes[name].push(setter ? setter(p, i, positions) : Array(opts.size).fill(0));
-            }
-          }
-        }
-      }
-    }
-
     return this[_mesh];
   }
 
@@ -13774,33 +13764,27 @@ class Mesh2D {
       positions,
       position0: p
     } = mesh;
-    const [w, h] = this[_bound][1];
 
     for (let i = 0; i < positions.length; i++) {
       const [x, y] = p[i];
       const position = positions[i];
       position[0] = x * m[0] + y * m[2] + m[4];
       position[1] = x * m[1] + y * m[3] + m[5];
-      position[0] = 2 * position[0] / w - 1;
-      position[1] = 1 - 2 * position[1] / h;
     }
 
     this._updateMatrix = false;
   }
 
   [_applyGradientTransform]() {
-    const h = this[_bound][1][1];
     const m = this[_transform];
     const vector = [...this._radialGradientVector];
 
     if (vector) {
-      let [x1, y1,, x2, y2] = vector;
-      y1 = h - y1;
-      y2 = h - y2;
+      const [x1, y1,, x2, y2] = vector;
       vector[0] = x1 * m[0] + y1 * m[2] + m[4];
-      vector[1] = h - (x1 * m[1] + y1 * m[3] + m[5]);
+      vector[1] = x1 * m[1] + y1 * m[3] + m[5];
       vector[3] = x2 * m[0] + y2 * m[2] + m[4];
-      vector[4] = h - (x2 * m[1] + y2 * m[3] + m[5]);
+      vector[4] = x2 * m[1] + y2 * m[3] + m[5];
       this[_uniforms].u_radialGradientVector = vector;
     }
   }
@@ -13827,7 +13811,6 @@ class Mesh2D {
 
     if (rect[2] == null) rect[2] = srcRect ? srcRect[2] : imgWidth;
     if (rect[3] == null) rect[3] = srcRect ? srcRect[3] : imgHeight;
-    const [w, h] = this[_bound][1];
 
     if (options.hidden) {
       mesh.textureCoord = mesh.positions.map(() => [-1, -1, -1]);
@@ -13845,12 +13828,10 @@ class Mesh2D {
           if (options.rotated) {
             const x0 = x * m[0] + y * m[2] + m[4];
             const y0 = x * m[1] + y * m[3] + m[5];
-            [x, y] = [x0 / w, 1 - y0 / h];
-          } else {
-            [x, y] = [x / w, 1 - y / h];
+            [x, y] = [x0, y0];
           }
 
-          const texCoord = getTexCoord([x, y], [rect[0] / rect[2], rect[1] / rect[3], rect[2] / w, rect[3] / h], options);
+          const texCoord = getTexCoord([x, y], [rect[0] / rect[2], rect[1] / rect[3], rect[2], rect[3]], options);
           if (options.repeat) texCoord[2] = 1;
           return texCoord;
         }
@@ -13876,38 +13857,6 @@ class Mesh2D {
       const contours = accurate(this.contours.path, scale, simplify);
       this[_mesh] = null;
       this[_contours] = contours;
-    }
-  }
-
-  setResolution({
-    width,
-    height
-  }) {
-    if (this[_bound][1][0] !== width || this[_bound][1][1] !== height) {
-      this[_mesh] = null;
-      this[_bound][1][0] = width;
-      this[_bound][1][1] = height;
-
-      if (this[_gradient]) {
-        if (this[_gradient].fill) {
-          this.setGradient(_objectSpread({}, this[_gradient].fill, {
-            type: 'fill'
-          }));
-        } else if (this[_gradient].stroke) {
-          this.setGradient(_objectSpread({}, this[_gradient].stroke, {
-            type: 'stroke'
-          }));
-        }
-      }
-
-      if (this[_pass].length) {
-        this[_pass].forEach(pass => {
-          pass.setResolution({
-            width,
-            height
-          });
-        });
-      }
     }
   }
 
@@ -13941,7 +13890,7 @@ class Mesh2D {
       miterLimit,
       roundSegments
     });
-    if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_11__["default"])(color);
+    if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_10__["default"])(color);
     this[_strokeColor] = color;
     this[_stroke].lineDash = lineDash;
     this[_stroke].lineDashOffset = lineDashOffset;
@@ -13956,7 +13905,7 @@ class Mesh2D {
     this[_fill] = {
       rule
     };
-    if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_11__["default"])(color);
+    if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_10__["default"])(color);
     this[_fillColor] = color;
     return this;
   }
@@ -14058,7 +14007,7 @@ class Mesh2D {
       offset,
       color
     }) => {
-      if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_11__["default"])(color);
+      if (typeof color === 'string') color = Object(_utils_parse_color__WEBPACK_IMPORTED_MODULE_10__["default"])(color);
       return {
         offset,
         color
@@ -14089,9 +14038,6 @@ class Mesh2D {
       _vector = [...vector];
     }
 
-    const [, h] = this[_bound][1];
-    _vector[1] = h - _vector[1];
-    _vector[4] = h - _vector[4];
     if (colorSteps.length < 40) colorSteps.push(-1);
     if (colorSteps.length > 40) throw new Error('Too many colors, should be less than 8 colors');
     this._radialGradientVector = _vector;
@@ -14112,16 +14058,7 @@ class Mesh2D {
     const transform = this[_transform];
 
     if (!gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].equals(m, transform)) {
-      this[_transform] = m; // if(this[_mesh] || this[_uniforms].u_radialGradientVector) {
-      //   m = mat2d(m) * mat2d.invert(transform);
-      // }
-      // if(this[_mesh]) {
-      //   this[_applyTransform](this[_mesh], m);
-      // }
-      // if(this[_uniforms].u_radialGradientVector) {
-      //   this[_applyGradientTransform]();
-      // }
-
+      this[_transform] = m;
       this._updateMatrix = true;
     }
 
@@ -14130,9 +14067,7 @@ class Mesh2D {
 
   transform(...m) {
     const transform = this[_transform];
-    this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m); // if(this[_mesh]) this[_applyTransform](this[_mesh], m);
-    // if(this[_uniforms].u_radialGradientVector) this[_applyGradientTransform]();
-
+    this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
     this._updateMatrix = true;
     return this;
   }
@@ -14194,7 +14129,7 @@ class Mesh2D {
     let transform = this.uniforms.u_colorMatrix;
 
     if (transform) {
-      transform = Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["multiply"])(transform, m);
+      transform = Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["multiply"])(transform, m);
     } else {
       transform = m;
     }
@@ -14212,13 +14147,13 @@ class Mesh2D {
   brightness(p = 1.0) {
     this[_filter].push(`brightness(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["brightness"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["brightness"])(p));
   }
 
   contrast(p = 1.0) {
     this[_filter].push(`contrast(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["contrast"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["contrast"])(p));
   }
 
   dropShadow(offsetX, offsetY, blurRadius = 0, color = [0, 0, 0, 1]) {
@@ -14232,38 +14167,38 @@ class Mesh2D {
   grayscale(p = 1.0) {
     this[_filter].push(`grayscale(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["grayscale"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["grayscale"])(p));
   } // https://github.com/phoboslab/WebGLImageFilter/blob/master/webgl-image-filter.js#L371
 
 
   hueRotate(deg = 0) {
     this[_filter].push(`hue-rotate(${deg}deg)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["hueRotate"])(deg));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["hueRotate"])(deg));
   }
 
   invert(p = 1.0) {
     this[_filter].push(`invert(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["invert"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["invert"])(p));
   }
 
   opacity(p = 1.0) {
     this[_filter].push(`opacity(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["opacity"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["opacity"])(p));
   }
 
   saturate(p = 1.0) {
     this[_filter].push(`saturate(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["saturate"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["saturate"])(p));
   }
 
   sepia(p = 1.0) {
     this[_filter].push(`sepia(${100 * p}%)`);
 
-    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_6__["sepia"])(p));
+    return this.transformColor(...Object(_utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__["sepia"])(p));
   }
 
   url(svgFilter) {
@@ -14273,8 +14208,6 @@ class Mesh2D {
   }
 
   isPointCollision(x, y, type = 'both') {
-    const [w, h] = this[_bound][1];
-    [x, y] = Object(_utils_positions__WEBPACK_IMPORTED_MODULE_5__["normalize"])([x, y], w, h);
     const meshData = this.meshData;
     const {
       positions,
@@ -14328,12 +14261,14 @@ class Mesh2D {
     return this.isPointCollision(x, y, 'stroke');
   }
 
-  addPass(program, uniforms = {}) {
-    const {
+  addPass(program, _ref = {}) {
+    let {
       width,
       height
-    } = this;
-    const figure = new _figure2d__WEBPACK_IMPORTED_MODULE_12__["default"]();
+    } = _ref,
+        uniforms = _objectWithoutProperties(_ref, ["width", "height"]);
+
+    const figure = new _figure2d__WEBPACK_IMPORTED_MODULE_11__["default"]();
     figure.rect(0, 0, width, height);
     const mesh = new Mesh2D(figure, {
       width,
@@ -18326,16 +18261,14 @@ const _shaders = Symbol('shaders');
 function createShaders(renderer) {
   renderer[_shaders] = [];
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 8; i++) {
     const defines = [];
     const hasTexture = !!(i & 0x1);
     const hasFilter = !!(i & 0x2);
     const hasGradient = !!(i & 0x4);
-    const hasGlobalTransform = !!(i & 0x8);
     if (hasTexture) defines.push('#define TEXTURE 1');
     if (hasFilter) defines.push('#define FILTER 1');
     if (hasGradient) defines.push('#define GRADIENT 1');
-    if (hasGlobalTransform) defines.push('#define GLOBALTRANSFORM 1');
     const prefix = `${defines.join('\n')}\n`;
     const samplerDef = [];
 
@@ -18350,10 +18283,9 @@ function createShaders(renderer) {
 function applyShader(renderer, {
   hasTexture = false,
   hasFilter = false,
-  hasGradient = false,
-  hasGlobalTransform = false
+  hasGradient = false
 } = {}) {
-  const idx = hasTexture | hasFilter << 1 | hasGradient << 2 | hasGlobalTransform << 3;
+  const idx = hasTexture | hasFilter << 1 | hasGradient << 2;
   let program = renderer[_shaders][idx];
 
   if (Array.isArray(program)) {
@@ -18372,18 +18304,16 @@ function applyShader(renderer, {
 }
 const cloudShaders = [];
 function createCloudShaders(renderer) {
-  for (let i = 0; i < 64; i++) {
+  for (let i = 0; i < 32; i++) {
     const defines = [];
     const hasTexture = !!(i & 0x1);
     const hasFilter = !!(i & 0x2);
     const hasGradient = !!(i & 0x4);
-    const hasGlobalTransform = !!(i & 0x8);
-    const hasCloudColor = !!(i & 0x10);
-    const hasCloudFilter = !!(i & 0x20);
+    const hasCloudColor = !!(i & 0x8);
+    const hasCloudFilter = !!(i & 0x10);
     if (hasTexture) defines.push('#define TEXTURE 1');
     if (hasFilter) defines.push('#define FILTER 1');
     if (hasGradient) defines.push('#define GRADIENT 1');
-    if (hasGlobalTransform) defines.push('#define GLOBALTRANSFORM 1');
     if (hasCloudColor) defines.push('#define CLOUDCOLOR 1');
     if (hasCloudFilter) defines.push('#define CLOUDFILTER 1');
     const prefix = `${defines.join('\n')}\n`;
@@ -18404,11 +18334,10 @@ function applyCloudShader(renderer, {
   hasTexture = false,
   hasFilter = false,
   hasGradient = false,
-  hasGlobalTransform = false,
   hasCloudColor = false,
   hasCloudFilter = false
 } = {}) {
-  const idx = hasTexture | hasFilter << 1 | hasGradient << 2 | hasGlobalTransform << 3 | hasCloudColor << 4 | hasCloudFilter << 5;
+  const idx = hasTexture | hasFilter << 1 | hasGradient << 2 | hasCloudColor << 3 | hasCloudFilter << 4;
   let program = cloudShaders[idx];
 
   if (Array.isArray(program)) {
@@ -18444,7 +18373,7 @@ function applyCloudShader(renderer, {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\n#ifdef GLOBALTRANSFORM\nuniform float u_globalTransform[8];\n\nvoid transformPoint(inout vec2 p) {\n  vec3 m0 = vec3(u_globalTransform[0], u_globalTransform[2], u_globalTransform[5]);\n  vec3 m1 = vec3(u_globalTransform[1], u_globalTransform[4], u_globalTransform[6]);\n  float w = u_globalTransform[3];\n  float h = u_globalTransform[7];\n  float x = p.x;\n  float y = p.y;\n  x = (x + 1.0) * 0.5 * w;\n  y = (1.0 - y) * 0.5 * h;\n  p.x = x * m0.x + y * m0.y + m0.z;\n  p.y = x * m1.x + y * m1.y + m1.z;\n  p.x = 2.0 * (p.x / w - 0.5);\n  p.y = 2.0 * (0.5 - p.y / h);\n}\n#endif\n\nvoid main() {\n  gl_PointSize = 1.0;\n  gl_Position = vec4(a_vertexPosition.xy, 1.0, 1.0);\n  \n#ifdef GRADIENT\n  vGradientVector1 = vec3(u_radialGradientVector[0], u_radialGradientVector[1], u_radialGradientVector[2]);\n  vGradientVector2 = vec3(u_radialGradientVector[3], u_radialGradientVector[4], u_radialGradientVector[5]);\n#endif\n\n#ifdef GLOBALTRANSFORM\n  vec2 xy = a_vertexPosition.xy;\n  transformPoint(xy);\n  gl_Position = vec4(xy, 1.0, 1.0);\n#ifdef GRADIENT\n  vec2 vg1 = vGradientVector1.xy;\n  vec2 vg2 = vGradientVector2.xy;\n  float h = u_globalTransform[7];\n  float y1 = h - vg1.y;\n  float y2 = h - vg2.y;\n\n  vGradientVector1.x = vg1.x * u_globalTransform[0] + y1 * u_globalTransform[2] + u_globalTransform[5];\n  vGradientVector1.y = h - (vg1.x * u_globalTransform[1] + y1 * u_globalTransform[4] + u_globalTransform[6]);\n\n  vGradientVector2.x = vg2.x * u_globalTransform[0] + y2 * u_globalTransform[2] + u_globalTransform[5];\n  vGradientVector2.y = h - (vg2.x * u_globalTransform[1] + y2 * u_globalTransform[4] + u_globalTransform[6]);\n#endif\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n  vColor = a_color;\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  vSourceRect = a_sourceRect;\n#endif\n}");
+/* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\nuniform vec2 u_resolution;\nuniform mat3 viewMatrix;\nuniform mat3 projectionMatrix;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\nvoid main() {\n  gl_PointSize = 1.0;\n\n  vec3 pos = projectionMatrix * viewMatrix * vec3(a_vertexPosition.xy, 1.0);\n  gl_Position = vec4(pos.xy, 1.0, 1.0);\n\n#ifdef GRADIENT\n  vec3 vg1 = viewMatrix * vec3(u_radialGradientVector[0], u_radialGradientVector[1], 1.0);\n  vec3 vg2 = viewMatrix * vec3(u_radialGradientVector[3], u_radialGradientVector[4], 1.0);\n  float h = u_resolution.y;\n  vg1.y = h - vg1.y;\n  vg2.y = h - vg2.y;\n  vGradientVector1 = vec3(vg1.xy, u_radialGradientVector[2]);\n  vGradientVector2 = vec3(vg2.xy, u_radialGradientVector[5]);\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n  vColor = a_color;\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  vSourceRect = a_sourceRect;\n#endif\n}");
 
 /***/ }),
 /* 72 */
@@ -18460,7 +18389,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\nattribute vec4 a_transform0;\nattribute vec4 a_transform1;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute float a_frameIndex;\nvarying float frameIndex;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLOUDFILTER\nattribute vec4 a_colorCloud0;\nattribute vec4 a_colorCloud1;\nattribute vec4 a_colorCloud2;\nattribute vec4 a_colorCloud3;\nattribute vec4 a_colorCloud4;\nvarying vec4 colorCloud0;\nvarying vec4 colorCloud1;\nvarying vec4 colorCloud2;\nvarying vec4 colorCloud3;\nvarying vec4 colorCloud4;\n#endif\n\n#ifdef CLOUDCOLOR\nattribute vec4 a_fillCloudColor;\nattribute vec4 a_strokeCloudColor;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\n#ifdef GLOBALTRANSFORM\nuniform float u_globalTransform[8];\n#endif\n\nvoid transformPoint(inout vec2 p, vec3 m0, vec3 m1, float w, float h) {\n  float x = p.x;\n  float y = p.y;\n  x = (x + 1.0) * 0.5 * w;\n  y = (1.0 - y) * 0.5 * h;\n  p.x = x * m0.x + y * m0.y + m0.z;\n  p.y = x * m1.x + y * m1.y + m1.z;\n  p.x = 2.0 * (p.x / w - 0.5);\n  p.y = 2.0 * (0.5 - p.y / h);\n}\n\nvoid main() {\n  gl_PointSize = 1.0;\n\n  vec3 m0 = vec3(a_transform0.x, a_transform0.z, a_transform1.y);\n  vec3 m1 = vec3(a_transform0.y, a_transform1.x, a_transform1.z);\n\n  vec2 xy = a_vertexPosition.xy;\n  transformPoint(xy, m0, m1, a_transform0.w, a_transform1.w);\n  gl_Position = vec4(xy, 1.0, 1.0);\n\n#ifdef GRADIENT\n  vGradientVector1 = vec3(u_radialGradientVector[0], u_radialGradientVector[1], u_radialGradientVector[2]);\n  vGradientVector2 = vec3(u_radialGradientVector[3], u_radialGradientVector[4], u_radialGradientVector[5]);\n#endif\n\n#ifdef GLOBALTRANSFORM\n  vec3 m3 = vec3(u_globalTransform[0], u_globalTransform[2], u_globalTransform[5]);\n  vec3 m4 = vec3(u_globalTransform[1], u_globalTransform[4], u_globalTransform[6]);\n  float width = u_globalTransform[3];\n  float height = u_globalTransform[7];\n  transformPoint(xy, m3, m4, width, height);\n  gl_Position = vec4(xy, 1.0, 1.0);\n#ifdef GRADIENT\n  vec2 vg1 = vGradientVector1.xy;\n  vec2 vg2 = vGradientVector2.xy;\n  float h = u_globalTransform[7];\n  float y1 = h - vg1.y;\n  float y2 = h - vg2.y;\n\n  vGradientVector1.x = vg1.x * u_globalTransform[0] + y1 * u_globalTransform[2] + u_globalTransform[5];\n  vGradientVector1.y = h - (vg1.x * u_globalTransform[1] + y1 * u_globalTransform[4] + u_globalTransform[6]);\n\n  vGradientVector2.x = vg2.x * u_globalTransform[0] + y2 * u_globalTransform[2] + u_globalTransform[5];\n  vGradientVector2.y = h - (vg2.x * u_globalTransform[1] + y2 * u_globalTransform[4] + u_globalTransform[6]);\n#endif\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n\n#ifdef CLOUDCOLOR\n  if(flagBackground > 0.0) {\n    vColor = mix(a_color, a_fillCloudColor, a_fillCloudColor.a);\n  } else {\n    vColor = mix(a_color, a_strokeCloudColor, a_strokeCloudColor.a);\n  }\n#else\n  vColor = a_color;\n#endif\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  frameIndex = a_frameIndex;\n  vSourceRect = a_sourceRect;\n#endif\n\n#ifdef CLOUDFILTER\n  colorCloud0 = a_colorCloud0;\n  colorCloud1 = a_colorCloud1;\n  colorCloud2 = a_colorCloud2;\n  colorCloud3 = a_colorCloud3;\n  colorCloud4 = a_colorCloud4;\n#endif\n}");
+/* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\nattribute vec3 a_transform0;\nattribute vec3 a_transform1;\nuniform vec2 u_resolution;\nuniform mat3 viewMatrix;\nuniform mat3 projectionMatrix;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute float a_frameIndex;\nvarying float frameIndex;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLOUDFILTER\nattribute vec4 a_colorCloud0;\nattribute vec4 a_colorCloud1;\nattribute vec4 a_colorCloud2;\nattribute vec4 a_colorCloud3;\nattribute vec4 a_colorCloud4;\nvarying vec4 colorCloud0;\nvarying vec4 colorCloud1;\nvarying vec4 colorCloud2;\nvarying vec4 colorCloud3;\nvarying vec4 colorCloud4;\n#endif\n\n#ifdef CLOUDCOLOR\nattribute vec4 a_fillCloudColor;\nattribute vec4 a_strokeCloudColor;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\nvoid main() {\n  gl_PointSize = 1.0;\n\n  mat3 modelMatrix = mat3(\n    a_transform0.x, a_transform1.x, 0, \n    a_transform0.y, a_transform1.y, 0,\n    a_transform0.z, a_transform1.z, 1\n  );\n\n  vec3 pos = projectionMatrix * viewMatrix * modelMatrix * vec3(a_vertexPosition.xy, 1.0);\n  gl_Position = vec4(pos.xy, 1.0, 1.0);\n\n#ifdef GRADIENT\n  vec3 vg1 = viewMatrix * vec3(u_radialGradientVector[0], u_radialGradientVector[1], 1.0);\n  vec3 vg2 = viewMatrix * vec3(u_radialGradientVector[3], u_radialGradientVector[4], 1.0);\n  float h = u_resolution.y;\n  vg1.y = h - vg1.y;\n  vg2.y = h - vg2.y;\n  vGradientVector1 = vec3(vg1.xy, u_radialGradientVector[2]);\n  vGradientVector2 = vec3(vg2.xy, u_radialGradientVector[5]);\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n\n#ifdef CLOUDCOLOR\n  if(flagBackground > 0.0) {\n    vColor = mix(a_color, a_fillCloudColor, a_fillCloudColor.a);\n  } else {\n    vColor = mix(a_color, a_strokeCloudColor, a_strokeCloudColor.a);\n  }\n#else\n  vColor = a_color;\n#endif\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  frameIndex = a_frameIndex;\n  vSourceRect = a_sourceRect;\n#endif\n\n#ifdef CLOUDFILTER\n  colorCloud0 = a_colorCloud0;\n  colorCloud1 = a_colorCloud1;\n  colorCloud2 = a_colorCloud2;\n  colorCloud3 = a_colorCloud3;\n  colorCloud4 = a_colorCloud4;\n#endif\n}");
 
 /***/ }),
 /* 74 */
@@ -19263,8 +19192,8 @@ class Node {
       this[_resolution] = {
         width,
         height
-      };
-      this.updateContours();
+      }; // this.updateContours();
+
       this.forceUpdate();
       this.dispatchEvent({
         type: 'resolutionchange',
@@ -19274,11 +19203,6 @@ class Node {
         }
       });
     }
-
-    if (this.mesh && this.mesh.setResolution) this.mesh.setResolution({
-      width,
-      height
-    });
   }
 
   show() {
@@ -25565,7 +25489,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
       let mesh = this[_mesh];
 
       if (!mesh) {
-        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](box, this.getResolution());
+        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](box);
         mesh.box = box;
         const fillColor = this.attributes.bgcolor;
         Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setFillColor"])(mesh, {
@@ -26578,7 +26502,7 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
       let mesh = this[_mesh];
 
       if (!mesh) {
-        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](this.path, this.getResolution());
+        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](this.path);
         mesh.path = path;
         const fillColor = this.attributes.fillColor;
         const fillRule = this.attributes.fillRule;
@@ -32835,11 +32759,8 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         options
       });
       const figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Figure2D"]();
-      figure.rect(0, 0, width, height);
-      const mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](figure, {
-        width,
-        height
-      });
+      figure.rect(0, 0, width / this.displayRatio, height / this.displayRatio);
+      const mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](figure);
       mesh.setUniforms(uniforms);
       mesh.setProgram(program);
 
@@ -32977,10 +32898,17 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     if (fbo) {
       const renderer = this.renderer.glRenderer;
       const len = this[_pass].length;
+      const {
+        width,
+        height
+      } = this.getResolution();
+      const rect = [0, 0, width / this.displayRatio, height / this.displayRatio];
 
       this[_pass].forEach((pass, idx) => {
         pass.blend = true;
-        pass.setTexture(fbo.target.texture);
+        pass.setTexture(fbo.target.texture, {
+          rect
+        });
         if (idx === len - 1) renderer.bindFBO(null);else {
           fbo.swap();
           renderer.bindFBO(fbo.target);
@@ -33020,20 +32948,16 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       if (this.canvas) {
         this.canvas.width = width;
         this.canvas.height = height;
-      }
-
-      if (renderer.glRenderer) {
-        renderer.glRenderer.gl.viewport(0, 0, width, height);
+        if (renderer.updateResolution) renderer.updateResolution();
       }
 
       this.attributes.size = [width, height];
 
       if (this[_pass].length) {
         this[_pass].forEach(pass => {
-          pass.setResolution({
-            width,
-            height
-          });
+          const figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Figure2D"]();
+          figure.rect(0, 0, width / this.displayRatio, height / this.displayRatio);
+          pass.contours = figure.contours;
         });
       } // this.dispatchEvent({type: 'resolutionchange', width, height});
 
@@ -33071,14 +32995,14 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
       const _update = () => {
         const p = Math.min(1.0, t.currentTime / duration);
-        const ret = handler(t.currentTime, p);
+        const ret = handler ? handler(t.currentTime, p) : null;
 
         if (layer[_autoRender] && !layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
 
-            if (handler && ret !== false && p < 1.0) {
+            if (ret !== false && p < 1.0) {
               update();
             }
           });
@@ -33305,18 +33229,11 @@ class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
     return null;
   }
   /* override */
+  // setResolution({width, height}) {
+  //   super.setResolution({width, height});
+  //   updateTexture(this);
+  // }
 
-
-  setResolution({
-    width,
-    height
-  }) {
-    super.setResolution({
-      width,
-      height
-    });
-    updateTexture(this);
-  }
   /* override */
 
 

@@ -127,8 +127,8 @@ export default class Layer extends Group {
       const {width, height} = this.getResolution();
       const program = this.renderer.createPassProgram({vertex, fragment, options});
       const figure = new Figure2D();
-      figure.rect(0, 0, width, height);
-      const mesh = new Mesh2D(figure, {width, height});
+      figure.rect(0, 0, width / this.displayRatio, height / this.displayRatio);
+      const mesh = new Mesh2D(figure);
       mesh.setUniforms(uniforms);
       mesh.setProgram(program);
       this[_pass].push(mesh);
@@ -242,9 +242,11 @@ export default class Layer extends Group {
     if(fbo) {
       const renderer = this.renderer.glRenderer;
       const len = this[_pass].length;
+      const {width, height} = this.getResolution();
+      const rect = [0, 0, width / this.displayRatio, height / this.displayRatio];
       this[_pass].forEach((pass, idx) => {
         pass.blend = true;
-        pass.setTexture(fbo.target.texture);
+        pass.setTexture(fbo.target.texture, {rect});
         if(idx === len - 1) renderer.bindFBO(null);
         else {
           fbo.swap();
@@ -270,14 +272,14 @@ export default class Layer extends Group {
       if(this.canvas) {
         this.canvas.width = width;
         this.canvas.height = height;
-      }
-      if(renderer.glRenderer) {
-        renderer.glRenderer.gl.viewport(0, 0, width, height);
+        if(renderer.updateResolution) renderer.updateResolution();
       }
       this.attributes.size = [width, height];
       if(this[_pass].length) {
         this[_pass].forEach((pass) => {
-          pass.setResolution({width, height});
+          const figure = new Figure2D();
+          figure.rect(0, 0, width / this.displayRatio, height / this.displayRatio);
+          pass.contours = figure.contours;
         });
       }
       // this.dispatchEvent({type: 'resolutionchange', width, height});
@@ -306,12 +308,12 @@ export default class Layer extends Group {
       let _requestID = null;
       const _update = () => {
         const p = Math.min(1.0, t.currentTime / duration);
-        const ret = handler(t.currentTime, p);
+        const ret = handler ? handler(t.currentTime, p) : null;
         if(layer[_autoRender] && !layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
-            if(handler && ret !== false && p < 1.0) {
+            if(ret !== false && p < 1.0) {
               update();
             }
           });

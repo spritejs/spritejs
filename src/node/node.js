@@ -446,11 +446,10 @@ export default class Node {
     const {width: w, height: h} = this[_resolution];
     if(w !== width || h !== height) {
       this[_resolution] = {width, height};
-      this.updateContours();
+      // this.updateContours();
       this.forceUpdate();
       this.dispatchEvent({type: 'resolutionchange', detail: {width, height}});
     }
-    if(this.mesh && this.mesh.setResolution) this.mesh.setResolution({width, height});
   }
 
   show() {

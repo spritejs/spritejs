@@ -352,14 +352,6 @@ declare namespace spritejs {
 
   interface Mesh2d {
     /**
-     * Resolution width.
-     */
-    readonly width: number;
-    /**
-     * Resolution height.
-     */
-    readonly height: number;
-    /**
      * The corresponding WebGLProgram.
      * Defaults to null.
      */
@@ -483,11 +475,6 @@ declare namespace spritejs {
      */
     getTotalLength(): number;
     accurate(scale: number): void;
-    /**
-     * Set the resolution of the mesh.
-     * @param resolution {width, height}
-     */
-    setResolution(resolution: Resolution): void;
     /**
      * Whether the mesh can ignore when rendering.
      */

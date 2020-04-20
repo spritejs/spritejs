@@ -138,10 +138,10 @@ export default class SpriteSvg extends Sprite {
   }
 
   /* override */
-  setResolution({width, height}) {
-    super.setResolution({width, height});
-    updateTexture(this);
-  }
+  // setResolution({width, height}) {
+  //   super.setResolution({width, height});
+  //   updateTexture(this);
+  // }
 
   /* override */
   dispatchPointerEvent(event) {

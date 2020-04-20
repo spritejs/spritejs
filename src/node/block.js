@@ -61,7 +61,7 @@ export default class Block extends Node {
     if(box) {
       let mesh = this[_mesh];
       if(!mesh) {
-        mesh = new Mesh2D(box, this.getResolution());
+        mesh = new Mesh2D(box);
         mesh.box = box;
         const fillColor = this.attributes.bgcolor;
         setFillColor(mesh, {color: fillColor});

@@ -41,7 +41,7 @@ export default class Path extends Node {
     if(path) {
       let mesh = this[_mesh];
       if(!mesh) {
-        mesh = new Mesh2D(this.path, this.getResolution());
+        mesh = new Mesh2D(this.path);
         mesh.path = path;
         const fillColor = this.attributes.fillColor;
         const fillRule = this.attributes.fillRule;

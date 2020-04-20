@@ -43,7 +43,7 @@
     const group = new spritejs.Group();
 
     group.appendChild(el);
-    group.appendChild(el2);
+    // group.appendChild(el2);
 
     group.attr({
       transformOrigin: [256, 256],
@@ -55,7 +55,7 @@
       group.attr({
         transform: `rotate(${0.1 * t})`,
       });
-      // requestAnimationFrame(update);
+      requestAnimationFrame(update);
     }
 
     update(0);
