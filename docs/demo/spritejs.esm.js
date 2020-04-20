@@ -13033,6 +13033,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scaleAndAdd", function() { return scaleAndAdd; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dot", function() { return dot; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rotate", function() { return rotate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cross", function() { return cross; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
@@ -13050,6 +13053,9 @@ const copy = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].copy;
 const scaleAndAdd = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].scaleAndAdd;
 const dot = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].dot;
 const rotate = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].rotate;
+const cross = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].cross;
+const sub = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].sub;
+const add = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].add;
 
 
 /***/ }),
@@ -14477,63 +14483,37 @@ Stroke.prototype.build = function (points, closed = false) {
 
   this._lastFlip = -1;
   this._started = false;
-  this._normal = null;
+  this._normal = null; // join each segment
 
-  if (this.join === 'round') {
-    for (let i = 1; i < total; i++) {
-      this._started = false;
-      this._normal = null;
-      this._lastFlip = -1;
-      const _complex = {
-        positions: [],
-        cells: []
-      };
-      const last = points[i - 1];
-      const cur = points[i];
-      const thickness = this.mapThickness(cur, i, points);
+  for (let i = 1, count = 0; i < total; i++) {
+    const last = points[i - 1];
+    const cur = points[i];
+    const next = i < points.length - 1 ? points[i + 1] : null;
+    const thickness = this.mapThickness(cur, i, points);
 
-      if (i === 1 && this.cap !== 'round' && this.cap !== 'roundStart') {
-        this._seg(_complex, 0, last, cur, null, thickness / 2, false, false, 'roundEnd');
-      } else if (i === total - 1 && this.cap !== 'round' && this.cap !== 'roundEnd') {
-        this._seg(_complex, 0, last, cur, null, thickness / 2, false, false, 'roundStart');
-      } else {
-        this._seg(_complex, 0, last, cur, null, thickness / 2, false, false, 'round');
-      }
+    this._seg(complex, count, last, cur, next, thickness / 2, closed, closeNext);
 
-      const idx = complex.positions.length;
-      complex.positions.push(..._complex.positions);
-      complex.cells.push(..._complex.cells.map(o => o.map(i => i + idx)));
-    }
-  } else {
-    // join each segment
-    for (let i = 1, count = 0; i < total; i++) {
-      const last = points[i - 1];
-      const cur = points[i];
-      const next = i < points.length - 1 ? points[i + 1] : null;
-      const thickness = this.mapThickness(cur, i, points);
+    count = complex.positions.length - 2;
+  }
 
-      this._seg(complex, count, last, cur, next, thickness / 2, closed, closeNext);
-
-      count = complex.positions.length - 2;
-    }
-
-    if (closed) {
-      complex.positions = complex.positions.slice(2);
-      complex.cells = complex.cells.slice(2).map(([a, b, c]) => [a - 2, b - 2, c - 2]);
-    }
+  if (closed) {
+    complex.positions = complex.positions.slice(2);
+    complex.cells = complex.cells.slice(2).map(([a, b, c]) => [a - 2, b - 2, c - 2]);
   }
 
   return complex;
 };
 
 Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, closed, closeNext, cap = this.cap) {
+  // eslint-disable-line complexity
   const cells = complex.cells;
   const positions = complex.positions;
   const capSquare = cap === 'square';
   const capRound = cap === 'round';
   const capRoundStart = cap === 'roundStart';
   const capRoundEnd = cap === 'roundEnd';
-  const joinBevel = this.join === 'bevel'; // get unit direction of line
+  const joinBevel = this.join === 'bevel';
+  const joinRound = this.join === 'round'; // get unit direction of line
 
   direction(lineA, cur, last); // if we don't yet have a normal from previous join,
   // compute based on line start - end
@@ -14608,7 +14588,7 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
     // get orientation
 
     let flip = _vecutil__WEBPACK_IMPORTED_MODULE_1__["dot"](tangent, this._normal) < 0 ? -1 : 1;
-    let bevel = joinBevel;
+    let bevel = joinBevel || joinRound;
 
     if (!bevel && this.join === 'miter') {
       const limit = miterLen / halfThick;
@@ -14623,18 +14603,70 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
       // next two points in our first segment
       _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, this._normal, -halfThick * flip);
       positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
+      positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](cur)); // vec.scaleAndAdd(tmp, cur, miter, miterLen * flip);
+      // positions.push(vec.clone(tmp));
+
+      cells.push(this._lastFlip !== -flip ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
       _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, miter, miterLen * flip);
       positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-      cells.push(this._lastFlip !== -flip ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
+
+      if (!joinRound) {
+        cells.push(this._lastFlip !== -flip ? [index, index + 3, index + 4] : [index + 3, index + 1, index + 4]);
+      }
 
       if (next) {
         normal(tmp, lineB);
         _vecutil__WEBPACK_IMPORTED_MODULE_1__["copy"](this._normal, tmp); // store normal for next round
 
         _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, tmp, -halfThick * flip);
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp)); // now add the bevel triangle
+        const pE2 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp); // now add the bevel triangle
 
-        cells.push([index + 2, index + 3, index + 4]);
+        if (!joinRound) {
+          cells.push([index + 2, index + 3, index + 5]);
+        } else {
+          // join round
+          const pEnd = positions.pop();
+          const o = positions[index + 3];
+          const p1 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["sub"](_vecutil__WEBPACK_IMPORTED_MODULE_1__["create"](), positions[index + 2], o);
+          const p2 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["sub"](_vecutil__WEBPACK_IMPORTED_MODULE_1__["create"](), pE2, o);
+          const delta = Math.PI / this.roundSegments;
+
+          for (let i = 0; i < this.roundSegments; i++) {
+            _vecutil__WEBPACK_IMPORTED_MODULE_1__["rotate"](p1, p1, [0, 0], flip * delta); // console.log(p1, p2, vec.cross([], p1, p2)[2]);
+
+            if (Math.sign(_vecutil__WEBPACK_IMPORTED_MODULE_1__["cross"](tmp, p1, p2)[2]) !== flip) {
+              _vecutil__WEBPACK_IMPORTED_MODULE_1__["add"](tmp, p2, o);
+              positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
+
+              if (i === 0) {
+                cells.push([index + 3, index + 2, index + 5]);
+              } else {
+                cells.push([index + 3, index + 5 + i - 1, index + 5 + i]);
+              }
+
+              break;
+            } else {
+              _vecutil__WEBPACK_IMPORTED_MODULE_1__["add"](tmp, p1, o);
+              positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
+
+              if (i === 0) {
+                cells.push([index + 3, index + 2, index + 5]);
+              } else {
+                cells.push([index + 3, index + 5 + i - 1, index + 5 + i]);
+              }
+            }
+          } // console.log(index, positions.length);
+
+
+          cells.push(this._lastFlip !== -flip ? [index, index + 3, positions.length] : [index + 3, index + 1, positions.length]);
+          positions.push(pEnd);
+        }
+
+        positions.push(pE2);
+      }
+
+      if (!next || !joinRound) {
+        cells.push([index + 3, index + 4, index + 5]);
       }
     } else {
       // miter
