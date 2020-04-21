@@ -31,13 +31,13 @@ export default class Block extends Node {
   }
 
   get contentSize() {
-    let {width, height, boxSizing} = this.attributes;
+    let {width, height, boxSizing, paddingTop, paddingRight, paddingBottom, paddingLeft} = this.attributes;
     width = width || 0;
     height = height || 0;
     if(boxSizing === 'border-box') {
       const bw = 2 * this.attributes.borderWidth;
-      width -= bw;
-      height -= bw;
+      width -= bw + paddingRight + paddingLeft;
+      height -= bw + paddingTop + paddingBottom;
       width = Math.max(0, width);
       height = Math.max(0, height);
     }

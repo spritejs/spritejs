@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      #container {
+        width: 960px;
+        height: 540px;
+      }
+    </style>
+    <script src="/js/spritejs.js"></script>
+    <script src="http://s9.qhres.com/static/0847e42b9c814c4b.js"></script>
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="container2">
+      <!-- <span style="display:block;width:960px;font-size:30px;background:red;padding:20px;text-align:right;box-sizing: border-box;">test</span> -->
+    </div>
+    <script>
+      const { Scene, Layer, Label } = spritejs;
+      const scene = new Scene({
+        container: document.querySelector("#container"),
+        width: 960,
+        height: 540,
+        displayRatio: 2,
+      });
+      const layer = scene.layer();
+      const label = new Label({
+        text: 'test',
+        fontFamily: '"宋体"',
+        fontSize: 30,
+        lineHeight: 50,
+        x: 0,
+        y: 0,
+        bgcolor: 'red',
+        width: 960,
+        textAlign: 'right',
+        boxSizing: 'border-box',
+        padding: [20, 20, 20, 20],
+      });
+      layer.appendChild(label);
+    </script>
+  </body>
+</html>

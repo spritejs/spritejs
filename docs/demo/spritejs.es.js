@@ -25625,15 +25625,19 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
     let {
       width,
       height,
-      boxSizing
+      boxSizing,
+      paddingTop,
+      paddingRight,
+      paddingBottom,
+      paddingLeft
     } = this.attributes;
     width = width || 0;
     height = height || 0;
 
     if (boxSizing === 'border-box') {
       const bw = 2 * this.attributes.borderWidth;
-      width -= bw;
-      height -= bw;
+      width -= bw + paddingRight + paddingLeft;
+      height -= bw + paddingTop + paddingBottom;
       width = Math.max(0, width);
       height = Math.max(0, height);
     }

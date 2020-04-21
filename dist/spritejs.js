@@ -29603,14 +29603,18 @@ function (_Node) {
       var _this$attributes5 = this.attributes,
           width = _this$attributes5.width,
           height = _this$attributes5.height,
-          boxSizing = _this$attributes5.boxSizing;
+          boxSizing = _this$attributes5.boxSizing,
+          paddingTop = _this$attributes5.paddingTop,
+          paddingRight = _this$attributes5.paddingRight,
+          paddingBottom = _this$attributes5.paddingBottom,
+          paddingLeft = _this$attributes5.paddingLeft;
       width = width || 0;
       height = height || 0;
 
       if (boxSizing === 'border-box') {
         var bw = 2 * this.attributes.borderWidth;
-        width -= bw;
-        height -= bw;
+        width -= bw + paddingRight + paddingLeft;
+        height -= bw + paddingTop + paddingBottom;
         width = Math.max(0, width);
         height = Math.max(0, height);
       }
