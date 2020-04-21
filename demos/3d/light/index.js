@@ -6,7 +6,8 @@ const container = document.getElementById('container');
 const scene = new Scene({container});
 const layer = scene.layer3d('fglayer', {
   ambientColor: '#ff000080',
-  directionalLight: [1, 0, 0, 0.5],
+  directionalLight: [1, 0, 0],
+  directionalLightColor: [1, 1, 1, 0.5],
   pointLightColor: 'blue',
   pointLightPosition: [5, 3, 6],
   camera: {

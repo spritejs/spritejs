@@ -9,7 +9,8 @@ const layer = scene.layer3d('fglayer', {
   camera: {
     fov: 35,
   },
-  directionalLight: [0.5, 1.0, -0.3, 0.15],
+  directionalLight: [0.5, 1.0, -0.3],
+  directionalLightColor: [1, 1, 1, 0.15],
 });
 
 layer.camera.attributes.pos = [8, 5, 15];

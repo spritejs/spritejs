@@ -170,7 +170,8 @@ const layer = scene.layer3d('fglayer', {
     fov: 45,
     pos: [-2, 2, 2],
   },
-  directionalLight: [0.5, 1.0, -0.3, 0.15],
+  directionalLight: [0.5, 1.0, -0.3],
+  directionalLightColor: [1, 1, 1, 0.15],
 });
 
 const program = layer.createProgram(shaders.NORMAL);
@@ -200,7 +201,8 @@ const layer = scene.layer3d('fglayer', {
     fov: 45,
     pos: [-2, 2, 2],
   },
-  directionalLight: [0.5, 1.0, -0.3, 0.15],
+  directionalLight: [0.5, 1.0, -0.3],
+  directionalLightColor: [1, 1, 1, 0.15],
 });
 
 const texture = layer.createTexture('https://p1.ssl.qhimg.com/t01b4bd0e2fb9f47550.jpg');
@@ -232,7 +234,8 @@ const container = document.getElementById('container');
 const scene = new Scene({container});
 const layer = scene.layer3d('fglayer', {
   ambientColor: '#ff000080',
-  directionalLight: [1, 0, 0, 0.5],
+  directionalLight: [1, 0, 0],
+  directionalLightColor: [1, 1, 1, 0.5],
   pointLightColor: 'blue',
   pointLightPosition: [5, 3, 6],
   camera: {

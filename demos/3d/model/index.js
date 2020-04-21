@@ -10,7 +10,8 @@ const layer = scene.layer3d('fglayer', {
     fov: 45,
     pos: [-2, 2, 2],
   },
-  directionalLight: [0.5, 1.0, -0.3, 0.15],
+  directionalLight: [0.5, 1.0, -0.3],
+  directionalLightColor: [1, 1, 1, 0.15],
 });
 
 const program = layer.createProgram(shaders.NORMAL);
