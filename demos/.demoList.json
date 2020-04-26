@@ -325,6 +325,9 @@
     "label": "skydome",
     "src": "3d/skydome"
   }, {
+    "label": "solar",
+    "src": "3d/solar"
+  }, {
     "label": "text",
     "src": "3d/text"
   }, {
