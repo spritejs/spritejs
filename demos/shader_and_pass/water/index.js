@@ -118,7 +118,8 @@ const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
     'https://p1.ssl.qhimg.com/t01c273ff89bd766fa8.png',
     'https://p1.ssl.qhimg.com/t019da184b79bec3b4f.png',
 
-    'https://p2.ssl.qhimg.com/t01993a03539dd34042.jpg',
+    // 'https://p2.ssl.qhimg.com/t01993a03539dd34042.jpg',
+    'https://p4.ssl.qhimg.com/t01d677560390610d5f.jpg',
 
     'https://p4.ssl.qhimg.com/t016323fa653ff2eaf9.png',
   );
