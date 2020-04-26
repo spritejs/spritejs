@@ -8152,9 +8152,9 @@ class Renderer {
     }
   }
 
-  createTexture(img) {
+  createTexture(img, opts) {
     const renderer = this[_glRenderer] || this[_canvasRenderer];
-    return renderer.createTexture(img);
+    return renderer.createTexture(img, opts);
   }
   /* async */
 
@@ -8600,8 +8600,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 const GLSL_LIBS = {};
 
-const _renderFrameID = Symbol('renderFrameID');
-
 function mapTextureCoordinate(positions, size = 3) {
   const texVertexData = [];
   const len = positions.length;
@@ -8623,7 +8621,13 @@ function clearBuffers(gl, program) {
 
 function bindTexture(gl, texture, i) {
   gl.activeTexture(gl.TEXTURE0 + i);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  if (Array.isArray(texture._img)) {
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  } else {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+  }
+
   return texture;
 }
 
@@ -8639,7 +8643,14 @@ const uniformTypeMap = {
   mat2: 'Matrix2fv',
   mat3: 'Matrix3fv',
   mat4: 'Matrix4fv',
-  sampler2D: 'sampler2D'
+  sampler1D: 'sampler1D',
+  sampler2D: 'sampler2D',
+  sampler3D: 'sampler3D',
+  samplerCube: 'samplerCube',
+  sampler1DShadow: 'sampler1DShadow',
+  sampler2DShadow: 'sampler2DShadow',
+  sampler2DRect: 'sampler2DRect',
+  sampler2DRectShadow: 'sampler2DRectShadow'
 };
 class Renderer {
   static addLibs(libs = {}) {
@@ -8703,7 +8714,7 @@ class Renderer {
     let value;
     const that = this;
 
-    if (type === 'sampler2D') {
+    if (/^sampler/.test(type)) {
       const samplerMap = program._samplerMap;
       const textures = program._bindTextures;
       Object.defineProperty(program.uniforms, name, {
@@ -8854,9 +8865,9 @@ class Renderer {
     if (this.program === program) {
       this.startRender = false;
 
-      if (this[_renderFrameID]) {
-        cancelAnimationFrame(this[_renderFrameID]);
-        delete this[_renderFrameID];
+      if (this._renderFrameID) {
+        cancelAnimationFrame(this._renderFrameID);
+        delete this._renderFrameID;
       }
 
       gl.useProgram(null);
@@ -8950,7 +8961,7 @@ class Renderer {
   createProgram(fragmentShader, vertexShader) {
     // this.deleteProgram();
     // this._events = {};
-    const enableTextures = /^\s*uniform\s+sampler2D/mg.test(fragmentShader);
+    const enableTextures = /^\s*uniform\s+sampler/mg.test(fragmentShader);
     if (fragmentShader == null) fragmentShader = _default_frag_glsl__WEBPACK_IMPORTED_MODULE_2__["default"];
     if (vertexShader == null) vertexShader = enableTextures ? _default_feeback_vert_glsl__WEBPACK_IMPORTED_MODULE_3__["default"] : _default_vert_glsl__WEBPACK_IMPORTED_MODULE_1__["default"];
     const gl = this.gl;
@@ -8966,26 +8977,27 @@ class Renderer {
     program._bindTextures = [];
     program._enableTextures = enableTextures; // console.log(vertexShader);
 
-    const pattern = new RegExp(`attribute vec(\\d) ${this.options.vertexPosition}`, 'im');
+    const pattern = new RegExp(`(?:attribute|in) vec(\\d) ${this.options.vertexPosition}`, 'im');
     let matched = vertexShader.match(pattern);
 
     if (matched) {
       program._dimension = Number(matched[1]);
     }
 
-    const texCoordPattern = new RegExp(`attribute vec(\\d) ${this.options.vertexTextureCoord}`, 'im');
+    const texCoordPattern = new RegExp(`(?:attribute|in) vec(\\d) ${this.options.vertexTextureCoord}`, 'im');
     matched = vertexShader.match(texCoordPattern);
 
     if (matched) {
       program._texCoordSize = Number(matched[1]);
     }
 
-    const attributePattern = /^\s*attribute (\w+?)(\d*) (\w+)/gim;
+    program._enableTextures = enableTextures && !!program._texCoordSize;
+    const attributePattern = /^\s*(?:attribute|in) (\w+?)(\d*) (\w+)/gim;
     matched = vertexShader.match(attributePattern);
 
     if (matched) {
       for (let i = 0; i < matched.length; i++) {
-        const patt = /^\s*attribute (\w+?)(\d*) (\w+)/im;
+        const patt = /^\s*(?:attribute|in) (\w+?)(\d*) (\w+)/im;
 
         const _matched = matched[i].match(patt);
 
@@ -9033,9 +9045,9 @@ class Renderer {
   useProgram(program, attrOptions = {}) {
     this.startRender = false;
 
-    if (this[_renderFrameID]) {
-      cancelAnimationFrame(this[_renderFrameID]);
-      delete this[_renderFrameID];
+    if (this._renderFrameID) {
+      cancelAnimationFrame(this._renderFrameID);
+      delete this._renderFrameID;
     }
 
     const gl = this.gl;
@@ -9205,11 +9217,18 @@ class Renderer {
     return this.compile(frag, vert);
   }
 
-  createTexture(img = null) {
+  createTexture(img = null, {
+    wrapS = this.gl.CLAMP_TO_EDGE,
+    wrapT = this.gl.CLAMP_TO_EDGE,
+    minFilter = this.gl.LINEAR,
+    magFilter = this.gl.LINEAR
+  } = {}) {
     const gl = this.gl;
-    gl.activeTexture(gl.TEXTURE15);
+    const target = Array.isArray(img) ? gl.TEXTURE_CUBE_MAP : gl.TEXTURE_2D;
+    this._max_texture_image_units = this._max_texture_image_units || gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+    gl.activeTexture(gl.TEXTURE0 + this._max_texture_image_units - 1);
     const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(target, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     const {
       width,
@@ -9217,19 +9236,38 @@ class Renderer {
     } = this.canvas;
 
     if (img) {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      if (target === gl.TEXTURE_CUBE_MAP) {
+        // For cube maps
+        for (let i = 0; i < 6; i++) {
+          gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img[i]);
+        }
+      } else {
+        gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      }
+    } else if (target === gl.TEXTURE_CUBE_MAP) {
+      // For cube maps
+      for (let i = 0; i < 6; i++) {
+        this.gl.texImage2D(this.gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      }
     } else {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.texImage2D(target, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     } // gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
 
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // Prevents s-coordinate wrapping (repeating).
+    gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, minFilter);
+    gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, magFilter); // Prevents s-coordinate wrapping (repeating).
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // Prevents t-coordinate wrapping (repeating).
+    gl.texParameteri(target, gl.TEXTURE_WRAP_S, wrapS); // Prevents t-coordinate wrapping (repeating).
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_T, wrapT);
+
+    if (target === gl.TEXTURE_CUBE_MAP) {
+      // gl.texParameteri(target, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+      img.width = img[0].width;
+      img.height = img[0].height;
+    }
+
+    gl.bindTexture(target, null);
     texture._img = img || {
       width,
       height
@@ -9334,7 +9372,7 @@ class Renderer {
     }
 
     if (clearBuffer) gl.clear(gl.COLOR_BUFFER_BIT);
-    const lastFrameID = this[_renderFrameID];
+    const lastFrameID = this._renderFrameID;
 
     this._draw();
 
@@ -9342,16 +9380,16 @@ class Renderer {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-    if (this[_renderFrameID] === lastFrameID) {
-      this[_renderFrameID] = null;
+    if (this._renderFrameID === lastFrameID) {
+      this._renderFrameID = null;
     }
   }
 
   update() {
     if (!this.startRender) return;
 
-    if (this[_renderFrameID] == null) {
-      this[_renderFrameID] = requestAnimationFrame(this.render.bind(this));
+    if (this._renderFrameID == null) {
+      this._renderFrameID = requestAnimationFrame(this.render.bind(this));
     }
   }
 
@@ -34179,8 +34217,9 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
   }
 
   async preload(...resources) {
-    const ret = [],
-          tasks = [];
+    const loaded = [],
+          tasks = [],
+          ret = [];
 
     for (let i = 0; i < resources.length; i++) {
       const res = resources[i];
@@ -34205,12 +34244,13 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
       }
 
       tasks.push(task.then(r => {
-        ret.push(r);
+        loaded.push(r);
+        ret[i] = r;
         const preloadEvent = new _event_event__WEBPACK_IMPORTED_MODULE_7__["default"]({
           type: 'preload',
           detail: {
             current: r,
-            loaded: ret,
+            loaded,
             resources
           }
         });

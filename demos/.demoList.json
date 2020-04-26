@@ -244,6 +244,9 @@
     "label": "pass wave",
     "src": "shader_and_pass/pass_wave"
   }, {
+    "label": "water",
+    "src": "shader_and_pass/water"
+  }, {
     "label": "basic",
     "src": "3d/basic"
   }, {

@@ -367,8 +367,9 @@ export default class Scene extends Group {
   }
 
   async preload(...resources) {
-    const ret = [],
-      tasks = [];
+    const loaded = [],
+      tasks = [],
+      ret = [];
 
     for(let i = 0; i < resources.length; i++) {
       const res = resources[i];
@@ -388,8 +389,9 @@ export default class Scene extends Group {
       }
 
       tasks.push(task.then((r) => {
-        ret.push(r);
-        const preloadEvent = new Event({type: 'preload', detail: {current: r, loaded: ret, resources}});
+        loaded.push(r);
+        ret[i] = r;
+        const preloadEvent = new Event({type: 'preload', detail: {current: r, loaded, resources}});
         this.dispatchEvent(preloadEvent);
       }));
     }

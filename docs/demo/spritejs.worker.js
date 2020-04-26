@@ -8003,9 +8003,9 @@ function () {
     }
   }, {
     key: "createTexture",
-    value: function createTexture(img) {
+    value: function createTexture(img, opts) {
       var renderer = this[_glRenderer] || this[_canvasRenderer];
-      return renderer.createTexture(img);
+      return renderer.createTexture(img, opts);
     }
     /* async */
 
@@ -8765,8 +8765,6 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 var GLSL_LIBS = {};
 
-var _renderFrameID = Symbol('renderFrameID');
-
 function mapTextureCoordinate(positions) {
   var size = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 3;
   var texVertexData = [];
@@ -8789,7 +8787,13 @@ function clearBuffers(gl, program) {
 
 function bindTexture(gl, texture, i) {
   gl.activeTexture(gl.TEXTURE0 + i);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  if (Array.isArray(texture._img)) {
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  } else {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+  }
+
   return texture;
 }
 
@@ -8805,7 +8809,14 @@ var uniformTypeMap = {
   mat2: 'Matrix2fv',
   mat3: 'Matrix3fv',
   mat4: 'Matrix4fv',
-  sampler2D: 'sampler2D'
+  sampler1D: 'sampler1D',
+  sampler2D: 'sampler2D',
+  sampler3D: 'sampler3D',
+  samplerCube: 'samplerCube',
+  sampler1DShadow: 'sampler1DShadow',
+  sampler2DShadow: 'sampler2DShadow',
+  sampler2DRect: 'sampler2DRect',
+  sampler2DRectShadow: 'sampler2DRectShadow'
 };
 
 var Renderer =
@@ -8883,7 +8894,7 @@ function () {
       var value;
       var that = this;
 
-      if (type === 'sampler2D') {
+      if (/^sampler/.test(type)) {
         var samplerMap = program._samplerMap;
         var textures = program._bindTextures;
         Object.defineProperty(program.uniforms, name, {
@@ -9017,9 +9028,9 @@ function () {
       if (this.program === program) {
         this.startRender = false;
 
-        if (this[_renderFrameID]) {
-          cancelAnimationFrame(this[_renderFrameID]);
-          delete this[_renderFrameID];
+        if (this._renderFrameID) {
+          cancelAnimationFrame(this._renderFrameID);
+          delete this._renderFrameID;
         }
 
         gl.useProgram(null);
@@ -9121,7 +9132,7 @@ function () {
 
       // this.deleteProgram();
       // this._events = {};
-      var enableTextures = /^\s*uniform\s+sampler2D/mg.test(fragmentShader);
+      var enableTextures = /^\s*uniform\s+sampler/mg.test(fragmentShader);
       if (fragmentShader == null) fragmentShader = _default_frag_glsl__WEBPACK_IMPORTED_MODULE_9__["default"];
       if (vertexShader == null) vertexShader = enableTextures ? _default_feeback_vert_glsl__WEBPACK_IMPORTED_MODULE_10__["default"] : _default_vert_glsl__WEBPACK_IMPORTED_MODULE_8__["default"];
       var gl = this.gl;
@@ -9139,26 +9150,27 @@ function () {
       program._bindTextures = [];
       program._enableTextures = enableTextures; // console.log(vertexShader);
 
-      var pattern = new RegExp("attribute vec(\\d) ".concat(this.options.vertexPosition), 'im');
+      var pattern = new RegExp("(?:attribute|in) vec(\\d) ".concat(this.options.vertexPosition), 'im');
       var matched = vertexShader.match(pattern);
 
       if (matched) {
         program._dimension = Number(matched[1]);
       }
 
-      var texCoordPattern = new RegExp("attribute vec(\\d) ".concat(this.options.vertexTextureCoord), 'im');
+      var texCoordPattern = new RegExp("(?:attribute|in) vec(\\d) ".concat(this.options.vertexTextureCoord), 'im');
       matched = vertexShader.match(texCoordPattern);
 
       if (matched) {
         program._texCoordSize = Number(matched[1]);
       }
 
-      var attributePattern = /^\s*attribute (\w+?)(\d*) (\w+)/gim;
+      program._enableTextures = enableTextures && !!program._texCoordSize;
+      var attributePattern = /^\s*(?:attribute|in) (\w+?)(\d*) (\w+)/gim;
       matched = vertexShader.match(attributePattern);
 
       if (matched) {
         for (var i = 0; i < matched.length; i++) {
-          var patt = /^\s*attribute (\w+?)(\d*) (\w+)/im;
+          var patt = /^\s*(?:attribute|in) (\w+?)(\d*) (\w+)/im;
 
           var _matched = matched[i].match(patt);
 
@@ -9216,9 +9228,9 @@ function () {
       var attrOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       this.startRender = false;
 
-      if (this[_renderFrameID]) {
-        cancelAnimationFrame(this[_renderFrameID]);
-        delete this[_renderFrameID];
+      if (this._renderFrameID) {
+        cancelAnimationFrame(this._renderFrameID);
+        delete this._renderFrameID;
       }
 
       var gl = this.gl;
@@ -9553,29 +9565,61 @@ function () {
       var _this4 = this;
 
       var img = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      var _ref11 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref11$wrapS = _ref11.wrapS,
+          wrapS = _ref11$wrapS === void 0 ? this.gl.CLAMP_TO_EDGE : _ref11$wrapS,
+          _ref11$wrapT = _ref11.wrapT,
+          wrapT = _ref11$wrapT === void 0 ? this.gl.CLAMP_TO_EDGE : _ref11$wrapT,
+          _ref11$minFilter = _ref11.minFilter,
+          minFilter = _ref11$minFilter === void 0 ? this.gl.LINEAR : _ref11$minFilter,
+          _ref11$magFilter = _ref11.magFilter,
+          magFilter = _ref11$magFilter === void 0 ? this.gl.LINEAR : _ref11$magFilter;
+
       var gl = this.gl;
-      gl.activeTexture(gl.TEXTURE15);
+      var target = Array.isArray(img) ? gl.TEXTURE_CUBE_MAP : gl.TEXTURE_2D;
+      this._max_texture_image_units = this._max_texture_image_units || gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+      gl.activeTexture(gl.TEXTURE0 + this._max_texture_image_units - 1);
       var texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.bindTexture(target, texture);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       var _this$canvas = this.canvas,
           width = _this$canvas.width,
           height = _this$canvas.height;
 
       if (img) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+        if (target === gl.TEXTURE_CUBE_MAP) {
+          // For cube maps
+          for (var i = 0; i < 6; i++) {
+            gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img[i]);
+          }
+        } else {
+          gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+        }
+      } else if (target === gl.TEXTURE_CUBE_MAP) {
+        // For cube maps
+        for (var _i = 0; _i < 6; _i++) {
+          this.gl.texImage2D(this.gl.TEXTURE_CUBE_MAP_POSITIVE_X + _i, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        }
       } else {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(target, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
       } // gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
 
 
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // Prevents s-coordinate wrapping (repeating).
+      gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, minFilter);
+      gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, magFilter); // Prevents s-coordinate wrapping (repeating).
 
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // Prevents t-coordinate wrapping (repeating).
+      gl.texParameteri(target, gl.TEXTURE_WRAP_S, wrapS); // Prevents t-coordinate wrapping (repeating).
 
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.bindTexture(gl.TEXTURE_2D, null);
+      gl.texParameteri(target, gl.TEXTURE_WRAP_T, wrapT);
+
+      if (target === gl.TEXTURE_CUBE_MAP) {
+        // gl.texParameteri(target, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+        img.width = img[0].width;
+        img.height = img[0].height;
+      }
+
+      gl.bindTexture(target, null);
       texture._img = img || {
         width: width,
         height: height
@@ -9604,8 +9648,8 @@ function () {
       var _loadTexture = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(source) {
-        var _ref11,
-            _ref11$useImageBitmap,
+        var _ref12,
+            _ref12$useImageBitmap,
             useImageBitmap,
             img,
             _args4 = arguments;
@@ -9614,7 +9658,7 @@ function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _ref11 = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {}, _ref11$useImageBitmap = _ref11.useImageBitmap, useImageBitmap = _ref11$useImageBitmap === void 0 ? true : _ref11$useImageBitmap;
+                _ref12 = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {}, _ref12$useImageBitmap = _ref12.useImageBitmap, useImageBitmap = _ref12$useImageBitmap === void 0 ? true : _ref12$useImageBitmap;
                 _context4.next = 3;
                 return Renderer.loadImage(source, {
                   useImageBitmap: useImageBitmap
@@ -9641,15 +9685,15 @@ function () {
   }, {
     key: "createFBO",
     value: function createFBO() {
-      var _ref12 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          _ref12$color = _ref12.color,
-          color = _ref12$color === void 0 ? 1 : _ref12$color,
-          _ref12$blend = _ref12.blend,
-          blend = _ref12$blend === void 0 ? false : _ref12$blend,
-          _ref12$depth = _ref12.depth,
-          depth = _ref12$depth === void 0 ? this.options.depth !== false : _ref12$depth,
-          _ref12$stencil = _ref12.stencil,
-          stencil = _ref12$stencil === void 0 ? !!this.options.stencil : _ref12$stencil;
+      var _ref13 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref13$color = _ref13.color,
+          color = _ref13$color === void 0 ? 1 : _ref13$color,
+          _ref13$blend = _ref13.blend,
+          blend = _ref13$blend === void 0 ? false : _ref13$blend,
+          _ref13$depth = _ref13.depth,
+          depth = _ref13$depth === void 0 ? this.options.depth !== false : _ref13$depth,
+          _ref13$stencil = _ref13.stencil,
+          stencil = _ref13$stencil === void 0 ? !!this.options.stencil : _ref13$stencil;
 
       var gl = this.gl;
       var buffer = gl.createFramebuffer();
@@ -9704,9 +9748,9 @@ function () {
   }, {
     key: "render",
     value: function render() {
-      var _ref13 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          _ref13$clearBuffer = _ref13.clearBuffer,
-          clearBuffer = _ref13$clearBuffer === void 0 ? true : _ref13$clearBuffer;
+      var _ref14 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref14$clearBuffer = _ref14.clearBuffer,
+          clearBuffer = _ref14$clearBuffer === void 0 ? true : _ref14$clearBuffer;
 
       this.startRender = true;
       var gl = this.gl;
@@ -9722,7 +9766,7 @@ function () {
       }
 
       if (clearBuffer) gl.clear(gl.COLOR_BUFFER_BIT);
-      var lastFrameID = this[_renderFrameID];
+      var lastFrameID = this._renderFrameID;
 
       this._draw();
 
@@ -9730,8 +9774,8 @@ function () {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       }
 
-      if (this[_renderFrameID] === lastFrameID) {
-        this[_renderFrameID] = null;
+      if (this._renderFrameID === lastFrameID) {
+        this._renderFrameID = null;
       }
     }
   }, {
@@ -9739,8 +9783,8 @@ function () {
     value: function update() {
       if (!this.startRender) return;
 
-      if (this[_renderFrameID] == null) {
-        this[_renderFrameID] = requestAnimationFrame(this.render.bind(this));
+      if (this._renderFrameID == null) {
+        this._renderFrameID = requestAnimationFrame(this.render.bind(this));
       }
     }
   }, {
