@@ -72,6 +72,10 @@ export default class Block extends Node {
         }
         // mesh.setOpacity(this.attributes.opacity);
         this[_mesh] = mesh;
+        const clipPath = this.attributes.clipPath;
+        if(clipPath) {
+          this[_mesh].setClipPath(clipPath);
+        }
       } else if(mesh.box !== box) {
         mesh.contours = box.contours;
         mesh.box = box;
@@ -154,6 +158,9 @@ export default class Block extends Node {
     //     }
     //   }
     // }
+    if(this[_mesh] && key === 'clipPath') {
+      this[_mesh].setClipPath(newValue);
+    }
     if(this[_mesh] && key === 'bgcolor') {
       setFillColor(this[_mesh], {color: newValue});
     }

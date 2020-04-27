@@ -65,6 +65,10 @@ export default class Path extends Node {
         }
         // mesh.setOpacity(this.attributes.opacity);
         this[_mesh] = mesh;
+        const clipPath = this.attributes.clipPath;
+        if(clipPath) {
+          this[_mesh].setClipPath(clipPath);
+        }
       } else if(mesh.path !== path) {
         mesh.contours = path.contours;
         mesh.path = path;
@@ -165,6 +169,9 @@ export default class Path extends Node {
         setStrokeColor(this[_mesh], {
           color: strokeColor, lineCap, lineJoin, lineWidth, lineDash, lineDashOffset, miterLimit, roundSegments});
       }
+    }
+    if(this[_mesh] && key === 'clipPath') {
+      this[_mesh].setClipPath(newValue);
     }
     if(key === 'texture') {
       applyTexture(this, newValue);

@@ -26,6 +26,7 @@ export default class Path extends Node {
       textureRect: undefined,
       textureRepeat: false,
       sourceRect: undefined,
+      clipPath: undefined,
     });
   }
 
@@ -160,5 +161,13 @@ export default class Path extends Node {
 
   set textureRepeat(value) {
     this[setAttribute]('textureRepeat', !!value);
+  }
+
+  get clipPath() {
+    return this[getAttribute]('clipPath');
+  }
+
+  set clipPath(value) {
+    this[setAttribute]('clipPath', value);
   }
 }

@@ -35,6 +35,7 @@ export default class Block extends Node {
       paddingLeft: 0,
       /* padding */
       boxSizing: 'content-box',
+      clipPath: undefined,
     });
     this[declareAlias]('anchor', 'size', 'border', 'borderRadius', 'padding');
   }
@@ -253,6 +254,14 @@ export default class Block extends Node {
     this.paddingRight = value[1];
     this.paddingBottom = value[2];
     this.paddingLeft = value[3];
+  }
+
+  get clipPath() {
+    return this[getAttribute]('clipPath');
+  }
+
+  set clipPath(value) {
+    this[setAttribute]('clipPath', value);
   }
 
   get boxSizing() {
