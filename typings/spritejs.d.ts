@@ -479,6 +479,7 @@ declare namespace spritejs {
      * Whether the mesh can ignore when rendering.
      */
     canIgnore(): boolean;
+    setClipPath(path: string): void;
     /**
      * Set stroke options.
      * @param stroke 
