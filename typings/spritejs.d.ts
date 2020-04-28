@@ -32,7 +32,7 @@ declare namespace spritejs {
     size: [number, number],
     sourceRect: Array<any>,
     texture: string,
-    textureRect: [number, number, number],
+    textureRect: [number, number, number, number],
     textureRepeat: boolean,
     width: number,
     id: string,
