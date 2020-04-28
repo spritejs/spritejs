@@ -19121,6 +19121,21 @@ class Node {
     return m;
   }
 
+  get worldScaling() {
+    const m = this.renderMatrix;
+    return [Math.hypot(m[0], m[1]), Math.hypot(m[2], m[3])];
+  }
+
+  get worldRotation() {
+    const m = this.renderMatrix;
+    return Math.atan2(m[1], m[3]);
+  }
+
+  get worldPosition() {
+    const m = this.renderMatrix;
+    return [m[4], m[5]];
+  }
+
   get uniforms() {
     return this[_uniforms];
   }

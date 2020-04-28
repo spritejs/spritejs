@@ -22973,6 +22973,24 @@ function () {
       return m;
     }
   }, {
+    key: "worldScaling",
+    get: function get() {
+      var m = this.renderMatrix;
+      return [Math.hypot(m[0], m[1]), Math.hypot(m[2], m[3])];
+    }
+  }, {
+    key: "worldRotation",
+    get: function get() {
+      var m = this.renderMatrix;
+      return Math.atan2(m[1], m[3]);
+    }
+  }, {
+    key: "worldPosition",
+    get: function get() {
+      var m = this.renderMatrix;
+      return [m[4], m[5]];
+    }
+  }, {
     key: "uniforms",
     get: function get() {
       return this[_uniforms];

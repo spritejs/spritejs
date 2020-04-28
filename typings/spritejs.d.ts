@@ -1535,6 +1535,9 @@ declare namespace spritejs {
     get zIndex(): number;
     set zIndex(value: number);
     get shaderAttrs(): Record<string, any>;
+    get worldPosition(): Array<number>;
+    get worldRotation(): number;
+    get worldScaling(): Array<number>;
     /**
      * Activate all animations in progress on the element.
      */
