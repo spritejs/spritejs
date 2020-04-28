@@ -392,6 +392,13 @@ export default class Node {
     return children[idx + distance];
   }
 
+  getWorldPosition(offsetX, offsetY) {
+    const m = this.renderMatrix;
+    const x = offsetX * m[0] + offsetY * m[2] + m[4];
+    const y = offsetX * m[1] + offsetY * m[3] + m[5];
+    return [x, y];
+  }
+
   getOffsetPosition(x, y) {
     const m = mat2d.invert(this.renderMatrix);
     const offsetX = x * m[0] + y * m[2] + m[4];

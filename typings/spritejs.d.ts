@@ -1636,6 +1636,7 @@ declare namespace spritejs {
      * @param y 
      */
     getOffsetPosition(x: number, y: number): Array<number>;
+    getWorldPosition(offsetX: number, offsetY: number): Array<number>;
     /**
      * Get the context resolution of the element.
      */

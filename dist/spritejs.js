@@ -22616,6 +22616,14 @@ function () {
       return children[idx + distance];
     }
   }, {
+    key: "getWorldPosition",
+    value: function getWorldPosition(offsetX, offsetY) {
+      var m = this.renderMatrix;
+      var x = offsetX * m[0] + offsetY * m[2] + m[4];
+      var y = offsetX * m[1] + offsetY * m[3] + m[5];
+      return [x, y];
+    }
+  }, {
     key: "getOffsetPosition",
     value: function getOffsetPosition(x, y) {
       var m = gl_matrix__WEBPACK_IMPORTED_MODULE_6__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), this.renderMatrix);
