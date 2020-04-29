@@ -8251,8 +8251,8 @@ class Renderer {
 
             if ((!previousMesh || !previousMesh.filterCanvas || previousMesh.filter !== currentFilter) && (!nextMesh || !nextMesh.filterCanvas || nextMesh.filter !== currentFilter)) {
               if (hasGlobalTransform) {
-                filterContext.save();
-                filterContext.transform(...this.globalTransformMatrix);
+                filterContext.save(); // filterContext.transform(...this.globalTransformMatrix);
+
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["drawMesh2D"])(originalMesh, filterContext, false);
                 filterContext.restore();
                 Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["applyFilter"])(filterContext, currentFilter);
@@ -8265,8 +8265,7 @@ class Renderer {
               drawFilterContext(renderer, filterContext, width, height);
             } else {
               if (hasGlobalTransform) {
-                filterContext.save();
-                filterContext.transform(...this.globalTransformMatrix);
+                filterContext.save(); // filterContext.transform(...this.globalTransformMatrix);
               }
 
               Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_4__["drawMesh2D"])(originalMesh, filterContext, false);

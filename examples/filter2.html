@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #201e1e;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background: #201e1e;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+  (async function () {
+    const {Scene, Sprite, Label, Group, Path} = spritejs;
+    const container = document.getElementById('stage');
+    const scene = new Scene({
+      container,
+      width: 1600,
+      height: 1200,
+      mode: 'stickyWidth',
+      // contextType: '2d',
+    });
+  
+    const layer = scene.layer();
+    layer.canvas.style.backgroundColor = '#f4f2e6';
+
+    await scene.preload([
+      'https://p3.ssl.qhimg.com/t010ded517024020e10.png',
+      'https://s1.ssl.qhres.com/static/6ead70a354da7aa4.json',
+    ]);
+
+    const generateSpriteWithFilter = (filter, labelText, pos) => {
+      const guanguan = new Sprite();
+      guanguan.attr({
+        size: [270, 340],
+        texture: 'guanguan1s.png',
+        textureRect: [50, 40, 180, 220],
+        filter,
+        anchor: 0.5,
+        pos,
+      });
+      layer.append(guanguan);
+
+      const label = new Label(labelText);
+      label.attr({
+        font: 'bold 30px "Arial"',
+        fillColor: '#474534',
+        anchor: 0.5,
+        pos: [pos[0], pos[1] + 120],
+        filter,
+      });
+      layer.append(label);
+    };
+
+    this.scene = scene;
+
+    // same filter as in css3
+    generateSpriteWithFilter('drop-shadow(2px, 2px, 10px, #FF6040)', 'dropShadow', [200, 500]);
+    generateSpriteWithFilter('blur(4px)', 'blur', [500, 500]);
+    generateSpriteWithFilter('brightness(50%)', 'birghtness', [800, 500]);
+    generateSpriteWithFilter('contrast(200%)', 'contrast', [1100, 500]);
+    generateSpriteWithFilter('grayscale(100%)', 'grayscale', [1400, 500]);
+    generateSpriteWithFilter('hue-rotate(90deg)', 'hueRotate', [200, 840]);
+    generateSpriteWithFilter('invert(75%)', 'brightness', [500, 840]);
+    generateSpriteWithFilter('opacity(0.25)', 'opacity', [800, 840]);
+    generateSpriteWithFilter('saturate(30%)', 'saturate', [1100, 840]);
+    generateSpriteWithFilter('sepia(100%)', 'sepia', [1400, 840]);
+  }());
+  </script>
+</body>
+</html>

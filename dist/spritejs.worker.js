@@ -8271,11 +8271,7 @@ function () {
 
                   if ((!previousMesh || !previousMesh.filterCanvas || previousMesh.filter !== currentFilter) && (!nextMesh || !nextMesh.filterCanvas || nextMesh.filter !== currentFilter)) {
                     if (hasGlobalTransform) {
-                      var _filterContext;
-
-                      filterContext.save();
-
-                      (_filterContext = filterContext).transform.apply(_filterContext, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(_this.globalTransformMatrix));
+                      filterContext.save(); // filterContext.transform(...this.globalTransformMatrix);
 
                       Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_8__["drawMesh2D"])(originalMesh, filterContext, false);
                       filterContext.restore();
@@ -8289,11 +8285,7 @@ function () {
                     drawFilterContext(renderer, filterContext, width, height);
                   } else {
                     if (hasGlobalTransform) {
-                      var _filterContext2;
-
-                      filterContext.save();
-
-                      (_filterContext2 = filterContext).transform.apply(_filterContext2, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(_this.globalTransformMatrix));
+                      filterContext.save(); // filterContext.transform(...this.globalTransformMatrix);
                     }
 
                     Object(_utils_canvas__WEBPACK_IMPORTED_MODULE_8__["drawMesh2D"])(originalMesh, filterContext, false);
