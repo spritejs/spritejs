@@ -32,7 +32,7 @@ declare namespace spritejs {
     size: [number, number],
     sourceRect: Array<any>,
     texture: string,
-    textureRect: [number, number, number],
+    textureRect: [number, number, number, number],
     textureRepeat: boolean,
     width: number,
     id: string,
@@ -1574,7 +1574,7 @@ declare namespace spritejs {
      * Set attributes.
      * @param key 
      */
-    attr(key: Attrs): this;
+    attr(key: Partial<Attrs>): this;
     /**
      * Copy the entire element.
      * @param deep 
