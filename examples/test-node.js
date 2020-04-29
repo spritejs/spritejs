@@ -31,6 +31,7 @@ const url = 'https://p0.ssl.qhimg.com/t01a72262146b87165f.png';
     bgcolor: 'rgba(255, 0, 0, 0.5)',
     // bgcolor: 'red',
     // opacity: 1.0,
+    filter: 'grayscale(0.5)',
     texture: 'robot',
   });
 
