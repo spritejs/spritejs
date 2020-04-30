@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const el = new spritejs.Sprite();
+    el.attr({
+      size: [20, 20],
+      anchor: 0.5,
+      borderWidth: 150,
+      borderColor: 'rgba(0,0,0,1)',
+      bgcolor: 'green',
+      pos: [256, 256],
+      borderRadius: 300,
+      transformOrigin: [50, 50],
+      // scale: 2.5,
+    });
+
+    const el2 = new spritejs.Arc();
+    el2.attr({
+      radius: 10,
+      pos: [300, 300],
+      fillColor: 'red',
+      scale: 5.5,
+    });
+
+    const container = document.getElementById('container');
+    const scene = new spritejs.Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+      // contextType: '2d',
+    });
+
+    const fglayer = scene.layer('fglayer');
+
+    fglayer.append(el2, el);
+  </script>
+</body>
+</html>

@@ -10057,6 +10057,14 @@ function drawMesh2D(mesh, context, enableFilter = true, cloudFill = null, cloudS
   let fill = false;
   context.globalAlpha = mesh.getOpacity();
 
+  if (mesh._updateMatrix) {
+    const acc = mesh.transformScale / mesh.contours.scale;
+
+    if (acc > 1.5) {
+      mesh.accurate(mesh.transformScale);
+    }
+  }
+
   if (mesh.lineWidth) {
     let gradient = mesh.gradient && mesh.gradient.stroke;
 
@@ -12039,7 +12047,7 @@ class Figure2D {
     if (options.path) this[_path] = parse_svg_path__WEBPACK_IMPORTED_MODULE_0___default()(options.path);else this[_path] = [];
     this[_contours] = null;
     this[_simplify] = options.simplify || 0;
-    this[_scale] = options.scale || 1;
+    this[_scale] = options.scale || 2;
   }
 
   get contours() {
@@ -14015,7 +14023,7 @@ class Mesh2D {
 
     if (path) {
       const simplify = this.contours.simplify;
-      const contours = accurate(this.contours.path, scale, simplify);
+      const contours = accurate(this.contours.path, 2 * scale, simplify);
       this[_mesh] = null;
       this[_contours] = contours;
     }
