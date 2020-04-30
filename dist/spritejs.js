@@ -39567,7 +39567,7 @@ function delegateEvents(scene) {
 
         if (evt.type === 'touchmove' || evt.type === 'touchend') {
           var capturedTarget = touchEventCapturedTargets[id];
-          if (capturedTarget) capturedTarget.dispatchEvent(event);
+          if (capturedTarget) capturedTarget.dispatchEvent(evt);
           if (evt.type === 'touchend') delete touchEventCapturedTargets[id];
         } else {
           for (var i = layers.length - 1; i >= 0; i--) {
