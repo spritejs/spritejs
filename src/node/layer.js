@@ -20,6 +20,7 @@ const _tickRender = Symbol('tickRender');
 
 const _pass = Symbol('pass');
 const _fbo = Symbol('fbo');
+const _tickers = Symbol('tickers');
 
 export default class Layer extends Group {
   constructor(options = {}) {
@@ -298,22 +299,35 @@ export default class Layer extends Group {
    * @param {*} handler
    * @param {*} options
    */
-  tick(handler, {duration = Infinity, ...timelineOptions} = {}) {
+  tick(handler = null, {duration = Infinity, ...timelineOptions} = {}) {
     // this._prepareRenderFinished();
     const t = this.timeline.fork(timelineOptions);
     const layer = this;
+
+    this[_tickers] = this[_tickers] || [];
+    this[_tickers].push({handler, duration});
 
     const update = () => {
       let _resolve = null;
       let _requestID = null;
       const _update = () => {
-        const p = Math.min(1.0, t.currentTime / duration);
-        const ret = handler ? handler(t.currentTime, p) : null;
+        // const ret = handler ? handler(t.currentTime, p) : null;
+        const ret = this[_tickers].map(({handler, duration}) => {
+          const p = Math.min(1.0, t.currentTime / duration);
+          const value = handler ? handler(t.currentTime, p) : null;
+          return {value, p};
+        });
         if(layer[_autoRender] && !layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
-            if(ret !== false && p < 1.0) {
+            for(let i = ret.length - 1; i >= 0; i--) {
+              const {value, p} = ret[i];
+              if(value === false || p >= 1.0) {
+                this[_tickers].splice(i, 1);
+              }
+            }
+            if(this[_tickers].length > 0) {
               update();
             }
           });
@@ -335,8 +349,6 @@ export default class Layer extends Group {
         prepareRender._type = 'ticker';
 
         this[_prepareRender] = prepareRender;
-      } else {
-        requestAnimationFrame(_update);
       }
     };
 

@@ -32883,6 +32883,8 @@ const _pass = Symbol('pass');
 
 const _fbo = Symbol('fbo');
 
+const _tickers = Symbol('tickers');
+
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   constructor(options = {}) {
     super();
@@ -33241,7 +33243,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
    */
 
 
-  tick(handler, _ref = {}) {
+  tick(handler = null, _ref = {}) {
     let {
       duration = Infinity
     } = _ref,
@@ -33250,21 +33252,48 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     // this._prepareRenderFinished();
     const t = this.timeline.fork(timelineOptions);
     const layer = this;
+    this[_tickers] = this[_tickers] || [];
+
+    this[_tickers].push({
+      handler,
+      duration
+    });
 
     const update = () => {
       let _resolve = null;
       let _requestID = null;
 
       const _update = () => {
-        const p = Math.min(1.0, t.currentTime / duration);
-        const ret = handler ? handler(t.currentTime, p) : null;
+        // const ret = handler ? handler(t.currentTime, p) : null;
+        const ret = this[_tickers].map(({
+          handler,
+          duration
+        }) => {
+          const p = Math.min(1.0, t.currentTime / duration);
+          const value = handler ? handler(t.currentTime, p) : null;
+          return {
+            value,
+            p
+          };
+        });
 
         if (layer[_autoRender] && !layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
             layer.render();
             delete layer[_tickRender];
 
-            if (ret !== false && p < 1.0) {
+            for (let i = ret.length - 1; i >= 0; i--) {
+              const {
+                value,
+                p
+              } = ret[i];
+
+              if (value === false || p >= 1.0) {
+                this[_tickers].splice(i, 1);
+              }
+            }
+
+            if (this[_tickers].length > 0) {
               update();
             }
           });
@@ -33285,8 +33314,6 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
         prepareRender._requestID = _requestID;
         prepareRender._type = 'ticker';
         this[_prepareRender] = prepareRender;
-      } else {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(_update);
       }
     };
 

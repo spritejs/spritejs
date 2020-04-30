@@ -38133,6 +38133,8 @@ var _pass = Symbol('pass');
 
 var _fbo = Symbol('fbo');
 
+var _tickers = Symbol('tickers');
+
 var Layer =
 /*#__PURE__*/
 function (_Group) {
@@ -38457,8 +38459,10 @@ function (_Group) {
 
   }, {
     key: "tick",
-    value: function tick(handler) {
+    value: function tick() {
       var _this5 = this;
+
+      var handler = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
       var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           _ref5$duration = _ref5.duration,
@@ -38468,21 +38472,46 @@ function (_Group) {
       // this._prepareRenderFinished();
       var t = this.timeline.fork(timelineOptions);
       var layer = this;
+      this[_tickers] = this[_tickers] || [];
+
+      this[_tickers].push({
+        handler: handler,
+        duration: duration
+      });
 
       var update = function update() {
         var _resolve = null;
         var _requestID = null;
 
         var _update = function _update() {
-          var p = Math.min(1.0, t.currentTime / duration);
-          var ret = handler ? handler(t.currentTime, p) : null;
+          // const ret = handler ? handler(t.currentTime, p) : null;
+          var ret = _this5[_tickers].map(function (_ref6) {
+            var handler = _ref6.handler,
+                duration = _ref6.duration;
+            var p = Math.min(1.0, t.currentTime / duration);
+            var value = handler ? handler(t.currentTime, p) : null;
+            return {
+              value: value,
+              p: p
+            };
+          });
 
           if (layer[_autoRender] && !layer[_tickRender]) {
             layer[_tickRender] = Promise.resolve().then(function () {
               layer.render();
               delete layer[_tickRender];
 
-              if (ret !== false && p < 1.0) {
+              for (var i = ret.length - 1; i >= 0; i--) {
+                var _ret$i = ret[i],
+                    value = _ret$i.value,
+                    p = _ret$i.p;
+
+                if (value === false || p >= 1.0) {
+                  _this5[_tickers].splice(i, 1);
+                }
+              }
+
+              if (_this5[_tickers].length > 0) {
                 update();
               }
             });
@@ -38503,8 +38532,6 @@ function (_Group) {
           prepareRender._requestID = _requestID;
           prepareRender._type = 'ticker';
           _this5[_prepareRender] = prepareRender;
-        } else {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["requestAnimationFrame"])(_update);
         }
       };
 
