@@ -11,7 +11,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8327f502ee8ba003c6b8/maintainability)](https://codeclimate.com/github/spritejs/spritejs/maintainability)
 [![License](https://img.shields.io/npm/l/spritejs.svg)](LICENSE)
 
-Spritejs is a cross platform high-performance graphics system, which can rendering graphics on web, node, desktop applications and mini-programs.
+Spritejs is a cross platform high-performance graphics system, which can render graphics on web, node, desktop applications and mini-programs.
 
 Spritejs<sup>Next</sup> is the new version of spritejs. It is renderer agnostic enabling the same api to render in multiple contexts: webgl2, webgl, and canvas2d.
 
