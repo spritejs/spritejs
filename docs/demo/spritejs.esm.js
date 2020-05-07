@@ -9374,7 +9374,13 @@ class Renderer {
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
     }
 
-    if (clearBuffer) gl.clear(gl.COLOR_BUFFER_BIT);
+    const depth = this.options.depth;
+
+    if (depth) {
+      gl.enable(gl.DEPTH_TEST);
+    }
+
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | (this.depth ? this.gl.DEPTH_BUFFER_BIT : 0) | (this.stencil ? this.gl.STENCIL_BUFFER_BIT : 0));
     const lastFrameID = this._renderFrameID;
 
     this._draw();
@@ -12168,7 +12174,7 @@ class Figure2D {
     };
     if (options.path) this[_path] = parse_svg_path__WEBPACK_IMPORTED_MODULE_0___default()(options.path);else this[_path] = [];
     this[_contours] = null;
-    this[_simplify] = options.simplify || 0;
+    this[_simplify] = options.simplify || 0.5;
     this[_scale] = options.scale || 2;
   }
 
@@ -14788,7 +14794,7 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
           for (let i = 0; i < this.roundSegments; i++) {
             _vecutil__WEBPACK_IMPORTED_MODULE_1__["rotate"](p1, p1, [0, 0], flip * delta); // console.log(p1, p2, vec.cross([], p1, p2)[2]);
 
-            if (Math.sign(_vecutil__WEBPACK_IMPORTED_MODULE_1__["cross"](tmp, p1, p2)[2]) !== flip) {
+            if (i > 0 && Math.sign(_vecutil__WEBPACK_IMPORTED_MODULE_1__["cross"](tmp, p1, p2)[2]) !== flip) {
               _vecutil__WEBPACK_IMPORTED_MODULE_1__["add"](tmp, p2, o);
               positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
 

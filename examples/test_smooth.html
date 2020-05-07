@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      #container {
+        margin-top: 20px;
+        width: 960px;
+        height: 540px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2),
+          inset 0 0 0 1px hsla(0, 0%, 100%, 0.2);
+      }
+    </style>
+    <script src="/js/spritejs.js"></script>
+    <script src="http://s9.qhres.com/static/0847e42b9c814c4b/tween.js"></script>
+  </head>
+  <body>
+    <div style="width: 960px; margin: auto;">
+      <div id="container"></div>
+      <div id="videoContainer" style="display: none;">
+        <h2>视频</h2>
+        <video
+          width="960"
+          height="540"
+          controls="true"
+          autoplay="true"
+          id="video"
+        ></video>
+      </div>
+    </div>
+    <script>
+      const { Scene, Layer, Polyline } = spritejs;
+      const scene = new Scene({
+        container: document.querySelector("#container"),
+        width: 960,
+        height: 540,
+        displayRatio: 2,
+      });
+      const layer = scene.layer("layer", {
+        handleEvent: false,
+      });
+      line = new Polyline({
+        pos: [100, 100],
+        points: [
+          0,
+          87.8542335707851,
+          19.761904761904763,
+          67.77716403973452,
+          20.336778571931756,
+          176.68540867059392,
+        ],
+        close: false,
+        strokeColor: "red",
+        lineWidth: 15,
+        lineCap: "square",
+        lineJoin: 'round',
+        opacity: 0.2,
+        smooth: true,
+      });
+      layer.appendChild(line);
+    </script>
+  </body>
+</html>
