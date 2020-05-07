@@ -17866,9 +17866,10 @@ Stroke.prototype.build = function (points) {
     var last = points[i - 1];
     var cur = points[i];
     var next = i < points.length - 1 ? points[i + 1] : null;
+    var nextnext = i < points.length - 2 ? points[i + 2] : null;
     var thickness = this.mapThickness(cur, i, points);
 
-    this._seg(complex, count, last, cur, next, thickness / 2, closed, closeNext);
+    this._seg(complex, count, last, cur, next, nextnext, thickness / 2, closed, closeNext);
 
     count = complex.positions.length - 2;
   }
@@ -17888,8 +17889,8 @@ Stroke.prototype.build = function (points) {
   return complex;
 };
 
-Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, closed, closeNext) {
-  var cap = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : this.cap;
+Stroke.prototype._seg = function (complex, index, last, cur, next, nextnext, halfThick, closed, closeNext) {
+  var cap = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : this.cap;
   // eslint-disable-line complexity
   var cells = complex.cells;
   var positions = complex.positions;
@@ -17984,6 +17985,9 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
       }
     }
 
+    var len = Infinity;
+    if (next && !nextnext) len = Math.hypot(next[0] - cur[0], next[1] - cur[1]);
+
     if (bevel) {
       // next two points in our first segment
       _vecutil__WEBPACK_IMPORTED_MODULE_3__["scaleAndAdd"](tmp, cur, this._normal, -halfThick * flip);
@@ -17992,8 +17996,13 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
       // positions.push(vec.clone(tmp));
 
       cells.push(this._lastFlip !== -flip ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
-      _vecutil__WEBPACK_IMPORTED_MODULE_3__["scaleAndAdd"](tmp, cur, miter, miterLen * flip);
-      positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](tmp));
+
+      if (len < miterLen) {
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](next));
+      } else {
+        _vecutil__WEBPACK_IMPORTED_MODULE_3__["scaleAndAdd"](tmp, cur, miter, miterLen * flip);
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](tmp));
+      }
 
       if (!joinRound) {
         cells.push(this._lastFlip !== -flip ? [index, index + 3, index + 4] : [index + 3, index + 1, index + 4]);
@@ -18056,7 +18065,21 @@ Stroke.prototype._seg = function (complex, index, last, cur, next, halfThick, cl
     } else {
       // miter
       // next two points for our miter join
-      extrusions(complex, cur, miter, miterLen);
+      // extrusions(complex, cur, miter, miterLen);
+      if (flip === -1 && len < miterLen) {
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](next));
+      } else {
+        _vecutil__WEBPACK_IMPORTED_MODULE_3__["scaleAndAdd"](tmp, cur, miter, -miterLen);
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](tmp));
+      }
+
+      if (flip === 1 && len < miterLen) {
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](next));
+      } else {
+        _vecutil__WEBPACK_IMPORTED_MODULE_3__["scaleAndAdd"](tmp, cur, miter, miterLen);
+        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_3__["clone"](tmp));
+      }
+
       cells.push(this._lastFlip === 1 ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
       flip = -1; // the miter is now the normal for our next join
 
