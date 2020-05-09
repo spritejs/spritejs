@@ -9249,7 +9249,7 @@ class Renderer {
       gl.enable(gl.DEPTH_TEST);
     }
 
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT | (this.depth ? this.gl.DEPTH_BUFFER_BIT : 0) | (this.stencil ? this.gl.STENCIL_BUFFER_BIT : 0));
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | (depth ? this.gl.DEPTH_BUFFER_BIT : 0) | (this.options.stencil ? this.gl.STENCIL_BUFFER_BIT : 0));
     const lastFrameID = this._renderFrameID;
 
     this._draw();
@@ -12043,8 +12043,8 @@ class Figure2D {
     };
     if (options.path) this[_path] = parse_svg_path__WEBPACK_IMPORTED_MODULE_0___default()(options.path);else this[_path] = [];
     this[_contours] = null;
-    this[_simplify] = options.simplify || 0.5;
-    this[_scale] = options.scale || 2;
+    this[_simplify] = options.simplify != null ? options.simplify : 0.05;
+    this[_scale] = options.scale != null ? options.scale : 2;
   }
 
   get contours() {
@@ -19805,7 +19805,8 @@ class Node {
     this[declareAlias]('class', 'pos');
     this[_changedAttrs] = new Set();
     this[_offsetFigure] = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_1__["Figure2D"]({
-      scale: 5
+      scale: 5,
+      simplify: 0
     });
   }
 

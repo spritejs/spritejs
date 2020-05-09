@@ -9898,7 +9898,7 @@ function () {
         gl.enable(gl.DEPTH_TEST);
       }
 
-      this.gl.clear(this.gl.COLOR_BUFFER_BIT | (this.depth ? this.gl.DEPTH_BUFFER_BIT : 0) | (this.stencil ? this.gl.STENCIL_BUFFER_BIT : 0));
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT | (depth ? this.gl.DEPTH_BUFFER_BIT : 0) | (this.options.stencil ? this.gl.STENCIL_BUFFER_BIT : 0));
       var lastFrameID = this._renderFrameID;
 
       this._draw();
@@ -14985,8 +14985,8 @@ function () {
     };
     if (options.path) this[_path] = parse_svg_path__WEBPACK_IMPORTED_MODULE_4___default()(options.path);else this[_path] = [];
     this[_contours] = null;
-    this[_simplify] = options.simplify || 0.5;
-    this[_scale] = options.scale || 2;
+    this[_simplify] = options.simplify != null ? options.simplify : 0.05;
+    this[_scale] = options.scale != null ? options.scale : 2;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Figure2D, [{
@@ -23347,7 +23347,8 @@ function () {
 
     this[_changedAttrs] = new Set();
     this[_offsetFigure] = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_5__["Figure2D"]({
-      scale: 5
+      scale: 5,
+      simplify: 0
     });
   }
 

@@ -158,7 +158,7 @@ export default class Node {
 
     this[declareAlias]('class', 'pos');
     this[_changedAttrs] = new Set();
-    this[_offsetFigure] = new Figure2D({scale: 5});
+    this[_offsetFigure] = new Figure2D({scale: 5, simplify: 0});
   }
 
   get [changedAttrs]() {
