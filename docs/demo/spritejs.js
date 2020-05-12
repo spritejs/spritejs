@@ -28848,8 +28848,8 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 function parseFilterString(filterStr) {
   filterStr = filterStr.trim();
   if (!filterStr || filterStr === 'none') return null;
-  var filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/i;
-  var filters = filterStr.match(/^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/ig);
+  var filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+$/i;
+  var filters = filterStr.match(/(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+?/ig);
   var ret = [];
 
   if (filters) {
@@ -28861,7 +28861,8 @@ function parseFilterString(filterStr) {
           type = _matched[1],
           args = _matched[2];
 
-      args = args.trim().split(/\s+/g).map(function (n, i) {
+      type = type.toLowerCase();
+      args = args.trim().match(/(?<=\s|^)([^( )]+|([^( )]+\(.*\)))(?=\s|$)/g).map(function (n, i) {
         var value;
 
         if (type === 'url' || type === 'drop-shadow' && i === 3) {
@@ -34794,6 +34795,11 @@ function (_Block) {
     },
     set: function set(value) {
       this.attributes.text = value;
+    }
+  }, {
+    key: "textImage",
+    get: function get() {
+      return this[_textImage] || {};
     }
   }, {
     key: "textImageReady",

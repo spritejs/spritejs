@@ -25178,8 +25178,8 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 function parseFilterString(filterStr) {
   filterStr = filterStr.trim();
   if (!filterStr || filterStr === 'none') return null;
-  const filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/i;
-  const filters = filterStr.match(/^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/ig);
+  const filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+$/i;
+  const filters = filterStr.match(/(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+?/ig);
   const ret = [];
 
   if (filters) {
@@ -25187,7 +25187,8 @@ function parseFilterString(filterStr) {
       const matched = filter.match(filterReg);
       if (!matched) throw new TypeError('Invalid fitler string.');
       let [, type, args] = matched;
-      args = args.trim().split(/\s+/g).map((n, i) => {
+      type = type.toLowerCase();
+      args = args.trim().match(/(?<=\s|^)([^( )]+|([^( )]+\(.*\)))(?=\s|$)/g).map((n, i) => {
         let value;
 
         if (type === 'url' || type === 'drop-shadow' && i === 3) {
@@ -29585,6 +29586,10 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
   set textContent(value) {
     this.attributes.text = value;
+  }
+
+  get textImage() {
+    return this[_textImage] || {};
   }
 
   get textImageReady() {
