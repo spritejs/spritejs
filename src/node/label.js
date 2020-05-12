@@ -49,6 +49,10 @@ export default class Label extends Block {
     this.attributes.text = value;
   }
 
+  get textImage() {
+    return this[_textImage] || {};
+  }
+
   get textImageReady() {
     return this[_textImageTask] || Promise.resolve();
   }
