@@ -16786,7 +16786,7 @@ function () {
     value: function setFill() {
       var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           _ref9$rule = _ref9.rule,
-          rule = _ref9$rule === void 0 ? 'nonzero' : _ref9$rule,
+          rule = _ref9$rule === void 0 ? this.fillRule : _ref9$rule,
           _ref9$color = _ref9.color,
           color = _ref9$color === void 0 ? [0, 0, 0, 0] : _ref9$color;
 

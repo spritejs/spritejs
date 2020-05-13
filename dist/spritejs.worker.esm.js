@@ -14064,7 +14064,7 @@ class Mesh2D {
   }
 
   setFill({
-    rule = 'nonzero',
+    rule = this.fillRule,
     color = [0, 0, 0, 0]
   } = {}) {
     this[_mesh] = null;
