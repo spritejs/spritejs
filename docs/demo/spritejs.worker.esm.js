@@ -25048,7 +25048,7 @@ function parseFilterString(filterStr) {
       if (!matched) throw new TypeError('Invalid fitler string.');
       let [, type, args] = matched;
       type = type.toLowerCase();
-      args = args.trim().match(/(?<=\s|^)([^( )]+|([^( )]+\(.*\)))(?=\s|$)/g).map((n, i) => {
+      args = args.trim().match(/([^( )]+|([^( )]+\(.*\)))(?=\s|$)/g).map((n, i) => {
         let value;
 
         if (type === 'url' || type === 'drop-shadow' && i === 3) {
