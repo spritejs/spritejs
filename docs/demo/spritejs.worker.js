@@ -17760,7 +17760,7 @@ function () {
       var closed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var total = points.length;
       points = _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(points);
-      if (total <= 2) return points;
+      if (total < 2) return points;
 
       if (closed) {
         if (points[0][0] !== points[total - 1][0] || points[0][1] !== points[total - 1][1]) {

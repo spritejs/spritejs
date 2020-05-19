@@ -14664,7 +14664,7 @@ class Stroke {
   build(points, closed = false) {
     let total = points.length;
     points = [...points];
-    if (total <= 2) return points;
+    if (total < 2) return points;
 
     if (closed) {
       if (points[0][0] !== points[total - 1][0] || points[0][1] !== points[total - 1][1]) {
