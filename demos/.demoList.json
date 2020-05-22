@@ -42,6 +42,9 @@
     "label": "ray",
     "src": "ray"
   }, {
+    "label": "video",
+    "src": "video"
+  }, {
     "label": "birds_fly",
     "src": "benchmark/birds_fly"
   },

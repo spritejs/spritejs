@@ -48,7 +48,7 @@ export function createTexture(image, renderer) {
     return renderer[_textureMap].get(image);
   }
   const texture = renderer.createTexture(image);
-  if(!/^blob:/.test(image.src)) {
+  if(!/^blob:/.test(image.src) && typeof image.getContext !== 'function') {
     // no cache blobs
     renderer[_textureMap].set(image, texture);
   }
@@ -71,12 +71,12 @@ export function drawTexture(node, mesh) {
     ? String(node.textureImage) : node.textureImage;
   const textureImageRotated = node.textureImageRotated;
   const texture = mesh.texture;
+  const renderer = node.renderer;
   if(textureImage) {
     const contentRect = node.originalContentRect;
     let textureRect = node.attributes.textureRect;
     const textureRepeat = node.attributes.textureRepeat;
     const sourceRect = node.attributes.sourceRect;
-    const renderer = node.renderer;
 
     if(!texture
       || node[_textureContext] && node[_textureContext] !== renderer
@@ -108,6 +108,14 @@ export function drawTexture(node, mesh) {
       node[_textureContext] = renderer;
     }
   } else if(texture) {
+    let oldTexture = null;
+    if(!renderer[_textureMap].has(texture.image)) {
+      oldTexture = mesh.uniforms.u_texSampler;
+    }
+    // delete uncached texture
+    if(oldTexture && oldTexture.delete) {
+      oldTexture.delete();
+    }
     mesh.setTexture(null);
   }
 }

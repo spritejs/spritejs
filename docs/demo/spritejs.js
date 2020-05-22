@@ -29564,7 +29564,7 @@ function createTexture(image, renderer) {
 
   var texture = renderer.createTexture(image);
 
-  if (!/^blob:/.test(image.src)) {
+  if (!/^blob:/.test(image.src) && typeof image.getContext !== 'function') {
     // no cache blobs
     renderer[_textureMap].set(image, texture);
   }
@@ -29592,13 +29592,13 @@ function drawTexture(node, mesh) {
   ? String(node.textureImage) : node.textureImage;
   var textureImageRotated = node.textureImageRotated;
   var texture = mesh.texture;
+  var renderer = node.renderer;
 
   if (textureImage) {
     var contentRect = node.originalContentRect;
     var textureRect = node.attributes.textureRect;
     var textureRepeat = node.attributes.textureRepeat;
     var sourceRect = node.attributes.sourceRect;
-    var renderer = node.renderer;
 
     if (!texture || node[_textureContext] && node[_textureContext] !== renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_4__["compareValue"])(texture.options.srcRect, sourceRect)) {
       var newTexture = createTexture(textureImage, renderer);
@@ -29630,6 +29630,17 @@ function drawTexture(node, mesh) {
       node[_textureContext] = renderer;
     }
   } else if (texture) {
+    var _oldTexture = null;
+
+    if (!renderer[_textureMap].has(texture.image)) {
+      _oldTexture = mesh.uniforms.u_texSampler;
+    } // delete uncached texture
+
+
+    if (_oldTexture && _oldTexture.delete) {
+      _oldTexture.delete();
+    }
+
     mesh.setTexture(null);
   }
 }
