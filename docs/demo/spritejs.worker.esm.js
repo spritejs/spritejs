@@ -25632,7 +25632,7 @@ function drawTexture(node, mesh) {
 
       let oldTexture = null;
 
-      if (texture && !renderer[_textureMap].has(texture.image)) {
+      if (texture && !renderer[_textureMap].has(texture.image) && (!texture.options || !texture.options.hidden)) {
         oldTexture = mesh.uniforms.u_texSampler;
       }
 
@@ -25652,16 +25652,15 @@ function drawTexture(node, mesh) {
   } else if (texture) {
     let oldTexture = null;
 
-    if (!renderer[_textureMap].has(texture.image)) {
+    if (!renderer[_textureMap].has(texture.image) && (!texture.options || !texture.options.hidden)) {
       oldTexture = mesh.uniforms.u_texSampler;
-    } // delete uncached texture
+    }
 
+    mesh.setTexture(null); // delete uncached texture
 
     if (oldTexture && oldTexture.delete) {
       oldTexture.delete();
     }
-
-    mesh.setTexture(null);
   }
 }
 /**
