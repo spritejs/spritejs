@@ -38299,13 +38299,11 @@ function (_Group) {
 
     var _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Renderer"];
 
-    _this[_renderer] = new _Renderer(canvas, opts);
-
-    if (canvas.__gl__) {
-      // fix blendFunc for node-canvas-webgl
-      var gl = canvas.__gl__;
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    }
+    _this[_renderer] = new _Renderer(canvas, opts); // if(canvas.__gl__) {
+    //   // fix blendFunc for node-canvas-webgl
+    //   const gl = canvas.__gl__;
+    //   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // }
 
     _this.options = options;
     _this.id = options.id;

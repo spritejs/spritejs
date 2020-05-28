@@ -43,11 +43,11 @@ export default class Layer extends Group {
     delete options.autoRender;
     const _Renderer = opts.Renderer || Renderer;
     this[_renderer] = new _Renderer(canvas, opts);
-    if(canvas.__gl__) {
-      // fix blendFunc for node-canvas-webgl
-      const gl = canvas.__gl__;
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    }
+    // if(canvas.__gl__) {
+    //   // fix blendFunc for node-canvas-webgl
+    //   const gl = canvas.__gl__;
+    //   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // }
     this.options = options;
     this.id = options.id;
     this[_pass] = [];

@@ -33015,13 +33015,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
     const _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Renderer"];
 
-    this[_renderer] = new _Renderer(canvas, opts);
-
-    if (canvas.__gl__) {
-      // fix blendFunc for node-canvas-webgl
-      const gl = canvas.__gl__;
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    }
+    this[_renderer] = new _Renderer(canvas, opts); // if(canvas.__gl__) {
+    //   // fix blendFunc for node-canvas-webgl
+    //   const gl = canvas.__gl__;
+    //   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // }
 
     this.options = options;
     this.id = options.id;
