@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[213],{729:function(n,e,t){"use strict";t.r(e),e.default="const container = document.getElementById('stage');\nconst scene = new spritejs.Scene({\n  container,\n  width: 1200,\n  height: 600,\n});\n\nscene.layer('fglayer', {worker: './worker.js'});"}}]);

@@ -33,6 +33,9 @@
     "label": "svg path",
     "src": "svg_path"
   }, {
+    "label": "path animate",
+    "src": "path_animate"
+  }, {
     "label": "offset api",
     "src": "offset_api"
   }, {
