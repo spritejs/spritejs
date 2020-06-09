@@ -52,7 +52,7 @@ const layer = scene.layer3d('fglayer', {
   },
   ambientColor: 'white',
 });
-
+layer.gl.clearColor(1, 1, 1, 1);
 layer.camera.attributes.pos = [6, 6, 12];
 // layer.camera.lookAt([0, 0, 0]);
 
