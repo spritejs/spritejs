@@ -17353,6 +17353,11 @@ function () {
       var meshData = this.meshData;
       var positions = meshData.positions,
           cells = meshData.cells;
+      var box = this.renderBox;
+
+      if (box && (x < box[0][0] || x > box[1][0] || y < box[0][1] || y > box[1][1])) {
+        return false;
+      }
 
       function projectionOn(_ref22, _ref23, _ref24) {
         var _ref25 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref22, 2),
@@ -17485,6 +17490,29 @@ function () {
         var positions = meshData.position0;
         if (positions.length) meshData.boundingBox = bound_points__WEBPACK_IMPORTED_MODULE_6___default()(positions);else return [[0, 0], [0, 0]];
         return meshData.boundingBox;
+      }
+
+      return [[0, 0], [0, 0]];
+    }
+  }, {
+    key: "renderBox",
+    get: function get() {
+      if (this[_mesh] && !this._updateMatrix && this[_mesh]._renderBox) return this[_mesh]._renderBox;
+      var bound = this.boundingBox;
+
+      if (bound) {
+        var x0 = bound[0][0];
+        var y0 = bound[0][1];
+        var x1 = bound[1][0];
+        var y1 = bound[1][1];
+        var m = this[_transform];
+        var box = [[m[0] * x0 + m[2] * y0 + m[4], m[1] * x0 + m[3] * y0 + m[5]], [m[0] * x1 + m[2] * y1 + m[4], m[1] * x1 + m[3] * y1 + m[5]]];
+
+        if (this[_mesh]) {
+          this[_mesh]._renderBox = box;
+        }
+
+        return box;
       }
 
       return [[0, 0], [0, 0]];
@@ -40259,11 +40287,14 @@ function (_Group) {
 
       for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
-        if (layer.render) layer.render();
-        var canvas = layer.canvas;
 
-        if (canvas && canvas !== layer) {
-          context.drawImage(canvas, 0, 0, width, height);
+        if (!layer.options.ignoreSnapshot) {
+          if (layer.render) layer.render();
+          var canvas = layer.canvas;
+
+          if (canvas && canvas !== layer) {
+            context.drawImage(canvas, 0, 0, width, height);
+          }
         }
       }
 

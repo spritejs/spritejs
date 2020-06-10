@@ -521,10 +521,12 @@ export default class Scene extends Group {
     context.clearRect(0, 0, width, height);
     for(let i = 0; i < layers.length; i++) {
       const layer = layers[i];
-      if(layer.render) layer.render();
-      const canvas = layer.canvas;
-      if(canvas && canvas !== layer) {
-        context.drawImage(canvas, 0, 0, width, height);
+      if(!layer.options.ignoreSnapshot) {
+        if(layer.render) layer.render();
+        const canvas = layer.canvas;
+        if(canvas && canvas !== layer) {
+          context.drawImage(canvas, 0, 0, width, height);
+        }
       }
     }
     return this[_canvas];

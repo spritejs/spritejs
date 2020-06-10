@@ -13696,6 +13696,28 @@ class Mesh2D {
     return [[0, 0], [0, 0]];
   }
 
+  get renderBox() {
+    if (this[_mesh] && !this._updateMatrix && this[_mesh]._renderBox) return this[_mesh]._renderBox;
+    const bound = this.boundingBox;
+
+    if (bound) {
+      const x0 = bound[0][0];
+      const y0 = bound[0][1];
+      const x1 = bound[1][0];
+      const y1 = bound[1][1];
+      const m = this[_transform];
+      const box = [[m[0] * x0 + m[2] * y0 + m[4], m[1] * x0 + m[3] * y0 + m[5]], [m[0] * x1 + m[2] * y1 + m[4], m[1] * x1 + m[3] * y1 + m[5]]];
+
+      if (this[_mesh]) {
+        this[_mesh]._renderBox = box;
+      }
+
+      return box;
+    }
+
+    return [[0, 0], [0, 0]];
+  }
+
   get boundingCenter() {
     const bound = this.boundingBox;
 
@@ -14415,6 +14437,11 @@ class Mesh2D {
       positions,
       cells
     } = meshData;
+    const box = this.renderBox;
+
+    if (box && (x < box[0][0] || x > box[1][0] || y < box[0][1] || y > box[1][1])) {
+      return false;
+    }
 
     function projectionOn([x0, y0], [x1, y1], [x2, y2]) {
       const v2x = x2 - x1;
