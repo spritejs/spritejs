@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+    <script src="/js/spritejs.js"></script>
+    <script src="http://s9.qhres.com/static/0847e42b9c814c4b.js"></script>
+  </head>
+  <body>
+    <div id="container" style="height:500px;background-color:#ccc"></div>
+    <script>
+    const {Scene, Label, Polyline, Path} = spritejs;
+    const container = document.querySelector('#container');
+    const shape = 'M24.5 300.5a150 150 0 1 0 300 0a150 150 0 1 0 -300 0z';
+    const scene = new Scene({
+      container,
+      displayRatio: window.devicePixelRatio,
+      // contextType: 'webgl'
+    });
+    const layer = scene.layer('hahaha');
+    const polyline = new Polyline();
+    polyline.attr({
+      points: [[-43.7, 555.5], [-43.7, 254.02463410395694],
+        [-43.7, 254.02463410395694], [-6.200000000000003, 260.016583204131],
+        [31.299999999999997, 263.36277911891165],
+        [68.8, 262.10306566377784], [106.3, 256.97536589604306],
+        [143.8, 250.983416795869],
+        [181.3, 247.63722088108835],
+        [218.8, 248.8969343362222],
+        [256.3, 254.02463410395694],
+        [293.8, 260.016583204131], [331.3, 263.36277911891165],
+        [368.8, 262.10306566377784], [406.3, 256.9753658960431],
+        [443.8, 250.983416795869], [443.8, 250.983416795869],
+        [443.8, 555.5]],
+      clipPath: shape,
+      fillColor: '#f00',
+      smooth: true,
+      strokeColor: '#0f0',
+    });
+
+    const label = new Label();
+    label.attr({
+      text: 'aaaa',
+      fontSize: 60,
+      pos: [200, 300],
+    });
+
+    const path = new Path();
+    path.attr({
+      d: shape,
+      strokeColor: '#000',
+    });
+
+    layer.append(polyline);
+    layer.append(label);
+    layer.append(path);
+    </script>
+  </body>
+</html>

@@ -1275,7 +1275,11 @@ declare namespace spritejs {
      */
     updateContours(): void;
   }
-
+  
+  interface TextImage {
+    image?: HTMLCanvasElement,
+    rect?: [number, number, number, number]
+  }
   /**
    * Label draws a piece of text.
    */
@@ -1286,6 +1290,7 @@ declare namespace spritejs {
      * Element's content size.
      */
     get contentSize(): Array<number>;
+    get textImage(): TextImage;
     get textImageReady(): Promise<any>;
     get text(): string;
     set text(value: string);

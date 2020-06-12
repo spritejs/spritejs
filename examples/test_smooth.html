@@ -48,7 +48,7 @@
       const layer = scene.layer("layer", {
         handleEvent: false,
       });
-      line = new Polyline({
+      const line = new Polyline({
         pos: [100, 100],
         points: [
           0,
@@ -65,11 +65,11 @@
         //   90, 60,
         // ],
         close: false,
-        strokeColor: "red",
+        strokeColor: 'red',
         lineWidth: 20,
-        lineCap: "square",
-        // lineJoin: 'bevel',
-        miterLimit: 100,
+        lineCap: 'square',
+        lineJoin: 'bevel',
+        // miterLimit: 100,
         opacity: 0.2,
         smooth: true,
       });

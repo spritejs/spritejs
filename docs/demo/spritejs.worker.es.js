@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 297);
+/******/ 	return __webpack_require__(__webpack_require__.s = 290);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -7819,9 +7819,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _figure2d__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(40);
 /* harmony import */ var _mesh2d__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(56);
 /* harmony import */ var _mesh_cloud__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(29);
-/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(65);
+/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(59);
 /* harmony import */ var _utils_env__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(21);
-/* harmony import */ var _utils_shader_creator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(70);
+/* harmony import */ var _utils_shader_creator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(63);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -12052,7 +12052,7 @@ class Figure2D {
     };
     if (options.path) this[_path] = parse_svg_path__WEBPACK_IMPORTED_MODULE_0___default()(options.path);else this[_path] = [];
     this[_contours] = null;
-    this[_simplify] = options.simplify != null ? options.simplify : 0.05;
+    this[_simplify] = options.simplify != null ? options.simplify : 0;
     this[_scale] = options.scale != null ? options.scale : 2;
   }
 
@@ -12744,7 +12744,9 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 /* eslint-disable */
 var bezier = __webpack_require__(47);
 
-var vec2 = __webpack_require__(49);
+var {
+  copy
+} = __webpack_require__(49);
 
 var simplify = __webpack_require__(50);
 
@@ -12768,7 +12770,7 @@ module.exports = function contours(svg, scale, simp) {
   var pen = [0, 0];
   svg.forEach(function (segment, i, self) {
     if (segment[0] === 'M') {
-      vec2.copy(pen, segment.slice(1));
+      copy(pen, segment.slice(1));
 
       if (points.length > 0) {
         paths.push(points);
@@ -13011,6 +13013,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cross", function() { return cross; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMiter", function() { return computeMiter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normal", function() { return normal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "direction", function() { return direction; });
 /* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
@@ -13031,6 +13036,34 @@ const rotate = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].rotate;
 const cross = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].cross;
 const sub = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].sub;
 const add = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].add;
+const normalize = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].normalize;
+const set = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].set;
+const tmp = create();
+
+function computeMiter(tangent, miter, lineA, lineB, halfThick) {
+  // get tangent line
+  add(tangent, lineA, lineB);
+  normalize(tangent, tangent); // get miter as a unit vector
+
+  set(miter, -tangent[1], tangent[0]);
+  set(tmp, -lineA[1], lineA[0]); // get the necessary length of our miter
+
+  return halfThick / dot(miter, tmp);
+}
+
+function normal(out, dir) {
+  // get perpendicular
+  set(out, -dir[1], dir[0]);
+  return out;
+}
+
+function direction(out, a, b) {
+  // get unit dir of two lines
+  sub(out, a, b);
+  normalize(out, out);
+  return out;
+}
+
 
 
 /***/ }),
@@ -13315,13 +13348,13 @@ function getDashContours(contours, lineDash, lineDashOffset) {
     idx = -1;
 
     do {
-      lineDashOffset += lineDash[idx % lineDashLen + lineDashLen];
+      lineDashOffset += lineDash[idx % lineDashLen + lineDashLen - 1];
       idx--;
     } while (lineDashOffset < 0);
 
-    if (lineDashOffset > 0) {
+    if (lineDashOffset >= 0) {
       idx++;
-      dash = lineDash[idx % lineDashLen + lineDashLen] - lineDashOffset;
+      dash = lineDash[idx % lineDashLen + lineDashLen - 1] - lineDashOffset;
     }
   }
 
@@ -13408,13 +13441,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var bound_points__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(42);
 /* harmony import */ var bound_points__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bound_points__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _extrude_polyline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(57);
+/* harmony import */ var _extrude_contours__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(57);
 /* harmony import */ var _utils_flatten_meshes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(28);
 /* harmony import */ var _utils_vector_to_rgba__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(24);
 /* harmony import */ var _utils_color_matrix__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
-/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(65);
+/* harmony import */ var _utils_transform__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(59);
 /* harmony import */ var _utils_contours__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(53);
-/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(66);
+/* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(60);
 /* harmony import */ var _triangulate_contours__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_triangulate_contours__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(46);
 /* harmony import */ var _svg_path_contours__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_svg_path_contours__WEBPACK_IMPORTED_MODULE_9__);
@@ -13454,6 +13487,8 @@ const _strokeColor = Symbol('strokeColor');
 const _fillColor = Symbol('fillColor');
 
 const _transform = Symbol('transform');
+
+const _invertTransform = Symbol('invertTransform');
 
 const _uniforms = Symbol('uniforms');
 
@@ -13692,7 +13727,7 @@ class Mesh2D {
 
   get lineWidth() {
     if (this[_stroke]) {
-      return this[_stroke].thickness;
+      return this[_stroke].lineWidth;
     }
 
     return 0;
@@ -13700,7 +13735,7 @@ class Mesh2D {
 
   get lineCap() {
     if (this[_stroke]) {
-      return this[_stroke].cap;
+      return this[_stroke].lineCap;
     }
 
     return '';
@@ -13708,7 +13743,7 @@ class Mesh2D {
 
   get lineJoin() {
     if (this[_stroke]) {
-      return this[_stroke].join;
+      return this[_stroke].lineJoin;
     }
 
     return '';
@@ -13784,6 +13819,15 @@ class Mesh2D {
 
   get transformMatrix() {
     return this[_transform];
+  }
+
+  get invertMatrix() {
+    if (!this[_invertTransform]) {
+      const m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), this[_transform]);
+      this[_invertTransform] = m;
+    }
+
+    return this[_invertTransform];
   }
 
   get transformScale() {
@@ -13875,7 +13919,10 @@ class Mesh2D {
 
           const _meshes = strokeContours.map((lines, i) => {
             const closed = lines.length > 1 && gl_matrix__WEBPACK_IMPORTED_MODULE_0__["vec2"].equals(lines[0], lines[lines.length - 1]);
-            return this[_stroke].build(lines, closed);
+
+            const points = this[_stroke].build(lines, closed);
+
+            return _triangulate_contours__WEBPACK_IMPORTED_MODULE_8___default()([points]);
           });
 
           _meshes.forEach(mesh => {
@@ -14036,7 +14083,7 @@ class Mesh2D {
   }
 
   canIgnore() {
-    const noStroke = this[_stroke] == null || this[_stroke].thickness === 0 || this[_strokeColor][3] === 0;
+    const noStroke = this[_stroke] == null || this[_stroke].lineWidth === 0 || this[_strokeColor][3] === 0;
     const noFill = this[_fill] == null || this[_fillColor][3] === 0;
     const noGradient = this[_uniforms].u_radialGradientVector == null;
     const noTexture = this[_uniforms].u_texSampler == null;
@@ -14058,10 +14105,10 @@ class Mesh2D {
     roundSegments = 20
   } = {}) {
     this[_mesh] = null;
-    this[_stroke] = Object(_extrude_polyline__WEBPACK_IMPORTED_MODULE_2__["default"])({
-      thickness,
-      cap,
-      join,
+    this[_stroke] = new _extrude_contours__WEBPACK_IMPORTED_MODULE_2__["default"]({
+      lineWidth: thickness,
+      lineCap: cap,
+      lineJoin: join,
       miterLimit,
       roundSegments
     });
@@ -14073,7 +14120,7 @@ class Mesh2D {
   }
 
   setFill({
-    rule = 'nonzero',
+    rule = this.fillRule,
     color = [0, 0, 0, 0]
   } = {}) {
     this[_mesh] = null;
@@ -14234,6 +14281,7 @@ class Mesh2D {
 
     if (!gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].equals(m, transform)) {
       this[_transform] = m;
+      delete this[_invertTransform];
       this._updateMatrix = true;
     }
 
@@ -14243,6 +14291,7 @@ class Mesh2D {
   transform(...m) {
     const transform = this[_transform];
     this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
+    delete this[_invertTransform];
     this._updateMatrix = true;
     return this;
   }
@@ -14388,6 +14437,14 @@ class Mesh2D {
       positions,
       cells
     } = meshData;
+    const m = this.invertMatrix;
+    const x0 = m[0] * x + m[2] * y + m[4];
+    const y0 = m[1] * x + m[3] * y + m[5];
+    const box = this.boundingBox;
+
+    if (box && (x0 < box[0][0] || x0 > box[1][0] || y0 < box[0][1] || y0 > box[1][1])) {
+      return false;
+    }
 
     function projectionOn([x0, y0], [x1, y1], [x2, y2]) {
       const v2x = x2 - x1;
@@ -14463,464 +14520,250 @@ class Mesh2D {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var as_number__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
-/* harmony import */ var as_number__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(as_number__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _vecutil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(49);
+/* harmony import */ var _stroke__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
-
-const tmp = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-const capEnd = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-const lineA = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-const lineB = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-const tangent = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-const miter = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-
-const util = __webpack_require__(59);
-
-const computeMiter = util.computeMiter,
-      normal = util.normal,
-      direction = util.direction;
-const MAX_MITER_VALUE = 1e20; // infinity * 0 cause NaN, fix #7
-
-function Stroke(opt) {
-  if (!(this instanceof Stroke)) return new Stroke(opt);
-  opt = opt || {};
-  this.miterLimit = as_number__WEBPACK_IMPORTED_MODULE_0___default()(opt.miterLimit, 10);
-  this.thickness = as_number__WEBPACK_IMPORTED_MODULE_0___default()(opt.thickness, 1);
-  this.join = opt.join || 'miter';
-  this.cap = opt.cap || 'butt';
-  this.roundSegments = opt.roundSegments || 20;
-  this._normal = null;
-  this._lastFlip = -1;
-  this._started = false;
-}
-
-Stroke.prototype.mapThickness = function (point, i, points) {
-  return this.thickness;
-};
-
-Stroke.prototype.build = function (points, closed = false) {
-  points = [...points];
-  const complex = {
-    positions: [],
-    cells: []
-  };
-  if (points.length <= 1) return complex;
-  let closeNext = null;
-
-  if (closed) {
-    const [a, b] = points;
-    const v = [b[0] - a[0], b[1] - a[1]];
-    closeNext = _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](_vecutil__WEBPACK_IMPORTED_MODULE_1__["create"](), a, v, 1e-7);
-    points.unshift([...points[points.length - 2]]);
-  }
-
-  const total = points.length; // clear flags
-
-  this._lastFlip = -1;
-  this._started = false;
-  this._normal = null; // join each segment
-
-  for (let i = 1, count = 0; i < total; i++) {
-    const last = points[i - 1];
-    const cur = points[i];
-    const next = i < points.length - 1 ? points[i + 1] : null;
-    const nextnext = i < points.length - 2 ? points[i + 2] : null;
-    const thickness = this.mapThickness(cur, i, points);
-
-    this._seg(complex, count, last, cur, next, nextnext, thickness / 2, closed, closeNext);
-
-    count = complex.positions.length - 2;
-  }
-
-  if (closed) {
-    complex.positions = complex.positions.slice(2);
-    complex.cells = complex.cells.slice(2).map(([a, b, c]) => [a - 2, b - 2, c - 2]);
-  }
-
-  return complex;
-};
-
-Stroke.prototype._seg = function (complex, index, last, cur, next, nextnext, halfThick, closed, closeNext, cap = this.cap) {
-  // eslint-disable-line complexity
-  const cells = complex.cells;
-  const positions = complex.positions;
-  const capSquare = cap === 'square';
-  const capRound = cap === 'round';
-  const capRoundStart = cap === 'roundStart';
-  const capRoundEnd = cap === 'roundEnd';
-  const joinBevel = this.join === 'bevel';
-  const joinRound = this.join === 'round'; // get unit direction of line
-
-  direction(lineA, cur, last); // if we don't yet have a normal from previous join,
-  // compute based on line start - end
-
-  if (!this._normal) {
-    this._normal = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-    normal(this._normal, lineA);
-  } // if we haven't started yet, add the first two points
-
-
-  if (!this._started) {
-    this._started = true; // if the end cap is type square, we can just push the verts out a bit
-
-    if (capSquare) {
-      _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](capEnd, last, lineA, -halfThick);
-      last = capEnd;
-    }
-
-    if (capRound || capRoundStart) {
-      round(complex, last, this._normal, halfThick, -1, this.roundSegments);
-
-      for (let i = 1; i <= this.roundSegments; i++) {
-        cells.push([index, index + i, index + i + 1]);
-      }
-
-      index += this.roundSegments + 2;
-    }
-
-    extrusions(complex, last, this._normal, halfThick);
-  }
-
-  cells.push([index + 0, index + 1, index + 2]);
-  /*
-    // now determine the type of join with next segment
-     - round (TODO)
-    - bevel
-    - miter
-    - none (i.e. no next segment, use normal)
-     */
-
-  if (!closed && !next) {
-    // no next segment, simple extrusion
-    // now reset normal to finish cap
-    normal(this._normal, lineA); // push square end cap out a bit
-
-    if (capSquare) {
-      _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](capEnd, cur, lineA, halfThick);
-      cur = capEnd;
-    }
-
-    extrusions(complex, cur, this._normal, halfThick);
-    cells.push(this._lastFlip === 1 ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
-
-    if (capRound || capRoundEnd) {
-      const idx = complex.positions.length;
-      round(complex, cur, this._normal, halfThick, 1, this.roundSegments);
-
-      for (let i = 1; i <= this.roundSegments; i++) {
-        cells.push([idx, idx + i, idx + i + 1]);
-      }
-
-      index += this.roundSegments + 2;
-    }
-  } else {
-    // we have a next segment, start with miter
-    // get unit dir of next line
-    if (!next) direction(lineB, closeNext, cur);else direction(lineB, next, cur); // stores tangent & miter
-
-    let miterLen = computeMiter(tangent, miter, lineA, lineB, halfThick); // infinity * 0 cause NaN, fix #7
-
-    miterLen = Math.min(miterLen, MAX_MITER_VALUE); // normal(tmp, lineA)
-    // get orientation
-
-    let flip = _vecutil__WEBPACK_IMPORTED_MODULE_1__["dot"](tangent, this._normal) < 0 ? -1 : 1;
-    let bevel = joinBevel || joinRound;
-
-    if (!bevel && this.join === 'miter') {
-      const limit = miterLen / halfThick;
-
-      if (limit > this.miterLimit) {
-        miterLen = this.miterLimit * halfThick;
-        bevel = true;
-      }
-    }
-
-    let len = Infinity;
-    if (next && !nextnext) len = Math.hypot(next[0] - cur[0], next[1] - cur[1]);
-
-    if (bevel) {
-      // next two points in our first segment
-      _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, this._normal, -halfThick * flip);
-      positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-      positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](cur)); // vec.scaleAndAdd(tmp, cur, miter, miterLen * flip);
-      // positions.push(vec.clone(tmp));
-
-      cells.push(this._lastFlip !== -flip ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
-
-      if (len < miterLen) {
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](next));
-      } else {
-        _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, miter, miterLen * flip);
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-      }
-
-      if (!joinRound) {
-        cells.push(this._lastFlip !== -flip ? [index, index + 3, index + 4] : [index + 3, index + 1, index + 4]);
-      }
-
-      if (next) {
-        normal(tmp, lineB);
-        _vecutil__WEBPACK_IMPORTED_MODULE_1__["copy"](this._normal, tmp); // store normal for next round
-
-        _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, tmp, -halfThick * flip);
-        const pE2 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp); // now add the bevel triangle
-
-        if (!joinRound) {
-          cells.push([index + 2, index + 3, index + 5]);
-        } else {
-          // join round
-          const pEnd = positions.pop();
-          const o = positions[index + 3];
-          const p1 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["sub"](_vecutil__WEBPACK_IMPORTED_MODULE_1__["create"](), positions[index + 2], o);
-          const p2 = _vecutil__WEBPACK_IMPORTED_MODULE_1__["sub"](_vecutil__WEBPACK_IMPORTED_MODULE_1__["create"](), pE2, o);
-          const delta = Math.PI / this.roundSegments;
-
-          for (let i = 0; i < this.roundSegments; i++) {
-            _vecutil__WEBPACK_IMPORTED_MODULE_1__["rotate"](p1, p1, [0, 0], flip * delta); // console.log(p1, p2, vec.cross([], p1, p2)[2]);
-
-            if (i > 0 && Math.sign(_vecutil__WEBPACK_IMPORTED_MODULE_1__["cross"](tmp, p1, p2)[2]) !== flip) {
-              _vecutil__WEBPACK_IMPORTED_MODULE_1__["add"](tmp, p2, o);
-              positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-
-              if (i === 0) {
-                cells.push([index + 3, index + 2, index + 5]);
-              } else {
-                cells.push([index + 3, index + 5 + i - 1, index + 5 + i]);
-              }
-
-              break;
-            } else {
-              _vecutil__WEBPACK_IMPORTED_MODULE_1__["add"](tmp, p1, o);
-              positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-
-              if (i === 0) {
-                cells.push([index + 3, index + 2, index + 5]);
-              } else {
-                cells.push([index + 3, index + 5 + i - 1, index + 5 + i]);
-              }
-            }
-          } // console.log(index, positions.length);
-
-
-          cells.push(this._lastFlip !== -flip ? [index, index + 3, positions.length] : [index + 3, index + 1, positions.length]);
-          positions.push(pEnd);
-        }
-
-        positions.push(pE2);
-      }
-
-      if (!next || !joinRound) {
-        cells.push([index + 3, index + 4, index + 5]);
-      }
-    } else {
-      // miter
-      // next two points for our miter join
-      // extrusions(complex, cur, miter, miterLen);
-      if (flip === -1 && len < miterLen) {
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](next));
-      } else {
-        _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, miter, -miterLen);
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-      }
-
-      if (flip === 1 && len < miterLen) {
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](next));
-      } else {
-        _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, cur, miter, miterLen);
-        positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-      }
-
-      cells.push(this._lastFlip === 1 ? [index, index + 2, index + 3] : [index + 2, index + 1, index + 3]);
-      flip = -1; // the miter is now the normal for our next join
-
-      _vecutil__WEBPACK_IMPORTED_MODULE_1__["copy"](this._normal, miter);
-    }
-
-    this._lastFlip = flip;
-  }
-};
-
-function extrusions(complex, point, normal, scale) {
-  const positions = complex.positions; // next two points to end our segment
-
-  _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, point, normal, -scale);
-  positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-  _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, point, normal, scale);
-  positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-}
-
-function round(complex, point, normal, scale, dir = 1, roundSegments = 20) {
-  const positions = complex.positions; // const positions = [];
-
-  const t = _vecutil__WEBPACK_IMPORTED_MODULE_1__["create"]();
-  positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](point));
-
-  for (let i = 0; i <= roundSegments; i++) {
-    const rad = dir * Math.PI * i / roundSegments;
-    _vecutil__WEBPACK_IMPORTED_MODULE_1__["rotate"](t, normal, [0, 0], rad);
-    _vecutil__WEBPACK_IMPORTED_MODULE_1__["scaleAndAdd"](tmp, point, t, -scale);
-    positions.push(_vecutil__WEBPACK_IMPORTED_MODULE_1__["clone"](tmp));
-  }
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (Stroke);
+/* harmony default export */ __webpack_exports__["default"] = (_stroke__WEBPACK_IMPORTED_MODULE_0__["Stroke"]);
 
 /***/ }),
 /* 58 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-module.exports = function numtype(num, def) {
-	return typeof num === 'number'
-		? num 
-		: (typeof def === 'number' ? def : 0)
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Stroke", function() { return Stroke; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(49);
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+
+const tmp = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+const lineA = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+const lineB = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+const tangent = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+const miter = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+const MAX_MITER_VALUE = 1e20; // infinity * 0 cause NaN, fix #7
+
+class Stroke {
+  constructor({
+    lineWidth = 1,
+    lineJoin = 'miter',
+    miterLimit = 10,
+    lineCap = 'butt',
+    roundSegments = 20
+  } = {}) {
+    this.lineWidth = lineWidth;
+    this.lineJoin = lineJoin;
+    this.miterLimit = miterLimit;
+    this.lineCap = lineCap;
+    this.roundSegments = roundSegments;
+    this._normal = null;
+  }
+
+  build(points, closed = false) {
+    let total = points.length;
+    points = [...points];
+    if (total < 2) return points;
+
+    if (closed) {
+      if (points[0][0] !== points[total - 1][0] || points[0][1] !== points[total - 1][1]) {
+        points.push([...points[0]]);
+      }
+
+      points.push([...points[1]]);
+    }
+
+    total = points.length; // clear flags
+
+    this._normal = null;
+    const contours = {
+      left: [],
+      right: []
+    };
+    const halfThick = this.lineWidth / 2;
+    const cap = this.lineCap;
+
+    if (!closed && cap === 'square') {
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["direction"])(lineA, points[0], points[1]);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(points[0], points[0], lineA, halfThick);
+      const idx = points.length - 1;
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["direction"])(lineA, points[idx], points[idx - 1]);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(points[idx], points[idx], lineA, halfThick);
+    } // join each segment
+
+
+    for (let i = 1; i < total; i++) {
+      const last = points[i - 1];
+      const cur = points[i];
+      const next = points[i + 1];
+
+      this._seg(contours, last, cur, next, halfThick, closed);
+    }
+
+    if (!closed && cap === 'round') {
+      capRound(contours, this.roundSegments);
+    }
+
+    const ret = [...contours.left, ...contours.right.reverse()];
+    return ret;
+  }
+
+  _seg(contours, last, cur, next, halfThick, closed) {
+    const joinBevel = this.lineJoin === 'bevel';
+    const joinRound = this.lineJoin === 'round'; // get unit direction of line
+
+    Object(_utils__WEBPACK_IMPORTED_MODULE_0__["direction"])(lineA, cur, last); // if we don't yet have a normal from previous join,
+    // compute based on line start - end
+
+    if (!this._normal) {
+      this._normal = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["normal"])(this._normal, lineA);
+    }
+
+    if (!contours.left.length) {
+      // start
+      extrusions(contours, last, this._normal, halfThick);
+    }
+
+    if (!next) {
+      // no next segment, simple extrusion
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["normal"])(this._normal, lineA);
+
+      if (!closed) {
+        extrusions(contours, cur, this._normal, halfThick);
+      } else {
+        extrusions(contours, last, this._normal, halfThick);
+      }
+    } else {
+      // we have a next segment, start with miter
+      // get unit dir of next line
+      Object(_utils__WEBPACK_IMPORTED_MODULE_0__["direction"])(lineB, next, cur); // stores tangent & miter
+
+      let miterLen = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["computeMiter"])(tangent, miter, lineA, lineB, halfThick); // infinity * 0 cause NaN, fix #7
+
+      miterLen = Math.min(miterLen, MAX_MITER_VALUE); // get orientation
+
+      const flip = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["dot"])(tangent, this._normal) < 0 ? -1 : 1;
+      let bevel = joinBevel || joinRound;
+
+      if (!bevel && this.lineJoin === 'miter') {
+        const limit = miterLen / halfThick;
+
+        if (limit > this.miterLimit) {
+          // miterLen = this.miterLimit * halfThick;
+          bevel = true;
+        }
+      } // let len = Infinity;
+      // if(next && !nextnext) len = Math.hypot(next[0] - cur[0], next[1] - cur[1]);
+
+
+      if (bevel) {
+        // next two points in our first segment
+        Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(tmp, cur, this._normal, -halfThick * flip);
+        addPoint(contours, tmp, flip);
+        let maxLen = Infinity;
+
+        if (last) {
+          maxLen = Math.min(maxLen, Math.hypot(cur[0] - last[0], cur[1] - last[1]));
+        }
+
+        if (next) {
+          maxLen = Math.min(maxLen, Math.hypot(next[0] - cur[0], next[1] - cur[1]));
+        }
+
+        const len = Math.max(halfThick, Math.min(miterLen, maxLen));
+        Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(tmp, cur, miter, len * flip);
+        addPoint(contours, tmp, -flip);
+
+        if (next) {
+          Object(_utils__WEBPACK_IMPORTED_MODULE_0__["normal"])(tmp, lineB);
+          Object(_utils__WEBPACK_IMPORTED_MODULE_0__["copy"])(this._normal, tmp); // store normal for next round
+
+          Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(tmp, cur, tmp, -halfThick * flip);
+
+          if (joinRound) {
+            const pEnd = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(tmp);
+            const pStart = flip > 0 ? contours.left[contours.left.length - 1] : contours.right[contours.right.length - 1];
+            const o = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(cur);
+            const p1 = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sub"])(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])(), pStart, o);
+            const p2 = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sub"])(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])(), pEnd, o);
+            const delta = Math.PI / this.roundSegments;
+
+            for (let i = 0; i < this.roundSegments; i++) {
+              Object(_utils__WEBPACK_IMPORTED_MODULE_0__["rotate"])(p1, p1, [0, 0], flip * delta);
+
+              if (Math.sign(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["cross"])(tmp, p1, p2)[2]) !== flip) {
+                break;
+              } else {
+                Object(_utils__WEBPACK_IMPORTED_MODULE_0__["add"])(tmp, p1, o);
+              }
+
+              addPoint(contours, tmp, flip);
+            }
+
+            addPoint(contours, pEnd, flip);
+          } else {
+            addPoint(contours, tmp, flip);
+          }
+        }
+      } else {
+        extrusions(contours, cur, miter, miterLen);
+        Object(_utils__WEBPACK_IMPORTED_MODULE_0__["copy"])(this._normal, miter);
+      }
+    }
+  }
+
+}
+
+function addPoint(contours, point, flip) {
+  if (flip > 0) {
+    contours.left.push(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(point));
+  } else {
+    contours.right.push(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(point));
+  }
+}
+
+function extrusions(contours, point, normal, scale, flip = -1) {
+  // next two points to end our segment
+  Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(tmp, point, normal, -scale);
+  addPoint(contours, tmp, -flip);
+  Object(_utils__WEBPACK_IMPORTED_MODULE_0__["scaleAndAdd"])(tmp, point, normal, scale);
+  addPoint(contours, tmp, flip);
+}
+
+function capRound({
+  left,
+  right
+}, roundSegments) {
+  const t = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+  const normal = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["create"])();
+  let pStart = left[0];
+  let pEnd = right[0];
+  let center = [0.5 * (pStart[0] + pEnd[0]), 0.5 * (pStart[1] + pEnd[1])];
+  Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sub"])(normal, pStart, center);
+
+  for (let i = 1; i <= roundSegments; i++) {
+    const rad = -1 * Math.PI * i / roundSegments;
+    Object(_utils__WEBPACK_IMPORTED_MODULE_0__["rotate"])(t, normal, [0, 0], rad);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_0__["add"])(tmp, center, t);
+    left.unshift(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(tmp));
+  }
+
+  pStart = right[right.length - 1];
+  pEnd = left[left.length - 1];
+  center = [0.5 * (pStart[0] + pEnd[0]), 0.5 * (pStart[1] + pEnd[1])];
+  Object(_utils__WEBPACK_IMPORTED_MODULE_0__["sub"])(normal, pStart, center);
+
+  for (let i = 1; i <= roundSegments; i++) {
+    const rad = -1 * Math.PI * i / roundSegments;
+    Object(_utils__WEBPACK_IMPORTED_MODULE_0__["rotate"])(t, normal, [0, 0], rad);
+    Object(_utils__WEBPACK_IMPORTED_MODULE_0__["add"])(tmp, center, t);
+    right.push(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["clone"])(tmp));
+  }
 }
 
 /***/ }),
 /* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var add = __webpack_require__(60)
-var set = __webpack_require__(61)
-var normalize = __webpack_require__(62)
-var subtract = __webpack_require__(63)
-var dot = __webpack_require__(64)
-
-var tmp = [0, 0]
-
-module.exports.computeMiter = function computeMiter(tangent, miter, lineA, lineB, halfThick) {
-    //get tangent line
-    add(tangent, lineA, lineB)
-    normalize(tangent, tangent)
-
-    //get miter as a unit vector
-    set(miter, -tangent[1], tangent[0])
-    set(tmp, -lineA[1], lineA[0])
-
-    //get the necessary length of our miter
-    return halfThick / dot(miter, tmp)
-}
-
-module.exports.normal = function normal(out, dir) {
-    //get perpendicular
-    set(out, -dir[1], dir[0])
-    return out
-}
-
-module.exports.direction = function direction(out, a, b) {
-    //get unit dir of two lines
-    subtract(out, a, b)
-    normalize(out, out)
-    return out
-}
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports) {
-
-module.exports = add
-
-/**
- * Adds two vec2's
- *
- * @param {vec2} out the receiving vector
- * @param {vec2} a the first operand
- * @param {vec2} b the second operand
- * @returns {vec2} out
- */
-function add(out, a, b) {
-    out[0] = a[0] + b[0]
-    out[1] = a[1] + b[1]
-    return out
-}
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports) {
-
-module.exports = set
-
-/**
- * Set the components of a vec2 to the given values
- *
- * @param {vec2} out the receiving vector
- * @param {Number} x X component
- * @param {Number} y Y component
- * @returns {vec2} out
- */
-function set(out, x, y) {
-    out[0] = x
-    out[1] = y
-    return out
-}
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = normalize
-
-/**
- * Normalize a vec2
- *
- * @param {vec2} out the receiving vector
- * @param {vec2} a vector to normalize
- * @returns {vec2} out
- */
-function normalize(out, a) {
-    var x = a[0],
-        y = a[1]
-    var len = x*x + y*y
-    if (len > 0) {
-        //TODO: evaluate use of glm_invsqrt here?
-        len = 1 / Math.sqrt(len)
-        out[0] = a[0] * len
-        out[1] = a[1] * len
-    }
-    return out
-}
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports) {
-
-module.exports = subtract
-
-/**
- * Subtracts vector b from vector a
- *
- * @param {vec2} out the receiving vector
- * @param {vec2} a the first operand
- * @param {vec2} b the second operand
- * @returns {vec2} out
- */
-function subtract(out, a, b) {
-    out[0] = a[0] - b[0]
-    out[1] = a[1] - b[1]
-    return out
-}
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports) {
-
-module.exports = dot
-
-/**
- * Calculates the dot product of two vec2's
- *
- * @param {vec2} a the first operand
- * @param {vec2} b the second operand
- * @returns {Number} dot product of a and b
- */
-function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1]
-}
-
-/***/ }),
-/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14933,7 +14776,7 @@ function isUnitTransform(m) {
 }
 
 /***/ }),
-/* 66 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
@@ -14941,9 +14784,9 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 // https://github.com/mattdesl/triangulate-contours
 
 /* eslint-disable */
-var Tess2 = __webpack_require__(67);
+var Tess2 = __webpack_require__(61);
 
-var xtend = __webpack_require__(69);
+var xtend = __webpack_require__(62);
 
 module.exports = function (contours, opt) {
   opt = opt || {};
@@ -14998,16 +14841,12 @@ module.exports = function (contours, opt) {
 };
 
 /***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(68);
-
-/***/ }),
-/* 68 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* eslint-disabled */
+
 /*
 ** SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008) 
 ** Copyright (C) [dates of first publication] Silicon Graphics, Inc.
@@ -15035,3407 +14874,3647 @@ module.exports = __webpack_require__(68);
 ** be used in advertising or otherwise to promote the sale, use or other dealings in
 ** this Software without prior written authorization from Silicon Graphics, Inc.
 */
+
 /*
 ** Author: Mikko Mononen, Aug 2013.
 ** The code is based on GLU libtess by Eric Veach, July 1994
 */
 
-	
-
-	/* Public API */
-
-	var Tess2 = {};
-
-	module.exports = Tess2;
-	
-	Tess2.WINDING_ODD = 0;
-	Tess2.WINDING_NONZERO = 1;
-	Tess2.WINDING_POSITIVE = 2;
-	Tess2.WINDING_NEGATIVE = 3;
-	Tess2.WINDING_ABS_GEQ_TWO = 4;
-
-	Tess2.POLYGONS = 0;
-	Tess2.CONNECTED_POLYGONS = 1;
-	Tess2.BOUNDARY_CONTOURS = 2;
-
-	Tess2.tesselate = function(opts) {
-		var debug =  opts.debug || false;
-		var tess = new Tesselator();
-		for (var i = 0; i < opts.contours.length; i++) {
-			tess.addContour(opts.vertexSize || 2, opts.contours[i]);
-		}
-		tess.tesselate(opts.windingRule || Tess2.WINDING_ODD,
-					   opts.elementType || Tess2.POLYGONS,
-					   opts.polySize || 3,
-					   opts.vertexSize || 2,
-					   opts.normal || [0,0,1]);
-		return {
-			vertices: tess.vertices,
-			vertexIndices: tess.vertexIndices,
-			vertexCount: tess.vertexCount,
-			elements: tess.elements,
-			elementCount: tess.elementCount,
-			mesh: debug ? tess.mesh : undefined
-		};
-	};
-
-	/* Internal */
-
-	var assert = function(cond) {
-		if (!cond) {
-			throw "Assertion Failed!";
-		}
-	}
-
-	/* The mesh structure is similar in spirit, notation, and operations
-	* to the "quad-edge" structure (see L. Guibas and J. Stolfi, Primitives
-	* for the manipulation of general subdivisions and the computation of
-	* Voronoi diagrams, ACM Transactions on Graphics, 4(2):74-123, April 1985).
-	* For a simplified description, see the course notes for CS348a,
-	* "Mathematical Foundations of Computer Graphics", available at the
-	* Stanford bookstore (and taught during the fall quarter).
-	* The implementation also borrows a tiny subset of the graph-based approach
-	* use in Mantyla's Geometric Work Bench (see M. Mantyla, An Introduction
-	* to Sold Modeling, Computer Science Press, Rockville, Maryland, 1988).
-	*
-	* The fundamental data structure is the "half-edge".  Two half-edges
-	* go together to make an edge, but they point in opposite directions.
-	* Each half-edge has a pointer to its mate (the "symmetric" half-edge Sym),
-	* its origin vertex (Org), the face on its left side (Lface), and the
-	* adjacent half-edges in the CCW direction around the origin vertex
-	* (Onext) and around the left face (Lnext).  There is also a "next"
-	* pointer for the global edge list (see below).
-	*
-	* The notation used for mesh navigation:
-	*  Sym   = the mate of a half-edge (same edge, but opposite direction)
-	*  Onext = edge CCW around origin vertex (keep same origin)
-	*  Dnext = edge CCW around destination vertex (keep same dest)
-	*  Lnext = edge CCW around left face (dest becomes new origin)
-	*  Rnext = edge CCW around right face (origin becomes new dest)
-	*
-	* "prev" means to substitute CW for CCW in the definitions above.
-	*
-	* The mesh keeps global lists of all vertices, faces, and edges,
-	* stored as doubly-linked circular lists with a dummy header node.
-	* The mesh stores pointers to these dummy headers (vHead, fHead, eHead).
-	*
-	* The circular edge list is special; since half-edges always occur
-	* in pairs (e and e->Sym), each half-edge stores a pointer in only
-	* one direction.  Starting at eHead and following the e->next pointers
-	* will visit each *edge* once (ie. e or e->Sym, but not both).
-	* e->Sym stores a pointer in the opposite direction, thus it is
-	* always true that e->Sym->next->Sym->next == e.
-	*
-	* Each vertex has a pointer to next and previous vertices in the
-	* circular list, and a pointer to a half-edge with this vertex as
-	* the origin (NULL if this is the dummy header).  There is also a
-	* field "data" for client data.
-	*
-	* Each face has a pointer to the next and previous faces in the
-	* circular list, and a pointer to a half-edge with this face as
-	* the left face (NULL if this is the dummy header).  There is also
-	* a field "data" for client data.
-	*
-	* Note that what we call a "face" is really a loop; faces may consist
-	* of more than one loop (ie. not simply connected), but there is no
-	* record of this in the data structure.  The mesh may consist of
-	* several disconnected regions, so it may not be possible to visit
-	* the entire mesh by starting at a half-edge and traversing the edge
-	* structure.
-	*
-	* The mesh does NOT support isolated vertices; a vertex is deleted along
-	* with its last edge.  Similarly when two faces are merged, one of the
-	* faces is deleted (see tessMeshDelete below).  For mesh operations,
-	* all face (loop) and vertex pointers must not be NULL.  However, once
-	* mesh manipulation is finished, TESSmeshZapFace can be used to delete
-	* faces of the mesh, one at a time.  All external faces can be "zapped"
-	* before the mesh is returned to the client; then a NULL face indicates
-	* a region which is not part of the output polygon.
-	*/
-
-	function TESSvertex() {
-		this.next = null;	/* next vertex (never NULL) */
-		this.prev = null;	/* previous vertex (never NULL) */
-		this.anEdge = null;	/* a half-edge with this origin */
-
-		/* Internal data (keep hidden) */
-		this.coords = [0,0,0];	/* vertex location in 3D */
-		this.s = 0.0;
-		this.t = 0.0;			/* projection onto the sweep plane */
-		this.pqHandle = 0;		/* to allow deletion from priority queue */
-		this.n = 0;				/* to allow identify unique vertices */
-		this.idx = 0;			/* to allow map result to original verts */
-	} 
-
-	function TESSface() {
-		this.next = null;		/* next face (never NULL) */
-		this.prev = null;		/* previous face (never NULL) */
-		this.anEdge = null;		/* a half edge with this left face */
-
-		/* Internal data (keep hidden) */
-		this.trail = null;		/* "stack" for conversion to strips */
-		this.n = 0;				/* to allow identiy unique faces */
-		this.marked = false;	/* flag for conversion to strips */
-		this.inside = false;	/* this face is in the polygon interior */
-	};
-
-	function TESShalfEdge(side) {
-		this.next = null;		/* doubly-linked list (prev==Sym->next) */
-		this.Sym = null;		/* same edge, opposite direction */
-		this.Onext = null;		/* next edge CCW around origin */
-		this.Lnext = null;		/* next edge CCW around left face */
-		this.Org = null;		/* origin vertex (Overtex too long) */
-		this.Lface = null;		/* left face */
-
-		/* Internal data (keep hidden) */
-		this.activeRegion = null;	/* a region with this upper edge (sweep.c) */
-		this.winding = 0;			/* change in winding number when crossing
-									   from the right face to the left face */
-		this.side = side;
-	};
-
-	TESShalfEdge.prototype = {
-		get Rface() { return this.Sym.Lface; },
-		set Rface(v) { this.Sym.Lface = v; },
-		get Dst() { return this.Sym.Org; },
-		set Dst(v) { this.Sym.Org = v; },
-		get Oprev() { return this.Sym.Lnext; },
-		set Oprev(v) { this.Sym.Lnext = v; },
-		get Lprev() { return this.Onext.Sym; },
-		set Lprev(v) { this.Onext.Sym = v; },
-		get Dprev() { return this.Lnext.Sym; },
-		set Dprev(v) { this.Lnext.Sym = v; },
-		get Rprev() { return this.Sym.Onext; },
-		set Rprev(v) { this.Sym.Onext = v; },
-		get Dnext() { return /*this.Rprev*/this.Sym.Onext.Sym; },  /* 3 pointers */
-		set Dnext(v) { /*this.Rprev*/this.Sym.Onext.Sym = v; },  /* 3 pointers */
-		get Rnext() { return /*this.Oprev*/this.Sym.Lnext.Sym; },  /* 3 pointers */
-		set Rnext(v) { /*this.Oprev*/this.Sym.Lnext.Sym = v; },  /* 3 pointers */
-	};
-
-
-
-	function TESSmesh() {
-		var v = new TESSvertex();
-		var f = new TESSface();
-		var e = new TESShalfEdge(0);
-		var eSym = new TESShalfEdge(1);
-
-		v.next = v.prev = v;
-		v.anEdge = null;
-
-		f.next = f.prev = f;
-		f.anEdge = null;
-		f.trail = null;
-		f.marked = false;
-		f.inside = false;
-
-		e.next = e;
-		e.Sym = eSym;
-		e.Onext = null;
-		e.Lnext = null;
-		e.Org = null;
-		e.Lface = null;
-		e.winding = 0;
-		e.activeRegion = null;
-
-		eSym.next = eSym;
-		eSym.Sym = e;
-		eSym.Onext = null;
-		eSym.Lnext = null;
-		eSym.Org = null;
-		eSym.Lface = null;
-		eSym.winding = 0;
-		eSym.activeRegion = null;
-
-		this.vHead = v;		/* dummy header for vertex list */
-		this.fHead = f;		/* dummy header for face list */
-		this.eHead = e;		/* dummy header for edge list */
-		this.eHeadSym = eSym;	/* and its symmetric counterpart */
-	};
-
-	/* The mesh operations below have three motivations: completeness,
-	* convenience, and efficiency.  The basic mesh operations are MakeEdge,
-	* Splice, and Delete.  All the other edge operations can be implemented
-	* in terms of these.  The other operations are provided for convenience
-	* and/or efficiency.
-	*
-	* When a face is split or a vertex is added, they are inserted into the
-	* global list *before* the existing vertex or face (ie. e->Org or e->Lface).
-	* This makes it easier to process all vertices or faces in the global lists
-	* without worrying about processing the same data twice.  As a convenience,
-	* when a face is split, the "inside" flag is copied from the old face.
-	* Other internal data (v->data, v->activeRegion, f->data, f->marked,
-	* f->trail, e->winding) is set to zero.
-	*
-	* ********************** Basic Edge Operations **************************
-	*
-	* tessMeshMakeEdge( mesh ) creates one edge, two vertices, and a loop.
-	* The loop (face) consists of the two new half-edges.
-	*
-	* tessMeshSplice( eOrg, eDst ) is the basic operation for changing the
-	* mesh connectivity and topology.  It changes the mesh so that
-	*  eOrg->Onext <- OLD( eDst->Onext )
-	*  eDst->Onext <- OLD( eOrg->Onext )
-	* where OLD(...) means the value before the meshSplice operation.
-	*
-	* This can have two effects on the vertex structure:
-	*  - if eOrg->Org != eDst->Org, the two vertices are merged together
-	*  - if eOrg->Org == eDst->Org, the origin is split into two vertices
-	* In both cases, eDst->Org is changed and eOrg->Org is untouched.
-	*
-	* Similarly (and independently) for the face structure,
-	*  - if eOrg->Lface == eDst->Lface, one loop is split into two
-	*  - if eOrg->Lface != eDst->Lface, two distinct loops are joined into one
-	* In both cases, eDst->Lface is changed and eOrg->Lface is unaffected.
-	*
-	* tessMeshDelete( eDel ) removes the edge eDel.  There are several cases:
-	* if (eDel->Lface != eDel->Rface), we join two loops into one; the loop
-	* eDel->Lface is deleted.  Otherwise, we are splitting one loop into two;
-	* the newly created loop will contain eDel->Dst.  If the deletion of eDel
-	* would create isolated vertices, those are deleted as well.
-	*
-	* ********************** Other Edge Operations **************************
-	*
-	* tessMeshAddEdgeVertex( eOrg ) creates a new edge eNew such that
-	* eNew == eOrg->Lnext, and eNew->Dst is a newly created vertex.
-	* eOrg and eNew will have the same left face.
-	*
-	* tessMeshSplitEdge( eOrg ) splits eOrg into two edges eOrg and eNew,
-	* such that eNew == eOrg->Lnext.  The new vertex is eOrg->Dst == eNew->Org.
-	* eOrg and eNew will have the same left face.
-	*
-	* tessMeshConnect( eOrg, eDst ) creates a new edge from eOrg->Dst
-	* to eDst->Org, and returns the corresponding half-edge eNew.
-	* If eOrg->Lface == eDst->Lface, this splits one loop into two,
-	* and the newly created loop is eNew->Lface.  Otherwise, two disjoint
-	* loops are merged into one, and the loop eDst->Lface is destroyed.
-	*
-	* ************************ Other Operations *****************************
-	*
-	* tessMeshNewMesh() creates a new mesh with no edges, no vertices,
-	* and no loops (what we usually call a "face").
-	*
-	* tessMeshUnion( mesh1, mesh2 ) forms the union of all structures in
-	* both meshes, and returns the new mesh (the old meshes are destroyed).
-	*
-	* tessMeshDeleteMesh( mesh ) will free all storage for any valid mesh.
-	*
-	* tessMeshZapFace( fZap ) destroys a face and removes it from the
-	* global face list.  All edges of fZap will have a NULL pointer as their
-	* left face.  Any edges which also have a NULL pointer as their right face
-	* are deleted entirely (along with any isolated vertices this produces).
-	* An entire mesh can be deleted by zapping its faces, one at a time,
-	* in any order.  Zapped faces cannot be used in further mesh operations!
-	*
-	* tessMeshCheckMesh( mesh ) checks a mesh for self-consistency.
-	*/
-
-	TESSmesh.prototype = {
-
-		/* MakeEdge creates a new pair of half-edges which form their own loop.
-		* No vertex or face structures are allocated, but these must be assigned
-		* before the current edge operation is completed.
-		*/
-		//static TESShalfEdge *MakeEdge( TESSmesh* mesh, TESShalfEdge *eNext )
-		makeEdge_: function(eNext) {
-			var e = new TESShalfEdge(0);
-			var eSym = new TESShalfEdge(1);
-
-			/* Make sure eNext points to the first edge of the edge pair */
-			if( eNext.Sym.side < eNext.side ) { eNext = eNext.Sym; }
-
-			/* Insert in circular doubly-linked list before eNext.
-			* Note that the prev pointer is stored in Sym->next.
-			*/
-			var ePrev = eNext.Sym.next;
-			eSym.next = ePrev;
-			ePrev.Sym.next = e;
-			e.next = eNext;
-			eNext.Sym.next = eSym;
-
-			e.Sym = eSym;
-			e.Onext = e;
-			e.Lnext = eSym;
-			e.Org = null;
-			e.Lface = null;
-			e.winding = 0;
-			e.activeRegion = null;
-
-			eSym.Sym = e;
-			eSym.Onext = eSym;
-			eSym.Lnext = e;
-			eSym.Org = null;
-			eSym.Lface = null;
-			eSym.winding = 0;
-			eSym.activeRegion = null;
-
-			return e;
-		},
-
-		/* Splice( a, b ) is best described by the Guibas/Stolfi paper or the
-		* CS348a notes (see mesh.h).  Basically it modifies the mesh so that
-		* a->Onext and b->Onext are exchanged.  This can have various effects
-		* depending on whether a and b belong to different face or vertex rings.
-		* For more explanation see tessMeshSplice() below.
-		*/
-		// static void Splice( TESShalfEdge *a, TESShalfEdge *b )
-		splice_: function(a, b) {
-			var aOnext = a.Onext;
-			var bOnext = b.Onext;
-			aOnext.Sym.Lnext = b;
-			bOnext.Sym.Lnext = a;
-			a.Onext = bOnext;
-			b.Onext = aOnext;
-		},
-
-		/* MakeVertex( newVertex, eOrig, vNext ) attaches a new vertex and makes it the
-		* origin of all edges in the vertex loop to which eOrig belongs. "vNext" gives
-		* a place to insert the new vertex in the global vertex list.  We insert
-		* the new vertex *before* vNext so that algorithms which walk the vertex
-		* list will not see the newly created vertices.
-		*/
-		//static void MakeVertex( TESSvertex *newVertex, TESShalfEdge *eOrig, TESSvertex *vNext )
-		makeVertex_: function(newVertex, eOrig, vNext) {
-			var vNew = newVertex;
-			assert(vNew !== null);
-
-			/* insert in circular doubly-linked list before vNext */
-			var vPrev = vNext.prev;
-			vNew.prev = vPrev;
-			vPrev.next = vNew;
-			vNew.next = vNext;
-			vNext.prev = vNew;
-
-			vNew.anEdge = eOrig;
-			/* leave coords, s, t undefined */
-
-			/* fix other edges on this vertex loop */
-			var e = eOrig;
-			do {
-				e.Org = vNew;
-				e = e.Onext;
-			} while(e !== eOrig);
-		},
-
-		/* MakeFace( newFace, eOrig, fNext ) attaches a new face and makes it the left
-		* face of all edges in the face loop to which eOrig belongs.  "fNext" gives
-		* a place to insert the new face in the global face list.  We insert
-		* the new face *before* fNext so that algorithms which walk the face
-		* list will not see the newly created faces.
-		*/
-		// static void MakeFace( TESSface *newFace, TESShalfEdge *eOrig, TESSface *fNext )
-		makeFace_: function(newFace, eOrig, fNext) {
-			var fNew = newFace;
-			assert(fNew !== null); 
-
-			/* insert in circular doubly-linked list before fNext */
-			var fPrev = fNext.prev;
-			fNew.prev = fPrev;
-			fPrev.next = fNew;
-			fNew.next = fNext;
-			fNext.prev = fNew;
-
-			fNew.anEdge = eOrig;
-			fNew.trail = null;
-			fNew.marked = false;
-
-			/* The new face is marked "inside" if the old one was.  This is a
-			* convenience for the common case where a face has been split in two.
-			*/
-			fNew.inside = fNext.inside;
-
-			/* fix other edges on this face loop */
-			var e = eOrig;
-			do {
-				e.Lface = fNew;
-				e = e.Lnext;
-			} while(e !== eOrig);
-		},
-
-		/* KillEdge( eDel ) destroys an edge (the half-edges eDel and eDel->Sym),
-		* and removes from the global edge list.
-		*/
-		//static void KillEdge( TESSmesh *mesh, TESShalfEdge *eDel )
-		killEdge_: function(eDel) {
-			/* Half-edges are allocated in pairs, see EdgePair above */
-			if( eDel.Sym.side < eDel.side ) { eDel = eDel.Sym; }
-
-			/* delete from circular doubly-linked list */
-			var eNext = eDel.next;
-			var ePrev = eDel.Sym.next;
-			eNext.Sym.next = ePrev;
-			ePrev.Sym.next = eNext;
-		},
-
-
-		/* KillVertex( vDel ) destroys a vertex and removes it from the global
-		* vertex list.  It updates the vertex loop to point to a given new vertex.
-		*/
-		//static void KillVertex( TESSmesh *mesh, TESSvertex *vDel, TESSvertex *newOrg )
-		killVertex_: function(vDel, newOrg) {
-			var eStart = vDel.anEdge;
-			/* change the origin of all affected edges */
-			var e = eStart;
-			do {
-				e.Org = newOrg;
-				e = e.Onext;
-			} while(e !== eStart);
-
-			/* delete from circular doubly-linked list */
-			var vPrev = vDel.prev;
-			var vNext = vDel.next;
-			vNext.prev = vPrev;
-			vPrev.next = vNext;
-		},
-
-		/* KillFace( fDel ) destroys a face and removes it from the global face
-		* list.  It updates the face loop to point to a given new face.
-		*/
-		//static void KillFace( TESSmesh *mesh, TESSface *fDel, TESSface *newLface )
-		killFace_: function(fDel, newLface) {
-			var eStart = fDel.anEdge;
-
-			/* change the left face of all affected edges */
-			var e = eStart;
-			do {
-				e.Lface = newLface;
-				e = e.Lnext;
-			} while(e !== eStart);
-
-			/* delete from circular doubly-linked list */
-			var fPrev = fDel.prev;
-			var fNext = fDel.next;
-			fNext.prev = fPrev;
-			fPrev.next = fNext;
-		},
-
-		/****************** Basic Edge Operations **********************/
-
-		/* tessMeshMakeEdge creates one edge, two vertices, and a loop (face).
-		* The loop consists of the two new half-edges.
-		*/
-		//TESShalfEdge *tessMeshMakeEdge( TESSmesh *mesh )
-		makeEdge: function() {
-			var newVertex1 = new TESSvertex();
-			var newVertex2 = new TESSvertex();
-			var newFace = new TESSface();
-			var e = this.makeEdge_( this.eHead);
-			this.makeVertex_( newVertex1, e, this.vHead );
-			this.makeVertex_( newVertex2, e.Sym, this.vHead );
-			this.makeFace_( newFace, e, this.fHead );
-			return e;
-		},
-
-		/* tessMeshSplice( eOrg, eDst ) is the basic operation for changing the
-		* mesh connectivity and topology.  It changes the mesh so that
-		*	eOrg->Onext <- OLD( eDst->Onext )
-		*	eDst->Onext <- OLD( eOrg->Onext )
-		* where OLD(...) means the value before the meshSplice operation.
-		*
-		* This can have two effects on the vertex structure:
-		*  - if eOrg->Org != eDst->Org, the two vertices are merged together
-		*  - if eOrg->Org == eDst->Org, the origin is split into two vertices
-		* In both cases, eDst->Org is changed and eOrg->Org is untouched.
-		*
-		* Similarly (and independently) for the face structure,
-		*  - if eOrg->Lface == eDst->Lface, one loop is split into two
-		*  - if eOrg->Lface != eDst->Lface, two distinct loops are joined into one
-		* In both cases, eDst->Lface is changed and eOrg->Lface is unaffected.
-		*
-		* Some special cases:
-		* If eDst == eOrg, the operation has no effect.
-		* If eDst == eOrg->Lnext, the new face will have a single edge.
-		* If eDst == eOrg->Lprev, the old face will have a single edge.
-		* If eDst == eOrg->Onext, the new vertex will have a single edge.
-		* If eDst == eOrg->Oprev, the old vertex will have a single edge.
-		*/
-		//int tessMeshSplice( TESSmesh* mesh, TESShalfEdge *eOrg, TESShalfEdge *eDst )
-		splice: function(eOrg, eDst) {
-			var joiningLoops = false;
-			var joiningVertices = false;
-
-			if( eOrg === eDst ) return;
-
-			if( eDst.Org !== eOrg.Org ) {
-				/* We are merging two disjoint vertices -- destroy eDst->Org */
-				joiningVertices = true;
-				this.killVertex_( eDst.Org, eOrg.Org );
-			}
-			if( eDst.Lface !== eOrg.Lface ) {
-				/* We are connecting two disjoint loops -- destroy eDst->Lface */
-				joiningLoops = true;
-				this.killFace_( eDst.Lface, eOrg.Lface );
-			}
-
-			/* Change the edge structure */
-			this.splice_( eDst, eOrg );
-
-			if( ! joiningVertices ) {
-				var newVertex = new TESSvertex();
-
-				/* We split one vertex into two -- the new vertex is eDst->Org.
-				* Make sure the old vertex points to a valid half-edge.
-				*/
-				this.makeVertex_( newVertex, eDst, eOrg.Org );
-				eOrg.Org.anEdge = eOrg;
-			}
-			if( ! joiningLoops ) {
-				var newFace = new TESSface();  
-
-				/* We split one loop into two -- the new loop is eDst->Lface.
-				* Make sure the old face points to a valid half-edge.
-				*/
-				this.makeFace_( newFace, eDst, eOrg.Lface );
-				eOrg.Lface.anEdge = eOrg;
-			}
-		},
-
-		/* tessMeshDelete( eDel ) removes the edge eDel.  There are several cases:
-		* if (eDel->Lface != eDel->Rface), we join two loops into one; the loop
-		* eDel->Lface is deleted.  Otherwise, we are splitting one loop into two;
-		* the newly created loop will contain eDel->Dst.  If the deletion of eDel
-		* would create isolated vertices, those are deleted as well.
-		*
-		* This function could be implemented as two calls to tessMeshSplice
-		* plus a few calls to memFree, but this would allocate and delete
-		* unnecessary vertices and faces.
-		*/
-		//int tessMeshDelete( TESSmesh *mesh, TESShalfEdge *eDel )
-		delete: function(eDel) {
-			var eDelSym = eDel.Sym;
-			var joiningLoops = false;
-
-			/* First step: disconnect the origin vertex eDel->Org.  We make all
-			* changes to get a consistent mesh in this "intermediate" state.
-			*/
-			if( eDel.Lface !== eDel.Rface ) {
-				/* We are joining two loops into one -- remove the left face */
-				joiningLoops = true;
-				this.killFace_( eDel.Lface, eDel.Rface );
-			}
-
-			if( eDel.Onext === eDel ) {
-				this.killVertex_( eDel.Org, null );
-			} else {
-				/* Make sure that eDel->Org and eDel->Rface point to valid half-edges */
-				eDel.Rface.anEdge = eDel.Oprev;
-				eDel.Org.anEdge = eDel.Onext;
-
-				this.splice_( eDel, eDel.Oprev );
-				if( ! joiningLoops ) {
-					var newFace = new TESSface();
-
-					/* We are splitting one loop into two -- create a new loop for eDel. */
-					this.makeFace_( newFace, eDel, eDel.Lface );
-				}
-			}
-
-			/* Claim: the mesh is now in a consistent state, except that eDel->Org
-			* may have been deleted.  Now we disconnect eDel->Dst.
-			*/
-			if( eDelSym.Onext === eDelSym ) {
-				this.killVertex_( eDelSym.Org, null );
-				this.killFace_( eDelSym.Lface, null );
-			} else {
-				/* Make sure that eDel->Dst and eDel->Lface point to valid half-edges */
-				eDel.Lface.anEdge = eDelSym.Oprev;
-				eDelSym.Org.anEdge = eDelSym.Onext;
-				this.splice_( eDelSym, eDelSym.Oprev );
-			}
-
-			/* Any isolated vertices or faces have already been freed. */
-			this.killEdge_( eDel );
-		},
-
-		/******************** Other Edge Operations **********************/
-
-		/* All these routines can be implemented with the basic edge
-		* operations above.  They are provided for convenience and efficiency.
-		*/
-
-
-		/* tessMeshAddEdgeVertex( eOrg ) creates a new edge eNew such that
-		* eNew == eOrg->Lnext, and eNew->Dst is a newly created vertex.
-		* eOrg and eNew will have the same left face.
-		*/
-		// TESShalfEdge *tessMeshAddEdgeVertex( TESSmesh *mesh, TESShalfEdge *eOrg );
-		addEdgeVertex: function(eOrg) {
-			var eNew = this.makeEdge_( eOrg );
-			var eNewSym = eNew.Sym;
-
-			/* Connect the new edge appropriately */
-			this.splice_( eNew, eOrg.Lnext );
-
-			/* Set the vertex and face information */
-			eNew.Org = eOrg.Dst;
-
-			var newVertex = new TESSvertex();
-			this.makeVertex_( newVertex, eNewSym, eNew.Org );
-
-			eNew.Lface = eNewSym.Lface = eOrg.Lface;
-
-			return eNew;
-		},
-
-
-		/* tessMeshSplitEdge( eOrg ) splits eOrg into two edges eOrg and eNew,
-		* such that eNew == eOrg->Lnext.  The new vertex is eOrg->Dst == eNew->Org.
-		* eOrg and eNew will have the same left face.
-		*/
-		// TESShalfEdge *tessMeshSplitEdge( TESSmesh *mesh, TESShalfEdge *eOrg );
-		splitEdge: function(eOrg, eDst) {
-			var tempHalfEdge = this.addEdgeVertex( eOrg );
-			var eNew = tempHalfEdge.Sym;
-
-			/* Disconnect eOrg from eOrg->Dst and connect it to eNew->Org */
-			this.splice_( eOrg.Sym, eOrg.Sym.Oprev );
-			this.splice_( eOrg.Sym, eNew );
-
-			/* Set the vertex and face information */
-			eOrg.Dst = eNew.Org;
-			eNew.Dst.anEdge = eNew.Sym;	/* may have pointed to eOrg->Sym */
-			eNew.Rface = eOrg.Rface;
-			eNew.winding = eOrg.winding;	/* copy old winding information */
-			eNew.Sym.winding = eOrg.Sym.winding;
-
-			return eNew;
-		},
-
-
-		/* tessMeshConnect( eOrg, eDst ) creates a new edge from eOrg->Dst
-		* to eDst->Org, and returns the corresponding half-edge eNew.
-		* If eOrg->Lface == eDst->Lface, this splits one loop into two,
-		* and the newly created loop is eNew->Lface.  Otherwise, two disjoint
-		* loops are merged into one, and the loop eDst->Lface is destroyed.
-		*
-		* If (eOrg == eDst), the new face will have only two edges.
-		* If (eOrg->Lnext == eDst), the old face is reduced to a single edge.
-		* If (eOrg->Lnext->Lnext == eDst), the old face is reduced to two edges.
-		*/
-
-		// TESShalfEdge *tessMeshConnect( TESSmesh *mesh, TESShalfEdge *eOrg, TESShalfEdge *eDst );
-		connect: function(eOrg, eDst) {
-			var joiningLoops = false;  
-			var eNew = this.makeEdge_( eOrg );
-			var eNewSym = eNew.Sym;
-
-			if( eDst.Lface !== eOrg.Lface ) {
-				/* We are connecting two disjoint loops -- destroy eDst->Lface */
-				joiningLoops = true;
-				this.killFace_( eDst.Lface, eOrg.Lface );
-			}
-
-			/* Connect the new edge appropriately */
-			this.splice_( eNew, eOrg.Lnext );
-			this.splice_( eNewSym, eDst );
-
-			/* Set the vertex and face information */
-			eNew.Org = eOrg.Dst;
-			eNewSym.Org = eDst.Org;
-			eNew.Lface = eNewSym.Lface = eOrg.Lface;
-
-			/* Make sure the old face points to a valid half-edge */
-			eOrg.Lface.anEdge = eNewSym;
-
-			if( ! joiningLoops ) {
-				var newFace = new TESSface();
-				/* We split one loop into two -- the new loop is eNew->Lface */
-				this.makeFace_( newFace, eNew, eOrg.Lface );
-			}
-			return eNew;
-		},
-
-		/* tessMeshZapFace( fZap ) destroys a face and removes it from the
-		* global face list.  All edges of fZap will have a NULL pointer as their
-		* left face.  Any edges which also have a NULL pointer as their right face
-		* are deleted entirely (along with any isolated vertices this produces).
-		* An entire mesh can be deleted by zapping its faces, one at a time,
-		* in any order.  Zapped faces cannot be used in further mesh operations!
-		*/
-		zapFace: function( fZap )
-		{
-			var eStart = fZap.anEdge;
-			var e, eNext, eSym;
-			var fPrev, fNext;
-
-			/* walk around face, deleting edges whose right face is also NULL */
-			eNext = eStart.Lnext;
-			do {
-				e = eNext;
-				eNext = e.Lnext;
-
-				e.Lface = null;
-				if( e.Rface === null ) {
-					/* delete the edge -- see TESSmeshDelete above */
-
-					if( e.Onext === e ) {
-						this.killVertex_( e.Org, null );
-					} else {
-						/* Make sure that e->Org points to a valid half-edge */
-						e.Org.anEdge = e.Onext;
-						this.splice_( e, e.Oprev );
-					}
-					eSym = e.Sym;
-					if( eSym.Onext === eSym ) {
-						this.killVertex_( eSym.Org, null );
-					} else {
-						/* Make sure that eSym->Org points to a valid half-edge */
-						eSym.Org.anEdge = eSym.Onext;
-						this.splice_( eSym, eSym.Oprev );
-					}
-					this.killEdge_( e );
-				}
-			} while( e != eStart );
-
-			/* delete from circular doubly-linked list */
-			fPrev = fZap.prev;
-			fNext = fZap.next;
-			fNext.prev = fPrev;
-			fPrev.next = fNext;
-		},
-
-		countFaceVerts_: function(f) {
-			var eCur = f.anEdge;
-			var n = 0;
-			do
-			{
-				n++;
-				eCur = eCur.Lnext;
-			}
-			while (eCur !== f.anEdge);
-			return n;
-		},
-
-		//int tessMeshMergeConvexFaces( TESSmesh *mesh, int maxVertsPerFace )
-		mergeConvexFaces: function(maxVertsPerFace) {
-			var f;
-			var eCur, eNext, eSym;
-			var vStart;
-			var curNv, symNv;
-
-			for( f = this.fHead.next; f !== this.fHead; f = f.next )
-			{
-				// Skip faces which are outside the result.
-				if( !f.inside )
-					continue;
-
-				eCur = f.anEdge;
-				vStart = eCur.Org;
-					
-				while (true)
-				{
-					eNext = eCur.Lnext;
-					eSym = eCur.Sym;
-
-					// Try to merge if the neighbour face is valid.
-					if( eSym && eSym.Lface && eSym.Lface.inside )
-					{
-						// Try to merge the neighbour faces if the resulting polygons
-						// does not exceed maximum number of vertices.
-						curNv = this.countFaceVerts_( f );
-						symNv = this.countFaceVerts_( eSym.Lface );
-						if( (curNv+symNv-2) <= maxVertsPerFace )
-						{
-							// Merge if the resulting poly is convex.
-							if( Geom.vertCCW( eCur.Lprev.Org, eCur.Org, eSym.Lnext.Lnext.Org ) &&
-								Geom.vertCCW( eSym.Lprev.Org, eSym.Org, eCur.Lnext.Lnext.Org ) )
-							{
-								eNext = eSym.Lnext;
-								this.delete( eSym );
-								eCur = null;
-								eSym = null;
-							}
-						}
-					}
-					
-					if( eCur && eCur.Lnext.Org === vStart )
-						break;
-						
-					// Continue to next edge.
-					eCur = eNext;
-				}
-			}
-			
-			return true;
-		},
-
-		/* tessMeshCheckMesh( mesh ) checks a mesh for self-consistency.
-		*/
-		check: function() {
-			var fHead = this.fHead;
-			var vHead = this.vHead;
-			var eHead = this.eHead;
-			var f, fPrev, v, vPrev, e, ePrev;
-
-			fPrev = fHead;
-			for( fPrev = fHead ; (f = fPrev.next) !== fHead; fPrev = f) {
-				assert( f.prev === fPrev );
-				e = f.anEdge;
-				do {
-					assert( e.Sym !== e );
-					assert( e.Sym.Sym === e );
-					assert( e.Lnext.Onext.Sym === e );
-					assert( e.Onext.Sym.Lnext === e );
-					assert( e.Lface === f );
-					e = e.Lnext;
-				} while( e !== f.anEdge );
-			}
-			assert( f.prev === fPrev && f.anEdge === null );
-
-			vPrev = vHead;
-			for( vPrev = vHead ; (v = vPrev.next) !== vHead; vPrev = v) {
-				assert( v.prev === vPrev );
-				e = v.anEdge;
-				do {
-					assert( e.Sym !== e );
-					assert( e.Sym.Sym === e );
-					assert( e.Lnext.Onext.Sym === e );
-					assert( e.Onext.Sym.Lnext === e );
-					assert( e.Org === v );
-					e = e.Onext;
-				} while( e !== v.anEdge );
-			}
-			assert( v.prev === vPrev && v.anEdge === null );
-
-			ePrev = eHead;
-			for( ePrev = eHead ; (e = ePrev.next) !== eHead; ePrev = e) {
-				assert( e.Sym.next === ePrev.Sym );
-				assert( e.Sym !== e );
-				assert( e.Sym.Sym === e );
-				assert( e.Org !== null );
-				assert( e.Dst !== null );
-				assert( e.Lnext.Onext.Sym === e );
-				assert( e.Onext.Sym.Lnext === e );
-			}
-			assert( e.Sym.next === ePrev.Sym
-				&& e.Sym === this.eHeadSym
-				&& e.Sym.Sym === e
-				&& e.Org === null && e.Dst === null
-				&& e.Lface === null && e.Rface === null );
-		}
-
-	};
-
-	var Geom = {};
-
-	Geom.vertEq = function(u,v) {
-		return (u.s === v.s && u.t === v.t);
-	};
-
-	/* Returns TRUE if u is lexicographically <= v. */
-	Geom.vertLeq = function(u,v) {
-		return ((u.s < v.s) || (u.s === v.s && u.t <= v.t));
-	};
-
-	/* Versions of VertLeq, EdgeSign, EdgeEval with s and t transposed. */
-	Geom.transLeq = function(u,v) {
-		return ((u.t < v.t) || (u.t === v.t && u.s <= v.s));
-	};
-
-	Geom.edgeGoesLeft = function(e) {
-		return Geom.vertLeq( e.Dst, e.Org );
-	};
-
-	Geom.edgeGoesRight = function(e) {
-		return Geom.vertLeq( e.Org, e.Dst );
-	};
-
-	Geom.vertL1dist = function(u,v) {
-		return (Math.abs(u.s - v.s) + Math.abs(u.t - v.t));
-	};
-
-	//TESSreal tesedgeEval( TESSvertex *u, TESSvertex *v, TESSvertex *w )
-	Geom.edgeEval = function( u, v, w ) {
-		/* Given three vertices u,v,w such that VertLeq(u,v) && VertLeq(v,w),
-		* evaluates the t-coord of the edge uw at the s-coord of the vertex v.
-		* Returns v->t - (uw)(v->s), ie. the signed distance from uw to v.
-		* If uw is vertical (and thus passes thru v), the result is zero.
-		*
-		* The calculation is extremely accurate and stable, even when v
-		* is very close to u or w.  In particular if we set v->t = 0 and
-		* let r be the negated result (this evaluates (uw)(v->s)), then
-		* r is guaranteed to satisfy MIN(u->t,w->t) <= r <= MAX(u->t,w->t).
-		*/
-		assert( Geom.vertLeq( u, v ) && Geom.vertLeq( v, w ));
-
-		var gapL = v.s - u.s;
-		var gapR = w.s - v.s;
-
-		if( gapL + gapR > 0.0 ) {
-			if( gapL < gapR ) {
-				return (v.t - u.t) + (u.t - w.t) * (gapL / (gapL + gapR));
-			} else {
-				return (v.t - w.t) + (w.t - u.t) * (gapR / (gapL + gapR));
-			}
-		}
-		/* vertical line */
-		return 0.0;
-	};
-
-	//TESSreal tesedgeSign( TESSvertex *u, TESSvertex *v, TESSvertex *w )
-	Geom.edgeSign = function( u, v, w ) {
-		/* Returns a number whose sign matches EdgeEval(u,v,w) but which
-		* is cheaper to evaluate.  Returns > 0, == 0 , or < 0
-		* as v is above, on, or below the edge uw.
-		*/
-		assert( Geom.vertLeq( u, v ) && Geom.vertLeq( v, w ));
-
-		var gapL = v.s - u.s;
-		var gapR = w.s - v.s;
-
-		if( gapL + gapR > 0.0 ) {
-			return (v.t - w.t) * gapL + (v.t - u.t) * gapR;
-		}
-		/* vertical line */
-		return 0.0;
-	};
-
-
-	/***********************************************************************
-	* Define versions of EdgeSign, EdgeEval with s and t transposed.
-	*/
-
-	//TESSreal testransEval( TESSvertex *u, TESSvertex *v, TESSvertex *w )
-	Geom.transEval = function( u, v, w ) {
-		/* Given three vertices u,v,w such that TransLeq(u,v) && TransLeq(v,w),
-		* evaluates the t-coord of the edge uw at the s-coord of the vertex v.
-		* Returns v->s - (uw)(v->t), ie. the signed distance from uw to v.
-		* If uw is vertical (and thus passes thru v), the result is zero.
-		*
-		* The calculation is extremely accurate and stable, even when v
-		* is very close to u or w.  In particular if we set v->s = 0 and
-		* let r be the negated result (this evaluates (uw)(v->t)), then
-		* r is guaranteed to satisfy MIN(u->s,w->s) <= r <= MAX(u->s,w->s).
-		*/
-		assert( Geom.transLeq( u, v ) && Geom.transLeq( v, w ));
-
-		var gapL = v.t - u.t;
-		var gapR = w.t - v.t;
-
-		if( gapL + gapR > 0.0 ) {
-			if( gapL < gapR ) {
-				return (v.s - u.s) + (u.s - w.s) * (gapL / (gapL + gapR));
-			} else {
-				return (v.s - w.s) + (w.s - u.s) * (gapR / (gapL + gapR));
-			}
-		}
-		/* vertical line */
-		return 0.0;
-	};
-
-	//TESSreal testransSign( TESSvertex *u, TESSvertex *v, TESSvertex *w )
-	Geom.transSign = function( u, v, w ) {
-		/* Returns a number whose sign matches TransEval(u,v,w) but which
-		* is cheaper to evaluate.  Returns > 0, == 0 , or < 0
-		* as v is above, on, or below the edge uw.
-		*/
-		assert( Geom.transLeq( u, v ) && Geom.transLeq( v, w ));
-
-		var gapL = v.t - u.t;
-		var gapR = w.t - v.t;
-
-		if( gapL + gapR > 0.0 ) {
-			return (v.s - w.s) * gapL + (v.s - u.s) * gapR;
-		}
-		/* vertical line */
-		return 0.0;
-	};
-
-
-	//int tesvertCCW( TESSvertex *u, TESSvertex *v, TESSvertex *w )
-	Geom.vertCCW = function( u, v, w ) {
-		/* For almost-degenerate situations, the results are not reliable.
-		* Unless the floating-point arithmetic can be performed without
-		* rounding errors, *any* implementation will give incorrect results
-		* on some degenerate inputs, so the client must have some way to
-		* handle this situation.
-		*/
-		return (u.s*(v.t - w.t) + v.s*(w.t - u.t) + w.s*(u.t - v.t)) >= 0.0;
-	};
-
-	/* Given parameters a,x,b,y returns the value (b*x+a*y)/(a+b),
-	* or (x+y)/2 if a==b==0.  It requires that a,b >= 0, and enforces
-	* this in the rare case that one argument is slightly negative.
-	* The implementation is extremely stable numerically.
-	* In particular it guarantees that the result r satisfies
-	* MIN(x,y) <= r <= MAX(x,y), and the results are very accurate
-	* even when a and b differ greatly in magnitude.
-	*/
-	Geom.interpolate = function(a,x,b,y) {
-		return (a = (a < 0) ? 0 : a, b = (b < 0) ? 0 : b, ((a <= b) ? ((b == 0) ? ((x+y) / 2) : (x + (y-x) * (a/(a+b)))) : (y + (x-y) * (b/(a+b)))));
-	};
-
-	/*
-	#ifndef FOR_TRITE_TEST_PROGRAM
-	#define Interpolate(a,x,b,y)	RealInterpolate(a,x,b,y)
-	#else
-
-	// Claim: the ONLY property the sweep algorithm relies on is that
-	// MIN(x,y) <= r <= MAX(x,y).  This is a nasty way to test that.
-	#include <stdlib.h>
-	extern int RandomInterpolate;
-
-	double Interpolate( double a, double x, double b, double y)
-	{
-		printf("*********************%d\n",RandomInterpolate);
-		if( RandomInterpolate ) {
-			a = 1.2 * drand48() - 0.1;
-			a = (a < 0) ? 0 : ((a > 1) ? 1 : a);
-			b = 1.0 - a;
-		}
-		return RealInterpolate(a,x,b,y);
-	}
-	#endif*/
-
-	Geom.intersect = function( o1, d1, o2, d2, v ) {
-		/* Given edges (o1,d1) and (o2,d2), compute their point of intersection.
-		* The computed point is guaranteed to lie in the intersection of the
-		* bounding rectangles defined by each edge.
-		*/
-		var z1, z2;
-		var t;
-
-		/* This is certainly not the most efficient way to find the intersection
-		* of two line segments, but it is very numerically stable.
-		*
-		* Strategy: find the two middle vertices in the VertLeq ordering,
-		* and interpolate the intersection s-value from these.  Then repeat
-		* using the TransLeq ordering to find the intersection t-value.
-		*/
-
-		if( ! Geom.vertLeq( o1, d1 )) { t = o1; o1 = d1; d1 = t; } //swap( o1, d1 ); }
-		if( ! Geom.vertLeq( o2, d2 )) { t = o2; o2 = d2; d2 = t; } //swap( o2, d2 ); }
-		if( ! Geom.vertLeq( o1, o2 )) { t = o1; o1 = o2; o2 = t; t = d1; d1 = d2; d2 = t; }//swap( o1, o2 ); swap( d1, d2 ); }
-
-		if( ! Geom.vertLeq( o2, d1 )) {
-			/* Technically, no intersection -- do our best */
-			v.s = (o2.s + d1.s) / 2;
-		} else if( Geom.vertLeq( d1, d2 )) {
-			/* Interpolate between o2 and d1 */
-			z1 = Geom.edgeEval( o1, o2, d1 );
-			z2 = Geom.edgeEval( o2, d1, d2 );
-			if( z1+z2 < 0 ) { z1 = -z1; z2 = -z2; }
-			v.s = Geom.interpolate( z1, o2.s, z2, d1.s );
-		} else {
-			/* Interpolate between o2 and d2 */
-			z1 = Geom.edgeSign( o1, o2, d1 );
-			z2 = -Geom.edgeSign( o1, d2, d1 );
-			if( z1+z2 < 0 ) { z1 = -z1; z2 = -z2; }
-			v.s = Geom.interpolate( z1, o2.s, z2, d2.s );
-		}
-
-		/* Now repeat the process for t */
-
-		if( ! Geom.transLeq( o1, d1 )) { t = o1; o1 = d1; d1 = t; } //swap( o1, d1 ); }
-		if( ! Geom.transLeq( o2, d2 )) { t = o2; o2 = d2; d2 = t; } //swap( o2, d2 ); }
-		if( ! Geom.transLeq( o1, o2 )) { t = o1; o1 = o2; o2 = t; t = d1; d1 = d2; d2 = t; } //swap( o1, o2 ); swap( d1, d2 ); }
-
-		if( ! Geom.transLeq( o2, d1 )) {
-			/* Technically, no intersection -- do our best */
-			v.t = (o2.t + d1.t) / 2;
-		} else if( Geom.transLeq( d1, d2 )) {
-			/* Interpolate between o2 and d1 */
-			z1 = Geom.transEval( o1, o2, d1 );
-			z2 = Geom.transEval( o2, d1, d2 );
-			if( z1+z2 < 0 ) { z1 = -z1; z2 = -z2; }
-			v.t = Geom.interpolate( z1, o2.t, z2, d1.t );
-		} else {
-			/* Interpolate between o2 and d2 */
-			z1 = Geom.transSign( o1, o2, d1 );
-			z2 = -Geom.transSign( o1, d2, d1 );
-			if( z1+z2 < 0 ) { z1 = -z1; z2 = -z2; }
-			v.t = Geom.interpolate( z1, o2.t, z2, d2.t );
-		}
-	};
-
-
-
-	function DictNode() {
-		this.key = null;
-		this.next = null;
-		this.prev = null;
-	};
-
-	function Dict(frame, leq) {
-		this.head = new DictNode();
-		this.head.next = this.head;
-		this.head.prev = this.head;
-		this.frame = frame;
-		this.leq = leq;
-	};
-
-	Dict.prototype = {
-		min: function() {
-			return this.head.next;
-		},
-
-		max: function() {
-			return this.head.prev;
-		},
-
-		insert: function(k) {
-			return this.insertBefore(this.head, k);
-		},
-
-		search: function(key) {
-			/* Search returns the node with the smallest key greater than or equal
-			* to the given key.  If there is no such key, returns a node whose
-			* key is NULL.  Similarly, Succ(Max(d)) has a NULL key, etc.
-			*/
-			var node = this.head;
-			do {
-				node = node.next;
-			} while( node.key !== null && ! this.leq(this.frame, key, node.key));
-
-			return node;
-		},
-
-		insertBefore: function(node, key) {
-			do {
-				node = node.prev;
-			} while( node.key !== null && ! this.leq(this.frame, node.key, key));
-
-			var newNode = new DictNode();
-			newNode.key = key;
-			newNode.next = node.next;
-			node.next.prev = newNode;
-			newNode.prev = node;
-			node.next = newNode;
-
-			return newNode;
-		},
-
-		delete: function(node) {
-			node.next.prev = node.prev;
-			node.prev.next = node.next;
-		}
-	};
-
-
-	function PQnode() {
-		this.handle = null;
-	}
-
-	function PQhandleElem() {
-		this.key = null;
-		this.node = null;
-	}
-
-	function PriorityQ(size, leq) {
-		this.size = 0;
-		this.max = size;
-
-		this.nodes = [];
-		this.nodes.length = size+1;
-		for (var i = 0; i < this.nodes.length; i++)
-			this.nodes[i] = new PQnode();
-
-		this.handles = [];
-		this.handles.length = size+1;
-		for (var i = 0; i < this.handles.length; i++)
-			this.handles[i] = new PQhandleElem();
-
-		this.initialized = false;
-		this.freeList = 0;
-		this.leq = leq;
-
-		this.nodes[1].handle = 1;	/* so that Minimum() returns NULL */
-		this.handles[1].key = null;
-	};
-
-	PriorityQ.prototype = {
-
-		floatDown_: function( curr )
-		{
-			var n = this.nodes;
-			var h = this.handles;
-			var hCurr, hChild;
-			var child;
-
-			hCurr = n[curr].handle;
-			for( ;; ) {
-				child = curr << 1;
-				if( child < this.size && this.leq( h[n[child+1].handle].key, h[n[child].handle].key )) {
-					++child;
-				}
-
-				assert(child <= this.max);
-
-				hChild = n[child].handle;
-				if( child > this.size || this.leq( h[hCurr].key, h[hChild].key )) {
-					n[curr].handle = hCurr;
-					h[hCurr].node = curr;
-					break;
-				}
-				n[curr].handle = hChild;
-				h[hChild].node = curr;
-				curr = child;
-			}
-		},
-
-		floatUp_: function( curr )
-		{
-			var n = this.nodes;
-			var h = this.handles;
-			var hCurr, hParent;
-			var parent;
-
-			hCurr = n[curr].handle;
-			for( ;; ) {
-				parent = curr >> 1;
-				hParent = n[parent].handle;
-				if( parent == 0 || this.leq( h[hParent].key, h[hCurr].key )) {
-					n[curr].handle = hCurr;
-					h[hCurr].node = curr;
-					break;
-				}
-				n[curr].handle = hParent;
-				h[hParent].node = curr;
-				curr = parent;
-			}
-		},
-
-		init: function() {
-			/* This method of building a heap is O(n), rather than O(n lg n). */
-			for( var i = this.size; i >= 1; --i ) {
-				this.floatDown_( i );
-			}
-			this.initialized = true;
-		},
-
-		min: function() {
-			return this.handles[this.nodes[1].handle].key;
-		},
-
-		isEmpty: function() {
-			this.size === 0;
-		},
-
-		/* really pqHeapInsert */
-		/* returns INV_HANDLE iff out of memory */
-		//PQhandle pqHeapInsert( TESSalloc* alloc, PriorityQHeap *pq, PQkey keyNew )
-		insert: function(keyNew)
-		{
-			var curr;
-			var free;
-
-			curr = ++this.size;
-			if( (curr*2) > this.max ) {
-				this.max *= 2;
-				var s;
-				s = this.nodes.length;
-				this.nodes.length = this.max+1;
-				for (var i = s; i < this.nodes.length; i++)
-					this.nodes[i] = new PQnode();
-
-				s = this.handles.length;
-				this.handles.length = this.max+1;
-				for (var i = s; i < this.handles.length; i++)
-					this.handles[i] = new PQhandleElem();
-			}
-
-			if( this.freeList === 0 ) {
-				free = curr;
-			} else {
-				free = this.freeList;
-				this.freeList = this.handles[free].node;
-			}
-
-			this.nodes[curr].handle = free;
-			this.handles[free].node = curr;
-			this.handles[free].key = keyNew;
-
-			if( this.initialized ) {
-				this.floatUp_( curr );
-			}
-			return free;
-		},
-
-		//PQkey pqHeapExtractMin( PriorityQHeap *pq )
-		extractMin: function() {
-			var n = this.nodes;
-			var h = this.handles;
-			var hMin = n[1].handle;
-			var min = h[hMin].key;
-
-			if( this.size > 0 ) {
-				n[1].handle = n[this.size].handle;
-				h[n[1].handle].node = 1;
-
-				h[hMin].key = null;
-				h[hMin].node = this.freeList;
-				this.freeList = hMin;
-
-				--this.size;
-				if( this.size > 0 ) {
-					this.floatDown_( 1 );
-				}
-			}
-			return min;
-		},
-
-		delete: function( hCurr ) {
-			var n = this.nodes;
-			var h = this.handles;
-			var curr;
-
-			assert( hCurr >= 1 && hCurr <= this.max && h[hCurr].key !== null );
-
-			curr = h[hCurr].node;
-			n[curr].handle = n[this.size].handle;
-			h[n[curr].handle].node = curr;
-
-			--this.size;
-			if( curr <= this.size ) {
-				if( curr <= 1 || this.leq( h[n[curr>>1].handle].key, h[n[curr].handle].key )) {
-					this.floatDown_( curr );
-				} else {
-					this.floatUp_( curr );
-				}
-			}
-			h[hCurr].key = null;
-			h[hCurr].node = this.freeList;
-			this.freeList = hCurr;
-		}
-	};
-
-
-	/* For each pair of adjacent edges crossing the sweep line, there is
-	* an ActiveRegion to represent the region between them.  The active
-	* regions are kept in sorted order in a dynamic dictionary.  As the
-	* sweep line crosses each vertex, we update the affected regions.
-	*/
-
-	function ActiveRegion() {
-		this.eUp = null;		/* upper edge, directed right to left */
-		this.nodeUp = null;	/* dictionary node corresponding to eUp */
-		this.windingNumber = 0;	/* used to determine which regions are
-								* inside the polygon */
-		this.inside = false;		/* is this region inside the polygon? */
-		this.sentinel = false;	/* marks fake edges at t = +/-infinity */
-		this.dirty = false;		/* marks regions where the upper or lower
-						* edge has changed, but we haven't checked
-						* whether they intersect yet */
-		this.fixUpperEdge = false;	/* marks temporary edges introduced when
-							* we process a "right vertex" (one without
-							* any edges leaving to the right) */
-	};
-
-	var Sweep = {};
-
-	Sweep.regionBelow = function(r) {
-		return r.nodeUp.prev.key;
-	}
-
-	Sweep.regionAbove = function(r) {
-		return r.nodeUp.next.key;
-	}
-
-	Sweep.debugEvent = function( tess ) {
-		// empty
-	}
-
-
-	/*
-	* Invariants for the Edge Dictionary.
-	* - each pair of adjacent edges e2=Succ(e1) satisfies EdgeLeq(e1,e2)
-	*   at any valid location of the sweep event
-	* - if EdgeLeq(e2,e1) as well (at any valid sweep event), then e1 and e2
-	*   share a common endpoint
-	* - for each e, e->Dst has been processed, but not e->Org
-	* - each edge e satisfies VertLeq(e->Dst,event) && VertLeq(event,e->Org)
-	*   where "event" is the current sweep line event.
-	* - no edge e has zero length
-	*
-	* Invariants for the Mesh (the processed portion).
-	* - the portion of the mesh left of the sweep line is a planar graph,
-	*   ie. there is *some* way to embed it in the plane
-	* - no processed edge has zero length
-	* - no two processed vertices have identical coordinates
-	* - each "inside" region is monotone, ie. can be broken into two chains
-	*   of monotonically increasing vertices according to VertLeq(v1,v2)
-	*   - a non-invariant: these chains may intersect (very slightly)
-	*
-	* Invariants for the Sweep.
-	* - if none of the edges incident to the event vertex have an activeRegion
-	*   (ie. none of these edges are in the edge dictionary), then the vertex
-	*   has only right-going edges.
-	* - if an edge is marked "fixUpperEdge" (it is a temporary edge introduced
-	*   by ConnectRightVertex), then it is the only right-going edge from
-	*   its associated vertex.  (This says that these edges exist only
-	*   when it is necessary.)
-	*/
-
-	/* When we merge two edges into one, we need to compute the combined
-	* winding of the new edge.
-	*/
-	Sweep.addWinding = function(eDst,eSrc) {
-		eDst.winding += eSrc.winding;
-		eDst.Sym.winding += eSrc.Sym.winding;
-	}
-
-
-	//static int EdgeLeq( TESStesselator *tess, ActiveRegion *reg1, ActiveRegion *reg2 )
-	Sweep.edgeLeq = function( tess, reg1, reg2 ) {
-		/*
-		* Both edges must be directed from right to left (this is the canonical
-		* direction for the upper edge of each region).
-		*
-		* The strategy is to evaluate a "t" value for each edge at the
-		* current sweep line position, given by tess->event.  The calculations
-		* are designed to be very stable, but of course they are not perfect.
-		*
-		* Special case: if both edge destinations are at the sweep event,
-		* we sort the edges by slope (they would otherwise compare equally).
-		*/
-		var ev = tess.event;
-		var t1, t2;
-
-		var e1 = reg1.eUp;
-		var e2 = reg2.eUp;
-
-		if( e1.Dst === ev ) {
-			if( e2.Dst === ev ) {
-				/* Two edges right of the sweep line which meet at the sweep event.
-				* Sort them by slope.
-				*/
-				if( Geom.vertLeq( e1.Org, e2.Org )) {
-					return Geom.edgeSign( e2.Dst, e1.Org, e2.Org ) <= 0;
-				}
-				return Geom.edgeSign( e1.Dst, e2.Org, e1.Org ) >= 0;
-			}
-			return Geom.edgeSign( e2.Dst, ev, e2.Org ) <= 0;
-		}
-		if( e2.Dst === ev ) {
-			return Geom.edgeSign( e1.Dst, ev, e1.Org ) >= 0;
-		}
-
-		/* General case - compute signed distance *from* e1, e2 to event */
-		var t1 = Geom.edgeEval( e1.Dst, ev, e1.Org );
-		var t2 = Geom.edgeEval( e2.Dst, ev, e2.Org );
-		return (t1 >= t2);
-	}
-
-
-	//static void DeleteRegion( TESStesselator *tess, ActiveRegion *reg )
-	Sweep.deleteRegion = function( tess, reg ) {
-		if( reg.fixUpperEdge ) {
-			/* It was created with zero winding number, so it better be
-			* deleted with zero winding number (ie. it better not get merged
-			* with a real edge).
-			*/
-			assert( reg.eUp.winding === 0 );
-		}
-		reg.eUp.activeRegion = null;
-		tess.dict.delete( reg.nodeUp );
-	}
-
-	//static int FixUpperEdge( TESStesselator *tess, ActiveRegion *reg, TESShalfEdge *newEdge )
-	Sweep.fixUpperEdge = function( tess, reg, newEdge ) {
-		/*
-		* Replace an upper edge which needs fixing (see ConnectRightVertex).
-		*/
-		assert( reg.fixUpperEdge );
-		tess.mesh.delete( reg.eUp );
-		reg.fixUpperEdge = false;
-		reg.eUp = newEdge;
-		newEdge.activeRegion = reg;
-	}
-
-	//static ActiveRegion *TopLeftRegion( TESStesselator *tess, ActiveRegion *reg )
-	Sweep.topLeftRegion = function( tess, reg ) {
-		var org = reg.eUp.Org;
-		var e;
-
-		/* Find the region above the uppermost edge with the same origin */
-		do {
-			reg = Sweep.regionAbove( reg );
-		} while( reg.eUp.Org === org );
-
-		/* If the edge above was a temporary edge introduced by ConnectRightVertex,
-		* now is the time to fix it.
-		*/
-		if( reg.fixUpperEdge ) {
-			e = tess.mesh.connect( Sweep.regionBelow(reg).eUp.Sym, reg.eUp.Lnext );
-			if (e === null) return null;
-			Sweep.fixUpperEdge( tess, reg, e );
-			reg = Sweep.regionAbove( reg );
-		}
-		return reg;
-	}
-
-	//static ActiveRegion *TopRightRegion( ActiveRegion *reg )
-	Sweep.topRightRegion = function( reg )
-	{
-		var dst = reg.eUp.Dst;
-		var reg = null;
-		/* Find the region above the uppermost edge with the same destination */
-		do {
-			reg = Sweep.regionAbove( reg );
-		} while( reg.eUp.Dst === dst );
-		return reg;
-	}
-
-	//static ActiveRegion *AddRegionBelow( TESStesselator *tess, ActiveRegion *regAbove, TESShalfEdge *eNewUp )
-	Sweep.addRegionBelow = function( tess, regAbove, eNewUp ) {
-		/*
-		* Add a new active region to the sweep line, *somewhere* below "regAbove"
-		* (according to where the new edge belongs in the sweep-line dictionary).
-		* The upper edge of the new region will be "eNewUp".
-		* Winding number and "inside" flag are not updated.
-		*/
-		var regNew = new ActiveRegion();
-		regNew.eUp = eNewUp;
-		regNew.nodeUp = tess.dict.insertBefore( regAbove.nodeUp, regNew );
-	//	if (regNew->nodeUp == NULL) longjmp(tess->env,1);
-		regNew.fixUpperEdge = false;
-		regNew.sentinel = false;
-		regNew.dirty = false;
-
-		eNewUp.activeRegion = regNew;
-		return regNew;
-	}
-
-	//static int IsWindingInside( TESStesselator *tess, int n )
-	Sweep.isWindingInside = function( tess, n ) {
-		switch( tess.windingRule ) {
-			case Tess2.WINDING_ODD:
-				return (n & 1) != 0;
-			case Tess2.WINDING_NONZERO:
-				return (n != 0);
-			case Tess2.WINDING_POSITIVE:
-				return (n > 0);
-			case Tess2.WINDING_NEGATIVE:
-				return (n < 0);
-			case Tess2.WINDING_ABS_GEQ_TWO:
-				return (n >= 2) || (n <= -2);
-		}
-		assert( false );
-		return false;
-	}
-
-	//static void ComputeWinding( TESStesselator *tess, ActiveRegion *reg )
-	Sweep.computeWinding = function( tess, reg ) {
-		reg.windingNumber = Sweep.regionAbove(reg).windingNumber + reg.eUp.winding;
-		reg.inside = Sweep.isWindingInside( tess, reg.windingNumber );
-	}
-
-
-	//static void FinishRegion( TESStesselator *tess, ActiveRegion *reg )
-	Sweep.finishRegion = function( tess, reg ) {
-		/*
-		* Delete a region from the sweep line.  This happens when the upper
-		* and lower chains of a region meet (at a vertex on the sweep line).
-		* The "inside" flag is copied to the appropriate mesh face (we could
-		* not do this before -- since the structure of the mesh is always
-		* changing, this face may not have even existed until now).
-		*/
-		var e = reg.eUp;
-		var f = e.Lface;
-
-		f.inside = reg.inside;
-		f.anEdge = e;   /* optimization for tessMeshTessellateMonoRegion() */
-		Sweep.deleteRegion( tess, reg );
-	}
-
-
-	//static TESShalfEdge *FinishLeftRegions( TESStesselator *tess, ActiveRegion *regFirst, ActiveRegion *regLast )
-	Sweep.finishLeftRegions = function( tess, regFirst, regLast ) {
-		/*
-		* We are given a vertex with one or more left-going edges.  All affected
-		* edges should be in the edge dictionary.  Starting at regFirst->eUp,
-		* we walk down deleting all regions where both edges have the same
-		* origin vOrg.  At the same time we copy the "inside" flag from the
-		* active region to the face, since at this point each face will belong
-		* to at most one region (this was not necessarily true until this point
-		* in the sweep).  The walk stops at the region above regLast; if regLast
-		* is NULL we walk as far as possible.  At the same time we relink the
-		* mesh if necessary, so that the ordering of edges around vOrg is the
-		* same as in the dictionary.
-		*/
-		var e, ePrev;
-		var reg = null;
-		var regPrev = regFirst;
-		var ePrev = regFirst.eUp;
-		while( regPrev !== regLast ) {
-			regPrev.fixUpperEdge = false;	/* placement was OK */
-			reg = Sweep.regionBelow( regPrev );
-			e = reg.eUp;
-			if( e.Org != ePrev.Org ) {
-				if( ! reg.fixUpperEdge ) {
-					/* Remove the last left-going edge.  Even though there are no further
-					* edges in the dictionary with this origin, there may be further
-					* such edges in the mesh (if we are adding left edges to a vertex
-					* that has already been processed).  Thus it is important to call
-					* FinishRegion rather than just DeleteRegion.
-					*/
-					Sweep.finishRegion( tess, regPrev );
-					break;
-				}
-				/* If the edge below was a temporary edge introduced by
-				* ConnectRightVertex, now is the time to fix it.
-				*/
-				e = tess.mesh.connect( ePrev.Lprev, e.Sym );
-	//			if (e == NULL) longjmp(tess->env,1);
-				Sweep.fixUpperEdge( tess, reg, e );
-			}
-
-			/* Relink edges so that ePrev->Onext == e */
-			if( ePrev.Onext !== e ) {
-				tess.mesh.splice( e.Oprev, e );
-				tess.mesh.splice( ePrev, e );
-			}
-			Sweep.finishRegion( tess, regPrev );	/* may change reg->eUp */
-			ePrev = reg.eUp;
-			regPrev = reg;
-		}
-		return ePrev;
-	}
-
-
-	//static void AddRightEdges( TESStesselator *tess, ActiveRegion *regUp, TESShalfEdge *eFirst, TESShalfEdge *eLast, TESShalfEdge *eTopLeft, int cleanUp )
-	Sweep.addRightEdges = function( tess, regUp, eFirst, eLast, eTopLeft, cleanUp ) {
-		/*
-		* Purpose: insert right-going edges into the edge dictionary, and update
-		* winding numbers and mesh connectivity appropriately.  All right-going
-		* edges share a common origin vOrg.  Edges are inserted CCW starting at
-		* eFirst; the last edge inserted is eLast->Oprev.  If vOrg has any
-		* left-going edges already processed, then eTopLeft must be the edge
-		* such that an imaginary upward vertical segment from vOrg would be
-		* contained between eTopLeft->Oprev and eTopLeft; otherwise eTopLeft
-		* should be NULL.
-		*/
-		var reg, regPrev;
-		var e, ePrev;
-		var firstTime = true;
-
-		/* Insert the new right-going edges in the dictionary */
-		e = eFirst;
-		do {
-			assert( Geom.vertLeq( e.Org, e.Dst ));
-			Sweep.addRegionBelow( tess, regUp, e.Sym );
-			e = e.Onext;
-		} while ( e !== eLast );
-
-		/* Walk *all* right-going edges from e->Org, in the dictionary order,
-		* updating the winding numbers of each region, and re-linking the mesh
-		* edges to match the dictionary ordering (if necessary).
-		*/
-		if( eTopLeft === null ) {
-			eTopLeft = Sweep.regionBelow( regUp ).eUp.Rprev;
-		}
-		regPrev = regUp;
-		ePrev = eTopLeft;
-		for( ;; ) {
-			reg = Sweep.regionBelow( regPrev );
-			e = reg.eUp.Sym;
-			if( e.Org !== ePrev.Org ) break;
-
-			if( e.Onext !== ePrev ) {
-				/* Unlink e from its current position, and relink below ePrev */
-				tess.mesh.splice( e.Oprev, e );
-				tess.mesh.splice( ePrev.Oprev, e );
-			}
-			/* Compute the winding number and "inside" flag for the new regions */
-			reg.windingNumber = regPrev.windingNumber - e.winding;
-			reg.inside = Sweep.isWindingInside( tess, reg.windingNumber );
-
-			/* Check for two outgoing edges with same slope -- process these
-			* before any intersection tests (see example in tessComputeInterior).
-			*/
-			regPrev.dirty = true;
-			if( ! firstTime && Sweep.checkForRightSplice( tess, regPrev )) {
-				Sweep.addWinding( e, ePrev );
-				Sweep.deleteRegion( tess, regPrev );
-				tess.mesh.delete( ePrev );
-			}
-			firstTime = false;
-			regPrev = reg;
-			ePrev = e;
-		}
-		regPrev.dirty = true;
-		assert( regPrev.windingNumber - e.winding === reg.windingNumber );
-
-		if( cleanUp ) {
-			/* Check for intersections between newly adjacent edges. */
-			Sweep.walkDirtyRegions( tess, regPrev );
-		}
-	}
-
-
-	//static void SpliceMergeVertices( TESStesselator *tess, TESShalfEdge *e1, TESShalfEdge *e2 )
-	Sweep.spliceMergeVertices = function( tess, e1, e2 ) {
-		/*
-		* Two vertices with idential coordinates are combined into one.
-		* e1->Org is kept, while e2->Org is discarded.
-		*/
-		tess.mesh.splice( e1, e2 ); 
-	}
-
-	//static void VertexWeights( TESSvertex *isect, TESSvertex *org, TESSvertex *dst, TESSreal *weights )
-	Sweep.vertexWeights = function( isect, org, dst ) {
-		/*
-		* Find some weights which describe how the intersection vertex is
-		* a linear combination of "org" and "dest".  Each of the two edges
-		* which generated "isect" is allocated 50% of the weight; each edge
-		* splits the weight between its org and dst according to the
-		* relative distance to "isect".
-		*/
-		var t1 = Geom.vertL1dist( org, isect );
-		var t2 = Geom.vertL1dist( dst, isect );
-		var w0 = 0.5 * t2 / (t1 + t2);
-		var w1 = 0.5 * t1 / (t1 + t2);
-		isect.coords[0] += w0*org.coords[0] + w1*dst.coords[0];
-		isect.coords[1] += w0*org.coords[1] + w1*dst.coords[1];
-		isect.coords[2] += w0*org.coords[2] + w1*dst.coords[2];
-	}
-
-
-	//static void GetIntersectData( TESStesselator *tess, TESSvertex *isect, TESSvertex *orgUp, TESSvertex *dstUp, TESSvertex *orgLo, TESSvertex *dstLo )
-	Sweep.getIntersectData = function( tess, isect, orgUp, dstUp, orgLo, dstLo ) {
-		 /*
-		 * We've computed a new intersection point, now we need a "data" pointer
-		 * from the user so that we can refer to this new vertex in the
-		 * rendering callbacks.
-		 */
-		isect.coords[0] = isect.coords[1] = isect.coords[2] = 0;
-		isect.idx = -1;
-		Sweep.vertexWeights( isect, orgUp, dstUp );
-		Sweep.vertexWeights( isect, orgLo, dstLo );
-	}
-
-	//static int CheckForRightSplice( TESStesselator *tess, ActiveRegion *regUp )
-	Sweep.checkForRightSplice = function( tess, regUp ) {
-		/*
-		* Check the upper and lower edge of "regUp", to make sure that the
-		* eUp->Org is above eLo, or eLo->Org is below eUp (depending on which
-		* origin is leftmost).
-		*
-		* The main purpose is to splice right-going edges with the same
-		* dest vertex and nearly identical slopes (ie. we can't distinguish
-		* the slopes numerically).  However the splicing can also help us
-		* to recover from numerical errors.  For example, suppose at one
-		* point we checked eUp and eLo, and decided that eUp->Org is barely
-		* above eLo.  Then later, we split eLo into two edges (eg. from
-		* a splice operation like this one).  This can change the result of
-		* our test so that now eUp->Org is incident to eLo, or barely below it.
-		* We must correct this condition to maintain the dictionary invariants.
-		*
-		* One possibility is to check these edges for intersection again
-		* (ie. CheckForIntersect).  This is what we do if possible.  However
-		* CheckForIntersect requires that tess->event lies between eUp and eLo,
-		* so that it has something to fall back on when the intersection
-		* calculation gives us an unusable answer.  So, for those cases where
-		* we can't check for intersection, this routine fixes the problem
-		* by just splicing the offending vertex into the other edge.
-		* This is a guaranteed solution, no matter how degenerate things get.
-		* Basically this is a combinatorial solution to a numerical problem.
-		*/
-		var regLo = Sweep.regionBelow(regUp);
-		var eUp = regUp.eUp;
-		var eLo = regLo.eUp;
-
-		if( Geom.vertLeq( eUp.Org, eLo.Org )) {
-			if( Geom.edgeSign( eLo.Dst, eUp.Org, eLo.Org ) > 0 ) return false;
-
-			/* eUp->Org appears to be below eLo */
-			if( ! Geom.vertEq( eUp.Org, eLo.Org )) {
-				/* Splice eUp->Org into eLo */
-				tess.mesh.splitEdge( eLo.Sym );
-				tess.mesh.splice( eUp, eLo.Oprev );
-				regUp.dirty = regLo.dirty = true;
-
-			} else if( eUp.Org !== eLo.Org ) {
-				/* merge the two vertices, discarding eUp->Org */
-				tess.pq.delete( eUp.Org.pqHandle );
-				Sweep.spliceMergeVertices( tess, eLo.Oprev, eUp );
-			}
-		} else {
-			if( Geom.edgeSign( eUp.Dst, eLo.Org, eUp.Org ) < 0 ) return false;
-
-			/* eLo->Org appears to be above eUp, so splice eLo->Org into eUp */
-			Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
-			tess.mesh.splitEdge( eUp.Sym );
-			tess.mesh.splice( eLo.Oprev, eUp );
-		}
-		return true;
-	}
-
-	//static int CheckForLeftSplice( TESStesselator *tess, ActiveRegion *regUp )
-	Sweep.checkForLeftSplice = function( tess, regUp ) {
-		/*
-		* Check the upper and lower edge of "regUp", to make sure that the
-		* eUp->Dst is above eLo, or eLo->Dst is below eUp (depending on which
-		* destination is rightmost).
-		*
-		* Theoretically, this should always be true.  However, splitting an edge
-		* into two pieces can change the results of previous tests.  For example,
-		* suppose at one point we checked eUp and eLo, and decided that eUp->Dst
-		* is barely above eLo.  Then later, we split eLo into two edges (eg. from
-		* a splice operation like this one).  This can change the result of
-		* the test so that now eUp->Dst is incident to eLo, or barely below it.
-		* We must correct this condition to maintain the dictionary invariants
-		* (otherwise new edges might get inserted in the wrong place in the
-		* dictionary, and bad stuff will happen).
-		*
-		* We fix the problem by just splicing the offending vertex into the
-		* other edge.
-		*/
-		var regLo = Sweep.regionBelow(regUp);
-		var eUp = regUp.eUp;
-		var eLo = regLo.eUp;
-		var e;
-
-		assert( ! Geom.vertEq( eUp.Dst, eLo.Dst ));
-
-		if( Geom.vertLeq( eUp.Dst, eLo.Dst )) {
-			if( Geom.edgeSign( eUp.Dst, eLo.Dst, eUp.Org ) < 0 ) return false;
-
-			/* eLo->Dst is above eUp, so splice eLo->Dst into eUp */
-			Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
-			e = tess.mesh.splitEdge( eUp );
-			tess.mesh.splice( eLo.Sym, e );
-			e.Lface.inside = regUp.inside;
-		} else {
-			if( Geom.edgeSign( eLo.Dst, eUp.Dst, eLo.Org ) > 0 ) return false;
-
-			/* eUp->Dst is below eLo, so splice eUp->Dst into eLo */
-			regUp.dirty = regLo.dirty = true;
-			e = tess.mesh.splitEdge( eLo );
-			tess.mesh.splice( eUp.Lnext, eLo.Sym );
-			e.Rface.inside = regUp.inside;
-		}
-		return true;
-	}
-
-
-	//static int CheckForIntersect( TESStesselator *tess, ActiveRegion *regUp )
-	Sweep.checkForIntersect = function( tess, regUp ) {
-		/*
-		* Check the upper and lower edges of the given region to see if
-		* they intersect.  If so, create the intersection and add it
-		* to the data structures.
-		*
-		* Returns TRUE if adding the new intersection resulted in a recursive
-		* call to AddRightEdges(); in this case all "dirty" regions have been
-		* checked for intersections, and possibly regUp has been deleted.
-		*/
-		var regLo = Sweep.regionBelow(regUp);
-		var eUp = regUp.eUp;
-		var eLo = regLo.eUp;
-		var orgUp = eUp.Org;
-		var orgLo = eLo.Org;
-		var dstUp = eUp.Dst;
-		var dstLo = eLo.Dst;
-		var tMinUp, tMaxLo;
-		var isect = new TESSvertex, orgMin;
-		var e;
-
-		assert( ! Geom.vertEq( dstLo, dstUp ));
-		assert( Geom.edgeSign( dstUp, tess.event, orgUp ) <= 0 );
-		assert( Geom.edgeSign( dstLo, tess.event, orgLo ) >= 0 );
-		assert( orgUp !== tess.event && orgLo !== tess.event );
-		assert( ! regUp.fixUpperEdge && ! regLo.fixUpperEdge );
-
-		if( orgUp === orgLo ) return false;	/* right endpoints are the same */
-
-		tMinUp = Math.min( orgUp.t, dstUp.t );
-		tMaxLo = Math.max( orgLo.t, dstLo.t );
-		if( tMinUp > tMaxLo ) return false;	/* t ranges do not overlap */
-
-		if( Geom.vertLeq( orgUp, orgLo )) {
-			if( Geom.edgeSign( dstLo, orgUp, orgLo ) > 0 ) return false;
-		} else {
-			if( Geom.edgeSign( dstUp, orgLo, orgUp ) < 0 ) return false;
-		}
-
-		/* At this point the edges intersect, at least marginally */
-		Sweep.debugEvent( tess );
-
-		Geom.intersect( dstUp, orgUp, dstLo, orgLo, isect );
-		/* The following properties are guaranteed: */
-		assert( Math.min( orgUp.t, dstUp.t ) <= isect.t );
-		assert( isect.t <= Math.max( orgLo.t, dstLo.t ));
-		assert( Math.min( dstLo.s, dstUp.s ) <= isect.s );
-		assert( isect.s <= Math.max( orgLo.s, orgUp.s ));
-
-		if( Geom.vertLeq( isect, tess.event )) {
-			/* The intersection point lies slightly to the left of the sweep line,
-			* so move it until it''s slightly to the right of the sweep line.
-			* (If we had perfect numerical precision, this would never happen
-			* in the first place).  The easiest and safest thing to do is
-			* replace the intersection by tess->event.
-			*/
-			isect.s = tess.event.s;
-			isect.t = tess.event.t;
-		}
-		/* Similarly, if the computed intersection lies to the right of the
-		* rightmost origin (which should rarely happen), it can cause
-		* unbelievable inefficiency on sufficiently degenerate inputs.
-		* (If you have the test program, try running test54.d with the
-		* "X zoom" option turned on).
-		*/
-		orgMin = Geom.vertLeq( orgUp, orgLo ) ? orgUp : orgLo;
-		if( Geom.vertLeq( orgMin, isect )) {
-			isect.s = orgMin.s;
-			isect.t = orgMin.t;
-		}
-
-		if( Geom.vertEq( isect, orgUp ) || Geom.vertEq( isect, orgLo )) {
-			/* Easy case -- intersection at one of the right endpoints */
-			Sweep.checkForRightSplice( tess, regUp );
-			return false;
-		}
-
-		if(    (! Geom.vertEq( dstUp, tess.event )
-			&& Geom.edgeSign( dstUp, tess.event, isect ) >= 0)
-			|| (! Geom.vertEq( dstLo, tess.event )
-			&& Geom.edgeSign( dstLo, tess.event, isect ) <= 0 ))
-		{
-			/* Very unusual -- the new upper or lower edge would pass on the
-			* wrong side of the sweep event, or through it.  This can happen
-			* due to very small numerical errors in the intersection calculation.
-			*/
-			if( dstLo === tess.event ) {
-				/* Splice dstLo into eUp, and process the new region(s) */
-				tess.mesh.splitEdge( eUp.Sym );
-				tess.mesh.splice( eLo.Sym, eUp );
-				regUp = Sweep.topLeftRegion( tess, regUp );
-	//			if (regUp == NULL) longjmp(tess->env,1);
-				eUp = Sweep.regionBelow(regUp).eUp;
-				Sweep.finishLeftRegions( tess, Sweep.regionBelow(regUp), regLo );
-				Sweep.addRightEdges( tess, regUp, eUp.Oprev, eUp, eUp, true );
-				return TRUE;
-			}
-			if( dstUp === tess.event ) {
-				/* Splice dstUp into eLo, and process the new region(s) */
-				tess.mesh.splitEdge( eLo.Sym );
-				tess.mesh.splice( eUp.Lnext, eLo.Oprev ); 
-				regLo = regUp;
-				regUp = Sweep.topRightRegion( regUp );
-				e = Sweep.regionBelow(regUp).eUp.Rprev;
-				regLo.eUp = eLo.Oprev;
-				eLo = Sweep.finishLeftRegions( tess, regLo, null );
-				Sweep.addRightEdges( tess, regUp, eLo.Onext, eUp.Rprev, e, true );
-				return true;
-			}
-			/* Special case: called from ConnectRightVertex.  If either
-			* edge passes on the wrong side of tess->event, split it
-			* (and wait for ConnectRightVertex to splice it appropriately).
-			*/
-			if( Geom.edgeSign( dstUp, tess.event, isect ) >= 0 ) {
-				Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
-				tess.mesh.splitEdge( eUp.Sym );
-				eUp.Org.s = tess.event.s;
-				eUp.Org.t = tess.event.t;
-			}
-			if( Geom.edgeSign( dstLo, tess.event, isect ) <= 0 ) {
-				regUp.dirty = regLo.dirty = true;
-				tess.mesh.splitEdge( eLo.Sym );
-				eLo.Org.s = tess.event.s;
-				eLo.Org.t = tess.event.t;
-			}
-			/* leave the rest for ConnectRightVertex */
-			return false;
-		}
-
-		/* General case -- split both edges, splice into new vertex.
-		* When we do the splice operation, the order of the arguments is
-		* arbitrary as far as correctness goes.  However, when the operation
-		* creates a new face, the work done is proportional to the size of
-		* the new face.  We expect the faces in the processed part of
-		* the mesh (ie. eUp->Lface) to be smaller than the faces in the
-		* unprocessed original contours (which will be eLo->Oprev->Lface).
-		*/
-		tess.mesh.splitEdge( eUp.Sym );
-		tess.mesh.splitEdge( eLo.Sym );
-		tess.mesh.splice( eLo.Oprev, eUp );
-		eUp.Org.s = isect.s;
-		eUp.Org.t = isect.t;
-		eUp.Org.pqHandle = tess.pq.insert( eUp.Org );
-		Sweep.getIntersectData( tess, eUp.Org, orgUp, dstUp, orgLo, dstLo );
-		Sweep.regionAbove(regUp).dirty = regUp.dirty = regLo.dirty = true;
-		return false;
-	}
-
-	//static void WalkDirtyRegions( TESStesselator *tess, ActiveRegion *regUp )
-	Sweep.walkDirtyRegions = function( tess, regUp ) {
-		/*
-		* When the upper or lower edge of any region changes, the region is
-		* marked "dirty".  This routine walks through all the dirty regions
-		* and makes sure that the dictionary invariants are satisfied
-		* (see the comments at the beginning of this file).  Of course
-		* new dirty regions can be created as we make changes to restore
-		* the invariants.
-		*/
-		var regLo = Sweep.regionBelow(regUp);
-		var eUp, eLo;
-
-		for( ;; ) {
-			/* Find the lowest dirty region (we walk from the bottom up). */
-			while( regLo.dirty ) {
-				regUp = regLo;
-				regLo = Sweep.regionBelow(regLo);
-			}
-			if( ! regUp.dirty ) {
-				regLo = regUp;
-				regUp = Sweep.regionAbove( regUp );
-				if( regUp == null || ! regUp.dirty ) {
-					/* We've walked all the dirty regions */
-					return;
-				}
-			}
-			regUp.dirty = false;
-			eUp = regUp.eUp;
-			eLo = regLo.eUp;
-
-			if( eUp.Dst !== eLo.Dst ) {
-				/* Check that the edge ordering is obeyed at the Dst vertices. */
-				if( Sweep.checkForLeftSplice( tess, regUp )) {
-
-					/* If the upper or lower edge was marked fixUpperEdge, then
-					* we no longer need it (since these edges are needed only for
-					* vertices which otherwise have no right-going edges).
-					*/
-					if( regLo.fixUpperEdge ) {
-						Sweep.deleteRegion( tess, regLo );
-						tess.mesh.delete( eLo );
-						regLo = Sweep.regionBelow( regUp );
-						eLo = regLo.eUp;
-					} else if( regUp.fixUpperEdge ) {
-						Sweep.deleteRegion( tess, regUp );
-						tess.mesh.delete( eUp );
-						regUp = Sweep.regionAbove( regLo );
-						eUp = regUp.eUp;
-					}
-				}
-			}
-			if( eUp.Org !== eLo.Org ) {
-				if(    eUp.Dst !== eLo.Dst
-					&& ! regUp.fixUpperEdge && ! regLo.fixUpperEdge
-					&& (eUp.Dst === tess.event || eLo.Dst === tess.event) )
-				{
-					/* When all else fails in CheckForIntersect(), it uses tess->event
-					* as the intersection location.  To make this possible, it requires
-					* that tess->event lie between the upper and lower edges, and also
-					* that neither of these is marked fixUpperEdge (since in the worst
-					* case it might splice one of these edges into tess->event, and
-					* violate the invariant that fixable edges are the only right-going
-					* edge from their associated vertex).
-					*/
-					if( Sweep.checkForIntersect( tess, regUp )) {
-						/* WalkDirtyRegions() was called recursively; we're done */
-						return;
-					}
-				} else {
-					/* Even though we can't use CheckForIntersect(), the Org vertices
-					* may violate the dictionary edge ordering.  Check and correct this.
-					*/
-					Sweep.checkForRightSplice( tess, regUp );
-				}
-			}
-			if( eUp.Org === eLo.Org && eUp.Dst === eLo.Dst ) {
-				/* A degenerate loop consisting of only two edges -- delete it. */
-				Sweep.addWinding( eLo, eUp );
-				Sweep.deleteRegion( tess, regUp );
-				tess.mesh.delete( eUp );
-				regUp = Sweep.regionAbove( regLo );
-			}
-		}
-	}
-
-
-	//static void ConnectRightVertex( TESStesselator *tess, ActiveRegion *regUp, TESShalfEdge *eBottomLeft )
-	Sweep.connectRightVertex = function( tess, regUp, eBottomLeft ) {
-		/*
-		* Purpose: connect a "right" vertex vEvent (one where all edges go left)
-		* to the unprocessed portion of the mesh.  Since there are no right-going
-		* edges, two regions (one above vEvent and one below) are being merged
-		* into one.  "regUp" is the upper of these two regions.
-		*
-		* There are two reasons for doing this (adding a right-going edge):
-		*  - if the two regions being merged are "inside", we must add an edge
-		*    to keep them separated (the combined region would not be monotone).
-		*  - in any case, we must leave some record of vEvent in the dictionary,
-		*    so that we can merge vEvent with features that we have not seen yet.
-		*    For example, maybe there is a vertical edge which passes just to
-		*    the right of vEvent; we would like to splice vEvent into this edge.
-		*
-		* However, we don't want to connect vEvent to just any vertex.  We don''t
-		* want the new edge to cross any other edges; otherwise we will create
-		* intersection vertices even when the input data had no self-intersections.
-		* (This is a bad thing; if the user's input data has no intersections,
-		* we don't want to generate any false intersections ourselves.)
-		*
-		* Our eventual goal is to connect vEvent to the leftmost unprocessed
-		* vertex of the combined region (the union of regUp and regLo).
-		* But because of unseen vertices with all right-going edges, and also
-		* new vertices which may be created by edge intersections, we don''t
-		* know where that leftmost unprocessed vertex is.  In the meantime, we
-		* connect vEvent to the closest vertex of either chain, and mark the region
-		* as "fixUpperEdge".  This flag says to delete and reconnect this edge
-		* to the next processed vertex on the boundary of the combined region.
-		* Quite possibly the vertex we connected to will turn out to be the
-		* closest one, in which case we won''t need to make any changes.
-		*/
-		var eNew;
-		var eTopLeft = eBottomLeft.Onext;
-		var regLo = Sweep.regionBelow(regUp);
-		var eUp = regUp.eUp;
-		var eLo = regLo.eUp;
-		var degenerate = false;
-
-		if( eUp.Dst !== eLo.Dst ) {
-			Sweep.checkForIntersect( tess, regUp );
-		}
-
-		/* Possible new degeneracies: upper or lower edge of regUp may pass
-		* through vEvent, or may coincide with new intersection vertex
-		*/
-		if( Geom.vertEq( eUp.Org, tess.event )) {
-			tess.mesh.splice( eTopLeft.Oprev, eUp );
-			regUp = Sweep.topLeftRegion( tess, regUp );
-			eTopLeft = Sweep.regionBelow( regUp ).eUp;
-			Sweep.finishLeftRegions( tess, Sweep.regionBelow(regUp), regLo );
-			degenerate = true;
-		}
-		if( Geom.vertEq( eLo.Org, tess.event )) {
-			tess.mesh.splice( eBottomLeft, eLo.Oprev );
-			eBottomLeft = Sweep.finishLeftRegions( tess, regLo, null );
-			degenerate = true;
-		}
-		if( degenerate ) {
-			Sweep.addRightEdges( tess, regUp, eBottomLeft.Onext, eTopLeft, eTopLeft, true );
-			return;
-		}
-
-		/* Non-degenerate situation -- need to add a temporary, fixable edge.
-		* Connect to the closer of eLo->Org, eUp->Org.
-		*/
-		if( Geom.vertLeq( eLo.Org, eUp.Org )) {
-			eNew = eLo.Oprev;
-		} else {
-			eNew = eUp;
-		}
-		eNew = tess.mesh.connect( eBottomLeft.Lprev, eNew );
-
-		/* Prevent cleanup, otherwise eNew might disappear before we've even
-		* had a chance to mark it as a temporary edge.
-		*/
-		Sweep.addRightEdges( tess, regUp, eNew, eNew.Onext, eNew.Onext, false );
-		eNew.Sym.activeRegion.fixUpperEdge = true;
-		Sweep.walkDirtyRegions( tess, regUp );
-	}
-
-	/* Because vertices at exactly the same location are merged together
-	* before we process the sweep event, some degenerate cases can't occur.
-	* However if someone eventually makes the modifications required to
-	* merge features which are close together, the cases below marked
-	* TOLERANCE_NONZERO will be useful.  They were debugged before the
-	* code to merge identical vertices in the main loop was added.
-	*/
-	//#define TOLERANCE_NONZERO	FALSE
-
-	//static void ConnectLeftDegenerate( TESStesselator *tess, ActiveRegion *regUp, TESSvertex *vEvent )
-	Sweep.connectLeftDegenerate = function( tess, regUp, vEvent ) {
-		/*
-		* The event vertex lies exacty on an already-processed edge or vertex.
-		* Adding the new vertex involves splicing it into the already-processed
-		* part of the mesh.
-		*/
-		var e, eTopLeft, eTopRight, eLast;
-		var reg;
-
-		e = regUp.eUp;
-		if( Geom.vertEq( e.Org, vEvent )) {
-			/* e->Org is an unprocessed vertex - just combine them, and wait
-			* for e->Org to be pulled from the queue
-			*/
-			assert( false /*TOLERANCE_NONZERO*/ );
-			Sweep.spliceMergeVertices( tess, e, vEvent.anEdge );
-			return;
-		}
-
-		if( ! Geom.vertEq( e.Dst, vEvent )) {
-			/* General case -- splice vEvent into edge e which passes through it */
-			tess.mesh.splitEdge( e.Sym );
-			if( regUp.fixUpperEdge ) {
-				/* This edge was fixable -- delete unused portion of original edge */
-				tess.mesh.delete( e.Onext );
-				regUp.fixUpperEdge = false;
-			}
-			tess.mesh.splice( vEvent.anEdge, e );
-			Sweep.sweepEvent( tess, vEvent );	/* recurse */
-			return;
-		}
-
-		/* vEvent coincides with e->Dst, which has already been processed.
-		* Splice in the additional right-going edges.
-		*/
-		assert( false /*TOLERANCE_NONZERO*/ );
-		regUp = Sweep.topRightRegion( regUp );
-		reg = Sweep.regionBelow( regUp );
-		eTopRight = reg.eUp.Sym;
-		eTopLeft = eLast = eTopRight.Onext;
-		if( reg.fixUpperEdge ) {
-			/* Here e->Dst has only a single fixable edge going right.
-			* We can delete it since now we have some real right-going edges.
-			*/
-			assert( eTopLeft !== eTopRight );   /* there are some left edges too */
-			Sweep.deleteRegion( tess, reg );
-			tess.mesh.delete( eTopRight );
-			eTopRight = eTopLeft.Oprev;
-		}
-		tess.mesh.splice( vEvent.anEdge, eTopRight );
-		if( ! Geom.edgeGoesLeft( eTopLeft )) {
-			/* e->Dst had no left-going edges -- indicate this to AddRightEdges() */
-			eTopLeft = null;
-		}
-		Sweep.addRightEdges( tess, regUp, eTopRight.Onext, eLast, eTopLeft, true );
-	}
-
-
-	//static void ConnectLeftVertex( TESStesselator *tess, TESSvertex *vEvent )
-	Sweep.connectLeftVertex = function( tess, vEvent ) {
-		/*
-		* Purpose: connect a "left" vertex (one where both edges go right)
-		* to the processed portion of the mesh.  Let R be the active region
-		* containing vEvent, and let U and L be the upper and lower edge
-		* chains of R.  There are two possibilities:
-		*
-		* - the normal case: split R into two regions, by connecting vEvent to
-		*   the rightmost vertex of U or L lying to the left of the sweep line
-		*
-		* - the degenerate case: if vEvent is close enough to U or L, we
-		*   merge vEvent into that edge chain.  The subcases are:
-		*	- merging with the rightmost vertex of U or L
-		*	- merging with the active edge of U or L
-		*	- merging with an already-processed portion of U or L
-		*/
-		var regUp, regLo, reg;
-		var eUp, eLo, eNew;
-		var tmp = new ActiveRegion();
-
-		/* assert( vEvent->anEdge->Onext->Onext == vEvent->anEdge ); */
-
-		/* Get a pointer to the active region containing vEvent */
-		tmp.eUp = vEvent.anEdge.Sym;
-		/* __GL_DICTLISTKEY */ /* tessDictListSearch */
-		regUp = tess.dict.search( tmp ).key;
-		regLo = Sweep.regionBelow( regUp );
-		if( !regLo ) {
-			// This may happen if the input polygon is coplanar.
-			return;
-		}
-		eUp = regUp.eUp;
-		eLo = regLo.eUp;
-
-		/* Try merging with U or L first */
-		if( Geom.edgeSign( eUp.Dst, vEvent, eUp.Org ) === 0.0 ) {
-			Sweep.connectLeftDegenerate( tess, regUp, vEvent );
-			return;
-		}
-
-		/* Connect vEvent to rightmost processed vertex of either chain.
-		* e->Dst is the vertex that we will connect to vEvent.
-		*/
-		reg = Geom.vertLeq( eLo.Dst, eUp.Dst ) ? regUp : regLo;
-
-		if( regUp.inside || reg.fixUpperEdge) {
-			if( reg === regUp ) {
-				eNew = tess.mesh.connect( vEvent.anEdge.Sym, eUp.Lnext );
-			} else {
-				var tempHalfEdge = tess.mesh.connect( eLo.Dnext, vEvent.anEdge);
-				eNew = tempHalfEdge.Sym;
-			}
-			if( reg.fixUpperEdge ) {
-				Sweep.fixUpperEdge( tess, reg, eNew );
-			} else {
-				Sweep.computeWinding( tess, Sweep.addRegionBelow( tess, regUp, eNew ));
-			}
-			Sweep.sweepEvent( tess, vEvent );
-		} else {
-			/* The new vertex is in a region which does not belong to the polygon.
-			* We don''t need to connect this vertex to the rest of the mesh.
-			*/
-			Sweep.addRightEdges( tess, regUp, vEvent.anEdge, vEvent.anEdge, null, true );
-		}
-	};
-
-
-	//static void SweepEvent( TESStesselator *tess, TESSvertex *vEvent )
-	Sweep.sweepEvent = function( tess, vEvent ) {
-		/*
-		* Does everything necessary when the sweep line crosses a vertex.
-		* Updates the mesh and the edge dictionary.
-		*/
-
-		tess.event = vEvent;		/* for access in EdgeLeq() */
-		Sweep.debugEvent( tess );
-
-		/* Check if this vertex is the right endpoint of an edge that is
-		* already in the dictionary.  In this case we don't need to waste
-		* time searching for the location to insert new edges.
-		*/
-		var e = vEvent.anEdge;
-		while( e.activeRegion === null ) {
-			e = e.Onext;
-			if( e == vEvent.anEdge ) {
-				/* All edges go right -- not incident to any processed edges */
-				Sweep.connectLeftVertex( tess, vEvent );
-				return;
-			}
-		}
-
-		/* Processing consists of two phases: first we "finish" all the
-		* active regions where both the upper and lower edges terminate
-		* at vEvent (ie. vEvent is closing off these regions).
-		* We mark these faces "inside" or "outside" the polygon according
-		* to their winding number, and delete the edges from the dictionary.
-		* This takes care of all the left-going edges from vEvent.
-		*/
-		var regUp = Sweep.topLeftRegion( tess, e.activeRegion );
-		assert( regUp !== null );
-	//	if (regUp == NULL) longjmp(tess->env,1);
-		var reg = Sweep.regionBelow( regUp );
-		var eTopLeft = reg.eUp;
-		var eBottomLeft = Sweep.finishLeftRegions( tess, reg, null );
-
-		/* Next we process all the right-going edges from vEvent.  This
-		* involves adding the edges to the dictionary, and creating the
-		* associated "active regions" which record information about the
-		* regions between adjacent dictionary edges.
-		*/
-		if( eBottomLeft.Onext === eTopLeft ) {
-			/* No right-going edges -- add a temporary "fixable" edge */
-			Sweep.connectRightVertex( tess, regUp, eBottomLeft );
-		} else {
-			Sweep.addRightEdges( tess, regUp, eBottomLeft.Onext, eTopLeft, eTopLeft, true );
-		}
-	};
-
-
-	/* Make the sentinel coordinates big enough that they will never be
-	* merged with real input features.
-	*/
-
-	//static void AddSentinel( TESStesselator *tess, TESSreal smin, TESSreal smax, TESSreal t )
-	Sweep.addSentinel = function( tess, smin, smax, t ) {
-		/*
-		* We add two sentinel edges above and below all other edges,
-		* to avoid special cases at the top and bottom.
-		*/
-		var reg = new ActiveRegion();
-		var e = tess.mesh.makeEdge();
-	//	if (e == NULL) longjmp(tess->env,1);
-
-		e.Org.s = smax;
-		e.Org.t = t;
-		e.Dst.s = smin;
-		e.Dst.t = t;
-		tess.event = e.Dst;		/* initialize it */
-
-		reg.eUp = e;
-		reg.windingNumber = 0;
-		reg.inside = false;
-		reg.fixUpperEdge = false;
-		reg.sentinel = true;
-		reg.dirty = false;
-		reg.nodeUp = tess.dict.insert( reg );
-	//	if (reg->nodeUp == NULL) longjmp(tess->env,1);
-	}
-
-
-	//static void InitEdgeDict( TESStesselator *tess )
-	Sweep.initEdgeDict = function( tess ) {
-		/*
-		* We maintain an ordering of edge intersections with the sweep line.
-		* This order is maintained in a dynamic dictionary.
-		*/
-		tess.dict = new Dict( tess, Sweep.edgeLeq );
-	//	if (tess->dict == NULL) longjmp(tess->env,1);
-
-		var w = (tess.bmax[0] - tess.bmin[0]);
-		var h = (tess.bmax[1] - tess.bmin[1]);
-
-		var smin = tess.bmin[0] - w;
-		var smax = tess.bmax[0] + w;
-		var tmin = tess.bmin[1] - h;
-		var tmax = tess.bmax[1] + h;
-
-		Sweep.addSentinel( tess, smin, smax, tmin );
-		Sweep.addSentinel( tess, smin, smax, tmax );
-	}
-
-
-	Sweep.doneEdgeDict = function( tess )
-	{
-		var reg;
-		var fixedEdges = 0;
-
-		while( (reg = tess.dict.min().key) !== null ) {
-			/*
-			* At the end of all processing, the dictionary should contain
-			* only the two sentinel edges, plus at most one "fixable" edge
-			* created by ConnectRightVertex().
-			*/
-			if( ! reg.sentinel ) {
-				assert( reg.fixUpperEdge );
-				assert( ++fixedEdges == 1 );
-			}
-			assert( reg.windingNumber == 0 );
-			Sweep.deleteRegion( tess, reg );
-			/*    tessMeshDelete( reg->eUp );*/
-		}
-	//	dictDeleteDict( &tess->alloc, tess->dict );
-	}
-
-
-	Sweep.removeDegenerateEdges = function( tess ) {
-		/*
-		* Remove zero-length edges, and contours with fewer than 3 vertices.
-		*/
-		var e, eNext, eLnext;
-		var eHead = tess.mesh.eHead;
-
-		/*LINTED*/
-		for( e = eHead.next; e !== eHead; e = eNext ) {
-			eNext = e.next;
-			eLnext = e.Lnext;
-
-			if( Geom.vertEq( e.Org, e.Dst ) && e.Lnext.Lnext !== e ) {
-				/* Zero-length edge, contour has at least 3 edges */
-				Sweep.spliceMergeVertices( tess, eLnext, e );	/* deletes e->Org */
-				tess.mesh.delete( e ); /* e is a self-loop */
-				e = eLnext;
-				eLnext = e.Lnext;
-			}
-			if( eLnext.Lnext === e ) {
-				/* Degenerate contour (one or two edges) */
-				if( eLnext !== e ) {
-					if( eLnext === eNext || eLnext === eNext.Sym ) { eNext = eNext.next; }
-					tess.mesh.delete( eLnext );
-				}
-				if( e === eNext || e === eNext.Sym ) { eNext = eNext.next; }
-				tess.mesh.delete( e );
-			}
-		}
-	}
-
-	Sweep.initPriorityQ = function( tess ) {
-		/*
-		* Insert all vertices into the priority queue which determines the
-		* order in which vertices cross the sweep line.
-		*/
-		var pq;
-		var v, vHead;
-		var vertexCount = 0;
-		
-		vHead = tess.mesh.vHead;
-		for( v = vHead.next; v !== vHead; v = v.next ) {
-			vertexCount++;
-		}
-		/* Make sure there is enough space for sentinels. */
-		vertexCount += 8; //MAX( 8, tess->alloc.extraVertices );
-		
-		pq = tess.pq = new PriorityQ( vertexCount, Geom.vertLeq );
-	//	if (pq == NULL) return 0;
-
-		vHead = tess.mesh.vHead;
-		for( v = vHead.next; v !== vHead; v = v.next ) {
-			v.pqHandle = pq.insert( v );
-	//		if (v.pqHandle == INV_HANDLE)
-	//			break;
-		}
-
-		if (v !== vHead) {
-			return false;
-		}
-
-		pq.init();
-
-		return true;
-	}
-
-
-	Sweep.donePriorityQ = function( tess ) {
-		tess.pq = null;
-	}
-
-
-	Sweep.removeDegenerateFaces = function( tess, mesh ) {
-		/*
-		* Delete any degenerate faces with only two edges.  WalkDirtyRegions()
-		* will catch almost all of these, but it won't catch degenerate faces
-		* produced by splice operations on already-processed edges.
-		* The two places this can happen are in FinishLeftRegions(), when
-		* we splice in a "temporary" edge produced by ConnectRightVertex(),
-		* and in CheckForLeftSplice(), where we splice already-processed
-		* edges to ensure that our dictionary invariants are not violated
-		* by numerical errors.
-		*
-		* In both these cases it is *very* dangerous to delete the offending
-		* edge at the time, since one of the routines further up the stack
-		* will sometimes be keeping a pointer to that edge.
-		*/
-		var f, fNext;
-		var e;
-
-		/*LINTED*/
-		for( f = mesh.fHead.next; f !== mesh.fHead; f = fNext ) {
-			fNext = f.next;
-			e = f.anEdge;
-			assert( e.Lnext !== e );
-
-			if( e.Lnext.Lnext === e ) {
-				/* A face with only two edges */
-				Sweep.addWinding( e.Onext, e );
-				tess.mesh.delete( e );
-			}
-		}
-		return true;
-	}
-
-	Sweep.computeInterior = function( tess ) {
-		/*
-		* tessComputeInterior( tess ) computes the planar arrangement specified
-		* by the given contours, and further subdivides this arrangement
-		* into regions.  Each region is marked "inside" if it belongs
-		* to the polygon, according to the rule given by tess->windingRule.
-		* Each interior region is guaranteed be monotone.
-		*/
-		var v, vNext;
-
-		/* Each vertex defines an event for our sweep line.  Start by inserting
-		* all the vertices in a priority queue.  Events are processed in
-		* lexicographic order, ie.
-		*
-		*	e1 < e2  iff  e1.x < e2.x || (e1.x == e2.x && e1.y < e2.y)
-		*/
-		Sweep.removeDegenerateEdges( tess );
-		if ( !Sweep.initPriorityQ( tess ) ) return false; /* if error */
-		Sweep.initEdgeDict( tess );
-
-		while( (v = tess.pq.extractMin()) !== null ) {
-			for( ;; ) {
-				vNext = tess.pq.min();
-				if( vNext === null || ! Geom.vertEq( vNext, v )) break;
-
-				/* Merge together all vertices at exactly the same location.
-				* This is more efficient than processing them one at a time,
-				* simplifies the code (see ConnectLeftDegenerate), and is also
-				* important for correct handling of certain degenerate cases.
-				* For example, suppose there are two identical edges A and B
-				* that belong to different contours (so without this code they would
-				* be processed by separate sweep events).  Suppose another edge C
-				* crosses A and B from above.  When A is processed, we split it
-				* at its intersection point with C.  However this also splits C,
-				* so when we insert B we may compute a slightly different
-				* intersection point.  This might leave two edges with a small
-				* gap between them.  This kind of error is especially obvious
-				* when using boundary extraction (TESS_BOUNDARY_ONLY).
-				*/
-				vNext = tess.pq.extractMin();
-				Sweep.spliceMergeVertices( tess, v.anEdge, vNext.anEdge );
-			}
-			Sweep.sweepEvent( tess, v );
-		}
-
-		/* Set tess->event for debugging purposes */
-		tess.event = tess.dict.min().key.eUp.Org;
-		Sweep.debugEvent( tess );
-		Sweep.doneEdgeDict( tess );
-		Sweep.donePriorityQ( tess );
-
-		if ( !Sweep.removeDegenerateFaces( tess, tess.mesh ) ) return false;
-		tess.mesh.check();
-
-		return true;
-	}
-
-
-	function Tesselator() {
-
-		/*** state needed for collecting the input data ***/
-		this.mesh = null;		/* stores the input contours, and eventually
-							the tessellation itself */
-
-		/*** state needed for projecting onto the sweep plane ***/
-
-		this.normal = [0.0, 0.0, 0.0];	/* user-specified normal (if provided) */
-		this.sUnit = [0.0, 0.0, 0.0];	/* unit vector in s-direction (debugging) */
-		this.tUnit = [0.0, 0.0, 0.0];	/* unit vector in t-direction (debugging) */
-
-		this.bmin = [0.0, 0.0];
-		this.bmax = [0.0, 0.0];
-
-		/*** state needed for the line sweep ***/
-		this.windingRule = Tess2.WINDING_ODD;	/* rule for determining polygon interior */
-
-		this.dict = null;		/* edge dictionary for sweep line */
-		this.pq = null;		/* priority queue of vertex events */
-		this.event = null;		/* current sweep event being processed */
-
-		this.vertexIndexCounter = 0;
-		
-		this.vertices = [];
-		this.vertexIndices = [];
-		this.vertexCount = 0;
-		this.elements = [];
-		this.elementCount = 0;
-	};
-
-	Tesselator.prototype = {
-
-		dot_: function(u, v) {
-			return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2]);
-		},
-
-		normalize_: function( v ) {
-			var len = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-			assert( len > 0.0 );
-			len = Math.sqrt( len );
-			v[0] /= len;
-			v[1] /= len;
-			v[2] /= len;
-		},
-
-		longAxis_: function( v ) {
-			var i = 0;
-			if( Math.abs(v[1]) > Math.abs(v[0]) ) { i = 1; }
-			if( Math.abs(v[2]) > Math.abs(v[i]) ) { i = 2; }
-			return i;
-		},
-
-		computeNormal_: function( norm )
-		{
-			var v, v1, v2;
-			var c, tLen2, maxLen2;
-			var maxVal = [0,0,0], minVal = [0,0,0], d1 = [0,0,0], d2 = [0,0,0], tNorm = [0,0,0];
-			var maxVert = [null,null,null], minVert = [null,null,null];
-			var vHead = this.mesh.vHead;
-			var i;
-
-			v = vHead.next;
-			for( i = 0; i < 3; ++i ) {
-				c = v.coords[i];
-				minVal[i] = c;
-				minVert[i] = v;
-				maxVal[i] = c;
-				maxVert[i] = v;
-			}
-
-			for( v = vHead.next; v !== vHead; v = v.next ) {
-				for( i = 0; i < 3; ++i ) {
-					c = v.coords[i];
-					if( c < minVal[i] ) { minVal[i] = c; minVert[i] = v; }
-					if( c > maxVal[i] ) { maxVal[i] = c; maxVert[i] = v; }
-				}
-			}
-
-			/* Find two vertices separated by at least 1/sqrt(3) of the maximum
-			* distance between any two vertices
-			*/
-			i = 0;
-			if( maxVal[1] - minVal[1] > maxVal[0] - minVal[0] ) { i = 1; }
-			if( maxVal[2] - minVal[2] > maxVal[i] - minVal[i] ) { i = 2; }
-			if( minVal[i] >= maxVal[i] ) {
-				/* All vertices are the same -- normal doesn't matter */
-				norm[0] = 0; norm[1] = 0; norm[2] = 1;
-				return;
-			}
-
-			/* Look for a third vertex which forms the triangle with maximum area
-			* (Length of normal == twice the triangle area)
-			*/
-			maxLen2 = 0;
-			v1 = minVert[i];
-			v2 = maxVert[i];
-			d1[0] = v1.coords[0] - v2.coords[0];
-			d1[1] = v1.coords[1] - v2.coords[1];
-			d1[2] = v1.coords[2] - v2.coords[2];
-			for( v = vHead.next; v !== vHead; v = v.next ) {
-				d2[0] = v.coords[0] - v2.coords[0];
-				d2[1] = v.coords[1] - v2.coords[1];
-				d2[2] = v.coords[2] - v2.coords[2];
-				tNorm[0] = d1[1]*d2[2] - d1[2]*d2[1];
-				tNorm[1] = d1[2]*d2[0] - d1[0]*d2[2];
-				tNorm[2] = d1[0]*d2[1] - d1[1]*d2[0];
-				tLen2 = tNorm[0]*tNorm[0] + tNorm[1]*tNorm[1] + tNorm[2]*tNorm[2];
-				if( tLen2 > maxLen2 ) {
-					maxLen2 = tLen2;
-					norm[0] = tNorm[0];
-					norm[1] = tNorm[1];
-					norm[2] = tNorm[2];
-				}
-			}
-
-			if( maxLen2 <= 0 ) {
-				/* All points lie on a single line -- any decent normal will do */
-				norm[0] = norm[1] = norm[2] = 0;
-				norm[this.longAxis_(d1)] = 1;
-			}
-		},
-
-		checkOrientation_: function() {
-			var area;
-			var f, fHead = this.mesh.fHead;
-			var v, vHead = this.mesh.vHead;
-			var e;
-
-			/* When we compute the normal automatically, we choose the orientation
-			* so that the the sum of the signed areas of all contours is non-negative.
-			*/
-			area = 0;
-			for( f = fHead.next; f !== fHead; f = f.next ) {
-				e = f.anEdge;
-				if( e.winding <= 0 ) continue;
-				do {
-					area += (e.Org.s - e.Dst.s) * (e.Org.t + e.Dst.t);
-					e = e.Lnext;
-				} while( e !== f.anEdge );
-			}
-			if( area < 0 ) {
-				/* Reverse the orientation by flipping all the t-coordinates */
-				for( v = vHead.next; v !== vHead; v = v.next ) {
-					v.t = - v.t;
-				}
-				this.tUnit[0] = - this.tUnit[0];
-				this.tUnit[1] = - this.tUnit[1];
-				this.tUnit[2] = - this.tUnit[2];
-			}
-		},
-
-	/*	#ifdef FOR_TRITE_TEST_PROGRAM
-		#include <stdlib.h>
-		extern int RandomSweep;
-		#define S_UNIT_X	(RandomSweep ? (2*drand48()-1) : 1.0)
-		#define S_UNIT_Y	(RandomSweep ? (2*drand48()-1) : 0.0)
-		#else
-		#if defined(SLANTED_SWEEP) */
-		/* The "feature merging" is not intended to be complete.  There are
-		* special cases where edges are nearly parallel to the sweep line
-		* which are not implemented.  The algorithm should still behave
-		* robustly (ie. produce a reasonable tesselation) in the presence
-		* of such edges, however it may miss features which could have been
-		* merged.  We could minimize this effect by choosing the sweep line
-		* direction to be something unusual (ie. not parallel to one of the
-		* coordinate axes).
-		*/
-	/*	#define S_UNIT_X	(TESSreal)0.50941539564955385	// Pre-normalized
-		#define S_UNIT_Y	(TESSreal)0.86052074622010633
-		#else
-		#define S_UNIT_X	(TESSreal)1.0
-		#define S_UNIT_Y	(TESSreal)0.0
-		#endif
-		#endif*/
-
-		/* Determine the polygon normal and project vertices onto the plane
-		* of the polygon.
-		*/
-		projectPolygon_: function() {
-			var v, vHead = this.mesh.vHead;
-			var norm = [0,0,0];
-			var sUnit, tUnit;
-			var i, first, computedNormal = false;
-
-			norm[0] = this.normal[0];
-			norm[1] = this.normal[1];
-			norm[2] = this.normal[2];
-			if( norm[0] === 0.0 && norm[1] === 0.0 && norm[2] === 0.0 ) {
-				this.computeNormal_( norm );
-				computedNormal = true;
-			}
-			sUnit = this.sUnit;
-			tUnit = this.tUnit;
-			i = this.longAxis_( norm );
-
-	/*	#if defined(FOR_TRITE_TEST_PROGRAM) || defined(TRUE_PROJECT)
-			// Choose the initial sUnit vector to be approximately perpendicular
-			// to the normal.
-			
-			Normalize( norm );
-
-			sUnit[i] = 0;
-			sUnit[(i+1)%3] = S_UNIT_X;
-			sUnit[(i+2)%3] = S_UNIT_Y;
-
-			// Now make it exactly perpendicular 
-			w = Dot( sUnit, norm );
-			sUnit[0] -= w * norm[0];
-			sUnit[1] -= w * norm[1];
-			sUnit[2] -= w * norm[2];
-			Normalize( sUnit );
-
-			// Choose tUnit so that (sUnit,tUnit,norm) form a right-handed frame 
-			tUnit[0] = norm[1]*sUnit[2] - norm[2]*sUnit[1];
-			tUnit[1] = norm[2]*sUnit[0] - norm[0]*sUnit[2];
-			tUnit[2] = norm[0]*sUnit[1] - norm[1]*sUnit[0];
-			Normalize( tUnit );
-		#else*/
-			/* Project perpendicular to a coordinate axis -- better numerically */
-			sUnit[i] = 0;
-			sUnit[(i+1)%3] = 1.0;
-			sUnit[(i+2)%3] = 0.0;
-
-			tUnit[i] = 0;
-			tUnit[(i+1)%3] = 0.0;
-			tUnit[(i+2)%3] = (norm[i] > 0) ? 1.0 : -1.0;
-	//	#endif
-
-			/* Project the vertices onto the sweep plane */
-			for( v = vHead.next; v !== vHead; v = v.next ) {
-				v.s = this.dot_( v.coords, sUnit );
-				v.t = this.dot_( v.coords, tUnit );
-			}
-			if( computedNormal ) {
-				this.checkOrientation_();
-			}
-
-			/* Compute ST bounds. */
-			first = true;
-			for( v = vHead.next; v !== vHead; v = v.next ) {
-				if (first) {
-					this.bmin[0] = this.bmax[0] = v.s;
-					this.bmin[1] = this.bmax[1] = v.t;
-					first = false;
-				} else {
-					if (v.s < this.bmin[0]) this.bmin[0] = v.s;
-					if (v.s > this.bmax[0]) this.bmax[0] = v.s;
-					if (v.t < this.bmin[1]) this.bmin[1] = v.t;
-					if (v.t > this.bmax[1]) this.bmax[1] = v.t;
-				}
-			}
-		},
-
-		addWinding_: function(eDst,eSrc) {
-			eDst.winding += eSrc.winding;
-			eDst.Sym.winding += eSrc.Sym.winding;
-		},
-		
-		/* tessMeshTessellateMonoRegion( face ) tessellates a monotone region
-		* (what else would it do??)  The region must consist of a single
-		* loop of half-edges (see mesh.h) oriented CCW.  "Monotone" in this
-		* case means that any vertical line intersects the interior of the
-		* region in a single interval.  
-		*
-		* Tessellation consists of adding interior edges (actually pairs of
-		* half-edges), to split the region into non-overlapping triangles.
-		*
-		* The basic idea is explained in Preparata and Shamos (which I don''t
-		* have handy right now), although their implementation is more
-		* complicated than this one.  The are two edge chains, an upper chain
-		* and a lower chain.  We process all vertices from both chains in order,
-		* from right to left.
-		*
-		* The algorithm ensures that the following invariant holds after each
-		* vertex is processed: the untessellated region consists of two
-		* chains, where one chain (say the upper) is a single edge, and
-		* the other chain is concave.  The left vertex of the single edge
-		* is always to the left of all vertices in the concave chain.
-		*
-		* Each step consists of adding the rightmost unprocessed vertex to one
-		* of the two chains, and forming a fan of triangles from the rightmost
-		* of two chain endpoints.  Determining whether we can add each triangle
-		* to the fan is a simple orientation test.  By making the fan as large
-		* as possible, we restore the invariant (check it yourself).
-		*/
-	//	int tessMeshTessellateMonoRegion( TESSmesh *mesh, TESSface *face )
-		tessellateMonoRegion_: function( mesh, face ) {
-			var up, lo;
-
-			/* All edges are oriented CCW around the boundary of the region.
-			* First, find the half-edge whose origin vertex is rightmost.
-			* Since the sweep goes from left to right, face->anEdge should
-			* be close to the edge we want.
-			*/
-			up = face.anEdge;
-			assert( up.Lnext !== up && up.Lnext.Lnext !== up );
-
-			for( ; Geom.vertLeq( up.Dst, up.Org ); up = up.Lprev )
-				;
-			for( ; Geom.vertLeq( up.Org, up.Dst ); up = up.Lnext )
-				;
-			lo = up.Lprev;
-
-			while( up.Lnext !== lo ) {
-				if( Geom.vertLeq( up.Dst, lo.Org )) {
-					/* up->Dst is on the left.  It is safe to form triangles from lo->Org.
-					* The EdgeGoesLeft test guarantees progress even when some triangles
-					* are CW, given that the upper and lower chains are truly monotone.
-					*/
-					while( lo.Lnext !== up && (Geom.edgeGoesLeft( lo.Lnext )
-						|| Geom.edgeSign( lo.Org, lo.Dst, lo.Lnext.Dst ) <= 0.0 )) {
-							var tempHalfEdge = mesh.connect( lo.Lnext, lo );
-							//if (tempHalfEdge == NULL) return 0;
-							lo = tempHalfEdge.Sym;
-					}
-					lo = lo.Lprev;
-				} else {
-					/* lo->Org is on the left.  We can make CCW triangles from up->Dst. */
-					while( lo.Lnext != up && (Geom.edgeGoesRight( up.Lprev )
-						|| Geom.edgeSign( up.Dst, up.Org, up.Lprev.Org ) >= 0.0 )) {
-							var tempHalfEdge = mesh.connect( up, up.Lprev );
-							//if (tempHalfEdge == NULL) return 0;
-							up = tempHalfEdge.Sym;
-					}
-					up = up.Lnext;
-				}
-			}
-
-			/* Now lo->Org == up->Dst == the leftmost vertex.  The remaining region
-			* can be tessellated in a fan from this leftmost vertex.
-			*/
-			assert( lo.Lnext !== up );
-			while( lo.Lnext.Lnext !== up ) {
-				var tempHalfEdge = mesh.connect( lo.Lnext, lo );
-				//if (tempHalfEdge == NULL) return 0;
-				lo = tempHalfEdge.Sym;
-			}
-
-			return true;
-		},
-
-
-		/* tessMeshTessellateInterior( mesh ) tessellates each region of
-		* the mesh which is marked "inside" the polygon.  Each such region
-		* must be monotone.
-		*/
-		//int tessMeshTessellateInterior( TESSmesh *mesh )
-		tessellateInterior_: function( mesh ) {
-			var f, next;
-
-			/*LINTED*/
-			for( f = mesh.fHead.next; f !== mesh.fHead; f = next ) {
-				/* Make sure we don''t try to tessellate the new triangles. */
-				next = f.next;
-				if( f.inside ) {
-					if ( !this.tessellateMonoRegion_( mesh, f ) ) return false;
-				}
-			}
-
-			return true;
-		},
-
-
-		/* tessMeshDiscardExterior( mesh ) zaps (ie. sets to NULL) all faces
-		* which are not marked "inside" the polygon.  Since further mesh operations
-		* on NULL faces are not allowed, the main purpose is to clean up the
-		* mesh so that exterior loops are not represented in the data structure.
-		*/
-		//void tessMeshDiscardExterior( TESSmesh *mesh )
-		discardExterior_: function( mesh ) {
-			var f, next;
-
-			/*LINTED*/
-			for( f = mesh.fHead.next; f !== mesh.fHead; f = next ) {
-				/* Since f will be destroyed, save its next pointer. */
-				next = f.next;
-				if( ! f.inside ) {
-					mesh.zapFace( f );
-				}
-			}
-		},
-
-		/* tessMeshSetWindingNumber( mesh, value, keepOnlyBoundary ) resets the
-		* winding numbers on all edges so that regions marked "inside" the
-		* polygon have a winding number of "value", and regions outside
-		* have a winding number of 0.
-		*
-		* If keepOnlyBoundary is TRUE, it also deletes all edges which do not
-		* separate an interior region from an exterior one.
-		*/
-	//	int tessMeshSetWindingNumber( TESSmesh *mesh, int value, int keepOnlyBoundary )
-		setWindingNumber_: function( mesh, value, keepOnlyBoundary ) {
-			var e, eNext;
-
-			for( e = mesh.eHead.next; e !== mesh.eHead; e = eNext ) {
-				eNext = e.next;
-				if( e.Rface.inside !== e.Lface.inside ) {
-
-					/* This is a boundary edge (one side is interior, one is exterior). */
-					e.winding = (e.Lface.inside) ? value : -value;
-				} else {
-
-					/* Both regions are interior, or both are exterior. */
-					if( ! keepOnlyBoundary ) {
-						e.winding = 0;
-					} else {
-						mesh.delete( e );
-					}
-				}
-			}
-		},
-
-		getNeighbourFace_: function(edge)
-		{
-			if (!edge.Rface)
-				return -1;
-			if (!edge.Rface.inside)
-				return -1;
-			return edge.Rface.n;
-		},
-
-		outputPolymesh_: function( mesh, elementType, polySize, vertexSize ) {
-			var v;
-			var f;
-			var edge;
-			var maxFaceCount = 0;
-			var maxVertexCount = 0;
-			var faceVerts, i;
-			var elements = 0;
-			var vert;
-
-			// Assume that the input data is triangles now.
-			// Try to merge as many polygons as possible
-			if (polySize > 3)
-			{
-				mesh.mergeConvexFaces( polySize );
-			}
-
-			// Mark unused
-			for ( v = mesh.vHead.next; v !== mesh.vHead; v = v.next )
-				v.n = -1;
-
-			// Create unique IDs for all vertices and faces.
-			for ( f = mesh.fHead.next; f != mesh.fHead; f = f.next )
-			{
-				f.n = -1;
-				if( !f.inside ) continue;
-
-				edge = f.anEdge;
-				faceVerts = 0;
-				do
-				{
-					v = edge.Org;
-					if ( v.n === -1 )
-					{
-						v.n = maxVertexCount;
-						maxVertexCount++;
-					}
-					faceVerts++;
-					edge = edge.Lnext;
-				}
-				while (edge !== f.anEdge);
-				
-				assert( faceVerts <= polySize );
-
-				f.n = maxFaceCount;
-				++maxFaceCount;
-			}
-
-			this.elementCount = maxFaceCount;
-			if (elementType == Tess2.CONNECTED_POLYGONS)
-				maxFaceCount *= 2;
-	/*		tess.elements = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
-															  sizeof(TESSindex) * maxFaceCount * polySize );
-			if (!tess->elements)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.elements = [];
-			this.elements.length = maxFaceCount * polySize;
-			
-			this.vertexCount = maxVertexCount;
-	/*		tess->vertices = (TESSreal*)tess->alloc.memalloc( tess->alloc.userData,
-															 sizeof(TESSreal) * tess->vertexCount * vertexSize );
-			if (!tess->vertices)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.vertices = [];
-			this.vertices.length = maxVertexCount * vertexSize;
-
-	/*		tess->vertexIndices = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
-																    sizeof(TESSindex) * tess->vertexCount );
-			if (!tess->vertexIndices)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.vertexIndices = [];
-			this.vertexIndices.length = maxVertexCount;
-
-			
-			// Output vertices.
-			for ( v = mesh.vHead.next; v !== mesh.vHead; v = v.next )
-			{
-				if ( v.n != -1 )
-				{
-					// Store coordinate
-					var idx = v.n * vertexSize;
-					this.vertices[idx+0] = v.coords[0];
-					this.vertices[idx+1] = v.coords[1];
-					if ( vertexSize > 2 )
-						this.vertices[idx+2] = v.coords[2];
-					// Store vertex index.
-					this.vertexIndices[v.n] = v.idx;
-				}
-			}
-
-			// Output indices.
-			var nel = 0;
-			for ( f = mesh.fHead.next; f !== mesh.fHead; f = f.next )
-			{
-				if ( !f.inside ) continue;
-				
-				// Store polygon
-				edge = f.anEdge;
-				faceVerts = 0;
-				do
-				{
-					v = edge.Org;
-					this.elements[nel++] = v.n;
-					faceVerts++;
-					edge = edge.Lnext;
-				}
-				while (edge !== f.anEdge);
-				// Fill unused.
-				for (i = faceVerts; i < polySize; ++i)
-					this.elements[nel++] = -1;
-
-				// Store polygon connectivity
-				if ( elementType == Tess2.CONNECTED_POLYGONS )
-				{
-					edge = f.anEdge;
-					do
-					{
-						this.elements[nel++] = this.getNeighbourFace_( edge );
-						edge = edge.Lnext;
-					}
-					while (edge !== f.anEdge);
-					// Fill unused.
-					for (i = faceVerts; i < polySize; ++i)
-						this.elements[nel++] = -1;
-				}
-			}
-		},
-
-	//	void OutputContours( TESStesselator *tess, TESSmesh *mesh, int vertexSize )
-		outputContours_: function( mesh, vertexSize ) {
-			var f;
-			var edge;
-			var start;
-			var verts;
-			var elements;
-			var vertInds;
-			var startVert = 0;
-			var vertCount = 0;
-
-			this.vertexCount = 0;
-			this.elementCount = 0;
-
-			for ( f = mesh.fHead.next; f !== mesh.fHead; f = f.next )
-			{
-				if ( !f.inside ) continue;
-
-				start = edge = f.anEdge;
-				do
-				{
-					this.vertexCount++;
-					edge = edge.Lnext;
-				}
-				while ( edge !== start );
-
-				this.elementCount++;
-			}
-
-	/*		tess->elements = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
-															  sizeof(TESSindex) * tess->elementCount * 2 );
-			if (!tess->elements)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.elements = [];
-			this.elements.length = this.elementCount * 2;
-			
-	/*		tess->vertices = (TESSreal*)tess->alloc.memalloc( tess->alloc.userData,
-															  sizeof(TESSreal) * tess->vertexCount * vertexSize );
-			if (!tess->vertices)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.vertices = [];
-			this.vertices.length = this.vertexCount * vertexSize;
-
-	/*		tess->vertexIndices = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
-																    sizeof(TESSindex) * tess->vertexCount );
-			if (!tess->vertexIndices)
-			{
-				tess->outOfMemory = 1;
-				return;
-			}*/
-			this.vertexIndices = [];
-			this.vertexIndices.length = this.vertexCount;
-
-			var nv = 0;
-			var nvi = 0;
-			var nel = 0;
-			startVert = 0;
-
-			for ( f = mesh.fHead.next; f !== mesh.fHead; f = f.next )
-			{
-				if ( !f.inside ) continue;
-
-				vertCount = 0;
-				start = edge = f.anEdge;
-				do
-				{
-					this.vertices[nv++] = edge.Org.coords[0];
-					this.vertices[nv++] = edge.Org.coords[1];
-					if ( vertexSize > 2 )
-						this.vertices[nv++] = edge.Org.coords[2];
-					this.vertexIndices[nvi++] = edge.Org.idx;
-					vertCount++;
-					edge = edge.Lnext;
-				}
-				while ( edge !== start );
-
-				this.elements[nel++] = startVert;
-				this.elements[nel++] = vertCount;
-
-				startVert += vertCount;
-			}
-		},
-
-		addContour: function( size, vertices )
-		{
-			var e;
-			var i;
-
-			if ( this.mesh === null )
-			  	this.mesh = new TESSmesh();
-	/*	 	if ( tess->mesh == NULL ) {
-				tess->outOfMemory = 1;
-				return;
-			}*/
-
-			if ( size < 2 )
-				size = 2;
-			if ( size > 3 )
-				size = 3;
-
-			e = null;
-
-			for( i = 0; i < vertices.length; i += size )
-			{
-				if( e == null ) {
-					/* Make a self-loop (one vertex, one edge). */
-					e = this.mesh.makeEdge();
-	/*				if ( e == NULL ) {
-						tess->outOfMemory = 1;
-						return;
-					}*/
-					this.mesh.splice( e, e.Sym );
-				} else {
-					/* Create a new vertex and edge which immediately follow e
-					* in the ordering around the left face.
-					*/
-					this.mesh.splitEdge( e );
-					e = e.Lnext;
-				}
-
-				/* The new vertex is now e->Org. */
-				e.Org.coords[0] = vertices[i+0];
-				e.Org.coords[1] = vertices[i+1];
-				if ( size > 2 )
-					e.Org.coords[2] = vertices[i+2];
-				else
-					e.Org.coords[2] = 0.0;
-				/* Store the insertion number so that the vertex can be later recognized. */
-				e.Org.idx = this.vertexIndexCounter++;
-
-				/* The winding of an edge says how the winding number changes as we
-				* cross from the edge''s right face to its left face.  We add the
-				* vertices in such an order that a CCW contour will add +1 to
-				* the winding number of the region inside the contour.
-				*/
-				e.winding = 1;
-				e.Sym.winding = -1;
-			}
-		},
-
-	//	int tessTesselate( TESStesselator *tess, int windingRule, int elementType, int polySize, int vertexSize, const TESSreal* normal )
-		tesselate: function( windingRule, elementType, polySize, vertexSize, normal ) {
-			this.vertices = [];
-			this.elements = [];
-			this.vertexIndices = [];
-
-			this.vertexIndexCounter = 0;
-			
-			if (normal)
-			{
-				this.normal[0] = normal[0];
-				this.normal[1] = normal[1];
-				this.normal[2] = normal[2];
-			}
-
-			this.windingRule = windingRule;
-
-			if (vertexSize < 2)
-				vertexSize = 2;
-			if (vertexSize > 3)
-				vertexSize = 3;
-
-	/*		if (setjmp(tess->env) != 0) { 
-				// come back here if out of memory
-				return 0;
-			}*/
-
-			if (!this.mesh)
-			{
-				return false;
-			}
-
-			/* Determine the polygon normal and project vertices onto the plane
-			* of the polygon.
-			*/
-			this.projectPolygon_();
-
-			/* tessComputeInterior( tess ) computes the planar arrangement specified
-			* by the given contours, and further subdivides this arrangement
-			* into regions.  Each region is marked "inside" if it belongs
-			* to the polygon, according to the rule given by tess->windingRule.
-			* Each interior region is guaranteed be monotone.
-			*/
-			Sweep.computeInterior( this );
-
-			var mesh = this.mesh;
-
-			/* If the user wants only the boundary contours, we throw away all edges
-			* except those which separate the interior from the exterior.
-			* Otherwise we tessellate all the regions marked "inside".
-			*/
-			if (elementType == Tess2.BOUNDARY_CONTOURS) {
-				this.setWindingNumber_( mesh, 1, true );
-			} else {
-				this.tessellateInterior_( mesh ); 
-			}
-	//		if (rc == 0) longjmp(tess->env,1);  /* could've used a label */
-
-			mesh.check();
-
-			if (elementType == Tess2.BOUNDARY_CONTOURS) {
-				this.outputContours_( mesh, vertexSize );     /* output contours */
-			}
-			else
-			{
-				this.outputPolymesh_( mesh, elementType, polySize, vertexSize );     /* output polygons */
-			}
-
-//			tess.mesh = null;
-
-			return true;
-		}
-	};
+/* Public API */
+
+__webpack_require__(1).glMatrix.setMatrixArrayType(Array);
+
+var Tess2 = {};
+var Geom = {};
+module.exports = Tess2;
+Tess2.WINDING_ODD = 0;
+Tess2.WINDING_NONZERO = 1;
+Tess2.WINDING_POSITIVE = 2;
+Tess2.WINDING_NEGATIVE = 3;
+Tess2.WINDING_ABS_GEQ_TWO = 4;
+Tess2.POLYGONS = 0;
+Tess2.CONNECTED_POLYGONS = 1;
+Tess2.BOUNDARY_CONTOURS = 2;
+
+Tess2.tesselate = function (opts) {
+  var debug = opts.debug || false;
+  var tess = new Tesselator();
+
+  for (var i = 0; i < opts.contours.length; i++) {
+    tess.addContour(opts.vertexSize || 2, opts.contours[i]);
+  }
+
+  tess.tesselate(opts.windingRule || Tess2.WINDING_ODD, opts.elementType || Tess2.POLYGONS, opts.polySize || 3, opts.vertexSize || 2, opts.normal || [0, 0, 1]);
+  return {
+    vertices: tess.vertices,
+    vertexIndices: tess.vertexIndices,
+    vertexCount: tess.vertexCount,
+    elements: tess.elements,
+    elementCount: tess.elementCount,
+    mesh: debug ? tess.mesh : undefined
+  };
+};
+/* Internal */
+
+
+var assert = function (cond) {
+  if (!cond) {
+    throw "Assertion Failed!";
+  }
+};
+/* The mesh structure is similar in spirit, notation, and operations
+* to the "quad-edge" structure (see L. Guibas and J. Stolfi, Primitives
+* for the manipulation of general subdivisions and the computation of
+* Voronoi diagrams, ACM Transactions on Graphics, 4(2):74-123, April 1985).
+* For a simplified description, see the course notes for CS348a,
+* "Mathematical Foundations of Computer Graphics", available at the
+* Stanford bookstore (and taught during the fall quarter).
+* The implementation also borrows a tiny subset of the graph-based approach
+* use in Mantyla's Geometric Work Bench (see M. Mantyla, An Introduction
+* to Sold Modeling, Computer Science Press, Rockville, Maryland, 1988).
+*
+* The fundamental data structure is the "half-edge".  Two half-edges
+* go together to make an edge, but they point in opposite directions.
+* Each half-edge has a pointer to its mate (the "symmetric" half-edge Sym),
+* its origin vertex (Org), the face on its left side (Lface), and the
+* adjacent half-edges in the CCW direction around the origin vertex
+* (Onext) and around the left face (Lnext).  There is also a "next"
+* pointer for the global edge list (see below).
+*
+* The notation used for mesh navigation:
+*  Sym   = the mate of a half-edge (same edge, but opposite direction)
+*  Onext = edge CCW around origin vertex (keep same origin)
+*  Dnext = edge CCW around destination vertex (keep same dest)
+*  Lnext = edge CCW around left face (dest becomes new origin)
+*  Rnext = edge CCW around right face (origin becomes new dest)
+*
+* "prev" means to substitute CW for CCW in the definitions above.
+*
+* The mesh keeps global lists of all vertices, faces, and edges,
+* stored as doubly-linked circular lists with a dummy header node.
+* The mesh stores pointers to these dummy headers (vHead, fHead, eHead).
+*
+* The circular edge list is special; since half-edges always occur
+* in pairs (e and e->Sym), each half-edge stores a pointer in only
+* one direction.  Starting at eHead and following the e->next pointers
+* will visit each *edge* once (ie. e or e->Sym, but not both).
+* e->Sym stores a pointer in the opposite direction, thus it is
+* always true that e->Sym->next->Sym->next == e.
+*
+* Each vertex has a pointer to next and previous vertices in the
+* circular list, and a pointer to a half-edge with this vertex as
+* the origin (NULL if this is the dummy header).  There is also a
+* field "data" for client data.
+*
+* Each face has a pointer to the next and previous faces in the
+* circular list, and a pointer to a half-edge with this face as
+* the left face (NULL if this is the dummy header).  There is also
+* a field "data" for client data.
+*
+* Note that what we call a "face" is really a loop; faces may consist
+* of more than one loop (ie. not simply connected), but there is no
+* record of this in the data structure.  The mesh may consist of
+* several disconnected regions, so it may not be possible to visit
+* the entire mesh by starting at a half-edge and traversing the edge
+* structure.
+*
+* The mesh does NOT support isolated vertices; a vertex is deleted along
+* with its last edge.  Similarly when two faces are merged, one of the
+* faces is deleted (see tessMeshDelete below).  For mesh operations,
+* all face (loop) and vertex pointers must not be NULL.  However, once
+* mesh manipulation is finished, TESSmeshZapFace can be used to delete
+* faces of the mesh, one at a time.  All external faces can be "zapped"
+* before the mesh is returned to the client; then a NULL face indicates
+* a region which is not part of the output polygon.
+*/
+
+
+function TESSvertex() {
+  this.next = null;
+  /* next vertex (never NULL) */
+
+  this.prev = null;
+  /* previous vertex (never NULL) */
+
+  this.anEdge = null;
+  /* a half-edge with this origin */
+
+  /* Internal data (keep hidden) */
+
+  this.coords = [0, 0, 0];
+  /* vertex location in 3D */
+
+  this.s = 0.0;
+  this.t = 0.0;
+  /* projection onto the sweep plane */
+
+  this.pqHandle = 0;
+  /* to allow deletion from priority queue */
+
+  this.n = 0;
+  /* to allow identify unique vertices */
+
+  this.idx = 0;
+  /* to allow map result to original verts */
+}
+
+function TESSface() {
+  this.next = null;
+  /* next face (never NULL) */
+
+  this.prev = null;
+  /* previous face (never NULL) */
+
+  this.anEdge = null;
+  /* a half edge with this left face */
+
+  /* Internal data (keep hidden) */
+
+  this.trail = null;
+  /* "stack" for conversion to strips */
+
+  this.n = 0;
+  /* to allow identiy unique faces */
+
+  this.marked = false;
+  /* flag for conversion to strips */
+
+  this.inside = false;
+  /* this face is in the polygon interior */
+}
+
+;
+
+function TESShalfEdge(side) {
+  this.next = null;
+  /* doubly-linked list (prev==Sym->next) */
+
+  this.Sym = null;
+  /* same edge, opposite direction */
+
+  this.Onext = null;
+  /* next edge CCW around origin */
+
+  this.Lnext = null;
+  /* next edge CCW around left face */
+
+  this.Org = null;
+  /* origin vertex (Overtex too long) */
+
+  this.Lface = null;
+  /* left face */
+
+  /* Internal data (keep hidden) */
+
+  this.activeRegion = null;
+  /* a region with this upper edge (sweep.c) */
+
+  this.winding = 0;
+  /* change in winding number when crossing
+  from the right face to the left face */
+
+  this.side = side;
+}
+
+;
+TESShalfEdge.prototype = {
+  get Rface() {
+    return this.Sym.Lface;
+  },
+
+  set Rface(v) {
+    this.Sym.Lface = v;
+  },
+
+  get Dst() {
+    return this.Sym.Org;
+  },
+
+  set Dst(v) {
+    this.Sym.Org = v;
+  },
+
+  get Oprev() {
+    return this.Sym.Lnext;
+  },
+
+  set Oprev(v) {
+    this.Sym.Lnext = v;
+  },
+
+  get Lprev() {
+    return this.Onext.Sym;
+  },
+
+  set Lprev(v) {
+    this.Onext.Sym = v;
+  },
+
+  get Dprev() {
+    return this.Lnext.Sym;
+  },
+
+  set Dprev(v) {
+    this.Lnext.Sym = v;
+  },
+
+  get Rprev() {
+    return this.Sym.Onext;
+  },
+
+  set Rprev(v) {
+    this.Sym.Onext = v;
+  },
+
+  get Dnext() {
+    return (
+      /*this.Rprev*/
+      this.Sym.Onext.Sym
+    );
+  },
+
+  /* 3 pointers */
+  set Dnext(v) {
+    /*this.Rprev*/
+    this.Sym.Onext.Sym = v;
+  },
+
+  /* 3 pointers */
+  get Rnext() {
+    return (
+      /*this.Oprev*/
+      this.Sym.Lnext.Sym
+    );
+  },
+
+  /* 3 pointers */
+  set Rnext(v) {
+    /*this.Oprev*/
+    this.Sym.Lnext.Sym = v;
+  }
+
+};
+
+function TESSmesh() {
+  var v = new TESSvertex();
+  var f = new TESSface();
+  var e = new TESShalfEdge(0);
+  var eSym = new TESShalfEdge(1);
+  v.next = v.prev = v;
+  v.anEdge = null;
+  f.next = f.prev = f;
+  f.anEdge = null;
+  f.trail = null;
+  f.marked = false;
+  f.inside = false;
+  e.next = e;
+  e.Sym = eSym;
+  e.Onext = null;
+  e.Lnext = null;
+  e.Org = null;
+  e.Lface = null;
+  e.winding = 0;
+  e.activeRegion = null;
+  eSym.next = eSym;
+  eSym.Sym = e;
+  eSym.Onext = null;
+  eSym.Lnext = null;
+  eSym.Org = null;
+  eSym.Lface = null;
+  eSym.winding = 0;
+  eSym.activeRegion = null;
+  this.vHead = v;
+  /* dummy header for vertex list */
+
+  this.fHead = f;
+  /* dummy header for face list */
+
+  this.eHead = e;
+  /* dummy header for edge list */
+
+  this.eHeadSym = eSym;
+  /* and its symmetric counterpart */
+}
+
+;
+/* The mesh operations below have three motivations: completeness,
+* convenience, and efficiency.  The basic mesh operations are MakeEdge,
+* Splice, and Delete.  All the other edge operations can be implemented
+* in terms of these.  The other operations are provided for convenience
+* and/or efficiency.
+*
+* When a face is split or a vertex is added, they are inserted into the
+* global list *before* the existing vertex or face (ie. e->Org or e->Lface).
+* This makes it easier to process all vertices or faces in the global lists
+* without worrying about processing the same data twice.  As a convenience,
+* when a face is split, the "inside" flag is copied from the old face.
+* Other internal data (v->data, v->activeRegion, f->data, f->marked,
+* f->trail, e->winding) is set to zero.
+*
+* ********************** Basic Edge Operations **************************
+*
+* tessMeshMakeEdge( mesh ) creates one edge, two vertices, and a loop.
+* The loop (face) consists of the two new half-edges.
+*
+* tessMeshSplice( eOrg, eDst ) is the basic operation for changing the
+* mesh connectivity and topology.  It changes the mesh so that
+*  eOrg->Onext <- OLD( eDst->Onext )
+*  eDst->Onext <- OLD( eOrg->Onext )
+* where OLD(...) means the value before the meshSplice operation.
+*
+* This can have two effects on the vertex structure:
+*  - if eOrg->Org != eDst->Org, the two vertices are merged together
+*  - if eOrg->Org == eDst->Org, the origin is split into two vertices
+* In both cases, eDst->Org is changed and eOrg->Org is untouched.
+*
+* Similarly (and independently) for the face structure,
+*  - if eOrg->Lface == eDst->Lface, one loop is split into two
+*  - if eOrg->Lface != eDst->Lface, two distinct loops are joined into one
+* In both cases, eDst->Lface is changed and eOrg->Lface is unaffected.
+*
+* tessMeshDelete( eDel ) removes the edge eDel.  There are several cases:
+* if (eDel->Lface != eDel->Rface), we join two loops into one; the loop
+* eDel->Lface is deleted.  Otherwise, we are splitting one loop into two;
+* the newly created loop will contain eDel->Dst.  If the deletion of eDel
+* would create isolated vertices, those are deleted as well.
+*
+* ********************** Other Edge Operations **************************
+*
+* tessMeshAddEdgeVertex( eOrg ) creates a new edge eNew such that
+* eNew == eOrg->Lnext, and eNew->Dst is a newly created vertex.
+* eOrg and eNew will have the same left face.
+*
+* tessMeshSplitEdge( eOrg ) splits eOrg into two edges eOrg and eNew,
+* such that eNew == eOrg->Lnext.  The new vertex is eOrg->Dst == eNew->Org.
+* eOrg and eNew will have the same left face.
+*
+* tessMeshConnect( eOrg, eDst ) creates a new edge from eOrg->Dst
+* to eDst->Org, and returns the corresponding half-edge eNew.
+* If eOrg->Lface == eDst->Lface, this splits one loop into two,
+* and the newly created loop is eNew->Lface.  Otherwise, two disjoint
+* loops are merged into one, and the loop eDst->Lface is destroyed.
+*
+* ************************ Other Operations *****************************
+*
+* tessMeshNewMesh() creates a new mesh with no edges, no vertices,
+* and no loops (what we usually call a "face").
+*
+* tessMeshUnion( mesh1, mesh2 ) forms the union of all structures in
+* both meshes, and returns the new mesh (the old meshes are destroyed).
+*
+* tessMeshDeleteMesh( mesh ) will free all storage for any valid mesh.
+*
+* tessMeshZapFace( fZap ) destroys a face and removes it from the
+* global face list.  All edges of fZap will have a NULL pointer as their
+* left face.  Any edges which also have a NULL pointer as their right face
+* are deleted entirely (along with any isolated vertices this produces).
+* An entire mesh can be deleted by zapping its faces, one at a time,
+* in any order.  Zapped faces cannot be used in further mesh operations!
+*
+* tessMeshCheckMesh( mesh ) checks a mesh for self-consistency.
+*/
+
+TESSmesh.prototype = {
+  /* MakeEdge creates a new pair of half-edges which form their own loop.
+  * No vertex or face structures are allocated, but these must be assigned
+  * before the current edge operation is completed.
+  */
+  //static TESShalfEdge *MakeEdge( TESSmesh* mesh, TESShalfEdge *eNext )
+  makeEdge_: function (eNext) {
+    var e = new TESShalfEdge(0);
+    var eSym = new TESShalfEdge(1);
+    /* Make sure eNext points to the first edge of the edge pair */
+
+    if (eNext.Sym.side < eNext.side) {
+      eNext = eNext.Sym;
+    }
+    /* Insert in circular doubly-linked list before eNext.
+    * Note that the prev pointer is stored in Sym->next.
+    */
+
+
+    var ePrev = eNext.Sym.next;
+    eSym.next = ePrev;
+    ePrev.Sym.next = e;
+    e.next = eNext;
+    eNext.Sym.next = eSym;
+    e.Sym = eSym;
+    e.Onext = e;
+    e.Lnext = eSym;
+    e.Org = null;
+    e.Lface = null;
+    e.winding = 0;
+    e.activeRegion = null;
+    eSym.Sym = e;
+    eSym.Onext = eSym;
+    eSym.Lnext = e;
+    eSym.Org = null;
+    eSym.Lface = null;
+    eSym.winding = 0;
+    eSym.activeRegion = null;
+    return e;
+  },
+
+  /* Splice( a, b ) is best described by the Guibas/Stolfi paper or the
+  * CS348a notes (see mesh.h).  Basically it modifies the mesh so that
+  * a->Onext and b->Onext are exchanged.  This can have various effects
+  * depending on whether a and b belong to different face or vertex rings.
+  * For more explanation see tessMeshSplice() below.
+  */
+  // static void Splice( TESShalfEdge *a, TESShalfEdge *b )
+  splice_: function (a, b) {
+    var aOnext = a.Onext;
+    var bOnext = b.Onext;
+    aOnext.Sym.Lnext = b;
+    bOnext.Sym.Lnext = a;
+    a.Onext = bOnext;
+    b.Onext = aOnext;
+  },
+
+  /* MakeVertex( newVertex, eOrig, vNext ) attaches a new vertex and makes it the
+  * origin of all edges in the vertex loop to which eOrig belongs. "vNext" gives
+  * a place to insert the new vertex in the global vertex list.  We insert
+  * the new vertex *before* vNext so that algorithms which walk the vertex
+  * list will not see the newly created vertices.
+  */
+  //static void MakeVertex( TESSvertex *newVertex, TESShalfEdge *eOrig, TESSvertex *vNext )
+  makeVertex_: function (newVertex, eOrig, vNext) {
+    var vNew = newVertex;
+    assert(vNew !== null);
+    /* insert in circular doubly-linked list before vNext */
+
+    var vPrev = vNext.prev;
+    vNew.prev = vPrev;
+    vPrev.next = vNew;
+    vNew.next = vNext;
+    vNext.prev = vNew;
+    vNew.anEdge = eOrig;
+    /* leave coords, s, t undefined */
+
+    /* fix other edges on this vertex loop */
+
+    var e = eOrig;
+
+    do {
+      e.Org = vNew;
+      e = e.Onext;
+    } while (e !== eOrig);
+  },
+
+  /* MakeFace( newFace, eOrig, fNext ) attaches a new face and makes it the left
+  * face of all edges in the face loop to which eOrig belongs.  "fNext" gives
+  * a place to insert the new face in the global face list.  We insert
+  * the new face *before* fNext so that algorithms which walk the face
+  * list will not see the newly created faces.
+  */
+  // static void MakeFace( TESSface *newFace, TESShalfEdge *eOrig, TESSface *fNext )
+  makeFace_: function (newFace, eOrig, fNext) {
+    var fNew = newFace;
+    assert(fNew !== null);
+    /* insert in circular doubly-linked list before fNext */
+
+    var fPrev = fNext.prev;
+    fNew.prev = fPrev;
+    fPrev.next = fNew;
+    fNew.next = fNext;
+    fNext.prev = fNew;
+    fNew.anEdge = eOrig;
+    fNew.trail = null;
+    fNew.marked = false;
+    /* The new face is marked "inside" if the old one was.  This is a
+    * convenience for the common case where a face has been split in two.
+    */
+
+    fNew.inside = fNext.inside;
+    /* fix other edges on this face loop */
+
+    var e = eOrig;
+
+    do {
+      e.Lface = fNew;
+      e = e.Lnext;
+    } while (e !== eOrig);
+  },
+
+  /* KillEdge( eDel ) destroys an edge (the half-edges eDel and eDel->Sym),
+  * and removes from the global edge list.
+  */
+  //static void KillEdge( TESSmesh *mesh, TESShalfEdge *eDel )
+  killEdge_: function (eDel) {
+    /* Half-edges are allocated in pairs, see EdgePair above */
+    if (eDel.Sym.side < eDel.side) {
+      eDel = eDel.Sym;
+    }
+    /* delete from circular doubly-linked list */
+
+
+    var eNext = eDel.next;
+    var ePrev = eDel.Sym.next;
+    eNext.Sym.next = ePrev;
+    ePrev.Sym.next = eNext;
+  },
+
+  /* KillVertex( vDel ) destroys a vertex and removes it from the global
+  * vertex list.  It updates the vertex loop to point to a given new vertex.
+  */
+  //static void KillVertex( TESSmesh *mesh, TESSvertex *vDel, TESSvertex *newOrg )
+  killVertex_: function (vDel, newOrg) {
+    var eStart = vDel.anEdge;
+    /* change the origin of all affected edges */
+
+    var e = eStart;
+
+    do {
+      e.Org = newOrg;
+      e = e.Onext;
+    } while (e !== eStart);
+    /* delete from circular doubly-linked list */
+
+
+    var vPrev = vDel.prev;
+    var vNext = vDel.next;
+    vNext.prev = vPrev;
+    vPrev.next = vNext;
+  },
+
+  /* KillFace( fDel ) destroys a face and removes it from the global face
+  * list.  It updates the face loop to point to a given new face.
+  */
+  //static void KillFace( TESSmesh *mesh, TESSface *fDel, TESSface *newLface )
+  killFace_: function (fDel, newLface) {
+    var eStart = fDel.anEdge;
+    /* change the left face of all affected edges */
+
+    var e = eStart;
+
+    do {
+      e.Lface = newLface;
+      e = e.Lnext;
+    } while (e !== eStart);
+    /* delete from circular doubly-linked list */
+
+
+    var fPrev = fDel.prev;
+    var fNext = fDel.next;
+    fNext.prev = fPrev;
+    fPrev.next = fNext;
+  },
+
+  /****************** Basic Edge Operations **********************/
+
+  /* tessMeshMakeEdge creates one edge, two vertices, and a loop (face).
+  * The loop consists of the two new half-edges.
+  */
+  //TESShalfEdge *tessMeshMakeEdge( TESSmesh *mesh )
+  makeEdge: function () {
+    var newVertex1 = new TESSvertex();
+    var newVertex2 = new TESSvertex();
+    var newFace = new TESSface();
+    var e = this.makeEdge_(this.eHead);
+    this.makeVertex_(newVertex1, e, this.vHead);
+    this.makeVertex_(newVertex2, e.Sym, this.vHead);
+    this.makeFace_(newFace, e, this.fHead);
+    return e;
+  },
+
+  /* tessMeshSplice( eOrg, eDst ) is the basic operation for changing the
+  * mesh connectivity and topology.  It changes the mesh so that
+  *	eOrg->Onext <- OLD( eDst->Onext )
+  *	eDst->Onext <- OLD( eOrg->Onext )
+  * where OLD(...) means the value before the meshSplice operation.
+  *
+  * This can have two effects on the vertex structure:
+  *  - if eOrg->Org != eDst->Org, the two vertices are merged together
+  *  - if eOrg->Org == eDst->Org, the origin is split into two vertices
+  * In both cases, eDst->Org is changed and eOrg->Org is untouched.
+  *
+  * Similarly (and independently) for the face structure,
+  *  - if eOrg->Lface == eDst->Lface, one loop is split into two
+  *  - if eOrg->Lface != eDst->Lface, two distinct loops are joined into one
+  * In both cases, eDst->Lface is changed and eOrg->Lface is unaffected.
+  *
+  * Some special cases:
+  * If eDst == eOrg, the operation has no effect.
+  * If eDst == eOrg->Lnext, the new face will have a single edge.
+  * If eDst == eOrg->Lprev, the old face will have a single edge.
+  * If eDst == eOrg->Onext, the new vertex will have a single edge.
+  * If eDst == eOrg->Oprev, the old vertex will have a single edge.
+  */
+  //int tessMeshSplice( TESSmesh* mesh, TESShalfEdge *eOrg, TESShalfEdge *eDst )
+  splice: function (eOrg, eDst) {
+    var joiningLoops = false;
+    var joiningVertices = false;
+    if (eOrg === eDst) return;
+
+    if (eDst.Org !== eOrg.Org) {
+      /* We are merging two disjoint vertices -- destroy eDst->Org */
+      joiningVertices = true;
+      this.killVertex_(eDst.Org, eOrg.Org);
+    }
+
+    if (eDst.Lface !== eOrg.Lface) {
+      /* We are connecting two disjoint loops -- destroy eDst->Lface */
+      joiningLoops = true;
+      this.killFace_(eDst.Lface, eOrg.Lface);
+    }
+    /* Change the edge structure */
+
+
+    this.splice_(eDst, eOrg);
+
+    if (!joiningVertices) {
+      var newVertex = new TESSvertex();
+      /* We split one vertex into two -- the new vertex is eDst->Org.
+      * Make sure the old vertex points to a valid half-edge.
+      */
+
+      this.makeVertex_(newVertex, eDst, eOrg.Org);
+      eOrg.Org.anEdge = eOrg;
+    }
+
+    if (!joiningLoops) {
+      var newFace = new TESSface();
+      /* We split one loop into two -- the new loop is eDst->Lface.
+      * Make sure the old face points to a valid half-edge.
+      */
+
+      this.makeFace_(newFace, eDst, eOrg.Lface);
+      eOrg.Lface.anEdge = eOrg;
+    }
+  },
+
+  /* tessMeshDelete( eDel ) removes the edge eDel.  There are several cases:
+  * if (eDel->Lface != eDel->Rface), we join two loops into one; the loop
+  * eDel->Lface is deleted.  Otherwise, we are splitting one loop into two;
+  * the newly created loop will contain eDel->Dst.  If the deletion of eDel
+  * would create isolated vertices, those are deleted as well.
+  *
+  * This function could be implemented as two calls to tessMeshSplice
+  * plus a few calls to memFree, but this would allocate and delete
+  * unnecessary vertices and faces.
+  */
+  //int tessMeshDelete( TESSmesh *mesh, TESShalfEdge *eDel )
+  delete: function (eDel) {
+    var eDelSym = eDel.Sym;
+    var joiningLoops = false;
+    /* First step: disconnect the origin vertex eDel->Org.  We make all
+    * changes to get a consistent mesh in this "intermediate" state.
+    */
+
+    if (eDel.Lface !== eDel.Rface) {
+      /* We are joining two loops into one -- remove the left face */
+      joiningLoops = true;
+      this.killFace_(eDel.Lface, eDel.Rface);
+    }
+
+    if (eDel.Onext === eDel) {
+      this.killVertex_(eDel.Org, null);
+    } else {
+      /* Make sure that eDel->Org and eDel->Rface point to valid half-edges */
+      eDel.Rface.anEdge = eDel.Oprev;
+      eDel.Org.anEdge = eDel.Onext;
+      this.splice_(eDel, eDel.Oprev);
+
+      if (!joiningLoops) {
+        var newFace = new TESSface();
+        /* We are splitting one loop into two -- create a new loop for eDel. */
+
+        this.makeFace_(newFace, eDel, eDel.Lface);
+      }
+    }
+    /* Claim: the mesh is now in a consistent state, except that eDel->Org
+    * may have been deleted.  Now we disconnect eDel->Dst.
+    */
+
+
+    if (eDelSym.Onext === eDelSym) {
+      this.killVertex_(eDelSym.Org, null);
+      this.killFace_(eDelSym.Lface, null);
+    } else {
+      /* Make sure that eDel->Dst and eDel->Lface point to valid half-edges */
+      eDel.Lface.anEdge = eDelSym.Oprev;
+      eDelSym.Org.anEdge = eDelSym.Onext;
+      this.splice_(eDelSym, eDelSym.Oprev);
+    }
+    /* Any isolated vertices or faces have already been freed. */
+
+
+    this.killEdge_(eDel);
+  },
+
+  /******************** Other Edge Operations **********************/
+
+  /* All these routines can be implemented with the basic edge
+  * operations above.  They are provided for convenience and efficiency.
+  */
+
+  /* tessMeshAddEdgeVertex( eOrg ) creates a new edge eNew such that
+  * eNew == eOrg->Lnext, and eNew->Dst is a newly created vertex.
+  * eOrg and eNew will have the same left face.
+  */
+  // TESShalfEdge *tessMeshAddEdgeVertex( TESSmesh *mesh, TESShalfEdge *eOrg );
+  addEdgeVertex: function (eOrg) {
+    var eNew = this.makeEdge_(eOrg);
+    var eNewSym = eNew.Sym;
+    /* Connect the new edge appropriately */
+
+    this.splice_(eNew, eOrg.Lnext);
+    /* Set the vertex and face information */
+
+    eNew.Org = eOrg.Dst;
+    var newVertex = new TESSvertex();
+    this.makeVertex_(newVertex, eNewSym, eNew.Org);
+    eNew.Lface = eNewSym.Lface = eOrg.Lface;
+    return eNew;
+  },
+
+  /* tessMeshSplitEdge( eOrg ) splits eOrg into two edges eOrg and eNew,
+  * such that eNew == eOrg->Lnext.  The new vertex is eOrg->Dst == eNew->Org.
+  * eOrg and eNew will have the same left face.
+  */
+  // TESShalfEdge *tessMeshSplitEdge( TESSmesh *mesh, TESShalfEdge *eOrg );
+  splitEdge: function (eOrg, eDst) {
+    var tempHalfEdge = this.addEdgeVertex(eOrg);
+    var eNew = tempHalfEdge.Sym;
+    /* Disconnect eOrg from eOrg->Dst and connect it to eNew->Org */
+
+    this.splice_(eOrg.Sym, eOrg.Sym.Oprev);
+    this.splice_(eOrg.Sym, eNew);
+    /* Set the vertex and face information */
+
+    eOrg.Dst = eNew.Org;
+    eNew.Dst.anEdge = eNew.Sym;
+    /* may have pointed to eOrg->Sym */
+
+    eNew.Rface = eOrg.Rface;
+    eNew.winding = eOrg.winding;
+    /* copy old winding information */
+
+    eNew.Sym.winding = eOrg.Sym.winding;
+    return eNew;
+  },
+
+  /* tessMeshConnect( eOrg, eDst ) creates a new edge from eOrg->Dst
+  * to eDst->Org, and returns the corresponding half-edge eNew.
+  * If eOrg->Lface == eDst->Lface, this splits one loop into two,
+  * and the newly created loop is eNew->Lface.  Otherwise, two disjoint
+  * loops are merged into one, and the loop eDst->Lface is destroyed.
+  *
+  * If (eOrg == eDst), the new face will have only two edges.
+  * If (eOrg->Lnext == eDst), the old face is reduced to a single edge.
+  * If (eOrg->Lnext->Lnext == eDst), the old face is reduced to two edges.
+  */
+  // TESShalfEdge *tessMeshConnect( TESSmesh *mesh, TESShalfEdge *eOrg, TESShalfEdge *eDst );
+  connect: function (eOrg, eDst) {
+    var joiningLoops = false;
+    var eNew = this.makeEdge_(eOrg);
+    var eNewSym = eNew.Sym;
+
+    if (eDst.Lface !== eOrg.Lface) {
+      /* We are connecting two disjoint loops -- destroy eDst->Lface */
+      joiningLoops = true;
+      this.killFace_(eDst.Lface, eOrg.Lface);
+    }
+    /* Connect the new edge appropriately */
+
+
+    this.splice_(eNew, eOrg.Lnext);
+    this.splice_(eNewSym, eDst);
+    /* Set the vertex and face information */
+
+    eNew.Org = eOrg.Dst;
+    eNewSym.Org = eDst.Org;
+    eNew.Lface = eNewSym.Lface = eOrg.Lface;
+    /* Make sure the old face points to a valid half-edge */
+
+    eOrg.Lface.anEdge = eNewSym;
+
+    if (!joiningLoops) {
+      var newFace = new TESSface();
+      /* We split one loop into two -- the new loop is eNew->Lface */
+
+      this.makeFace_(newFace, eNew, eOrg.Lface);
+    }
+
+    return eNew;
+  },
+
+  /* tessMeshZapFace( fZap ) destroys a face and removes it from the
+  * global face list.  All edges of fZap will have a NULL pointer as their
+  * left face.  Any edges which also have a NULL pointer as their right face
+  * are deleted entirely (along with any isolated vertices this produces).
+  * An entire mesh can be deleted by zapping its faces, one at a time,
+  * in any order.  Zapped faces cannot be used in further mesh operations!
+  */
+  zapFace: function (fZap) {
+    var eStart = fZap.anEdge;
+    var e, eNext, eSym;
+    var fPrev, fNext;
+    /* walk around face, deleting edges whose right face is also NULL */
+
+    eNext = eStart.Lnext;
+
+    do {
+      e = eNext;
+      eNext = e.Lnext;
+      e.Lface = null;
+
+      if (e.Rface === null) {
+        /* delete the edge -- see TESSmeshDelete above */
+        if (e.Onext === e) {
+          this.killVertex_(e.Org, null);
+        } else {
+          /* Make sure that e->Org points to a valid half-edge */
+          e.Org.anEdge = e.Onext;
+          this.splice_(e, e.Oprev);
+        }
+
+        eSym = e.Sym;
+
+        if (eSym.Onext === eSym) {
+          this.killVertex_(eSym.Org, null);
+        } else {
+          /* Make sure that eSym->Org points to a valid half-edge */
+          eSym.Org.anEdge = eSym.Onext;
+          this.splice_(eSym, eSym.Oprev);
+        }
+
+        this.killEdge_(e);
+      }
+    } while (e != eStart);
+    /* delete from circular doubly-linked list */
+
+
+    fPrev = fZap.prev;
+    fNext = fZap.next;
+    fNext.prev = fPrev;
+    fPrev.next = fNext;
+  },
+  countFaceVerts_: function (f) {
+    var eCur = f.anEdge;
+    var n = 0;
+
+    do {
+      n++;
+      eCur = eCur.Lnext;
+    } while (eCur !== f.anEdge);
+
+    return n;
+  },
+  //int tessMeshMergeConvexFaces( TESSmesh *mesh, int maxVertsPerFace )
+  mergeConvexFaces: function (maxVertsPerFace) {
+    var f;
+    var eCur, eNext, eSym;
+    var vStart;
+    var curNv, symNv;
+
+    for (f = this.fHead.next; f !== this.fHead; f = f.next) {
+      // Skip faces which are outside the result.
+      if (!f.inside) continue;
+      eCur = f.anEdge;
+      vStart = eCur.Org;
+
+      while (true) {
+        eNext = eCur.Lnext;
+        eSym = eCur.Sym; // Try to merge if the neighbour face is valid.
+
+        if (eSym && eSym.Lface && eSym.Lface.inside) {
+          // Try to merge the neighbour faces if the resulting polygons
+          // does not exceed maximum number of vertices.
+          curNv = this.countFaceVerts_(f);
+          symNv = this.countFaceVerts_(eSym.Lface);
+
+          if (curNv + symNv - 2 <= maxVertsPerFace) {
+            // Merge if the resulting poly is convex.
+            if (Geom.vertCCW(eCur.Lprev.Org, eCur.Org, eSym.Lnext.Lnext.Org) && Geom.vertCCW(eSym.Lprev.Org, eSym.Org, eCur.Lnext.Lnext.Org)) {
+              eNext = eSym.Lnext;
+              this.delete(eSym);
+              eCur = null;
+              eSym = null;
+            }
+          }
+        }
+
+        if (eCur && eCur.Lnext.Org === vStart) break; // Continue to next edge.
+
+        eCur = eNext;
+      }
+    }
+
+    return true;
+  },
+
+  /* tessMeshCheckMesh( mesh ) checks a mesh for self-consistency.
+  */
+  check: function () {
+    var fHead = this.fHead;
+    var vHead = this.vHead;
+    var eHead = this.eHead;
+    var f, fPrev, v, vPrev, e, ePrev;
+    fPrev = fHead;
+
+    for (fPrev = fHead; (f = fPrev.next) !== fHead; fPrev = f) {
+      assert(f.prev === fPrev);
+      e = f.anEdge;
+
+      do {
+        assert(e.Sym !== e);
+        assert(e.Sym.Sym === e);
+        assert(e.Lnext.Onext.Sym === e);
+        assert(e.Onext.Sym.Lnext === e);
+        assert(e.Lface === f);
+        e = e.Lnext;
+      } while (e !== f.anEdge);
+    }
+
+    assert(f.prev === fPrev && f.anEdge === null);
+    vPrev = vHead;
+
+    for (vPrev = vHead; (v = vPrev.next) !== vHead; vPrev = v) {
+      assert(v.prev === vPrev);
+      e = v.anEdge;
+
+      do {
+        assert(e.Sym !== e);
+        assert(e.Sym.Sym === e);
+        assert(e.Lnext.Onext.Sym === e);
+        assert(e.Onext.Sym.Lnext === e);
+        assert(e.Org === v);
+        e = e.Onext;
+      } while (e !== v.anEdge);
+    }
+
+    assert(v.prev === vPrev && v.anEdge === null);
+    ePrev = eHead;
+
+    for (ePrev = eHead; (e = ePrev.next) !== eHead; ePrev = e) {
+      assert(e.Sym.next === ePrev.Sym);
+      assert(e.Sym !== e);
+      assert(e.Sym.Sym === e);
+      assert(e.Org !== null);
+      assert(e.Dst !== null);
+      assert(e.Lnext.Onext.Sym === e);
+      assert(e.Onext.Sym.Lnext === e);
+    }
+
+    assert(e.Sym.next === ePrev.Sym && e.Sym === this.eHeadSym && e.Sym.Sym === e && e.Org === null && e.Dst === null && e.Lface === null && e.Rface === null);
+  }
+};
+
+Geom.vertEq = function (u, v) {
+  return u.s === v.s && u.t === v.t;
+};
+/* Returns TRUE if u is lexicographically <= v. */
+
+
+Geom.vertLeq = function (u, v) {
+  return u.s < v.s || u.s === v.s && u.t <= v.t;
+};
+/* Versions of VertLeq, EdgeSign, EdgeEval with s and t transposed. */
+
+
+Geom.transLeq = function (u, v) {
+  return u.t < v.t || u.t === v.t && u.s <= v.s;
+};
+
+Geom.edgeGoesLeft = function (e) {
+  return Geom.vertLeq(e.Dst, e.Org);
+};
+
+Geom.edgeGoesRight = function (e) {
+  return Geom.vertLeq(e.Org, e.Dst);
+};
+
+Geom.vertL1dist = function (u, v) {
+  return Math.abs(u.s - v.s) + Math.abs(u.t - v.t);
+}; //TESSreal tesedgeEval( TESSvertex *u, TESSvertex *v, TESSvertex *w )
+
+
+Geom.edgeEval = function (u, v, w) {
+  /* Given three vertices u,v,w such that VertLeq(u,v) && VertLeq(v,w),
+  * evaluates the t-coord of the edge uw at the s-coord of the vertex v.
+  * Returns v->t - (uw)(v->s), ie. the signed distance from uw to v.
+  * If uw is vertical (and thus passes thru v), the result is zero.
+  *
+  * The calculation is extremely accurate and stable, even when v
+  * is very close to u or w.  In particular if we set v->t = 0 and
+  * let r be the negated result (this evaluates (uw)(v->s)), then
+  * r is guaranteed to satisfy MIN(u->t,w->t) <= r <= MAX(u->t,w->t).
+  */
+  assert(Geom.vertLeq(u, v) && Geom.vertLeq(v, w));
+  var gapL = v.s - u.s;
+  var gapR = w.s - v.s;
+
+  if (gapL + gapR > 0.0) {
+    if (gapL < gapR) {
+      return v.t - u.t + (u.t - w.t) * (gapL / (gapL + gapR));
+    } else {
+      return v.t - w.t + (w.t - u.t) * (gapR / (gapL + gapR));
+    }
+  }
+  /* vertical line */
+
+
+  return 0.0;
+}; //TESSreal tesedgeSign( TESSvertex *u, TESSvertex *v, TESSvertex *w )
+
+
+Geom.edgeSign = function (u, v, w) {
+  /* Returns a number whose sign matches EdgeEval(u,v,w) but which
+  * is cheaper to evaluate.  Returns > 0, == 0 , or < 0
+  * as v is above, on, or below the edge uw.
+  */
+  assert(Geom.vertLeq(u, v) && Geom.vertLeq(v, w));
+  var gapL = v.s - u.s;
+  var gapR = w.s - v.s;
+
+  if (gapL + gapR > 0.0) {
+    return (v.t - w.t) * gapL + (v.t - u.t) * gapR;
+  }
+  /* vertical line */
+
+
+  return 0.0;
+};
+/***********************************************************************
+* Define versions of EdgeSign, EdgeEval with s and t transposed.
+*/
+//TESSreal testransEval( TESSvertex *u, TESSvertex *v, TESSvertex *w )
+
+
+Geom.transEval = function (u, v, w) {
+  /* Given three vertices u,v,w such that TransLeq(u,v) && TransLeq(v,w),
+  * evaluates the t-coord of the edge uw at the s-coord of the vertex v.
+  * Returns v->s - (uw)(v->t), ie. the signed distance from uw to v.
+  * If uw is vertical (and thus passes thru v), the result is zero.
+  *
+  * The calculation is extremely accurate and stable, even when v
+  * is very close to u or w.  In particular if we set v->s = 0 and
+  * let r be the negated result (this evaluates (uw)(v->t)), then
+  * r is guaranteed to satisfy MIN(u->s,w->s) <= r <= MAX(u->s,w->s).
+  */
+  assert(Geom.transLeq(u, v) && Geom.transLeq(v, w));
+  var gapL = v.t - u.t;
+  var gapR = w.t - v.t;
+
+  if (gapL + gapR > 0.0) {
+    if (gapL < gapR) {
+      return v.s - u.s + (u.s - w.s) * (gapL / (gapL + gapR));
+    } else {
+      return v.s - w.s + (w.s - u.s) * (gapR / (gapL + gapR));
+    }
+  }
+  /* vertical line */
+
+
+  return 0.0;
+}; //TESSreal testransSign( TESSvertex *u, TESSvertex *v, TESSvertex *w )
+
+
+Geom.transSign = function (u, v, w) {
+  /* Returns a number whose sign matches TransEval(u,v,w) but which
+  * is cheaper to evaluate.  Returns > 0, == 0 , or < 0
+  * as v is above, on, or below the edge uw.
+  */
+  assert(Geom.transLeq(u, v) && Geom.transLeq(v, w));
+  var gapL = v.t - u.t;
+  var gapR = w.t - v.t;
+
+  if (gapL + gapR > 0.0) {
+    return (v.s - w.s) * gapL + (v.s - u.s) * gapR;
+  }
+  /* vertical line */
+
+
+  return 0.0;
+}; //int tesvertCCW( TESSvertex *u, TESSvertex *v, TESSvertex *w )
+
+
+Geom.vertCCW = function (u, v, w) {
+  /* For almost-degenerate situations, the results are not reliable.
+  * Unless the floating-point arithmetic can be performed without
+  * rounding errors, *any* implementation will give incorrect results
+  * on some degenerate inputs, so the client must have some way to
+  * handle this situation.
+  */
+  return u.s * (v.t - w.t) + v.s * (w.t - u.t) + w.s * (u.t - v.t) >= 0.0;
+};
+/* Given parameters a,x,b,y returns the value (b*x+a*y)/(a+b),
+* or (x+y)/2 if a==b==0.  It requires that a,b >= 0, and enforces
+* this in the rare case that one argument is slightly negative.
+* The implementation is extremely stable numerically.
+* In particular it guarantees that the result r satisfies
+* MIN(x,y) <= r <= MAX(x,y), and the results are very accurate
+* even when a and b differ greatly in magnitude.
+*/
+
+
+Geom.interpolate = function (a, x, b, y) {
+  return a = a < 0 ? 0 : a, b = b < 0 ? 0 : b, a <= b ? b === 0 ? (x + y) / 2 : x + (y - x) * (a / (a + b)) : y + (x - y) * (b / (a + b));
+};
+/*
+#ifndef FOR_TRITE_TEST_PROGRAM
+#define Interpolate(a,x,b,y)	RealInterpolate(a,x,b,y)
+#else
+
+// Claim: the ONLY property the sweep algorithm relies on is that
+// MIN(x,y) <= r <= MAX(x,y).  This is a nasty way to test that.
+#include <stdlib.h>
+extern int RandomInterpolate;
+
+double Interpolate( double a, double x, double b, double y)
+{
+  printf("*********************%d\n",RandomInterpolate);
+  if( RandomInterpolate ) {
+    a = 1.2 * drand48() - 0.1;
+    a = (a < 0) ? 0 : ((a > 1) ? 1 : a);
+    b = 1.0 - a;
+  }
+  return RealInterpolate(a,x,b,y);
+}
+#endif*/
+
+
+Geom.intersect = function (o1, d1, o2, d2, v) {
+  /* Given edges (o1,d1) and (o2,d2), compute their point of intersection.
+  * The computed point is guaranteed to lie in the intersection of the
+  * bounding rectangles defined by each edge.
+  */
+  var z1, z2;
+  var t;
+  /* This is certainly not the most efficient way to find the intersection
+  * of two line segments, but it is very numerically stable.
+  *
+  * Strategy: find the two middle vertices in the VertLeq ordering,
+  * and interpolate the intersection s-value from these.  Then repeat
+  * using the TransLeq ordering to find the intersection t-value.
+  */
+
+  if (!Geom.vertLeq(o1, d1)) {
+    t = o1;
+    o1 = d1;
+    d1 = t;
+  } //swap( o1, d1 ); }
+
+
+  if (!Geom.vertLeq(o2, d2)) {
+    t = o2;
+    o2 = d2;
+    d2 = t;
+  } //swap( o2, d2 ); }
+
+
+  if (!Geom.vertLeq(o1, o2)) {
+    t = o1;
+    o1 = o2;
+    o2 = t;
+    t = d1;
+    d1 = d2;
+    d2 = t;
+  } //swap( o1, o2 ); swap( d1, d2 ); }
+
+
+  if (!Geom.vertLeq(o2, d1)) {
+    /* Technically, no intersection -- do our best */
+    v.s = (o2.s + d1.s) / 2;
+  } else if (Geom.vertLeq(d1, d2)) {
+    /* Interpolate between o2 and d1 */
+    z1 = Geom.edgeEval(o1, o2, d1);
+    z2 = Geom.edgeEval(o2, d1, d2);
+
+    if (z1 + z2 < 0) {
+      z1 = -z1;
+      z2 = -z2;
+    }
+
+    v.s = Geom.interpolate(z1, o2.s, z2, d1.s);
+  } else {
+    /* Interpolate between o2 and d2 */
+    z1 = Geom.edgeSign(o1, o2, d1);
+    z2 = -Geom.edgeSign(o1, d2, d1);
+
+    if (z1 + z2 < 0) {
+      z1 = -z1;
+      z2 = -z2;
+    }
+
+    v.s = Geom.interpolate(z1, o2.s, z2, d2.s);
+  }
+  /* Now repeat the process for t */
+
+
+  if (!Geom.transLeq(o1, d1)) {
+    t = o1;
+    o1 = d1;
+    d1 = t;
+  } //swap( o1, d1 ); }
+
+
+  if (!Geom.transLeq(o2, d2)) {
+    t = o2;
+    o2 = d2;
+    d2 = t;
+  } //swap( o2, d2 ); }
+
+
+  if (!Geom.transLeq(o1, o2)) {
+    t = o1;
+    o1 = o2;
+    o2 = t;
+    t = d1;
+    d1 = d2;
+    d2 = t;
+  } //swap( o1, o2 ); swap( d1, d2 ); }
+
+
+  if (!Geom.transLeq(o2, d1)) {
+    /* Technically, no intersection -- do our best */
+    v.t = (o2.t + d1.t) / 2;
+  } else if (Geom.transLeq(d1, d2)) {
+    /* Interpolate between o2 and d1 */
+    z1 = Geom.transEval(o1, o2, d1);
+    z2 = Geom.transEval(o2, d1, d2);
+
+    if (z1 + z2 < 0) {
+      z1 = -z1;
+      z2 = -z2;
+    }
+
+    v.t = Geom.interpolate(z1, o2.t, z2, d1.t);
+  } else {
+    /* Interpolate between o2 and d2 */
+    z1 = Geom.transSign(o1, o2, d1);
+    z2 = -Geom.transSign(o1, d2, d1);
+
+    if (z1 + z2 < 0) {
+      z1 = -z1;
+      z2 = -z2;
+    }
+
+    v.t = Geom.interpolate(z1, o2.t, z2, d2.t);
+  }
+};
+
+function DictNode() {
+  this.key = null;
+  this.next = null;
+  this.prev = null;
+}
+
+;
+
+function Dict(frame, leq) {
+  this.head = new DictNode();
+  this.head.next = this.head;
+  this.head.prev = this.head;
+  this.frame = frame;
+  this.leq = leq;
+}
+
+;
+Dict.prototype = {
+  min: function () {
+    return this.head.next;
+  },
+  max: function () {
+    return this.head.prev;
+  },
+  insert: function (k) {
+    return this.insertBefore(this.head, k);
+  },
+  search: function (key) {
+    /* Search returns the node with the smallest key greater than or equal
+    * to the given key.  If there is no such key, returns a node whose
+    * key is NULL.  Similarly, Succ(Max(d)) has a NULL key, etc.
+    */
+    var node = this.head;
+
+    do {
+      node = node.next;
+    } while (node.key !== null && !this.leq(this.frame, key, node.key));
+
+    return node;
+  },
+  insertBefore: function (node, key) {
+    do {
+      node = node.prev;
+    } while (node.key !== null && !this.leq(this.frame, node.key, key));
+
+    var newNode = new DictNode();
+    newNode.key = key;
+    newNode.next = node.next;
+    node.next.prev = newNode;
+    newNode.prev = node;
+    node.next = newNode;
+    return newNode;
+  },
+  delete: function (node) {
+    node.next.prev = node.prev;
+    node.prev.next = node.next;
+  }
+};
+
+function PQnode() {
+  this.handle = null;
+}
+
+function PQhandleElem() {
+  this.key = null;
+  this.node = null;
+}
+
+function PriorityQ(size, leq) {
+  this.size = 0;
+  this.max = size;
+  this.nodes = [];
+  this.nodes.length = size + 1;
+  var i;
+
+  for (i = 0; i < this.nodes.length; i++) this.nodes[i] = new PQnode();
+
+  this.handles = [];
+  this.handles.length = size + 1;
+
+  for (i = 0; i < this.handles.length; i++) this.handles[i] = new PQhandleElem();
+
+  this.initialized = false;
+  this.freeList = 0;
+  this.leq = leq;
+  this.nodes[1].handle = 1;
+  /* so that Minimum() returns NULL */
+
+  this.handles[1].key = null;
+}
+
+;
+PriorityQ.prototype = {
+  floatDown_: function (curr) {
+    var n = this.nodes;
+    var h = this.handles;
+    var hCurr, hChild;
+    var child;
+    hCurr = n[curr].handle;
+
+    for (;;) {
+      child = curr << 1;
+
+      if (child < this.size && this.leq(h[n[child + 1].handle].key, h[n[child].handle].key)) {
+        ++child;
+      }
+
+      assert(child <= this.max);
+      hChild = n[child].handle;
+
+      if (child > this.size || this.leq(h[hCurr].key, h[hChild].key)) {
+        n[curr].handle = hCurr;
+        h[hCurr].node = curr;
+        break;
+      }
+
+      n[curr].handle = hChild;
+      h[hChild].node = curr;
+      curr = child;
+    }
+  },
+  floatUp_: function (curr) {
+    var n = this.nodes;
+    var h = this.handles;
+    var hCurr, hParent;
+    var parent;
+    hCurr = n[curr].handle;
+
+    for (;;) {
+      parent = curr >> 1;
+      hParent = n[parent].handle;
+
+      if (parent === 0 || this.leq(h[hParent].key, h[hCurr].key)) {
+        n[curr].handle = hCurr;
+        h[hCurr].node = curr;
+        break;
+      }
+
+      n[curr].handle = hParent;
+      h[hParent].node = curr;
+      curr = parent;
+    }
+  },
+  init: function () {
+    /* This method of building a heap is O(n), rather than O(n lg n). */
+    for (var i = this.size; i >= 1; --i) {
+      this.floatDown_(i);
+    }
+
+    this.initialized = true;
+  },
+  min: function () {
+    return this.handles[this.nodes[1].handle].key;
+  },
+
+  /* really pqHeapInsert */
+
+  /* returns INV_HANDLE iff out of memory */
+  //PQhandle pqHeapInsert( TESSalloc* alloc, PriorityQHeap *pq, PQkey keyNew )
+  insert: function (keyNew) {
+    var curr;
+    var free;
+    curr = ++this.size;
+
+    if (curr * 2 > this.max) {
+      this.max *= 2;
+      var i;
+      var s;
+      s = this.nodes.length;
+      this.nodes.length = this.max + 1;
+
+      for (i = s; i < this.nodes.length; i++) this.nodes[i] = new PQnode();
+
+      s = this.handles.length;
+      this.handles.length = this.max + 1;
+
+      for (i = s; i < this.handles.length; i++) this.handles[i] = new PQhandleElem();
+    }
+
+    if (this.freeList === 0) {
+      free = curr;
+    } else {
+      free = this.freeList;
+      this.freeList = this.handles[free].node;
+    }
+
+    this.nodes[curr].handle = free;
+    this.handles[free].node = curr;
+    this.handles[free].key = keyNew;
+
+    if (this.initialized) {
+      this.floatUp_(curr);
+    }
+
+    return free;
+  },
+  //PQkey pqHeapExtractMin( PriorityQHeap *pq )
+  extractMin: function () {
+    var n = this.nodes;
+    var h = this.handles;
+    var hMin = n[1].handle;
+    var min = h[hMin].key;
+
+    if (this.size > 0) {
+      n[1].handle = n[this.size].handle;
+      h[n[1].handle].node = 1;
+      h[hMin].key = null;
+      h[hMin].node = this.freeList;
+      this.freeList = hMin;
+      --this.size;
+
+      if (this.size > 0) {
+        this.floatDown_(1);
+      }
+    }
+
+    return min;
+  },
+  delete: function (hCurr) {
+    var n = this.nodes;
+    var h = this.handles;
+    var curr;
+    assert(hCurr >= 1 && hCurr <= this.max && h[hCurr].key !== null);
+    curr = h[hCurr].node;
+    n[curr].handle = n[this.size].handle;
+    h[n[curr].handle].node = curr;
+    --this.size;
+
+    if (curr <= this.size) {
+      if (curr <= 1 || this.leq(h[n[curr >> 1].handle].key, h[n[curr].handle].key)) {
+        this.floatDown_(curr);
+      } else {
+        this.floatUp_(curr);
+      }
+    }
+
+    h[hCurr].key = null;
+    h[hCurr].node = this.freeList;
+    this.freeList = hCurr;
+  }
+};
+/* For each pair of adjacent edges crossing the sweep line, there is
+* an ActiveRegion to represent the region between them.  The active
+* regions are kept in sorted order in a dynamic dictionary.  As the
+* sweep line crosses each vertex, we update the affected regions.
+*/
+
+function ActiveRegion() {
+  this.eUp = null;
+  /* upper edge, directed right to left */
+
+  this.nodeUp = null;
+  /* dictionary node corresponding to eUp */
+
+  this.windingNumber = 0;
+  /* used to determine which regions are
+  * inside the polygon */
+
+  this.inside = false;
+  /* is this region inside the polygon? */
+
+  this.sentinel = false;
+  /* marks fake edges at t = +/-infinity */
+
+  this.dirty = false;
+  /* marks regions where the upper or lower
+  * edge has changed, but we haven't checked
+  * whether they intersect yet */
+
+  this.fixUpperEdge = false;
+  /* marks temporary edges introduced when
+  * we process a "right vertex" (one without
+  * any edges leaving to the right) */
+}
+
+;
+var Sweep = {};
+
+Sweep.regionBelow = function (r) {
+  return r.nodeUp.prev.key;
+};
+
+Sweep.regionAbove = function (r) {
+  return r.nodeUp.next.key;
+};
+
+Sweep.debugEvent = function (tess) {} // empty
+
+/*
+* Invariants for the Edge Dictionary.
+* - each pair of adjacent edges e2=Succ(e1) satisfies EdgeLeq(e1,e2)
+*   at any valid location of the sweep event
+* - if EdgeLeq(e2,e1) as well (at any valid sweep event), then e1 and e2
+*   share a common endpoint
+* - for each e, e->Dst has been processed, but not e->Org
+* - each edge e satisfies VertLeq(e->Dst,event) && VertLeq(event,e->Org)
+*   where "event" is the current sweep line event.
+* - no edge e has zero length
+*
+* Invariants for the Mesh (the processed portion).
+* - the portion of the mesh left of the sweep line is a planar graph,
+*   ie. there is *some* way to embed it in the plane
+* - no processed edge has zero length
+* - no two processed vertices have identical coordinates
+* - each "inside" region is monotone, ie. can be broken into two chains
+*   of monotonically increasing vertices according to VertLeq(v1,v2)
+*   - a non-invariant: these chains may intersect (very slightly)
+*
+* Invariants for the Sweep.
+* - if none of the edges incident to the event vertex have an activeRegion
+*   (ie. none of these edges are in the edge dictionary), then the vertex
+*   has only right-going edges.
+* - if an edge is marked "fixUpperEdge" (it is a temporary edge introduced
+*   by ConnectRightVertex), then it is the only right-going edge from
+*   its associated vertex.  (This says that these edges exist only
+*   when it is necessary.)
+*/
+
+/* When we merge two edges into one, we need to compute the combined
+* winding of the new edge.
+*/
+;
+
+Sweep.addWinding = function (eDst, eSrc) {
+  eDst.winding += eSrc.winding;
+  eDst.Sym.winding += eSrc.Sym.winding;
+}; //static int EdgeLeq( TESStesselator *tess, ActiveRegion *reg1, ActiveRegion *reg2 )
+
+
+Sweep.edgeLeq = function (tess, reg1, reg2) {
+  /*
+  * Both edges must be directed from right to left (this is the canonical
+  * direction for the upper edge of each region).
+  *
+  * The strategy is to evaluate a "t" value for each edge at the
+  * current sweep line position, given by tess->event.  The calculations
+  * are designed to be very stable, but of course they are not perfect.
+  *
+  * Special case: if both edge destinations are at the sweep event,
+  * we sort the edges by slope (they would otherwise compare equally).
+  */
+  var ev = tess.event;
+  var t1, t2;
+  var e1 = reg1.eUp;
+  var e2 = reg2.eUp;
+
+  if (e1.Dst === ev) {
+    if (e2.Dst === ev) {
+      /* Two edges right of the sweep line which meet at the sweep event.
+      * Sort them by slope.
+      */
+      if (Geom.vertLeq(e1.Org, e2.Org)) {
+        return Geom.edgeSign(e2.Dst, e1.Org, e2.Org) <= 0;
+      }
+
+      return Geom.edgeSign(e1.Dst, e2.Org, e1.Org) >= 0;
+    }
+
+    return Geom.edgeSign(e2.Dst, ev, e2.Org) <= 0;
+  }
+
+  if (e2.Dst === ev) {
+    return Geom.edgeSign(e1.Dst, ev, e1.Org) >= 0;
+  }
+  /* General case - compute signed distance *from* e1, e2 to event */
+
+
+  var t1 = Geom.edgeEval(e1.Dst, ev, e1.Org);
+  var t2 = Geom.edgeEval(e2.Dst, ev, e2.Org);
+  return t1 >= t2;
+}; //static void DeleteRegion( TESStesselator *tess, ActiveRegion *reg )
+
+
+Sweep.deleteRegion = function (tess, reg) {
+  if (reg.fixUpperEdge) {
+    /* It was created with zero winding number, so it better be
+    * deleted with zero winding number (ie. it better not get merged
+    * with a real edge).
+    */
+    assert(reg.eUp.winding === 0);
+  }
+
+  reg.eUp.activeRegion = null;
+  tess.dict.delete(reg.nodeUp);
+}; //static int FixUpperEdge( TESStesselator *tess, ActiveRegion *reg, TESShalfEdge *newEdge )
+
+
+Sweep.fixUpperEdge = function (tess, reg, newEdge) {
+  /*
+  * Replace an upper edge which needs fixing (see ConnectRightVertex).
+  */
+  assert(reg.fixUpperEdge);
+  tess.mesh.delete(reg.eUp);
+  reg.fixUpperEdge = false;
+  reg.eUp = newEdge;
+  newEdge.activeRegion = reg;
+}; //static ActiveRegion *TopLeftRegion( TESStesselator *tess, ActiveRegion *reg )
+
+
+Sweep.topLeftRegion = function (tess, reg) {
+  var org = reg.eUp.Org;
+  var e;
+  /* Find the region above the uppermost edge with the same origin */
+
+  do {
+    reg = Sweep.regionAbove(reg);
+  } while (reg.eUp.Org === org);
+  /* If the edge above was a temporary edge introduced by ConnectRightVertex,
+  * now is the time to fix it.
+  */
+
+
+  if (reg.fixUpperEdge) {
+    e = tess.mesh.connect(Sweep.regionBelow(reg).eUp.Sym, reg.eUp.Lnext);
+    if (e === null) return null;
+    Sweep.fixUpperEdge(tess, reg, e);
+    reg = Sweep.regionAbove(reg);
+  }
+
+  return reg;
+}; //static ActiveRegion *TopRightRegion( ActiveRegion *reg )
+
+
+Sweep.topRightRegion = function (reg) {
+  var dst = reg.eUp.Dst;
+  /* Find the region above the uppermost edge with the same destination */
+
+  do {
+    reg = Sweep.regionAbove(reg);
+  } while (reg.eUp.Dst === dst);
+
+  return reg;
+}; //static ActiveRegion *AddRegionBelow( TESStesselator *tess, ActiveRegion *regAbove, TESShalfEdge *eNewUp )
+
+
+Sweep.addRegionBelow = function (tess, regAbove, eNewUp) {
+  /*
+  * Add a new active region to the sweep line, *somewhere* below "regAbove"
+  * (according to where the new edge belongs in the sweep-line dictionary).
+  * The upper edge of the new region will be "eNewUp".
+  * Winding number and "inside" flag are not updated.
+  */
+  var regNew = new ActiveRegion();
+  regNew.eUp = eNewUp;
+  regNew.nodeUp = tess.dict.insertBefore(regAbove.nodeUp, regNew); //	if (regNew->nodeUp == NULL) longjmp(tess->env,1);
+
+  regNew.fixUpperEdge = false;
+  regNew.sentinel = false;
+  regNew.dirty = false;
+  eNewUp.activeRegion = regNew;
+  return regNew;
+}; //static int IsWindingInside( TESStesselator *tess, int n )
+
+
+Sweep.isWindingInside = function (tess, n) {
+  switch (tess.windingRule) {
+    case Tess2.WINDING_ODD:
+      return (n & 1) !== 0;
+
+    case Tess2.WINDING_NONZERO:
+      return n !== 0;
+
+    case Tess2.WINDING_POSITIVE:
+      return n > 0;
+
+    case Tess2.WINDING_NEGATIVE:
+      return n < 0;
+
+    case Tess2.WINDING_ABS_GEQ_TWO:
+      return n >= 2 || n <= -2;
+  }
+
+  assert(false);
+  return false;
+}; //static void ComputeWinding( TESStesselator *tess, ActiveRegion *reg )
+
+
+Sweep.computeWinding = function (tess, reg) {
+  reg.windingNumber = Sweep.regionAbove(reg).windingNumber + reg.eUp.winding;
+  reg.inside = Sweep.isWindingInside(tess, reg.windingNumber);
+}; //static void FinishRegion( TESStesselator *tess, ActiveRegion *reg )
+
+
+Sweep.finishRegion = function (tess, reg) {
+  /*
+  * Delete a region from the sweep line.  This happens when the upper
+  * and lower chains of a region meet (at a vertex on the sweep line).
+  * The "inside" flag is copied to the appropriate mesh face (we could
+  * not do this before -- since the structure of the mesh is always
+  * changing, this face may not have even existed until now).
+  */
+  var e = reg.eUp;
+  var f = e.Lface;
+  f.inside = reg.inside;
+  f.anEdge = e;
+  /* optimization for tessMeshTessellateMonoRegion() */
+
+  Sweep.deleteRegion(tess, reg);
+}; //static TESShalfEdge *FinishLeftRegions( TESStesselator *tess, ActiveRegion *regFirst, ActiveRegion *regLast )
+
+
+Sweep.finishLeftRegions = function (tess, regFirst, regLast) {
+  /*
+  * We are given a vertex with one or more left-going edges.  All affected
+  * edges should be in the edge dictionary.  Starting at regFirst->eUp,
+  * we walk down deleting all regions where both edges have the same
+  * origin vOrg.  At the same time we copy the "inside" flag from the
+  * active region to the face, since at this point each face will belong
+  * to at most one region (this was not necessarily true until this point
+  * in the sweep).  The walk stops at the region above regLast; if regLast
+  * is NULL we walk as far as possible.  At the same time we relink the
+  * mesh if necessary, so that the ordering of edges around vOrg is the
+  * same as in the dictionary.
+  */
+  var e, ePrev;
+  var reg = null;
+  var regPrev = regFirst;
+  var ePrev = regFirst.eUp;
+
+  while (regPrev !== regLast) {
+    regPrev.fixUpperEdge = false;
+    /* placement was OK */
+
+    reg = Sweep.regionBelow(regPrev);
+    e = reg.eUp;
+
+    if (e.Org != ePrev.Org) {
+      if (!reg.fixUpperEdge) {
+        /* Remove the last left-going edge.  Even though there are no further
+        * edges in the dictionary with this origin, there may be further
+        * such edges in the mesh (if we are adding left edges to a vertex
+        * that has already been processed).  Thus it is important to call
+        * FinishRegion rather than just DeleteRegion.
+        */
+        Sweep.finishRegion(tess, regPrev);
+        break;
+      }
+      /* If the edge below was a temporary edge introduced by
+      * ConnectRightVertex, now is the time to fix it.
+      */
+
+
+      e = tess.mesh.connect(ePrev.Lprev, e.Sym); //			if (e == NULL) longjmp(tess->env,1);
+
+      Sweep.fixUpperEdge(tess, reg, e);
+    }
+    /* Relink edges so that ePrev->Onext == e */
+
+
+    if (ePrev.Onext !== e) {
+      tess.mesh.splice(e.Oprev, e);
+      tess.mesh.splice(ePrev, e);
+    }
+
+    Sweep.finishRegion(tess, regPrev);
+    /* may change reg->eUp */
+
+    ePrev = reg.eUp;
+    regPrev = reg;
+  }
+
+  return ePrev;
+}; //static void AddRightEdges( TESStesselator *tess, ActiveRegion *regUp, TESShalfEdge *eFirst, TESShalfEdge *eLast, TESShalfEdge *eTopLeft, int cleanUp )
+
+
+Sweep.addRightEdges = function (tess, regUp, eFirst, eLast, eTopLeft, cleanUp) {
+  /*
+  * Purpose: insert right-going edges into the edge dictionary, and update
+  * winding numbers and mesh connectivity appropriately.  All right-going
+  * edges share a common origin vOrg.  Edges are inserted CCW starting at
+  * eFirst; the last edge inserted is eLast->Oprev.  If vOrg has any
+  * left-going edges already processed, then eTopLeft must be the edge
+  * such that an imaginary upward vertical segment from vOrg would be
+  * contained between eTopLeft->Oprev and eTopLeft; otherwise eTopLeft
+  * should be NULL.
+  */
+  var reg, regPrev;
+  var e, ePrev;
+  var firstTime = true;
+  /* Insert the new right-going edges in the dictionary */
+
+  e = eFirst;
+
+  do {
+    assert(Geom.vertLeq(e.Org, e.Dst));
+    Sweep.addRegionBelow(tess, regUp, e.Sym);
+    e = e.Onext;
+  } while (e !== eLast);
+  /* Walk *all* right-going edges from e->Org, in the dictionary order,
+  * updating the winding numbers of each region, and re-linking the mesh
+  * edges to match the dictionary ordering (if necessary).
+  */
+
+
+  if (eTopLeft === null) {
+    eTopLeft = Sweep.regionBelow(regUp).eUp.Rprev;
+  }
+
+  regPrev = regUp;
+  ePrev = eTopLeft;
+
+  for (;;) {
+    reg = Sweep.regionBelow(regPrev);
+    e = reg.eUp.Sym;
+    if (e.Org !== ePrev.Org) break;
+
+    if (e.Onext !== ePrev) {
+      /* Unlink e from its current position, and relink below ePrev */
+      tess.mesh.splice(e.Oprev, e);
+      tess.mesh.splice(ePrev.Oprev, e);
+    }
+    /* Compute the winding number and "inside" flag for the new regions */
+
+
+    reg.windingNumber = regPrev.windingNumber - e.winding;
+    reg.inside = Sweep.isWindingInside(tess, reg.windingNumber);
+    /* Check for two outgoing edges with same slope -- process these
+    * before any intersection tests (see example in tessComputeInterior).
+    */
+
+    regPrev.dirty = true;
+
+    if (!firstTime && Sweep.checkForRightSplice(tess, regPrev)) {
+      Sweep.addWinding(e, ePrev);
+      Sweep.deleteRegion(tess, regPrev);
+      tess.mesh.delete(ePrev);
+    }
+
+    firstTime = false;
+    regPrev = reg;
+    ePrev = e;
+  }
+
+  regPrev.dirty = true;
+  assert(regPrev.windingNumber - e.winding === reg.windingNumber);
+
+  if (cleanUp) {
+    /* Check for intersections between newly adjacent edges. */
+    Sweep.walkDirtyRegions(tess, regPrev);
+  }
+}; //static void SpliceMergeVertices( TESStesselator *tess, TESShalfEdge *e1, TESShalfEdge *e2 )
+
+
+Sweep.spliceMergeVertices = function (tess, e1, e2) {
+  /*
+  * Two vertices with idential coordinates are combined into one.
+  * e1->Org is kept, while e2->Org is discarded.
+  */
+  tess.mesh.splice(e1, e2);
+}; //static void VertexWeights( TESSvertex *isect, TESSvertex *org, TESSvertex *dst, TESSreal *weights )
+
+
+Sweep.vertexWeights = function (isect, org, dst) {
+  /*
+  * Find some weights which describe how the intersection vertex is
+  * a linear combination of "org" and "dest".  Each of the two edges
+  * which generated "isect" is allocated 50% of the weight; each edge
+  * splits the weight between its org and dst according to the
+  * relative distance to "isect".
+  */
+  var t1 = Geom.vertL1dist(org, isect);
+  var t2 = Geom.vertL1dist(dst, isect);
+  var w0 = 0.5 * t2 / (t1 + t2);
+  var w1 = 0.5 * t1 / (t1 + t2);
+  isect.coords[0] += w0 * org.coords[0] + w1 * dst.coords[0];
+  isect.coords[1] += w0 * org.coords[1] + w1 * dst.coords[1];
+  isect.coords[2] += w0 * org.coords[2] + w1 * dst.coords[2];
+}; //static void GetIntersectData( TESStesselator *tess, TESSvertex *isect, TESSvertex *orgUp, TESSvertex *dstUp, TESSvertex *orgLo, TESSvertex *dstLo )
+
+
+Sweep.getIntersectData = function (tess, isect, orgUp, dstUp, orgLo, dstLo) {
+  /*
+  * We've computed a new intersection point, now we need a "data" pointer
+  * from the user so that we can refer to this new vertex in the
+  * rendering callbacks.
+  */
+  isect.coords[0] = isect.coords[1] = isect.coords[2] = 0;
+  isect.idx = -1;
+  Sweep.vertexWeights(isect, orgUp, dstUp);
+  Sweep.vertexWeights(isect, orgLo, dstLo);
+}; //static int CheckForRightSplice( TESStesselator *tess, ActiveRegion *regUp )
+
+
+Sweep.checkForRightSplice = function (tess, regUp) {
+  /*
+  * Check the upper and lower edge of "regUp", to make sure that the
+  * eUp->Org is above eLo, or eLo->Org is below eUp (depending on which
+  * origin is leftmost).
+  *
+  * The main purpose is to splice right-going edges with the same
+  * dest vertex and nearly identical slopes (ie. we can't distinguish
+  * the slopes numerically).  However the splicing can also help us
+  * to recover from numerical errors.  For example, suppose at one
+  * point we checked eUp and eLo, and decided that eUp->Org is barely
+  * above eLo.  Then later, we split eLo into two edges (eg. from
+  * a splice operation like this one).  This can change the result of
+  * our test so that now eUp->Org is incident to eLo, or barely below it.
+  * We must correct this condition to maintain the dictionary invariants.
+  *
+  * One possibility is to check these edges for intersection again
+  * (ie. CheckForIntersect).  This is what we do if possible.  However
+  * CheckForIntersect requires that tess->event lies between eUp and eLo,
+  * so that it has something to fall back on when the intersection
+  * calculation gives us an unusable answer.  So, for those cases where
+  * we can't check for intersection, this routine fixes the problem
+  * by just splicing the offending vertex into the other edge.
+  * This is a guaranteed solution, no matter how degenerate things get.
+  * Basically this is a combinatorial solution to a numerical problem.
+  */
+  var regLo = Sweep.regionBelow(regUp);
+  var eUp = regUp.eUp;
+  var eLo = regLo.eUp;
+
+  if (Geom.vertLeq(eUp.Org, eLo.Org)) {
+    if (Geom.edgeSign(eLo.Dst, eUp.Org, eLo.Org) > 0) return false;
+    /* eUp->Org appears to be below eLo */
+
+    if (!Geom.vertEq(eUp.Org, eLo.Org)) {
+      /* Splice eUp->Org into eLo */
+      tess.mesh.splitEdge(eLo.Sym);
+      tess.mesh.splice(eUp, eLo.Oprev);
+      regUp.dirty = regLo.dirty = true;
+    } else if (eUp.Org !== eLo.Org) {
+      /* merge the two vertices, discarding eUp->Org */
+      tess.pq.delete(eUp.Org.pqHandle);
+      Sweep.spliceMergeVertices(tess, eLo.Oprev, eUp);
+    }
+  } else {
+    if (Geom.edgeSign(eUp.Dst, eLo.Org, eUp.Org) < 0) return false;
+    /* eLo->Org appears to be above eUp, so splice eLo->Org into eUp */
+
+    Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
+    tess.mesh.splitEdge(eUp.Sym);
+    tess.mesh.splice(eLo.Oprev, eUp);
+  }
+
+  return true;
+}; //static int CheckForLeftSplice( TESStesselator *tess, ActiveRegion *regUp )
+
+
+Sweep.checkForLeftSplice = function (tess, regUp) {
+  /*
+  * Check the upper and lower edge of "regUp", to make sure that the
+  * eUp->Dst is above eLo, or eLo->Dst is below eUp (depending on which
+  * destination is rightmost).
+  *
+  * Theoretically, this should always be true.  However, splitting an edge
+  * into two pieces can change the results of previous tests.  For example,
+  * suppose at one point we checked eUp and eLo, and decided that eUp->Dst
+  * is barely above eLo.  Then later, we split eLo into two edges (eg. from
+  * a splice operation like this one).  This can change the result of
+  * the test so that now eUp->Dst is incident to eLo, or barely below it.
+  * We must correct this condition to maintain the dictionary invariants
+  * (otherwise new edges might get inserted in the wrong place in the
+  * dictionary, and bad stuff will happen).
+  *
+  * We fix the problem by just splicing the offending vertex into the
+  * other edge.
+  */
+  var regLo = Sweep.regionBelow(regUp);
+  var eUp = regUp.eUp;
+  var eLo = regLo.eUp;
+  var e;
+  assert(!Geom.vertEq(eUp.Dst, eLo.Dst));
+
+  if (Geom.vertLeq(eUp.Dst, eLo.Dst)) {
+    if (Geom.edgeSign(eUp.Dst, eLo.Dst, eUp.Org) < 0) return false;
+    /* eLo->Dst is above eUp, so splice eLo->Dst into eUp */
+
+    Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
+    e = tess.mesh.splitEdge(eUp);
+    tess.mesh.splice(eLo.Sym, e);
+    e.Lface.inside = regUp.inside;
+  } else {
+    if (Geom.edgeSign(eLo.Dst, eUp.Dst, eLo.Org) > 0) return false;
+    /* eUp->Dst is below eLo, so splice eUp->Dst into eLo */
+
+    regUp.dirty = regLo.dirty = true;
+    e = tess.mesh.splitEdge(eLo);
+    tess.mesh.splice(eUp.Lnext, eLo.Sym);
+    e.Rface.inside = regUp.inside;
+  }
+
+  return true;
+}; //static int CheckForIntersect( TESStesselator *tess, ActiveRegion *regUp )
+
+
+Sweep.checkForIntersect = function (tess, regUp) {
+  /*
+  * Check the upper and lower edges of the given region to see if
+  * they intersect.  If so, create the intersection and add it
+  * to the data structures.
+  *
+  * Returns TRUE if adding the new intersection resulted in a recursive
+  * call to AddRightEdges(); in this case all "dirty" regions have been
+  * checked for intersections, and possibly regUp has been deleted.
+  */
+  var regLo = Sweep.regionBelow(regUp);
+  var eUp = regUp.eUp;
+  var eLo = regLo.eUp;
+  var orgUp = eUp.Org;
+  var orgLo = eLo.Org;
+  var dstUp = eUp.Dst;
+  var dstLo = eLo.Dst;
+  var tMinUp, tMaxLo;
+  var isect = new TESSvertex(),
+      orgMin;
+  var e;
+  assert(!Geom.vertEq(dstLo, dstUp));
+  assert(Geom.edgeSign(dstUp, tess.event, orgUp) <= 0);
+  assert(Geom.edgeSign(dstLo, tess.event, orgLo) >= 0);
+  assert(orgUp !== tess.event && orgLo !== tess.event);
+  assert(!regUp.fixUpperEdge && !regLo.fixUpperEdge);
+  if (orgUp === orgLo) return false;
+  /* right endpoints are the same */
+
+  tMinUp = Math.min(orgUp.t, dstUp.t);
+  tMaxLo = Math.max(orgLo.t, dstLo.t);
+  if (tMinUp > tMaxLo) return false;
+  /* t ranges do not overlap */
+
+  if (Geom.vertLeq(orgUp, orgLo)) {
+    if (Geom.edgeSign(dstLo, orgUp, orgLo) > 0) return false;
+  } else {
+    if (Geom.edgeSign(dstUp, orgLo, orgUp) < 0) return false;
+  }
+  /* At this point the edges intersect, at least marginally */
+
+
+  Sweep.debugEvent(tess);
+  Geom.intersect(dstUp, orgUp, dstLo, orgLo, isect);
+  /* The following properties are guaranteed: */
+
+  assert(Math.min(orgUp.t, dstUp.t) <= isect.t);
+  assert(isect.t <= Math.max(orgLo.t, dstLo.t));
+  assert(Math.min(dstLo.s, dstUp.s) <= isect.s);
+  assert(isect.s <= Math.max(orgLo.s, orgUp.s));
+
+  if (Geom.vertLeq(isect, tess.event)) {
+    /* The intersection point lies slightly to the left of the sweep line,
+    * so move it until it''s slightly to the right of the sweep line.
+    * (If we had perfect numerical precision, this would never happen
+    * in the first place).  The easiest and safest thing to do is
+    * replace the intersection by tess->event.
+    */
+    isect.s = tess.event.s;
+    isect.t = tess.event.t;
+  }
+  /* Similarly, if the computed intersection lies to the right of the
+  * rightmost origin (which should rarely happen), it can cause
+  * unbelievable inefficiency on sufficiently degenerate inputs.
+  * (If you have the test program, try running test54.d with the
+  * "X zoom" option turned on).
+  */
+
+
+  orgMin = Geom.vertLeq(orgUp, orgLo) ? orgUp : orgLo;
+
+  if (Geom.vertLeq(orgMin, isect)) {
+    isect.s = orgMin.s;
+    isect.t = orgMin.t;
+  }
+
+  if (Geom.vertEq(isect, orgUp) || Geom.vertEq(isect, orgLo)) {
+    /* Easy case -- intersection at one of the right endpoints */
+    Sweep.checkForRightSplice(tess, regUp);
+    return false;
+  }
+
+  if (!Geom.vertEq(dstUp, tess.event) && Geom.edgeSign(dstUp, tess.event, isect) >= 0 || !Geom.vertEq(dstLo, tess.event) && Geom.edgeSign(dstLo, tess.event, isect) <= 0) {
+    /* Very unusual -- the new upper or lower edge would pass on the
+    * wrong side of the sweep event, or through it.  This can happen
+    * due to very small numerical errors in the intersection calculation.
+    */
+    if (dstLo === tess.event) {
+      /* Splice dstLo into eUp, and process the new region(s) */
+      tess.mesh.splitEdge(eUp.Sym);
+      tess.mesh.splice(eLo.Sym, eUp);
+      regUp = Sweep.topLeftRegion(tess, regUp); //			if (regUp == NULL) longjmp(tess->env,1);
+
+      eUp = Sweep.regionBelow(regUp).eUp;
+      Sweep.finishLeftRegions(tess, Sweep.regionBelow(regUp), regLo);
+      Sweep.addRightEdges(tess, regUp, eUp.Oprev, eUp, eUp, true);
+      return true;
+    }
+
+    if (dstUp === tess.event) {
+      /* Splice dstUp into eLo, and process the new region(s) */
+      tess.mesh.splitEdge(eLo.Sym);
+      tess.mesh.splice(eUp.Lnext, eLo.Oprev);
+      regLo = regUp;
+      regUp = Sweep.topRightRegion(regUp);
+      e = Sweep.regionBelow(regUp).eUp.Rprev;
+      regLo.eUp = eLo.Oprev;
+      eLo = Sweep.finishLeftRegions(tess, regLo, null);
+      Sweep.addRightEdges(tess, regUp, eLo.Onext, eUp.Rprev, e, true);
+      return true;
+    }
+    /* Special case: called from ConnectRightVertex.  If either
+    * edge passes on the wrong side of tess->event, split it
+    * (and wait for ConnectRightVertex to splice it appropriately).
+    */
+
+
+    if (Geom.edgeSign(dstUp, tess.event, isect) >= 0) {
+      Sweep.regionAbove(regUp).dirty = regUp.dirty = true;
+      tess.mesh.splitEdge(eUp.Sym);
+      eUp.Org.s = tess.event.s;
+      eUp.Org.t = tess.event.t;
+    }
+
+    if (Geom.edgeSign(dstLo, tess.event, isect) <= 0) {
+      regUp.dirty = regLo.dirty = true;
+      tess.mesh.splitEdge(eLo.Sym);
+      eLo.Org.s = tess.event.s;
+      eLo.Org.t = tess.event.t;
+    }
+    /* leave the rest for ConnectRightVertex */
+
+
+    return false;
+  }
+  /* General case -- split both edges, splice into new vertex.
+  * When we do the splice operation, the order of the arguments is
+  * arbitrary as far as correctness goes.  However, when the operation
+  * creates a new face, the work done is proportional to the size of
+  * the new face.  We expect the faces in the processed part of
+  * the mesh (ie. eUp->Lface) to be smaller than the faces in the
+  * unprocessed original contours (which will be eLo->Oprev->Lface).
+  */
+
+
+  tess.mesh.splitEdge(eUp.Sym);
+  tess.mesh.splitEdge(eLo.Sym);
+  tess.mesh.splice(eLo.Oprev, eUp);
+  eUp.Org.s = isect.s;
+  eUp.Org.t = isect.t;
+  eUp.Org.pqHandle = tess.pq.insert(eUp.Org);
+  Sweep.getIntersectData(tess, eUp.Org, orgUp, dstUp, orgLo, dstLo);
+  Sweep.regionAbove(regUp).dirty = regUp.dirty = regLo.dirty = true;
+  return false;
+}; //static void WalkDirtyRegions( TESStesselator *tess, ActiveRegion *regUp )
+
+
+Sweep.walkDirtyRegions = function (tess, regUp) {
+  /*
+  * When the upper or lower edge of any region changes, the region is
+  * marked "dirty".  This routine walks through all the dirty regions
+  * and makes sure that the dictionary invariants are satisfied
+  * (see the comments at the beginning of this file).  Of course
+  * new dirty regions can be created as we make changes to restore
+  * the invariants.
+  */
+  var regLo = Sweep.regionBelow(regUp);
+  var eUp, eLo;
+
+  for (;;) {
+    /* Find the lowest dirty region (we walk from the bottom up). */
+    while (regLo.dirty) {
+      regUp = regLo;
+      regLo = Sweep.regionBelow(regLo);
+    }
+
+    if (!regUp.dirty) {
+      regLo = regUp;
+      regUp = Sweep.regionAbove(regUp);
+
+      if (regUp === null || !regUp.dirty) {
+        /* We've walked all the dirty regions */
+        return;
+      }
+    }
+
+    regUp.dirty = false;
+    eUp = regUp.eUp;
+    eLo = regLo.eUp;
+
+    if (eUp.Dst !== eLo.Dst) {
+      /* Check that the edge ordering is obeyed at the Dst vertices. */
+      if (Sweep.checkForLeftSplice(tess, regUp)) {
+        /* If the upper or lower edge was marked fixUpperEdge, then
+        * we no longer need it (since these edges are needed only for
+        * vertices which otherwise have no right-going edges).
+        */
+        if (regLo.fixUpperEdge) {
+          Sweep.deleteRegion(tess, regLo);
+          tess.mesh.delete(eLo);
+          regLo = Sweep.regionBelow(regUp);
+          eLo = regLo.eUp;
+        } else if (regUp.fixUpperEdge) {
+          Sweep.deleteRegion(tess, regUp);
+          tess.mesh.delete(eUp);
+          regUp = Sweep.regionAbove(regLo);
+          eUp = regUp.eUp;
+        }
+      }
+    }
+
+    if (eUp.Org !== eLo.Org) {
+      if (eUp.Dst !== eLo.Dst && !regUp.fixUpperEdge && !regLo.fixUpperEdge && (eUp.Dst === tess.event || eLo.Dst === tess.event)) {
+        /* When all else fails in CheckForIntersect(), it uses tess->event
+        * as the intersection location.  To make this possible, it requires
+        * that tess->event lie between the upper and lower edges, and also
+        * that neither of these is marked fixUpperEdge (since in the worst
+        * case it might splice one of these edges into tess->event, and
+        * violate the invariant that fixable edges are the only right-going
+        * edge from their associated vertex).
+        */
+        if (Sweep.checkForIntersect(tess, regUp)) {
+          /* WalkDirtyRegions() was called recursively; we're done */
+          return;
+        }
+      } else {
+        /* Even though we can't use CheckForIntersect(), the Org vertices
+        * may violate the dictionary edge ordering.  Check and correct this.
+        */
+        Sweep.checkForRightSplice(tess, regUp);
+      }
+    }
+
+    if (eUp.Org === eLo.Org && eUp.Dst === eLo.Dst) {
+      /* A degenerate loop consisting of only two edges -- delete it. */
+      Sweep.addWinding(eLo, eUp);
+      Sweep.deleteRegion(tess, regUp);
+      tess.mesh.delete(eUp);
+      regUp = Sweep.regionAbove(regLo);
+    }
+  }
+}; //static void ConnectRightVertex( TESStesselator *tess, ActiveRegion *regUp, TESShalfEdge *eBottomLeft )
+
+
+Sweep.connectRightVertex = function (tess, regUp, eBottomLeft) {
+  /*
+  * Purpose: connect a "right" vertex vEvent (one where all edges go left)
+  * to the unprocessed portion of the mesh.  Since there are no right-going
+  * edges, two regions (one above vEvent and one below) are being merged
+  * into one.  "regUp" is the upper of these two regions.
+  *
+  * There are two reasons for doing this (adding a right-going edge):
+  *  - if the two regions being merged are "inside", we must add an edge
+  *    to keep them separated (the combined region would not be monotone).
+  *  - in any case, we must leave some record of vEvent in the dictionary,
+  *    so that we can merge vEvent with features that we have not seen yet.
+  *    For example, maybe there is a vertical edge which passes just to
+  *    the right of vEvent; we would like to splice vEvent into this edge.
+  *
+  * However, we don't want to connect vEvent to just any vertex.  We don''t
+  * want the new edge to cross any other edges; otherwise we will create
+  * intersection vertices even when the input data had no self-intersections.
+  * (This is a bad thing; if the user's input data has no intersections,
+  * we don't want to generate any false intersections ourselves.)
+  *
+  * Our eventual goal is to connect vEvent to the leftmost unprocessed
+  * vertex of the combined region (the union of regUp and regLo).
+  * But because of unseen vertices with all right-going edges, and also
+  * new vertices which may be created by edge intersections, we don''t
+  * know where that leftmost unprocessed vertex is.  In the meantime, we
+  * connect vEvent to the closest vertex of either chain, and mark the region
+  * as "fixUpperEdge".  This flag says to delete and reconnect this edge
+  * to the next processed vertex on the boundary of the combined region.
+  * Quite possibly the vertex we connected to will turn out to be the
+  * closest one, in which case we won''t need to make any changes.
+  */
+  var eNew;
+  var eTopLeft = eBottomLeft.Onext;
+  var regLo = Sweep.regionBelow(regUp);
+  var eUp = regUp.eUp;
+  var eLo = regLo.eUp;
+  var degenerate = false;
+
+  if (eUp.Dst !== eLo.Dst) {
+    Sweep.checkForIntersect(tess, regUp);
+  }
+  /* Possible new degeneracies: upper or lower edge of regUp may pass
+  * through vEvent, or may coincide with new intersection vertex
+  */
+
+
+  if (Geom.vertEq(eUp.Org, tess.event)) {
+    tess.mesh.splice(eTopLeft.Oprev, eUp);
+    regUp = Sweep.topLeftRegion(tess, regUp);
+    eTopLeft = Sweep.regionBelow(regUp).eUp;
+    Sweep.finishLeftRegions(tess, Sweep.regionBelow(regUp), regLo);
+    degenerate = true;
+  }
+
+  if (Geom.vertEq(eLo.Org, tess.event)) {
+    tess.mesh.splice(eBottomLeft, eLo.Oprev);
+    eBottomLeft = Sweep.finishLeftRegions(tess, regLo, null);
+    degenerate = true;
+  }
+
+  if (degenerate) {
+    Sweep.addRightEdges(tess, regUp, eBottomLeft.Onext, eTopLeft, eTopLeft, true);
+    return;
+  }
+  /* Non-degenerate situation -- need to add a temporary, fixable edge.
+  * Connect to the closer of eLo->Org, eUp->Org.
+  */
+
+
+  if (Geom.vertLeq(eLo.Org, eUp.Org)) {
+    eNew = eLo.Oprev;
+  } else {
+    eNew = eUp;
+  }
+
+  eNew = tess.mesh.connect(eBottomLeft.Lprev, eNew);
+  /* Prevent cleanup, otherwise eNew might disappear before we've even
+  * had a chance to mark it as a temporary edge.
+  */
+
+  Sweep.addRightEdges(tess, regUp, eNew, eNew.Onext, eNew.Onext, false);
+  eNew.Sym.activeRegion.fixUpperEdge = true;
+  Sweep.walkDirtyRegions(tess, regUp);
+};
+/* Because vertices at exactly the same location are merged together
+* before we process the sweep event, some degenerate cases can't occur.
+* However if someone eventually makes the modifications required to
+* merge features which are close together, the cases below marked
+* TOLERANCE_NONZERO will be useful.  They were debugged before the
+* code to merge identical vertices in the main loop was added.
+*/
+//#define TOLERANCE_NONZERO	FALSE
+//static void ConnectLeftDegenerate( TESStesselator *tess, ActiveRegion *regUp, TESSvertex *vEvent )
+
+
+Sweep.connectLeftDegenerate = function (tess, regUp, vEvent) {
+  /*
+  * The event vertex lies exacty on an already-processed edge or vertex.
+  * Adding the new vertex involves splicing it into the already-processed
+  * part of the mesh.
+  */
+  var e, eTopLeft, eTopRight, eLast;
+  var reg;
+  e = regUp.eUp;
+
+  if (Geom.vertEq(e.Org, vEvent)) {
+    /* e->Org is an unprocessed vertex - just combine them, and wait
+    * for e->Org to be pulled from the queue
+    */
+    assert(false
+    /*TOLERANCE_NONZERO*/
+    );
+    Sweep.spliceMergeVertices(tess, e, vEvent.anEdge);
+    return;
+  }
+
+  if (!Geom.vertEq(e.Dst, vEvent)) {
+    /* General case -- splice vEvent into edge e which passes through it */
+    tess.mesh.splitEdge(e.Sym);
+
+    if (regUp.fixUpperEdge) {
+      /* This edge was fixable -- delete unused portion of original edge */
+      tess.mesh.delete(e.Onext);
+      regUp.fixUpperEdge = false;
+    }
+
+    tess.mesh.splice(vEvent.anEdge, e);
+    Sweep.sweepEvent(tess, vEvent);
+    /* recurse */
+
+    return;
+  }
+  /* vEvent coincides with e->Dst, which has already been processed.
+  * Splice in the additional right-going edges.
+  */
+
+
+  assert(false
+  /*TOLERANCE_NONZERO*/
+  );
+  regUp = Sweep.topRightRegion(regUp);
+  reg = Sweep.regionBelow(regUp);
+  eTopRight = reg.eUp.Sym;
+  eTopLeft = eLast = eTopRight.Onext;
+
+  if (reg.fixUpperEdge) {
+    /* Here e->Dst has only a single fixable edge going right.
+    * We can delete it since now we have some real right-going edges.
+    */
+    assert(eTopLeft !== eTopRight);
+    /* there are some left edges too */
+
+    Sweep.deleteRegion(tess, reg);
+    tess.mesh.delete(eTopRight);
+    eTopRight = eTopLeft.Oprev;
+  }
+
+  tess.mesh.splice(vEvent.anEdge, eTopRight);
+
+  if (!Geom.edgeGoesLeft(eTopLeft)) {
+    /* e->Dst had no left-going edges -- indicate this to AddRightEdges() */
+    eTopLeft = null;
+  }
+
+  Sweep.addRightEdges(tess, regUp, eTopRight.Onext, eLast, eTopLeft, true);
+}; //static void ConnectLeftVertex( TESStesselator *tess, TESSvertex *vEvent )
+
+
+Sweep.connectLeftVertex = function (tess, vEvent) {
+  /*
+  * Purpose: connect a "left" vertex (one where both edges go right)
+  * to the processed portion of the mesh.  Let R be the active region
+  * containing vEvent, and let U and L be the upper and lower edge
+  * chains of R.  There are two possibilities:
+  *
+  * - the normal case: split R into two regions, by connecting vEvent to
+  *   the rightmost vertex of U or L lying to the left of the sweep line
+  *
+  * - the degenerate case: if vEvent is close enough to U or L, we
+  *   merge vEvent into that edge chain.  The subcases are:
+  *	- merging with the rightmost vertex of U or L
+  *	- merging with the active edge of U or L
+  *	- merging with an already-processed portion of U or L
+  */
+  var regUp, regLo, reg;
+  var eUp, eLo, eNew;
+  var tmp = new ActiveRegion();
+  /* assert( vEvent->anEdge->Onext->Onext == vEvent->anEdge ); */
+
+  /* Get a pointer to the active region containing vEvent */
+
+  tmp.eUp = vEvent.anEdge.Sym;
+  /* __GL_DICTLISTKEY */
+
+  /* tessDictListSearch */
+
+  regUp = tess.dict.search(tmp).key;
+  regLo = Sweep.regionBelow(regUp);
+
+  if (!regLo) {
+    // This may happen if the input polygon is coplanar.
+    return;
+  }
+
+  eUp = regUp.eUp;
+  eLo = regLo.eUp;
+  /* Try merging with U or L first */
+
+  if (Geom.edgeSign(eUp.Dst, vEvent, eUp.Org) === 0.0) {
+    Sweep.connectLeftDegenerate(tess, regUp, vEvent);
+    return;
+  }
+  /* Connect vEvent to rightmost processed vertex of either chain.
+  * e->Dst is the vertex that we will connect to vEvent.
+  */
+
+
+  reg = Geom.vertLeq(eLo.Dst, eUp.Dst) ? regUp : regLo;
+
+  if (regUp.inside || reg.fixUpperEdge) {
+    if (reg === regUp) {
+      eNew = tess.mesh.connect(vEvent.anEdge.Sym, eUp.Lnext);
+    } else {
+      var tempHalfEdge = tess.mesh.connect(eLo.Dnext, vEvent.anEdge);
+      eNew = tempHalfEdge.Sym;
+    }
+
+    if (reg.fixUpperEdge) {
+      Sweep.fixUpperEdge(tess, reg, eNew);
+    } else {
+      Sweep.computeWinding(tess, Sweep.addRegionBelow(tess, regUp, eNew));
+    }
+
+    Sweep.sweepEvent(tess, vEvent);
+  } else {
+    /* The new vertex is in a region which does not belong to the polygon.
+    * We don''t need to connect this vertex to the rest of the mesh.
+    */
+    Sweep.addRightEdges(tess, regUp, vEvent.anEdge, vEvent.anEdge, null, true);
+  }
+}; //static void SweepEvent( TESStesselator *tess, TESSvertex *vEvent )
+
+
+Sweep.sweepEvent = function (tess, vEvent) {
+  /*
+  * Does everything necessary when the sweep line crosses a vertex.
+  * Updates the mesh and the edge dictionary.
+  */
+  tess.event = vEvent;
+  /* for access in EdgeLeq() */
+
+  Sweep.debugEvent(tess);
+  /* Check if this vertex is the right endpoint of an edge that is
+  * already in the dictionary.  In this case we don't need to waste
+  * time searching for the location to insert new edges.
+  */
+
+  var e = vEvent.anEdge;
+
+  while (e.activeRegion === null) {
+    e = e.Onext;
+
+    if (e === vEvent.anEdge) {
+      /* All edges go right -- not incident to any processed edges */
+      Sweep.connectLeftVertex(tess, vEvent);
+      return;
+    }
+  }
+  /* Processing consists of two phases: first we "finish" all the
+  * active regions where both the upper and lower edges terminate
+  * at vEvent (ie. vEvent is closing off these regions).
+  * We mark these faces "inside" or "outside" the polygon according
+  * to their winding number, and delete the edges from the dictionary.
+  * This takes care of all the left-going edges from vEvent.
+  */
+
+
+  var regUp = Sweep.topLeftRegion(tess, e.activeRegion);
+  assert(regUp !== null); //	if (regUp == NULL) longjmp(tess->env,1);
+
+  var reg = Sweep.regionBelow(regUp);
+  var eTopLeft = reg.eUp;
+  var eBottomLeft = Sweep.finishLeftRegions(tess, reg, null);
+  /* Next we process all the right-going edges from vEvent.  This
+  * involves adding the edges to the dictionary, and creating the
+  * associated "active regions" which record information about the
+  * regions between adjacent dictionary edges.
+  */
+
+  if (eBottomLeft.Onext === eTopLeft) {
+    /* No right-going edges -- add a temporary "fixable" edge */
+    Sweep.connectRightVertex(tess, regUp, eBottomLeft);
+  } else {
+    Sweep.addRightEdges(tess, regUp, eBottomLeft.Onext, eTopLeft, eTopLeft, true);
+  }
+};
+/* Make the sentinel coordinates big enough that they will never be
+* merged with real input features.
+*/
+//static void AddSentinel( TESStesselator *tess, TESSreal smin, TESSreal smax, TESSreal t )
+
+
+Sweep.addSentinel = function (tess, smin, smax, t) {
+  /*
+  * We add two sentinel edges above and below all other edges,
+  * to avoid special cases at the top and bottom.
+  */
+  var reg = new ActiveRegion();
+  var e = tess.mesh.makeEdge(); //	if (e == NULL) longjmp(tess->env,1);
+
+  e.Org.s = smax;
+  e.Org.t = t;
+  e.Dst.s = smin;
+  e.Dst.t = t;
+  tess.event = e.Dst;
+  /* initialize it */
+
+  reg.eUp = e;
+  reg.windingNumber = 0;
+  reg.inside = false;
+  reg.fixUpperEdge = false;
+  reg.sentinel = true;
+  reg.dirty = false;
+  reg.nodeUp = tess.dict.insert(reg); //	if (reg->nodeUp == NULL) longjmp(tess->env,1);
+}; //static void InitEdgeDict( TESStesselator *tess )
+
+
+Sweep.initEdgeDict = function (tess) {
+  /*
+  * We maintain an ordering of edge intersections with the sweep line.
+  * This order is maintained in a dynamic dictionary.
+  */
+  tess.dict = new Dict(tess, Sweep.edgeLeq); //	if (tess->dict == NULL) longjmp(tess->env,1);
+
+  var w = tess.bmax[0] - tess.bmin[0];
+  var h = tess.bmax[1] - tess.bmin[1];
+  var smin = tess.bmin[0] - w;
+  var smax = tess.bmax[0] + w;
+  var tmin = tess.bmin[1] - h;
+  var tmax = tess.bmax[1] + h;
+  Sweep.addSentinel(tess, smin, smax, tmin);
+  Sweep.addSentinel(tess, smin, smax, tmax);
+};
+
+Sweep.doneEdgeDict = function (tess) {
+  var reg;
+  var fixedEdges = 0;
+
+  while ((reg = tess.dict.min().key) !== null) {
+    /*
+    * At the end of all processing, the dictionary should contain
+    * only the two sentinel edges, plus at most one "fixable" edge
+    * created by ConnectRightVertex().
+    */
+    if (!reg.sentinel) {
+      assert(reg.fixUpperEdge);
+      assert(++fixedEdges === 1);
+    }
+
+    assert(reg.windingNumber === 0);
+    Sweep.deleteRegion(tess, reg);
+    /*    tessMeshDelete( reg->eUp );*/
+  } //	dictDeleteDict( &tess->alloc, tess->dict );
+
+};
+
+Sweep.removeDegenerateEdges = function (tess) {
+  /*
+  * Remove zero-length edges, and contours with fewer than 3 vertices.
+  */
+  var e, eNext, eLnext;
+  var eHead = tess.mesh.eHead;
+  /*LINTED*/
+
+  for (e = eHead.next; e !== eHead; e = eNext) {
+    eNext = e.next;
+    eLnext = e.Lnext;
+
+    if (Geom.vertEq(e.Org, e.Dst) && e.Lnext.Lnext !== e) {
+      /* Zero-length edge, contour has at least 3 edges */
+      Sweep.spliceMergeVertices(tess, eLnext, e);
+      /* deletes e->Org */
+
+      tess.mesh.delete(e);
+      /* e is a self-loop */
+
+      e = eLnext;
+      eLnext = e.Lnext;
+    }
+
+    if (eLnext.Lnext === e) {
+      /* Degenerate contour (one or two edges) */
+      if (eLnext !== e) {
+        if (eLnext === eNext || eLnext === eNext.Sym) {
+          eNext = eNext.next;
+        }
+
+        tess.mesh.delete(eLnext);
+      }
+
+      if (e === eNext || e === eNext.Sym) {
+        eNext = eNext.next;
+      }
+
+      tess.mesh.delete(e);
+    }
+  }
+};
+
+Sweep.initPriorityQ = function (tess) {
+  /*
+  * Insert all vertices into the priority queue which determines the
+  * order in which vertices cross the sweep line.
+  */
+  var pq;
+  var v, vHead;
+  var vertexCount = 0;
+  vHead = tess.mesh.vHead;
+
+  for (v = vHead.next; v !== vHead; v = v.next) {
+    vertexCount++;
+  }
+  /* Make sure there is enough space for sentinels. */
+
+
+  vertexCount += 8; //MAX( 8, tess->alloc.extraVertices );
+
+  pq = tess.pq = new PriorityQ(vertexCount, Geom.vertLeq); //	if (pq == NULL) return 0;
+
+  vHead = tess.mesh.vHead;
+
+  for (v = vHead.next; v !== vHead; v = v.next) {
+    v.pqHandle = pq.insert(v); //		if (v.pqHandle == INV_HANDLE)
+    //			break;
+  }
+
+  if (v !== vHead) {
+    return false;
+  }
+
+  pq.init();
+  return true;
+};
+
+Sweep.donePriorityQ = function (tess) {
+  tess.pq = null;
+};
+
+Sweep.removeDegenerateFaces = function (tess, mesh) {
+  /*
+  * Delete any degenerate faces with only two edges.  WalkDirtyRegions()
+  * will catch almost all of these, but it won't catch degenerate faces
+  * produced by splice operations on already-processed edges.
+  * The two places this can happen are in FinishLeftRegions(), when
+  * we splice in a "temporary" edge produced by ConnectRightVertex(),
+  * and in CheckForLeftSplice(), where we splice already-processed
+  * edges to ensure that our dictionary invariants are not violated
+  * by numerical errors.
+  *
+  * In both these cases it is *very* dangerous to delete the offending
+  * edge at the time, since one of the routines further up the stack
+  * will sometimes be keeping a pointer to that edge.
+  */
+  var f, fNext;
+  var e;
+  /*LINTED*/
+
+  for (f = mesh.fHead.next; f !== mesh.fHead; f = fNext) {
+    fNext = f.next;
+    e = f.anEdge;
+    assert(e.Lnext !== e);
+
+    if (e.Lnext.Lnext === e) {
+      /* A face with only two edges */
+      Sweep.addWinding(e.Onext, e);
+      tess.mesh.delete(e);
+    }
+  }
+
+  return true;
+};
+
+Sweep.computeInterior = function (tess) {
+  /*
+  * tessComputeInterior( tess ) computes the planar arrangement specified
+  * by the given contours, and further subdivides this arrangement
+  * into regions.  Each region is marked "inside" if it belongs
+  * to the polygon, according to the rule given by tess->windingRule.
+  * Each interior region is guaranteed be monotone.
+  */
+  var v, vNext;
+  /* Each vertex defines an event for our sweep line.  Start by inserting
+  * all the vertices in a priority queue.  Events are processed in
+  * lexicographic order, ie.
+  *
+  *	e1 < e2  iff  e1.x < e2.x || (e1.x == e2.x && e1.y < e2.y)
+  */
+
+  Sweep.removeDegenerateEdges(tess);
+  if (!Sweep.initPriorityQ(tess)) return false;
+  /* if error */
+
+  Sweep.initEdgeDict(tess);
+
+  while ((v = tess.pq.extractMin()) !== null) {
+    for (;;) {
+      vNext = tess.pq.min();
+      if (vNext === null || !Geom.vertEq(vNext, v)) break;
+      /* Merge together all vertices at exactly the same location.
+      * This is more efficient than processing them one at a time,
+      * simplifies the code (see ConnectLeftDegenerate), and is also
+      * important for correct handling of certain degenerate cases.
+      * For example, suppose there are two identical edges A and B
+      * that belong to different contours (so without this code they would
+      * be processed by separate sweep events).  Suppose another edge C
+      * crosses A and B from above.  When A is processed, we split it
+      * at its intersection point with C.  However this also splits C,
+      * so when we insert B we may compute a slightly different
+      * intersection point.  This might leave two edges with a small
+      * gap between them.  This kind of error is especially obvious
+      * when using boundary extraction (TESS_BOUNDARY_ONLY).
+      */
+
+      vNext = tess.pq.extractMin();
+      Sweep.spliceMergeVertices(tess, v.anEdge, vNext.anEdge);
+    }
+
+    Sweep.sweepEvent(tess, v);
+  }
+  /* Set tess->event for debugging purposes */
+
+
+  tess.event = tess.dict.min().key.eUp.Org;
+  Sweep.debugEvent(tess);
+  Sweep.doneEdgeDict(tess);
+  Sweep.donePriorityQ(tess);
+  if (!Sweep.removeDegenerateFaces(tess, tess.mesh)) return false;
+  tess.mesh.check();
+  return true;
+};
+
+function Tesselator() {
+  /*** state needed for collecting the input data ***/
+  this.mesh = null;
+  /* stores the input contours, and eventually
+  the tessellation itself */
+
+  /*** state needed for projecting onto the sweep plane ***/
+
+  this.normal = [0.0, 0.0, 0.0];
+  /* user-specified normal (if provided) */
+
+  this.sUnit = [0.0, 0.0, 0.0];
+  /* unit vector in s-direction (debugging) */
+
+  this.tUnit = [0.0, 0.0, 0.0];
+  /* unit vector in t-direction (debugging) */
+
+  this.bmin = [0.0, 0.0];
+  this.bmax = [0.0, 0.0];
+  /*** state needed for the line sweep ***/
+
+  this.windingRule = Tess2.WINDING_ODD;
+  /* rule for determining polygon interior */
+
+  this.dict = null;
+  /* edge dictionary for sweep line */
+
+  this.pq = null;
+  /* priority queue of vertex events */
+
+  this.event = null;
+  /* current sweep event being processed */
+
+  this.vertexIndexCounter = 0;
+  this.vertices = [];
+  this.vertexIndices = [];
+  this.vertexCount = 0;
+  this.elements = [];
+  this.elementCount = 0;
+}
+
+;
+Tesselator.prototype = {
+  dot_: function (u, v) {
+    return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
+  },
+  normalize_: function (v) {
+    var len = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
+    assert(len > 0.0);
+    len = Math.sqrt(len);
+    v[0] /= len;
+    v[1] /= len;
+    v[2] /= len;
+  },
+  longAxis_: function (v) {
+    var i = 0;
+
+    if (Math.abs(v[1]) > Math.abs(v[0])) {
+      i = 1;
+    }
+
+    if (Math.abs(v[2]) > Math.abs(v[i])) {
+      i = 2;
+    }
+
+    return i;
+  },
+  computeNormal_: function (norm) {
+    var v, v1, v2;
+    var c, tLen2, maxLen2;
+    var maxVal = [0, 0, 0],
+        minVal = [0, 0, 0],
+        d1 = [0, 0, 0],
+        d2 = [0, 0, 0],
+        tNorm = [0, 0, 0];
+    var maxVert = [null, null, null],
+        minVert = [null, null, null];
+    var vHead = this.mesh.vHead;
+    var i;
+    v = vHead.next;
+
+    for (i = 0; i < 3; ++i) {
+      c = v.coords[i];
+      minVal[i] = c;
+      minVert[i] = v;
+      maxVal[i] = c;
+      maxVert[i] = v;
+    }
+
+    for (v = vHead.next; v !== vHead; v = v.next) {
+      for (i = 0; i < 3; ++i) {
+        c = v.coords[i];
+
+        if (c < minVal[i]) {
+          minVal[i] = c;
+          minVert[i] = v;
+        }
+
+        if (c > maxVal[i]) {
+          maxVal[i] = c;
+          maxVert[i] = v;
+        }
+      }
+    }
+    /* Find two vertices separated by at least 1/sqrt(3) of the maximum
+    * distance between any two vertices
+    */
+
+
+    i = 0;
+
+    if (maxVal[1] - minVal[1] > maxVal[0] - minVal[0]) {
+      i = 1;
+    }
+
+    if (maxVal[2] - minVal[2] > maxVal[i] - minVal[i]) {
+      i = 2;
+    }
+
+    if (minVal[i] >= maxVal[i]) {
+      /* All vertices are the same -- normal doesn't matter */
+      norm[0] = 0;
+      norm[1] = 0;
+      norm[2] = 1;
+      return;
+    }
+    /* Look for a third vertex which forms the triangle with maximum area
+    * (Length of normal == twice the triangle area)
+    */
+
+
+    maxLen2 = 0;
+    v1 = minVert[i];
+    v2 = maxVert[i];
+    d1[0] = v1.coords[0] - v2.coords[0];
+    d1[1] = v1.coords[1] - v2.coords[1];
+    d1[2] = v1.coords[2] - v2.coords[2];
+
+    for (v = vHead.next; v !== vHead; v = v.next) {
+      d2[0] = v.coords[0] - v2.coords[0];
+      d2[1] = v.coords[1] - v2.coords[1];
+      d2[2] = v.coords[2] - v2.coords[2];
+      tNorm[0] = d1[1] * d2[2] - d1[2] * d2[1];
+      tNorm[1] = d1[2] * d2[0] - d1[0] * d2[2];
+      tNorm[2] = d1[0] * d2[1] - d1[1] * d2[0];
+      tLen2 = tNorm[0] * tNorm[0] + tNorm[1] * tNorm[1] + tNorm[2] * tNorm[2];
+
+      if (tLen2 > maxLen2) {
+        maxLen2 = tLen2;
+        norm[0] = tNorm[0];
+        norm[1] = tNorm[1];
+        norm[2] = tNorm[2];
+      }
+    }
+
+    if (maxLen2 <= 0) {
+      /* All points lie on a single line -- any decent normal will do */
+      norm[0] = norm[1] = norm[2] = 0;
+      norm[this.longAxis_(d1)] = 1;
+    }
+  },
+  checkOrientation_: function () {
+    var area;
+    var f,
+        fHead = this.mesh.fHead;
+    var v,
+        vHead = this.mesh.vHead;
+    var e;
+    /* When we compute the normal automatically, we choose the orientation
+    * so that the the sum of the signed areas of all contours is non-negative.
+    */
+
+    area = 0;
+
+    for (f = fHead.next; f !== fHead; f = f.next) {
+      e = f.anEdge;
+      if (e.winding <= 0) continue;
+
+      do {
+        area += (e.Org.s - e.Dst.s) * (e.Org.t + e.Dst.t);
+        e = e.Lnext;
+      } while (e !== f.anEdge);
+    }
+
+    if (area < 0) {
+      /* Reverse the orientation by flipping all the t-coordinates */
+      for (v = vHead.next; v !== vHead; v = v.next) {
+        v.t = -v.t;
+      }
+
+      this.tUnit[0] = -this.tUnit[0];
+      this.tUnit[1] = -this.tUnit[1];
+      this.tUnit[2] = -this.tUnit[2];
+    }
+  },
+
+  /*	#ifdef FOR_TRITE_TEST_PROGRAM
+    #include <stdlib.h>
+    extern int RandomSweep;
+    #define S_UNIT_X	(RandomSweep ? (2*drand48()-1) : 1.0)
+    #define S_UNIT_Y	(RandomSweep ? (2*drand48()-1) : 0.0)
+    #else
+    #if defined(SLANTED_SWEEP) */
+
+  /* The "feature merging" is not intended to be complete.  There are
+  * special cases where edges are nearly parallel to the sweep line
+  * which are not implemented.  The algorithm should still behave
+  * robustly (ie. produce a reasonable tesselation) in the presence
+  * of such edges, however it may miss features which could have been
+  * merged.  We could minimize this effect by choosing the sweep line
+  * direction to be something unusual (ie. not parallel to one of the
+  * coordinate axes).
+  */
+
+  /*	#define S_UNIT_X	(TESSreal)0.50941539564955385	// Pre-normalized
+    #define S_UNIT_Y	(TESSreal)0.86052074622010633
+    #else
+    #define S_UNIT_X	(TESSreal)1.0
+    #define S_UNIT_Y	(TESSreal)0.0
+    #endif
+    #endif*/
+
+  /* Determine the polygon normal and project vertices onto the plane
+  * of the polygon.
+  */
+  projectPolygon_: function () {
+    var v,
+        vHead = this.mesh.vHead;
+    var norm = [0, 0, 0];
+    var sUnit, tUnit;
+    var i,
+        first,
+        computedNormal = false;
+    norm[0] = this.normal[0];
+    norm[1] = this.normal[1];
+    norm[2] = this.normal[2];
+
+    if (norm[0] === 0.0 && norm[1] === 0.0 && norm[2] === 0.0) {
+      this.computeNormal_(norm);
+      computedNormal = true;
+    }
+
+    sUnit = this.sUnit;
+    tUnit = this.tUnit;
+    i = this.longAxis_(norm);
+    /*	#if defined(FOR_TRITE_TEST_PROGRAM) || defined(TRUE_PROJECT)
+        // Choose the initial sUnit vector to be approximately perpendicular
+        // to the normal.
+        
+        Normalize( norm );
+    
+        sUnit[i] = 0;
+        sUnit[(i+1)%3] = S_UNIT_X;
+        sUnit[(i+2)%3] = S_UNIT_Y;
+    
+        // Now make it exactly perpendicular 
+        w = Dot( sUnit, norm );
+        sUnit[0] -= w * norm[0];
+        sUnit[1] -= w * norm[1];
+        sUnit[2] -= w * norm[2];
+        Normalize( sUnit );
+    
+        // Choose tUnit so that (sUnit,tUnit,norm) form a right-handed frame 
+        tUnit[0] = norm[1]*sUnit[2] - norm[2]*sUnit[1];
+        tUnit[1] = norm[2]*sUnit[0] - norm[0]*sUnit[2];
+        tUnit[2] = norm[0]*sUnit[1] - norm[1]*sUnit[0];
+        Normalize( tUnit );
+      #else*/
+
+    /* Project perpendicular to a coordinate axis -- better numerically */
+
+    sUnit[i] = 0;
+    sUnit[(i + 1) % 3] = 1.0;
+    sUnit[(i + 2) % 3] = 0.0;
+    tUnit[i] = 0;
+    tUnit[(i + 1) % 3] = 0.0;
+    tUnit[(i + 2) % 3] = norm[i] > 0 ? 1.0 : -1.0; //	#endif
+
+    /* Project the vertices onto the sweep plane */
+
+    for (v = vHead.next; v !== vHead; v = v.next) {
+      v.s = this.dot_(v.coords, sUnit);
+      v.t = this.dot_(v.coords, tUnit);
+    }
+
+    if (computedNormal) {
+      this.checkOrientation_();
+    }
+    /* Compute ST bounds. */
+
+
+    first = true;
+
+    for (v = vHead.next; v !== vHead; v = v.next) {
+      if (first) {
+        this.bmin[0] = this.bmax[0] = v.s;
+        this.bmin[1] = this.bmax[1] = v.t;
+        first = false;
+      } else {
+        if (v.s < this.bmin[0]) this.bmin[0] = v.s;
+        if (v.s > this.bmax[0]) this.bmax[0] = v.s;
+        if (v.t < this.bmin[1]) this.bmin[1] = v.t;
+        if (v.t > this.bmax[1]) this.bmax[1] = v.t;
+      }
+    }
+  },
+  addWinding_: function (eDst, eSrc) {
+    eDst.winding += eSrc.winding;
+    eDst.Sym.winding += eSrc.Sym.winding;
+  },
+
+  /* tessMeshTessellateMonoRegion( face ) tessellates a monotone region
+  * (what else would it do??)  The region must consist of a single
+  * loop of half-edges (see mesh.h) oriented CCW.  "Monotone" in this
+  * case means that any vertical line intersects the interior of the
+  * region in a single interval.  
+  *
+  * Tessellation consists of adding interior edges (actually pairs of
+  * half-edges), to split the region into non-overlapping triangles.
+  *
+  * The basic idea is explained in Preparata and Shamos (which I don''t
+  * have handy right now), although their implementation is more
+  * complicated than this one.  The are two edge chains, an upper chain
+  * and a lower chain.  We process all vertices from both chains in order,
+  * from right to left.
+  *
+  * The algorithm ensures that the following invariant holds after each
+  * vertex is processed: the untessellated region consists of two
+  * chains, where one chain (say the upper) is a single edge, and
+  * the other chain is concave.  The left vertex of the single edge
+  * is always to the left of all vertices in the concave chain.
+  *
+  * Each step consists of adding the rightmost unprocessed vertex to one
+  * of the two chains, and forming a fan of triangles from the rightmost
+  * of two chain endpoints.  Determining whether we can add each triangle
+  * to the fan is a simple orientation test.  By making the fan as large
+  * as possible, we restore the invariant (check it yourself).
+  */
+  //	int tessMeshTessellateMonoRegion( TESSmesh *mesh, TESSface *face )
+  tessellateMonoRegion_: function (mesh, face) {
+    var up, lo;
+    /* All edges are oriented CCW around the boundary of the region.
+    * First, find the half-edge whose origin vertex is rightmost.
+    * Since the sweep goes from left to right, face->anEdge should
+    * be close to the edge we want.
+    */
+
+    up = face.anEdge;
+    assert(up.Lnext !== up && up.Lnext.Lnext !== up);
+
+    for (; Geom.vertLeq(up.Dst, up.Org); up = up.Lprev);
+
+    for (; Geom.vertLeq(up.Org, up.Dst); up = up.Lnext);
+
+    lo = up.Lprev;
+
+    while (up.Lnext !== lo) {
+      if (Geom.vertLeq(up.Dst, lo.Org)) {
+        /* up->Dst is on the left.  It is safe to form triangles from lo->Org.
+        * The EdgeGoesLeft test guarantees progress even when some triangles
+        * are CW, given that the upper and lower chains are truly monotone.
+        */
+        while (lo.Lnext !== up && (Geom.edgeGoesLeft(lo.Lnext) || Geom.edgeSign(lo.Org, lo.Dst, lo.Lnext.Dst) <= 0.0)) {
+          var tempHalfEdge = mesh.connect(lo.Lnext, lo); //if (tempHalfEdge == NULL) return 0;
+
+          lo = tempHalfEdge.Sym;
+        }
+
+        lo = lo.Lprev;
+      } else {
+        /* lo->Org is on the left.  We can make CCW triangles from up->Dst. */
+        while (lo.Lnext !== up && (Geom.edgeGoesRight(up.Lprev) || Geom.edgeSign(up.Dst, up.Org, up.Lprev.Org) >= 0.0)) {
+          var tempHalfEdge = mesh.connect(up, up.Lprev); //if (tempHalfEdge == NULL) return 0;
+
+          up = tempHalfEdge.Sym;
+        }
+
+        up = up.Lnext;
+      }
+    }
+    /* Now lo->Org == up->Dst == the leftmost vertex.  The remaining region
+    * can be tessellated in a fan from this leftmost vertex.
+    */
+
+
+    assert(lo.Lnext !== up);
+
+    while (lo.Lnext.Lnext !== up) {
+      var tempHalfEdge = mesh.connect(lo.Lnext, lo); //if (tempHalfEdge == NULL) return 0;
+
+      lo = tempHalfEdge.Sym;
+    }
+
+    return true;
+  },
+
+  /* tessMeshTessellateInterior( mesh ) tessellates each region of
+  * the mesh which is marked "inside" the polygon.  Each such region
+  * must be monotone.
+  */
+  //int tessMeshTessellateInterior( TESSmesh *mesh )
+  tessellateInterior_: function (mesh) {
+    var f, next;
+    /*LINTED*/
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = next) {
+      /* Make sure we don''t try to tessellate the new triangles. */
+      next = f.next;
+
+      if (f.inside) {
+        if (!this.tessellateMonoRegion_(mesh, f)) return false;
+      }
+    }
+
+    return true;
+  },
+
+  /* tessMeshDiscardExterior( mesh ) zaps (ie. sets to NULL) all faces
+  * which are not marked "inside" the polygon.  Since further mesh operations
+  * on NULL faces are not allowed, the main purpose is to clean up the
+  * mesh so that exterior loops are not represented in the data structure.
+  */
+  //void tessMeshDiscardExterior( TESSmesh *mesh )
+  discardExterior_: function (mesh) {
+    var f, next;
+    /*LINTED*/
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = next) {
+      /* Since f will be destroyed, save its next pointer. */
+      next = f.next;
+
+      if (!f.inside) {
+        mesh.zapFace(f);
+      }
+    }
+  },
+
+  /* tessMeshSetWindingNumber( mesh, value, keepOnlyBoundary ) resets the
+  * winding numbers on all edges so that regions marked "inside" the
+  * polygon have a winding number of "value", and regions outside
+  * have a winding number of 0.
+  *
+  * If keepOnlyBoundary is TRUE, it also deletes all edges which do not
+  * separate an interior region from an exterior one.
+  */
+  //	int tessMeshSetWindingNumber( TESSmesh *mesh, int value, int keepOnlyBoundary )
+  setWindingNumber_: function (mesh, value, keepOnlyBoundary) {
+    var e, eNext;
+
+    for (e = mesh.eHead.next; e !== mesh.eHead; e = eNext) {
+      eNext = e.next;
+
+      if (e.Rface.inside !== e.Lface.inside) {
+        /* This is a boundary edge (one side is interior, one is exterior). */
+        e.winding = e.Lface.inside ? value : -value;
+      } else {
+        /* Both regions are interior, or both are exterior. */
+        if (!keepOnlyBoundary) {
+          e.winding = 0;
+        } else {
+          mesh.delete(e);
+        }
+      }
+    }
+  },
+  getNeighbourFace_: function (edge) {
+    if (!edge.Rface) return -1;
+    if (!edge.Rface.inside) return -1;
+    return edge.Rface.n;
+  },
+  outputPolymesh_: function (mesh, elementType, polySize, vertexSize) {
+    var v;
+    var f;
+    var edge;
+    var maxFaceCount = 0;
+    var maxVertexCount = 0;
+    var faceVerts, i;
+    var elements = 0;
+    var vert; // Assume that the input data is triangles now.
+    // Try to merge as many polygons as possible
+
+    if (polySize > 3) {
+      mesh.mergeConvexFaces(polySize);
+    } // Mark unused
+
+
+    for (v = mesh.vHead.next; v !== mesh.vHead; v = v.next) v.n = -1; // Create unique IDs for all vertices and faces.
+
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = f.next) {
+      f.n = -1;
+      if (!f.inside) continue;
+      edge = f.anEdge;
+      faceVerts = 0;
+
+      do {
+        v = edge.Org;
+
+        if (v.n === -1) {
+          v.n = maxVertexCount;
+          maxVertexCount++;
+        }
+
+        faceVerts++;
+        edge = edge.Lnext;
+      } while (edge !== f.anEdge);
+
+      assert(faceVerts <= polySize);
+      f.n = maxFaceCount;
+      ++maxFaceCount;
+    }
+
+    this.elementCount = maxFaceCount;
+    if (elementType === Tess2.CONNECTED_POLYGONS) maxFaceCount *= 2;
+    /*		tess.elements = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
+                                  sizeof(TESSindex) * maxFaceCount * polySize );
+        if (!tess->elements)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    this.elements = [];
+    this.elements.length = maxFaceCount * polySize;
+    this.vertexCount = maxVertexCount;
+    /*		tess->vertices = (TESSreal*)tess->alloc.memalloc( tess->alloc.userData,
+                                 sizeof(TESSreal) * tess->vertexCount * vertexSize );
+        if (!tess->vertices)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    this.vertices = [];
+    this.vertices.length = maxVertexCount * vertexSize;
+    /*		tess->vertexIndices = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
+                                      sizeof(TESSindex) * tess->vertexCount );
+        if (!tess->vertexIndices)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    this.vertexIndices = [];
+    this.vertexIndices.length = maxVertexCount; // Output vertices.
+
+    for (v = mesh.vHead.next; v !== mesh.vHead; v = v.next) {
+      if (v.n !== -1) {
+        // Store coordinate
+        var idx = v.n * vertexSize;
+        this.vertices[idx + 0] = v.coords[0];
+        this.vertices[idx + 1] = v.coords[1];
+        if (vertexSize > 2) this.vertices[idx + 2] = v.coords[2]; // Store vertex index.
+
+        this.vertexIndices[v.n] = v.idx;
+      }
+    } // Output indices.
+
+
+    var nel = 0;
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = f.next) {
+      if (!f.inside) continue; // Store polygon
+
+      edge = f.anEdge;
+      faceVerts = 0;
+
+      do {
+        v = edge.Org;
+        this.elements[nel++] = v.n;
+        faceVerts++;
+        edge = edge.Lnext;
+      } while (edge !== f.anEdge); // Fill unused.
+
+
+      for (i = faceVerts; i < polySize; ++i) this.elements[nel++] = -1; // Store polygon connectivity
+
+
+      if (elementType === Tess2.CONNECTED_POLYGONS) {
+        edge = f.anEdge;
+
+        do {
+          this.elements[nel++] = this.getNeighbourFace_(edge);
+          edge = edge.Lnext;
+        } while (edge !== f.anEdge); // Fill unused.
+
+
+        for (i = faceVerts; i < polySize; ++i) this.elements[nel++] = -1;
+      }
+    }
+  },
+  //	void OutputContours( TESStesselator *tess, TESSmesh *mesh, int vertexSize )
+  outputContours_: function (mesh, vertexSize) {
+    var f;
+    var edge;
+    var start;
+    var verts;
+    var elements;
+    var vertInds;
+    var startVert = 0;
+    var vertCount = 0;
+    this.vertexCount = 0;
+    this.elementCount = 0;
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = f.next) {
+      if (!f.inside) continue;
+      start = edge = f.anEdge;
+
+      do {
+        this.vertexCount++;
+        edge = edge.Lnext;
+      } while (edge !== start);
+
+      this.elementCount++;
+    }
+    /*		tess->elements = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
+                                  sizeof(TESSindex) * tess->elementCount * 2 );
+        if (!tess->elements)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+
+    this.elements = [];
+    this.elements.length = this.elementCount * 2;
+    /*		tess->vertices = (TESSreal*)tess->alloc.memalloc( tess->alloc.userData,
+                                  sizeof(TESSreal) * tess->vertexCount * vertexSize );
+        if (!tess->vertices)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    this.vertices = [];
+    this.vertices.length = this.vertexCount * vertexSize;
+    /*		tess->vertexIndices = (TESSindex*)tess->alloc.memalloc( tess->alloc.userData,
+                                      sizeof(TESSindex) * tess->vertexCount );
+        if (!tess->vertexIndices)
+        {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    this.vertexIndices = [];
+    this.vertexIndices.length = this.vertexCount;
+    var nv = 0;
+    var nvi = 0;
+    var nel = 0;
+    startVert = 0;
+
+    for (f = mesh.fHead.next; f !== mesh.fHead; f = f.next) {
+      if (!f.inside) continue;
+      vertCount = 0;
+      start = edge = f.anEdge;
+
+      do {
+        this.vertices[nv++] = edge.Org.coords[0];
+        this.vertices[nv++] = edge.Org.coords[1];
+        if (vertexSize > 2) this.vertices[nv++] = edge.Org.coords[2];
+        this.vertexIndices[nvi++] = edge.Org.idx;
+        vertCount++;
+        edge = edge.Lnext;
+      } while (edge !== start);
+
+      this.elements[nel++] = startVert;
+      this.elements[nel++] = vertCount;
+      startVert += vertCount;
+    }
+  },
+  addContour: function (size, vertices) {
+    var e;
+    var i;
+    if (this.mesh === null) this.mesh = new TESSmesh();
+    /*	 	if ( tess->mesh == NULL ) {
+          tess->outOfMemory = 1;
+          return;
+        }*/
+
+    if (size < 2) size = 2;
+    if (size > 3) size = 3;
+    e = null;
+
+    for (i = 0; i < vertices.length; i += size) {
+      if (e === null) {
+        /* Make a self-loop (one vertex, one edge). */
+        e = this.mesh.makeEdge();
+        /*				if ( e == NULL ) {
+                  tess->outOfMemory = 1;
+                  return;
+                }*/
+
+        this.mesh.splice(e, e.Sym);
+      } else {
+        /* Create a new vertex and edge which immediately follow e
+        * in the ordering around the left face.
+        */
+        this.mesh.splitEdge(e);
+        e = e.Lnext;
+      }
+      /* The new vertex is now e->Org. */
+
+
+      e.Org.coords[0] = vertices[i + 0];
+      e.Org.coords[1] = vertices[i + 1];
+      if (size > 2) e.Org.coords[2] = vertices[i + 2];else e.Org.coords[2] = 0.0;
+      /* Store the insertion number so that the vertex can be later recognized. */
+
+      e.Org.idx = this.vertexIndexCounter++;
+      /* The winding of an edge says how the winding number changes as we
+      * cross from the edge''s right face to its left face.  We add the
+      * vertices in such an order that a CCW contour will add +1 to
+      * the winding number of the region inside the contour.
+      */
+
+      e.winding = 1;
+      e.Sym.winding = -1;
+    }
+  },
+  //	int tessTesselate( TESStesselator *tess, int windingRule, int elementType, int polySize, int vertexSize, const TESSreal* normal )
+  tesselate: function (windingRule, elementType, polySize, vertexSize, normal) {
+    this.vertices = [];
+    this.elements = [];
+    this.vertexIndices = [];
+    this.vertexIndexCounter = 0;
+
+    if (normal) {
+      this.normal[0] = normal[0];
+      this.normal[1] = normal[1];
+      this.normal[2] = normal[2];
+    }
+
+    this.windingRule = windingRule;
+    if (vertexSize < 2) vertexSize = 2;
+    if (vertexSize > 3) vertexSize = 3;
+    /*		if (setjmp(tess->env) != 0) { 
+          // come back here if out of memory
+          return 0;
+        }*/
+
+    if (!this.mesh) {
+      return false;
+    }
+    /* Determine the polygon normal and project vertices onto the plane
+    * of the polygon.
+    */
+
+
+    this.projectPolygon_();
+    /* tessComputeInterior( tess ) computes the planar arrangement specified
+    * by the given contours, and further subdivides this arrangement
+    * into regions.  Each region is marked "inside" if it belongs
+    * to the polygon, according to the rule given by tess->windingRule.
+    * Each interior region is guaranteed be monotone.
+    */
+
+    Sweep.computeInterior(this);
+    var mesh = this.mesh;
+    /* If the user wants only the boundary contours, we throw away all edges
+    * except those which separate the interior from the exterior.
+    * Otherwise we tessellate all the regions marked "inside".
+    */
+
+    if (elementType === Tess2.BOUNDARY_CONTOURS) {
+      this.setWindingNumber_(mesh, 1, true);
+    } else {
+      this.tessellateInterior_(mesh);
+    } //		if (rc == 0) longjmp(tess->env,1);  /* could've used a label */
+
+
+    mesh.check();
+
+    if (elementType === Tess2.BOUNDARY_CONTOURS) {
+      this.outputContours_(mesh, vertexSize);
+      /* output contours */
+    } else {
+      this.outputPolymesh_(mesh, elementType, polySize, vertexSize);
+      /* output polygons */
+    } //			tess.mesh = null;
+
+
+    return true;
+  }
+};
 
 /***/ }),
-/* 69 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = extend
@@ -18460,7 +18539,7 @@ function extend() {
 
 
 /***/ }),
-/* 70 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18469,10 +18548,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyShader", function() { return applyShader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCloudShaders", function() { return createCloudShaders; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyCloudShader", function() { return applyCloudShader; });
-/* harmony import */ var _shader_vert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
-/* harmony import */ var _shader_frag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
-/* harmony import */ var _shader_cloud_vert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(73);
-/* harmony import */ var _shader_cloud_frag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(74);
+/* harmony import */ var _shader_vert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(64);
+/* harmony import */ var _shader_frag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(65);
+/* harmony import */ var _shader_cloud_vert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(66);
+/* harmony import */ var _shader_cloud_frag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(67);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -18606,7 +18685,7 @@ function applyCloudShader(renderer, {
 }
 
 /***/ }),
-/* 71 */
+/* 64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18614,7 +18693,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\nuniform vec2 u_resolution;\nuniform mat3 viewMatrix;\nuniform mat3 projectionMatrix;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLIPPATH\nattribute vec2 a_clipUV;\nvarying vec2 vClipUV;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\nvoid main() {\n  gl_PointSize = 1.0;\n\n  vec3 pos = projectionMatrix * viewMatrix * vec3(a_vertexPosition.xy, 1.0);\n  gl_Position = vec4(pos.xy, 1.0, 1.0);\n\n#ifdef GRADIENT\n  vec3 vg1 = viewMatrix * vec3(u_radialGradientVector[0], u_radialGradientVector[1], 1.0);\n  vec3 vg2 = viewMatrix * vec3(u_radialGradientVector[3], u_radialGradientVector[4], 1.0);\n  float h = u_resolution.y;\n  vg1.y = h - vg1.y;\n  vg2.y = h - vg2.y;\n  vGradientVector1 = vec3(vg1.xy, u_radialGradientVector[2]);\n  vGradientVector2 = vec3(vg2.xy, u_radialGradientVector[5]);\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n  vColor = a_color;\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  vSourceRect = a_sourceRect;\n#endif\n\n#ifdef CLIPPATH\n  vClipUV = a_clipUV;\n#endif\n}");
 
 /***/ }),
-/* 72 */
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18622,7 +18701,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\n\nvarying vec4 vColor;\nvarying float flagBackground;\n\n#ifdef TEXTURE\nvarying vec3 vTextureCoord;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLIPPATH\nvarying vec2 vClipUV;\n#endif\n\n#ifdef FILTER\nuniform int u_filterFlag;\nuniform float u_colorMatrix[20];\n#endif\n\n#ifdef GRADIENT\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\nuniform float u_colorSteps[40];\nuniform int u_gradientType;\n// uniform float u_radialGradientVector[6];\n\nvoid gradient(inout vec4 color, vec3 gv1, vec3 gv2, float colorSteps[40]) {\n  float t;\n  // center circle radius\n  float cr = gv1.z;\n  // focal circle radius\n  float fr = gv2.z;\n\n  if(cr > 0.0 || fr > 0.0) {\n    // radial gradient\n    vec2 center = gv1.xy;\n    vec2 focal = gv2.xy;\n    float x = focal.x - gl_FragCoord.x;\n    float y = focal.y - gl_FragCoord.y;\n    float dx = focal.x - center.x;\n    float dy = focal.y - center.y;\n    float dr = cr - fr;\n    float a = dx * dx + dy * dy - dr * dr;\n    float b = -2.0 * (y * dy + x * dx + fr * dr);\n    float c = x * x + y * y - fr * fr;\n    t = 1.0 - 0.5 * (1.0 / a) * (-b + sqrt(b * b - 4.0 * a * c));\n  } else {\n    // linear gradient\n    vec2 v1 = gl_FragCoord.xy - gv1.xy;\n    vec2 v2 = gv2.xy - gv1.xy;\n    t = (v1.x * v2.x + v1.y * v2.y) / (v2.x * v2.x + v2.y * v2.y);\n  }\n\n  vec4 colors[8];\n  colors[0] = vec4(colorSteps[1], colorSteps[2], colorSteps[3], colorSteps[4]);\n  colors[1] = vec4(colorSteps[6], colorSteps[7], colorSteps[8], colorSteps[9]);\n  colors[2] = vec4(colorSteps[11], colorSteps[12], colorSteps[13], colorSteps[14]);\n  colors[3] = vec4(colorSteps[16], colorSteps[17], colorSteps[18], colorSteps[19]);\n  colors[4] = vec4(colorSteps[21], colorSteps[22], colorSteps[23], colorSteps[24]);\n  colors[5] = vec4(colorSteps[26], colorSteps[27], colorSteps[28], colorSteps[29]);\n  colors[6] = vec4(colorSteps[31], colorSteps[32], colorSteps[33], colorSteps[34]);\n  colors[7] = vec4(colorSteps[36], colorSteps[37], colorSteps[38], colorSteps[39]);\n  \n  float steps[8];\n  steps[0] = colorSteps[0];\n  steps[1] = colorSteps[5];\n  steps[2] = colorSteps[10];\n  steps[3] = colorSteps[15];\n  steps[4] = colorSteps[20];\n  steps[5] = colorSteps[25];\n  steps[6] = colorSteps[30];\n  steps[7] = colorSteps[35];\n\n  color = colors[0];\n  for (int i = 1; i < 8; i++) {\n    if (steps[i] < 0.0 || steps[i] > 1.0) {\n      break;\n    }\n    if(steps[i] == steps[i - 1]) {\n      color = colors[i];\n    } else {\n      color = mix(color, colors[i], clamp((t - steps[i - 1]) / (steps[i] - steps[i - 1]), 0.0, 1.0));\n    }\n    if (steps[i] >= t) {\n      break;\n    }\n  }\n}\n#endif\n\n#ifdef FILTER\nvoid transformColor(inout vec4 color, in float colorMatrix[20]) {\n  float r = color.r, g = color.g, b = color.b, a = color.a;\n  color[0] = colorMatrix[0] * r + colorMatrix[1] * g + colorMatrix[2] * b + colorMatrix[3] * a + colorMatrix[4];\n  color[1] = colorMatrix[5] * r + colorMatrix[6] * g + colorMatrix[7] * b + colorMatrix[8] * a + colorMatrix[9];\n  color[2] = colorMatrix[10] * r + colorMatrix[11] * g + colorMatrix[12] * b + colorMatrix[13] * a + colorMatrix[14];\n  color[3] = colorMatrix[15] * r + colorMatrix[16] * g + colorMatrix[17] * b + colorMatrix[18] * a + colorMatrix[19];\n}\n#endif\n\nvoid main() {\n  vec4 color = vColor;\n  float opacity = abs(flagBackground);\n\n#ifdef GRADIENT\n  if(u_gradientType > 0 && flagBackground > 0.0 || u_gradientType == 0 && flagBackground <= 0.0) {\n    gradient(color, vGradientVector1, vGradientVector2, u_colorSteps);\n  }\n#endif\n\n  if(opacity < 1.0) {\n    color.a *= opacity;\n  }\n\n#ifdef TEXTURE\n  if(flagBackground > 0.0) {\n    vec3 texCoord = vTextureCoord;\n\n    if(texCoord.z == 1.0) {\n      texCoord = fract(texCoord);\n    }\n\n    if(texCoord.x <= 1.0 && texCoord.x >= 0.0\n      && texCoord.y <= 1.0 && texCoord.y >= 0.0) {\n      if(vSourceRect.z > 0.0) {\n        texCoord.x = vSourceRect.x + texCoord.x * vSourceRect.z;\n        texCoord.y = 1.0 - (vSourceRect.y + (1.0 - texCoord.y) * vSourceRect.w);\n      }\n      vec4 texColor = texture2D(u_texSampler, texCoord.xy);\n      float alpha = texColor.a;\n      if(opacity < 1.0) {\n        texColor.a *= opacity;\n        alpha *= mix(0.465, 1.0, opacity);\n      }\n      // color = mix(color, texColor, texColor.a);\n      color.rgb = mix(color.rgb, texColor.rgb, alpha);\n      // color.rgb = mix(texColor.rgb, color.rgb, color.a);\n      color.rgb = mix(texColor.rgb, color.rgb, clamp(color.a / max(0.0001, texColor.a), 0.0, 1.0));\n      color.a = texColor.a + (1.0 - texColor.a) * color.a;\n    }\n  }\n#endif\n\n#ifdef FILTER\n  if(u_filterFlag > 0) {\n    transformColor(color, u_colorMatrix);\n  }\n#endif\n\n#ifdef CLIPPATH\n  float clip = texture2D(u_clipSampler, vClipUV).r;\n  color *= clip;\n#endif\n\n  gl_FragColor = color;\n}");
 
 /***/ }),
-/* 73 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18630,7 +18709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("attribute vec3 a_vertexPosition;\nattribute vec4 a_color;\nvarying vec4 vColor;\nvarying float flagBackground;\nattribute vec3 a_transform0;\nattribute vec3 a_transform1;\nuniform vec2 u_resolution;\nuniform mat3 viewMatrix;\nuniform mat3 projectionMatrix;\n\n#ifdef TEXTURE\nattribute vec3 a_vertexTextureCoord;\nvarying vec3 vTextureCoord;\nattribute float a_frameIndex;\nvarying float frameIndex;\nattribute vec4 a_sourceRect;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLIPPATH\nattribute vec2 a_clipUV;\nvarying vec2 vClipUV;\n#endif\n\n#ifdef CLOUDFILTER\nattribute vec4 a_colorCloud0;\nattribute vec4 a_colorCloud1;\nattribute vec4 a_colorCloud2;\nattribute vec4 a_colorCloud3;\nattribute vec4 a_colorCloud4;\nvarying vec4 colorCloud0;\nvarying vec4 colorCloud1;\nvarying vec4 colorCloud2;\nvarying vec4 colorCloud3;\nvarying vec4 colorCloud4;\n#endif\n\n#ifdef CLOUDCOLOR\nattribute vec4 a_fillCloudColor;\nattribute vec4 a_strokeCloudColor;\n#endif\n\n#ifdef GRADIENT\nuniform float u_radialGradientVector[6];\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\n#endif\n\nvoid main() {\n  gl_PointSize = 1.0;\n\n  mat3 modelMatrix = mat3(\n    a_transform0.x, a_transform1.x, 0, \n    a_transform0.y, a_transform1.y, 0,\n    a_transform0.z, a_transform1.z, 1\n  );\n\n  vec3 pos = projectionMatrix * viewMatrix * modelMatrix * vec3(a_vertexPosition.xy, 1.0);\n  gl_Position = vec4(pos.xy, 1.0, 1.0);\n\n#ifdef GRADIENT\n  vec3 vg1 = viewMatrix * vec3(u_radialGradientVector[0], u_radialGradientVector[1], 1.0);\n  vec3 vg2 = viewMatrix * vec3(u_radialGradientVector[3], u_radialGradientVector[4], 1.0);\n  float h = u_resolution.y;\n  vg1.y = h - vg1.y;\n  vg2.y = h - vg2.y;\n  vGradientVector1 = vec3(vg1.xy, u_radialGradientVector[2]);\n  vGradientVector2 = vec3(vg2.xy, u_radialGradientVector[5]);\n#endif\n  \n  flagBackground = a_vertexPosition.z;\n\n#ifdef CLOUDCOLOR\n  if(flagBackground > 0.0) {\n    vColor = mix(a_color, a_fillCloudColor, a_fillCloudColor.a);\n  } else {\n    vColor = mix(a_color, a_strokeCloudColor, a_strokeCloudColor.a);\n  }\n#else\n  vColor = a_color;\n#endif\n\n#ifdef TEXTURE\n  vTextureCoord = a_vertexTextureCoord;\n  frameIndex = a_frameIndex;\n  vSourceRect = a_sourceRect;\n#endif\n\n#ifdef CLIPPATH\n  vClipUV = a_clipUV;\n#endif\n\n#ifdef CLOUDFILTER\n  colorCloud0 = a_colorCloud0;\n  colorCloud1 = a_colorCloud1;\n  colorCloud2 = a_colorCloud2;\n  colorCloud3 = a_colorCloud3;\n  colorCloud4 = a_colorCloud4;\n#endif\n}");
 
 /***/ }),
-/* 74 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18638,7 +18717,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\n\nvarying vec4 vColor;\nvarying float flagBackground;\n\n#ifdef TEXTURE\nvarying float frameIndex;\nvarying vec3 vTextureCoord;\nvarying vec4 vSourceRect;\n#endif\n\n#ifdef CLIPPATH\nvarying vec2 vClipUV;\n#endif\n\n#ifdef FILTER\nuniform int u_filterFlag;\nuniform float u_colorMatrix[20];\n#endif\n\n#ifdef CLOUDFILTER\nvarying vec4 colorCloud0;\nvarying vec4 colorCloud1;\nvarying vec4 colorCloud2;\nvarying vec4 colorCloud3;\nvarying vec4 colorCloud4;\n#endif\n\n#ifdef GRADIENT\nvarying vec3 vGradientVector1;\nvarying vec3 vGradientVector2;\nuniform float u_colorSteps[40];\nuniform int u_gradientType;\n\nvoid gradient(inout vec4 color, vec3 gv1, vec3 gv2, float colorSteps[40]) {\n  float t;\n  // center circle radius\n  float cr = gv1.z;\n  // focal circle radius\n  float fr = gv2.z;\n\n  if(cr > 0.0 || fr > 0.0) {\n    // radial gradient\n    vec2 center = gv1.xy;\n    vec2 focal = gv2.xy;\n    float x = focal.x - gl_FragCoord.x;\n    float y = focal.y - gl_FragCoord.y;\n    float dx = focal.x - center.x;\n    float dy = focal.y - center.y;\n    float dr = cr - fr;\n    float a = dx * dx + dy * dy - dr * dr;\n    float b = -2.0 * (y * dy + x * dx + fr * dr);\n    float c = x * x + y * y - fr * fr;\n    t = 1.0 - 0.5 * (1.0 / a) * (-b + sqrt(b * b - 4.0 * a * c));\n  } else {\n    // linear gradient\n    vec2 v1 = gl_FragCoord.xy - gv1.xy;\n    vec2 v2 = gv2.xy - gv1.xy;\n    t = (v1.x * v2.x + v1.y * v2.y) / (v2.x * v2.x + v2.y * v2.y);\n  }\n\n  vec4 colors[8];\n  colors[0] = vec4(colorSteps[1], colorSteps[2], colorSteps[3], colorSteps[4]);\n  colors[1] = vec4(colorSteps[6], colorSteps[7], colorSteps[8], colorSteps[9]);\n  colors[2] = vec4(colorSteps[11], colorSteps[12], colorSteps[13], colorSteps[14]);\n  colors[3] = vec4(colorSteps[16], colorSteps[17], colorSteps[18], colorSteps[19]);\n  colors[4] = vec4(colorSteps[21], colorSteps[22], colorSteps[23], colorSteps[24]);\n  colors[5] = vec4(colorSteps[26], colorSteps[27], colorSteps[28], colorSteps[29]);\n  colors[6] = vec4(colorSteps[31], colorSteps[32], colorSteps[33], colorSteps[34]);\n  colors[7] = vec4(colorSteps[36], colorSteps[37], colorSteps[38], colorSteps[39]);\n  \n  float steps[8];\n  steps[0] = colorSteps[0];\n  steps[1] = colorSteps[5];\n  steps[2] = colorSteps[10];\n  steps[3] = colorSteps[15];\n  steps[4] = colorSteps[20];\n  steps[5] = colorSteps[25];\n  steps[6] = colorSteps[30];\n  steps[7] = colorSteps[35];\n\n  color = colors[0];\n  for (int i = 1; i < 8; i++) {\n    if (steps[i] < 0.0 || steps[i] > 1.0) {\n      break;\n    }\n    if(steps[i] == steps[i - 1]) {\n      color = colors[i];\n    } else {\n      color = mix(color, colors[i], clamp((t - steps[i - 1]) / (steps[i] - steps[i - 1]), 0.0, 1.0));\n    }\n    if (steps[i] >= t) {\n      break;\n    }\n  }\n}\n#endif\n\nvoid transformColor(inout vec4 color, in float colorMatrix[20]) {\n  float r = color.r, g = color.g, b = color.b, a = color.a;\n  color[0] = colorMatrix[0] * r + colorMatrix[1] * g + colorMatrix[2] * b + colorMatrix[3] * a + colorMatrix[4];\n  color[1] = colorMatrix[5] * r + colorMatrix[6] * g + colorMatrix[7] * b + colorMatrix[8] * a + colorMatrix[9];\n  color[2] = colorMatrix[10] * r + colorMatrix[11] * g + colorMatrix[12] * b + colorMatrix[13] * a + colorMatrix[14];\n  color[3] = colorMatrix[15] * r + colorMatrix[16] * g + colorMatrix[17] * b + colorMatrix[18] * a + colorMatrix[19];\n}\n\n#ifdef CLOUDFILTER\nvoid buildCloudColor(inout float colorCloudMatrix[20]) {\n  colorCloudMatrix[0] = colorCloud0[0];\n  colorCloudMatrix[1] = colorCloud1[0];\n  colorCloudMatrix[2] = colorCloud2[0];\n  colorCloudMatrix[3] = colorCloud3[0];\n  colorCloudMatrix[4] = colorCloud4[0];\n\n  colorCloudMatrix[5] = colorCloud0[1];\n  colorCloudMatrix[6] = colorCloud1[1];\n  colorCloudMatrix[7] = colorCloud2[1];\n  colorCloudMatrix[8] = colorCloud3[1];\n  colorCloudMatrix[9] = colorCloud4[1];\n\n  colorCloudMatrix[10] = colorCloud0[2];\n  colorCloudMatrix[11] = colorCloud1[2];\n  colorCloudMatrix[12] = colorCloud2[2];\n  colorCloudMatrix[13] = colorCloud3[2];\n  colorCloudMatrix[14] = colorCloud4[2];\n\n  colorCloudMatrix[15] = colorCloud0[3];\n  colorCloudMatrix[16] = colorCloud1[3];\n  colorCloudMatrix[17] = colorCloud2[3];\n  colorCloudMatrix[18] = colorCloud3[3];\n  colorCloudMatrix[19] = colorCloud4[3];\n}\n#endif\n\nvoid main() {\n  vec4 color = vColor;\n  float opacity = abs(flagBackground);\n\n#ifdef GRADIENT\n  if(u_gradientType > 0 && flagBackground > 0.0 || u_gradientType == 0 && flagBackground <= 0.0) {\n    gradient(color, vGradientVector1, vGradientVector2, u_colorSteps);\n  }\n#endif\n\n  if(opacity < 1.0) {\n    color.a *= opacity;\n  }\n\n#ifdef TEXTURE\n  if(flagBackground > 0.0) {\n    vec3 texCoord = vTextureCoord;\n\n    if(texCoord.z == 1.0) {\n      texCoord = fract(texCoord);\n    }\n\n    if(texCoord.x <= 1.0 && texCoord.x >= 0.0\n      && texCoord.y <= 1.0 && texCoord.y >= 0.0) {\n      if(vSourceRect.z > 0.0) {\n        texCoord.x = vSourceRect.x + texCoord.x * vSourceRect.z;\n        texCoord.y = 1.0 - (vSourceRect.y + (1.0 - texCoord.y) * vSourceRect.w);\n      }\n      if(frameIndex < 0.0) {\n        vec4 texColor = texture2D(u_texSampler, texCoord.xy);\n        color = mix(color, texColor, texColor.a);\n      } else {\n        int index = int(floor(clamp(0.0, 11.0, frameIndex)));\n        vec4 texColor;\n        if(index == 0) texColor = texture2D(u_texFrame0, texCoord.xy);\n        else if(index == 1) texColor = texture2D(u_texFrame1, texCoord.xy);\n        else if(index == 2) texColor = texture2D(u_texFrame2, texCoord.xy);\n        else if(index == 3) texColor = texture2D(u_texFrame3, texCoord.xy);\n        else if(index == 4) texColor = texture2D(u_texFrame4, texCoord.xy);\n        else if(index == 5) texColor = texture2D(u_texFrame5, texCoord.xy);\n        else if(index == 6) texColor = texture2D(u_texFrame6, texCoord.xy);\n        else if(index == 7) texColor = texture2D(u_texFrame7, texCoord.xy);\n        else if(index == 8) texColor = texture2D(u_texFrame8, texCoord.xy);\n        else if(index == 9) texColor = texture2D(u_texFrame9, texCoord.xy);\n        else if(index == 10) texColor = texture2D(u_texFrame10, texCoord.xy);\n        else texColor = texture2D(u_texFrame11, texCoord.xy);\n        float alpha = texColor.a;\n        if(opacity < 1.0) {\n          texColor.a *= opacity;\n          alpha *= mix(0.465, 1.0, opacity);\n        }\n        // color = mix(color, texColor, texColor.a);\n        color.rgb = mix(color.rgb, texColor.rgb, alpha);\n        // color.rgb = mix(texColor.rgb, color.rgb, color.a);\n        color.rgb = mix(texColor.rgb, color.rgb, clamp(color.a / max(0.0001, texColor.a), 0.0, 1.0));\n        color.a = texColor.a + (1.0 - texColor.a) * color.a;\n      }\n    }\n  }\n#endif\n\n#ifdef FILTER\n  if(u_filterFlag > 0) {\n    transformColor(color, u_colorMatrix);\n  }\n#endif\n\n#ifdef CLOUDFILTER\n  float colorCloudMatrix[20];\n  buildCloudColor(colorCloudMatrix);\n  transformColor(color, colorCloudMatrix);\n#endif\n\n#ifdef CLIPPATH\n  float clip = texture2D(u_clipSampler, vClipUV).r;\n  color *= clip;\n#endif\n\n  gl_FragColor = color;\n}");
 
 /***/ }),
-/* 75 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18679,10 +18758,10 @@ if (typeof global !== 'undefined' && typeof global.requestAnimationFrame === 'fu
 }
 
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(76), __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(69), __webpack_require__(22)))
 
 /***/ }),
-/* 76 */
+/* 69 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -18872,19 +18951,19 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 77 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Node; });
 /* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _attribute_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(78);
-/* harmony import */ var _animation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(80);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
-/* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(221);
-/* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(222);
-/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(223);
+/* harmony import */ var _attribute_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(71);
+/* harmony import */ var _animation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(73);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(213);
+/* harmony import */ var _event_event__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(214);
+/* harmony import */ var _utils_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(215);
+/* harmony import */ var _utils_render_event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(216);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -19621,7 +19700,7 @@ _defineProperty(Node, "Attr", _attribute_node__WEBPACK_IMPORTED_MODULE_1__["defa
 _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Node, 'node');
 
 /***/ }),
-/* 78 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19629,7 +19708,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Node; });
 /* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -20129,7 +20208,7 @@ class Node {
 }
 
 /***/ }),
-/* 79 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20248,18 +20327,18 @@ function compareValue(oldValue, newValue) {
 }
 
 /***/ }),
-/* 80 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Animation; });
-/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(81);
+/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(74);
 /* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sprite_animator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(32);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(color_rgba__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(75);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(79);
+/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(68);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -20428,7 +20507,7 @@ class Animation extends sprite_animator__WEBPACK_IMPORTED_MODULE_0__["Animator"]
 }
 
 /***/ }),
-/* 81 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20439,17 +20518,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Timeline = exports.Effects = exports.Easings = exports.Animator = undefined;
 
-var _spriteTimeline = __webpack_require__(82);
+var _spriteTimeline = __webpack_require__(75);
 
 var _spriteTimeline2 = _interopRequireDefault(_spriteTimeline);
 
-var _effect = __webpack_require__(194);
+var _effect = __webpack_require__(187);
 
 var _effect2 = _interopRequireDefault(_effect);
 
-var _easing = __webpack_require__(195);
+var _easing = __webpack_require__(188);
 
-var _animator = __webpack_require__(197);
+var _animator = __webpack_require__(190);
 
 var _animator2 = _interopRequireDefault(_animator);
 
@@ -20461,7 +20540,7 @@ exports.Effects = _effect2.default;
 exports.Timeline = _spriteTimeline2.default;
 
 /***/ }),
-/* 82 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20471,35 +20550,35 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray2 = __webpack_require__(83);
+var _slicedToArray2 = __webpack_require__(76);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _toConsumableArray2 = __webpack_require__(140);
+var _toConsumableArray2 = __webpack_require__(133);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _map = __webpack_require__(148);
+var _map = __webpack_require__(141);
 
 var _map2 = _interopRequireDefault(_map);
 
-var _assign = __webpack_require__(171);
+var _assign = __webpack_require__(164);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _classCallCheck2 = __webpack_require__(177);
+var _classCallCheck2 = __webpack_require__(170);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(178);
+var _createClass2 = __webpack_require__(171);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _symbol = __webpack_require__(182);
+var _symbol = __webpack_require__(175);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
-var _utils = __webpack_require__(193);
+var _utils = __webpack_require__(186);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20923,7 +21002,7 @@ var Timeline = function () {
 exports.default = Timeline;
 
 /***/ }),
-/* 83 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20931,11 +21010,11 @@ exports.default = Timeline;
 
 exports.__esModule = true;
 
-var _isIterable2 = __webpack_require__(84);
+var _isIterable2 = __webpack_require__(77);
 
 var _isIterable3 = _interopRequireDefault(_isIterable2);
 
-var _getIterator2 = __webpack_require__(136);
+var _getIterator2 = __webpack_require__(129);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -20980,29 +21059,29 @@ exports.default = function () {
 }();
 
 /***/ }),
-/* 84 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(85), __esModule: true };
+module.exports = { "default": __webpack_require__(78), __esModule: true };
 
 /***/ }),
-/* 85 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(86);
-__webpack_require__(132);
-module.exports = __webpack_require__(134);
+__webpack_require__(79);
+__webpack_require__(125);
+module.exports = __webpack_require__(127);
 
 
 /***/ }),
-/* 86 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(87);
-var global = __webpack_require__(98);
-var hide = __webpack_require__(102);
-var Iterators = __webpack_require__(90);
-var TO_STRING_TAG = __webpack_require__(129)('toStringTag');
+__webpack_require__(80);
+var global = __webpack_require__(91);
+var hide = __webpack_require__(95);
+var Iterators = __webpack_require__(83);
+var TO_STRING_TAG = __webpack_require__(122)('toStringTag');
 
 var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
   'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
@@ -21020,21 +21099,21 @@ for (var i = 0; i < DOMIterables.length; i++) {
 
 
 /***/ }),
-/* 87 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var addToUnscopables = __webpack_require__(88);
-var step = __webpack_require__(89);
-var Iterators = __webpack_require__(90);
-var toIObject = __webpack_require__(91);
+var addToUnscopables = __webpack_require__(81);
+var step = __webpack_require__(82);
+var Iterators = __webpack_require__(83);
+var toIObject = __webpack_require__(84);
 
 // 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = __webpack_require__(95)(Array, 'Array', function (iterated, kind) {
+module.exports = __webpack_require__(88)(Array, 'Array', function (iterated, kind) {
   this._t = toIObject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
@@ -21061,14 +21140,14 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 88 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = function () { /* empty */ };
 
 
 /***/ }),
-/* 89 */
+/* 82 */
 /***/ (function(module, exports) {
 
 module.exports = function (done, value) {
@@ -21077,30 +21156,30 @@ module.exports = function (done, value) {
 
 
 /***/ }),
-/* 90 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 
 /***/ }),
-/* 91 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(92);
-var defined = __webpack_require__(94);
+var IObject = __webpack_require__(85);
+var defined = __webpack_require__(87);
 module.exports = function (it) {
   return IObject(defined(it));
 };
 
 
 /***/ }),
-/* 92 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(93);
+var cof = __webpack_require__(86);
 // eslint-disable-next-line no-prototype-builtins
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -21108,7 +21187,7 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 93 */
+/* 86 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -21119,7 +21198,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 94 */
+/* 87 */
 /***/ (function(module, exports) {
 
 // 7.2.1 RequireObjectCoercible(argument)
@@ -21130,20 +21209,20 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 95 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var LIBRARY = __webpack_require__(96);
-var $export = __webpack_require__(97);
-var redefine = __webpack_require__(113);
-var hide = __webpack_require__(102);
-var Iterators = __webpack_require__(90);
-var $iterCreate = __webpack_require__(114);
-var setToStringTag = __webpack_require__(128);
-var getPrototypeOf = __webpack_require__(130);
-var ITERATOR = __webpack_require__(129)('iterator');
+var LIBRARY = __webpack_require__(89);
+var $export = __webpack_require__(90);
+var redefine = __webpack_require__(106);
+var hide = __webpack_require__(95);
+var Iterators = __webpack_require__(83);
+var $iterCreate = __webpack_require__(107);
+var setToStringTag = __webpack_require__(121);
+var getPrototypeOf = __webpack_require__(123);
+var ITERATOR = __webpack_require__(122)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -21206,21 +21285,21 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 
 /***/ }),
-/* 96 */
+/* 89 */
 /***/ (function(module, exports) {
 
 module.exports = true;
 
 
 /***/ }),
-/* 97 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global = __webpack_require__(98);
-var core = __webpack_require__(99);
-var ctx = __webpack_require__(100);
-var hide = __webpack_require__(102);
-var has = __webpack_require__(112);
+var global = __webpack_require__(91);
+var core = __webpack_require__(92);
+var ctx = __webpack_require__(93);
+var hide = __webpack_require__(95);
+var has = __webpack_require__(105);
 var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
@@ -21281,7 +21360,7 @@ module.exports = $export;
 
 
 /***/ }),
-/* 98 */
+/* 91 */
 /***/ (function(module, exports) {
 
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
@@ -21293,7 +21372,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 
 /***/ }),
-/* 99 */
+/* 92 */
 /***/ (function(module, exports) {
 
 var core = module.exports = { version: '2.6.11' };
@@ -21301,11 +21380,11 @@ if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
 /***/ }),
-/* 100 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(101);
+var aFunction = __webpack_require__(94);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -21327,7 +21406,7 @@ module.exports = function (fn, that, length) {
 
 
 /***/ }),
-/* 101 */
+/* 94 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -21337,12 +21416,12 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 102 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(103);
-var createDesc = __webpack_require__(111);
-module.exports = __webpack_require__(107) ? function (object, key, value) {
+var dP = __webpack_require__(96);
+var createDesc = __webpack_require__(104);
+module.exports = __webpack_require__(100) ? function (object, key, value) {
   return dP.f(object, key, createDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
@@ -21351,15 +21430,15 @@ module.exports = __webpack_require__(107) ? function (object, key, value) {
 
 
 /***/ }),
-/* 103 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(104);
-var IE8_DOM_DEFINE = __webpack_require__(106);
-var toPrimitive = __webpack_require__(110);
+var anObject = __webpack_require__(97);
+var IE8_DOM_DEFINE = __webpack_require__(99);
+var toPrimitive = __webpack_require__(103);
 var dP = Object.defineProperty;
 
-exports.f = __webpack_require__(107) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+exports.f = __webpack_require__(100) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -21373,10 +21452,10 @@ exports.f = __webpack_require__(107) ? Object.defineProperty : function definePr
 
 
 /***/ }),
-/* 104 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(105);
+var isObject = __webpack_require__(98);
 module.exports = function (it) {
   if (!isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
@@ -21384,7 +21463,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 105 */
+/* 98 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -21393,26 +21472,26 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 106 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(107) && !__webpack_require__(108)(function () {
-  return Object.defineProperty(__webpack_require__(109)('div'), 'a', { get: function () { return 7; } }).a != 7;
+module.exports = !__webpack_require__(100) && !__webpack_require__(101)(function () {
+  return Object.defineProperty(__webpack_require__(102)('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
 /***/ }),
-/* 107 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(108)(function () {
+module.exports = !__webpack_require__(101)(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
 /***/ }),
-/* 108 */
+/* 101 */
 /***/ (function(module, exports) {
 
 module.exports = function (exec) {
@@ -21425,11 +21504,11 @@ module.exports = function (exec) {
 
 
 /***/ }),
-/* 109 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(105);
-var document = __webpack_require__(98).document;
+var isObject = __webpack_require__(98);
+var document = __webpack_require__(91).document;
 // typeof document.createElement is 'object' in old IE
 var is = isObject(document) && isObject(document.createElement);
 module.exports = function (it) {
@@ -21438,11 +21517,11 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 110 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = __webpack_require__(105);
+var isObject = __webpack_require__(98);
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
 module.exports = function (it, S) {
@@ -21456,7 +21535,7 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 111 */
+/* 104 */
 /***/ (function(module, exports) {
 
 module.exports = function (bitmap, value) {
@@ -21470,7 +21549,7 @@ module.exports = function (bitmap, value) {
 
 
 /***/ }),
-/* 112 */
+/* 105 */
 /***/ (function(module, exports) {
 
 var hasOwnProperty = {}.hasOwnProperty;
@@ -21480,25 +21559,25 @@ module.exports = function (it, key) {
 
 
 /***/ }),
-/* 113 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(102);
+module.exports = __webpack_require__(95);
 
 
 /***/ }),
-/* 114 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var create = __webpack_require__(115);
-var descriptor = __webpack_require__(111);
-var setToStringTag = __webpack_require__(128);
+var create = __webpack_require__(108);
+var descriptor = __webpack_require__(104);
+var setToStringTag = __webpack_require__(121);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(102)(IteratorPrototype, __webpack_require__(129)('iterator'), function () { return this; });
+__webpack_require__(95)(IteratorPrototype, __webpack_require__(122)('iterator'), function () { return this; });
 
 module.exports = function (Constructor, NAME, next) {
   Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
@@ -21507,27 +21586,27 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 115 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject = __webpack_require__(104);
-var dPs = __webpack_require__(116);
-var enumBugKeys = __webpack_require__(126);
-var IE_PROTO = __webpack_require__(123)('IE_PROTO');
+var anObject = __webpack_require__(97);
+var dPs = __webpack_require__(109);
+var enumBugKeys = __webpack_require__(119);
+var IE_PROTO = __webpack_require__(116)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(109)('iframe');
+  var iframe = __webpack_require__(102)('iframe');
   var i = enumBugKeys.length;
   var lt = '<';
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(127).appendChild(iframe);
+  __webpack_require__(120).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -21554,14 +21633,14 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 116 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(103);
-var anObject = __webpack_require__(104);
-var getKeys = __webpack_require__(117);
+var dP = __webpack_require__(96);
+var anObject = __webpack_require__(97);
+var getKeys = __webpack_require__(110);
 
-module.exports = __webpack_require__(107) ? Object.defineProperties : function defineProperties(O, Properties) {
+module.exports = __webpack_require__(100) ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject(O);
   var keys = getKeys(Properties);
   var length = keys.length;
@@ -21573,12 +21652,12 @@ module.exports = __webpack_require__(107) ? Object.defineProperties : function d
 
 
 /***/ }),
-/* 117 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(118);
-var enumBugKeys = __webpack_require__(126);
+var $keys = __webpack_require__(111);
+var enumBugKeys = __webpack_require__(119);
 
 module.exports = Object.keys || function keys(O) {
   return $keys(O, enumBugKeys);
@@ -21586,13 +21665,13 @@ module.exports = Object.keys || function keys(O) {
 
 
 /***/ }),
-/* 118 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var has = __webpack_require__(112);
-var toIObject = __webpack_require__(91);
-var arrayIndexOf = __webpack_require__(119)(false);
-var IE_PROTO = __webpack_require__(123)('IE_PROTO');
+var has = __webpack_require__(105);
+var toIObject = __webpack_require__(84);
+var arrayIndexOf = __webpack_require__(112)(false);
+var IE_PROTO = __webpack_require__(116)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -21609,14 +21688,14 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 119 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
-var toIObject = __webpack_require__(91);
-var toLength = __webpack_require__(120);
-var toAbsoluteIndex = __webpack_require__(122);
+var toIObject = __webpack_require__(84);
+var toLength = __webpack_require__(113);
+var toAbsoluteIndex = __webpack_require__(115);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -21638,11 +21717,11 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 120 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.15 ToLength
-var toInteger = __webpack_require__(121);
+var toInteger = __webpack_require__(114);
 var min = Math.min;
 module.exports = function (it) {
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -21650,7 +21729,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 121 */
+/* 114 */
 /***/ (function(module, exports) {
 
 // 7.1.4 ToInteger
@@ -21662,10 +21741,10 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 122 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(121);
+var toInteger = __webpack_require__(114);
 var max = Math.max;
 var min = Math.min;
 module.exports = function (index, length) {
@@ -21675,22 +21754,22 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 123 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(124)('keys');
-var uid = __webpack_require__(125);
+var shared = __webpack_require__(117)('keys');
+var uid = __webpack_require__(118);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
 };
 
 
 /***/ }),
-/* 124 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var core = __webpack_require__(99);
-var global = __webpack_require__(98);
+var core = __webpack_require__(92);
+var global = __webpack_require__(91);
 var SHARED = '__core-js_shared__';
 var store = global[SHARED] || (global[SHARED] = {});
 
@@ -21698,13 +21777,13 @@ var store = global[SHARED] || (global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: core.version,
-  mode: __webpack_require__(96) ? 'pure' : 'global',
+  mode: __webpack_require__(89) ? 'pure' : 'global',
   copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
 
 
 /***/ }),
-/* 125 */
+/* 118 */
 /***/ (function(module, exports) {
 
 var id = 0;
@@ -21715,7 +21794,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 126 */
+/* 119 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -21725,20 +21804,20 @@ module.exports = (
 
 
 /***/ }),
-/* 127 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var document = __webpack_require__(98).document;
+var document = __webpack_require__(91).document;
 module.exports = document && document.documentElement;
 
 
 /***/ }),
-/* 128 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(103).f;
-var has = __webpack_require__(112);
-var TAG = __webpack_require__(129)('toStringTag');
+var def = __webpack_require__(96).f;
+var has = __webpack_require__(105);
+var TAG = __webpack_require__(122)('toStringTag');
 
 module.exports = function (it, tag, stat) {
   if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
@@ -21746,12 +21825,12 @@ module.exports = function (it, tag, stat) {
 
 
 /***/ }),
-/* 129 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store = __webpack_require__(124)('wks');
-var uid = __webpack_require__(125);
-var Symbol = __webpack_require__(98).Symbol;
+var store = __webpack_require__(117)('wks');
+var uid = __webpack_require__(118);
+var Symbol = __webpack_require__(91).Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
 
 var $exports = module.exports = function (name) {
@@ -21763,13 +21842,13 @@ $exports.store = store;
 
 
 /***/ }),
-/* 130 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has = __webpack_require__(112);
-var toObject = __webpack_require__(131);
-var IE_PROTO = __webpack_require__(123)('IE_PROTO');
+var has = __webpack_require__(105);
+var toObject = __webpack_require__(124);
+var IE_PROTO = __webpack_require__(116)('IE_PROTO');
 var ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function (O) {
@@ -21782,26 +21861,26 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 
 /***/ }),
-/* 131 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.13 ToObject(argument)
-var defined = __webpack_require__(94);
+var defined = __webpack_require__(87);
 module.exports = function (it) {
   return Object(defined(it));
 };
 
 
 /***/ }),
-/* 132 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $at = __webpack_require__(133)(true);
+var $at = __webpack_require__(126)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(95)(String, 'String', function (iterated) {
+__webpack_require__(88)(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -21817,11 +21896,11 @@ __webpack_require__(95)(String, 'String', function (iterated) {
 
 
 /***/ }),
-/* 133 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(121);
-var defined = __webpack_require__(94);
+var toInteger = __webpack_require__(114);
+var defined = __webpack_require__(87);
 // true  -> String#at
 // false -> String#codePointAt
 module.exports = function (TO_STRING) {
@@ -21840,13 +21919,13 @@ module.exports = function (TO_STRING) {
 
 
 /***/ }),
-/* 134 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(135);
-var ITERATOR = __webpack_require__(129)('iterator');
-var Iterators = __webpack_require__(90);
-module.exports = __webpack_require__(99).isIterable = function (it) {
+var classof = __webpack_require__(128);
+var ITERATOR = __webpack_require__(122)('iterator');
+var Iterators = __webpack_require__(83);
+module.exports = __webpack_require__(92).isIterable = function (it) {
   var O = Object(it);
   return O[ITERATOR] !== undefined
     || '@@iterator' in O
@@ -21856,12 +21935,12 @@ module.exports = __webpack_require__(99).isIterable = function (it) {
 
 
 /***/ }),
-/* 135 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(93);
-var TAG = __webpack_require__(129)('toStringTag');
+var cof = __webpack_require__(86);
+var TAG = __webpack_require__(122)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
 
@@ -21885,27 +21964,27 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 136 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(137), __esModule: true };
+module.exports = { "default": __webpack_require__(130), __esModule: true };
 
 /***/ }),
-/* 137 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(86);
-__webpack_require__(132);
-module.exports = __webpack_require__(138);
+__webpack_require__(79);
+__webpack_require__(125);
+module.exports = __webpack_require__(131);
 
 
 /***/ }),
-/* 138 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(104);
-var get = __webpack_require__(139);
-module.exports = __webpack_require__(99).getIterator = function (it) {
+var anObject = __webpack_require__(97);
+var get = __webpack_require__(132);
+module.exports = __webpack_require__(92).getIterator = function (it) {
   var iterFn = get(it);
   if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
   return anObject(iterFn.call(it));
@@ -21913,13 +21992,13 @@ module.exports = __webpack_require__(99).getIterator = function (it) {
 
 
 /***/ }),
-/* 139 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(135);
-var ITERATOR = __webpack_require__(129)('iterator');
-var Iterators = __webpack_require__(90);
-module.exports = __webpack_require__(99).getIteratorMethod = function (it) {
+var classof = __webpack_require__(128);
+var ITERATOR = __webpack_require__(122)('iterator');
+var Iterators = __webpack_require__(83);
+module.exports = __webpack_require__(92).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
     || Iterators[classof(it)];
@@ -21927,7 +22006,7 @@ module.exports = __webpack_require__(99).getIteratorMethod = function (it) {
 
 
 /***/ }),
-/* 140 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21935,7 +22014,7 @@ module.exports = __webpack_require__(99).getIteratorMethod = function (it) {
 
 exports.__esModule = true;
 
-var _from = __webpack_require__(141);
+var _from = __webpack_require__(134);
 
 var _from2 = _interopRequireDefault(_from);
 
@@ -21954,36 +22033,36 @@ exports.default = function (arr) {
 };
 
 /***/ }),
-/* 141 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(142), __esModule: true };
+module.exports = { "default": __webpack_require__(135), __esModule: true };
 
 /***/ }),
-/* 142 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(132);
-__webpack_require__(143);
-module.exports = __webpack_require__(99).Array.from;
+__webpack_require__(125);
+__webpack_require__(136);
+module.exports = __webpack_require__(92).Array.from;
 
 
 /***/ }),
-/* 143 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var ctx = __webpack_require__(100);
-var $export = __webpack_require__(97);
-var toObject = __webpack_require__(131);
-var call = __webpack_require__(144);
-var isArrayIter = __webpack_require__(145);
-var toLength = __webpack_require__(120);
-var createProperty = __webpack_require__(146);
-var getIterFn = __webpack_require__(139);
+var ctx = __webpack_require__(93);
+var $export = __webpack_require__(90);
+var toObject = __webpack_require__(124);
+var call = __webpack_require__(137);
+var isArrayIter = __webpack_require__(138);
+var toLength = __webpack_require__(113);
+var createProperty = __webpack_require__(139);
+var getIterFn = __webpack_require__(132);
 
-$export($export.S + $export.F * !__webpack_require__(147)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(140)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -22013,11 +22092,11 @@ $export($export.S + $export.F * !__webpack_require__(147)(function (iter) { Arra
 
 
 /***/ }),
-/* 144 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
-var anObject = __webpack_require__(104);
+var anObject = __webpack_require__(97);
 module.exports = function (iterator, fn, value, entries) {
   try {
     return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -22031,12 +22110,12 @@ module.exports = function (iterator, fn, value, entries) {
 
 
 /***/ }),
-/* 145 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators = __webpack_require__(90);
-var ITERATOR = __webpack_require__(129)('iterator');
+var Iterators = __webpack_require__(83);
+var ITERATOR = __webpack_require__(122)('iterator');
 var ArrayProto = Array.prototype;
 
 module.exports = function (it) {
@@ -22045,13 +22124,13 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 146 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $defineProperty = __webpack_require__(103);
-var createDesc = __webpack_require__(111);
+var $defineProperty = __webpack_require__(96);
+var createDesc = __webpack_require__(104);
 
 module.exports = function (object, index, value) {
   if (index in object) $defineProperty.f(object, index, createDesc(0, value));
@@ -22060,10 +22139,10 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 147 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ITERATOR = __webpack_require__(129)('iterator');
+var ITERATOR = __webpack_require__(122)('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -22088,43 +22167,43 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 148 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(149), __esModule: true };
+module.exports = { "default": __webpack_require__(142), __esModule: true };
 
 /***/ }),
-/* 149 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(150);
-__webpack_require__(132);
-__webpack_require__(86);
-__webpack_require__(151);
-__webpack_require__(164);
-__webpack_require__(167);
-__webpack_require__(169);
-module.exports = __webpack_require__(99).Map;
+__webpack_require__(143);
+__webpack_require__(125);
+__webpack_require__(79);
+__webpack_require__(144);
+__webpack_require__(157);
+__webpack_require__(160);
+__webpack_require__(162);
+module.exports = __webpack_require__(92).Map;
 
 
 /***/ }),
-/* 150 */
+/* 143 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 151 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var strong = __webpack_require__(152);
-var validate = __webpack_require__(158);
+var strong = __webpack_require__(145);
+var validate = __webpack_require__(151);
 var MAP = 'Map';
 
 // 23.1 Map Objects
-module.exports = __webpack_require__(159)(MAP, function (get) {
+module.exports = __webpack_require__(152)(MAP, function (get) {
   return function Map() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.1.3.6 Map.prototype.get(key)
@@ -22140,23 +22219,23 @@ module.exports = __webpack_require__(159)(MAP, function (get) {
 
 
 /***/ }),
-/* 152 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var dP = __webpack_require__(103).f;
-var create = __webpack_require__(115);
-var redefineAll = __webpack_require__(153);
-var ctx = __webpack_require__(100);
-var anInstance = __webpack_require__(154);
-var forOf = __webpack_require__(155);
-var $iterDefine = __webpack_require__(95);
-var step = __webpack_require__(89);
-var setSpecies = __webpack_require__(156);
-var DESCRIPTORS = __webpack_require__(107);
-var fastKey = __webpack_require__(157).fastKey;
-var validate = __webpack_require__(158);
+var dP = __webpack_require__(96).f;
+var create = __webpack_require__(108);
+var redefineAll = __webpack_require__(146);
+var ctx = __webpack_require__(93);
+var anInstance = __webpack_require__(147);
+var forOf = __webpack_require__(148);
+var $iterDefine = __webpack_require__(88);
+var step = __webpack_require__(82);
+var setSpecies = __webpack_require__(149);
+var DESCRIPTORS = __webpack_require__(100);
+var fastKey = __webpack_require__(150).fastKey;
+var validate = __webpack_require__(151);
 var SIZE = DESCRIPTORS ? '_s' : 'size';
 
 var getEntry = function (that, key) {
@@ -22291,10 +22370,10 @@ module.exports = {
 
 
 /***/ }),
-/* 153 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var hide = __webpack_require__(102);
+var hide = __webpack_require__(95);
 module.exports = function (target, src, safe) {
   for (var key in src) {
     if (safe && target[key]) target[key] = src[key];
@@ -22304,7 +22383,7 @@ module.exports = function (target, src, safe) {
 
 
 /***/ }),
-/* 154 */
+/* 147 */
 /***/ (function(module, exports) {
 
 module.exports = function (it, Constructor, name, forbiddenField) {
@@ -22315,15 +22394,15 @@ module.exports = function (it, Constructor, name, forbiddenField) {
 
 
 /***/ }),
-/* 155 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx = __webpack_require__(100);
-var call = __webpack_require__(144);
-var isArrayIter = __webpack_require__(145);
-var anObject = __webpack_require__(104);
-var toLength = __webpack_require__(120);
-var getIterFn = __webpack_require__(139);
+var ctx = __webpack_require__(93);
+var call = __webpack_require__(137);
+var isArrayIter = __webpack_require__(138);
+var anObject = __webpack_require__(97);
+var toLength = __webpack_require__(113);
+var getIterFn = __webpack_require__(132);
 var BREAK = {};
 var RETURN = {};
 var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
@@ -22346,16 +22425,16 @@ exports.RETURN = RETURN;
 
 
 /***/ }),
-/* 156 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var global = __webpack_require__(98);
-var core = __webpack_require__(99);
-var dP = __webpack_require__(103);
-var DESCRIPTORS = __webpack_require__(107);
-var SPECIES = __webpack_require__(129)('species');
+var global = __webpack_require__(91);
+var core = __webpack_require__(92);
+var dP = __webpack_require__(96);
+var DESCRIPTORS = __webpack_require__(100);
+var SPECIES = __webpack_require__(122)('species');
 
 module.exports = function (KEY) {
   var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
@@ -22367,18 +22446,18 @@ module.exports = function (KEY) {
 
 
 /***/ }),
-/* 157 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var META = __webpack_require__(125)('meta');
-var isObject = __webpack_require__(105);
-var has = __webpack_require__(112);
-var setDesc = __webpack_require__(103).f;
+var META = __webpack_require__(118)('meta');
+var isObject = __webpack_require__(98);
+var has = __webpack_require__(105);
+var setDesc = __webpack_require__(96).f;
 var id = 0;
 var isExtensible = Object.isExtensible || function () {
   return true;
 };
-var FREEZE = !__webpack_require__(108)(function () {
+var FREEZE = !__webpack_require__(101)(function () {
   return isExtensible(Object.preventExtensions({}));
 });
 var setMeta = function (it) {
@@ -22426,10 +22505,10 @@ var meta = module.exports = {
 
 
 /***/ }),
-/* 158 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(105);
+var isObject = __webpack_require__(98);
 module.exports = function (it, TYPE) {
   if (!isObject(it) || it._t !== TYPE) throw TypeError('Incompatible receiver, ' + TYPE + ' required!');
   return it;
@@ -22437,24 +22516,24 @@ module.exports = function (it, TYPE) {
 
 
 /***/ }),
-/* 159 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var global = __webpack_require__(98);
-var $export = __webpack_require__(97);
-var meta = __webpack_require__(157);
-var fails = __webpack_require__(108);
-var hide = __webpack_require__(102);
-var redefineAll = __webpack_require__(153);
-var forOf = __webpack_require__(155);
-var anInstance = __webpack_require__(154);
-var isObject = __webpack_require__(105);
-var setToStringTag = __webpack_require__(128);
-var dP = __webpack_require__(103).f;
-var each = __webpack_require__(160)(0);
-var DESCRIPTORS = __webpack_require__(107);
+var global = __webpack_require__(91);
+var $export = __webpack_require__(90);
+var meta = __webpack_require__(150);
+var fails = __webpack_require__(101);
+var hide = __webpack_require__(95);
+var redefineAll = __webpack_require__(146);
+var forOf = __webpack_require__(148);
+var anInstance = __webpack_require__(147);
+var isObject = __webpack_require__(98);
+var setToStringTag = __webpack_require__(121);
+var dP = __webpack_require__(96).f;
+var each = __webpack_require__(153)(0);
+var DESCRIPTORS = __webpack_require__(100);
 
 module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
   var Base = global[NAME];
@@ -22503,7 +22582,7 @@ module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 
 
 /***/ }),
-/* 160 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 0 -> Array#forEach
@@ -22513,11 +22592,11 @@ module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 // 4 -> Array#every
 // 5 -> Array#find
 // 6 -> Array#findIndex
-var ctx = __webpack_require__(100);
-var IObject = __webpack_require__(92);
-var toObject = __webpack_require__(131);
-var toLength = __webpack_require__(120);
-var asc = __webpack_require__(161);
+var ctx = __webpack_require__(93);
+var IObject = __webpack_require__(85);
+var toObject = __webpack_require__(124);
+var toLength = __webpack_require__(113);
+var asc = __webpack_require__(154);
 module.exports = function (TYPE, $create) {
   var IS_MAP = TYPE == 1;
   var IS_FILTER = TYPE == 2;
@@ -22553,11 +22632,11 @@ module.exports = function (TYPE, $create) {
 
 
 /***/ }),
-/* 161 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 9.4.2.3 ArraySpeciesCreate(originalArray, length)
-var speciesConstructor = __webpack_require__(162);
+var speciesConstructor = __webpack_require__(155);
 
 module.exports = function (original, length) {
   return new (speciesConstructor(original))(length);
@@ -22565,12 +22644,12 @@ module.exports = function (original, length) {
 
 
 /***/ }),
-/* 162 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(105);
-var isArray = __webpack_require__(163);
-var SPECIES = __webpack_require__(129)('species');
+var isObject = __webpack_require__(98);
+var isArray = __webpack_require__(156);
+var SPECIES = __webpack_require__(122)('species');
 
 module.exports = function (original) {
   var C;
@@ -22587,33 +22666,33 @@ module.exports = function (original) {
 
 
 /***/ }),
-/* 163 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.2 IsArray(argument)
-var cof = __webpack_require__(93);
+var cof = __webpack_require__(86);
 module.exports = Array.isArray || function isArray(arg) {
   return cof(arg) == 'Array';
 };
 
 
 /***/ }),
-/* 164 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export = __webpack_require__(97);
+var $export = __webpack_require__(90);
 
-$export($export.P + $export.R, 'Map', { toJSON: __webpack_require__(165)('Map') });
+$export($export.P + $export.R, 'Map', { toJSON: __webpack_require__(158)('Map') });
 
 
 /***/ }),
-/* 165 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var classof = __webpack_require__(135);
-var from = __webpack_require__(166);
+var classof = __webpack_require__(128);
+var from = __webpack_require__(159);
 module.exports = function (NAME) {
   return function toJSON() {
     if (classof(this) != NAME) throw TypeError(NAME + "#toJSON isn't generic");
@@ -22623,10 +22702,10 @@ module.exports = function (NAME) {
 
 
 /***/ }),
-/* 166 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var forOf = __webpack_require__(155);
+var forOf = __webpack_require__(148);
 
 module.exports = function (iter, ITERATOR) {
   var result = [];
@@ -22636,21 +22715,21 @@ module.exports = function (iter, ITERATOR) {
 
 
 /***/ }),
-/* 167 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
-__webpack_require__(168)('Map');
+__webpack_require__(161)('Map');
 
 
 /***/ }),
-/* 168 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/proposal-setmap-offrom/
-var $export = __webpack_require__(97);
+var $export = __webpack_require__(90);
 
 module.exports = function (COLLECTION) {
   $export($export.S, COLLECTION, { of: function of() {
@@ -22663,24 +22742,24 @@ module.exports = function (COLLECTION) {
 
 
 /***/ }),
-/* 169 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
-__webpack_require__(170)('Map');
+__webpack_require__(163)('Map');
 
 
 /***/ }),
-/* 170 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/proposal-setmap-offrom/
-var $export = __webpack_require__(97);
-var aFunction = __webpack_require__(101);
-var ctx = __webpack_require__(100);
-var forOf = __webpack_require__(155);
+var $export = __webpack_require__(90);
+var aFunction = __webpack_require__(94);
+var ctx = __webpack_require__(93);
+var forOf = __webpack_require__(148);
 
 module.exports = function (COLLECTION) {
   $export($export.S, COLLECTION, { from: function from(source /* , mapFn, thisArg */) {
@@ -22706,46 +22785,46 @@ module.exports = function (COLLECTION) {
 
 
 /***/ }),
-/* 171 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(172), __esModule: true };
+module.exports = { "default": __webpack_require__(165), __esModule: true };
 
 /***/ }),
-/* 172 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(173);
-module.exports = __webpack_require__(99).Object.assign;
+__webpack_require__(166);
+module.exports = __webpack_require__(92).Object.assign;
 
 
 /***/ }),
-/* 173 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(97);
+var $export = __webpack_require__(90);
 
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(174) });
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(167) });
 
 
 /***/ }),
-/* 174 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
-var DESCRIPTORS = __webpack_require__(107);
-var getKeys = __webpack_require__(117);
-var gOPS = __webpack_require__(175);
-var pIE = __webpack_require__(176);
-var toObject = __webpack_require__(131);
-var IObject = __webpack_require__(92);
+var DESCRIPTORS = __webpack_require__(100);
+var getKeys = __webpack_require__(110);
+var gOPS = __webpack_require__(168);
+var pIE = __webpack_require__(169);
+var toObject = __webpack_require__(124);
+var IObject = __webpack_require__(85);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-module.exports = !$assign || __webpack_require__(108)(function () {
+module.exports = !$assign || __webpack_require__(101)(function () {
   var A = {};
   var B = {};
   // eslint-disable-next-line no-undef
@@ -22775,21 +22854,21 @@ module.exports = !$assign || __webpack_require__(108)(function () {
 
 
 /***/ }),
-/* 175 */
+/* 168 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
 
 /***/ }),
-/* 176 */
+/* 169 */
 /***/ (function(module, exports) {
 
 exports.f = {}.propertyIsEnumerable;
 
 
 /***/ }),
-/* 177 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22804,7 +22883,7 @@ exports.default = function (instance, Constructor) {
 };
 
 /***/ }),
-/* 178 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22812,7 +22891,7 @@ exports.default = function (instance, Constructor) {
 
 exports.__esModule = true;
 
-var _defineProperty = __webpack_require__(179);
+var _defineProperty = __webpack_require__(172);
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -22837,82 +22916,82 @@ exports.default = function () {
 }();
 
 /***/ }),
-/* 179 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(180), __esModule: true };
+module.exports = { "default": __webpack_require__(173), __esModule: true };
 
 /***/ }),
-/* 180 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(181);
-var $Object = __webpack_require__(99).Object;
+__webpack_require__(174);
+var $Object = __webpack_require__(92).Object;
 module.exports = function defineProperty(it, key, desc) {
   return $Object.defineProperty(it, key, desc);
 };
 
 
 /***/ }),
-/* 181 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(97);
+var $export = __webpack_require__(90);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(107), 'Object', { defineProperty: __webpack_require__(103).f });
+$export($export.S + $export.F * !__webpack_require__(100), 'Object', { defineProperty: __webpack_require__(96).f });
 
 
 /***/ }),
-/* 182 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(183), __esModule: true };
+module.exports = { "default": __webpack_require__(176), __esModule: true };
 
 /***/ }),
-/* 183 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(177);
+__webpack_require__(143);
 __webpack_require__(184);
-__webpack_require__(150);
-__webpack_require__(191);
-__webpack_require__(192);
-module.exports = __webpack_require__(99).Symbol;
+__webpack_require__(185);
+module.exports = __webpack_require__(92).Symbol;
 
 
 /***/ }),
-/* 184 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // ECMAScript 6 symbols shim
-var global = __webpack_require__(98);
-var has = __webpack_require__(112);
-var DESCRIPTORS = __webpack_require__(107);
-var $export = __webpack_require__(97);
-var redefine = __webpack_require__(113);
-var META = __webpack_require__(157).KEY;
-var $fails = __webpack_require__(108);
-var shared = __webpack_require__(124);
-var setToStringTag = __webpack_require__(128);
-var uid = __webpack_require__(125);
-var wks = __webpack_require__(129);
-var wksExt = __webpack_require__(185);
-var wksDefine = __webpack_require__(186);
-var enumKeys = __webpack_require__(187);
-var isArray = __webpack_require__(163);
-var anObject = __webpack_require__(104);
-var isObject = __webpack_require__(105);
-var toObject = __webpack_require__(131);
-var toIObject = __webpack_require__(91);
-var toPrimitive = __webpack_require__(110);
-var createDesc = __webpack_require__(111);
-var _create = __webpack_require__(115);
-var gOPNExt = __webpack_require__(188);
-var $GOPD = __webpack_require__(190);
-var $GOPS = __webpack_require__(175);
-var $DP = __webpack_require__(103);
-var $keys = __webpack_require__(117);
+var global = __webpack_require__(91);
+var has = __webpack_require__(105);
+var DESCRIPTORS = __webpack_require__(100);
+var $export = __webpack_require__(90);
+var redefine = __webpack_require__(106);
+var META = __webpack_require__(150).KEY;
+var $fails = __webpack_require__(101);
+var shared = __webpack_require__(117);
+var setToStringTag = __webpack_require__(121);
+var uid = __webpack_require__(118);
+var wks = __webpack_require__(122);
+var wksExt = __webpack_require__(178);
+var wksDefine = __webpack_require__(179);
+var enumKeys = __webpack_require__(180);
+var isArray = __webpack_require__(156);
+var anObject = __webpack_require__(97);
+var isObject = __webpack_require__(98);
+var toObject = __webpack_require__(124);
+var toIObject = __webpack_require__(84);
+var toPrimitive = __webpack_require__(103);
+var createDesc = __webpack_require__(104);
+var _create = __webpack_require__(108);
+var gOPNExt = __webpack_require__(181);
+var $GOPD = __webpack_require__(183);
+var $GOPS = __webpack_require__(168);
+var $DP = __webpack_require__(96);
+var $keys = __webpack_require__(110);
 var gOPD = $GOPD.f;
 var dP = $DP.f;
 var gOPN = gOPNExt.f;
@@ -23035,11 +23114,11 @@ if (!USE_NATIVE) {
 
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
-  __webpack_require__(189).f = gOPNExt.f = $getOwnPropertyNames;
-  __webpack_require__(176).f = $propertyIsEnumerable;
+  __webpack_require__(182).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(169).f = $propertyIsEnumerable;
   $GOPS.f = $getOwnPropertySymbols;
 
-  if (DESCRIPTORS && !__webpack_require__(96)) {
+  if (DESCRIPTORS && !__webpack_require__(89)) {
     redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
   }
 
@@ -23123,7 +23202,7 @@ $JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function () {
 });
 
 // 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
-$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(102)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(95)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
 // 19.4.3.5 Symbol.prototype[@@toStringTag]
 setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
@@ -23133,21 +23212,21 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 185 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports.f = __webpack_require__(129);
+exports.f = __webpack_require__(122);
 
 
 /***/ }),
-/* 186 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global = __webpack_require__(98);
-var core = __webpack_require__(99);
-var LIBRARY = __webpack_require__(96);
-var wksExt = __webpack_require__(185);
-var defineProperty = __webpack_require__(103).f;
+var global = __webpack_require__(91);
+var core = __webpack_require__(92);
+var LIBRARY = __webpack_require__(89);
+var wksExt = __webpack_require__(178);
+var defineProperty = __webpack_require__(96).f;
 module.exports = function (name) {
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: wksExt.f(name) });
@@ -23155,13 +23234,13 @@ module.exports = function (name) {
 
 
 /***/ }),
-/* 187 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
-var getKeys = __webpack_require__(117);
-var gOPS = __webpack_require__(175);
-var pIE = __webpack_require__(176);
+var getKeys = __webpack_require__(110);
+var gOPS = __webpack_require__(168);
+var pIE = __webpack_require__(169);
 module.exports = function (it) {
   var result = getKeys(it);
   var getSymbols = gOPS.f;
@@ -23176,12 +23255,12 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 188 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-var toIObject = __webpack_require__(91);
-var gOPN = __webpack_require__(189).f;
+var toIObject = __webpack_require__(84);
+var gOPN = __webpack_require__(182).f;
 var toString = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -23201,12 +23280,12 @@ module.exports.f = function getOwnPropertyNames(it) {
 
 
 /***/ }),
-/* 189 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-var $keys = __webpack_require__(118);
-var hiddenKeys = __webpack_require__(126).concat('length', 'prototype');
+var $keys = __webpack_require__(111);
+var hiddenKeys = __webpack_require__(119).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
   return $keys(O, hiddenKeys);
@@ -23214,18 +23293,18 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 
 /***/ }),
-/* 190 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var pIE = __webpack_require__(176);
-var createDesc = __webpack_require__(111);
-var toIObject = __webpack_require__(91);
-var toPrimitive = __webpack_require__(110);
-var has = __webpack_require__(112);
-var IE8_DOM_DEFINE = __webpack_require__(106);
+var pIE = __webpack_require__(169);
+var createDesc = __webpack_require__(104);
+var toIObject = __webpack_require__(84);
+var toPrimitive = __webpack_require__(103);
+var has = __webpack_require__(105);
+var IE8_DOM_DEFINE = __webpack_require__(99);
 var gOPD = Object.getOwnPropertyDescriptor;
 
-exports.f = __webpack_require__(107) ? gOPD : function getOwnPropertyDescriptor(O, P) {
+exports.f = __webpack_require__(100) ? gOPD : function getOwnPropertyDescriptor(O, P) {
   O = toIObject(O);
   P = toPrimitive(P, true);
   if (IE8_DOM_DEFINE) try {
@@ -23236,21 +23315,21 @@ exports.f = __webpack_require__(107) ? gOPD : function getOwnPropertyDescriptor(
 
 
 /***/ }),
-/* 191 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(186)('asyncIterator');
+__webpack_require__(179)('asyncIterator');
 
 
 /***/ }),
-/* 192 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(186)('observable');
+__webpack_require__(179)('observable');
 
 
 /***/ }),
-/* 193 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23290,7 +23369,7 @@ function formatDelay(delay) {
 }
 
 /***/ }),
-/* 194 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23314,7 +23393,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 195 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23325,21 +23404,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.parseEasing = exports.Easings = undefined;
 
-var _slicedToArray2 = __webpack_require__(83);
+var _slicedToArray2 = __webpack_require__(76);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _toConsumableArray2 = __webpack_require__(140);
+var _toConsumableArray2 = __webpack_require__(133);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _map = __webpack_require__(148);
+var _map = __webpack_require__(141);
 
 var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var BezierEasing = __webpack_require__(196);
+var BezierEasing = __webpack_require__(189);
 var bezierFuncCache = new _map2.default();
 
 function getBezierEasing() {
@@ -23469,7 +23548,7 @@ exports.Easings = Easings;
 exports.parseEasing = parseEasing;
 
 /***/ }),
-/* 196 */
+/* 189 */
 /***/ (function(module, exports) {
 
 /**
@@ -23582,7 +23661,7 @@ module.exports = function bezier (mX1, mY1, mX2, mY2) {
 
 
 /***/ }),
-/* 197 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23592,37 +23671,37 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _promise = __webpack_require__(198);
+var _promise = __webpack_require__(191);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _keys = __webpack_require__(211);
+var _keys = __webpack_require__(204);
 
 var _keys2 = _interopRequireDefault(_keys);
 
-var _assign = __webpack_require__(171);
+var _assign = __webpack_require__(164);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _classCallCheck2 = __webpack_require__(177);
+var _classCallCheck2 = __webpack_require__(170);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(178);
+var _createClass2 = __webpack_require__(171);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _symbol = __webpack_require__(182);
+var _symbol = __webpack_require__(175);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
-var _spriteTimeline = __webpack_require__(82);
+var _spriteTimeline = __webpack_require__(75);
 
 var _spriteTimeline2 = _interopRequireDefault(_spriteTimeline);
 
-var _utils = __webpack_require__(215);
+var _utils = __webpack_require__(208);
 
-var _easing = __webpack_require__(195);
+var _easing = __webpack_require__(188);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23998,46 +24077,46 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 198 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(199), __esModule: true };
+module.exports = { "default": __webpack_require__(192), __esModule: true };
 
 /***/ }),
-/* 199 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(150);
-__webpack_require__(132);
-__webpack_require__(86);
-__webpack_require__(200);
-__webpack_require__(209);
-__webpack_require__(210);
-module.exports = __webpack_require__(99).Promise;
+__webpack_require__(143);
+__webpack_require__(125);
+__webpack_require__(79);
+__webpack_require__(193);
+__webpack_require__(202);
+__webpack_require__(203);
+module.exports = __webpack_require__(92).Promise;
 
 
 /***/ }),
-/* 200 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var LIBRARY = __webpack_require__(96);
-var global = __webpack_require__(98);
-var ctx = __webpack_require__(100);
-var classof = __webpack_require__(135);
-var $export = __webpack_require__(97);
-var isObject = __webpack_require__(105);
-var aFunction = __webpack_require__(101);
-var anInstance = __webpack_require__(154);
-var forOf = __webpack_require__(155);
-var speciesConstructor = __webpack_require__(201);
-var task = __webpack_require__(202).set;
-var microtask = __webpack_require__(204)();
-var newPromiseCapabilityModule = __webpack_require__(205);
-var perform = __webpack_require__(206);
-var userAgent = __webpack_require__(207);
-var promiseResolve = __webpack_require__(208);
+var LIBRARY = __webpack_require__(89);
+var global = __webpack_require__(91);
+var ctx = __webpack_require__(93);
+var classof = __webpack_require__(128);
+var $export = __webpack_require__(90);
+var isObject = __webpack_require__(98);
+var aFunction = __webpack_require__(94);
+var anInstance = __webpack_require__(147);
+var forOf = __webpack_require__(148);
+var speciesConstructor = __webpack_require__(194);
+var task = __webpack_require__(195).set;
+var microtask = __webpack_require__(197)();
+var newPromiseCapabilityModule = __webpack_require__(198);
+var perform = __webpack_require__(199);
+var userAgent = __webpack_require__(200);
+var promiseResolve = __webpack_require__(201);
 var PROMISE = 'Promise';
 var TypeError = global.TypeError;
 var process = global.process;
@@ -24053,7 +24132,7 @@ var USE_NATIVE = !!function () {
   try {
     // correct subclassing with @@species support
     var promise = $Promise.resolve(1);
-    var FakePromise = (promise.constructor = {})[__webpack_require__(129)('species')] = function (exec) {
+    var FakePromise = (promise.constructor = {})[__webpack_require__(122)('species')] = function (exec) {
       exec(empty, empty);
     };
     // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
@@ -24212,7 +24291,7 @@ if (!USE_NATIVE) {
     this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
     this._n = false;          // <- notify
   };
-  Internal.prototype = __webpack_require__(153)($Promise.prototype, {
+  Internal.prototype = __webpack_require__(146)($Promise.prototype, {
     // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
     then: function then(onFulfilled, onRejected) {
       var reaction = newPromiseCapability(speciesConstructor(this, $Promise));
@@ -24243,9 +24322,9 @@ if (!USE_NATIVE) {
 }
 
 $export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
-__webpack_require__(128)($Promise, PROMISE);
-__webpack_require__(156)(PROMISE);
-Wrapper = __webpack_require__(99)[PROMISE];
+__webpack_require__(121)($Promise, PROMISE);
+__webpack_require__(149)(PROMISE);
+Wrapper = __webpack_require__(92)[PROMISE];
 
 // statics
 $export($export.S + $export.F * !USE_NATIVE, PROMISE, {
@@ -24263,7 +24342,7 @@ $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
     return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
   }
 });
-$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(147)(function (iter) {
+$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(140)(function (iter) {
   $Promise.all(iter)['catch'](empty);
 })), PROMISE, {
   // 25.4.4.1 Promise.all(iterable)
@@ -24310,13 +24389,13 @@ $export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(147)(functio
 
 
 /***/ }),
-/* 201 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject = __webpack_require__(104);
-var aFunction = __webpack_require__(101);
-var SPECIES = __webpack_require__(129)('species');
+var anObject = __webpack_require__(97);
+var aFunction = __webpack_require__(94);
+var SPECIES = __webpack_require__(122)('species');
 module.exports = function (O, D) {
   var C = anObject(O).constructor;
   var S;
@@ -24325,14 +24404,14 @@ module.exports = function (O, D) {
 
 
 /***/ }),
-/* 202 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx = __webpack_require__(100);
-var invoke = __webpack_require__(203);
-var html = __webpack_require__(127);
-var cel = __webpack_require__(109);
-var global = __webpack_require__(98);
+var ctx = __webpack_require__(93);
+var invoke = __webpack_require__(196);
+var html = __webpack_require__(120);
+var cel = __webpack_require__(102);
+var global = __webpack_require__(91);
 var process = global.process;
 var setTask = global.setImmediate;
 var clearTask = global.clearImmediate;
@@ -24371,7 +24450,7 @@ if (!setTask || !clearTask) {
     delete queue[id];
   };
   // Node.js 0.8-
-  if (__webpack_require__(93)(process) == 'process') {
+  if (__webpack_require__(86)(process) == 'process') {
     defer = function (id) {
       process.nextTick(ctx(run, id, 1));
     };
@@ -24415,7 +24494,7 @@ module.exports = {
 
 
 /***/ }),
-/* 203 */
+/* 196 */
 /***/ (function(module, exports) {
 
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -24437,15 +24516,15 @@ module.exports = function (fn, args, that) {
 
 
 /***/ }),
-/* 204 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global = __webpack_require__(98);
-var macrotask = __webpack_require__(202).set;
+var global = __webpack_require__(91);
+var macrotask = __webpack_require__(195).set;
 var Observer = global.MutationObserver || global.WebKitMutationObserver;
 var process = global.process;
 var Promise = global.Promise;
-var isNode = __webpack_require__(93)(process) == 'process';
+var isNode = __webpack_require__(86)(process) == 'process';
 
 module.exports = function () {
   var head, last, notify;
@@ -24512,13 +24591,13 @@ module.exports = function () {
 
 
 /***/ }),
-/* 205 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 25.4.1.5 NewPromiseCapability(C)
-var aFunction = __webpack_require__(101);
+var aFunction = __webpack_require__(94);
 
 function PromiseCapability(C) {
   var resolve, reject;
@@ -24537,7 +24616,7 @@ module.exports.f = function (C) {
 
 
 /***/ }),
-/* 206 */
+/* 199 */
 /***/ (function(module, exports) {
 
 module.exports = function (exec) {
@@ -24550,22 +24629,22 @@ module.exports = function (exec) {
 
 
 /***/ }),
-/* 207 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global = __webpack_require__(98);
+var global = __webpack_require__(91);
 var navigator = global.navigator;
 
 module.exports = navigator && navigator.userAgent || '';
 
 
 /***/ }),
-/* 208 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(104);
-var isObject = __webpack_require__(105);
-var newPromiseCapability = __webpack_require__(205);
+var anObject = __webpack_require__(97);
+var isObject = __webpack_require__(98);
+var newPromiseCapability = __webpack_require__(198);
 
 module.exports = function (C, x) {
   anObject(C);
@@ -24578,17 +24657,17 @@ module.exports = function (C, x) {
 
 
 /***/ }),
-/* 209 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 // https://github.com/tc39/proposal-promise-finally
 
-var $export = __webpack_require__(97);
-var core = __webpack_require__(99);
-var global = __webpack_require__(98);
-var speciesConstructor = __webpack_require__(201);
-var promiseResolve = __webpack_require__(208);
+var $export = __webpack_require__(90);
+var core = __webpack_require__(92);
+var global = __webpack_require__(91);
+var speciesConstructor = __webpack_require__(194);
+var promiseResolve = __webpack_require__(201);
 
 $export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
   var C = speciesConstructor(this, core.Promise || global.Promise);
@@ -24605,15 +24684,15 @@ $export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
 
 
 /***/ }),
-/* 210 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/tc39/proposal-promise-try
-var $export = __webpack_require__(97);
-var newPromiseCapability = __webpack_require__(205);
-var perform = __webpack_require__(206);
+var $export = __webpack_require__(90);
+var newPromiseCapability = __webpack_require__(198);
+var perform = __webpack_require__(199);
 
 $export($export.S, 'Promise', { 'try': function (callbackfn) {
   var promiseCapability = newPromiseCapability.f(this);
@@ -24624,28 +24703,28 @@ $export($export.S, 'Promise', { 'try': function (callbackfn) {
 
 
 /***/ }),
-/* 211 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(212), __esModule: true };
+module.exports = { "default": __webpack_require__(205), __esModule: true };
 
 /***/ }),
-/* 212 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(213);
-module.exports = __webpack_require__(99).Object.keys;
+__webpack_require__(206);
+module.exports = __webpack_require__(92).Object.keys;
 
 
 /***/ }),
-/* 213 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 Object.keys(O)
-var toObject = __webpack_require__(131);
-var $keys = __webpack_require__(117);
+var toObject = __webpack_require__(124);
+var $keys = __webpack_require__(110);
 
-__webpack_require__(214)('keys', function () {
+__webpack_require__(207)('keys', function () {
   return function keys(it) {
     return $keys(toObject(it));
   };
@@ -24653,13 +24732,13 @@ __webpack_require__(214)('keys', function () {
 
 
 /***/ }),
-/* 214 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // most Object methods by ES6 should accept primitives
-var $export = __webpack_require__(97);
-var core = __webpack_require__(99);
-var fails = __webpack_require__(108);
+var $export = __webpack_require__(90);
+var core = __webpack_require__(92);
+var fails = __webpack_require__(101);
 module.exports = function (KEY, exec) {
   var fn = (core.Object || {})[KEY] || Object[KEY];
   var exp = {};
@@ -24669,7 +24748,7 @@ module.exports = function (KEY, exec) {
 
 
 /***/ }),
-/* 215 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24679,19 +24758,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray2 = __webpack_require__(83);
+var _slicedToArray2 = __webpack_require__(76);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _entries = __webpack_require__(216);
+var _entries = __webpack_require__(209);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _assign = __webpack_require__(171);
+var _assign = __webpack_require__(164);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _promise = __webpack_require__(198);
+var _promise = __webpack_require__(191);
 
 var _promise2 = _interopRequireDefault(_promise);
 
@@ -24701,9 +24780,9 @@ exports.calculateFramesOffset = calculateFramesOffset;
 exports.getProgress = getProgress;
 exports.getCurrentFrame = getCurrentFrame;
 
-var _easing2 = __webpack_require__(195);
+var _easing2 = __webpack_require__(188);
 
-var _effect = __webpack_require__(194);
+var _effect = __webpack_require__(187);
 
 var _effect2 = _interopRequireDefault(_effect);
 
@@ -24855,26 +24934,26 @@ function getCurrentFrame(timing, keyframes, effects, p) {
 }
 
 /***/ }),
-/* 216 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(217), __esModule: true };
+module.exports = { "default": __webpack_require__(210), __esModule: true };
 
 /***/ }),
-/* 217 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(218);
-module.exports = __webpack_require__(99).Object.entries;
+__webpack_require__(211);
+module.exports = __webpack_require__(92).Object.entries;
 
 
 /***/ }),
-/* 218 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
-var $export = __webpack_require__(97);
-var $entries = __webpack_require__(219)(true);
+var $export = __webpack_require__(90);
+var $entries = __webpack_require__(212)(true);
 
 $export($export.S, 'Object', {
   entries: function entries(it) {
@@ -24884,13 +24963,13 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 219 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DESCRIPTORS = __webpack_require__(107);
-var getKeys = __webpack_require__(117);
-var toIObject = __webpack_require__(91);
-var isEnum = __webpack_require__(176).f;
+var DESCRIPTORS = __webpack_require__(100);
+var getKeys = __webpack_require__(110);
+var toIObject = __webpack_require__(84);
+var isEnum = __webpack_require__(169).f;
 module.exports = function (isEntries) {
   return function (it) {
     var O = toIObject(it);
@@ -24911,7 +24990,7 @@ module.exports = function (isEntries) {
 
 
 /***/ }),
-/* 220 */
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24969,7 +25048,7 @@ const ownerDocument = {
 /* harmony default export */ __webpack_exports__["default"] = (ownerDocument);
 
 /***/ }),
-/* 221 */
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25033,22 +25112,22 @@ class Event {
 }
 
 /***/ }),
-/* 222 */
+/* 215 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseFilterString", function() { return parseFilterString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyFilters", function() { return applyFilters; });
-/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79);
+/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
 function parseFilterString(filterStr) {
   filterStr = filterStr.trim();
   if (!filterStr || filterStr === 'none') return null;
-  const filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/i;
-  const filters = filterStr.match(/^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]+)\))+$/ig);
+  const filterReg = /^(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+$/i;
+  const filters = filterStr.match(/(?:(url|blur|brightness|contrast|drop-shadow|grayscale|hue-rotate|invert|opacity|saturate|sepia)\(([^()]*(?:\(.*\))*[^()]*)\))+?/ig);
   const ret = [];
 
   if (filters) {
@@ -25056,7 +25135,8 @@ function parseFilterString(filterStr) {
       const matched = filter.match(filterReg);
       if (!matched) throw new TypeError('Invalid fitler string.');
       let [, type, args] = matched;
-      args = args.trim().split(/\s+/g).map((n, i) => {
+      type = type.toLowerCase();
+      args = args.trim().match(/([^( )]+|([^( )]+\(.*\)))(?=\s|$)/g).map((n, i) => {
         let value;
 
         if (type === 'url' || type === 'drop-shadow' && i === 3) {
@@ -25096,7 +25176,7 @@ function applyFilters(mesh, filters) {
 }
 
 /***/ }),
-/* 223 */
+/* 216 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25137,16 +25217,16 @@ function applyRenderEvent(target, mesh) {
 }
 
 /***/ }),
-/* 224 */
+/* 217 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Cloud; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(225);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(77);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(218);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(213);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -25458,7 +25538,7 @@ class Cloud extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
 _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Cloud, 'cloud');
 
 /***/ }),
-/* 225 */
+/* 218 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25470,7 +25550,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawTexture", function() { return drawTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadFrames", function() { return loadFrames; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -25534,7 +25614,7 @@ function createTexture(image, renderer) {
 
   const texture = renderer.createTexture(image);
 
-  if (!/^blob:/.test(image.src)) {
+  if (!/^blob:/.test(image.src) && typeof image.getContext !== 'function') {
     // no cache blobs
     renderer[_textureMap].set(image, texture);
   }
@@ -25562,13 +25642,13 @@ function drawTexture(node, mesh) {
   ? String(node.textureImage) : node.textureImage;
   const textureImageRotated = node.textureImageRotated;
   const texture = mesh.texture;
+  const renderer = node.renderer;
 
   if (textureImage) {
     const contentRect = node.originalContentRect;
     let textureRect = node.attributes.textureRect;
     const textureRepeat = node.attributes.textureRepeat;
     const sourceRect = node.attributes.sourceRect;
-    const renderer = node.renderer;
 
     if (!texture || node[_textureContext] && node[_textureContext] !== renderer || texture.image !== textureImage || texture.options.repeat !== textureRepeat || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.rect, textureRect) || !Object(_attribute_value__WEBPACK_IMPORTED_MODULE_1__["compareValue"])(texture.options.srcRect, sourceRect)) {
       const newTexture = createTexture(textureImage, renderer);
@@ -25582,7 +25662,7 @@ function drawTexture(node, mesh) {
 
       let oldTexture = null;
 
-      if (texture && !renderer[_textureMap].has(texture.image)) {
+      if (texture && !renderer[_textureMap].has(texture.image) && (!texture.options || !texture.options.hidden)) {
         oldTexture = mesh.uniforms.u_texSampler;
       }
 
@@ -25600,7 +25680,17 @@ function drawTexture(node, mesh) {
       node[_textureContext] = renderer;
     }
   } else if (texture) {
-    mesh.setTexture(null);
+    let oldTexture = null;
+
+    if (!renderer[_textureMap].has(texture.image) && (!texture.options || !texture.options.hidden)) {
+      oldTexture = mesh.uniforms.u_texSampler;
+    }
+
+    mesh.setTexture(null); // delete uncached texture
+
+    if (oldTexture && oldTexture.delete) {
+      oldTexture.delete();
+    }
   }
 }
 /**
@@ -25654,19 +25744,19 @@ async function loadFrames(src, frameData) {
 }
 
 /***/ }),
-/* 226 */
+/* 219 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(77);
-/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(227);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(228);
-/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(229);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(220);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(230);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(70);
+/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(220);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(221);
+/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(222);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(213);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(223);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -25930,15 +26020,15 @@ _defineProperty(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_2__["de
 _document__WEBPACK_IMPORTED_MODULE_5__["default"].registerNode(Block, 'block');
 
 /***/ }),
-/* 227 */
+/* 220 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(78);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(228);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(221);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -26221,7 +26311,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 228 */
+/* 221 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26445,7 +26535,7 @@ class Color extends Array {
 }
 
 /***/ }),
-/* 229 */
+/* 222 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26505,7 +26595,7 @@ function createRadiusBox(figure, [x, y, w, h], radius) {
 }
 
 /***/ }),
-/* 230 */
+/* 223 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26552,16 +26642,16 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 });
 
 /***/ }),
-/* 231 */
+/* 224 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(225);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(226);
-/* harmony import */ var _attribute_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(232);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(218);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(219);
+/* harmony import */ var _attribute_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(225);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(213);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -26657,13 +26747,13 @@ _defineProperty(Sprite, "Attr", _attribute_sprite__WEBPACK_IMPORTED_MODULE_2__["
 _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Sprite, 'sprite');
 
 /***/ }),
-/* 232 */
+/* 225 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(220);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -26716,21 +26806,21 @@ class Sprite extends _block__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 233 */
+/* 226 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Path; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var pasition__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(234);
+/* harmony import */ var pasition__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(227);
 /* harmony import */ var pasition__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pasition__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(77);
-/* harmony import */ var _attribute_path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(235);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(228);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(225);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(220);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(230);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+/* harmony import */ var _attribute_path__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(228);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(221);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(218);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(213);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(223);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -26997,7 +27087,7 @@ _defineProperty(Path, "Attr", _attribute_path__WEBPACK_IMPORTED_MODULE_3__["defa
 _document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Path, 'path');
 
 /***/ }),
-/* 234 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27873,15 +27963,15 @@ return pasition;
 
 
 /***/ }),
-/* 235 */
+/* 228 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Path; });
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(78);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(228);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(221);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -28061,15 +28151,15 @@ class Path extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 236 */
+/* 229 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rect; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_rect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(237);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_rect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(230);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28094,14 +28184,14 @@ _defineProperty(Rect, "Attr", _attribute_rect__WEBPACK_IMPORTED_MODULE_2__["defa
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Rect, 'rect');
 
 /***/ }),
-/* 237 */
+/* 230 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rect; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(235);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -28179,15 +28269,15 @@ class Rect extends _path__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 238 */
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Triangle; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(239);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_triangle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(242);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_triangle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(235);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28210,15 +28300,15 @@ _defineProperty(Triangle, "Attr", _attribute_triangle__WEBPACK_IMPORTED_MODULE_2
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Triangle, 'triangle');
 
 /***/ }),
-/* 239 */
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Polyline; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_polyline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(240);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_polyline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(233);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28242,15 +28332,15 @@ _defineProperty(Polyline, "Attr", _attribute_polyline__WEBPACK_IMPORTED_MODULE_2
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Polyline, 'polyline');
 
 /***/ }),
-/* 240 */
+/* 233 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Polyline; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(235);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
-/* harmony import */ var _utils_smooth_curve__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(241);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
+/* harmony import */ var _utils_smooth_curve__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(234);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -28389,7 +28479,7 @@ class Polyline extends _path__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 241 */
+/* 234 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28473,14 +28563,14 @@ function makeSmoothCurveLine(points, smoothRange = [0]) {
 }
 
 /***/ }),
-/* 242 */
+/* 235 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Triangle; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(240);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -28545,15 +28635,15 @@ class Triangle extends _polyline__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 243 */
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Parallel; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(239);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_parallel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(244);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_parallel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(237);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28577,14 +28667,14 @@ _defineProperty(Parallel, "Attr", _attribute_parallel__WEBPACK_IMPORTED_MODULE_2
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Parallel, 'parallel');
 
 /***/ }),
-/* 244 */
+/* 237 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Parallel; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(240);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 // 平行四边形
@@ -28652,15 +28742,15 @@ class Parallel extends _polyline__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 245 */
+/* 238 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Regular; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(239);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_regular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(246);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_regular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(239);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28675,14 +28765,14 @@ _defineProperty(Regular, "Attr", _attribute_regular__WEBPACK_IMPORTED_MODULE_2__
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Regular, 'regular');
 
 /***/ }),
-/* 246 */
+/* 239 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Regular; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(240);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 // 正多边形
@@ -28773,15 +28863,15 @@ class Regular extends _polyline__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 247 */
+/* 240 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Star; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(239);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_star__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(248);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_star__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(241);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28796,14 +28886,14 @@ _defineProperty(Star, "Attr", _attribute_star__WEBPACK_IMPORTED_MODULE_2__["defa
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Star, 'star');
 
 /***/ }),
-/* 248 */
+/* 241 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Star; });
-/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(240);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _polyline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 // 多角星
@@ -28923,15 +29013,15 @@ class Star extends _polyline__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 249 */
+/* 242 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ellipse; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_ellipse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(250);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_ellipse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(243);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -28958,15 +29048,15 @@ _defineProperty(Ellipse, "Attr", _attribute_ellipse__WEBPACK_IMPORTED_MODULE_2__
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Ellipse, 'ellipse');
 
 /***/ }),
-/* 250 */
+/* 243 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ellipse; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(235);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(228);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -29133,15 +29223,15 @@ class Ellipse extends _path__WEBPACK_IMPORTED_MODULE_1__["default"] {
 }
 
 /***/ }),
-/* 251 */
+/* 244 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Arc; });
-/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(249);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_arc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(252);
+/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(242);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_arc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(245);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -29156,14 +29246,14 @@ _defineProperty(Arc, "Attr", _attribute_arc__WEBPACK_IMPORTED_MODULE_2__["defaul
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Arc, 'arc');
 
 /***/ }),
-/* 252 */
+/* 245 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Arc; });
-/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(250);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
+/* harmony import */ var _ellipse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(243);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -29182,15 +29272,15 @@ class Arc extends _ellipse__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 253 */
+/* 246 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ring; });
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(233);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
-/* harmony import */ var _attribute_ring__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(254);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
+/* harmony import */ var _attribute_ring__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(247);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -29217,15 +29307,15 @@ _defineProperty(Ring, "Attr", _attribute_ring__WEBPACK_IMPORTED_MODULE_2__["defa
 _document__WEBPACK_IMPORTED_MODULE_1__["default"].registerNode(Ring, 'ring');
 
 /***/ }),
-/* 254 */
+/* 247 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ring; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(235);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(228);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -29380,17 +29470,17 @@ class Ring extends _path__WEBPACK_IMPORTED_MODULE_1__["default"] {
 }
 
 /***/ }),
-/* 255 */
+/* 248 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Label; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(225);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(226);
-/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(256);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(220);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(218);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(219);
+/* harmony import */ var _attribute_label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(249);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(213);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -29454,6 +29544,10 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
   set textContent(value) {
     this.attributes.text = value;
+  }
+
+  get textImage() {
+    return this[_textImage] || {};
   }
 
   get textImageReady() {
@@ -29589,16 +29683,16 @@ _defineProperty(Label, "Attr", _attribute_label__WEBPACK_IMPORTED_MODULE_3__["de
 _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Label, 'label');
 
 /***/ }),
-/* 256 */
+/* 249 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Label; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(79);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(228);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(227);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(72);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(221);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -29777,17 +29871,17 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_3__["default"] {
 }
 
 /***/ }),
-/* 257 */
+/* 250 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Group; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(226);
-/* harmony import */ var _attribute_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(258);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
-/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(259);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(219);
+/* harmony import */ var _attribute_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(251);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(213);
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(252);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -30115,13 +30209,13 @@ _defineProperty(Group, "Attr", _attribute_group__WEBPACK_IMPORTED_MODULE_2__["de
 _document__WEBPACK_IMPORTED_MODULE_3__["default"].registerNode(Group, 'group');
 
 /***/ }),
-/* 258 */
+/* 251 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Group; });
-/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(227);
+/* harmony import */ var _block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(220);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
  // const setDefault = Symbol.for('spritejs_setAttributeDefault');
@@ -30135,7 +30229,7 @@ class Group extends _block__WEBPACK_IMPORTED_MODULE_0__["default"] {// construct
 }
 
 /***/ }),
-/* 259 */
+/* 252 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30144,15 +30238,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "querySelector", function() { return querySelector; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMatched", function() { return isMatched; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compile", function() { return compile; });
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(228);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(220);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(221);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(213);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 /* istanbul ignore file */
 
 
 
-const CSSselect = __webpack_require__(260);
+const CSSselect = __webpack_require__(253);
 
 function isTag(elem) {
   return elem.nodeType === 1 || _document__WEBPACK_IMPORTED_MODULE_1__["default"].isSpriteNode(elem.nodeName);
@@ -30337,7 +30431,7 @@ function compile(query) {
 }
 
 /***/ }),
-/* 260 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30345,9 +30439,9 @@ function compile(query) {
 
 module.exports = CSSselect;
 
-var DomUtils = __webpack_require__(261);
-var falseFunc = __webpack_require__(280).falseFunc;
-var compileRaw = __webpack_require__(281);
+var DomUtils = __webpack_require__(254);
+var falseFunc = __webpack_require__(273).falseFunc;
+var compileRaw = __webpack_require__(274);
 
 function wrapCompile(func) {
     return function addAdapter(selector, options, context) {
@@ -30438,18 +30532,18 @@ CSSselect._compileToken = compileRaw.compileToken;
 
 
 /***/ }),
-/* 261 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DomUtils = module.exports;
 
 [
-	__webpack_require__(262),
-	__webpack_require__(275),
-	__webpack_require__(276),
-	__webpack_require__(277),
-	__webpack_require__(278),
-	__webpack_require__(279)
+	__webpack_require__(255),
+	__webpack_require__(268),
+	__webpack_require__(269),
+	__webpack_require__(270),
+	__webpack_require__(271),
+	__webpack_require__(272)
 ].forEach(function(ext){
 	Object.keys(ext).forEach(function(key){
 		DomUtils[key] = ext[key].bind(DomUtils);
@@ -30458,11 +30552,11 @@ var DomUtils = module.exports;
 
 
 /***/ }),
-/* 262 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ElementType = __webpack_require__(263),
-    getOuterHTML = __webpack_require__(264),
+var ElementType = __webpack_require__(256),
+    getOuterHTML = __webpack_require__(257),
     isTag = ElementType.isTag;
 
 module.exports = {
@@ -30487,7 +30581,7 @@ function getText(elem){
 
 
 /***/ }),
-/* 263 */
+/* 256 */
 /***/ (function(module, exports) {
 
 //Types of elements found in the DOM
@@ -30508,20 +30602,20 @@ module.exports = {
 
 
 /***/ }),
-/* 264 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
   Module dependencies
 */
-var ElementType = __webpack_require__(265);
-var entities = __webpack_require__(266);
+var ElementType = __webpack_require__(258);
+var entities = __webpack_require__(259);
 
 /* mixed-case SVG and MathML tags & attributes
    recognized by the HTML parser, see
    https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inforeign
 */
-var foreignNames = __webpack_require__(274);
+var foreignNames = __webpack_require__(267);
 foreignNames.elementNames.__proto__ = null; /* use as a simple dictionary */
 foreignNames.attributeNames.__proto__ = null;
 
@@ -30697,7 +30791,7 @@ function renderComment(elem) {
 
 
 /***/ }),
-/* 265 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30726,14 +30820,14 @@ exports.Doctype = "doctype" /* Doctype */;
 
 
 /***/ }),
-/* 266 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var decode_1 = __webpack_require__(267);
-var encode_1 = __webpack_require__(273);
+var decode_1 = __webpack_require__(260);
+var encode_1 = __webpack_require__(266);
 function decode(data, level) {
     return (!level || level <= 0 ? decode_1.decodeXML : decode_1.decodeHTML)(data);
 }
@@ -30746,14 +30840,14 @@ function encode(data, level) {
     return (!level || level <= 0 ? encode_1.encodeXML : encode_1.encodeHTML)(data);
 }
 exports.encode = encode;
-var encode_2 = __webpack_require__(273);
+var encode_2 = __webpack_require__(266);
 exports.encodeXML = encode_2.encodeXML;
 exports.encodeHTML = encode_2.encodeHTML;
 exports.escape = encode_2.escape;
 // Legacy aliases
 exports.encodeHTML4 = encode_2.encodeHTML;
 exports.encodeHTML5 = encode_2.encodeHTML;
-var decode_2 = __webpack_require__(267);
+var decode_2 = __webpack_require__(260);
 exports.decodeXML = decode_2.decodeXML;
 exports.decodeHTML = decode_2.decodeHTML;
 exports.decodeHTMLStrict = decode_2.decodeHTMLStrict;
@@ -30766,7 +30860,7 @@ exports.decodeXMLStrict = decode_2.decodeXML;
 
 
 /***/ }),
-/* 267 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30775,10 +30869,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var entities_json_1 = __importDefault(__webpack_require__(268));
-var legacy_json_1 = __importDefault(__webpack_require__(269));
-var xml_json_1 = __importDefault(__webpack_require__(270));
-var decode_codepoint_1 = __importDefault(__webpack_require__(271));
+var entities_json_1 = __importDefault(__webpack_require__(261));
+var legacy_json_1 = __importDefault(__webpack_require__(262));
+var xml_json_1 = __importDefault(__webpack_require__(263));
+var decode_codepoint_1 = __importDefault(__webpack_require__(264));
 exports.decodeXML = getStrictDecoder(xml_json_1.default);
 exports.decodeHTMLStrict = getStrictDecoder(entities_json_1.default);
 function getStrictDecoder(map) {
@@ -30827,25 +30921,25 @@ function getReplacer(map) {
 
 
 /***/ }),
-/* 268 */
+/* 261 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"Aacute\":\"Á\",\"aacute\":\"á\",\"Abreve\":\"Ă\",\"abreve\":\"ă\",\"ac\":\"∾\",\"acd\":\"∿\",\"acE\":\"∾̳\",\"Acirc\":\"Â\",\"acirc\":\"â\",\"acute\":\"´\",\"Acy\":\"А\",\"acy\":\"а\",\"AElig\":\"Æ\",\"aelig\":\"æ\",\"af\":\"⁡\",\"Afr\":\"𝔄\",\"afr\":\"𝔞\",\"Agrave\":\"À\",\"agrave\":\"à\",\"alefsym\":\"ℵ\",\"aleph\":\"ℵ\",\"Alpha\":\"Α\",\"alpha\":\"α\",\"Amacr\":\"Ā\",\"amacr\":\"ā\",\"amalg\":\"⨿\",\"amp\":\"&\",\"AMP\":\"&\",\"andand\":\"⩕\",\"And\":\"⩓\",\"and\":\"∧\",\"andd\":\"⩜\",\"andslope\":\"⩘\",\"andv\":\"⩚\",\"ang\":\"∠\",\"ange\":\"⦤\",\"angle\":\"∠\",\"angmsdaa\":\"⦨\",\"angmsdab\":\"⦩\",\"angmsdac\":\"⦪\",\"angmsdad\":\"⦫\",\"angmsdae\":\"⦬\",\"angmsdaf\":\"⦭\",\"angmsdag\":\"⦮\",\"angmsdah\":\"⦯\",\"angmsd\":\"∡\",\"angrt\":\"∟\",\"angrtvb\":\"⊾\",\"angrtvbd\":\"⦝\",\"angsph\":\"∢\",\"angst\":\"Å\",\"angzarr\":\"⍼\",\"Aogon\":\"Ą\",\"aogon\":\"ą\",\"Aopf\":\"𝔸\",\"aopf\":\"𝕒\",\"apacir\":\"⩯\",\"ap\":\"≈\",\"apE\":\"⩰\",\"ape\":\"≊\",\"apid\":\"≋\",\"apos\":\"'\",\"ApplyFunction\":\"⁡\",\"approx\":\"≈\",\"approxeq\":\"≊\",\"Aring\":\"Å\",\"aring\":\"å\",\"Ascr\":\"𝒜\",\"ascr\":\"𝒶\",\"Assign\":\"≔\",\"ast\":\"*\",\"asymp\":\"≈\",\"asympeq\":\"≍\",\"Atilde\":\"Ã\",\"atilde\":\"ã\",\"Auml\":\"Ä\",\"auml\":\"ä\",\"awconint\":\"∳\",\"awint\":\"⨑\",\"backcong\":\"≌\",\"backepsilon\":\"϶\",\"backprime\":\"‵\",\"backsim\":\"∽\",\"backsimeq\":\"⋍\",\"Backslash\":\"∖\",\"Barv\":\"⫧\",\"barvee\":\"⊽\",\"barwed\":\"⌅\",\"Barwed\":\"⌆\",\"barwedge\":\"⌅\",\"bbrk\":\"⎵\",\"bbrktbrk\":\"⎶\",\"bcong\":\"≌\",\"Bcy\":\"Б\",\"bcy\":\"б\",\"bdquo\":\"„\",\"becaus\":\"∵\",\"because\":\"∵\",\"Because\":\"∵\",\"bemptyv\":\"⦰\",\"bepsi\":\"϶\",\"bernou\":\"ℬ\",\"Bernoullis\":\"ℬ\",\"Beta\":\"Β\",\"beta\":\"β\",\"beth\":\"ℶ\",\"between\":\"≬\",\"Bfr\":\"𝔅\",\"bfr\":\"𝔟\",\"bigcap\":\"⋂\",\"bigcirc\":\"◯\",\"bigcup\":\"⋃\",\"bigodot\":\"⨀\",\"bigoplus\":\"⨁\",\"bigotimes\":\"⨂\",\"bigsqcup\":\"⨆\",\"bigstar\":\"★\",\"bigtriangledown\":\"▽\",\"bigtriangleup\":\"△\",\"biguplus\":\"⨄\",\"bigvee\":\"⋁\",\"bigwedge\":\"⋀\",\"bkarow\":\"⤍\",\"blacklozenge\":\"⧫\",\"blacksquare\":\"▪\",\"blacktriangle\":\"▴\",\"blacktriangledown\":\"▾\",\"blacktriangleleft\":\"◂\",\"blacktriangleright\":\"▸\",\"blank\":\"␣\",\"blk12\":\"▒\",\"blk14\":\"░\",\"blk34\":\"▓\",\"block\":\"█\",\"bne\":\"=⃥\",\"bnequiv\":\"≡⃥\",\"bNot\":\"⫭\",\"bnot\":\"⌐\",\"Bopf\":\"𝔹\",\"bopf\":\"𝕓\",\"bot\":\"⊥\",\"bottom\":\"⊥\",\"bowtie\":\"⋈\",\"boxbox\":\"⧉\",\"boxdl\":\"┐\",\"boxdL\":\"╕\",\"boxDl\":\"╖\",\"boxDL\":\"╗\",\"boxdr\":\"┌\",\"boxdR\":\"╒\",\"boxDr\":\"╓\",\"boxDR\":\"╔\",\"boxh\":\"─\",\"boxH\":\"═\",\"boxhd\":\"┬\",\"boxHd\":\"╤\",\"boxhD\":\"╥\",\"boxHD\":\"╦\",\"boxhu\":\"┴\",\"boxHu\":\"╧\",\"boxhU\":\"╨\",\"boxHU\":\"╩\",\"boxminus\":\"⊟\",\"boxplus\":\"⊞\",\"boxtimes\":\"⊠\",\"boxul\":\"┘\",\"boxuL\":\"╛\",\"boxUl\":\"╜\",\"boxUL\":\"╝\",\"boxur\":\"└\",\"boxuR\":\"╘\",\"boxUr\":\"╙\",\"boxUR\":\"╚\",\"boxv\":\"│\",\"boxV\":\"║\",\"boxvh\":\"┼\",\"boxvH\":\"╪\",\"boxVh\":\"╫\",\"boxVH\":\"╬\",\"boxvl\":\"┤\",\"boxvL\":\"╡\",\"boxVl\":\"╢\",\"boxVL\":\"╣\",\"boxvr\":\"├\",\"boxvR\":\"╞\",\"boxVr\":\"╟\",\"boxVR\":\"╠\",\"bprime\":\"‵\",\"breve\":\"˘\",\"Breve\":\"˘\",\"brvbar\":\"¦\",\"bscr\":\"𝒷\",\"Bscr\":\"ℬ\",\"bsemi\":\"⁏\",\"bsim\":\"∽\",\"bsime\":\"⋍\",\"bsolb\":\"⧅\",\"bsol\":\"\\\\\",\"bsolhsub\":\"⟈\",\"bull\":\"•\",\"bullet\":\"•\",\"bump\":\"≎\",\"bumpE\":\"⪮\",\"bumpe\":\"≏\",\"Bumpeq\":\"≎\",\"bumpeq\":\"≏\",\"Cacute\":\"Ć\",\"cacute\":\"ć\",\"capand\":\"⩄\",\"capbrcup\":\"⩉\",\"capcap\":\"⩋\",\"cap\":\"∩\",\"Cap\":\"⋒\",\"capcup\":\"⩇\",\"capdot\":\"⩀\",\"CapitalDifferentialD\":\"ⅅ\",\"caps\":\"∩︀\",\"caret\":\"⁁\",\"caron\":\"ˇ\",\"Cayleys\":\"ℭ\",\"ccaps\":\"⩍\",\"Ccaron\":\"Č\",\"ccaron\":\"č\",\"Ccedil\":\"Ç\",\"ccedil\":\"ç\",\"Ccirc\":\"Ĉ\",\"ccirc\":\"ĉ\",\"Cconint\":\"∰\",\"ccups\":\"⩌\",\"ccupssm\":\"⩐\",\"Cdot\":\"Ċ\",\"cdot\":\"ċ\",\"cedil\":\"¸\",\"Cedilla\":\"¸\",\"cemptyv\":\"⦲\",\"cent\":\"¢\",\"centerdot\":\"·\",\"CenterDot\":\"·\",\"cfr\":\"𝔠\",\"Cfr\":\"ℭ\",\"CHcy\":\"Ч\",\"chcy\":\"ч\",\"check\":\"✓\",\"checkmark\":\"✓\",\"Chi\":\"Χ\",\"chi\":\"χ\",\"circ\":\"ˆ\",\"circeq\":\"≗\",\"circlearrowleft\":\"↺\",\"circlearrowright\":\"↻\",\"circledast\":\"⊛\",\"circledcirc\":\"⊚\",\"circleddash\":\"⊝\",\"CircleDot\":\"⊙\",\"circledR\":\"®\",\"circledS\":\"Ⓢ\",\"CircleMinus\":\"⊖\",\"CirclePlus\":\"⊕\",\"CircleTimes\":\"⊗\",\"cir\":\"○\",\"cirE\":\"⧃\",\"cire\":\"≗\",\"cirfnint\":\"⨐\",\"cirmid\":\"⫯\",\"cirscir\":\"⧂\",\"ClockwiseContourIntegral\":\"∲\",\"CloseCurlyDoubleQuote\":\"”\",\"CloseCurlyQuote\":\"’\",\"clubs\":\"♣\",\"clubsuit\":\"♣\",\"colon\":\":\",\"Colon\":\"∷\",\"Colone\":\"⩴\",\"colone\":\"≔\",\"coloneq\":\"≔\",\"comma\":\",\",\"commat\":\"@\",\"comp\":\"∁\",\"compfn\":\"∘\",\"complement\":\"∁\",\"complexes\":\"ℂ\",\"cong\":\"≅\",\"congdot\":\"⩭\",\"Congruent\":\"≡\",\"conint\":\"∮\",\"Conint\":\"∯\",\"ContourIntegral\":\"∮\",\"copf\":\"𝕔\",\"Copf\":\"ℂ\",\"coprod\":\"∐\",\"Coproduct\":\"∐\",\"copy\":\"©\",\"COPY\":\"©\",\"copysr\":\"℗\",\"CounterClockwiseContourIntegral\":\"∳\",\"crarr\":\"↵\",\"cross\":\"✗\",\"Cross\":\"⨯\",\"Cscr\":\"𝒞\",\"cscr\":\"𝒸\",\"csub\":\"⫏\",\"csube\":\"⫑\",\"csup\":\"⫐\",\"csupe\":\"⫒\",\"ctdot\":\"⋯\",\"cudarrl\":\"⤸\",\"cudarrr\":\"⤵\",\"cuepr\":\"⋞\",\"cuesc\":\"⋟\",\"cularr\":\"↶\",\"cularrp\":\"⤽\",\"cupbrcap\":\"⩈\",\"cupcap\":\"⩆\",\"CupCap\":\"≍\",\"cup\":\"∪\",\"Cup\":\"⋓\",\"cupcup\":\"⩊\",\"cupdot\":\"⊍\",\"cupor\":\"⩅\",\"cups\":\"∪︀\",\"curarr\":\"↷\",\"curarrm\":\"⤼\",\"curlyeqprec\":\"⋞\",\"curlyeqsucc\":\"⋟\",\"curlyvee\":\"⋎\",\"curlywedge\":\"⋏\",\"curren\":\"¤\",\"curvearrowleft\":\"↶\",\"curvearrowright\":\"↷\",\"cuvee\":\"⋎\",\"cuwed\":\"⋏\",\"cwconint\":\"∲\",\"cwint\":\"∱\",\"cylcty\":\"⌭\",\"dagger\":\"†\",\"Dagger\":\"‡\",\"daleth\":\"ℸ\",\"darr\":\"↓\",\"Darr\":\"↡\",\"dArr\":\"⇓\",\"dash\":\"‐\",\"Dashv\":\"⫤\",\"dashv\":\"⊣\",\"dbkarow\":\"⤏\",\"dblac\":\"˝\",\"Dcaron\":\"Ď\",\"dcaron\":\"ď\",\"Dcy\":\"Д\",\"dcy\":\"д\",\"ddagger\":\"‡\",\"ddarr\":\"⇊\",\"DD\":\"ⅅ\",\"dd\":\"ⅆ\",\"DDotrahd\":\"⤑\",\"ddotseq\":\"⩷\",\"deg\":\"°\",\"Del\":\"∇\",\"Delta\":\"Δ\",\"delta\":\"δ\",\"demptyv\":\"⦱\",\"dfisht\":\"⥿\",\"Dfr\":\"𝔇\",\"dfr\":\"𝔡\",\"dHar\":\"⥥\",\"dharl\":\"⇃\",\"dharr\":\"⇂\",\"DiacriticalAcute\":\"´\",\"DiacriticalDot\":\"˙\",\"DiacriticalDoubleAcute\":\"˝\",\"DiacriticalGrave\":\"`\",\"DiacriticalTilde\":\"˜\",\"diam\":\"⋄\",\"diamond\":\"⋄\",\"Diamond\":\"⋄\",\"diamondsuit\":\"♦\",\"diams\":\"♦\",\"die\":\"¨\",\"DifferentialD\":\"ⅆ\",\"digamma\":\"ϝ\",\"disin\":\"⋲\",\"div\":\"÷\",\"divide\":\"÷\",\"divideontimes\":\"⋇\",\"divonx\":\"⋇\",\"DJcy\":\"Ђ\",\"djcy\":\"ђ\",\"dlcorn\":\"⌞\",\"dlcrop\":\"⌍\",\"dollar\":\"$\",\"Dopf\":\"𝔻\",\"dopf\":\"𝕕\",\"Dot\":\"¨\",\"dot\":\"˙\",\"DotDot\":\"⃜\",\"doteq\":\"≐\",\"doteqdot\":\"≑\",\"DotEqual\":\"≐\",\"dotminus\":\"∸\",\"dotplus\":\"∔\",\"dotsquare\":\"⊡\",\"doublebarwedge\":\"⌆\",\"DoubleContourIntegral\":\"∯\",\"DoubleDot\":\"¨\",\"DoubleDownArrow\":\"⇓\",\"DoubleLeftArrow\":\"⇐\",\"DoubleLeftRightArrow\":\"⇔\",\"DoubleLeftTee\":\"⫤\",\"DoubleLongLeftArrow\":\"⟸\",\"DoubleLongLeftRightArrow\":\"⟺\",\"DoubleLongRightArrow\":\"⟹\",\"DoubleRightArrow\":\"⇒\",\"DoubleRightTee\":\"⊨\",\"DoubleUpArrow\":\"⇑\",\"DoubleUpDownArrow\":\"⇕\",\"DoubleVerticalBar\":\"∥\",\"DownArrowBar\":\"⤓\",\"downarrow\":\"↓\",\"DownArrow\":\"↓\",\"Downarrow\":\"⇓\",\"DownArrowUpArrow\":\"⇵\",\"DownBreve\":\"̑\",\"downdownarrows\":\"⇊\",\"downharpoonleft\":\"⇃\",\"downharpoonright\":\"⇂\",\"DownLeftRightVector\":\"⥐\",\"DownLeftTeeVector\":\"⥞\",\"DownLeftVectorBar\":\"⥖\",\"DownLeftVector\":\"↽\",\"DownRightTeeVector\":\"⥟\",\"DownRightVectorBar\":\"⥗\",\"DownRightVector\":\"⇁\",\"DownTeeArrow\":\"↧\",\"DownTee\":\"⊤\",\"drbkarow\":\"⤐\",\"drcorn\":\"⌟\",\"drcrop\":\"⌌\",\"Dscr\":\"𝒟\",\"dscr\":\"𝒹\",\"DScy\":\"Ѕ\",\"dscy\":\"ѕ\",\"dsol\":\"⧶\",\"Dstrok\":\"Đ\",\"dstrok\":\"đ\",\"dtdot\":\"⋱\",\"dtri\":\"▿\",\"dtrif\":\"▾\",\"duarr\":\"⇵\",\"duhar\":\"⥯\",\"dwangle\":\"⦦\",\"DZcy\":\"Џ\",\"dzcy\":\"џ\",\"dzigrarr\":\"⟿\",\"Eacute\":\"É\",\"eacute\":\"é\",\"easter\":\"⩮\",\"Ecaron\":\"Ě\",\"ecaron\":\"ě\",\"Ecirc\":\"Ê\",\"ecirc\":\"ê\",\"ecir\":\"≖\",\"ecolon\":\"≕\",\"Ecy\":\"Э\",\"ecy\":\"э\",\"eDDot\":\"⩷\",\"Edot\":\"Ė\",\"edot\":\"ė\",\"eDot\":\"≑\",\"ee\":\"ⅇ\",\"efDot\":\"≒\",\"Efr\":\"𝔈\",\"efr\":\"𝔢\",\"eg\":\"⪚\",\"Egrave\":\"È\",\"egrave\":\"è\",\"egs\":\"⪖\",\"egsdot\":\"⪘\",\"el\":\"⪙\",\"Element\":\"∈\",\"elinters\":\"⏧\",\"ell\":\"ℓ\",\"els\":\"⪕\",\"elsdot\":\"⪗\",\"Emacr\":\"Ē\",\"emacr\":\"ē\",\"empty\":\"∅\",\"emptyset\":\"∅\",\"EmptySmallSquare\":\"◻\",\"emptyv\":\"∅\",\"EmptyVerySmallSquare\":\"▫\",\"emsp13\":\" \",\"emsp14\":\" \",\"emsp\":\" \",\"ENG\":\"Ŋ\",\"eng\":\"ŋ\",\"ensp\":\" \",\"Eogon\":\"Ę\",\"eogon\":\"ę\",\"Eopf\":\"𝔼\",\"eopf\":\"𝕖\",\"epar\":\"⋕\",\"eparsl\":\"⧣\",\"eplus\":\"⩱\",\"epsi\":\"ε\",\"Epsilon\":\"Ε\",\"epsilon\":\"ε\",\"epsiv\":\"ϵ\",\"eqcirc\":\"≖\",\"eqcolon\":\"≕\",\"eqsim\":\"≂\",\"eqslantgtr\":\"⪖\",\"eqslantless\":\"⪕\",\"Equal\":\"⩵\",\"equals\":\"=\",\"EqualTilde\":\"≂\",\"equest\":\"≟\",\"Equilibrium\":\"⇌\",\"equiv\":\"≡\",\"equivDD\":\"⩸\",\"eqvparsl\":\"⧥\",\"erarr\":\"⥱\",\"erDot\":\"≓\",\"escr\":\"ℯ\",\"Escr\":\"ℰ\",\"esdot\":\"≐\",\"Esim\":\"⩳\",\"esim\":\"≂\",\"Eta\":\"Η\",\"eta\":\"η\",\"ETH\":\"Ð\",\"eth\":\"ð\",\"Euml\":\"Ë\",\"euml\":\"ë\",\"euro\":\"€\",\"excl\":\"!\",\"exist\":\"∃\",\"Exists\":\"∃\",\"expectation\":\"ℰ\",\"exponentiale\":\"ⅇ\",\"ExponentialE\":\"ⅇ\",\"fallingdotseq\":\"≒\",\"Fcy\":\"Ф\",\"fcy\":\"ф\",\"female\":\"♀\",\"ffilig\":\"ﬃ\",\"fflig\":\"ﬀ\",\"ffllig\":\"ﬄ\",\"Ffr\":\"𝔉\",\"ffr\":\"𝔣\",\"filig\":\"ﬁ\",\"FilledSmallSquare\":\"◼\",\"FilledVerySmallSquare\":\"▪\",\"fjlig\":\"fj\",\"flat\":\"♭\",\"fllig\":\"ﬂ\",\"fltns\":\"▱\",\"fnof\":\"ƒ\",\"Fopf\":\"𝔽\",\"fopf\":\"𝕗\",\"forall\":\"∀\",\"ForAll\":\"∀\",\"fork\":\"⋔\",\"forkv\":\"⫙\",\"Fouriertrf\":\"ℱ\",\"fpartint\":\"⨍\",\"frac12\":\"½\",\"frac13\":\"⅓\",\"frac14\":\"¼\",\"frac15\":\"⅕\",\"frac16\":\"⅙\",\"frac18\":\"⅛\",\"frac23\":\"⅔\",\"frac25\":\"⅖\",\"frac34\":\"¾\",\"frac35\":\"⅗\",\"frac38\":\"⅜\",\"frac45\":\"⅘\",\"frac56\":\"⅚\",\"frac58\":\"⅝\",\"frac78\":\"⅞\",\"frasl\":\"⁄\",\"frown\":\"⌢\",\"fscr\":\"𝒻\",\"Fscr\":\"ℱ\",\"gacute\":\"ǵ\",\"Gamma\":\"Γ\",\"gamma\":\"γ\",\"Gammad\":\"Ϝ\",\"gammad\":\"ϝ\",\"gap\":\"⪆\",\"Gbreve\":\"Ğ\",\"gbreve\":\"ğ\",\"Gcedil\":\"Ģ\",\"Gcirc\":\"Ĝ\",\"gcirc\":\"ĝ\",\"Gcy\":\"Г\",\"gcy\":\"г\",\"Gdot\":\"Ġ\",\"gdot\":\"ġ\",\"ge\":\"≥\",\"gE\":\"≧\",\"gEl\":\"⪌\",\"gel\":\"⋛\",\"geq\":\"≥\",\"geqq\":\"≧\",\"geqslant\":\"⩾\",\"gescc\":\"⪩\",\"ges\":\"⩾\",\"gesdot\":\"⪀\",\"gesdoto\":\"⪂\",\"gesdotol\":\"⪄\",\"gesl\":\"⋛︀\",\"gesles\":\"⪔\",\"Gfr\":\"𝔊\",\"gfr\":\"𝔤\",\"gg\":\"≫\",\"Gg\":\"⋙\",\"ggg\":\"⋙\",\"gimel\":\"ℷ\",\"GJcy\":\"Ѓ\",\"gjcy\":\"ѓ\",\"gla\":\"⪥\",\"gl\":\"≷\",\"glE\":\"⪒\",\"glj\":\"⪤\",\"gnap\":\"⪊\",\"gnapprox\":\"⪊\",\"gne\":\"⪈\",\"gnE\":\"≩\",\"gneq\":\"⪈\",\"gneqq\":\"≩\",\"gnsim\":\"⋧\",\"Gopf\":\"𝔾\",\"gopf\":\"𝕘\",\"grave\":\"`\",\"GreaterEqual\":\"≥\",\"GreaterEqualLess\":\"⋛\",\"GreaterFullEqual\":\"≧\",\"GreaterGreater\":\"⪢\",\"GreaterLess\":\"≷\",\"GreaterSlantEqual\":\"⩾\",\"GreaterTilde\":\"≳\",\"Gscr\":\"𝒢\",\"gscr\":\"ℊ\",\"gsim\":\"≳\",\"gsime\":\"⪎\",\"gsiml\":\"⪐\",\"gtcc\":\"⪧\",\"gtcir\":\"⩺\",\"gt\":\">\",\"GT\":\">\",\"Gt\":\"≫\",\"gtdot\":\"⋗\",\"gtlPar\":\"⦕\",\"gtquest\":\"⩼\",\"gtrapprox\":\"⪆\",\"gtrarr\":\"⥸\",\"gtrdot\":\"⋗\",\"gtreqless\":\"⋛\",\"gtreqqless\":\"⪌\",\"gtrless\":\"≷\",\"gtrsim\":\"≳\",\"gvertneqq\":\"≩︀\",\"gvnE\":\"≩︀\",\"Hacek\":\"ˇ\",\"hairsp\":\" \",\"half\":\"½\",\"hamilt\":\"ℋ\",\"HARDcy\":\"Ъ\",\"hardcy\":\"ъ\",\"harrcir\":\"⥈\",\"harr\":\"↔\",\"hArr\":\"⇔\",\"harrw\":\"↭\",\"Hat\":\"^\",\"hbar\":\"ℏ\",\"Hcirc\":\"Ĥ\",\"hcirc\":\"ĥ\",\"hearts\":\"♥\",\"heartsuit\":\"♥\",\"hellip\":\"…\",\"hercon\":\"⊹\",\"hfr\":\"𝔥\",\"Hfr\":\"ℌ\",\"HilbertSpace\":\"ℋ\",\"hksearow\":\"⤥\",\"hkswarow\":\"⤦\",\"hoarr\":\"⇿\",\"homtht\":\"∻\",\"hookleftarrow\":\"↩\",\"hookrightarrow\":\"↪\",\"hopf\":\"𝕙\",\"Hopf\":\"ℍ\",\"horbar\":\"―\",\"HorizontalLine\":\"─\",\"hscr\":\"𝒽\",\"Hscr\":\"ℋ\",\"hslash\":\"ℏ\",\"Hstrok\":\"Ħ\",\"hstrok\":\"ħ\",\"HumpDownHump\":\"≎\",\"HumpEqual\":\"≏\",\"hybull\":\"⁃\",\"hyphen\":\"‐\",\"Iacute\":\"Í\",\"iacute\":\"í\",\"ic\":\"⁣\",\"Icirc\":\"Î\",\"icirc\":\"î\",\"Icy\":\"И\",\"icy\":\"и\",\"Idot\":\"İ\",\"IEcy\":\"Е\",\"iecy\":\"е\",\"iexcl\":\"¡\",\"iff\":\"⇔\",\"ifr\":\"𝔦\",\"Ifr\":\"ℑ\",\"Igrave\":\"Ì\",\"igrave\":\"ì\",\"ii\":\"ⅈ\",\"iiiint\":\"⨌\",\"iiint\":\"∭\",\"iinfin\":\"⧜\",\"iiota\":\"℩\",\"IJlig\":\"Ĳ\",\"ijlig\":\"ĳ\",\"Imacr\":\"Ī\",\"imacr\":\"ī\",\"image\":\"ℑ\",\"ImaginaryI\":\"ⅈ\",\"imagline\":\"ℐ\",\"imagpart\":\"ℑ\",\"imath\":\"ı\",\"Im\":\"ℑ\",\"imof\":\"⊷\",\"imped\":\"Ƶ\",\"Implies\":\"⇒\",\"incare\":\"℅\",\"in\":\"∈\",\"infin\":\"∞\",\"infintie\":\"⧝\",\"inodot\":\"ı\",\"intcal\":\"⊺\",\"int\":\"∫\",\"Int\":\"∬\",\"integers\":\"ℤ\",\"Integral\":\"∫\",\"intercal\":\"⊺\",\"Intersection\":\"⋂\",\"intlarhk\":\"⨗\",\"intprod\":\"⨼\",\"InvisibleComma\":\"⁣\",\"InvisibleTimes\":\"⁢\",\"IOcy\":\"Ё\",\"iocy\":\"ё\",\"Iogon\":\"Į\",\"iogon\":\"į\",\"Iopf\":\"𝕀\",\"iopf\":\"𝕚\",\"Iota\":\"Ι\",\"iota\":\"ι\",\"iprod\":\"⨼\",\"iquest\":\"¿\",\"iscr\":\"𝒾\",\"Iscr\":\"ℐ\",\"isin\":\"∈\",\"isindot\":\"⋵\",\"isinE\":\"⋹\",\"isins\":\"⋴\",\"isinsv\":\"⋳\",\"isinv\":\"∈\",\"it\":\"⁢\",\"Itilde\":\"Ĩ\",\"itilde\":\"ĩ\",\"Iukcy\":\"І\",\"iukcy\":\"і\",\"Iuml\":\"Ï\",\"iuml\":\"ï\",\"Jcirc\":\"Ĵ\",\"jcirc\":\"ĵ\",\"Jcy\":\"Й\",\"jcy\":\"й\",\"Jfr\":\"𝔍\",\"jfr\":\"𝔧\",\"jmath\":\"ȷ\",\"Jopf\":\"𝕁\",\"jopf\":\"𝕛\",\"Jscr\":\"𝒥\",\"jscr\":\"𝒿\",\"Jsercy\":\"Ј\",\"jsercy\":\"ј\",\"Jukcy\":\"Є\",\"jukcy\":\"є\",\"Kappa\":\"Κ\",\"kappa\":\"κ\",\"kappav\":\"ϰ\",\"Kcedil\":\"Ķ\",\"kcedil\":\"ķ\",\"Kcy\":\"К\",\"kcy\":\"к\",\"Kfr\":\"𝔎\",\"kfr\":\"𝔨\",\"kgreen\":\"ĸ\",\"KHcy\":\"Х\",\"khcy\":\"х\",\"KJcy\":\"Ќ\",\"kjcy\":\"ќ\",\"Kopf\":\"𝕂\",\"kopf\":\"𝕜\",\"Kscr\":\"𝒦\",\"kscr\":\"𝓀\",\"lAarr\":\"⇚\",\"Lacute\":\"Ĺ\",\"lacute\":\"ĺ\",\"laemptyv\":\"⦴\",\"lagran\":\"ℒ\",\"Lambda\":\"Λ\",\"lambda\":\"λ\",\"lang\":\"⟨\",\"Lang\":\"⟪\",\"langd\":\"⦑\",\"langle\":\"⟨\",\"lap\":\"⪅\",\"Laplacetrf\":\"ℒ\",\"laquo\":\"«\",\"larrb\":\"⇤\",\"larrbfs\":\"⤟\",\"larr\":\"←\",\"Larr\":\"↞\",\"lArr\":\"⇐\",\"larrfs\":\"⤝\",\"larrhk\":\"↩\",\"larrlp\":\"↫\",\"larrpl\":\"⤹\",\"larrsim\":\"⥳\",\"larrtl\":\"↢\",\"latail\":\"⤙\",\"lAtail\":\"⤛\",\"lat\":\"⪫\",\"late\":\"⪭\",\"lates\":\"⪭︀\",\"lbarr\":\"⤌\",\"lBarr\":\"⤎\",\"lbbrk\":\"❲\",\"lbrace\":\"{\",\"lbrack\":\"[\",\"lbrke\":\"⦋\",\"lbrksld\":\"⦏\",\"lbrkslu\":\"⦍\",\"Lcaron\":\"Ľ\",\"lcaron\":\"ľ\",\"Lcedil\":\"Ļ\",\"lcedil\":\"ļ\",\"lceil\":\"⌈\",\"lcub\":\"{\",\"Lcy\":\"Л\",\"lcy\":\"л\",\"ldca\":\"⤶\",\"ldquo\":\"“\",\"ldquor\":\"„\",\"ldrdhar\":\"⥧\",\"ldrushar\":\"⥋\",\"ldsh\":\"↲\",\"le\":\"≤\",\"lE\":\"≦\",\"LeftAngleBracket\":\"⟨\",\"LeftArrowBar\":\"⇤\",\"leftarrow\":\"←\",\"LeftArrow\":\"←\",\"Leftarrow\":\"⇐\",\"LeftArrowRightArrow\":\"⇆\",\"leftarrowtail\":\"↢\",\"LeftCeiling\":\"⌈\",\"LeftDoubleBracket\":\"⟦\",\"LeftDownTeeVector\":\"⥡\",\"LeftDownVectorBar\":\"⥙\",\"LeftDownVector\":\"⇃\",\"LeftFloor\":\"⌊\",\"leftharpoondown\":\"↽\",\"leftharpoonup\":\"↼\",\"leftleftarrows\":\"⇇\",\"leftrightarrow\":\"↔\",\"LeftRightArrow\":\"↔\",\"Leftrightarrow\":\"⇔\",\"leftrightarrows\":\"⇆\",\"leftrightharpoons\":\"⇋\",\"leftrightsquigarrow\":\"↭\",\"LeftRightVector\":\"⥎\",\"LeftTeeArrow\":\"↤\",\"LeftTee\":\"⊣\",\"LeftTeeVector\":\"⥚\",\"leftthreetimes\":\"⋋\",\"LeftTriangleBar\":\"⧏\",\"LeftTriangle\":\"⊲\",\"LeftTriangleEqual\":\"⊴\",\"LeftUpDownVector\":\"⥑\",\"LeftUpTeeVector\":\"⥠\",\"LeftUpVectorBar\":\"⥘\",\"LeftUpVector\":\"↿\",\"LeftVectorBar\":\"⥒\",\"LeftVector\":\"↼\",\"lEg\":\"⪋\",\"leg\":\"⋚\",\"leq\":\"≤\",\"leqq\":\"≦\",\"leqslant\":\"⩽\",\"lescc\":\"⪨\",\"les\":\"⩽\",\"lesdot\":\"⩿\",\"lesdoto\":\"⪁\",\"lesdotor\":\"⪃\",\"lesg\":\"⋚︀\",\"lesges\":\"⪓\",\"lessapprox\":\"⪅\",\"lessdot\":\"⋖\",\"lesseqgtr\":\"⋚\",\"lesseqqgtr\":\"⪋\",\"LessEqualGreater\":\"⋚\",\"LessFullEqual\":\"≦\",\"LessGreater\":\"≶\",\"lessgtr\":\"≶\",\"LessLess\":\"⪡\",\"lesssim\":\"≲\",\"LessSlantEqual\":\"⩽\",\"LessTilde\":\"≲\",\"lfisht\":\"⥼\",\"lfloor\":\"⌊\",\"Lfr\":\"𝔏\",\"lfr\":\"𝔩\",\"lg\":\"≶\",\"lgE\":\"⪑\",\"lHar\":\"⥢\",\"lhard\":\"↽\",\"lharu\":\"↼\",\"lharul\":\"⥪\",\"lhblk\":\"▄\",\"LJcy\":\"Љ\",\"ljcy\":\"љ\",\"llarr\":\"⇇\",\"ll\":\"≪\",\"Ll\":\"⋘\",\"llcorner\":\"⌞\",\"Lleftarrow\":\"⇚\",\"llhard\":\"⥫\",\"lltri\":\"◺\",\"Lmidot\":\"Ŀ\",\"lmidot\":\"ŀ\",\"lmoustache\":\"⎰\",\"lmoust\":\"⎰\",\"lnap\":\"⪉\",\"lnapprox\":\"⪉\",\"lne\":\"⪇\",\"lnE\":\"≨\",\"lneq\":\"⪇\",\"lneqq\":\"≨\",\"lnsim\":\"⋦\",\"loang\":\"⟬\",\"loarr\":\"⇽\",\"lobrk\":\"⟦\",\"longleftarrow\":\"⟵\",\"LongLeftArrow\":\"⟵\",\"Longleftarrow\":\"⟸\",\"longleftrightarrow\":\"⟷\",\"LongLeftRightArrow\":\"⟷\",\"Longleftrightarrow\":\"⟺\",\"longmapsto\":\"⟼\",\"longrightarrow\":\"⟶\",\"LongRightArrow\":\"⟶\",\"Longrightarrow\":\"⟹\",\"looparrowleft\":\"↫\",\"looparrowright\":\"↬\",\"lopar\":\"⦅\",\"Lopf\":\"𝕃\",\"lopf\":\"𝕝\",\"loplus\":\"⨭\",\"lotimes\":\"⨴\",\"lowast\":\"∗\",\"lowbar\":\"_\",\"LowerLeftArrow\":\"↙\",\"LowerRightArrow\":\"↘\",\"loz\":\"◊\",\"lozenge\":\"◊\",\"lozf\":\"⧫\",\"lpar\":\"(\",\"lparlt\":\"⦓\",\"lrarr\":\"⇆\",\"lrcorner\":\"⌟\",\"lrhar\":\"⇋\",\"lrhard\":\"⥭\",\"lrm\":\"‎\",\"lrtri\":\"⊿\",\"lsaquo\":\"‹\",\"lscr\":\"𝓁\",\"Lscr\":\"ℒ\",\"lsh\":\"↰\",\"Lsh\":\"↰\",\"lsim\":\"≲\",\"lsime\":\"⪍\",\"lsimg\":\"⪏\",\"lsqb\":\"[\",\"lsquo\":\"‘\",\"lsquor\":\"‚\",\"Lstrok\":\"Ł\",\"lstrok\":\"ł\",\"ltcc\":\"⪦\",\"ltcir\":\"⩹\",\"lt\":\"<\",\"LT\":\"<\",\"Lt\":\"≪\",\"ltdot\":\"⋖\",\"lthree\":\"⋋\",\"ltimes\":\"⋉\",\"ltlarr\":\"⥶\",\"ltquest\":\"⩻\",\"ltri\":\"◃\",\"ltrie\":\"⊴\",\"ltrif\":\"◂\",\"ltrPar\":\"⦖\",\"lurdshar\":\"⥊\",\"luruhar\":\"⥦\",\"lvertneqq\":\"≨︀\",\"lvnE\":\"≨︀\",\"macr\":\"¯\",\"male\":\"♂\",\"malt\":\"✠\",\"maltese\":\"✠\",\"Map\":\"⤅\",\"map\":\"↦\",\"mapsto\":\"↦\",\"mapstodown\":\"↧\",\"mapstoleft\":\"↤\",\"mapstoup\":\"↥\",\"marker\":\"▮\",\"mcomma\":\"⨩\",\"Mcy\":\"М\",\"mcy\":\"м\",\"mdash\":\"—\",\"mDDot\":\"∺\",\"measuredangle\":\"∡\",\"MediumSpace\":\" \",\"Mellintrf\":\"ℳ\",\"Mfr\":\"𝔐\",\"mfr\":\"𝔪\",\"mho\":\"℧\",\"micro\":\"µ\",\"midast\":\"*\",\"midcir\":\"⫰\",\"mid\":\"∣\",\"middot\":\"·\",\"minusb\":\"⊟\",\"minus\":\"−\",\"minusd\":\"∸\",\"minusdu\":\"⨪\",\"MinusPlus\":\"∓\",\"mlcp\":\"⫛\",\"mldr\":\"…\",\"mnplus\":\"∓\",\"models\":\"⊧\",\"Mopf\":\"𝕄\",\"mopf\":\"𝕞\",\"mp\":\"∓\",\"mscr\":\"𝓂\",\"Mscr\":\"ℳ\",\"mstpos\":\"∾\",\"Mu\":\"Μ\",\"mu\":\"μ\",\"multimap\":\"⊸\",\"mumap\":\"⊸\",\"nabla\":\"∇\",\"Nacute\":\"Ń\",\"nacute\":\"ń\",\"nang\":\"∠⃒\",\"nap\":\"≉\",\"napE\":\"⩰̸\",\"napid\":\"≋̸\",\"napos\":\"ŉ\",\"napprox\":\"≉\",\"natural\":\"♮\",\"naturals\":\"ℕ\",\"natur\":\"♮\",\"nbsp\":\" \",\"nbump\":\"≎̸\",\"nbumpe\":\"≏̸\",\"ncap\":\"⩃\",\"Ncaron\":\"Ň\",\"ncaron\":\"ň\",\"Ncedil\":\"Ņ\",\"ncedil\":\"ņ\",\"ncong\":\"≇\",\"ncongdot\":\"⩭̸\",\"ncup\":\"⩂\",\"Ncy\":\"Н\",\"ncy\":\"н\",\"ndash\":\"–\",\"nearhk\":\"⤤\",\"nearr\":\"↗\",\"neArr\":\"⇗\",\"nearrow\":\"↗\",\"ne\":\"≠\",\"nedot\":\"≐̸\",\"NegativeMediumSpace\":\"​\",\"NegativeThickSpace\":\"​\",\"NegativeThinSpace\":\"​\",\"NegativeVeryThinSpace\":\"​\",\"nequiv\":\"≢\",\"nesear\":\"⤨\",\"nesim\":\"≂̸\",\"NestedGreaterGreater\":\"≫\",\"NestedLessLess\":\"≪\",\"NewLine\":\"\\n\",\"nexist\":\"∄\",\"nexists\":\"∄\",\"Nfr\":\"𝔑\",\"nfr\":\"𝔫\",\"ngE\":\"≧̸\",\"nge\":\"≱\",\"ngeq\":\"≱\",\"ngeqq\":\"≧̸\",\"ngeqslant\":\"⩾̸\",\"nges\":\"⩾̸\",\"nGg\":\"⋙̸\",\"ngsim\":\"≵\",\"nGt\":\"≫⃒\",\"ngt\":\"≯\",\"ngtr\":\"≯\",\"nGtv\":\"≫̸\",\"nharr\":\"↮\",\"nhArr\":\"⇎\",\"nhpar\":\"⫲\",\"ni\":\"∋\",\"nis\":\"⋼\",\"nisd\":\"⋺\",\"niv\":\"∋\",\"NJcy\":\"Њ\",\"njcy\":\"њ\",\"nlarr\":\"↚\",\"nlArr\":\"⇍\",\"nldr\":\"‥\",\"nlE\":\"≦̸\",\"nle\":\"≰\",\"nleftarrow\":\"↚\",\"nLeftarrow\":\"⇍\",\"nleftrightarrow\":\"↮\",\"nLeftrightarrow\":\"⇎\",\"nleq\":\"≰\",\"nleqq\":\"≦̸\",\"nleqslant\":\"⩽̸\",\"nles\":\"⩽̸\",\"nless\":\"≮\",\"nLl\":\"⋘̸\",\"nlsim\":\"≴\",\"nLt\":\"≪⃒\",\"nlt\":\"≮\",\"nltri\":\"⋪\",\"nltrie\":\"⋬\",\"nLtv\":\"≪̸\",\"nmid\":\"∤\",\"NoBreak\":\"⁠\",\"NonBreakingSpace\":\" \",\"nopf\":\"𝕟\",\"Nopf\":\"ℕ\",\"Not\":\"⫬\",\"not\":\"¬\",\"NotCongruent\":\"≢\",\"NotCupCap\":\"≭\",\"NotDoubleVerticalBar\":\"∦\",\"NotElement\":\"∉\",\"NotEqual\":\"≠\",\"NotEqualTilde\":\"≂̸\",\"NotExists\":\"∄\",\"NotGreater\":\"≯\",\"NotGreaterEqual\":\"≱\",\"NotGreaterFullEqual\":\"≧̸\",\"NotGreaterGreater\":\"≫̸\",\"NotGreaterLess\":\"≹\",\"NotGreaterSlantEqual\":\"⩾̸\",\"NotGreaterTilde\":\"≵\",\"NotHumpDownHump\":\"≎̸\",\"NotHumpEqual\":\"≏̸\",\"notin\":\"∉\",\"notindot\":\"⋵̸\",\"notinE\":\"⋹̸\",\"notinva\":\"∉\",\"notinvb\":\"⋷\",\"notinvc\":\"⋶\",\"NotLeftTriangleBar\":\"⧏̸\",\"NotLeftTriangle\":\"⋪\",\"NotLeftTriangleEqual\":\"⋬\",\"NotLess\":\"≮\",\"NotLessEqual\":\"≰\",\"NotLessGreater\":\"≸\",\"NotLessLess\":\"≪̸\",\"NotLessSlantEqual\":\"⩽̸\",\"NotLessTilde\":\"≴\",\"NotNestedGreaterGreater\":\"⪢̸\",\"NotNestedLessLess\":\"⪡̸\",\"notni\":\"∌\",\"notniva\":\"∌\",\"notnivb\":\"⋾\",\"notnivc\":\"⋽\",\"NotPrecedes\":\"⊀\",\"NotPrecedesEqual\":\"⪯̸\",\"NotPrecedesSlantEqual\":\"⋠\",\"NotReverseElement\":\"∌\",\"NotRightTriangleBar\":\"⧐̸\",\"NotRightTriangle\":\"⋫\",\"NotRightTriangleEqual\":\"⋭\",\"NotSquareSubset\":\"⊏̸\",\"NotSquareSubsetEqual\":\"⋢\",\"NotSquareSuperset\":\"⊐̸\",\"NotSquareSupersetEqual\":\"⋣\",\"NotSubset\":\"⊂⃒\",\"NotSubsetEqual\":\"⊈\",\"NotSucceeds\":\"⊁\",\"NotSucceedsEqual\":\"⪰̸\",\"NotSucceedsSlantEqual\":\"⋡\",\"NotSucceedsTilde\":\"≿̸\",\"NotSuperset\":\"⊃⃒\",\"NotSupersetEqual\":\"⊉\",\"NotTilde\":\"≁\",\"NotTildeEqual\":\"≄\",\"NotTildeFullEqual\":\"≇\",\"NotTildeTilde\":\"≉\",\"NotVerticalBar\":\"∤\",\"nparallel\":\"∦\",\"npar\":\"∦\",\"nparsl\":\"⫽⃥\",\"npart\":\"∂̸\",\"npolint\":\"⨔\",\"npr\":\"⊀\",\"nprcue\":\"⋠\",\"nprec\":\"⊀\",\"npreceq\":\"⪯̸\",\"npre\":\"⪯̸\",\"nrarrc\":\"⤳̸\",\"nrarr\":\"↛\",\"nrArr\":\"⇏\",\"nrarrw\":\"↝̸\",\"nrightarrow\":\"↛\",\"nRightarrow\":\"⇏\",\"nrtri\":\"⋫\",\"nrtrie\":\"⋭\",\"nsc\":\"⊁\",\"nsccue\":\"⋡\",\"nsce\":\"⪰̸\",\"Nscr\":\"𝒩\",\"nscr\":\"𝓃\",\"nshortmid\":\"∤\",\"nshortparallel\":\"∦\",\"nsim\":\"≁\",\"nsime\":\"≄\",\"nsimeq\":\"≄\",\"nsmid\":\"∤\",\"nspar\":\"∦\",\"nsqsube\":\"⋢\",\"nsqsupe\":\"⋣\",\"nsub\":\"⊄\",\"nsubE\":\"⫅̸\",\"nsube\":\"⊈\",\"nsubset\":\"⊂⃒\",\"nsubseteq\":\"⊈\",\"nsubseteqq\":\"⫅̸\",\"nsucc\":\"⊁\",\"nsucceq\":\"⪰̸\",\"nsup\":\"⊅\",\"nsupE\":\"⫆̸\",\"nsupe\":\"⊉\",\"nsupset\":\"⊃⃒\",\"nsupseteq\":\"⊉\",\"nsupseteqq\":\"⫆̸\",\"ntgl\":\"≹\",\"Ntilde\":\"Ñ\",\"ntilde\":\"ñ\",\"ntlg\":\"≸\",\"ntriangleleft\":\"⋪\",\"ntrianglelefteq\":\"⋬\",\"ntriangleright\":\"⋫\",\"ntrianglerighteq\":\"⋭\",\"Nu\":\"Ν\",\"nu\":\"ν\",\"num\":\"#\",\"numero\":\"№\",\"numsp\":\" \",\"nvap\":\"≍⃒\",\"nvdash\":\"⊬\",\"nvDash\":\"⊭\",\"nVdash\":\"⊮\",\"nVDash\":\"⊯\",\"nvge\":\"≥⃒\",\"nvgt\":\">⃒\",\"nvHarr\":\"⤄\",\"nvinfin\":\"⧞\",\"nvlArr\":\"⤂\",\"nvle\":\"≤⃒\",\"nvlt\":\"<⃒\",\"nvltrie\":\"⊴⃒\",\"nvrArr\":\"⤃\",\"nvrtrie\":\"⊵⃒\",\"nvsim\":\"∼⃒\",\"nwarhk\":\"⤣\",\"nwarr\":\"↖\",\"nwArr\":\"⇖\",\"nwarrow\":\"↖\",\"nwnear\":\"⤧\",\"Oacute\":\"Ó\",\"oacute\":\"ó\",\"oast\":\"⊛\",\"Ocirc\":\"Ô\",\"ocirc\":\"ô\",\"ocir\":\"⊚\",\"Ocy\":\"О\",\"ocy\":\"о\",\"odash\":\"⊝\",\"Odblac\":\"Ő\",\"odblac\":\"ő\",\"odiv\":\"⨸\",\"odot\":\"⊙\",\"odsold\":\"⦼\",\"OElig\":\"Œ\",\"oelig\":\"œ\",\"ofcir\":\"⦿\",\"Ofr\":\"𝔒\",\"ofr\":\"𝔬\",\"ogon\":\"˛\",\"Ograve\":\"Ò\",\"ograve\":\"ò\",\"ogt\":\"⧁\",\"ohbar\":\"⦵\",\"ohm\":\"Ω\",\"oint\":\"∮\",\"olarr\":\"↺\",\"olcir\":\"⦾\",\"olcross\":\"⦻\",\"oline\":\"‾\",\"olt\":\"⧀\",\"Omacr\":\"Ō\",\"omacr\":\"ō\",\"Omega\":\"Ω\",\"omega\":\"ω\",\"Omicron\":\"Ο\",\"omicron\":\"ο\",\"omid\":\"⦶\",\"ominus\":\"⊖\",\"Oopf\":\"𝕆\",\"oopf\":\"𝕠\",\"opar\":\"⦷\",\"OpenCurlyDoubleQuote\":\"“\",\"OpenCurlyQuote\":\"‘\",\"operp\":\"⦹\",\"oplus\":\"⊕\",\"orarr\":\"↻\",\"Or\":\"⩔\",\"or\":\"∨\",\"ord\":\"⩝\",\"order\":\"ℴ\",\"orderof\":\"ℴ\",\"ordf\":\"ª\",\"ordm\":\"º\",\"origof\":\"⊶\",\"oror\":\"⩖\",\"orslope\":\"⩗\",\"orv\":\"⩛\",\"oS\":\"Ⓢ\",\"Oscr\":\"𝒪\",\"oscr\":\"ℴ\",\"Oslash\":\"Ø\",\"oslash\":\"ø\",\"osol\":\"⊘\",\"Otilde\":\"Õ\",\"otilde\":\"õ\",\"otimesas\":\"⨶\",\"Otimes\":\"⨷\",\"otimes\":\"⊗\",\"Ouml\":\"Ö\",\"ouml\":\"ö\",\"ovbar\":\"⌽\",\"OverBar\":\"‾\",\"OverBrace\":\"⏞\",\"OverBracket\":\"⎴\",\"OverParenthesis\":\"⏜\",\"para\":\"¶\",\"parallel\":\"∥\",\"par\":\"∥\",\"parsim\":\"⫳\",\"parsl\":\"⫽\",\"part\":\"∂\",\"PartialD\":\"∂\",\"Pcy\":\"П\",\"pcy\":\"п\",\"percnt\":\"%\",\"period\":\".\",\"permil\":\"‰\",\"perp\":\"⊥\",\"pertenk\":\"‱\",\"Pfr\":\"𝔓\",\"pfr\":\"𝔭\",\"Phi\":\"Φ\",\"phi\":\"φ\",\"phiv\":\"ϕ\",\"phmmat\":\"ℳ\",\"phone\":\"☎\",\"Pi\":\"Π\",\"pi\":\"π\",\"pitchfork\":\"⋔\",\"piv\":\"ϖ\",\"planck\":\"ℏ\",\"planckh\":\"ℎ\",\"plankv\":\"ℏ\",\"plusacir\":\"⨣\",\"plusb\":\"⊞\",\"pluscir\":\"⨢\",\"plus\":\"+\",\"plusdo\":\"∔\",\"plusdu\":\"⨥\",\"pluse\":\"⩲\",\"PlusMinus\":\"±\",\"plusmn\":\"±\",\"plussim\":\"⨦\",\"plustwo\":\"⨧\",\"pm\":\"±\",\"Poincareplane\":\"ℌ\",\"pointint\":\"⨕\",\"popf\":\"𝕡\",\"Popf\":\"ℙ\",\"pound\":\"£\",\"prap\":\"⪷\",\"Pr\":\"⪻\",\"pr\":\"≺\",\"prcue\":\"≼\",\"precapprox\":\"⪷\",\"prec\":\"≺\",\"preccurlyeq\":\"≼\",\"Precedes\":\"≺\",\"PrecedesEqual\":\"⪯\",\"PrecedesSlantEqual\":\"≼\",\"PrecedesTilde\":\"≾\",\"preceq\":\"⪯\",\"precnapprox\":\"⪹\",\"precneqq\":\"⪵\",\"precnsim\":\"⋨\",\"pre\":\"⪯\",\"prE\":\"⪳\",\"precsim\":\"≾\",\"prime\":\"′\",\"Prime\":\"″\",\"primes\":\"ℙ\",\"prnap\":\"⪹\",\"prnE\":\"⪵\",\"prnsim\":\"⋨\",\"prod\":\"∏\",\"Product\":\"∏\",\"profalar\":\"⌮\",\"profline\":\"⌒\",\"profsurf\":\"⌓\",\"prop\":\"∝\",\"Proportional\":\"∝\",\"Proportion\":\"∷\",\"propto\":\"∝\",\"prsim\":\"≾\",\"prurel\":\"⊰\",\"Pscr\":\"𝒫\",\"pscr\":\"𝓅\",\"Psi\":\"Ψ\",\"psi\":\"ψ\",\"puncsp\":\" \",\"Qfr\":\"𝔔\",\"qfr\":\"𝔮\",\"qint\":\"⨌\",\"qopf\":\"𝕢\",\"Qopf\":\"ℚ\",\"qprime\":\"⁗\",\"Qscr\":\"𝒬\",\"qscr\":\"𝓆\",\"quaternions\":\"ℍ\",\"quatint\":\"⨖\",\"quest\":\"?\",\"questeq\":\"≟\",\"quot\":\"\\\"\",\"QUOT\":\"\\\"\",\"rAarr\":\"⇛\",\"race\":\"∽̱\",\"Racute\":\"Ŕ\",\"racute\":\"ŕ\",\"radic\":\"√\",\"raemptyv\":\"⦳\",\"rang\":\"⟩\",\"Rang\":\"⟫\",\"rangd\":\"⦒\",\"range\":\"⦥\",\"rangle\":\"⟩\",\"raquo\":\"»\",\"rarrap\":\"⥵\",\"rarrb\":\"⇥\",\"rarrbfs\":\"⤠\",\"rarrc\":\"⤳\",\"rarr\":\"→\",\"Rarr\":\"↠\",\"rArr\":\"⇒\",\"rarrfs\":\"⤞\",\"rarrhk\":\"↪\",\"rarrlp\":\"↬\",\"rarrpl\":\"⥅\",\"rarrsim\":\"⥴\",\"Rarrtl\":\"⤖\",\"rarrtl\":\"↣\",\"rarrw\":\"↝\",\"ratail\":\"⤚\",\"rAtail\":\"⤜\",\"ratio\":\"∶\",\"rationals\":\"ℚ\",\"rbarr\":\"⤍\",\"rBarr\":\"⤏\",\"RBarr\":\"⤐\",\"rbbrk\":\"❳\",\"rbrace\":\"}\",\"rbrack\":\"]\",\"rbrke\":\"⦌\",\"rbrksld\":\"⦎\",\"rbrkslu\":\"⦐\",\"Rcaron\":\"Ř\",\"rcaron\":\"ř\",\"Rcedil\":\"Ŗ\",\"rcedil\":\"ŗ\",\"rceil\":\"⌉\",\"rcub\":\"}\",\"Rcy\":\"Р\",\"rcy\":\"р\",\"rdca\":\"⤷\",\"rdldhar\":\"⥩\",\"rdquo\":\"”\",\"rdquor\":\"”\",\"rdsh\":\"↳\",\"real\":\"ℜ\",\"realine\":\"ℛ\",\"realpart\":\"ℜ\",\"reals\":\"ℝ\",\"Re\":\"ℜ\",\"rect\":\"▭\",\"reg\":\"®\",\"REG\":\"®\",\"ReverseElement\":\"∋\",\"ReverseEquilibrium\":\"⇋\",\"ReverseUpEquilibrium\":\"⥯\",\"rfisht\":\"⥽\",\"rfloor\":\"⌋\",\"rfr\":\"𝔯\",\"Rfr\":\"ℜ\",\"rHar\":\"⥤\",\"rhard\":\"⇁\",\"rharu\":\"⇀\",\"rharul\":\"⥬\",\"Rho\":\"Ρ\",\"rho\":\"ρ\",\"rhov\":\"ϱ\",\"RightAngleBracket\":\"⟩\",\"RightArrowBar\":\"⇥\",\"rightarrow\":\"→\",\"RightArrow\":\"→\",\"Rightarrow\":\"⇒\",\"RightArrowLeftArrow\":\"⇄\",\"rightarrowtail\":\"↣\",\"RightCeiling\":\"⌉\",\"RightDoubleBracket\":\"⟧\",\"RightDownTeeVector\":\"⥝\",\"RightDownVectorBar\":\"⥕\",\"RightDownVector\":\"⇂\",\"RightFloor\":\"⌋\",\"rightharpoondown\":\"⇁\",\"rightharpoonup\":\"⇀\",\"rightleftarrows\":\"⇄\",\"rightleftharpoons\":\"⇌\",\"rightrightarrows\":\"⇉\",\"rightsquigarrow\":\"↝\",\"RightTeeArrow\":\"↦\",\"RightTee\":\"⊢\",\"RightTeeVector\":\"⥛\",\"rightthreetimes\":\"⋌\",\"RightTriangleBar\":\"⧐\",\"RightTriangle\":\"⊳\",\"RightTriangleEqual\":\"⊵\",\"RightUpDownVector\":\"⥏\",\"RightUpTeeVector\":\"⥜\",\"RightUpVectorBar\":\"⥔\",\"RightUpVector\":\"↾\",\"RightVectorBar\":\"⥓\",\"RightVector\":\"⇀\",\"ring\":\"˚\",\"risingdotseq\":\"≓\",\"rlarr\":\"⇄\",\"rlhar\":\"⇌\",\"rlm\":\"‏\",\"rmoustache\":\"⎱\",\"rmoust\":\"⎱\",\"rnmid\":\"⫮\",\"roang\":\"⟭\",\"roarr\":\"⇾\",\"robrk\":\"⟧\",\"ropar\":\"⦆\",\"ropf\":\"𝕣\",\"Ropf\":\"ℝ\",\"roplus\":\"⨮\",\"rotimes\":\"⨵\",\"RoundImplies\":\"⥰\",\"rpar\":\")\",\"rpargt\":\"⦔\",\"rppolint\":\"⨒\",\"rrarr\":\"⇉\",\"Rrightarrow\":\"⇛\",\"rsaquo\":\"›\",\"rscr\":\"𝓇\",\"Rscr\":\"ℛ\",\"rsh\":\"↱\",\"Rsh\":\"↱\",\"rsqb\":\"]\",\"rsquo\":\"’\",\"rsquor\":\"’\",\"rthree\":\"⋌\",\"rtimes\":\"⋊\",\"rtri\":\"▹\",\"rtrie\":\"⊵\",\"rtrif\":\"▸\",\"rtriltri\":\"⧎\",\"RuleDelayed\":\"⧴\",\"ruluhar\":\"⥨\",\"rx\":\"℞\",\"Sacute\":\"Ś\",\"sacute\":\"ś\",\"sbquo\":\"‚\",\"scap\":\"⪸\",\"Scaron\":\"Š\",\"scaron\":\"š\",\"Sc\":\"⪼\",\"sc\":\"≻\",\"sccue\":\"≽\",\"sce\":\"⪰\",\"scE\":\"⪴\",\"Scedil\":\"Ş\",\"scedil\":\"ş\",\"Scirc\":\"Ŝ\",\"scirc\":\"ŝ\",\"scnap\":\"⪺\",\"scnE\":\"⪶\",\"scnsim\":\"⋩\",\"scpolint\":\"⨓\",\"scsim\":\"≿\",\"Scy\":\"С\",\"scy\":\"с\",\"sdotb\":\"⊡\",\"sdot\":\"⋅\",\"sdote\":\"⩦\",\"searhk\":\"⤥\",\"searr\":\"↘\",\"seArr\":\"⇘\",\"searrow\":\"↘\",\"sect\":\"§\",\"semi\":\";\",\"seswar\":\"⤩\",\"setminus\":\"∖\",\"setmn\":\"∖\",\"sext\":\"✶\",\"Sfr\":\"𝔖\",\"sfr\":\"𝔰\",\"sfrown\":\"⌢\",\"sharp\":\"♯\",\"SHCHcy\":\"Щ\",\"shchcy\":\"щ\",\"SHcy\":\"Ш\",\"shcy\":\"ш\",\"ShortDownArrow\":\"↓\",\"ShortLeftArrow\":\"←\",\"shortmid\":\"∣\",\"shortparallel\":\"∥\",\"ShortRightArrow\":\"→\",\"ShortUpArrow\":\"↑\",\"shy\":\"­\",\"Sigma\":\"Σ\",\"sigma\":\"σ\",\"sigmaf\":\"ς\",\"sigmav\":\"ς\",\"sim\":\"∼\",\"simdot\":\"⩪\",\"sime\":\"≃\",\"simeq\":\"≃\",\"simg\":\"⪞\",\"simgE\":\"⪠\",\"siml\":\"⪝\",\"simlE\":\"⪟\",\"simne\":\"≆\",\"simplus\":\"⨤\",\"simrarr\":\"⥲\",\"slarr\":\"←\",\"SmallCircle\":\"∘\",\"smallsetminus\":\"∖\",\"smashp\":\"⨳\",\"smeparsl\":\"⧤\",\"smid\":\"∣\",\"smile\":\"⌣\",\"smt\":\"⪪\",\"smte\":\"⪬\",\"smtes\":\"⪬︀\",\"SOFTcy\":\"Ь\",\"softcy\":\"ь\",\"solbar\":\"⌿\",\"solb\":\"⧄\",\"sol\":\"/\",\"Sopf\":\"𝕊\",\"sopf\":\"𝕤\",\"spades\":\"♠\",\"spadesuit\":\"♠\",\"spar\":\"∥\",\"sqcap\":\"⊓\",\"sqcaps\":\"⊓︀\",\"sqcup\":\"⊔\",\"sqcups\":\"⊔︀\",\"Sqrt\":\"√\",\"sqsub\":\"⊏\",\"sqsube\":\"⊑\",\"sqsubset\":\"⊏\",\"sqsubseteq\":\"⊑\",\"sqsup\":\"⊐\",\"sqsupe\":\"⊒\",\"sqsupset\":\"⊐\",\"sqsupseteq\":\"⊒\",\"square\":\"□\",\"Square\":\"□\",\"SquareIntersection\":\"⊓\",\"SquareSubset\":\"⊏\",\"SquareSubsetEqual\":\"⊑\",\"SquareSuperset\":\"⊐\",\"SquareSupersetEqual\":\"⊒\",\"SquareUnion\":\"⊔\",\"squarf\":\"▪\",\"squ\":\"□\",\"squf\":\"▪\",\"srarr\":\"→\",\"Sscr\":\"𝒮\",\"sscr\":\"𝓈\",\"ssetmn\":\"∖\",\"ssmile\":\"⌣\",\"sstarf\":\"⋆\",\"Star\":\"⋆\",\"star\":\"☆\",\"starf\":\"★\",\"straightepsilon\":\"ϵ\",\"straightphi\":\"ϕ\",\"strns\":\"¯\",\"sub\":\"⊂\",\"Sub\":\"⋐\",\"subdot\":\"⪽\",\"subE\":\"⫅\",\"sube\":\"⊆\",\"subedot\":\"⫃\",\"submult\":\"⫁\",\"subnE\":\"⫋\",\"subne\":\"⊊\",\"subplus\":\"⪿\",\"subrarr\":\"⥹\",\"subset\":\"⊂\",\"Subset\":\"⋐\",\"subseteq\":\"⊆\",\"subseteqq\":\"⫅\",\"SubsetEqual\":\"⊆\",\"subsetneq\":\"⊊\",\"subsetneqq\":\"⫋\",\"subsim\":\"⫇\",\"subsub\":\"⫕\",\"subsup\":\"⫓\",\"succapprox\":\"⪸\",\"succ\":\"≻\",\"succcurlyeq\":\"≽\",\"Succeeds\":\"≻\",\"SucceedsEqual\":\"⪰\",\"SucceedsSlantEqual\":\"≽\",\"SucceedsTilde\":\"≿\",\"succeq\":\"⪰\",\"succnapprox\":\"⪺\",\"succneqq\":\"⪶\",\"succnsim\":\"⋩\",\"succsim\":\"≿\",\"SuchThat\":\"∋\",\"sum\":\"∑\",\"Sum\":\"∑\",\"sung\":\"♪\",\"sup1\":\"¹\",\"sup2\":\"²\",\"sup3\":\"³\",\"sup\":\"⊃\",\"Sup\":\"⋑\",\"supdot\":\"⪾\",\"supdsub\":\"⫘\",\"supE\":\"⫆\",\"supe\":\"⊇\",\"supedot\":\"⫄\",\"Superset\":\"⊃\",\"SupersetEqual\":\"⊇\",\"suphsol\":\"⟉\",\"suphsub\":\"⫗\",\"suplarr\":\"⥻\",\"supmult\":\"⫂\",\"supnE\":\"⫌\",\"supne\":\"⊋\",\"supplus\":\"⫀\",\"supset\":\"⊃\",\"Supset\":\"⋑\",\"supseteq\":\"⊇\",\"supseteqq\":\"⫆\",\"supsetneq\":\"⊋\",\"supsetneqq\":\"⫌\",\"supsim\":\"⫈\",\"supsub\":\"⫔\",\"supsup\":\"⫖\",\"swarhk\":\"⤦\",\"swarr\":\"↙\",\"swArr\":\"⇙\",\"swarrow\":\"↙\",\"swnwar\":\"⤪\",\"szlig\":\"ß\",\"Tab\":\"\\t\",\"target\":\"⌖\",\"Tau\":\"Τ\",\"tau\":\"τ\",\"tbrk\":\"⎴\",\"Tcaron\":\"Ť\",\"tcaron\":\"ť\",\"Tcedil\":\"Ţ\",\"tcedil\":\"ţ\",\"Tcy\":\"Т\",\"tcy\":\"т\",\"tdot\":\"⃛\",\"telrec\":\"⌕\",\"Tfr\":\"𝔗\",\"tfr\":\"𝔱\",\"there4\":\"∴\",\"therefore\":\"∴\",\"Therefore\":\"∴\",\"Theta\":\"Θ\",\"theta\":\"θ\",\"thetasym\":\"ϑ\",\"thetav\":\"ϑ\",\"thickapprox\":\"≈\",\"thicksim\":\"∼\",\"ThickSpace\":\"  \",\"ThinSpace\":\" \",\"thinsp\":\" \",\"thkap\":\"≈\",\"thksim\":\"∼\",\"THORN\":\"Þ\",\"thorn\":\"þ\",\"tilde\":\"˜\",\"Tilde\":\"∼\",\"TildeEqual\":\"≃\",\"TildeFullEqual\":\"≅\",\"TildeTilde\":\"≈\",\"timesbar\":\"⨱\",\"timesb\":\"⊠\",\"times\":\"×\",\"timesd\":\"⨰\",\"tint\":\"∭\",\"toea\":\"⤨\",\"topbot\":\"⌶\",\"topcir\":\"⫱\",\"top\":\"⊤\",\"Topf\":\"𝕋\",\"topf\":\"𝕥\",\"topfork\":\"⫚\",\"tosa\":\"⤩\",\"tprime\":\"‴\",\"trade\":\"™\",\"TRADE\":\"™\",\"triangle\":\"▵\",\"triangledown\":\"▿\",\"triangleleft\":\"◃\",\"trianglelefteq\":\"⊴\",\"triangleq\":\"≜\",\"triangleright\":\"▹\",\"trianglerighteq\":\"⊵\",\"tridot\":\"◬\",\"trie\":\"≜\",\"triminus\":\"⨺\",\"TripleDot\":\"⃛\",\"triplus\":\"⨹\",\"trisb\":\"⧍\",\"tritime\":\"⨻\",\"trpezium\":\"⏢\",\"Tscr\":\"𝒯\",\"tscr\":\"𝓉\",\"TScy\":\"Ц\",\"tscy\":\"ц\",\"TSHcy\":\"Ћ\",\"tshcy\":\"ћ\",\"Tstrok\":\"Ŧ\",\"tstrok\":\"ŧ\",\"twixt\":\"≬\",\"twoheadleftarrow\":\"↞\",\"twoheadrightarrow\":\"↠\",\"Uacute\":\"Ú\",\"uacute\":\"ú\",\"uarr\":\"↑\",\"Uarr\":\"↟\",\"uArr\":\"⇑\",\"Uarrocir\":\"⥉\",\"Ubrcy\":\"Ў\",\"ubrcy\":\"ў\",\"Ubreve\":\"Ŭ\",\"ubreve\":\"ŭ\",\"Ucirc\":\"Û\",\"ucirc\":\"û\",\"Ucy\":\"У\",\"ucy\":\"у\",\"udarr\":\"⇅\",\"Udblac\":\"Ű\",\"udblac\":\"ű\",\"udhar\":\"⥮\",\"ufisht\":\"⥾\",\"Ufr\":\"𝔘\",\"ufr\":\"𝔲\",\"Ugrave\":\"Ù\",\"ugrave\":\"ù\",\"uHar\":\"⥣\",\"uharl\":\"↿\",\"uharr\":\"↾\",\"uhblk\":\"▀\",\"ulcorn\":\"⌜\",\"ulcorner\":\"⌜\",\"ulcrop\":\"⌏\",\"ultri\":\"◸\",\"Umacr\":\"Ū\",\"umacr\":\"ū\",\"uml\":\"¨\",\"UnderBar\":\"_\",\"UnderBrace\":\"⏟\",\"UnderBracket\":\"⎵\",\"UnderParenthesis\":\"⏝\",\"Union\":\"⋃\",\"UnionPlus\":\"⊎\",\"Uogon\":\"Ų\",\"uogon\":\"ų\",\"Uopf\":\"𝕌\",\"uopf\":\"𝕦\",\"UpArrowBar\":\"⤒\",\"uparrow\":\"↑\",\"UpArrow\":\"↑\",\"Uparrow\":\"⇑\",\"UpArrowDownArrow\":\"⇅\",\"updownarrow\":\"↕\",\"UpDownArrow\":\"↕\",\"Updownarrow\":\"⇕\",\"UpEquilibrium\":\"⥮\",\"upharpoonleft\":\"↿\",\"upharpoonright\":\"↾\",\"uplus\":\"⊎\",\"UpperLeftArrow\":\"↖\",\"UpperRightArrow\":\"↗\",\"upsi\":\"υ\",\"Upsi\":\"ϒ\",\"upsih\":\"ϒ\",\"Upsilon\":\"Υ\",\"upsilon\":\"υ\",\"UpTeeArrow\":\"↥\",\"UpTee\":\"⊥\",\"upuparrows\":\"⇈\",\"urcorn\":\"⌝\",\"urcorner\":\"⌝\",\"urcrop\":\"⌎\",\"Uring\":\"Ů\",\"uring\":\"ů\",\"urtri\":\"◹\",\"Uscr\":\"𝒰\",\"uscr\":\"𝓊\",\"utdot\":\"⋰\",\"Utilde\":\"Ũ\",\"utilde\":\"ũ\",\"utri\":\"▵\",\"utrif\":\"▴\",\"uuarr\":\"⇈\",\"Uuml\":\"Ü\",\"uuml\":\"ü\",\"uwangle\":\"⦧\",\"vangrt\":\"⦜\",\"varepsilon\":\"ϵ\",\"varkappa\":\"ϰ\",\"varnothing\":\"∅\",\"varphi\":\"ϕ\",\"varpi\":\"ϖ\",\"varpropto\":\"∝\",\"varr\":\"↕\",\"vArr\":\"⇕\",\"varrho\":\"ϱ\",\"varsigma\":\"ς\",\"varsubsetneq\":\"⊊︀\",\"varsubsetneqq\":\"⫋︀\",\"varsupsetneq\":\"⊋︀\",\"varsupsetneqq\":\"⫌︀\",\"vartheta\":\"ϑ\",\"vartriangleleft\":\"⊲\",\"vartriangleright\":\"⊳\",\"vBar\":\"⫨\",\"Vbar\":\"⫫\",\"vBarv\":\"⫩\",\"Vcy\":\"В\",\"vcy\":\"в\",\"vdash\":\"⊢\",\"vDash\":\"⊨\",\"Vdash\":\"⊩\",\"VDash\":\"⊫\",\"Vdashl\":\"⫦\",\"veebar\":\"⊻\",\"vee\":\"∨\",\"Vee\":\"⋁\",\"veeeq\":\"≚\",\"vellip\":\"⋮\",\"verbar\":\"|\",\"Verbar\":\"‖\",\"vert\":\"|\",\"Vert\":\"‖\",\"VerticalBar\":\"∣\",\"VerticalLine\":\"|\",\"VerticalSeparator\":\"❘\",\"VerticalTilde\":\"≀\",\"VeryThinSpace\":\" \",\"Vfr\":\"𝔙\",\"vfr\":\"𝔳\",\"vltri\":\"⊲\",\"vnsub\":\"⊂⃒\",\"vnsup\":\"⊃⃒\",\"Vopf\":\"𝕍\",\"vopf\":\"𝕧\",\"vprop\":\"∝\",\"vrtri\":\"⊳\",\"Vscr\":\"𝒱\",\"vscr\":\"𝓋\",\"vsubnE\":\"⫋︀\",\"vsubne\":\"⊊︀\",\"vsupnE\":\"⫌︀\",\"vsupne\":\"⊋︀\",\"Vvdash\":\"⊪\",\"vzigzag\":\"⦚\",\"Wcirc\":\"Ŵ\",\"wcirc\":\"ŵ\",\"wedbar\":\"⩟\",\"wedge\":\"∧\",\"Wedge\":\"⋀\",\"wedgeq\":\"≙\",\"weierp\":\"℘\",\"Wfr\":\"𝔚\",\"wfr\":\"𝔴\",\"Wopf\":\"𝕎\",\"wopf\":\"𝕨\",\"wp\":\"℘\",\"wr\":\"≀\",\"wreath\":\"≀\",\"Wscr\":\"𝒲\",\"wscr\":\"𝓌\",\"xcap\":\"⋂\",\"xcirc\":\"◯\",\"xcup\":\"⋃\",\"xdtri\":\"▽\",\"Xfr\":\"𝔛\",\"xfr\":\"𝔵\",\"xharr\":\"⟷\",\"xhArr\":\"⟺\",\"Xi\":\"Ξ\",\"xi\":\"ξ\",\"xlarr\":\"⟵\",\"xlArr\":\"⟸\",\"xmap\":\"⟼\",\"xnis\":\"⋻\",\"xodot\":\"⨀\",\"Xopf\":\"𝕏\",\"xopf\":\"𝕩\",\"xoplus\":\"⨁\",\"xotime\":\"⨂\",\"xrarr\":\"⟶\",\"xrArr\":\"⟹\",\"Xscr\":\"𝒳\",\"xscr\":\"𝓍\",\"xsqcup\":\"⨆\",\"xuplus\":\"⨄\",\"xutri\":\"△\",\"xvee\":\"⋁\",\"xwedge\":\"⋀\",\"Yacute\":\"Ý\",\"yacute\":\"ý\",\"YAcy\":\"Я\",\"yacy\":\"я\",\"Ycirc\":\"Ŷ\",\"ycirc\":\"ŷ\",\"Ycy\":\"Ы\",\"ycy\":\"ы\",\"yen\":\"¥\",\"Yfr\":\"𝔜\",\"yfr\":\"𝔶\",\"YIcy\":\"Ї\",\"yicy\":\"ї\",\"Yopf\":\"𝕐\",\"yopf\":\"𝕪\",\"Yscr\":\"𝒴\",\"yscr\":\"𝓎\",\"YUcy\":\"Ю\",\"yucy\":\"ю\",\"yuml\":\"ÿ\",\"Yuml\":\"Ÿ\",\"Zacute\":\"Ź\",\"zacute\":\"ź\",\"Zcaron\":\"Ž\",\"zcaron\":\"ž\",\"Zcy\":\"З\",\"zcy\":\"з\",\"Zdot\":\"Ż\",\"zdot\":\"ż\",\"zeetrf\":\"ℨ\",\"ZeroWidthSpace\":\"​\",\"Zeta\":\"Ζ\",\"zeta\":\"ζ\",\"zfr\":\"𝔷\",\"Zfr\":\"ℨ\",\"ZHcy\":\"Ж\",\"zhcy\":\"ж\",\"zigrarr\":\"⇝\",\"zopf\":\"𝕫\",\"Zopf\":\"ℤ\",\"Zscr\":\"𝒵\",\"zscr\":\"𝓏\",\"zwj\":\"‍\",\"zwnj\":\"‌\"}");
 
 /***/ }),
-/* 269 */
+/* 262 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"Aacute\":\"Á\",\"aacute\":\"á\",\"Acirc\":\"Â\",\"acirc\":\"â\",\"acute\":\"´\",\"AElig\":\"Æ\",\"aelig\":\"æ\",\"Agrave\":\"À\",\"agrave\":\"à\",\"amp\":\"&\",\"AMP\":\"&\",\"Aring\":\"Å\",\"aring\":\"å\",\"Atilde\":\"Ã\",\"atilde\":\"ã\",\"Auml\":\"Ä\",\"auml\":\"ä\",\"brvbar\":\"¦\",\"Ccedil\":\"Ç\",\"ccedil\":\"ç\",\"cedil\":\"¸\",\"cent\":\"¢\",\"copy\":\"©\",\"COPY\":\"©\",\"curren\":\"¤\",\"deg\":\"°\",\"divide\":\"÷\",\"Eacute\":\"É\",\"eacute\":\"é\",\"Ecirc\":\"Ê\",\"ecirc\":\"ê\",\"Egrave\":\"È\",\"egrave\":\"è\",\"ETH\":\"Ð\",\"eth\":\"ð\",\"Euml\":\"Ë\",\"euml\":\"ë\",\"frac12\":\"½\",\"frac14\":\"¼\",\"frac34\":\"¾\",\"gt\":\">\",\"GT\":\">\",\"Iacute\":\"Í\",\"iacute\":\"í\",\"Icirc\":\"Î\",\"icirc\":\"î\",\"iexcl\":\"¡\",\"Igrave\":\"Ì\",\"igrave\":\"ì\",\"iquest\":\"¿\",\"Iuml\":\"Ï\",\"iuml\":\"ï\",\"laquo\":\"«\",\"lt\":\"<\",\"LT\":\"<\",\"macr\":\"¯\",\"micro\":\"µ\",\"middot\":\"·\",\"nbsp\":\" \",\"not\":\"¬\",\"Ntilde\":\"Ñ\",\"ntilde\":\"ñ\",\"Oacute\":\"Ó\",\"oacute\":\"ó\",\"Ocirc\":\"Ô\",\"ocirc\":\"ô\",\"Ograve\":\"Ò\",\"ograve\":\"ò\",\"ordf\":\"ª\",\"ordm\":\"º\",\"Oslash\":\"Ø\",\"oslash\":\"ø\",\"Otilde\":\"Õ\",\"otilde\":\"õ\",\"Ouml\":\"Ö\",\"ouml\":\"ö\",\"para\":\"¶\",\"plusmn\":\"±\",\"pound\":\"£\",\"quot\":\"\\\"\",\"QUOT\":\"\\\"\",\"raquo\":\"»\",\"reg\":\"®\",\"REG\":\"®\",\"sect\":\"§\",\"shy\":\"­\",\"sup1\":\"¹\",\"sup2\":\"²\",\"sup3\":\"³\",\"szlig\":\"ß\",\"THORN\":\"Þ\",\"thorn\":\"þ\",\"times\":\"×\",\"Uacute\":\"Ú\",\"uacute\":\"ú\",\"Ucirc\":\"Û\",\"ucirc\":\"û\",\"Ugrave\":\"Ù\",\"ugrave\":\"ù\",\"uml\":\"¨\",\"Uuml\":\"Ü\",\"uuml\":\"ü\",\"Yacute\":\"Ý\",\"yacute\":\"ý\",\"yen\":\"¥\",\"yuml\":\"ÿ\"}");
 
 /***/ }),
-/* 270 */
+/* 263 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"amp\":\"&\",\"apos\":\"'\",\"gt\":\">\",\"lt\":\"<\",\"quot\":\"\\\"\"}");
 
 /***/ }),
-/* 271 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30854,7 +30948,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var decode_json_1 = __importDefault(__webpack_require__(272));
+var decode_json_1 = __importDefault(__webpack_require__(265));
 // modified version of https://github.com/mathiasbynens/he/blob/master/src/he.js#L94-L119
 function decodeCodePoint(codePoint) {
     if ((codePoint >= 0xd800 && codePoint <= 0xdfff) || codePoint > 0x10ffff) {
@@ -30877,13 +30971,13 @@ exports.default = decodeCodePoint;
 
 
 /***/ }),
-/* 272 */
+/* 265 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"0\":65533,\"128\":8364,\"130\":8218,\"131\":402,\"132\":8222,\"133\":8230,\"134\":8224,\"135\":8225,\"136\":710,\"137\":8240,\"138\":352,\"139\":8249,\"140\":338,\"142\":381,\"145\":8216,\"146\":8217,\"147\":8220,\"148\":8221,\"149\":8226,\"150\":8211,\"151\":8212,\"152\":732,\"153\":8482,\"154\":353,\"155\":8250,\"156\":339,\"158\":382,\"159\":376}");
 
 /***/ }),
-/* 273 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30892,11 +30986,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var xml_json_1 = __importDefault(__webpack_require__(270));
+var xml_json_1 = __importDefault(__webpack_require__(263));
 var inverseXML = getInverseObj(xml_json_1.default);
 var xmlReplacer = getInverseReplacer(inverseXML);
 exports.encodeXML = getInverse(inverseXML, xmlReplacer);
-var entities_json_1 = __importDefault(__webpack_require__(268));
+var entities_json_1 = __importDefault(__webpack_require__(261));
 var inverseHTML = getInverseObj(entities_json_1.default);
 var htmlReplacer = getInverseReplacer(inverseHTML);
 exports.encodeHTML = getInverse(inverseHTML, htmlReplacer);
@@ -30957,13 +31051,13 @@ exports.escape = escape;
 
 
 /***/ }),
-/* 274 */
+/* 267 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"elementNames\":{\"altglyph\":\"altGlyph\",\"altglyphdef\":\"altGlyphDef\",\"altglyphitem\":\"altGlyphItem\",\"animatecolor\":\"animateColor\",\"animatemotion\":\"animateMotion\",\"animatetransform\":\"animateTransform\",\"clippath\":\"clipPath\",\"feblend\":\"feBlend\",\"fecolormatrix\":\"feColorMatrix\",\"fecomponenttransfer\":\"feComponentTransfer\",\"fecomposite\":\"feComposite\",\"feconvolvematrix\":\"feConvolveMatrix\",\"fediffuselighting\":\"feDiffuseLighting\",\"fedisplacementmap\":\"feDisplacementMap\",\"fedistantlight\":\"feDistantLight\",\"fedropshadow\":\"feDropShadow\",\"feflood\":\"feFlood\",\"fefunca\":\"feFuncA\",\"fefuncb\":\"feFuncB\",\"fefuncg\":\"feFuncG\",\"fefuncr\":\"feFuncR\",\"fegaussianblur\":\"feGaussianBlur\",\"feimage\":\"feImage\",\"femerge\":\"feMerge\",\"femergenode\":\"feMergeNode\",\"femorphology\":\"feMorphology\",\"feoffset\":\"feOffset\",\"fepointlight\":\"fePointLight\",\"fespecularlighting\":\"feSpecularLighting\",\"fespotlight\":\"feSpotLight\",\"fetile\":\"feTile\",\"feturbulence\":\"feTurbulence\",\"foreignobject\":\"foreignObject\",\"glyphref\":\"glyphRef\",\"lineargradient\":\"linearGradient\",\"radialgradient\":\"radialGradient\",\"textpath\":\"textPath\"},\"attributeNames\":{\"definitionurl\":\"definitionURL\",\"attributename\":\"attributeName\",\"attributetype\":\"attributeType\",\"basefrequency\":\"baseFrequency\",\"baseprofile\":\"baseProfile\",\"calcmode\":\"calcMode\",\"clippathunits\":\"clipPathUnits\",\"diffuseconstant\":\"diffuseConstant\",\"edgemode\":\"edgeMode\",\"filterunits\":\"filterUnits\",\"glyphref\":\"glyphRef\",\"gradienttransform\":\"gradientTransform\",\"gradientunits\":\"gradientUnits\",\"kernelmatrix\":\"kernelMatrix\",\"kernelunitlength\":\"kernelUnitLength\",\"keypoints\":\"keyPoints\",\"keysplines\":\"keySplines\",\"keytimes\":\"keyTimes\",\"lengthadjust\":\"lengthAdjust\",\"limitingconeangle\":\"limitingConeAngle\",\"markerheight\":\"markerHeight\",\"markerunits\":\"markerUnits\",\"markerwidth\":\"markerWidth\",\"maskcontentunits\":\"maskContentUnits\",\"maskunits\":\"maskUnits\",\"numoctaves\":\"numOctaves\",\"pathlength\":\"pathLength\",\"patterncontentunits\":\"patternContentUnits\",\"patterntransform\":\"patternTransform\",\"patternunits\":\"patternUnits\",\"pointsatx\":\"pointsAtX\",\"pointsaty\":\"pointsAtY\",\"pointsatz\":\"pointsAtZ\",\"preservealpha\":\"preserveAlpha\",\"preserveaspectratio\":\"preserveAspectRatio\",\"primitiveunits\":\"primitiveUnits\",\"refx\":\"refX\",\"refy\":\"refY\",\"repeatcount\":\"repeatCount\",\"repeatdur\":\"repeatDur\",\"requiredextensions\":\"requiredExtensions\",\"requiredfeatures\":\"requiredFeatures\",\"specularconstant\":\"specularConstant\",\"specularexponent\":\"specularExponent\",\"spreadmethod\":\"spreadMethod\",\"startoffset\":\"startOffset\",\"stddeviation\":\"stdDeviation\",\"stitchtiles\":\"stitchTiles\",\"surfacescale\":\"surfaceScale\",\"systemlanguage\":\"systemLanguage\",\"tablevalues\":\"tableValues\",\"targetx\":\"targetX\",\"targety\":\"targetY\",\"textlength\":\"textLength\",\"viewbox\":\"viewBox\",\"viewtarget\":\"viewTarget\",\"xchannelselector\":\"xChannelSelector\",\"ychannelselector\":\"yChannelSelector\",\"zoomandpan\":\"zoomAndPan\"}}");
 
 /***/ }),
-/* 275 */
+/* 268 */
 /***/ (function(module, exports) {
 
 var getChildren = exports.getChildren = function(elem){
@@ -30993,7 +31087,7 @@ exports.getName = function(elem){
 
 
 /***/ }),
-/* 276 */
+/* 269 */
 /***/ (function(module, exports) {
 
 exports.removeElement = function(elem){
@@ -31076,10 +31170,10 @@ exports.prepend = function(elem, prev){
 
 
 /***/ }),
-/* 277 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isTag = __webpack_require__(263).isTag;
+var isTag = __webpack_require__(256).isTag;
 
 module.exports = {
 	filter: filter,
@@ -31177,10 +31271,10 @@ function findAll(test, rootElems){
 
 
 /***/ }),
-/* 278 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ElementType = __webpack_require__(263);
+var ElementType = __webpack_require__(256);
 var isTag = exports.isTag = ElementType.isTag;
 
 exports.testElement = function(options, element){
@@ -31270,7 +31364,7 @@ exports.getElementsByTagType = function(type, element, recurse, limit){
 
 
 /***/ }),
-/* 279 */
+/* 272 */
 /***/ (function(module, exports) {
 
 // removeSubsets
@@ -31417,7 +31511,7 @@ exports.uniqueSort = function(nodes) {
 
 
 /***/ }),
-/* 280 */
+/* 273 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -31430,7 +31524,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 281 */
+/* 274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -31439,12 +31533,12 @@ module.exports = {
 
 module.exports = compile;
 
-var parse = __webpack_require__(282);
-var BaseFuncs = __webpack_require__(280);
-var sortRules = __webpack_require__(283);
-var procedure = __webpack_require__(284);
-var Rules = __webpack_require__(285);
-var Pseudos = __webpack_require__(287);
+var parse = __webpack_require__(275);
+var BaseFuncs = __webpack_require__(273);
+var sortRules = __webpack_require__(276);
+var procedure = __webpack_require__(277);
+var Rules = __webpack_require__(278);
+var Pseudos = __webpack_require__(280);
 var trueFunc = BaseFuncs.trueFunc;
 var falseFunc = BaseFuncs.falseFunc;
 
@@ -31655,7 +31749,7 @@ compile.Pseudos = Pseudos;
 
 
 /***/ }),
-/* 282 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31936,7 +32030,7 @@ function addToken(subselects, tokens){
 
 
 /***/ }),
-/* 283 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = sortByProcedure;
@@ -31947,7 +32041,7 @@ module.exports = sortByProcedure;
 	(some types of selectors are faster than others)
 */
 
-var procedure = __webpack_require__(284);
+var procedure = __webpack_require__(277);
 
 var attributes = {
     __proto__: null,
@@ -32022,17 +32116,17 @@ function getProcedure(token) {
 
 
 /***/ }),
-/* 284 */
+/* 277 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"universal\":50,\"tag\":30,\"attribute\":1,\"pseudo\":0,\"descendant\":-1,\"child\":-1,\"parent\":-1,\"sibling\":-1,\"adjacent\":-1}");
 
 /***/ }),
-/* 285 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var attributes = __webpack_require__(286);
-var Pseudos = __webpack_require__(287);
+var attributes = __webpack_require__(279);
+var Pseudos = __webpack_require__(280);
 
 /*
 	all available rules
@@ -32151,10 +32245,10 @@ module.exports = {
 
 
 /***/ }),
-/* 286 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var falseFunc = __webpack_require__(280).falseFunc;
+var falseFunc = __webpack_require__(273).falseFunc;
 
 //https://github.com/slevithan/XRegExp/blob/master/src/xregexp.js#L469
 var reChars = /[-[\]{}()*+?.,\\^$|#\s]/g;
@@ -32347,7 +32441,7 @@ module.exports = {
 
 
 /***/ }),
-/* 287 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -32363,9 +32457,9 @@ module.exports = {
 	  they need to return a boolean
 */
 
-var getNCheck = __webpack_require__(288);
-var BaseFuncs = __webpack_require__(280);
-var attributes = __webpack_require__(286);
+var getNCheck = __webpack_require__(281);
+var BaseFuncs = __webpack_require__(273);
+var attributes = __webpack_require__(279);
 var trueFunc = BaseFuncs.trueFunc;
 var falseFunc = BaseFuncs.falseFunc;
 
@@ -32771,11 +32865,11 @@ module.exports = {
 
 
 /***/ }),
-/* 288 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parse = __webpack_require__(289),
-    compile = __webpack_require__(290);
+var parse = __webpack_require__(282),
+    compile = __webpack_require__(283);
 
 module.exports = function nthCheck(formula){
 	return compile(parse(formula));
@@ -32785,7 +32879,7 @@ module.exports.parse = parse;
 module.exports.compile = compile;
 
 /***/ }),
-/* 289 */
+/* 282 */
 /***/ (function(module, exports) {
 
 module.exports = parse;
@@ -32831,12 +32925,12 @@ function parse(formula){
 
 
 /***/ }),
-/* 290 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = compile;
 
-var BaseFuncs = __webpack_require__(280),
+var BaseFuncs = __webpack_require__(273),
     trueFunc  = BaseFuncs.trueFunc,
     falseFunc = BaseFuncs.falseFunc;
 
@@ -32876,19 +32970,19 @@ function compile(parsed){
 }
 
 /***/ }),
-/* 291 */
+/* 284 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Layer; });
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(81);
+/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(74);
 /* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sprite_animator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(75);
-/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(257);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(220);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(225);
+/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(68);
+/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(250);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(213);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(218);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -32951,13 +33045,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
     const _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Renderer"];
 
-    this[_renderer] = new _Renderer(canvas, opts);
-
-    if (canvas.__gl__) {
-      // fix blendFunc for node-canvas-webgl
-      const gl = canvas.__gl__;
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    }
+    this[_renderer] = new _Renderer(canvas, opts); // if(canvas.__gl__) {
+    //   // fix blendFunc for node-canvas-webgl
+    //   const gl = canvas.__gl__;
+    //   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // }
 
     this.options = options;
     this.id = options.id;
@@ -33389,17 +33481,17 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 _document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
 
 /***/ }),
-/* 292 */
+/* 285 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
-/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(231);
-/* harmony import */ var _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(293);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(220);
-/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(259);
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(79);
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(224);
+/* harmony import */ var _attribute_spritesvg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(286);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(213);
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(252);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -33699,13 +33791,13 @@ _defineProperty(SpriteSvg, "Attr", _attribute_spritesvg__WEBPACK_IMPORTED_MODULE
 _document__WEBPACK_IMPORTED_MODULE_2__["default"].registerNode(SpriteSvg, 'spritesvg');
 
 /***/ }),
-/* 293 */
+/* 286 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SpriteSvg; });
-/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(232);
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(225);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 
@@ -33748,10 +33840,10 @@ class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
 }
 
 /***/ }),
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33764,65 +33856,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ENV", function() { return _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["ENV"]; });
 
-/* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(77);
+/* harmony import */ var _node_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(70);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Node", function() { return _node_node__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(224);
+/* harmony import */ var _node_cloud__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(217);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloud", function() { return _node_cloud__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(226);
+/* harmony import */ var _node_block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(219);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Block", function() { return _node_block__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(231);
+/* harmony import */ var _node_sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(224);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _node_sprite__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
-/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(233);
+/* harmony import */ var _node_path__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(226);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return _node_path__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(236);
+/* harmony import */ var _node_rect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(229);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return _node_rect__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-/* harmony import */ var _node_triangle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(238);
+/* harmony import */ var _node_triangle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(231);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Triangle", function() { return _node_triangle__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-/* harmony import */ var _node_parallel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(243);
+/* harmony import */ var _node_parallel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(236);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Parallel", function() { return _node_parallel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _node_regular__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(245);
+/* harmony import */ var _node_regular__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(238);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Regular", function() { return _node_regular__WEBPACK_IMPORTED_MODULE_9__["default"]; });
 
-/* harmony import */ var _node_star__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(247);
+/* harmony import */ var _node_star__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(240);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Star", function() { return _node_star__WEBPACK_IMPORTED_MODULE_10__["default"]; });
 
-/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(249);
+/* harmony import */ var _node_ellipse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(242);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ellipse", function() { return _node_ellipse__WEBPACK_IMPORTED_MODULE_11__["default"]; });
 
-/* harmony import */ var _node_arc__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(251);
+/* harmony import */ var _node_arc__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(244);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Arc", function() { return _node_arc__WEBPACK_IMPORTED_MODULE_12__["default"]; });
 
-/* harmony import */ var _node_ring__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(253);
+/* harmony import */ var _node_ring__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(246);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ring", function() { return _node_ring__WEBPACK_IMPORTED_MODULE_13__["default"]; });
 
-/* harmony import */ var _node_polyline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(239);
+/* harmony import */ var _node_polyline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(232);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polyline", function() { return _node_polyline__WEBPACK_IMPORTED_MODULE_14__["default"]; });
 
-/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(255);
+/* harmony import */ var _node_label__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(248);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _node_label__WEBPACK_IMPORTED_MODULE_15__["default"]; });
 
-/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(257);
+/* harmony import */ var _node_group__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(250);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _node_group__WEBPACK_IMPORTED_MODULE_16__["default"]; });
 
-/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(291);
+/* harmony import */ var _node_layer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(284);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Layer", function() { return _node_layer__WEBPACK_IMPORTED_MODULE_17__["default"]; });
 
-/* harmony import */ var _node_spritesvg__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(292);
+/* harmony import */ var _node_spritesvg__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(285);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSvg", function() { return _node_spritesvg__WEBPACK_IMPORTED_MODULE_18__["default"]; });
 
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(220);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(228);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(213);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(221);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gradient", function() { return _utils_color__WEBPACK_IMPORTED_MODULE_20__["Gradient"]; });
 
-/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(79);
+/* harmony import */ var _utils_attribute_value__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(72);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 

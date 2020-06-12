@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "3.7.9",
+  "version": "3.7.21",
   "description": "A cross platform high-performance graphics system.",
   "main": "dist/spritejs.js",
   "typings": "typings/spritejs.d.ts",
@@ -58,11 +58,11 @@
     "request": "^2.88.0",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.4",
-    "webpack-dev-server": "^3.7.1"
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@mesh.js/core": "^1.1.7",
+    "@mesh.js/core": "^1.1.17",
     "color-rgba": "^2.1.1",
     "css-select": "^2.0.2",
     "gl-matrix": "^3.1.0",

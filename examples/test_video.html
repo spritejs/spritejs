@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    canvas {
+      width: 512px;
+      height: 288px;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="1023" height="576"></canvas>
+  <script>
+    const canvas = document.querySelector('canvas');
+
+    const layer = new spritejs.Layer({
+      canvas,
+    });
+
+    const video = document.createElement('video');
+    video.src = 'https://s4.ssl.qhres.com/static/a2fa8e8634dd1ccb.mp4';
+    video.crossOrigin = 'Anonymous';
+    video.loop = true;
+    video.muted = true;
+    video.play();
+
+    const videoCanvas = canvas.cloneNode();
+    const videoCtx = videoCanvas.getContext('2d');
+
+    const s = new spritejs.Sprite({
+      width: 1023,
+      height: 576,
+    });
+
+    layer.append(s);
+
+    let started = false;
+    video.addEventListener('playing', () => {
+      if(!started) {
+        started = true;
+        layer.tick(() => {
+          videoCtx.drawImage(video, 0, 0);
+          s.attr('texture', videoCanvas);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
