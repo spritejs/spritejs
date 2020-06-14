@@ -175,7 +175,7 @@ Get the actual drawing area information of the element.
 
 The action when an element attribute value is changed.
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 Update the geometric figure of the drawing.
 

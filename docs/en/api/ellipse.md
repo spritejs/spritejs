@@ -169,7 +169,7 @@ Get the original coordinates of the point where the specified length is located.
 
 The action when an element attribute value is changed.
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 Update the geometric figure of the drawing.
 

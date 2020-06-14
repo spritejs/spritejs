@@ -186,7 +186,7 @@ Get a list of element related geometric meshes for rendering.
 
 The action when an element attribute value is changed.
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 Update the geometric figure of the drawing.
 
