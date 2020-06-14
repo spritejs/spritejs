@@ -153,7 +153,7 @@ Path 元素绘制一段SVG路径。
 
 当元素属性值被改变时，执行的动作。
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 更新图形的轮廓信息。
 
