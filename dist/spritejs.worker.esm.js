@@ -13479,6 +13479,8 @@ const _fillColor = Symbol('fillColor');
 
 const _transform = Symbol('transform');
 
+const _invertTransform = Symbol('invertTransform');
+
 const _uniforms = Symbol('uniforms');
 
 const _texOptions = Symbol('texOptions');
@@ -13808,6 +13810,15 @@ class Mesh2D {
 
   get transformMatrix() {
     return this[_transform];
+  }
+
+  get invertMatrix() {
+    if (!this[_invertTransform]) {
+      const m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), this[_transform]);
+      this[_invertTransform] = m;
+    }
+
+    return this[_invertTransform];
   }
 
   get transformScale() {
@@ -14261,6 +14272,7 @@ class Mesh2D {
 
     if (!gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].equals(m, transform)) {
       this[_transform] = m;
+      delete this[_invertTransform];
       this._updateMatrix = true;
     }
 
@@ -14270,6 +14282,7 @@ class Mesh2D {
   transform(...m) {
     const transform = this[_transform];
     this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
+    delete this[_invertTransform];
     this._updateMatrix = true;
     return this;
   }
@@ -14415,6 +14428,14 @@ class Mesh2D {
       positions,
       cells
     } = meshData;
+    const m = this.invertMatrix;
+    const x0 = m[0] * x + m[2] * y + m[4];
+    const y0 = m[1] * x + m[3] * y + m[5];
+    const box = this.boundingBox;
+
+    if (box && (x0 < box[0][0] || x0 > box[1][0] || y0 < box[0][1] || y0 > box[1][1])) {
+      return false;
+    }
 
     function projectionOn([x0, y0], [x1, y1], [x2, y2]) {
       const v2x = x2 - x1;

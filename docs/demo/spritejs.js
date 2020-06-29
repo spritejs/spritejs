@@ -16535,6 +16535,8 @@ var _fillColor = Symbol('fillColor');
 
 var _transform = Symbol('transform');
 
+var _invertTransform = Symbol('invertTransform');
+
 var _uniforms = Symbol('uniforms');
 
 var _texOptions = Symbol('texOptions');
@@ -17130,6 +17132,7 @@ function () {
 
       if (!gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].equals(m, transform)) {
         this[_transform] = m;
+        delete this[_invertTransform];
         this._updateMatrix = true;
       }
 
@@ -17145,6 +17148,7 @@ function () {
       }
 
       this[_transform] = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), transform, m);
+      delete this[_invertTransform];
       this._updateMatrix = true;
       return this;
     }
@@ -17353,6 +17357,14 @@ function () {
       var meshData = this.meshData;
       var positions = meshData.positions,
           cells = meshData.cells;
+      var m = this.invertMatrix;
+      var x0 = m[0] * x + m[2] * y + m[4];
+      var y0 = m[1] * x + m[3] * y + m[5];
+      var box = this.boundingBox;
+
+      if (box && (x0 < box[0][0] || x0 > box[1][0] || y0 < box[0][1] || y0 > box[1][1])) {
+        return false;
+      }
 
       function projectionOn(_ref22, _ref23, _ref24) {
         var _ref25 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_4___default()(_ref22, 2),
@@ -17618,6 +17630,16 @@ function () {
     key: "transformMatrix",
     get: function get() {
       return this[_transform];
+    }
+  }, {
+    key: "invertMatrix",
+    get: function get() {
+      if (!this[_invertTransform]) {
+        var m = gl_matrix__WEBPACK_IMPORTED_MODULE_5__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), this[_transform]);
+        this[_invertTransform] = m;
+      }
+
+      return this[_invertTransform];
     }
   }, {
     key: "transformScale",
@@ -40240,7 +40262,8 @@ function (_Group) {
     value: function snapshot() {
       var _ref6 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           _ref6$offscreen = _ref6.offscreen,
-          offscreen = _ref6$offscreen === void 0 ? false : _ref6$offscreen;
+          offscreen = _ref6$offscreen === void 0 ? false : _ref6$offscreen,
+          layers = _ref6.layers;
 
       var _canvas = offscreen ? 'snapshotOffScreenCanvas' : 'snapshotCanvas';
 
@@ -40254,16 +40277,19 @@ function (_Group) {
 
       var context = this[_canvas].getContext('2d');
 
-      var layers = this.orderedChildren;
+      layers = layers || this.orderedChildren;
       context.clearRect(0, 0, width, height);
 
       for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
-        if (layer.render) layer.render();
-        var canvas = layer.canvas;
 
-        if (canvas && canvas !== layer) {
-          context.drawImage(canvas, 0, 0, width, height);
+        if (!layer.options.ignoreSnapshot) {
+          if (layer.render) layer.render();
+          var canvas = layer.canvas;
+
+          if (canvas && canvas !== layer) {
+            context.drawImage(canvas, 0, 0, width, height);
+          }
         }
       }
 

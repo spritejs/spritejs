@@ -41,7 +41,7 @@
     const paper = new spritejs.Scene({container, width: 800, height: 800});
 
     const layer = paper.layer('fglayer', {
-      handleEvent: false,
+      handleEvent: true,
     });
 
     function wait(ms) {
@@ -82,26 +82,36 @@
       // anim.animate().then(function f() {
       //   anim.animate().then(f)
       // })
-      sprite.animate([
-        {scale: 1.0},
-        {scale: 0.8},
-        {scale: 1.0},
-        {scale: 1.1},
-        {scale: 1.0},
-      ], {
-        duration: 3000,
-        iterations: Infinity,
+      // sprite.animate([
+      //   {scale: 1.0},
+      //   {scale: 0.8},
+      //   {scale: 1.0},
+      //   {scale: 1.1},
+      //   {scale: 1.0},
+      // ], {
+      //   duration: 3000,
+      //   iterations: Infinity,
+      // });
+
+      sprite.addEventListener('mouseenter', (e) => {
+        e.target.bg = e.target.attr('bgcolor');
+        e.target.attr('bgcolor', 'red');
+      });
+      sprite.addEventListener('mouseleave', (e) => {
+        e.target.attr('bgcolor', e.target.bg);
       });
       layer.append(sprite);
-      await wait(100);
+      await wait(0);
     }
 
     window.fglayer = layer;
     window.paper = paper;
 
-    for(let i = 0; i < 300; i++) {
+    layer.tick();
+
+    for(let i = 0; i < 1200; i++) {
       spriteCount.innerHTML = i + 1;
-      await randomCircle();
+      await randomCircle(10);
     }
   }());
   </script>

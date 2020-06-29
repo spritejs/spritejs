@@ -511,20 +511,22 @@ export default class Scene extends Group {
     super.setResolution({width, height});
   }
 
-  snapshot({offscreen = false} = {}) {
+  snapshot({offscreen = false, layers} = {}) {
     const _canvas = offscreen ? 'snapshotOffScreenCanvas' : 'snapshotCanvas';
     const {width, height} = this.getResolution();
     this[_canvas] = this[_canvas] || ENV.createCanvas(width, height, {offscreen});
     const context = this[_canvas].getContext('2d');
-    const layers = this.orderedChildren;
+    layers = layers || this.orderedChildren;
 
     context.clearRect(0, 0, width, height);
     for(let i = 0; i < layers.length; i++) {
       const layer = layers[i];
-      if(layer.render) layer.render();
-      const canvas = layer.canvas;
-      if(canvas && canvas !== layer) {
-        context.drawImage(canvas, 0, 0, width, height);
+      if(!layer.options.ignoreSnapshot) {
+        if(layer.render) layer.render();
+        const canvas = layer.canvas;
+        if(canvas && canvas !== layer) {
+          context.drawImage(canvas, 0, 0, width, height);
+        }
       }
     }
     return this[_canvas];

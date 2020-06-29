@@ -177,7 +177,7 @@ Sprite 元素用来绘制图片。
 
 获取元素实际绘制区域信息。
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 更新图形的轮廓信息。
 
