@@ -131,7 +131,7 @@ declare namespace spritejs {
     /**
      * The current frame props of the animation.
      */
-    readonly frame: Attrs;
+    readonly frame: Partial<Attrs>;
     /**
      * The playState of the animation.
      * Valid values are 'idel' or 'running' or 'pending' or 'paused' or 'finished'.
@@ -1473,7 +1473,7 @@ declare namespace spritejs {
     /**
      * The attribute object of the current element.
      */
-    attributes: Attrs;
+    attributes: Partial<Attrs>;
     /**
      * The parent of the node.
      */
@@ -1559,11 +1559,11 @@ declare namespace spritejs {
      * @param frames 
      * @param timing 
      */
-    animate(frames: Array<Attrs>, timing: Timing): Animation;
+    animate(frames: Array<Partial<Attrs>>, timing: Timing): Animation;
     /**
      * Get all attributes.
      */
-    attr(): Attrs;
+    attr(): Partial<Attrs>;
     /**
      * Get attribute by key.
      * @param key 
