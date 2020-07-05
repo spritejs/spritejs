@@ -18,7 +18,7 @@ Path 元素绘制一段SVG路径。
 | fillRule | | enum: {nonzero, evenodd} | nonezero | 填充规则 |
 | strokeColor | | color | undefined | 描边颜色 |
 | lineWidth | | number | 1 | 描边宽度 |
-| lineJoin | | enum: {miter, bevel} | miter | 连线接头样式 |
+| lineJoin | | enum: {miter, bevel, round} | miter | 连线接头样式 |
 | lineCap | | enum: {butt, square} | butt | 线帽样式 |
 | lineDash | | Array | undefined | 虚线样式 |
 | lineDashOffset | | number | 0 | 虚线偏移 | 
