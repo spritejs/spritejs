@@ -1,6 +1,8 @@
 export = spritejs; // make it a module
 export as namespace spritejs; // keep a global namespace called Office
 
+type NumberOrArrayArg<T, K extends string> = Omit<T, K> & { [index in K]: number | [ number, number ] }
+
 declare namespace spritejs {
   /**
    * Sprite Node's Attributes.
@@ -58,7 +60,9 @@ declare namespace spritejs {
     display: '' | string,
     [x: string]: any,
   };
-
+  
+  type ArgAttrs = Partial<NumberOrArrayArg<Attrs, 'scale' | 'skew' | 'anchor' | 'transformOrigin'>>
+  
   /**
    * Animation playstate.
    */
@@ -1559,11 +1563,11 @@ declare namespace spritejs {
      * @param frames 
      * @param timing 
      */
-    animate(frames: Array<Partial<Attrs>>, timing: Timing): Animation;
+    animate(frames: Array<ArgAttrs>, timing: Timing): Animation;
     /**
      * Get all attributes.
      */
-    attr(): Partial<Attrs>;
+    attr(): Attrs;
     /**
      * Get attribute by key.
      * @param key 
@@ -1579,7 +1583,7 @@ declare namespace spritejs {
      * Set attributes.
      * @param key 
      */
-    attr(key: Partial<Attrs>): this;
+    attr(key: ArgAttrs): this;
     /**
      * Copy the entire element.
      * @param deep 
