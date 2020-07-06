@@ -1192,7 +1192,7 @@ declare namespace spritejs {
      * are copied at the same time.
      * @param deep 
      */
-    cloneNode(deep: boolean): Node;
+    cloneNode(deep?: boolean): Node;
     /**
      * Dispatch a mouse or touch event.
      * @param event 
@@ -1584,7 +1584,7 @@ declare namespace spritejs {
      * Copy the entire element.
      * @param deep 
      */
-    cloneNode(deep: boolean): Node;
+    cloneNode(deep?: boolean): Node;
     /**
      * When the element is added to the context tree, the function is called
      * and parent and zorder are assigned to the element.
