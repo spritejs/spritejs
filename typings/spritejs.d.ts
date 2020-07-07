@@ -60,7 +60,9 @@ type BaseAttrs = {
 };
 
 type NumberOrArrayArgKey = 'scale' | 'skew' | 'anchor' | 'transformOrigin'
-type NumberOrArrayAttrs<T, K extends string> = Omit<T, K> & { [ index in K ]: number | [ number, number ] }
+type NumberOrArrayAttrs<T, K extends string> = { [ index in K ]: number | [ number, number ] }
+type AttrBorderRadius = 'borderRadius'
+type AttrPadding = 'padding'
 
 declare namespace spritejs {
   /**
@@ -70,7 +72,12 @@ declare namespace spritejs {
   /**
    * attr's argument
    */
-  type ArgAttrs = Partial<NumberOrArrayAttrs<BaseAttrs, NumberOrArrayArgKey> & AnyAttrs> 
+  type ArgAttrs = Partial<Omit<BaseAttrs, NumberOrArrayArgKey | AttrBorderRadius | AttrPadding>
+    & NumberOrArrayAttrs<BaseAttrs, NumberOrArrayArgKey>
+    & { [ k in AttrBorderRadius ]: number | [ number, number ] | [ number, number, number, number ] |
+      [ number, number, number, number, number, number ] | [ number, number, number, number, number, number, number, number ] }
+    & { [ k in AttrPadding ]: number | [ number, number ] | [ number, number, number ] | [ number | number | number | number ] }
+    & AnyAttrs>
   /**
    * Animation playstate.
    */
