@@ -1,68 +1,76 @@
 export = spritejs; // make it a module
 export as namespace spritejs; // keep a global namespace called Office
 
-type NumberOrArrayArg<T, K extends string> = Omit<T, K> & { [index in K]: number | [ number, number ] }
+type AnyAttrs = { [ x: string ]: any }
+
+/**
+ * Sprite Node's Attributes.
+ */
+type BaseAttrs = {
+  anchor: [number, number],
+  anchorX: number,
+  anchorY: number,
+  bgcolor: string,
+  border: [number, string],
+  borderBottomLeftRadius: [number, number],
+  borderBottomRightRadius: [number, number],
+  borderColor: string,
+  borderDash: number,
+  borderDashOffset: number,
+  borderRadius: [number, number, number, number, number, number, number, number],
+  borderTopLeftRadius: [number, number],
+  borderTopRightRadius: [number, number],
+  borderWidth: number,
+  boxSizing: 'content-box' | 'border-box',
+  class: string,
+  height: number,
+  padding: [number, number, number, number],
+  paddingBottom: number,
+  paddingLeft: number,
+  paddingRight: number,
+  paddingTop: number,
+  pos: [number, number],
+  size: [number, number],
+  sourceRect: Array<any>,
+  texture: string,
+  textureRect: [number, number, number, number],
+  textureRepeat: boolean,
+  width: number,
+  id: string,
+  name: string,
+  className: string,
+  /* class */
+  x: number,
+  y: number,
+  /* pos */
+  transformOrigin: [number, number],
+  transform: string,
+  translate: [number, number],
+  rotate: number,
+  scale: [number, number],
+  skew: [number, number],
+  opacity: number,
+  zIndex: number,
+  offsetPath: string,
+  offsetDistance: number,
+  offsetRotate: 'auto' | 'reverse' | number,
+  pointerEvents: 'none' | 'visible' | 'visibleFill' | 'visibleStroke' | 'all', // none | visible | visibleFill | visibleStroke | all
+  filter: 'none' | string,
+  display: '' | string,
+};
+
+type NumberOrArrayArgKey = 'scale' | 'skew' | 'anchor' | 'transformOrigin'
+type NumberOrArrayAttrs<T, K extends string> = Omit<T, K> & { [ index in K ]: number | [ number, number ] }
 
 declare namespace spritejs {
   /**
    * Sprite Node's Attributes.
    */
-  type Attrs = {
-    anchor: [number, number],
-    anchorX: number,
-    anchorY: number,
-    bgcolor: string,
-    border: [number, string],
-    borderBottomLeftRadius: [number, number],
-    borderBottomRightRadius: [number, number],
-    borderColor: string,
-    borderDash: number,
-    borderDashOffset: number,
-    borderRadius: [number, number, number, number, number, number, number, number],
-    borderTopLeftRadius: [number, number],
-    borderTopRightRadius: [number, number],
-    borderWidth: number,
-    boxSizing: 'content-box' | 'border-box',
-    class: string,
-    height: number,
-    padding: [number, number, number, number],
-    paddingBottom: number,
-    paddingLeft: number,
-    paddingRight: number,
-    paddingTop: number,
-    pos: [number, number],
-    size: [number, number],
-    sourceRect: Array<any>,
-    texture: string,
-    textureRect: [number, number, number, number],
-    textureRepeat: boolean,
-    width: number,
-    id: string,
-    name: string,
-    className: string,
-    /* class */
-    x: number,
-    y: number,
-    /* pos */
-    transformOrigin: [number, number],
-    transform: string,
-    translate: [number, number],
-    rotate: number,
-    scale: [number, number],
-    skew: [number, number],
-    opacity: number,
-    zIndex: number,
-    offsetPath: string,
-    offsetDistance: number,
-    offsetRotate: 'auto' | 'reverse' | number,
-    pointerEvents: 'none' | 'visible' | 'visibleFill' | 'visibleStroke' | 'all', // none | visible | visibleFill | visibleStroke | all
-    filter: 'none' | string,
-    display: '' | string,
-    [x: string]: any,
-  };
-  
-  type ArgAttrs = Partial<NumberOrArrayArg<Attrs, 'scale' | 'skew' | 'anchor' | 'transformOrigin'>>
-  
+  type Attrs = BaseAttrs & AnyAttrs
+  /**
+   * attr's argument
+   */
+  type ArgAttrs = Partial<NumberOrArrayAttrs<BaseAttrs, NumberOrArrayArgKey> & AnyAttrs> 
   /**
    * Animation playstate.
    */
@@ -857,12 +865,12 @@ declare namespace spritejs {
      * @param prop 
      * @param val 
      */
-    attr(prop: string, val: any): Promise<void>;
+    attr<T extends keyof BaseAttrs | string & {}>(prop: T, val: ArgAttrs[T]): Promise<void>;
     /**
      * Set element attributes.
      * @param attrs 
      */
-    attr(attrs: Record<string, any>): Promise<void>;
+    attr(attrs: ArgAttrs): Promise<void>;
   }
 
   /**
@@ -1572,13 +1580,13 @@ declare namespace spritejs {
      * Get attribute by key.
      * @param key 
      */
-    attr(key: string): any;
+    attr<T extends keyof BaseAttrs | string & {}>(key: T): ArgAttrs[T];
     /**
      * Set attribute by key and value.
      * @param key 
      * @param value 
      */
-    attr(key: string, value: any): this;
+    attr<T extends keyof BaseAttrs | string & {}>(key: T, value: ArgAttrs[T]): this;
     /**
      * Set attributes.
      * @param key 
