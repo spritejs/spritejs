@@ -30,7 +30,7 @@ Arc 元素能绘制一段圆弧、扇形或圆形。
 | fillColor | Path | color | undefined | 填充颜色 |
 | strokeColor | Path | color | undefined | 描边颜色 |
 | lineWidth | Path | number | 1 | 描边宽度 |
-| lineJoin | Path | enum: {miter, bevel} | miter | 连线接头样式 |
+| lineJoin | Path | enum: {miter, bevel, round} | miter | 连线接头样式 |
 | lineCap | Path | enum: {butt, square} | butt | 线帽样式 |
 | lineDash | Path | Array | undefined | 虚线样式 |
 | lineDashOffset | Path | number | 0 | 虚线偏移 | 
@@ -171,7 +171,7 @@ Arc 元素能绘制一段圆弧、扇形或圆形。
 
 当元素属性值被改变时，执行的动作。
 
-##### _overrode_ updateContours()
+##### _override_ updateContours()
 
 更新图形的轮廓信息。
 

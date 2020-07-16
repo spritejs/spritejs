@@ -1,14 +1,6 @@
 ## 微信小程序组件
 
-这是微信小程序组件。
-
-### 使用方法：
-
-1. 将 scene 组件添加到微信小程序项目中，完成配置。
-
-1. 将 `index.js` 文件中的 `require` 修改为实际的 `spritejs.js` 和 `wx-miniprogram.js` 路径。
-
-1. 在需要使用的页面中引入组件。
+这是微信小程序组件，使用方法参考文档[跨平台](https://spritejs.org/#/zh-cn/guide/platforms)小程序中使用方法。
 
 ```xml
 <view>
