@@ -100,6 +100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return helpers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSpriteNode", function() { return isSpriteNode; });
@@ -224,6 +225,13 @@ var helpers = {
   toString: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["toString"],
   toNumber: _utils_attribute_value__WEBPACK_IMPORTED_MODULE_24__["toNumber"]
 };
+var spriteVer;
+
+if (true) {
+  spriteVer = "3.7.21"; // eslint-disable-line no-undef
+} else {}
+
+var version = spriteVer;
 
 
 /***/ }),
@@ -9084,11 +9092,21 @@ function () {
             textureCoord = meshData.textureCoord,
             enableBlend = meshData.enableBlend;
         var gl = _this.gl;
+        var mode = meshData.mode || gl.TRIANGLES;
+
+        if (typeof mode === 'string') {
+          mode = gl[mode];
+        }
+
         if (enableBlend) gl.enable(gl.BLEND);else gl.disable(gl.BLEND);
         gl.bindBuffer(gl.ARRAY_BUFFER, program._buffers.verticesBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, program._buffers.cellsBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cells, gl.STATIC_DRAW);
+
+        if (cells) {
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, program._buffers.cellsBuffer);
+          gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cells, gl.STATIC_DRAW);
+        }
+
         var locations = [];
 
         if (attributes) {
@@ -9126,6 +9144,13 @@ function () {
           });
         }
 
+        var count;
+
+        if (!cells) {
+          var dimension = program._dimension;
+          count = positions.length / dimension;
+        }
+
         if (program._enableTextures && program._buffers.texCoordBuffer) {
           var texVertexData = textureCoord || mapTextureCoordinate(positions, program._dimension);
           gl.bindBuffer(gl.ARRAY_BUFFER, program._buffers.texCoordBuffer);
@@ -9133,17 +9158,29 @@ function () {
         }
 
         if (instanceCount != null) {
-          if (gl.drawElementsInstanced) {
-            gl.drawElementsInstanced(gl.TRIANGLES, cellsCount, gl.UNSIGNED_SHORT, 0, instanceCount);
-          } else if (_this.aia_ext) {
-            _this.aia_ext.drawElementsInstancedANGLE(gl.TRIANGLES, cellsCount, gl.UNSIGNED_SHORT, 0, instanceCount);
+          if (cells) {
+            if (gl.drawElementsInstanced) {
+              gl.drawElementsInstanced(mode, cellsCount, gl.UNSIGNED_SHORT, 0, instanceCount);
+            } else if (_this.aia_ext) {
+              _this.aia_ext.drawElementsInstancedANGLE(mode, cellsCount, gl.UNSIGNED_SHORT, 0, instanceCount);
+            }
+          } else if (gl.drawArraysInstanced) {
+            gl.drawArraysInstanced(mode, 0, count, instanceCount);
+          } else {
+            _this.aia_ext.drawArraysInstancedANGLE(mode, 0, count, instanceCount);
           }
 
           locations.forEach(function (location) {
-            gl.vertexAttribDivisor(location, null);
+            if (gl.vertexAttribDivisor) {
+              gl.vertexAttribDivisor(location, null);
+            } else if (_this.aia_ext) {
+              _this.aia_ext.vertexAttribDivisorANGLE(location, null);
+            }
           });
+        } else if (cells) {
+          gl.drawElements(mode, cellsCount, gl.UNSIGNED_SHORT, 0);
         } else {
-          gl.drawElements(gl.TRIANGLES, cellsCount, gl.UNSIGNED_SHORT, 0);
+          gl.drawArrays(mode, 0, count);
         }
       });
     }
@@ -9193,7 +9230,8 @@ function () {
 
       var program = this.program;
       program.meshData = data.map(function (_ref4) {
-        var positions = _ref4.positions,
+        var mode = _ref4.mode,
+            positions = _ref4.positions,
             instanceCount = _ref4.instanceCount,
             cells = _ref4.cells,
             cellsCount = _ref4.cellsCount,
@@ -9203,12 +9241,19 @@ function () {
             enableBlend = _ref4.enableBlend;
         var meshData = {
           positions: Renderer.FLOAT(positions),
-          cells: Renderer.USHORT(cells),
           uniforms: uniforms,
           enableBlend: !!enableBlend,
           textureCoord: Renderer.FLOAT(textureCoord)
         };
-        meshData.cellsCount = cellsCount || meshData.cells.length;
+
+        if (cells) {
+          meshData.cells = Renderer.USHORT(cells);
+          meshData.cellsCount = cellsCount || meshData.cells.length;
+        }
+
+        if (mode) {
+          meshData.mode = mode;
+        }
 
         if (instanceCount != null) {
           if (!_this2.isWebGL2 && !_this2.aia_ext) throw new Error('Cannot use instanceCount in this rendering context, use webgl2 context instead.');else meshData.instanceCount = instanceCount;
@@ -17362,7 +17407,7 @@ function () {
       var y0 = m[1] * x + m[3] * y + m[5];
       var box = this.boundingBox;
 
-      if (box && (x0 < box[0][0] || x0 > box[1][0] || y0 < box[0][1] || y0 > box[1][1])) {
+      if (x0 < box[0][0] || x0 > box[1][0] || y0 < box[0][1] || y0 > box[1][1]) {
         return false;
       }
 
