@@ -38,6 +38,15 @@ const registerNode = ownerDocument.registerNode;
 
 const helpers = {parseColor, sizeToPixel, toArray, toString, toNumber};
 
+let spriteVer;
+if(typeof __SPRITEVER__ === 'string') {
+  spriteVer = __SPRITEVER__; // eslint-disable-line no-undef
+} else {
+  spriteVer = require('../package.json').version;
+}
+
+export const version = spriteVer;
+
 export {
   Arc,
   Block,

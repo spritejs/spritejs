@@ -40,6 +40,10 @@ module.exports = function (env = {}) {
     'spritejs.worker': './src/index.worker',
   };
 
+  plugins.push(new webpack.DefinePlugin({
+    __SPRITEVER__: `"${require('./package.json').version}"`,
+  }));
+
   return {
     mode: env.mode || 'none',
     entry,
