@@ -2,7 +2,7 @@
 
 Each layer has its own context. If our scene has multiple layers, and we need to save the current rendering results of the scene, we do not need to process each layer. 
 
-SpriteJS<sup>Next</sup> provides an synchronous interface snapshot (). We can take a current "snapshot" of the scene. `Snapshot()` returns a canvas object, which is the superposition of all the output content of the current layers.
+SpriteJS<sup>Next</sup> provides an synchronous interface snapshot (). We can take a current "snapshot" of the scene. `Snapshot()` returns a canvas object, which is the superposition of all the output content of the current layers.(If you want to ignore some "ignoreLayer" content output, you can implement it by setting `ignoreLayer.options.ignoreSnapshot = true `.)
 
 ```js
 const {Scene, Sprite, Path} = spritejs;
