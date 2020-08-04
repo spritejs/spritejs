@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[235],{751:function(n,i,o){"use strict";o.r(i),i.default="html, body {\n  width: 100%;\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  overflow: hidden;\n}\n\n#container {\n  width: 600px;\n  height: 600px;\n  background-color: #ccc;\n}"}}]);

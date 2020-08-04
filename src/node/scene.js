@@ -404,9 +404,9 @@ export default class Scene extends Group {
   removeChild(layer) {
     const ret = super.removeChild(layer);
     if(ret) {
-      layer._prepareRenderFinished();
+      if(layer._prepareRenderFinished) layer._prepareRenderFinished();
       const canvas = layer.canvas;
-      if(canvas.remove) canvas.remove();
+      if(canvas && canvas.remove) canvas.remove();
       if(layer.offscreen) this[_offscreenLayerCount]--;
     }
     return ret;
