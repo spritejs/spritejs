@@ -8958,7 +8958,7 @@ var Renderer = /*#__PURE__*/function () {
             textureCoord = meshData.textureCoord,
             enableBlend = meshData.enableBlend;
         var gl = _this.gl;
-        var mode = meshData.mode || gl.TRIANGLES;
+        var mode = meshData.mode != null ? meshData.mode : gl.TRIANGLES;
 
         if (typeof mode === 'string') {
           mode = gl[mode];
@@ -9117,7 +9117,7 @@ var Renderer = /*#__PURE__*/function () {
           meshData.cellsCount = cellsCount || meshData.cells.length;
         }
 
-        if (mode) {
+        if (mode != null) {
           meshData.mode = mode;
         }
 
@@ -13872,6 +13872,8 @@ var _simplify = Symbol('simplify');
 
 var _scale = Symbol('scale');
 
+var PI2 = 2 * Math.PI;
+
 var Figure2D = /*#__PURE__*/function () {
   function Figure2D() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -13963,7 +13965,6 @@ var Figure2D = /*#__PURE__*/function () {
       startAngle += rotation;
       endAngle += rotation;
       if (radiusX <= 0 || radiusY <= 0 || endAngle === startAngle) return;
-      var PI2 = 2 * Math.PI;
 
       if (endAngle < startAngle) {
         endAngle = startAngle + PI2 + (endAngle - startAngle) % PI2;
@@ -13974,18 +13975,17 @@ var Figure2D = /*#__PURE__*/function () {
       }
 
       var delta = endAngle - startAngle;
+
+      if (delta >= PI2) {
+        endAngle -= 1e-3;
+      }
+
       var path = this[_path].length > 0 && delta < PI2 ? 'L' : 'M';
-      var direction = anticlockwise ? -1 : 1;
       var startPoint = Object(_utils_ellipse__WEBPACK_IMPORTED_MODULE_10__["getPoint"])(x, y, radiusX, radiusY, startAngle);
       var endPoint = Object(_utils_ellipse__WEBPACK_IMPORTED_MODULE_10__["getPoint"])(x, y, radiusX, radiusY, endAngle);
       var sweepFlag = Number(!anticlockwise);
       var largeArcFlag = delta > Math.PI ? 1 : 0;
       if (anticlockwise) largeArcFlag = 1 - largeArcFlag;
-
-      if (delta >= PI2) {
-        endPoint[1] -= direction * 1e-2;
-      }
-
       path += startPoint.join(' ');
       path += "A".concat(radiusX, " ").concat(radiusY, " 0 ").concat(largeArcFlag, " ").concat(sweepFlag, " ").concat(endPoint.join(' '));
 
@@ -38229,9 +38229,8 @@ var SpriteSvg = /*#__PURE__*/function (_Sprite) {
       _svg.setAttribute('xmlns', namespace);
 
       _this[_root].appendChild(_svg);
-    }
+    } // updateTexture(this);
 
-    updateTexture(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
 
     if (typeof MutationObserver === 'function') {
       var observer = new MutationObserver(function (mutationsList) {
@@ -38250,15 +38249,24 @@ var SpriteSvg = /*#__PURE__*/function (_Sprite) {
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(SpriteSvg, [{
+    key: "setResolution",
+
+    /* override */
+    value: function setResolution(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(SpriteSvg.prototype), "setResolution", this).call(this, {
+        width: width,
+        height: height
+      });
+
+      updateTexture(this);
+    }
+    /* override */
+
+  }, {
     key: "dispatchPointerEvent",
-
-    /* override */
-    // setResolution({width, height}) {
-    //   super.setResolution({width, height});
-    //   updateTexture(this);
-    // }
-
-    /* override */
     value: function dispatchPointerEvent(event) {
       // 派发事件给 svg 元素，但是目前只支持派发给 svg 根元素，不支持派发给子元素
       var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(SpriteSvg.prototype), "dispatchPointerEvent", this).call(this, event);

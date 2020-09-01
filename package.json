@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "3.7.23",
+  "version": "3.7.24",
   "description": "A cross platform high-performance graphics system.",
   "main": "dist/spritejs.js",
   "typings": "typings/spritejs.d.ts",
@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@mesh.js/core": "^1.1.18",
+    "@mesh.js/core": "^1.1.19",
     "color-rgba": "^2.1.1",
     "css-select": "^2.0.2",
     "gl-matrix": "^3.1.0",

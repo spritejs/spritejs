@@ -8630,7 +8630,7 @@ class Renderer {
         enableBlend
       } = meshData;
       const gl = this.gl;
-      let mode = meshData.mode || gl.TRIANGLES;
+      let mode = meshData.mode != null ? meshData.mode : gl.TRIANGLES;
 
       if (typeof mode === 'string') {
         mode = gl[mode];
@@ -8801,7 +8801,7 @@ class Renderer {
         meshData.cellsCount = cellsCount || meshData.cells.length;
       }
 
-      if (mode) {
+      if (mode != null) {
         meshData.mode = mode;
       }
 
@@ -12051,6 +12051,7 @@ const _simplify = Symbol('simplify');
 
 const _scale = Symbol('scale');
 
+const PI2 = 2 * Math.PI;
 class Figure2D {
   constructor(options = {}) {
     if (typeof options === 'string') options = {
@@ -12167,7 +12168,6 @@ class Figure2D {
     startAngle += rotation;
     endAngle += rotation;
     if (radiusX <= 0 || radiusY <= 0 || endAngle === startAngle) return;
-    const PI2 = 2 * Math.PI;
 
     if (endAngle < startAngle) {
       endAngle = startAngle + PI2 + (endAngle - startAngle) % PI2;
@@ -12178,18 +12178,17 @@ class Figure2D {
     }
 
     const delta = endAngle - startAngle;
+
+    if (delta >= PI2) {
+      endAngle -= 1e-3;
+    }
+
     let path = this[_path].length > 0 && delta < PI2 ? 'L' : 'M';
-    const direction = anticlockwise ? -1 : 1;
     const startPoint = Object(_utils_ellipse__WEBPACK_IMPORTED_MODULE_6__["getPoint"])(x, y, radiusX, radiusY, startAngle);
     const endPoint = Object(_utils_ellipse__WEBPACK_IMPORTED_MODULE_6__["getPoint"])(x, y, radiusX, radiusY, endAngle);
     const sweepFlag = Number(!anticlockwise);
     let largeArcFlag = delta > Math.PI ? 1 : 0;
     if (anticlockwise) largeArcFlag = 1 - largeArcFlag;
-
-    if (delta >= PI2) {
-      endPoint[1] -= direction * 1e-2;
-    }
-
     path += startPoint.join(' ');
     path += `A${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endPoint.join(' ')}`;
 
@@ -33720,9 +33719,8 @@ class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
       svg.setAttribute('xmlns', namespace);
 
       this[_root].appendChild(svg);
-    }
+    } // updateTexture(this);
 
-    updateTexture(this);
 
     if (typeof MutationObserver === 'function') {
       const observer = new MutationObserver(mutationsList => {
@@ -33754,11 +33752,18 @@ class SpriteSvg extends _sprite__WEBPACK_IMPORTED_MODULE_0__["default"] {
     return null;
   }
   /* override */
-  // setResolution({width, height}) {
-  //   super.setResolution({width, height});
-  //   updateTexture(this);
-  // }
 
+
+  setResolution({
+    width,
+    height
+  }) {
+    super.setResolution({
+      width,
+      height
+    });
+    updateTexture(this);
+  }
   /* override */
 
 

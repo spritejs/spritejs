@@ -104,7 +104,7 @@ export default class SpriteSvg extends Sprite {
       svg.setAttribute('xmlns', namespace);
       this[_root].appendChild(svg);
     }
-    updateTexture(this);
+    // updateTexture(this);
 
     if(typeof MutationObserver === 'function') {
       const observer = new MutationObserver((mutationsList) => {
@@ -138,10 +138,10 @@ export default class SpriteSvg extends Sprite {
   }
 
   /* override */
-  // setResolution({width, height}) {
-  //   super.setResolution({width, height});
-  //   updateTexture(this);
-  // }
+  setResolution({width, height}) {
+    super.setResolution({width, height});
+    updateTexture(this);
+  }
 
   /* override */
   dispatchPointerEvent(event) {

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+const { Scene, Group, Arc } = spritejs;
+const container = document.getElementById("container");
+const scene = new Scene({
+  container,
+  width: 600,
+  height: 600
+});
+const layer = scene.layer();
+
+// const group = new Group({
+//   pos: [0, 0],
+//   size: [400, 400],
+//   border: [1, "red"]
+// });
+
+const arc = new Arc({
+  pos: [300, 300],
+  radius: 100,
+  startAngle: -40,
+  endAngle: 320,
+  lineWidth: 10,
+  strokeColor: "blue"
+});
+
+// const arc2 = arc.cloneNode();
+
+// arc2.attr({
+//   startAngle: 0,
+//   endAngle: 360,
+//   strokeColor: "red"
+// });
+
+// const g2 = new Group({
+//   pos: [0, 0]
+// });
+// g2.append(arc);
+
+// group.append(g2);
+layer.append(arc);
+  </script>
+</body>
+</html>
