@@ -9,7 +9,7 @@ describe('attribute set get', () => {
   test('d', () => {
     expect(attr.d).toBe('');
     attr.radius = [10, 10];
-    expect(attr.d).toBe('M 10 0A 10 10 0 1 1 10 -0.01Z');
+    expect(attr.d).toBe('M 10 0A 10 10 0 1 1 9.999995000000418 -0.009999998333339206Z');
     attr.radius = [0, 0];
     expect(attr.d).toBe('');
   });
