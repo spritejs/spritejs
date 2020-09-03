@@ -119,6 +119,18 @@ export default class Layer extends Group {
     return width / this.displayRatio;
   }
 
+  forceContextLoss() {
+    const gl = this.renderer.glRenderer;
+    if(gl) {
+      const ext = gl.getExtension('WEBGL_lose_context');
+      if(ext) {
+        ext.loseContext();
+        return true;
+      }
+    }
+    return false;
+  }
+
   // isPointCollision(x, y) {
   //   return true;
   // }

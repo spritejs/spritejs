@@ -1396,6 +1396,7 @@ declare namespace spritejs {
      * @param event 
      */
     dispatchPointerEvent(event: any): void;
+    forceContextLoss(): boolean;
     /**
      * Force the canvas to be redrawn.
      */
@@ -1488,7 +1489,7 @@ declare namespace spritejs {
    */
   export class Node {
     static Attr: any;
-    constructor(attrs?: Record<string, any>);
+    constructor(attrs?: Record<string, any>|any);
     /**
      * The attribute object of the current element.
      */
