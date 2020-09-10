@@ -352,6 +352,7 @@ declare namespace spritejs {
      * Event target.
      */
     target: Node;
+    currentTarget: Node;
     layerX: number;
     layerY: number;
     originalX: number;

@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.24"; // eslint-disable-line no-undef
+  spriteVer = "3.7.25"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -21657,12 +21657,14 @@ var Node = /*#__PURE__*/function () {
         var listeners = element[_captureEventListeners] && element[_captureEventListeners][type];
 
         if (listeners && listeners.length) {
+          event.currentTarget = element;
           listeners.forEach(function (_ref) {
             var listener = _ref.listener,
                 once = _ref.once;
             listener.call(_this2, event);
             if (once) elements.removeEventListener(listener);
           });
+          delete event.currentTarget;
         }
 
         if (!event.bubbles && event.cancelBubble) break;
@@ -21676,12 +21678,16 @@ var Node = /*#__PURE__*/function () {
           var _listeners = _element[_eventListeners] && _element[_eventListeners][type];
 
           if (_listeners && _listeners.length) {
+            event.currentTarget = _element;
+
             _listeners.forEach(function (_ref2) {
               var listener = _ref2.listener,
                   once = _ref2.once;
               listener.call(_this2, event);
               if (once) elements.removeEventListener(listener);
             });
+
+            delete event.currentTarget;
           }
 
           if (!event.bubbles || event.cancelBubble) break;
@@ -37729,10 +37735,26 @@ var Layer = /*#__PURE__*/function (_Group) {
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Layer, [{
-    key: "addPass",
-    // isPointCollision(x, y) {
+    key: "forceContextLoss",
+    value: function forceContextLoss() {
+      var gl = this.renderer.glRenderer;
+
+      if (gl) {
+        var ext = gl.getExtension('WEBGL_lose_context');
+
+        if (ext) {
+          ext.loseContext();
+          return true;
+        }
+      }
+
+      return false;
+    } // isPointCollision(x, y) {
     //   return true;
     // }
+
+  }, {
+    key: "addPass",
     value: function addPass() {
       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           vertex = _ref.vertex,

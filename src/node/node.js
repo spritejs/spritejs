@@ -308,10 +308,12 @@ export default class Node {
       const element = elements[i];
       const listeners = element[_captureEventListeners] && element[_captureEventListeners][type];
       if(listeners && listeners.length) {
+        event.currentTarget = element;
         listeners.forEach(({listener, once}) => {
           listener.call(this, event);
           if(once) elements.removeEventListener(listener);
         });
+        delete event.currentTarget;
       }
       if(!event.bubbles && event.cancelBubble) break;
     }
@@ -321,10 +323,12 @@ export default class Node {
         const element = elements[i];
         const listeners = element[_eventListeners] && element[_eventListeners][type];
         if(listeners && listeners.length) {
+          event.currentTarget = element;
           listeners.forEach(({listener, once}) => {
             listener.call(this, event);
             if(once) elements.removeEventListener(listener);
           });
+          delete event.currentTarget;
         }
         if(!event.bubbles || event.cancelBubble) break;
       }

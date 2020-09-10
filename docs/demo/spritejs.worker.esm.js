@@ -19342,6 +19342,7 @@ class Node {
       const listeners = element[_captureEventListeners] && element[_captureEventListeners][type];
 
       if (listeners && listeners.length) {
+        event.currentTarget = element;
         listeners.forEach(({
           listener,
           once
@@ -19349,6 +19350,7 @@ class Node {
           listener.call(this, event);
           if (once) elements.removeEventListener(listener);
         });
+        delete event.currentTarget;
       }
 
       if (!event.bubbles && event.cancelBubble) break;
@@ -19361,6 +19363,7 @@ class Node {
         const listeners = element[_eventListeners] && element[_eventListeners][type];
 
         if (listeners && listeners.length) {
+          event.currentTarget = element;
           listeners.forEach(({
             listener,
             once
@@ -19368,6 +19371,7 @@ class Node {
             listener.call(this, event);
             if (once) elements.removeEventListener(listener);
           });
+          delete event.currentTarget;
         }
 
         if (!event.bubbles || event.cancelBubble) break;
@@ -33236,6 +33240,21 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       width
     } = this.getResolution();
     return width / this.displayRatio;
+  }
+
+  forceContextLoss() {
+    const gl = this.renderer.glRenderer;
+
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_lose_context');
+
+      if (ext) {
+        ext.loseContext();
+        return true;
+      }
+    }
+
+    return false;
   } // isPointCollision(x, y) {
   //   return true;
   // }
