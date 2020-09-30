@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.26"; // eslint-disable-line no-undef
+  spriteVer = "3.7.27"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -19344,6 +19344,7 @@ class Node {
   }
 
   addEventListener(type, listener, options = {}) {
+    if (type === 'mousewheel') type = 'wheel';
     if (typeof options === 'boolean') options = {
       capture: options
     };
@@ -19473,7 +19474,8 @@ class Node {
     }
 
     event.target = this;
-    const type = event.type;
+    let type = event.type;
+    if (type === 'mousewheel') type = 'wheel';
     const elements = [this];
     let parent = this.parent;
 

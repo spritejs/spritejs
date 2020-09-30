@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.26"; // eslint-disable-line no-undef
+  spriteVer = "3.7.27"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -21504,6 +21504,7 @@ var Node = /*#__PURE__*/function () {
     key: "addEventListener",
     value: function addEventListener(type, listener) {
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      if (type === 'mousewheel') type = 'wheel';
       if (typeof options === 'boolean') options = {
         capture: options
       };
@@ -21650,6 +21651,7 @@ var Node = /*#__PURE__*/function () {
 
       event.target = this;
       var type = event.type;
+      if (type === 'mousewheel') type = 'wheel';
       var elements = [this];
       var parent = this.parent;
 

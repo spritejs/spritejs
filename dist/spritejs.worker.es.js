@@ -19214,6 +19214,7 @@ class Node {
   }
 
   addEventListener(type, listener, options = {}) {
+    if (type === 'mousewheel') type = 'wheel';
     if (typeof options === 'boolean') options = {
       capture: options
     };
@@ -19343,7 +19344,8 @@ class Node {
     }
 
     event.target = this;
-    const type = event.type;
+    let type = event.type;
+    if (type === 'mousewheel') type = 'wheel';
     const elements = [this];
     let parent = this.parent;
 

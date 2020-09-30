@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const {Scene, Group, Sprite} = spritejs;
+    const textureURL = 'https://p4.ssl.qhimg.com/t012170360e1552ce17.png';
+    const container = document.getElementById('container');
+    const scene = new Scene({
+      container,
+      displayRatio: 2,
+      width: 600,
+      height: 600,
+    });
+    
+    const fglayer = scene.layer('fglayer');
+    const g = new Group();
+    g.attr({
+      size: [2000, 2000],
+      anchor: 0.5,
+      pos: [300, 300],
+      scale: [1, -1],
+      bgcolor: 'rgba(255, 255, 0, 0.2)',
+    });
+    const el = new Sprite();
+    el.attr({
+      anchor: 0.5,
+      borderWidth: 0,
+      borderColor: 'rgba(0,0,0,1)',
+      bgcolor: 'red',
+      transformOrigin: [50, 50],
+      texture: textureURL,
+    });
+    g.append(el);
+    fglayer.appendChild(g);
+    
+    let o = 1;
+    g.addEventListener('mousewheel', (e) => {
+      const delta = e.originalEvent.wheelDeltaY > 0 ? 0.1 : -0.1;
+
+      o += delta;
+      o = Math.min(1, Math.max(0, o));
+      e.target.attr({
+        opacity: o,
+      });
+    });
+  </script>
+</body>
+</html>
