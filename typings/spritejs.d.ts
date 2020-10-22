@@ -1,7 +1,7 @@
 export = spritejs; // make it a module
 export as namespace spritejs; // keep a global namespace called Office
 
-type AnyAttrs = { [ x: string ]: any }
+type AnyAttrs = { [x: string]: any }
 
 /**
  * Sprite Node's Attributes.
@@ -60,7 +60,7 @@ type BaseAttrs = {
 };
 
 type NumberOrArrayArgKey = 'scale' | 'skew' | 'anchor' | 'transformOrigin'
-type NumberOrArrayAttrs<T, K extends string> = { [ index in K ]: number | [ number, number ] }
+type NumberOrArrayAttrs<T, K extends string> = { [index in K]: number | [number, number] }
 type AttrBorderRadius = 'borderRadius'
 type AttrPadding = 'padding'
 
@@ -74,14 +74,14 @@ declare namespace spritejs {
    */
   type ArgAttrs = Partial<Omit<BaseAttrs, NumberOrArrayArgKey | AttrBorderRadius | AttrPadding>
     & NumberOrArrayAttrs<BaseAttrs, NumberOrArrayArgKey>
-    & { [ k in AttrBorderRadius ]: number | [ number, number ] | [ number, number, number, number ] |
-      [ number, number, number, number, number, number ] | [ number, number, number, number, number, number, number, number ] }
-    & { [ k in AttrPadding ]: number | [ number, number ] | [ number, number, number ] | [ number | number | number | number ] }
+    & { [k in AttrBorderRadius]: number | [number, number] | [number, number, number, number] |
+    [number, number, number, number, number, number] | [number, number, number, number, number, number, number, number] }
+    & { [k in AttrPadding]: number | [number, number] | [number, number, number] | [number | number | number | number] }
     & AnyAttrs>
   /**
    * Animation playstate.
    */
-  type playState = 'idel'|'running'|'pending'|'paused'|'finished';
+  type playState = 'idel' | 'running' | 'pending' | 'paused' | 'finished';
 
   /**
    * Custom timeline. https://github.com/spritejs/sprite-timeline
@@ -213,24 +213,24 @@ declare namespace spritejs {
     /**
      * The arguments of the correspond filter.
      */
-    args: Array<string|number>;
+    args: Array<string | number>;
   }
 
   interface Renderer2d {
     /**
      * The canvas instance.
      */
-    readonly canvas: HTMLCanvasElement|OffscreenCanvas;
+    readonly canvas: HTMLCanvasElement | OffscreenCanvas;
     /**
      * If the renderer is a canvas2d render, canvasRenderer is CanvasRenderingContext2D,
      * otherwise is undefined.
      */
-    readonly canvasRenderer: CanvasRenderingContext2D|undefined;
+    readonly canvasRenderer: CanvasRenderingContext2D | undefined;
     /**
      * If the renderer is a webgl render, glRenderer is WebGL2RenderingContext
      * or WebGLRenderingContext, otherwise is undefined.
-     */    
-    readonly glRenderer: WebGL2RenderingContext|WebGLRenderingContext|undefined;
+     */
+    readonly glRenderer: WebGL2RenderingContext | WebGLRenderingContext | undefined;
     /**
      * Whether the rendering context is webgl2.
      */
@@ -260,7 +260,7 @@ declare namespace spritejs {
      * @param text 
      * @param options 
      */
-    createText(text: string, options?: Record<string, any>): WebGLTexture|Record<string, any>;
+    createText(text: string, options?: Record<string, any>): WebGLTexture | Record<string, any>;
     /**
      * Create a webgl program.
      * createProgram({vertex, fragment, options} = {})
@@ -375,7 +375,7 @@ declare namespace spritejs {
      * The corresponding WebGLProgram.
      * Defaults to null.
      */
-    readonly program: WebGLProgram|null;
+    readonly program: WebGLProgram | null;
     /**
      * The bounding box of the mesh. [[x, y], [width, height]]
      */
@@ -408,7 +408,7 @@ declare namespace spritejs {
     /**
      * Stroke lineDash.
      */
-    readonly lineDash: Array<any>|null;
+    readonly lineDash: Array<any> | null;
     /**
      * Stroke lineDash offset.
      */
@@ -466,13 +466,13 @@ declare namespace spritejs {
      * Use a custom WebGLProgram when drawing the mesh.
      * @param program 
      */
-    setProgram(program: WebGLProgram|null): void;
+    setProgram(program: WebGLProgram | null): void;
     /**
      * Set shader attributes to program.
      * @param key 
      * @param setter 
      */
-    setAttribute(key: string, setter: Function|null): void;
+    setAttribute(key: string, setter: Function | null): void;
     /**
      * Get opacity of the mesh.
      */
@@ -652,7 +652,7 @@ declare namespace spritejs {
      * @param program 
      * @param uniforms 
      */
-    addPass(program: WebGLProgram|null, uniforms?: Record<string, any>): void;
+    addPass(program: WebGLProgram | null, uniforms?: Record<string, any>): void;
   }
 
 
@@ -706,7 +706,7 @@ declare namespace spritejs {
     /**
      * Get the color filter matrix.
      * @param idx
-     */    
+     */
     getColorTransform(idx: number): Array<number>;
     transformColor(idx: number, m: Array<number>): this;
     /**
@@ -714,7 +714,7 @@ declare namespace spritejs {
      * @param idx 
      * @param color 
      */
-    setFillColor(idx: number, color: any): void; 
+    setFillColor(idx: number, color: any): void;
     /**
      * Set stroke color to specified mesh.
      * @param idx 
@@ -725,7 +725,7 @@ declare namespace spritejs {
      * Use a custom WebGLProgram when drawing the mesh.
      * @param program 
      */
-    setProgram(program: WebGLProgram|null): void;
+    setProgram(program: WebGLProgram | null): void;
     /**
      * Set the uniforms to the program before rendering.
      * @param uniforms 
@@ -806,11 +806,11 @@ declare namespace spritejs {
     getTextureFrame(idx: number): Array<any>;
     setTextureFrames(frames: Array<any>, options?: Record<string, any>): void;
     setFrameIndex(idx: number, frameIndex: number): void;
-    transform(idx:number, m: Array<number>): this;
-    translate(idx:number, xy: Array<number>): this;
-    rotate(idx:number, rad: number, origin?: Array<number>): this;
-    scale(idx:number, xy: Array<number>, origin?: Array<number>): this;
-    skew(idx:number, xy: Array<number>, origin?: Array<number>): this;
+    transform(idx: number, m: Array<number>): this;
+    translate(idx: number, xy: Array<number>): this;
+    rotate(idx: number, rad: number, origin?: Array<number>): this;
+    scale(idx: number, xy: Array<number>, origin?: Array<number>): this;
+    skew(idx: number, xy: Array<number>, origin?: Array<number>): this;
     /**
      * Determines whether a given point is within the fill or stroke shape of an element. Normal hit
      * testing rules apply; the value of the pointer-events property on the element determines
@@ -819,7 +819,7 @@ declare namespace spritejs {
      * @param xy
      * @param type 'fill'|'stroke'
      */
-    isPointCollision(idx:number, xy: Array<number>, type?: string): boolean;
+    isPointCollision(idx: number, xy: Array<number>, type?: string): boolean;
     /**
      * Determines whether a given point is within the fill shape of an element. Normal hit
      * testing rules apply; the value of the pointer-events property on the element determines
@@ -828,7 +828,7 @@ declare namespace spritejs {
      * @param xy
      * @param type 'fill'|'stroke'
      */
-    isPointInFill(idx:number, xy: Array<number>): boolean;
+    isPointInFill(idx: number, xy: Array<number>): boolean;
     /**
      * Determines whether a given point is within the stroke shape of an element. Normal hit
      * testing rules apply; the value of the pointer-events property on the element determines
@@ -837,7 +837,7 @@ declare namespace spritejs {
      * @param xy
      * @param type 'fill'|'stroke'
      */
-    isPointInStroke(idx:number, xy: Array<number>): boolean;    
+    isPointInStroke(idx: number, xy: Array<number>): boolean;
   }
 
   interface Resolution {
@@ -866,7 +866,7 @@ declare namespace spritejs {
     end(): void;
     /**
      * Reverse the states of the transition.
-     */    
+     */
     reverse(): void;
     /**
      * Set element attribute.
@@ -982,7 +982,7 @@ declare namespace spritejs {
     /**
      * Recalculate the mesh geometries.
      */
-    updateContours(): void;    
+    updateContours(): void;
   }
 
   /**
@@ -1078,7 +1078,7 @@ declare namespace spritejs {
      * @param p 
      */
     setOpacity(idx: number, p: number): this;
-    rotate(idx:number, rad: number, origin?: Array<number>): this;
+    rotate(idx: number, rad: number, origin?: Array<number>): this;
     /**
      * Saturates the drawing. A value of 0 means completely un-saturated. A value of 1 
      * leaves the drawing unchanged.
@@ -1086,7 +1086,7 @@ declare namespace spritejs {
      * @param p 
      */
     saturate(idx: number, p: number): this;
-    scale(idx:number, xy: Array<number>, origin?: Array<number>): this;
+    scale(idx: number, xy: Array<number>, origin?: Array<number>): this;
     /**
      * Update the color filter matrix.
      * @param idx
@@ -1123,10 +1123,10 @@ declare namespace spritejs {
      * @param m 
      */
     setTransform(idx: number, m: Array<number>): this;
-    skew(idx:number, xy: Array<number>, origin?: Array<number>): this;
-    transform(idx:number, m: Array<number>): this;
+    skew(idx: number, xy: Array<number>, origin?: Array<number>): this;
+    transform(idx: number, m: Array<number>): this;
     transformColor(idx: number, m: Array<number>): this;
-    translate(idx:number, xy: Array<number>): this;
+    translate(idx: number, xy: Array<number>): this;
     /**
      * Update mesh data.
      */
@@ -1184,7 +1184,7 @@ declare namespace spritejs {
   /**
    * The Group element creates a group.
    */
-  class Group extends Block {
+  export class Group extends Block {
     /**
      * The child elements.
      */
@@ -1227,7 +1227,7 @@ declare namespace spritejs {
      * Returns the child element of the specified ID.
      * @param id 
      */
-    getElementById(id: string): Node|null;
+    getElementById(id: string): Node | null;
     /**
      * Returns the list of child elements for the specified className.
      * @param className 
@@ -1255,7 +1255,7 @@ declare namespace spritejs {
      * Returns the specified child element based on the selector.
      * @param selector 
      */
-    querySelector(selector: string): Node|null;
+    querySelector(selector: string): Node | null;
     /**
      * Returns a list of all matching child elements based on the selector.
      * @param selector 
@@ -1295,7 +1295,7 @@ declare namespace spritejs {
      */
     updateContours(): void;
   }
-  
+
   interface TextImage {
     image?: HTMLCanvasElement,
     rect?: [number, number, number, number]
@@ -1332,7 +1332,7 @@ declare namespace spritejs {
      * Update the geometric figure of the drawing.
      */
     updateContours(): void;
-    updateText(): Promise<any>|null;
+    updateText(): Promise<any> | null;
   }
 
   /**
@@ -1340,7 +1340,7 @@ declare namespace spritejs {
    */
   export class Layer extends Group {
     constructor(options?: Record<string, any>);
-    canvas: HTMLCanvasElement|OffscreenCanvas;
+    canvas: HTMLCanvasElement | OffscreenCanvas;
     /**
      * Whether to render automatically depends on the parameters when creating a layer.
      */
@@ -1357,7 +1357,7 @@ declare namespace spritejs {
      * Get the layer object in the current paint context.
      */
     get layer(): this;
-    get gl(): WebGLRenderingContext|WebGL2RenderingContext|null;
+    get gl(): WebGLRenderingContext | WebGL2RenderingContext | null;
     /**
      * If the canvas of the layer is offscreen, this property is true.
      */
@@ -1391,7 +1391,7 @@ declare namespace spritejs {
      * @param options 
      */
     addPass(options: Record<string, any>): void;
-    deleteTexture(image:any): boolean;
+    deleteTexture(image: any): boolean;
     /**
      * Dispatch a mouse or touch event.
      * @param event 
@@ -1440,7 +1440,7 @@ declare namespace spritejs {
      * @param x 
      * @param y 
      */
-    toLocalPos(x: number, y: number): Array<number>;   
+    toLocalPos(x: number, y: number): Array<number>;
   }
 
   /**
@@ -1490,7 +1490,7 @@ declare namespace spritejs {
    */
   export class Node {
     static Attr: any;
-    constructor(attrs?: Record<string, any>|any);
+    constructor(attrs?: Record<string, any> | any);
     /**
      * The attribute object of the current element.
      */
@@ -1533,8 +1533,8 @@ declare namespace spritejs {
      * Get the transform matrix of the current element relative to the parent element.
      */
     get localMatrix(): Array<number>;
-    get nextSibling(): Node|undefined;
-    get previousSibling(): Node|undefined;
+    get nextSibling(): Node | undefined;
+    get previousSibling(): Node | undefined;
     get opacity(): number;
     /**
      * Get custom WebGLProgram.
@@ -1653,8 +1653,8 @@ declare namespace spritejs {
      * @param type 
      * @param options 
      */
-    getListeners(type: string, options: EventOptions): Array<(event: Event) =>void>;
-    getNodeNearBy(distance: number): Node|undefined;
+    getListeners(type: string, options: EventOptions): Array<(event: Event) => void>;
+    getNodeNearBy(distance: number): Node | undefined;
     /**
      * Transform the specified [x, y] coordinates relative of the layer to the coordinates
      * of the current element, with the anchor as the origin [0, 0].
@@ -1847,7 +1847,7 @@ declare namespace spritejs {
   /**
    * The Regular element draws a regular polygon.
    */
-  export class Regular extends Polyline {}
+  export class Regular extends Polyline { }
 
   /**
    * The Ring element draws a torus or arc.
@@ -1866,8 +1866,12 @@ declare namespace spritejs {
   /**
    * Scene manages one or more layers.
    */
-  class Scene extends Group {
+  export class Scene extends Group {
     constructor(options: Record<string, any>);
+    /**
+     * Get the container of Scene
+     */
+    get container(): Element;
     /**
      * If there is offscreen canvas, different rendering modes will be choosen 
      * according to the situation.
@@ -1939,7 +1943,7 @@ declare namespace spritejs {
      * @param id 
      * @param options 
      */
-    layer3d(id: string, options: Record<string, any>): Layer;  
+    layer3d(id: string, options: Record<string, any>): Layer;
     /**
      * Load resources asynchronously.
      * @param resources 
@@ -1974,7 +1978,7 @@ declare namespace spritejs {
      * Take a snapshot of the current scene.
      * @param options 
      */
-    snapshot(options?: Record<string, any>): HTMLCanvasElement|OffscreenCanvas; 
+    snapshot(options?: Record<string, any>): HTMLCanvasElement | OffscreenCanvas;
   }
 
   /**
@@ -2022,7 +2026,7 @@ declare namespace spritejs {
      * Returns the child element of the specified ID.
      * @param id 
      */
-    getElementById(id: string): Node|null;
+    getElementById(id: string): Node | null;
     /**
      * Returns the list of child elements for the specified className.
      * @param className 
@@ -2042,7 +2046,7 @@ declare namespace spritejs {
      * Returns the specified child element based on the selector.
      * @param selector 
      */
-    querySelector(selector: string): Node|null;
+    querySelector(selector: string): Node | null;
     /**
      * Returns a list of all matching child elements based on the selector.
      * @param selector 
@@ -2060,7 +2064,7 @@ declare namespace spritejs {
   /**
    * The Star element draws a polygonal star.
    */
-  export class Star extends Polyline {}
+  export class Star extends Polyline { }
 
   /**
    * The Triangle element draws a triangle.
@@ -2077,7 +2081,7 @@ declare namespace spritejs {
      * Parse color to a RGBA string.
      * @param color 
      */
-    export function parseColor(color: any): string|Gradient;
+    export function parseColor(color: any): string | Gradient;
     /**
      * Convert the CSS <length> to number.
      * @param value 
@@ -2094,12 +2098,12 @@ declare namespace spritejs {
      * Convert a value to string, if the value is not null.
      * @param value 
      */
-    export function toString(value: any): string|null;
+    export function toString(value: any): string | null;
     /**
      * Convert a string value to number.
      * @param value 
      */
-    export function toNumber(value: any): number|null;
+    export function toNumber(value: any): number | null;
   }
 
   /**
@@ -2140,14 +2144,14 @@ declare namespace spritejs {
     /**
      * createCanvas polyfill.
      */
-    export const createCanvas: Function|null;
+    export const createCanvas: Function | null;
     /**
      * loadImage polyfill.
      */
-    export const loadImage: Function|null;
+    export const loadImage: Function | null;
     /**
      * createText polyfill.
      */
-    export const createText: Function|null;
+    export const createText: Function | null;
   }
 }
