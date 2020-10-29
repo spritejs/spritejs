@@ -6,9 +6,9 @@
   "main": "dist/spritejs.js",
   "typings": "typings/spritejs.d.ts",
   "scripts": {
-    "test": "jest --coverage",
-    "test:build": "jest --updateSnapshot --coverage",
-    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test": "BABEL_ENV=test jest --coverage",
+    "test:build": "BABEL_ENV=test jest --updateSnapshot --coverage",
+    "test:coveralls": "BABEL_ENV=test jest --coverage --coverageReporters=text-lcov | coveralls",
     "start": "webpack-dev-server --env.server=examples --watch-poll",
     "compile": "rm -rf lib/* && babel src -d lib",
     "doc": "docsify serve ./docs",
