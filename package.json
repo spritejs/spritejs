@@ -12,7 +12,7 @@
     "start": "webpack-dev-server --env.server=examples --watch-poll",
     "compile": "rm -rf lib/* && babel src -d lib",
     "doc": "docsify serve ./docs",
-    "build": "rm -rf dist/* && webpack --env.mode=none & webpack --env.mode=none --env.esnext & webpack --env.mode=none --env.esnext --env.module & webpack --env.mode=production & webpack --env.mode=production --env.esnext",
+    "build": "rm -rf dist/* && rollup --config",
     "demo:dev": "demosify --serve",
     "demo:prod": "demosify --prod",
     "benchmark": "webpack-dev-server --watch-poll --env.server=benchmark",
