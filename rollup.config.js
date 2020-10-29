@@ -54,4 +54,16 @@ const config = {
   ],
 };
 
-export default config;
+/** @type {import('rollup').RollupOptions} */
+const workerConfig = {
+  ...config,
+  input: './src/index.worker',
+  output: config.output.map(item => {
+    return {
+      ...item,
+      file: item.file.replace('spritejs', 'spritejs.worker'),
+    };
+  }),
+};
+
+export default [config, workerConfig];
