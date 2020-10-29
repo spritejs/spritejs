@@ -4,6 +4,7 @@ import babel from '@rollup/plugin-babel';
 import json from '@rollup/plugin-json';
 import {string} from 'rollup-plugin-string';
 import globals from 'rollup-plugin-node-globals';
+import {terser} from 'rollup-plugin-terser';
 
 const pkg = require('./package.json');
 
@@ -21,6 +22,13 @@ const config = {
       name: 'spritejs',
       sourcemap: true,
       file: pkg.main,
+    },
+    {
+      format: 'umd',
+      name: 'spritejs',
+      sourcemap: true,
+      file: 'dist/spritejs.min.js',
+      plugins: [terser()],
     },
   ],
   plugins: [
