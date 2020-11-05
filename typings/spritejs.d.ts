@@ -1628,7 +1628,7 @@ declare namespace spritejs {
      * Dispatch a custom event.
      * @param event 
      */
-    dispatchEvent(event: any): void;
+    dispatchEvent(event: any, data?: any): void;
     /**
      * Dispatch a mouse or touch event.
      * @param event 
