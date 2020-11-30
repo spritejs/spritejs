@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.27"; // eslint-disable-line no-undef
+  spriteVer = "3.7.28"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -26148,7 +26148,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
       Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setStrokeColor"])(this[_mesh], {
         color: borderColor,
         lineWidth: borderWidth,
-        lineDash: borderDash,
+        lineDash: borderWidth ? borderDash : 0,
         lineDashOffset: borderDashOffset
       });
     }
@@ -26322,7 +26322,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_0__["default"] {
   set borderDash(value) {
     value = Object(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__["toArray"])(value, true);
     if (value != null && !Array.isArray(value)) value = [value];
-    this[setAttribute]('borderDash', value.map(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__["toNumber"]));
+    this[setAttribute]('borderDash', value ? value.map(_utils_attribute_value__WEBPACK_IMPORTED_MODULE_1__["toNumber"]) : null);
   }
 
   get borderDashOffset() {

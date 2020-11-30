@@ -171,7 +171,7 @@ export default class Block extends Node {
       || key === 'borderDashOffset')) {
       const {borderColor, borderWidth, borderDash, borderDashOffset} = this.attributes;
       setStrokeColor(this[_mesh],
-        {color: borderColor, lineWidth: borderWidth, lineDash: borderDash, lineDashOffset: borderDashOffset});
+        {color: borderColor, lineWidth: borderWidth, lineDash: borderWidth ? borderDash : 0, lineDashOffset: borderDashOffset});
     }
   }
 

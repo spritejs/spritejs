@@ -128,7 +128,7 @@ export default class Block extends Node {
   set borderDash(value) {
     value = toArray(value, true);
     if(value != null && !Array.isArray(value)) value = [value];
-    this[setAttribute]('borderDash', value.map(toNumber));
+    this[setAttribute]('borderDash', value ? value.map(toNumber) : null);
   }
 
   get borderDashOffset() {
