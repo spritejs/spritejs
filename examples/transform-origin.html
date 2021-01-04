@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border: solid 1px #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const {Scene, Group, Gradient, Sprite} = spritejs;
+    const container = document.getElementById('container');
+    const scene = new Scene({
+      container,
+      displayRatio: 2,
+    });
+    const layer = scene.layer('fglayer');
+    const group = new Group({
+      size: 600,
+    });
+    const group2 = group.cloneNode();
+    // group.attributes.bgcolor = 'grey';
+
+    const gradient = new Gradient({
+      vector: [0, 0, 100, 100],
+      colors: [{offset: 0, color: 'red'}, {offset: 1, color: 'green'}],
+    });
+    const s = new Sprite();
+    s.attr({
+      size: [100, 100],
+      anchor: 0.5,
+      bgcolor: gradient,
+      pos: [300, 300],
+    });
+    layer.append(group);
+    group.append(group2);
+    group2.append(s);
+
+    let scaled = 1.0;
+    group.addEventListener('wheel', (e) => {
+      const {x, y} = e;
+      const dy = e.originalEvent.deltaY / 3600;
+      scaled = Math.max(1.0, Math.min(20, scaled - dy));
+
+      const ofc = group2.getOffsetPosition(x, y);
+      const anchor = [ofc[0] / 600, ofc[1] / 600];
+      console.log([...ofc, ...anchor, x, y, scaled]);
+
+      group.attr({
+        anchor,
+        pos: [x, y],
+        scale: scaled,
+      });
+
+      group2.attr({
+        pos: [-ofc[0], -ofc[1]],
+      });
+    });
+
+    let ox, oy, gx, gy, dragging;
+    layer.addEventListener('mousedown', (e) => {
+      dragging = true;
+      gx = group.attributes.x;
+      gy = group.attributes.y;
+      ox = e.x;
+      oy = e.y;
+    });
+    layer.addEventListener('mousemove', (e) => {
+      if(dragging) {
+        group.attributes.x = gx + e.x - ox;
+        group.attributes.y = gy + e.y - oy;
+      }
+    });
+    layer.addEventListener('mouseup', (e) => {
+      dragging = false;
+    });
+  </script>
+</body>
+</html>
