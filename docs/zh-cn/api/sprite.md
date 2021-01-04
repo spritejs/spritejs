@@ -19,8 +19,8 @@ Sprite 元素用来绘制图片。
 | anchorX | Block | number | 0 | X 轴向锚点 |
 | anchorY | Block | number | 0 | Y 轴向锚点 |
 | anchor | Block | Array | [0, 0] | [anchorX, anchorY] 简写 |
-| width | Block | number | undefined | 元素宽度，不设定的话一般根据内容自适应 |
-| height | Block | number | undefined | 元素高度，不设定的话一般根据内容自适应 |
+| width | Block | number | undefined | 元素宽度，不设定的话自适应纹理图片大小 |
+| height | Block | number | undefined | 元素高度，不设定的话自适应纹理图片大小 |
 | size | Block | Array | [undefined, undefined] | [width, height] 简写 |
 | borderWidth | Block | number | 0 | border宽度 |
 | borderColor | Block | color | rgba(0,0,0,1) | border颜色 |

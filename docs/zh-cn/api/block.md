@@ -20,8 +20,8 @@ Block是所有块元素的基类，它继承自Node，Sprite、Label、Group等�
 | anchorX | | number | 0 | X 轴向锚点 |
 | anchorY | | number | 0 | Y 轴向锚点 |
 | anchor | | Array | [0, 0] | [anchorX, anchorY] 简写 |
-| width | | number | undefined | 元素宽度，不设定的话一般根据内容自适应 |
-| height | | number | undefined | 元素高度，不设定的话一般根据内容自适应 |
+| width | | number | undefined | 元素宽度 |
+| height | | number | undefined | 元素高度 |
 | size | | Array | [undefined, undefined] | [width, height] 简写 |
 | borderWidth | | number | 0 | border宽度 |
 | borderColor | | color | rgba(0,0,0,1) | border颜色 |
