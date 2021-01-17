@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.28"; // eslint-disable-line no-undef
+  spriteVer = "3.7.29"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -9822,6 +9822,12 @@ function fontEx(info, ratio) {
     pxLineHeight,
     family
   } = info;
+
+  if (stretch === 'normal') {
+    // fix iOS10 bug
+    return `${style} ${variant} ${weight} ${size * ratio}px/${pxLineHeight * ratio}px ${family}`;
+  }
+
   return `${style} ${variant} ${weight} ${stretch} ${size * ratio}px/${pxLineHeight * ratio}px ${family}`;
 }
 

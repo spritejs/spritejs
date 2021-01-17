@@ -11236,6 +11236,12 @@ function fontEx(info, ratio) {
       size = info.size,
       pxLineHeight = info.pxLineHeight,
       family = info.family;
+
+  if (stretch === 'normal') {
+    // fix iOS10 bug
+    return "".concat(style, " ").concat(variant, " ").concat(weight, " ").concat(size * ratio, "px/").concat(pxLineHeight * ratio, "px ").concat(family);
+  }
+
   return "".concat(style, " ").concat(variant, " ").concat(weight, " ").concat(stretch, " ").concat(size * ratio, "px/").concat(pxLineHeight * ratio, "px ").concat(family);
 }
 

@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.28"; // eslint-disable-line no-undef
+  spriteVer = "3.7.29"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -11375,6 +11375,12 @@ function fontEx(info, ratio) {
       size = info.size,
       pxLineHeight = info.pxLineHeight,
       family = info.family;
+
+  if (stretch === 'normal') {
+    // fix iOS10 bug
+    return "".concat(style, " ").concat(variant, " ").concat(weight, " ").concat(size * ratio, "px/").concat(pxLineHeight * ratio, "px ").concat(family);
+  }
+
   return "".concat(style, " ").concat(variant, " ").concat(weight, " ").concat(stretch, " ").concat(size * ratio, "px/").concat(pxLineHeight * ratio, "px ").concat(family);
 }
 
