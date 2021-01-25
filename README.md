@@ -140,15 +140,15 @@ Compatible with [d3.js](https://github.com/d3/d3).
 
 A visulization library based on spritejs.
 
-- [QCharts basic](http://spritejs.org/demo/#/qchart/basic)
-- [Lines](http://spritejs.org/demo/#/qchart/double_line)
-- [Smooth Lines](http://spritejs.org/demo/#/qchart/smooth_line)
-- [Lines & Bars](http://spritejs.org/demo/#/qchart/multicharts)
-- [Area Chart](http://spritejs.org/demo/#/qchart/area)
-- [Pie Chart](http://spritejs.org/demo/#/qchart/pie)
-- [Rose Chart](http://spritejs.org/demo/#/qchart/rose)
-- [Radar Chart](http://spritejs.org/demo/#/qchart/radar)
-- [Bubble Chart](http://spritejs.org/demo/#/qchart/bubble)
+- [QCharts basic](https://www.qcharts.cn/#/demo/line/default)
+- [Lines](https://www.qcharts.cn/#/demo/line/multi)
+- [Smooth Lines](https://www.qcharts.cn/#/demo/line/smooth)
+- [Lines & Bars](https://www.qcharts.cn/#/more/line-mixLineAndBar)
+- [Area Chart](https://www.qcharts.cn/#/demo/area/stack)
+- [Pie Chart](https://www.qcharts.cn/#/demo/pie/default)
+- [Rose Chart](https://www.qcharts.cn/#/demo/polarBar/group)
+- [Radar Chart](https://www.qcharts.cn/#/demo/radar/default)
+- [Bubble Chart](https://www.qcharts.cn/#/demo/scatter/bubble)
 
 <!-- ### With Proton
 
