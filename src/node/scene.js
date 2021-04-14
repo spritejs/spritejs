@@ -63,7 +63,7 @@ const touchEventCapturedTargets = {};
 function delegateEvents(scene) {
   const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel',
     'touchstart', 'touchend', 'touchmove', 'touchcancel',
-    'click', 'dblclick', 'longpress', 'tap'];
+    'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
 
   const container = scene.container;
   const {left, top, displayRatio} = scene.options;
@@ -163,7 +163,7 @@ function delegateEvents(scene) {
           });
         }
       });
-    }, {passive: true});
+    }, {passive: eventType !== 'contextmenu'});
   });
 }
 

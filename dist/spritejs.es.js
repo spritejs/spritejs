@@ -228,7 +228,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.29"; // eslint-disable-line no-undef
+  spriteVer = "3.7.30"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -34384,7 +34384,7 @@ function drawImage(layer, offscreenLayer) {
 const touchEventCapturedTargets = {};
 
 function delegateEvents(scene) {
-  const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap'];
+  const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
   const container = scene.container;
   const {
     left,
@@ -34500,7 +34500,7 @@ function delegateEvents(scene) {
         }
       });
     }, {
-      passive: true
+      passive: eventType !== 'contextmenu'
     });
   });
 }

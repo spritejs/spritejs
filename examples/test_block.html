@@ -32,6 +32,11 @@
       translate: [100, 0],
     });
     layer.append(block);
+
+    block.addEventListener('contextmenu', (e) => {
+      e.originalEvent.preventDefault();
+      console.log(e);
+    });
   </script>
 </body>
 </html>

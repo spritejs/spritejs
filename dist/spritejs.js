@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.29"; // eslint-disable-line no-undef
+  spriteVer = "3.7.30"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -39032,7 +39032,7 @@ function drawImage(layer, offscreenLayer) {
 var touchEventCapturedTargets = {};
 
 function delegateEvents(scene) {
-  var events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap'];
+  var events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
   var container = scene.container;
   var _scene$options = scene.options,
       left = _scene$options.left,
@@ -39157,7 +39157,7 @@ function delegateEvents(scene) {
         }
       });
     }, {
-      passive: true
+      passive: eventType !== 'contextmenu'
     });
   });
 }
