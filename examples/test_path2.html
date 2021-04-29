@@ -29,12 +29,14 @@
     const layer = scene.layer();
     const p1 = new Path();
     p1.attr({
-      d: 'M0,0A200,200,0,1,1,400,0A200,200,0,1,1,0,0Z',
+      // d: 'M0,0A200,200,0,1,1,400,0A200,200,0,1,1,0,0Z',
+      d: 'M24.499,69 L-24.501,68.999',
       scale: 0.5,
       strokeColor: '#033',
       fillColor: '#839',
       lineWidth: 12,
       pos: [100, 150],
+      lineDash: [3, 4],
     });
 
     layer.appendChild(p1);

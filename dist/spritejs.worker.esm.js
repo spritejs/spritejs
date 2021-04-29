@@ -13066,7 +13066,8 @@ function computeMiter(tangent, miter, lineA, lineB, halfThick) {
   set(miter, -tangent[1], tangent[0]);
   set(tmp, -lineA[1], lineA[0]); // get the necessary length of our miter
 
-  return halfThick / dot(miter, tmp);
+  const miterLen = halfThick / dot(miter, tmp);
+  return Math.abs(miterLen); // avoid -Infinity
 }
 
 function normal(out, dir) {
