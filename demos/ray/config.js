@@ -15,7 +15,7 @@ export default async () => {
     },
     packages: {
       js: [
-        '//s2.ssl.qhres.com/!87edaa34/animator-0.3.1.min.js',
+        '//s2.ssl.qhres2.com/!87edaa34/animator-0.3.1.min.js',
       ],
     },
   };

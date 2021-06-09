@@ -5,7 +5,7 @@ const layer = new spritejs.Layer({
 });
 
 const video = document.createElement('video');
-video.src = 'https://s4.ssl.qhres.com/static/a2fa8e8634dd1ccb.mp4';
+video.src = 'https://s4.ssl.qhres2.com/static/a2fa8e8634dd1ccb.mp4';
 video.crossOrigin = 'Anonymous';
 video.loop = true;
 video.muted = true;
