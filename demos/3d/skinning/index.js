@@ -138,14 +138,14 @@ const layer = scene.layer3d('fglayer', {
 layer.camera.attributes.pos = [6, 2, 6];
 
 (async function () {
-  const animationData = await (await fetch('https://s2.ssl.qhres.com/static/2042f56d104bd374.json')).json();
+  const animationData = await (await fetch('https://s2.ssl.qhres2.com/static/2042f56d104bd374.json')).json();
   const texture = layer.createTexture('https://p3.ssl.qhimg.com/d/inn/ae57767c6b58/snout.jpg');
   const program = layer.createProgram({
     vertex,
     fragment,
     texture,
   });
-  const model = layer.loadModel('https://s3.ssl.qhres.com/static/e9139173907776d5.json');
+  const model = layer.loadModel('https://s3.ssl.qhres2.com/static/e9139173907776d5.json');
   const skin = new Skin(program, {model});
   skin.attr({
     y: -1,

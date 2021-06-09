@@ -29,7 +29,7 @@ light.lookAt([0, 0, 0]);
 const shadow = layer.createShadow({light});
 
 const texture = layer.createTexture('https://p2.ssl.qhimg.com/t01155feb9a795bdd05.jpg');
-const model = layer.loadModel('https://s0.ssl.qhres.com/static/0baccc5ad3cd5b8c.json');
+const model = layer.loadModel('https://s0.ssl.qhres2.com/static/0baccc5ad3cd5b8c.json');
 const program = layer.createProgram({
   ...shaders.TEXTURE_WITH_SHADOW,
   cullFace: null,

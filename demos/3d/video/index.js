@@ -19,7 +19,7 @@ const program = layer.createProgram({
   ...shaders.NORMAL_TEXTURE,
   texture,
 });
-const model = layer.loadModel('https://s5.ssl.qhres.com/static/f545f86e6da07b9d.json');
+const model = layer.loadModel('https://s5.ssl.qhres2.com/static/f545f86e6da07b9d.json');
 const mesh = new Mesh3d(program, {model});
 layer.append(mesh);
 
@@ -33,7 +33,7 @@ const videoTexture = layer.createTexture({
 // Check update loop to see when video is attached to texture
 const video = document.createElement('video');
 video.crossOrigin = 'anonymous';
-video.src = 'https://s4.ssl.qhres.com/static/a2fa8e8634dd1ccb.mp4';
+video.src = 'https://s4.ssl.qhres2.com/static/a2fa8e8634dd1ccb.mp4';
 
 // Disclaimer: video autoplay is a confusing, constantly-changing browser feature.
 // The best approach is to never assume that it will work, and therefore prepare for a fallback.

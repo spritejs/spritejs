@@ -25,7 +25,7 @@ layer.camera.lookAt([0, 0, 0]);
     },
   });
 
-  const model = await layer.loadModel('https://s3.ssl.qhres.com/static/8613b585d1542274.json');
+  const model = await layer.loadModel('https://s3.ssl.qhres2.com/static/8613b585d1542274.json');
 
   // For an accurate wireframe, triangle vertices need to be duplicated to make line pairs.
   // Here we do so by generating indices. If your geometry is already indexed, this needs to be adjusted.

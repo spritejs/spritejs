@@ -25,7 +25,7 @@ const layer = scene.layer('fglayer', {
 
 layer.canvas.style.backgroundColor = '#8DBF59';
 
-d3.json('https://s4.ssl.qhres.com/static/4e8ebcccf5b5ea78.json', (error, us) => {
+d3.json('https://s4.ssl.qhres2.com/static/4e8ebcccf5b5ea78.json', (error, us) => {
   if(error) throw error;
 
   d3.select(layer).selectAll('path')

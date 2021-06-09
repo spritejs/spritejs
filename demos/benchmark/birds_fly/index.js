@@ -1,4 +1,4 @@
-const birdsJsonUrl = 'https://s5.ssl.qhres.com/static/5f6911b7b91c88da.json';
+const birdsJsonUrl = 'https://s5.ssl.qhres2.com/static/5f6911b7b91c88da.json';
 const birdsRes = 'https://p.ssl.qhimg.com/d/inn/c886d09f/birds.png';
 const container = document.getElementById('paper');
 const spriteCount = document.getElementById('spriteCount');

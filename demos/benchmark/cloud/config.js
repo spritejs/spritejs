@@ -14,7 +14,7 @@ export default async () => {
       code: css,
     },
     packages: {
-      js: ['https://s3.ssl.qhres.com/!ed7dc4fe/animator-0.3.2.js'],
+      js: ['https://s3.ssl.qhres2.com/!ed7dc4fe/animator-0.3.2.js'],
     },
   };
 };

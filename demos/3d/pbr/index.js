@@ -511,12 +511,12 @@ const shader = {
 };
 
 loadModels({
-  models: ['https://s4.ssl.qhres.com/static/461e5c422262b578.json', 'https://s5.ssl.qhres.com/static/b1839bacbb389981.json'],
+  models: ['https://s4.ssl.qhres2.com/static/461e5c422262b578.json', 'https://s5.ssl.qhres2.com/static/b1839bacbb389981.json'],
   settings: exteriorSettings,
 });
 
 loadModels({
-  models: ['https://s1.ssl.qhres.com/static/1bdf7e845a8c3f10.json'],
+  models: ['https://s1.ssl.qhres2.com/static/1bdf7e845a8c3f10.json'],
   settings: interiorSettings,
 });
 

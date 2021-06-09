@@ -16,7 +16,7 @@ layer.camera.lookAt([0, 0, 0]);
 
 /* globals d3,topojson */
 (async function () {
-  const data = await (await fetch('https://s0.ssl.qhres.com/static/6a08177cb2f066a5.json')).json();
+  const data = await (await fetch('https://s0.ssl.qhres2.com/static/6a08177cb2f066a5.json')).json();
   const countries = topojson.feature(data, data.objects.countries);
 
   // 默认宽高 960 X 500，默认 translate 是 480 X 250

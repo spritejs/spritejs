@@ -19,7 +19,7 @@ layer.append('label')
   .attr('text', '中国')
   .attr('fillColor', '#fff');
 
-d3.json('https://s5.ssl.qhres.com/static/b0695e2dd30daa64.json', (err, data) => {
+d3.json('https://s5.ssl.qhres2.com/static/b0695e2dd30daa64.json', (err, data) => {
   if(err) throw new Error(err);
 
   const root = d3.hierarchy(data)

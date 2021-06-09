@@ -21,7 +21,7 @@ const projection = d3.geoMercator()
 
 const path = d3.geoPath().projection(projection);
 
-d3.json('https://s1.ssl.qhres.com/static/6c6d50baf39026d5.json', (err, data) => {
+d3.json('https://s1.ssl.qhres2.com/static/6c6d50baf39026d5.json', (err, data) => {
   if(err) throw new Error(err);
 
   layer.selectAll('path')
