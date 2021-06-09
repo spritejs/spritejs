@@ -422,7 +422,7 @@ const scene = new spritejs.Scene({
   mode: 'stickyHeight',
 });
 
-const svgURL = 'https://s1.ssl.qhres.com/static/9bd74da7f533f462.svg';
+const svgURL = 'https://s1.ssl.qhres2.com/static/9bd74da7f533f462.svg';
 
 
 const fglayer = scene.layer('fglayer');

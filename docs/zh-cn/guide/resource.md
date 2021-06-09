@@ -94,7 +94,7 @@ const layer = scene.layer();
 
 (async function () {
   const earthPNG = 'https://p3.ssl.qhimg.com/t01806718065fe97c65.png',
-    earthJSON = 'https://s3.ssl.qhres.com/static/d479c28f553c6cff.json';
+    earthJSON = 'https://s3.ssl.qhres2.com/static/d479c28f553c6cff.json';
 
   await scene.preload([earthPNG, earthJSON]);
 

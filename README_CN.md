@@ -88,7 +88,7 @@ import {Cube, shaders} from 'sprite-extend-3d';
 
 SpriteJS <sup>Next</sup> 提供若干类基础精灵元素，可以像操作DOM元素一样在图层上操作它们。
 
-![架构图](https://s4.ssl.qhres.com/static/26567dd3bf3be8a9.svg)
+![架构图](https://s4.ssl.qhres2.com/static/26567dd3bf3be8a9.svg)
 
 ## 与旧版本主要差异
 

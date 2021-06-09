@@ -37,7 +37,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 <script src="https://unpkg.com/spritejs@3/dist/spritejs.min.js"></script>
 <div id="container" style="width:400px;height:400px"></div>
 <script>
-    const imgUrl = 'https://s5.ssl.qhres.com/static/ec9f373a383d7664.svg'
+    const imgUrl = 'https://s5.ssl.qhres2.com/static/ec9f373a383d7664.svg'
     const {Scene, Sprite} = spritejs;
     const container = document.getElementById('container');
     const paper = new Scene({
@@ -179,7 +179,7 @@ A visulization library based on spritejs.
 
 Spritejs<sup>Next</sup> provides several kinds of basic sprite elements, which can be operated on the layer like DOM elements.
 
-![架构图](https://s0.ssl.qhres.com/static/fe2ee3b6fd1aa59f.svg)
+![架构图](https://s0.ssl.qhres2.com/static/fe2ee3b6fd1aa59f.svg)
 
 ### Build
 
