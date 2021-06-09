@@ -10,7 +10,7 @@
 
   await scene.preload([
     '//p.ssl.qhimg.com/t01293283c63b01af00.png',
-    '//s.ssl.qhres.com/static/ee4e193568c3ffcb.json',
+    '//s.ssl.qhres2.com/static/ee4e193568c3ffcb.json',
   ]);
 
   const layer = scene.layer('fglayer');

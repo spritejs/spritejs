@@ -37,7 +37,7 @@ const layer = scene.layer3d('fglayer', {
 
 const program = layer.createProgram(shaders.NORMAL);
 
-const model = layer.loadModel('https://s2.ssl.qhres.com/static/bf607b5f64a91492.json');
+const model = layer.loadModel('https://s2.ssl.qhres2.com/static/bf607b5f64a91492.json');
 const macow = new Mesh3d(program, {model, mode: 'LINE_STRIP'});
 layer.append(macow);
 layer.setOrbit({target: [0, 0.7, 0]});

@@ -68,7 +68,7 @@ const program = layer.createProgram({
   texture,
 });
 
-const model = layer.loadModel('https://s4.ssl.qhres.com/static/4d2c8de20e171997.json');
+const model = layer.loadModel('https://s4.ssl.qhres2.com/static/4d2c8de20e171997.json');
 const size = 20;
 const num = size * size;
 
