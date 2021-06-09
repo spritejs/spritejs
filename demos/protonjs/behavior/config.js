@@ -15,8 +15,8 @@ export default async () => {
     },
     packages: {
       js: [
-        '//s4.ssl.qhres.com/!a52a564f/color.min.js',
-        '//s1.ssl.qhres.com/static/c83b6cdc11341b82.js', // proton-js
+        '//s4.ssl.qhres2.com/!a52a564f/color.min.js',
+        '//s1.ssl.qhres2.com/static/c83b6cdc11341b82.js', // proton-js
         '//unpkg.com/sprite-extend-proton/dist/sprite-extend-proton.js',
       ],
     },

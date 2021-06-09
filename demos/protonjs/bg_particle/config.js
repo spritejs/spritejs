@@ -16,7 +16,7 @@ export default async () => {
     packages: {
       js: [
         '//lib.baomitu.com/lodash.js/4.17.10/lodash.js',
-        '//s1.ssl.qhres.com/static/c83b6cdc11341b82.js', // proton-js
+        '//s1.ssl.qhres2.com/static/c83b6cdc11341b82.js', // proton-js
         '//unpkg.com/sprite-extend-proton/dist/sprite-extend-proton.js',
       ],
     },
