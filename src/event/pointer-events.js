@@ -33,12 +33,12 @@ export default function createPointerEvents(originalEvent, {offsetTop = 0, offse
     const event = new Event(originalEvent);
 
     Object.defineProperties(event, {
-      layerX: {
-        value: x,
-      },
-      layerY: {
-        value: y,
-      },
+      // layerX: {
+      //   value: x,
+      // },
+      // layerY: {
+      //   value: y,
+      // },
       originalX: {
         value: originalCoordinate.x,
       },

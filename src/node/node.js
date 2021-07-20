@@ -338,7 +338,7 @@ export default class Node {
   }
 
   dispatchPointerEvent(event) {
-    const {x, y} = event;
+    const {layerX: x, layerY: y} = event;
     if(this.isPointCollision(x, y)) {
       this.dispatchEvent(event);
       return true;

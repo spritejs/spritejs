@@ -35,6 +35,8 @@
       container,
       width: 1200,
       height: 1200,
+      contextType: '2d',
+      // displayRatio: 2,
     });
 
     await scene.preload([
@@ -201,6 +203,12 @@
         combine();
       });
     });
+
+    // layer.addEventListener('mousemove', (evt) => {
+    //   console.log(evt.x, evt.y);
+    // });
+
+    window.layer = layer;
   }());
   </script>
 </body>

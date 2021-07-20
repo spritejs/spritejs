@@ -19406,8 +19406,8 @@ class Node {
 
   dispatchPointerEvent(event) {
     const {
-      x,
-      y
+      layerX: x,
+      layerY: y
     } = event;
 
     if (this.isPointCollision(x, y)) {
@@ -33112,15 +33112,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(74);
 /* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sprite_animator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(68);
-/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(250);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(213);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(218);
+/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1);
+/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(68);
+/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(250);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(213);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(218);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -33151,7 +33153,11 @@ const _fbo = Symbol('fbo');
 
 const _tickers = Symbol('tickers');
 
-class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
+const _layerTransform = Symbol('layerTransform');
+
+const _layerTransformInvert = Symbol('_layerTransformInvert');
+
+class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
   constructor(options = {}) {
     super();
 
@@ -33191,6 +33197,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     this.canvas = canvas;
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
+    this[_layerTransform] = null;
   }
 
   get autoRender() {
@@ -33318,7 +33325,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
 
   deleteTexture(image) {
-    return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_5__["deleteTexture"])(image, this.renderer);
+    return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_6__["deleteTexture"])(image, this.renderer);
   }
   /* override */
 
@@ -33337,6 +33344,21 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
         this.__mouseCapturedTarget = null;
       }
+    }
+
+    if (this[_layerTransform]) {
+      const {
+        x,
+        y
+      } = event;
+      const m = this[_layerTransformInvert];
+      const layerX = m[0] * x + m[2] * y + m[4];
+      const layerY = m[1] * x + m[3] * y + m[5];
+      event.layerX = layerX;
+      event.layerY = layerY;
+    } else {
+      event.layerX = event.x;
+      event.layerY = event.y;
     }
 
     return super.dispatchPointerEvent(event);
@@ -33361,7 +33383,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
           _resolve = resolve;
 
           if (this[_autoRender]) {
-            _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(() => {
+            _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_3__["requestAnimationFrame"])(() => {
               delete prepareRender._requestID;
               this.render();
             });
@@ -33412,7 +33434,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   _prepareRenderFinished() {
     if (this[_prepareRender]) {
       if (this[_prepareRender]._requestID) {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_3__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
       }
 
       this[_prepareRender]._resolve();
@@ -33465,6 +33487,18 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
 
     this._prepareRenderFinished();
   }
+
+  setLayerTransform(...m) {
+    this[_layerTransform] = m.length >= 6 ? m : null;
+    this[_layerTransformInvert] = this[_layerTransform] && gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m); // m = m || mat2d(1, 0, 0, 1, 0, 0);
+
+    const renderer = this.renderer;
+    const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+    renderer.__globalTransformMatrix = globalMatrix;
+    const mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
+    renderer.setGlobalTransform(...gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].multiply(mOut, globalMatrix, m));
+    this.forceUpdate();
+  }
   /* override */
 
 
@@ -33473,7 +33507,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     height
   }) {
     const renderer = this.renderer;
-    const m = renderer.globalTransformMatrix;
+    const m = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
     const offsetLeft = m[4];
     const offsetTop = m[5];
     const previousDisplayRatio = m[0];
@@ -33512,6 +33546,12 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
     if (offsetLeft !== left || offsetTop !== top || previousDisplayRatio !== displayRatio) {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
+      renderer.__globalTransformMatrix = null;
+
+      if (this[_layerTransform]) {
+        this.setLayerTransform(this[_layerTransform]);
+      }
+
       this.forceUpdate();
     }
   }
@@ -33580,14 +33620,14 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
       };
 
       if (this[_prepareRender] && this[_prepareRender]._type !== 'ticker') {
-        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+        Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_3__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
         delete this[_prepareRender];
       }
 
       if (!this[_prepareRender]) {
         const prepareRender = new Promise(resolve => {
           _resolve = resolve;
-          _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_2__["requestAnimationFrame"])(_update);
+          _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_3__["requestAnimationFrame"])(_update);
         });
         prepareRender._resolve = _resolve;
         prepareRender._requestID = _requestID;
@@ -33626,7 +33666,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_3__["default"] {
   }
 
 }
-_document__WEBPACK_IMPORTED_MODULE_4__["default"].registerNode(Layer, 'layer');
+_document__WEBPACK_IMPORTED_MODULE_5__["default"].registerNode(Layer, 'layer');
 
 /***/ }),
 /* 287 */

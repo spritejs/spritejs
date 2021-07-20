@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.31"; // eslint-disable-line no-undef
+  spriteVer = "3.7.32"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -21713,8 +21713,8 @@ var Node = /*#__PURE__*/function () {
   }, {
     key: "dispatchPointerEvent",
     value: function dispatchPointerEvent(event) {
-      var x = event.x,
-          y = event.y;
+      var x = event.layerX,
+          y = event.layerY;
 
       if (this.isPointCollision(x, y)) {
         this.dispatchEvent(event);
@@ -37631,25 +37631,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(24);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(95);
-/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(98);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(100);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(97);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(12);
-/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(102);
-/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(sprite_animator__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(88);
-/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(283);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(241);
-/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(246);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(25);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(95);
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(98);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(100);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(97);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(12);
+/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(102);
+/* harmony import */ var sprite_animator__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(sprite_animator__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(1);
+/* harmony import */ var _utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(88);
+/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(283);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(241);
+/* harmony import */ var _utils_texture__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(246);
+
 
 
 
@@ -37661,9 +37665,10 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, result); }; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -37694,8 +37699,12 @@ var _fbo = Symbol('fbo');
 
 var _tickers = Symbol('tickers');
 
+var _layerTransform = Symbol('layerTransform');
+
+var _layerTransformInvert = Symbol('_layerTransformInvert');
+
 var Layer = /*#__PURE__*/function (_Group) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(Layer, _Group);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Layer, _Group);
 
   var _super = _createSuper(Layer);
 
@@ -37704,7 +37713,7 @@ var Layer = /*#__PURE__*/function (_Group) {
 
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Layer);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3___default()(this, Layer);
 
     _this = _super.call(this);
 
@@ -37713,7 +37722,7 @@ var Layer = /*#__PURE__*/function (_Group) {
           width = _this$getResolution.width,
           height = _this$getResolution.height;
 
-      var _canvas = _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["ENV"].createCanvas(width, height, {
+      var _canvas = _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["ENV"].createCanvas(width, height, {
         offscreen: !!options.offscreen,
         id: options.id,
         extra: options.extra
@@ -37730,7 +37739,7 @@ var Layer = /*#__PURE__*/function (_Group) {
     _this[_autoRender] = opts.autoRender;
     delete options.autoRender;
 
-    var _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Renderer"];
+    var _Renderer = opts.Renderer || _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Renderer"];
 
     _this[_renderer] = new _Renderer(canvas, opts); // if(canvas.__gl__) {
     //   // fix blendFunc for node-canvas-webgl
@@ -37745,12 +37754,13 @@ var Layer = /*#__PURE__*/function (_Group) {
     _this.setResolution(canvas);
 
     _this.canvas = canvas;
-    _this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_9__["Timeline"]();
+    _this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_10__["Timeline"]();
     _this.__mouseCapturedTarget = null;
+    _this[_layerTransform] = null;
     return _this;
   }
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Layer, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_4___default()(Layer, [{
     key: "forceContextLoss",
     value: function forceContextLoss() {
       var gl = this.renderer.glRenderer;
@@ -37788,9 +37798,9 @@ var Layer = /*#__PURE__*/function (_Group) {
           fragment: fragment,
           options: options
         });
-        var figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Figure2D"]();
+        var figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Figure2D"]();
         figure.rect(0, 0, width / this.displayRatio, height / this.displayRatio);
-        var mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Mesh2D"](figure);
+        var mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Mesh2D"](figure);
         mesh.setUniforms(uniforms);
         mesh.setProgram(program);
 
@@ -37806,7 +37816,7 @@ var Layer = /*#__PURE__*/function (_Group) {
   }, {
     key: "deleteTexture",
     value: function deleteTexture(image) {
-      return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_13__["deleteTexture"])(image, this.renderer);
+      return Object(_utils_texture__WEBPACK_IMPORTED_MODULE_15__["deleteTexture"])(image, this.renderer);
     }
     /* override */
 
@@ -37828,7 +37838,20 @@ var Layer = /*#__PURE__*/function (_Group) {
         }
       }
 
-      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Layer.prototype), "dispatchPointerEvent", this).call(this, event);
+      if (this[_layerTransform]) {
+        var x = event.x,
+            y = event.y;
+        var m = this[_layerTransformInvert];
+        var layerX = m[0] * x + m[2] * y + m[4];
+        var layerY = m[1] * x + m[3] * y + m[5];
+        event.layerX = layerX;
+        event.layerY = layerY;
+      } else {
+        event.layerX = event.x;
+        event.layerY = event.y;
+      }
+
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchPointerEvent", this).call(this, event);
     }
     /* override */
 
@@ -37854,7 +37877,7 @@ var Layer = /*#__PURE__*/function (_Group) {
             _resolve2 = resolve;
 
             if (_this2[_autoRender]) {
-              _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["requestAnimationFrame"])(function () {
+              _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["requestAnimationFrame"])(function () {
                 delete _prepareRender2._requestID;
 
                 _this2.render();
@@ -37899,7 +37922,7 @@ var Layer = /*#__PURE__*/function (_Group) {
   }, {
     key: "onPropertyChange",
     value: function onPropertyChange(key, newValue, oldValue) {
-      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Layer.prototype), "onPropertyChange", this).call(this, key, newValue, oldValue);
+      _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "onPropertyChange", this).call(this, key, newValue, oldValue);
 
       if (key === 'zIndex') {
         this.canvas.style.zIndex = newValue;
@@ -37910,7 +37933,7 @@ var Layer = /*#__PURE__*/function (_Group) {
     value: function _prepareRenderFinished() {
       if (this[_prepareRender]) {
         if (this[_prepareRender]._requestID) {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
+          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["cancelAnimationFrame"])(this[_prepareRender]._requestID);
         }
 
         this[_prepareRender]._resolve();
@@ -37969,6 +37992,23 @@ var Layer = /*#__PURE__*/function (_Group) {
 
       this._prepareRenderFinished();
     }
+  }, {
+    key: "setLayerTransform",
+    value: function setLayerTransform() {
+      for (var _len = arguments.length, m = new Array(_len), _key = 0; _key < _len; _key++) {
+        m[_key] = arguments[_key];
+      }
+
+      this[_layerTransform] = m.length >= 6 ? m : null;
+      this[_layerTransformInvert] = this[_layerTransform] && gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m); // m = m || mat2d(1, 0, 0, 1, 0, 0);
+
+      var renderer = this.renderer;
+      var globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+      renderer.__globalTransformMatrix = globalMatrix;
+      var mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
+      renderer.setGlobalTransform.apply(renderer, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].multiply(mOut, globalMatrix, m)));
+      this.forceUpdate();
+    }
     /* override */
 
   }, {
@@ -37979,7 +38019,7 @@ var Layer = /*#__PURE__*/function (_Group) {
       var width = _ref4.width,
           height = _ref4.height;
       var renderer = this.renderer;
-      var m = renderer.globalTransformMatrix;
+      var m = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
       var offsetLeft = m[4];
       var offsetTop = m[5];
       var previousDisplayRatio = m[0];
@@ -37989,7 +38029,7 @@ var Layer = /*#__PURE__*/function (_Group) {
           h = _this$getResolution5.height;
 
       if (w !== width || h !== height) {
-        _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_4___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Layer.prototype), "setResolution", this).call(this, {
+        _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "setResolution", this).call(this, {
           width: width,
           height: height
         });
@@ -38004,7 +38044,7 @@ var Layer = /*#__PURE__*/function (_Group) {
 
         if (this[_pass].length) {
           this[_pass].forEach(function (pass) {
-            var figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_8__["Figure2D"]();
+            var figure = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Figure2D"]();
             figure.rect(0, 0, width / _this4.displayRatio, height / _this4.displayRatio);
             pass.contours = figure.contours;
           });
@@ -38021,6 +38061,12 @@ var Layer = /*#__PURE__*/function (_Group) {
       if (offsetLeft !== left || offsetTop !== top || previousDisplayRatio !== displayRatio) {
         // console.log(displayRatio, this.parent);
         renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
+        renderer.__globalTransformMatrix = null;
+
+        if (this[_layerTransform]) {
+          this.setLayerTransform(this[_layerTransform]);
+        }
+
         this.forceUpdate();
       }
     }
@@ -38092,14 +38138,14 @@ var Layer = /*#__PURE__*/function (_Group) {
         };
 
         if (_this5[_prepareRender] && _this5[_prepareRender]._type !== 'ticker') {
-          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["cancelAnimationFrame"])(_this5[_prepareRender]._requestID);
+          Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["cancelAnimationFrame"])(_this5[_prepareRender]._requestID);
           delete _this5[_prepareRender];
         }
 
         if (!_this5[_prepareRender]) {
           var prepareRender = new Promise(function (resolve) {
             _resolve = resolve;
-            _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_10__["requestAnimationFrame"])(_update);
+            _requestID = Object(_utils_animation_frame__WEBPACK_IMPORTED_MODULE_12__["requestAnimationFrame"])(_update);
           });
           prepareRender._resolve = _resolve;
           prepareRender._requestID = _requestID;
@@ -38226,10 +38272,10 @@ var Layer = /*#__PURE__*/function (_Group) {
   }]);
 
   return Layer;
-}(_group__WEBPACK_IMPORTED_MODULE_11__["default"]);
+}(_group__WEBPACK_IMPORTED_MODULE_13__["default"]);
 
 
-_document__WEBPACK_IMPORTED_MODULE_12__["default"].registerNode(Layer, 'layer');
+_document__WEBPACK_IMPORTED_MODULE_14__["default"].registerNode(Layer, 'layer');
 
 /***/ }),
 /* 320 */
@@ -39740,12 +39786,12 @@ function createPointerEvents(originalEvent) {
 
     var event = new _event__WEBPACK_IMPORTED_MODULE_0__["default"](originalEvent);
     Object.defineProperties(event, {
-      layerX: {
-        value: x
-      },
-      layerY: {
-        value: y
-      },
+      // layerX: {
+      //   value: x,
+      // },
+      // layerY: {
+      //   value: y,
+      // },
       originalX: {
         value: originalCoordinate.x
       },
