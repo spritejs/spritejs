@@ -20059,8 +20059,9 @@ class Node {
     if (typeof value === 'string') value = value.replace(/\s*,\s*/g, ',');else if (value != null) {
       throw new TypeError('Invalid transform value.');
     }
+    const oldValue = this[_attr].transform;
 
-    if (this[setAttribute]('transform', value)) {
+    if (this[setAttribute]('transform', value, false)) {
       const transformMap = this[_transforms];
 
       if (transformMap.has('matrix')) {
@@ -20100,6 +20101,8 @@ class Node {
       }
 
       this[_transformMatrix] = null;
+
+      this[_subject].onPropertyChange('transform', value, oldValue, this);
     }
   }
 
@@ -33153,8 +33156,6 @@ const _fbo = Symbol('fbo');
 
 const _tickers = Symbol('tickers');
 
-const _layerTransform = Symbol('layerTransform');
-
 const _layerTransformInvert = Symbol('_layerTransformInvert');
 
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
@@ -33197,7 +33198,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
     this.canvas = canvas;
     this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_1__["Timeline"]();
     this.__mouseCapturedTarget = null;
-    this[_layerTransform] = null;
+    this[_layerTransformInvert] = null;
   }
 
   get autoRender() {
@@ -33274,6 +33275,26 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
     return width / this.displayRatio;
   }
 
+  get localMatrix() {
+    const {
+      x,
+      y
+    } = this.attributes;
+    return [1, 0, 0, 1, x, y];
+  }
+
+  get layerTransformInvert() {
+    if (this[_layerTransformInvert]) return this[_layerTransformInvert];
+    const m = this.transformMatrix;
+
+    if (m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1 && m[4] === 0 && m[5] === 0) {
+      return null;
+    }
+
+    this[_layerTransformInvert] = gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m);
+    return this[_layerTransformInvert];
+  }
+
   forceContextLoss() {
     const gl = this.renderer.glRenderer;
 
@@ -33346,22 +33367,63 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       }
     }
 
-    if (this[_layerTransform]) {
-      const {
-        x,
-        y
-      } = event;
-      const m = this[_layerTransformInvert];
+    let x, y;
+    const layerTransformInvert = this.layerTransformInvert;
+
+    if (layerTransformInvert) {
+      x = event.x;
+      y = event.y;
+      const m = layerTransformInvert;
       const layerX = m[0] * x + m[2] * y + m[4];
       const layerY = m[1] * x + m[3] * y + m[5];
-      event.layerX = layerX;
-      event.layerY = layerY;
-    } else {
-      event.layerX = event.x;
-      event.layerY = event.y;
+      delete event.x;
+      delete event.y;
+      delete event.layerX;
+      delete event.layerY;
+      Object.defineProperties(event, {
+        layerX: {
+          value: layerX,
+          configurable: true
+        },
+        layerY: {
+          value: layerY,
+          configurable: true
+        },
+        x: {
+          value: layerX,
+          configurable: true
+        },
+        y: {
+          value: layerY,
+          configurable: true
+        }
+      });
     }
 
-    return super.dispatchPointerEvent(event);
+    const ret = super.dispatchPointerEvent(event);
+
+    if (layerTransformInvert) {
+      Object.defineProperties(event, {
+        layerX: {
+          value: x,
+          configurable: true
+        },
+        layerY: {
+          value: y,
+          configurable: true
+        },
+        x: {
+          value: x,
+          configurable: true
+        },
+        y: {
+          value: y,
+          configurable: true
+        }
+      });
+    }
+
+    return ret;
   }
   /* override */
 
@@ -33420,6 +33482,16 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
 
     return this[_fbo] ? this[_fbo] : null;
   }
+
+  updateGlobalTransform() {
+    if (this.layerTransformInvert) {
+      const renderer = this.renderer;
+      const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+      renderer.__globalTransformMatrix = globalMatrix;
+      const mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
+      renderer.setGlobalTransform(...gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].multiply(mOut, globalMatrix, this.transformMatrix));
+    }
+  }
   /* override */
 
 
@@ -33428,6 +33500,11 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
 
     if (key === 'zIndex') {
       this.canvas.style.zIndex = newValue;
+    }
+
+    if (key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+      this[_layerTransformInvert] = null;
+      this.updateGlobalTransform();
     }
   }
 
@@ -33487,18 +33564,6 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
 
     this._prepareRenderFinished();
   }
-
-  setLayerTransform(...m) {
-    this[_layerTransform] = m.length >= 6 ? m : null;
-    this[_layerTransformInvert] = this[_layerTransform] && gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m); // m = m || mat2d(1, 0, 0, 1, 0, 0);
-
-    const renderer = this.renderer;
-    const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
-    renderer.__globalTransformMatrix = globalMatrix;
-    const mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
-    renderer.setGlobalTransform(...gl_matrix__WEBPACK_IMPORTED_MODULE_2__["mat2d"].multiply(mOut, globalMatrix, m));
-    this.forceUpdate();
-  }
   /* override */
 
 
@@ -33547,11 +33612,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
       renderer.__globalTransformMatrix = null;
-
-      if (this[_layerTransform]) {
-        this.setLayerTransform(this[_layerTransform]);
-      }
-
+      this.updateGlobalTransform();
       this.forceUpdate();
     }
   }

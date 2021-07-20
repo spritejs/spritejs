@@ -279,7 +279,8 @@ export default class Node {
     else if(value != null) {
       throw new TypeError('Invalid transform value.');
     }
-    if(this[setAttribute]('transform', value)) {
+    const oldValue = this[_attr].transform;
+    if(this[setAttribute]('transform', value, false)) {
       const transformMap = this[_transforms];
       if(transformMap.has('matrix')) {
         transformMap.delete('matrix');
@@ -312,6 +313,7 @@ export default class Node {
         }
       }
       this[_transformMatrix] = null;
+      this[_subject].onPropertyChange('transform', value, oldValue, this);
     }
   }
 

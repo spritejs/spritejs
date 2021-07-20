@@ -22509,8 +22509,9 @@ var Node = /*#__PURE__*/function () {
       if (typeof value === 'string') value = value.replace(/\s*,\s*/g, ',');else if (value != null) {
         throw new TypeError('Invalid transform value.');
       }
+      var oldValue = this[_attr].transform;
 
-      if (this[_setAttribute]('transform', value)) {
+      if (this[_setAttribute]('transform', value, false)) {
         var transformMap = this[_transforms];
 
         if (transformMap.has('matrix')) {
@@ -22555,6 +22556,8 @@ var Node = /*#__PURE__*/function () {
         }
 
         this[_transformMatrix] = null;
+
+        this[_subject].onPropertyChange('transform', value, oldValue, this);
       }
     }
   }, {
@@ -37560,8 +37563,6 @@ var _fbo = Symbol('fbo');
 
 var _tickers = Symbol('tickers');
 
-var _layerTransform = Symbol('layerTransform');
-
 var _layerTransformInvert = Symbol('_layerTransformInvert');
 
 var Layer = /*#__PURE__*/function (_Group) {
@@ -37617,7 +37618,7 @@ var Layer = /*#__PURE__*/function (_Group) {
     _this.canvas = canvas;
     _this[_timeline] = new sprite_animator__WEBPACK_IMPORTED_MODULE_10__["Timeline"]();
     _this.__mouseCapturedTarget = null;
-    _this[_layerTransform] = null;
+    _this[_layerTransformInvert] = null;
     return _this;
   }
 
@@ -37699,20 +37700,63 @@ var Layer = /*#__PURE__*/function (_Group) {
         }
       }
 
-      if (this[_layerTransform]) {
-        var x = event.x,
-            y = event.y;
-        var m = this[_layerTransformInvert];
+      var x, y;
+      var layerTransformInvert = this.layerTransformInvert;
+
+      if (layerTransformInvert) {
+        x = event.x;
+        y = event.y;
+        var m = layerTransformInvert;
         var layerX = m[0] * x + m[2] * y + m[4];
         var layerY = m[1] * x + m[3] * y + m[5];
-        event.layerX = layerX;
-        event.layerY = layerY;
-      } else {
-        event.layerX = event.x;
-        event.layerY = event.y;
+        delete event.x;
+        delete event.y;
+        delete event.layerX;
+        delete event.layerY;
+        Object.defineProperties(event, {
+          layerX: {
+            value: layerX,
+            configurable: true
+          },
+          layerY: {
+            value: layerY,
+            configurable: true
+          },
+          x: {
+            value: layerX,
+            configurable: true
+          },
+          y: {
+            value: layerY,
+            configurable: true
+          }
+        });
       }
 
-      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchPointerEvent", this).call(this, event);
+      var ret = _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_5___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Layer.prototype), "dispatchPointerEvent", this).call(this, event);
+
+      if (layerTransformInvert) {
+        Object.defineProperties(event, {
+          layerX: {
+            value: x,
+            configurable: true
+          },
+          layerY: {
+            value: y,
+            configurable: true
+          },
+          x: {
+            value: x,
+            configurable: true
+          },
+          y: {
+            value: y,
+            configurable: true
+          }
+        });
+      }
+
+      return ret;
     }
     /* override */
 
@@ -37778,6 +37822,17 @@ var Layer = /*#__PURE__*/function (_Group) {
 
       return this[_fbo] ? this[_fbo] : null;
     }
+  }, {
+    key: "updateGlobalTransform",
+    value: function updateGlobalTransform() {
+      if (this.layerTransformInvert) {
+        var renderer = this.renderer;
+        var globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+        renderer.__globalTransformMatrix = globalMatrix;
+        var mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
+        renderer.setGlobalTransform.apply(renderer, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].multiply(mOut, globalMatrix, this.transformMatrix)));
+      }
+    }
     /* override */
 
   }, {
@@ -37787,6 +37842,11 @@ var Layer = /*#__PURE__*/function (_Group) {
 
       if (key === 'zIndex') {
         this.canvas.style.zIndex = newValue;
+      }
+
+      if (key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+        this[_layerTransformInvert] = null;
+        this.updateGlobalTransform();
       }
     }
   }, {
@@ -37853,23 +37913,6 @@ var Layer = /*#__PURE__*/function (_Group) {
 
       this._prepareRenderFinished();
     }
-  }, {
-    key: "setLayerTransform",
-    value: function setLayerTransform() {
-      for (var _len = arguments.length, m = new Array(_len), _key = 0; _key < _len; _key++) {
-        m[_key] = arguments[_key];
-      }
-
-      this[_layerTransform] = m.length >= 6 ? m : null;
-      this[_layerTransformInvert] = this[_layerTransform] && gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m); // m = m || mat2d(1, 0, 0, 1, 0, 0);
-
-      var renderer = this.renderer;
-      var globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
-      renderer.__globalTransformMatrix = globalMatrix;
-      var mOut = gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].fromValues(1, 0, 0, 1, 0, 0);
-      renderer.setGlobalTransform.apply(renderer, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].multiply(mOut, globalMatrix, m)));
-      this.forceUpdate();
-    }
     /* override */
 
   }, {
@@ -37923,11 +37966,7 @@ var Layer = /*#__PURE__*/function (_Group) {
         // console.log(displayRatio, this.parent);
         renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
         renderer.__globalTransformMatrix = null;
-
-        if (this[_layerTransform]) {
-          this.setLayerTransform(this[_layerTransform]);
-        }
-
+        this.updateGlobalTransform();
         this.forceUpdate();
       }
     }
@@ -38129,6 +38168,27 @@ var Layer = /*#__PURE__*/function (_Group) {
           width = _this$getResolution9.width;
 
       return width / this.displayRatio;
+    }
+  }, {
+    key: "localMatrix",
+    get: function get() {
+      var _this$attributes = this.attributes,
+          x = _this$attributes.x,
+          y = _this$attributes.y;
+      return [1, 0, 0, 1, x, y];
+    }
+  }, {
+    key: "layerTransformInvert",
+    get: function get() {
+      if (this[_layerTransformInvert]) return this[_layerTransformInvert];
+      var m = this.transformMatrix;
+
+      if (m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1 && m[4] === 0 && m[5] === 0) {
+        return null;
+      }
+
+      this[_layerTransformInvert] = gl_matrix__WEBPACK_IMPORTED_MODULE_11__["mat2d"].invert(Array.of(0, 0, 0, 0, 0, 0), m);
+      return this[_layerTransformInvert];
     }
   }]);
 

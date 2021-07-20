@@ -23,7 +23,6 @@ const _pass = Symbol('pass');
 const _fbo = Symbol('fbo');
 const _tickers = Symbol('tickers');
 
-const _layerTransform = Symbol('layerTransform');
 const _layerTransformInvert = Symbol('_layerTransformInvert');
 
 export default class Layer extends Group {
@@ -59,7 +58,7 @@ export default class Layer extends Group {
     this.canvas = canvas;
     this[_timeline] = new Timeline();
     this.__mouseCapturedTarget = null;
-    this[_layerTransform] = null;
+    this[_layerTransformInvert] = null;
   }
 
   get autoRender() {
@@ -124,6 +123,21 @@ export default class Layer extends Group {
     return width / this.displayRatio;
   }
 
+  get localMatrix() {
+    const {x, y} = this.attributes;
+    return [1, 0, 0, 1, x, y];
+  }
+
+  get layerTransformInvert() {
+    if(this[_layerTransformInvert]) return this[_layerTransformInvert];
+    const m = this.transformMatrix;
+    if(m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1 && m[4] === 0 && m[5] === 0) {
+      return null;
+    }
+    this[_layerTransformInvert] = mat2d.invert(m);
+    return this[_layerTransformInvert];
+  }
+
   forceContextLoss() {
     const gl = this.renderer.glRenderer;
     if(gl) {
@@ -174,18 +188,60 @@ export default class Layer extends Group {
         this.__mouseCapturedTarget = null;
       }
     }
-    if(this[_layerTransform]) {
-      const {x, y} = event;
-      const m = this[_layerTransformInvert];
+    let x,
+      y;
+    const layerTransformInvert = this.layerTransformInvert;
+    if(layerTransformInvert) {
+      x = event.x;
+      y = event.y;
+      const m = layerTransformInvert;
       const layerX = m[0] * x + m[2] * y + m[4];
       const layerY = m[1] * x + m[3] * y + m[5];
-      event.layerX = layerX;
-      event.layerY = layerY;
-    } else {
-      event.layerX = event.x;
-      event.layerY = event.y;
+      delete event.x;
+      delete event.y;
+      delete event.layerX;
+      delete event.layerY;
+      Object.defineProperties(event, {
+        layerX: {
+          value: layerX,
+          configurable: true,
+        },
+        layerY: {
+          value: layerY,
+          configurable: true,
+        },
+        x: {
+          value: layerX,
+          configurable: true,
+        },
+        y: {
+          value: layerY,
+          configurable: true,
+        },
+      });
     }
-    return super.dispatchPointerEvent(event);
+    const ret = super.dispatchPointerEvent(event);
+    if(layerTransformInvert) {
+      Object.defineProperties(event, {
+        layerX: {
+          value: x,
+          configurable: true,
+        },
+        layerY: {
+          value: y,
+          configurable: true,
+        },
+        x: {
+          value: x,
+          configurable: true,
+        },
+        y: {
+          value: y,
+          configurable: true,
+        },
+      });
+    }
+    return ret;
   }
 
   /* override */
@@ -239,11 +295,26 @@ export default class Layer extends Group {
     return this[_fbo] ? this[_fbo] : null;
   }
 
+  updateGlobalTransform() {
+    if(this.layerTransformInvert) {
+      const renderer = this.renderer;
+      const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+      renderer.__globalTransformMatrix = globalMatrix;
+
+      const mOut = mat2d(1, 0, 0, 1, 0, 0);
+      renderer.setGlobalTransform(...mat2d.multiply(mOut, globalMatrix, this.transformMatrix));
+    }
+  }
+
   /* override */
   onPropertyChange(key, newValue, oldValue) {
     super.onPropertyChange(key, newValue, oldValue);
     if(key === 'zIndex') {
       this.canvas.style.zIndex = newValue;
+    }
+    if(key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+      this[_layerTransformInvert] = null;
+      this.updateGlobalTransform();
     }
   }
 
@@ -288,21 +359,6 @@ export default class Layer extends Group {
     this._prepareRenderFinished();
   }
 
-  setLayerTransform(...m) {
-    this[_layerTransform] = m.length >= 6 ? m : null;
-    this[_layerTransformInvert] = this[_layerTransform] && mat2d.invert(m);
-    // m = m || mat2d(1, 0, 0, 1, 0, 0);
-
-    const renderer = this.renderer;
-    const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
-    renderer.__globalTransformMatrix = globalMatrix;
-
-    const mOut = mat2d(1, 0, 0, 1, 0, 0);
-    renderer.setGlobalTransform(...mat2d.multiply(mOut, globalMatrix, m));
-
-    this.forceUpdate();
-  }
-
   /* override */
   setResolution({width, height}) {
     const renderer = this.renderer;
@@ -334,9 +390,7 @@ export default class Layer extends Group {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
       renderer.__globalTransformMatrix = null;
-      if(this[_layerTransform]) {
-        this.setLayerTransform(this[_layerTransform]);
-      }
+      this.updateGlobalTransform();
       this.forceUpdate();
     }
   }
