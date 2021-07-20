@@ -313,8 +313,14 @@ export default class Layer extends Group {
       this.canvas.style.zIndex = newValue;
     }
     if(key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+      const m = this[_layerTransformInvert];
       this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
+      if(m && !this.layerTransformInvert) {
+        const renderer = this.renderer;
+        const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+        renderer.setGlobalTransform(...globalMatrix);
+      }
     }
   }
 
@@ -457,6 +463,12 @@ export default class Layer extends Group {
   }
 
   toGlobalPos(x, y) {
+    if(this.layerTransformInvert) {
+      const m = this.transformMatrix;
+      x = m[0] * x + m[2] * y + m[4];
+      y = m[1] * x + m[3] * y + m[5];
+    }
+
     const {width, height} = this.getResolution();
     const offset = this.renderOffset;
     const viewport = [this.canvas.clientWidth, this.canvas.clientHeight];
@@ -466,7 +478,10 @@ export default class Layer extends Group {
 
     const displayRatio = this.displayRatio;
 
-    return [x * displayRatio, y * displayRatio];
+    x *= displayRatio;
+    y *= displayRatio;
+
+    return [x, y];
   }
 
   toLocalPos(x, y) {
@@ -478,7 +493,16 @@ export default class Layer extends Group {
 
     const displayRatio = this.displayRatio;
 
-    return [x / displayRatio, y / displayRatio];
+    x /= displayRatio;
+    y /= displayRatio;
+
+    const m = this.layerTransformInvert;
+    if(m) {
+      x = m[0] * x + m[2] * y + m[4];
+      y = m[1] * x + m[3] * y + m[5];
+    }
+
+    return [x, y];
   }
 }
 

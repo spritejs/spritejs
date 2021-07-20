@@ -37845,8 +37845,15 @@ var Layer = /*#__PURE__*/function (_Group) {
       }
 
       if (key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+        var m = this[_layerTransformInvert];
         this[_layerTransformInvert] = null;
         this.updateGlobalTransform();
+
+        if (m && !this.layerTransformInvert) {
+          var renderer = this.renderer;
+          var globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+          renderer.setGlobalTransform.apply(renderer, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(globalMatrix));
+        }
       }
     }
   }, {
@@ -38059,6 +38066,12 @@ var Layer = /*#__PURE__*/function (_Group) {
   }, {
     key: "toGlobalPos",
     value: function toGlobalPos(x, y) {
+      if (this.layerTransformInvert) {
+        var m = this.transformMatrix;
+        x = m[0] * x + m[2] * y + m[4];
+        y = m[1] * x + m[3] * y + m[5];
+      }
+
       var _this$getResolution6 = this.getResolution(),
           width = _this$getResolution6.width,
           height = _this$getResolution6.height;
@@ -38068,7 +38081,9 @@ var Layer = /*#__PURE__*/function (_Group) {
       x = x * viewport[0] / width + offset[0];
       y = y * viewport[1] / height + offset[1];
       var displayRatio = this.displayRatio;
-      return [x * displayRatio, y * displayRatio];
+      x *= displayRatio;
+      y *= displayRatio;
+      return [x, y];
     }
   }, {
     key: "toLocalPos",
@@ -38082,7 +38097,16 @@ var Layer = /*#__PURE__*/function (_Group) {
       x = x * width / viewport[0] - offset[0];
       y = y * height / viewport[1] - offset[1];
       var displayRatio = this.displayRatio;
-      return [x / displayRatio, y / displayRatio];
+      x /= displayRatio;
+      y /= displayRatio;
+      var m = this.layerTransformInvert;
+
+      if (m) {
+        x = m[0] * x + m[2] * y + m[4];
+        y = m[1] * x + m[3] * y + m[5];
+      }
+
+      return [x, y];
     }
   }, {
     key: "autoRender",

@@ -1,6 +1,6 @@
 {
   "name": "spritejs",
-  "version": "3.7.33",
+  "version": "3.7.34",
   "description": "A cross platform high-performance graphics system.",
   "main": "dist/spritejs.js",
   "typings": "typings/spritejs.d.ts",

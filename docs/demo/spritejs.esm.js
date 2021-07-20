@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.33"; // eslint-disable-line no-undef
+  spriteVer = "3.7.34"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -33633,8 +33633,15 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
     }
 
     if (key === 'transform' || key === 'translate' || key === 'rotate' || key === 'scale' || key === 'skew') {
+      const m = this[_layerTransformInvert];
       this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
+
+      if (m && !this.layerTransformInvert) {
+        const renderer = this.renderer;
+        const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
+        renderer.setGlobalTransform(...globalMatrix);
+      }
     }
   }
 
@@ -33831,6 +33838,12 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
   }
 
   toGlobalPos(x, y) {
+    if (this.layerTransformInvert) {
+      const m = this.transformMatrix;
+      x = m[0] * x + m[2] * y + m[4];
+      y = m[1] * x + m[3] * y + m[5];
+    }
+
     const {
       width,
       height
@@ -33840,7 +33853,9 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
     x = x * viewport[0] / width + offset[0];
     y = y * viewport[1] / height + offset[1];
     const displayRatio = this.displayRatio;
-    return [x * displayRatio, y * displayRatio];
+    x *= displayRatio;
+    y *= displayRatio;
+    return [x, y];
   }
 
   toLocalPos(x, y) {
@@ -33853,7 +33868,16 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
     x = x * width / viewport[0] - offset[0];
     y = y * height / viewport[1] - offset[1];
     const displayRatio = this.displayRatio;
-    return [x / displayRatio, y / displayRatio];
+    x /= displayRatio;
+    y /= displayRatio;
+    const m = this.layerTransformInvert;
+
+    if (m) {
+      x = m[0] * x + m[2] * y + m[4];
+      y = m[1] * x + m[3] * y + m[5];
+    }
+
+    return [x, y];
   }
 
 }
