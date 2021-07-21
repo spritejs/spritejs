@@ -228,7 +228,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.34"; // eslint-disable-line no-undef
+  spriteVer = "3.7.35"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -25928,13 +25928,14 @@ async function loadFrames(src, frameData) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(70);
-/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(220);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(221);
-/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(222);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(213);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(223);
+/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(220);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(221);
+/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(222);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(213);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(223);
 __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -25947,9 +25948,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 const _mesh = Symbol('mesh');
 
-class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class Block extends _node__WEBPACK_IMPORTED_MODULE_2__["default"] {
   constructor(attrs = {}) {
     super(attrs);
   }
@@ -26022,10 +26024,10 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
       let mesh = this[_mesh];
 
       if (!mesh) {
-        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Mesh2D"](box);
+        mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_1__["Mesh2D"](box);
         mesh.box = box;
         const fillColor = this.attributes.bgcolor;
-        Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setFillColor"])(mesh, {
+        Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setFillColor"])(mesh, {
           color: fillColor
         });
 
@@ -26036,7 +26038,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
             borderDash,
             borderDashOffset
           } = this.attributes;
-          Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setStrokeColor"])(mesh, {
+          Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setStrokeColor"])(mesh, {
             color: borderColor,
             lineWidth: borderWidth,
             lineDash: borderDash,
@@ -26099,6 +26101,12 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
   }
 
   getBoundingClientRect() {
+    let m = this.renderMatrix;
+
+    if (this.layer && this.layer.layerTransformInvert) {
+      m = gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), this.layer.transformMatrix, m);
+    }
+
     let boundingBox = null;
 
     if (this.mesh) {
@@ -26111,7 +26119,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
       }
     }
 
-    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_6__["default"])(boundingBox, this.renderMatrix);
+    return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_7__["default"])(boundingBox, m);
   } // transformPoint(x, y) {
   //   const m = mat2d.invert(this.renderMatrix);
   //   const newX = x * m[0] + y * m[2] + m[4];
@@ -26152,7 +26160,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
     }
 
     if (this[_mesh] && key === 'bgcolor') {
-      Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setFillColor"])(this[_mesh], {
+      Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setFillColor"])(this[_mesh], {
         color: newValue
       });
     }
@@ -26164,7 +26172,7 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
         borderDash,
         borderDashOffset
       } = this.attributes;
-      Object(_utils_color__WEBPACK_IMPORTED_MODULE_3__["setStrokeColor"])(this[_mesh], {
+      Object(_utils_color__WEBPACK_IMPORTED_MODULE_4__["setStrokeColor"])(this[_mesh], {
         color: borderColor,
         lineWidth: borderWidth,
         lineDash: borderWidth ? borderDash : 0,
@@ -26187,15 +26195,15 @@ class Block extends _node__WEBPACK_IMPORTED_MODULE_1__["default"] {
     const bw = 0.5 * borderWidth;
     const left = -anchorX * offsetSize[0] + bw;
     const top = -anchorY * offsetSize[1] + bw;
-    this.clientBox = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_0__["Figure2D"]();
-    Object(_utils_border_radius__WEBPACK_IMPORTED_MODULE_4__["createRadiusBox"])(this.clientBox, [left, top, width, height], borderRadius);
+    this.clientBox = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_1__["Figure2D"]();
+    Object(_utils_border_radius__WEBPACK_IMPORTED_MODULE_5__["createRadiusBox"])(this.clientBox, [left, top, width, height], borderRadius);
   }
 
 }
 
-_defineProperty(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_2__["default"]);
+_defineProperty(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-_document__WEBPACK_IMPORTED_MODULE_5__["default"].registerNode(Block, 'block');
+_document__WEBPACK_IMPORTED_MODULE_6__["default"].registerNode(Block, 'block');
 
 /***/ }),
 /* 220 */

@@ -1,3 +1,4 @@
+import {mat2d} from 'gl-matrix';
 import {Figure2D, Mesh2D} from '@mesh.js/core';
 import Node from './node';
 import Attr from '../attribute/block';
@@ -114,6 +115,10 @@ export default class Block extends Node {
   }
 
   getBoundingClientRect() {
+    let m = this.renderMatrix;
+    if(this.layer && this.layer.layerTransformInvert) {
+      m = mat2d(this.layer.transformMatrix) * mat2d(m);
+    }
     let boundingBox = null;
     if(this.mesh) {
       boundingBox = [...this.mesh.boundingBox];
@@ -123,7 +128,7 @@ export default class Block extends Node {
         boundingBox[1] = [boundingBox[1][0] + borderWidth, boundingBox[1][1] + borderWidth];
       }
     }
-    return getBoundingBox(boundingBox, this.renderMatrix);
+    return getBoundingBox(boundingBox, m);
   }
 
   // transformPoint(x, y) {

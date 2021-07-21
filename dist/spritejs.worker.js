@@ -28701,13 +28701,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(31);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(12);
-/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(90);
-/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(248);
-/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(249);
-/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(254);
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(241);
-/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(255);
+/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(1);
+/* harmony import */ var _mesh_js_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(12);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(90);
+/* harmony import */ var _attribute_block__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(248);
+/* harmony import */ var _utils_color__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(249);
+/* harmony import */ var _utils_border_radius__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(254);
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(241);
+/* harmony import */ var _utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(255);
 
 
 
@@ -28723,6 +28724,7 @@ __webpack_require__(1).glMatrix.setMatrixArrayType(Array);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -28750,6 +28752,12 @@ var Block = /*#__PURE__*/function (_Node) {
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Block, [{
     key: "getBoundingClientRect",
     value: function getBoundingClientRect() {
+      var m = this.renderMatrix;
+
+      if (this.layer && this.layer.layerTransformInvert) {
+        m = gl_matrix__WEBPACK_IMPORTED_MODULE_9__["mat2d"].multiply(Array.of(0, 0, 0, 0, 0, 0), this.layer.transformMatrix, m);
+      }
+
       var boundingBox = null;
 
       if (this.mesh) {
@@ -28762,7 +28770,7 @@ var Block = /*#__PURE__*/function (_Node) {
         }
       }
 
-      return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_15__["default"])(boundingBox, this.renderMatrix);
+      return Object(_utils_bounding_box__WEBPACK_IMPORTED_MODULE_16__["default"])(boundingBox, m);
     } // transformPoint(x, y) {
     //   const m = mat2d.invert(this.renderMatrix);
     //   const newX = x * m[0] + y * m[2] + m[4];
@@ -28804,7 +28812,7 @@ var Block = /*#__PURE__*/function (_Node) {
       }
 
       if (this[_mesh] && key === 'bgcolor') {
-        Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(this[_mesh], {
+        Object(_utils_color__WEBPACK_IMPORTED_MODULE_13__["setFillColor"])(this[_mesh], {
           color: newValue
         });
       }
@@ -28815,7 +28823,7 @@ var Block = /*#__PURE__*/function (_Node) {
             borderWidth = _this$attributes.borderWidth,
             borderDash = _this$attributes.borderDash,
             borderDashOffset = _this$attributes.borderDashOffset;
-        Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(this[_mesh], {
+        Object(_utils_color__WEBPACK_IMPORTED_MODULE_13__["setStrokeColor"])(this[_mesh], {
           color: borderColor,
           lineWidth: borderWidth,
           lineDash: borderWidth ? borderDash : 0,
@@ -28842,8 +28850,8 @@ var Block = /*#__PURE__*/function (_Node) {
       var bw = 0.5 * borderWidth;
       var left = -anchorX * offsetSize[0] + bw;
       var top = -anchorY * offsetSize[1] + bw;
-      this.clientBox = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Figure2D"]();
-      Object(_utils_border_radius__WEBPACK_IMPORTED_MODULE_13__["createRadiusBox"])(this.clientBox, [left, top, width, height], borderRadius);
+      this.clientBox = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_10__["Figure2D"]();
+      Object(_utils_border_radius__WEBPACK_IMPORTED_MODULE_14__["createRadiusBox"])(this.clientBox, [left, top, width, height], borderRadius);
     }
   }, {
     key: "borderSize",
@@ -28930,10 +28938,10 @@ var Block = /*#__PURE__*/function (_Node) {
         var mesh = this[_mesh];
 
         if (!mesh) {
-          mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_9__["Mesh2D"](box);
+          mesh = new _mesh_js_core__WEBPACK_IMPORTED_MODULE_10__["Mesh2D"](box);
           mesh.box = box;
           var fillColor = this.attributes.bgcolor;
-          Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setFillColor"])(mesh, {
+          Object(_utils_color__WEBPACK_IMPORTED_MODULE_13__["setFillColor"])(mesh, {
             color: fillColor
           });
 
@@ -28943,7 +28951,7 @@ var Block = /*#__PURE__*/function (_Node) {
                 borderWidth = _this$attributes6.borderWidth,
                 borderDash = _this$attributes6.borderDash,
                 borderDashOffset = _this$attributes6.borderDashOffset;
-            Object(_utils_color__WEBPACK_IMPORTED_MODULE_12__["setStrokeColor"])(mesh, {
+            Object(_utils_color__WEBPACK_IMPORTED_MODULE_13__["setStrokeColor"])(mesh, {
               color: borderColor,
               lineWidth: borderWidth,
               lineDash: borderDash,
@@ -29019,12 +29027,12 @@ var Block = /*#__PURE__*/function (_Node) {
   }]);
 
   return Block;
-}(_node__WEBPACK_IMPORTED_MODULE_10__["default"]);
+}(_node__WEBPACK_IMPORTED_MODULE_11__["default"]);
 
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_11__["default"]);
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(Block, "Attr", _attribute_block__WEBPACK_IMPORTED_MODULE_12__["default"]);
 
 
-_document__WEBPACK_IMPORTED_MODULE_14__["default"].registerNode(Block, 'block');
+_document__WEBPACK_IMPORTED_MODULE_15__["default"].registerNode(Block, 'block');
 
 /***/ }),
 /* 248 */
