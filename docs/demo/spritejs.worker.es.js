@@ -9830,7 +9830,7 @@ function createCanvas(width, height, options = {}) {
   const offscreen = options.offscreen || !isEarlyChrome && options.offscreen !== false;
   let canvas;
 
-  if (typeof global.createCanvas === 'function') {
+  if (typeof global !== 'undefined' && typeof global.createCanvas === 'function') {
     canvas = global.createCanvas(width, height, options);
   } else if (offscreen && typeof OffscreenCanvas === 'function') {
     canvas = new OffscreenCanvas(width, height);

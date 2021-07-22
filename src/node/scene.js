@@ -229,13 +229,20 @@ export default class Scene extends Group {
     options.autoResize = options.autoResize !== false;
 
     if(options.autoResize) {
-      if(global.addEventListener) {
+      let self; // cross platform
+      if(typeof globalThis !== 'undefined') {
+        self = globalThis;
+      } else {
+        self = typeof window !== 'undefined' ? window : global;
+      }
+
+      if(self.addEventListener) {
         const that = this;
-        global.addEventListener('resize', function listener() {
+        self.addEventListener('resize', function listener() {
           if(typeof document !== 'undefined' && document.contains(that.container)) {
             that.resize();
           } else {
-            global.removeEventListener('resize', listener);
+            self.removeEventListener('resize', listener);
           }
         });
       }

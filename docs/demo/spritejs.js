@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.35"; // eslint-disable-line no-undef
+  spriteVer = "3.7.36"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -11515,7 +11515,7 @@ function createCanvas(width, height) {
   var offscreen = options.offscreen || !isEarlyChrome && options.offscreen !== false;
   var canvas;
 
-  if (typeof global.createCanvas === 'function') {
+  if (typeof global !== 'undefined' && typeof global.createCanvas === 'function') {
     canvas = global.createCanvas(width, height, options);
   } else if (offscreen && typeof OffscreenCanvas === 'function') {
     canvas = new OffscreenCanvas(width, height);
@@ -39378,14 +39378,22 @@ var Scene = /*#__PURE__*/function (_Group) {
     options.autoResize = options.autoResize !== false;
 
     if (options.autoResize) {
-      if (global.addEventListener) {
+      var self; // cross platform
+
+      if (typeof globalThis !== 'undefined') {
+        self = globalThis;
+      } else {
+        self = typeof window !== 'undefined' ? window : global;
+      }
+
+      if (self.addEventListener) {
         var that = _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this);
 
-        global.addEventListener('resize', function listener() {
+        self.addEventListener('resize', function listener() {
           if (typeof document !== 'undefined' && document.contains(that.container)) {
             that.resize();
           } else {
-            global.removeEventListener('resize', listener);
+            self.removeEventListener('resize', listener);
           }
         });
       }

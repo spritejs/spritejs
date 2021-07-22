@@ -4,7 +4,7 @@ module.exports = {
   },
   globals: {
     spritejs: true,
-    global: true,
+    globalThis: true,
     Canvas: true,
     Container: true,
     importScripts: true,
