@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.36"; // eslint-disable-line no-undef
+  spriteVer = "3.7.37"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -37710,7 +37710,7 @@ var _fbo = Symbol('fbo');
 
 var _tickers = Symbol('tickers');
 
-var _layerTransformInvert = Symbol('_layerTransformInvert');
+var _layerTransformInvert = Symbol('layerTransformInvert');
 
 var Layer = /*#__PURE__*/function (_Group) {
   _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(Layer, _Group);
@@ -37997,6 +37997,7 @@ var Layer = /*#__PURE__*/function (_Group) {
         this.updateGlobalTransform();
 
         if (m && !this.layerTransformInvert) {
+          // unit matrix, recover globalMatrix
           var renderer = this.renderer;
           var globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
           renderer.setGlobalTransform.apply(renderer, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_2___default()(globalMatrix));
@@ -38120,6 +38121,7 @@ var Layer = /*#__PURE__*/function (_Group) {
         // console.log(displayRatio, this.parent);
         renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
         renderer.__globalTransformMatrix = null;
+        this[_layerTransformInvert] = null;
         this.updateGlobalTransform();
         this.forceUpdate();
       }
@@ -39173,10 +39175,6 @@ var touchEventCapturedTargets = {};
 function delegateEvents(scene) {
   var events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
   var container = scene.container;
-  var _scene$options = scene.options,
-      left = _scene$options.left,
-      top = _scene$options.top,
-      displayRatio = _scene$options.displayRatio;
   container.addEventListener('mouseleave', function (event) {
     var enteredTargets = scene[_enteredTargets];
 
@@ -39195,6 +39193,10 @@ function delegateEvents(scene) {
   });
   events.forEach(function (eventType) {
     container.addEventListener(eventType, function (event) {
+      var _scene$options = scene.options,
+          left = _scene$options.left,
+          top = _scene$options.top,
+          displayRatio = _scene$options.displayRatio;
       var layers = scene.orderedChildren;
       var pointerEvents = Object(_event_pointer_events__WEBPACK_IMPORTED_MODULE_17__["default"])(event, {
         offsetLeft: left,

@@ -23,7 +23,7 @@ const _pass = Symbol('pass');
 const _fbo = Symbol('fbo');
 const _tickers = Symbol('tickers');
 
-const _layerTransformInvert = Symbol('_layerTransformInvert');
+const _layerTransformInvert = Symbol('layerTransformInvert');
 
 export default class Layer extends Group {
   constructor(options = {}) {
@@ -317,6 +317,7 @@ export default class Layer extends Group {
       this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
       if(m && !this.layerTransformInvert) {
+        // unit matrix, recover globalMatrix
         const renderer = this.renderer;
         const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
         renderer.setGlobalTransform(...globalMatrix);
@@ -396,6 +397,7 @@ export default class Layer extends Group {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
       renderer.__globalTransformMatrix = null;
+      this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
       this.forceUpdate();
     }

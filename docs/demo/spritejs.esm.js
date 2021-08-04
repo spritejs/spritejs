@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.36"; // eslint-disable-line no-undef
+  spriteVer = "3.7.37"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -33294,7 +33294,7 @@ const _fbo = Symbol('fbo');
 
 const _tickers = Symbol('tickers');
 
-const _layerTransformInvert = Symbol('_layerTransformInvert');
+const _layerTransformInvert = Symbol('layerTransformInvert');
 
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
   constructor(options = {}) {
@@ -33646,6 +33646,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       this.updateGlobalTransform();
 
       if (m && !this.layerTransformInvert) {
+        // unit matrix, recover globalMatrix
         const renderer = this.renderer;
         const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
         renderer.setGlobalTransform(...globalMatrix);
@@ -33757,6 +33758,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
       renderer.__globalTransformMatrix = null;
+      this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
       this.forceUpdate();
     }
@@ -34511,11 +34513,6 @@ const touchEventCapturedTargets = {};
 function delegateEvents(scene) {
   const events = ['mousedown', 'mouseup', 'mousemove', 'mousewheel', 'wheel', 'touchstart', 'touchend', 'touchmove', 'touchcancel', 'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
   const container = scene.container;
-  const {
-    left,
-    top,
-    displayRatio
-  } = scene.options;
   container.addEventListener('mouseleave', event => {
     const enteredTargets = scene[_enteredTargets];
 
@@ -34533,6 +34530,11 @@ function delegateEvents(scene) {
   });
   events.forEach(eventType => {
     container.addEventListener(eventType, event => {
+      const {
+        left,
+        top,
+        displayRatio
+      } = scene.options;
       const layers = scene.orderedChildren;
       const pointerEvents = Object(_event_pointer_events__WEBPACK_IMPORTED_MODULE_6__["default"])(event, {
         offsetLeft: left,

@@ -33155,7 +33155,7 @@ const _fbo = Symbol('fbo');
 
 const _tickers = Symbol('tickers');
 
-const _layerTransformInvert = Symbol('_layerTransformInvert');
+const _layerTransformInvert = Symbol('layerTransformInvert');
 
 class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
   constructor(options = {}) {
@@ -33507,6 +33507,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       this.updateGlobalTransform();
 
       if (m && !this.layerTransformInvert) {
+        // unit matrix, recover globalMatrix
         const renderer = this.renderer;
         const globalMatrix = renderer.__globalTransformMatrix || renderer.globalTransformMatrix;
         renderer.setGlobalTransform(...globalMatrix);
@@ -33618,6 +33619,7 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
       // console.log(displayRatio, this.parent);
       renderer.setGlobalTransform(displayRatio, 0, 0, displayRatio, left, top);
       renderer.__globalTransformMatrix = null;
+      this[_layerTransformInvert] = null;
       this.updateGlobalTransform();
       this.forceUpdate();
     }

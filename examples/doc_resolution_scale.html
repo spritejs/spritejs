@@ -36,6 +36,12 @@
           pos: [i * 100 - 50, j * 100 - 50],
           bgcolor,
         });
+        if(i === 4 && j === 4) {
+          brick.attr('bgcolor', 'red');
+          brick.addEventListener('click', (evt) => {
+            console.log(evt);
+          });
+        }
 
         layer.append(brick);
       }

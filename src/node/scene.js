@@ -66,7 +66,6 @@ function delegateEvents(scene) {
     'click', 'dblclick', 'longpress', 'tap', 'contextmenu'];
 
   const container = scene.container;
-  const {left, top, displayRatio} = scene.options;
 
   container.addEventListener('mouseleave', (event) => {
     const enteredTargets = scene[_enteredTargets];
@@ -82,6 +81,7 @@ function delegateEvents(scene) {
 
   events.forEach((eventType) => {
     container.addEventListener(eventType, (event) => {
+      const {left, top, displayRatio} = scene.options;
       const layers = scene.orderedChildren;
       const pointerEvents = createPointerEvents(event, {offsetLeft: left, offsetTop: top, displayRatio});
       pointerEvents.forEach((evt) => {
