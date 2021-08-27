@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.37"; // eslint-disable-line no-undef
+  spriteVer = "3.7.38"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -39743,8 +39743,10 @@ var Scene = /*#__PURE__*/function (_Group) {
 
       var context = this[_canvas].getContext('2d');
 
-      layers = layers || this.orderedChildren;
-      context.clearRect(0, 0, width, height);
+      layers = layers || this.orderedChildren; // context.clearRect(0, 0, width, height);
+
+      this[_canvas].width = width;
+      this[_canvas].height = height;
 
       for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];

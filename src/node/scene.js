@@ -525,7 +525,10 @@ export default class Scene extends Group {
     const context = this[_canvas].getContext('2d');
     layers = layers || this.orderedChildren;
 
-    context.clearRect(0, 0, width, height);
+    // context.clearRect(0, 0, width, height);
+    this[_canvas].width = width;
+    this[_canvas].height = height;
+
     for(let i = 0; i < layers.length; i++) {
       const layer = layers[i];
       if(!layer.options.ignoreSnapshot) {
