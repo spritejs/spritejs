@@ -1,6 +1,6 @@
 ## 微信小程序组件
 
-这是微信小程序组件，使用方法参考文档[跨平台](https://spritejs.org/#/zh-cn/guide/platforms)小程序中使用方法。
+这是微信小程序组件，使用方法参考文档[跨平台](https://spritejs.com/#/zh-cn/guide/platforms)小程序中使用方法。
 
 ```xml
 <view>

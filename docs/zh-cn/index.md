@@ -14,7 +14,7 @@ SpriteJS <sup>Next</sup> 是SpriteJS的新版本，在浏览器端支持 webgl2 
 - OffscreenCanvas和Web Worker[多线程渲染](/zh-cn/guide/worker)
 - 结构化对象树，对[d3](https://github.com/d3/d3)引擎友好，能够无缝使用
 - [服务端渲染](/zh-cn/guide/platforms)
-- [Vue](http://vue.spritejs.org)
+- [Vue](http://vue.spritejs.com)
 
 ## 安装和使用
 

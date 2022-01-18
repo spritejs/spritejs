@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="http://spritejs.org"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
+  <a href="http://spritejs.com"><img src="https://p2.ssl.qhimg.com/t01e6920579715cc92b.jpg" alt="spritejs logo"/></a>
 </p>
 
-<a href="http://spritejs.org"><h1 align="center">spritejs.org</h1></a>
+<a href="http://spritejs.com"><h1 align="center">spritejs.com</h1></a>
 
 [![npm status](https://img.shields.io/npm/v/spritejs.svg)](https://www.npmjs.org/package/spritejs)
 [![build status](https://api.travis-ci.org/spritejs/spritejs.svg?branch=master)](https://travis-ci.org/spritejs/spritejs)
@@ -23,14 +23,14 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Multiple layers.
 - DOM Events.
 - Object Oriented Programmed Development with ES6+.
-- OffscreenCanvas and [Web Worker](https://next.spritejs.org/#/en/guide/worker).
+- OffscreenCanvas and [Web Worker](https://next.spritejs.com/#/en/guide/worker).
 - Work with [d3](https://github.com/d3/d3).
-- [Server-side rendering](https://next.spritejs.org/#/en/guide/platforms).
-- [Vue](http://vue.spritejs.org).
+- [Server-side rendering](https://next.spritejs.com/#/en/guide/platforms).
+- [Vue](http://vue.spritejs.com).
 
 ## Quick Start
 
-**SpriteJS** - spritejs.org
+**SpriteJS** - spritejs.com
 
 ```html
 <script src="https://unpkg.com/spritejs@3/dist/spritejs.min.js"></script>
@@ -57,7 +57,7 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 </script>
 ```
 
-<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.org/"><font size="36">spritejs.org</font></a></strong> </div>
+<div style="font-size: 1.5rem">Learn more at <strong style="font-size: 2.5rem"><a href="http://spritejs.com/"><font size="36">spritejs.com</font></a></strong> </div>
 
 ## Usage
 
@@ -98,42 +98,42 @@ import {Cube, shaders} from 'sprite-extend-3d';
 
 ### Basic
 
-- [Overview](http://spritejs.org/demo/)
-- [Sprites](http://spritejs.org/demo/#basic_sprites)
-- [Path & Group](http://spritejs.org/demo/#path_groups)
-- [Labels](http://spritejs.org/demo/#labels)
-- [Button](http://spritejs.org/demo/#button)
-- [Transforms](http://spritejs.org/demo/#transforms)
-- [Events](http://spritejs.org/demo/#events)
-- [Filters](http://spritejs.org/demo/#filters)
-- [Animations](http://spritejs.org/demo/#animations)
-- [SVG Paths](http://spritejs.org/demo/#svg_path)
-- [Offset API](http://spritejs.org/demo/#offset_api)
+- [Overview](http://spritejs.com/demo/)
+- [Sprites](http://spritejs.com/demo/#basic_sprites)
+- [Path & Group](http://spritejs.com/demo/#path_groups)
+- [Labels](http://spritejs.com/demo/#labels)
+- [Button](http://spritejs.com/demo/#button)
+- [Transforms](http://spritejs.com/demo/#transforms)
+- [Events](http://spritejs.com/demo/#events)
+- [Filters](http://spritejs.com/demo/#filters)
+- [Animations](http://spritejs.com/demo/#animations)
+- [SVG Paths](http://spritejs.com/demo/#svg_path)
+- [Offset API](http://spritejs.com/demo/#offset_api)
 
 ### With D3
 
 Compatible with [d3.js](https://github.com/d3/d3).
 
-- [Bar Graph](http://spritejs.org/demo/#/d3/bar)
-- [Hierarchy](http://spritejs.org/demo/#/d3/hierarchy)
-- [Map](http://spritejs.org/demo/#/d3/map)
-- [Force Links](http://spritejs.org/demo/#/d3/links)
+- [Bar Graph](http://spritejs.com/demo/#/d3/bar)
+- [Hierarchy](http://spritejs.com/demo/#/d3/hierarchy)
+- [Map](http://spritejs.com/demo/#/d3/map)
+- [Force Links](http://spritejs.com/demo/#/d3/links)
 
 ### 3D Extension
 
-- [3D Cube](http://spritejs.org/demo/#/3d/basic)
-- [Camera](http://spritejs.org/demo/#/3d/camera2)
-- [Cube Map](http://spritejs.org/demo/#/3d/cubemap)
-- [Physically Based Rendering](http://spritejs.org/demo/#/3d/pbr)
-- [Geometry](http://spritejs.org/demo/#/3d/geometry)
-- [Geometry Model](http://spritejs.org/demo/#/3d/geometry3)
-- [Model & Texture](http://spritejs.org/demo/#/3d/model_texture)
-- [Groups](http://spritejs.org/demo/#/3d/group3)
-- [Skydom](http://spritejs.org/demo/#/3d/skydom)
-- [Video](http://spritejs.org/demo/#/3d/video)
-- [Shadow](http://spritejs.org/demo/#/3d/shadow)
-- [Post channel](http://spritejs.org/demo/#/3d/post)
-- [GPGPU](http://spritejs.org/demo/#/3d/gpgpu)
+- [3D Cube](http://spritejs.com/demo/#/3d/basic)
+- [Camera](http://spritejs.com/demo/#/3d/camera2)
+- [Cube Map](http://spritejs.com/demo/#/3d/cubemap)
+- [Physically Based Rendering](http://spritejs.com/demo/#/3d/pbr)
+- [Geometry](http://spritejs.com/demo/#/3d/geometry)
+- [Geometry Model](http://spritejs.com/demo/#/3d/geometry3)
+- [Model & Texture](http://spritejs.com/demo/#/3d/model_texture)
+- [Groups](http://spritejs.com/demo/#/3d/group3)
+- [Skydom](http://spritejs.com/demo/#/3d/skydom)
+- [Video](http://spritejs.com/demo/#/3d/video)
+- [Shadow](http://spritejs.com/demo/#/3d/shadow)
+- [Post channel](http://spritejs.com/demo/#/3d/post)
+- [GPGPU](http://spritejs.com/demo/#/3d/gpgpu)
 
 ### [Q-Charts](https://github.com/spritejs/q-charts)
 
@@ -153,15 +153,15 @@ A visulization library based on spritejs.
 
 [Proton](https://github.com/a-jie/Proton) is a lightweight and powerful javascript particle engine. 
 
-- [Big Fire](http://spritejs.org/demo/#/proton/fire)
-- [Background Particles](http://spritejs.org/demo/#/proton/position)
-- [Custom Behavior](http://spritejs.org/demo/#/proton/behavior)
+- [Big Fire](http://spritejs.com/demo/#/proton/fire)
+- [Background Particles](http://spritejs.com/demo/#/proton/position)
+- [Custom Behavior](http://spritejs.com/demo/#/proton/behavior)
 
 ### With Matter-js
 
 [Matter.js]((https://github.com/liabru/matter-js)) is a JavaScript 2D rigid body physics engine.
 
-- [Mixed shapes](http://spritejs.org/demo/#/matterjs/mixed_shapes)
+- [Mixed shapes](http://spritejs.com/demo/#/matterjs/mixed_shapes)
 
 -->
 

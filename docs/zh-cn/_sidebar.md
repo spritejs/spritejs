@@ -112,8 +112,7 @@
     * [shaders](/zh-cn/api/ext3d/shaders)
 
 * 生态
-  * [旧版 2.x](http://v2.spritejs.org)
-  * [Vue](http://vue.spritejs.org)
+  * [Vue](http://vue.spritejs.com)
 
 * 其他
   * [相关资源](/zh-cn/resource)

@@ -27749,7 +27749,7 @@ var ownerDocument = {
         value: ownerDocument
       },
       namespaceURI: {
-        value: "http://spritejs.org/".concat(nodeName)
+        value: "http://spritejs.com/".concat(nodeName)
       }
     });
   },

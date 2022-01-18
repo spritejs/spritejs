@@ -113,8 +113,7 @@
     * [shaders](/en/api/ext3d/shaders)
 
 * Ecosystem
-  * [2.x](http://v2.spritejs.org)
-  * [Vue](http://vue.spritejs.org)
+  * [Vue](http://vue.spritejs.com)
 
 * Others
   * [Resource](/en/resource)

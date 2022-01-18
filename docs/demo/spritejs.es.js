@@ -25207,7 +25207,7 @@ const ownerDocument = {
         value: ownerDocument
       },
       namespaceURI: {
-        value: `http://spritejs.org/${nodeName}`
+        value: `http://spritejs.com/${nodeName}`
       }
     });
   },

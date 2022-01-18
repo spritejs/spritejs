@@ -14,7 +14,7 @@ Spritejs<sup>Next</sup> is the new version of spritejs. It is renderer agnostic 
 - OffscreenCanvas and [Web Worker](/en/guide/worker).
 - Work with [d3](https://github.com/d3/d3).
 - [Server-side rendering](/en/guide/platforms).
-- [Vue](http://vue.spritejs.org).
+- [Vue](http://vue.spritejs.com).
 
 ## Usage
 
