@@ -33,7 +33,7 @@ void main() {
 `;
 
 const program = layer.createProgram({
-  fragment: shaders.NORMAL_GEOMETRY.fragment,
+  fragment: shaders.BASE_GEOMETRY.fragment,
   vertex,
   cullFace: null,
 });
