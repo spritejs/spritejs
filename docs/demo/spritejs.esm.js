@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.7.38"; // eslint-disable-line no-undef
+  spriteVer = "3.8.0"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -35081,6 +35081,28 @@ class Scene extends _group__WEBPACK_IMPORTED_MODULE_5__["default"] {
   }
 
 }
+
+if (typeof document !== 'undefined') {
+  Scene.prototype.layer3d = function (id, options = {}) {
+    const url = options.url || 'https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.min.js';
+    return new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.async = false;
+      el.src = url;
+
+      el.onload = () => {
+        try {
+          resolve(this.layer3d(id, options));
+        } catch (ex) {
+          reject(ex);
+        }
+      };
+
+      document.documentElement.appendChild(el);
+    });
+  };
+}
+
 _document__WEBPACK_IMPORTED_MODULE_9__["default"].registerNode(Scene, 'scene');
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(22)))
 

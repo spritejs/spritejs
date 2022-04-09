@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    #container {
+      width: 100%;
+      padding-bottom: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    (async () => {
+      const vertex = /* glsl */ `
+        precision highp float;
+        precision highp int;
+
+        attribute vec3 position;
+        attribute vec3 normal;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat3 normalMatrix;
+
+        varying vec3 vNormal;
+
+        void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `;
+
+      const fragment = /* glsl */ `
+          precision highp float;
+          precision highp int;
+
+          varying vec3 vNormal;
+
+          void main() {
+              vec3 normal = normalize(vNormal);
+              float lighting = dot(normal, normalize(vec3(-0.3, 0.8, 0.6)));
+              gl_FragColor.rgb = vec3(0.2, 0.8, 1.0) + lighting * 0.1;
+              gl_FragColor.a = 1.0;
+          }
+      `;
+
+      const {Scene} = spritejs;
+      const container = document.getElementById('container');
+      const scene = new Scene({
+        container,
+        // width: 600,
+        // height: 600,
+        displayRatio: 2,
+        // mode: 'stickyHeight',
+      });
+      const layer = await scene.layer3d('fglayer', {
+        camera: {
+          fov: 35,
+        },
+      });
+      const {Plane, Sphere, Cube} = spritejs.ext3d;
+
+      layer.camera.attributes.pos = [5, 3, 6];
+      layer.camera.lookAt([0, 0, 0]);
+
+      const program = layer.createProgram({
+        vertex,
+        fragment,
+        cullFace: null,
+      });
+
+      const plane = new Plane(program);
+      plane.attributes.pos = [0, 1.3, 0];
+      layer.append(plane);
+      plane.animate([
+        {rotateY: 0},
+        {rotateY: -360},
+      ], {
+        duration: 10000,
+        iterations: Infinity,
+      });
+
+      const sphere = new Sphere(program);
+      sphere.attr({
+        phiLength: Math.PI,
+      });
+      layer.append(sphere);
+      sphere.animate([
+        {rotateY: 0},
+        {rotateY: -360},
+      ], {
+        duration: 7500,
+        iterations: Infinity,
+      });
+
+      const cube = new Cube(program);
+      cube.attributes.pos = [0, -1.3, 0];
+      layer.append(cube);
+      cube.animate([
+        {rotateY: 0},
+        {rotateY: -360},
+      ], {
+        duration: 5000,
+        iterations: Infinity,
+      });
+    })();
+  </script>
+</body>
+</html>

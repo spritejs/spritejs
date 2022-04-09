@@ -543,4 +543,22 @@ export default class Scene extends Group {
   }
 }
 
+if(typeof document !== 'undefined') {
+  Scene.prototype.layer3d = function (id, options = {}) {
+    const url = options.url || 'https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.min.js';
+    return new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.async = false;
+      el.src = url;
+      el.onload = () => {
+        try {
+          resolve(this.layer3d(id, options));
+        } catch (ex) {
+          reject(ex);
+        }
+      };
+      document.documentElement.appendChild(el);
+    });
+  };
+}
 ownerDocument.registerNode(Scene, 'scene');

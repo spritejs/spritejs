@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.7.38"; // eslint-disable-line no-undef
+  spriteVer = "3.8.0"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -39825,6 +39825,31 @@ var Scene = /*#__PURE__*/function (_Group) {
   return Scene;
 }(_group__WEBPACK_IMPORTED_MODULE_16__["default"]);
 
+
+
+if (typeof document !== 'undefined') {
+  Scene.prototype.layer3d = function (id) {
+    var _this4 = this;
+
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var url = options.url || 'https://unpkg.com/sprite-extend-3d/dist/sprite-extend-3d.min.js';
+    return new Promise(function (resolve, reject) {
+      var el = document.createElement('script');
+      el.async = false;
+      el.src = url;
+
+      el.onload = function () {
+        try {
+          resolve(_this4.layer3d(id, options));
+        } catch (ex) {
+          reject(ex);
+        }
+      };
+
+      document.documentElement.appendChild(el);
+    });
+  };
+}
 
 _document__WEBPACK_IMPORTED_MODULE_20__["default"].registerNode(Scene, 'scene');
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(39)))
