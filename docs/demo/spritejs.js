@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.8.0"; // eslint-disable-line no-undef
+  spriteVer = "3.8.1"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;

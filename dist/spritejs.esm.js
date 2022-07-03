@@ -219,7 +219,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.8.0"; // eslint-disable-line no-undef
+  spriteVer = "3.8.1"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;

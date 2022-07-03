@@ -54,6 +54,7 @@
     "gl": "^4.4.0",
     "jest": "^25.1.0",
     "node-canvas-webgl": "^0.2.6",
+    "node-sass": "^4.14.1",
     "raw-loader": "^3.1.0",
     "request": "^2.88.0",
     "webpack": "^4.33.0",
