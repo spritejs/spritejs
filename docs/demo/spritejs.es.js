@@ -228,7 +228,7 @@ const helpers = {
 let spriteVer;
 
 if (true) {
-  spriteVer = "3.8.1"; // eslint-disable-line no-undef
+  spriteVer = "3.8.2"; // eslint-disable-line no-undef
 } else {}
 
 const version = spriteVer;
@@ -29779,8 +29779,8 @@ class Label extends _block__WEBPACK_IMPORTED_MODULE_2__["default"] {
             anchorX,
             anchorY
           } = this.attributes;
-          x -= this.clientSize[0] * anchorX;
-          y -= this.clientSize[1] * anchorY;
+          x -= this.offsetSize[0] * anchorX;
+          y -= this.offsetSize[1] * anchorY;
           mesh.setTexture(texture, {
             rect: [x, y, width, height]
           });

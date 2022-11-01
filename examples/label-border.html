@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quick Start</title>
+  <script src="/js/spritejs.js"></script>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      background: #DDD;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #stage {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background: #DDD;
+    }  
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script>
+const {Scene, Label} = spritejs;
+
+const scene = new Scene({
+  container: stage,
+  width: 900,
+  height: 900,
+});
+
+const layer = scene.layer('fglayer');
+
+const box = new Label({
+  text: 'SpriteJS',
+  textAlign: 'left',
+  lineHeight: 300,
+  anchor: 0.5,
+  pos: [450, 450],
+  width: 300,
+  height: 300,
+  fontSize: '2rem',
+  border: [30, 'black'],
+  borderRadius: 30,
+  bgcolor: 'white',
+});
+
+layer.appendChild(box);
+  </script>
+</body>
+</html>
