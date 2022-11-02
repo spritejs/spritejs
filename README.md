@@ -23,9 +23,9 @@ Manipulate the **sprites** in canvas as you do with the DOM elements.
 - Multiple layers.
 - DOM Events.
 - Object Oriented Programmed Development with ES6+.
-- OffscreenCanvas and [Web Worker](https://next.spritejs.com/#/en/guide/worker).
+- OffscreenCanvas and [Web Worker](https://spritejs.com/#/en/guide/worker).
 - Work with [d3](https://github.com/d3/d3).
-- [Server-side rendering](https://next.spritejs.com/#/en/guide/platforms).
+- [Server-side rendering](https://spritejs.com/#/en/guide/platforms).
 - [Vue](http://vue.spritejs.com).
 
 ## Quick Start
