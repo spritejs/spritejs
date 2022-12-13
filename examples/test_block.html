@@ -23,7 +23,9 @@
       width: 600,
       height: 600,
     });
-    const layer = scene.layer();
+    const layer = scene.layer('fglayer', {
+      autoRender: false,
+    });
     const block = new Block({
       pos: [100, 100],
       size: [100, 100],
@@ -32,6 +34,12 @@
       translate: [100, 0],
     });
     layer.append(block);
+
+    layer.tick(() => {
+      block.attr('rotate', block.attr('rotate') + 1);
+      layer.render();
+      // console.log(111);
+    });
 
     block.addEventListener('contextmenu', (e) => {
       e.originalEvent.preventDefault();

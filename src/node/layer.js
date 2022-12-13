@@ -426,9 +426,9 @@ export default class Layer extends Group {
           const value = handler ? handler(t.currentTime, p) : null;
           return {value, p};
         });
-        if(layer[_autoRender] && !layer[_tickRender]) {
+        if(!layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
-            layer.render();
+            if(layer[_autoRender]) layer.render();
             delete layer[_tickRender];
             for(let i = ret.length - 1; i >= 0; i--) {
               const {value, p} = ret[i];

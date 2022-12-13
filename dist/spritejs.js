@@ -228,7 +228,7 @@ var helpers = {
 var spriteVer;
 
 if (true) {
-  spriteVer = "3.8.2"; // eslint-disable-line no-undef
+  spriteVer = "3.8.3"; // eslint-disable-line no-undef
 } else {}
 
 var version = spriteVer;
@@ -38171,9 +38171,9 @@ var Layer = /*#__PURE__*/function (_Group) {
             };
           });
 
-          if (layer[_autoRender] && !layer[_tickRender]) {
+          if (!layer[_tickRender]) {
             layer[_tickRender] = Promise.resolve().then(function () {
-              layer.render();
+              if (layer[_autoRender]) layer.render();
               delete layer[_tickRender];
 
               for (var i = ret.length - 1; i >= 0; i--) {

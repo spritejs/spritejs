@@ -33665,9 +33665,9 @@ class Layer extends _group__WEBPACK_IMPORTED_MODULE_4__["default"] {
           };
         });
 
-        if (layer[_autoRender] && !layer[_tickRender]) {
+        if (!layer[_tickRender]) {
           layer[_tickRender] = Promise.resolve().then(() => {
-            layer.render();
+            if (layer[_autoRender]) layer.render();
             delete layer[_tickRender];
 
             for (let i = ret.length - 1; i >= 0; i--) {
