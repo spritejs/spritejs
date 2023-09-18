@@ -1,5 +1,6 @@
 <body>
   <nav>
+    <a id="ask-ai" href="###">Ask AI</a>
     <a href="#/en/index">Docs</a>
     <a href="/demo" target="_blank">Demo</a>
     <a href="#/en/changelog" target="_blank">Change Log</a>

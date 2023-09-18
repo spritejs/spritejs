@@ -1,5 +1,6 @@
 <body>
   <nav>
+    <a id="ask-ai" href="###">询问 AI</a>
     <a href="#/zh-cn/index">官方文档</a>
     <a href="https://www.jcode.pub/?spritejs" target="_blank">使用范例</a>
     <a href="#/zh-cn/changelog" target="_blank">更新日志</a>
