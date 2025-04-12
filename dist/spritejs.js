@@ -27774,7 +27774,7 @@ function getCurrentFrame(timing, keyframes, effects, p) {
       var ep = p;
       if (_easing) {
         var d = offset - previousOffset;
-        ep = _easing((p - previousOffset) / d) * d + previousOffset;
+        ep = _easing((p - previousOffset) / d，keyframes) * d + previousOffset;
       }
 
       if (effect) {
