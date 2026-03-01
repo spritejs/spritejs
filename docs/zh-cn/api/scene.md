@@ -18,7 +18,7 @@ Scene 管理一个或多个Layer。
 
 获取或设置像素比。
 
-##### hight
+##### height
 
 获取或设置画布高度。
 
@@ -241,7 +241,7 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 返回指定类型的子元素列表。
 
-##### querySelctor(selector)
+##### querySelector(selector)
 
 根据选择器返回指定的子元素。
 
@@ -277,7 +277,7 @@ Copy一个Group，如果deep为true，则同时复制Group中的子孙元素。
 
 #### _继承自Node_
 
-###### activateAnimations() {
+###### activateAnimations()
 
 激活元素上正在执行的所有动画。
 

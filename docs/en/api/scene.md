@@ -12,13 +12,13 @@ Scene manages one or more layers.
 
 ##### _readonly_ hasOffscreenCanvas
 
-If there is offscreen canvas, different rendering modes will be choosen according to the situation.
+If there is offscreen canvas, different rendering modes will be chosen according to the situation.
 
 ##### displayRatio
 
 Get or set the pixel ratio.
 
-##### hight
+##### height
 
 Get or set the height of the canvas.
 
@@ -42,7 +42,7 @@ The child elements.
 
 ##### _readonly_ orderedChildren
 
-Child elements sorted by zindex and zorder.
+Child elements sorted by zIndex and zOrder.
 
 #### _From Block_
 
@@ -144,7 +144,7 @@ The same as element.attributes.zIndex
 
 ##### constructor(options)
 
-| Name | Type |Defaul | Instruction |
+| Name | Type |Default | Instruction |
 | --- | --- | --- | --- |
 | alpha | boolean | true | alpha channel |
 | autoRender | boolean | true | auto render |
@@ -241,7 +241,7 @@ Returns a list of child elements for the specified name.
 
 Returns a list of child elements of the specified type.
 
-##### querySelctor(selector)
+##### querySelector(selector)
 
 Returns the specified child element based on the selector.
 
@@ -255,7 +255,7 @@ Remove all child elements of the group.
 
 ##### reorder()
 
-Reorder children in the order of zindex and zorder, which updates orderedChildren.
+Reorder children in the order of zIndex and zOrder, which updates orderedChildren.
 
 ##### seal()
 
@@ -277,7 +277,7 @@ The action when an element attribute value is changed.
 
 #### _From Node_
 
-##### activateAnimations() {
+##### activateAnimations()
 
 Activate all animations in progress on the element.
 
@@ -295,7 +295,7 @@ Get or set attributes in batch.
 
 ##### connect(parent, zOrder)
 
-When the element is added to the context tree, the function is called and `parent` and `zorder` are assigned to the element.
+When the element is added to the context tree, the function is called and `parent` and `zOrder` are assigned to the element.
 
 ##### deactivateAnimations()
 
@@ -303,7 +303,7 @@ Stops all animations in progress on the element.
 
 ##### disconnect()
 
-When the element is removed from the context tree, the function is called and the parent and zorder properties are removed.
+When the element is removed from the context tree, the function is called and the parent and zOrder properties are removed.
 
 ##### dispatchEvent(event)
 
@@ -319,7 +319,7 @@ Get the event listeners.
 
 ##### getOffsetPosition(x, y)
 
-Transform the specified [x, y] coordinates relative to the layer to the coordinates of to the current element, with the anchor as the origin [0, 0].
+Transform the specified [x, y] coordinates relative to the layer to the coordinates of the current element, with the anchor as the origin [0, 0].
 
 ##### getResolution()
 
